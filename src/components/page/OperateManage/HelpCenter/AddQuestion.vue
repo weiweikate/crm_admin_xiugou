@@ -16,7 +16,7 @@
           </el-form-item>
           <el-form-item label=" ">
               <el-button type="primary" @click="submitForm">确认保存</el-button>
-              <el-button >取消</el-button>
+              <el-button @click="backTolist">取消</el-button>
           </el-form-item>
         </el-form>
     </el-card>
@@ -125,13 +125,16 @@ export default {
             const data = {};
             data.title = this.form.questionTitle;
             data.content = this.form.content;
-            data.typeid = this.questionTypeId;
+            data.typeId = this.questionTypeId;
             request.addHelpQuestion(data).then(res => {
-                this.$message.success(res.data.msg);
+                // this.$message.success(res.data.msg);
                 this.$router.push('/questionList');
             }).catch(error => {
                 console.log(error);
             });
+        },
+        backTolist() {
+            this.$router.push('/questionList');
         }
     }
 };

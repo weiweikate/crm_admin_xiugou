@@ -37,8 +37,8 @@ export default {
                 id: this.questionId
             };
             request.findHelpQuestionById(data).then(res => {
-                this.title = res.data.data.title;
-                this.content = res.data.data.content;
+                this.title = res.data.title || '';
+                this.content = res.data.content || '';
             }).catch(error => {
                 console.log(error);
             });

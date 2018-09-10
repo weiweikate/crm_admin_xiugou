@@ -111,8 +111,8 @@ export default {
             };
             request.queryHelpTypePageList(data).then(res => {
                 this.tableData = [];
-                this.tableData = res.data;
-                this.page.totalPage = res.totalNum;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
             }).catch(error => {
                 console.log(error);
             });
@@ -185,14 +185,15 @@ export default {
         color: #ff4e4e;
       }
     }
+      .el-input--small,.el-input__inner{
+          width: 200px;
+      }
   }
     .add-item{
         height: 40px;
         line-height: 40px;
     }
-    .el-input--small,.el-input__inner{
-        width: 200px;
-    }
+
     .el-dialog .el-upload--text {
         width: 100px;
         height: 40px;
