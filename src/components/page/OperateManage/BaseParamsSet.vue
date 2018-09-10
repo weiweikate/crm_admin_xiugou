@@ -20,75 +20,76 @@
               </div>
           </div>
       </el-card>
-      
+
   </div>
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import * as api from "@/api/OperateManage/baseParamsSet.js";
-import * as pApi from "@/privilegeList/OperateManage/baseParamsSet.js";
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import * as api from '@/api/OperateManage/baseParamsSet.js';
+import * as pApi from '@/privilegeList/OperateManage/baseParamsSet.js';
+import request from '@/http/http';
 export default {
-  components: { vBreadcrumb },
+    components: { vBreadcrumb },
 
-  data() {
-    return {
-      nav: ["运营管理", "交易基础参数设置"],
-      btnLoading: false,
-      orderCancleTime: "",
-      toBeConfirmTime: "",
-      returnGoodsTime: "",
-      returnDownTime: "",
-      payOvertime:""
-    };
-  },
+    data() {
+        return {
+            nav: ['运营管理', '交易基础参数设置'],
+            btnLoading: false,
+            orderCancleTime: '',
+            toBeConfirmTime: '',
+            returnGoodsTime: '',
+            returnDownTime: '',
+            payOvertime: ''
+        };
+    },
 
-  activated() {
-      this.getInfo();
-  },
+    activated() {
+        this.getInfo();
+    },
 
-  methods: {
+    methods: {
     //   获取数据
-    getInfo() {
-      this.$axios
-        .post(api.findSysConfig, {})
-        .then(res => {
-            this.orderCancleTime = res.data.data.timeOrderCancel;
-            this.toBeConfirmTime = res.data.data.timeGoodsConfirm;
-            // this.returnGoodsTime = res.data.data.timeReturnSend;
-            this.returnDownTime = res.data.data.timeExpressSend;
-            this.payOvertime = res.data.data.payOvertime;
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    //   提交表单
-    submitForm() {
-      let data = {};
-      data.timeOrderCancel = this.orderCancleTime;
-      data.timeGoodsConfirm = this.toBeConfirmTime;
-      // data.timeReturnSend = this.returnGoodsTime;
-      data.timeExpressSend = this.returnDownTime;
-      data.payOvertime = this.payOvertime;
-      data.url = pApi.updateSysConfigByTransaction;
-      this.btnLoading = true;
-      this.$axios
-        .post(api.updateSysConfigByTransaction, data)
-        .then(res => {
-          this.$message.success(res.data.msg);
-          this.btnLoading = false;
-        })
-        .catch(err => {
-          console.log(err);
-          this.btnLoading = false;
-        });
-    },
-    // 取消
-    cancle(){
-      this.getInfo();
+        getInfo() {
+            this.$axios
+                .post(api.findSysConfig, {})
+                .then(res => {
+                    this.orderCancleTime = res.data.data.timeOrderCancel;
+                    this.toBeConfirmTime = res.data.data.timeGoodsConfirm;
+                    // this.returnGoodsTime = res.data.data.timeReturnSend;
+                    this.returnDownTime = res.data.data.timeExpressSend;
+                    this.payOvertime = res.data.data.payOvertime;
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        //   提交表单
+        submitForm() {
+            const data = {};
+            data.timeOrderCancel = this.orderCancleTime;
+            data.timeGoodsConfirm = this.toBeConfirmTime;
+            // data.timeReturnSend = this.returnGoodsTime;
+            data.timeExpressSend = this.returnDownTime;
+            data.payOvertime = this.payOvertime;
+            data.url = pApi.updateSysConfigByTransaction;
+            this.btnLoading = true;
+            this.$axios
+                .post(api.updateSysConfigByTransaction, data)
+                .then(res => {
+                    this.$message.success(res.data.msg);
+                    this.btnLoading = false;
+                })
+                .catch(err => {
+                    console.log(err);
+                    this.btnLoading = false;
+                });
+        },
+        // 取消
+        cancle() {
+            this.getInfo();
+        }
     }
-  }
 };
 </script>
 <style lang='less' scoped>

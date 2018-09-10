@@ -82,13 +82,14 @@
 </template>
 
 <script>
-    import vBreadcrumb from '../../common/Breadcrumb.vue';
-    import icon from '../../common/ico.vue';
-    import region from '../../common/Region';
-    import deleteToast from "../../common/DeleteToast";
-    import * as api from '../../../api/OperateManage/BackAddress';
-    import utils from '../../../utils/index.js'
-    import * as pApi from '../../../privilegeList/OperateManage/BackAddress';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import icon from '@/components/common/ico.vue';
+    import region from '@/components/common/Region';
+    import deleteToast from '@/components/common/DeleteToast';
+    import * as api from '@/api/OperateManage/BackAddress';
+    import utils from '@/utils/index.js';
+    import * as pApi from '@/privilegeList/OperateManage/BackAddress';
+    import request from '@/http/http';
 
     export default {
         components: {
@@ -98,27 +99,27 @@
             return {
                 // 权限控制
                 p: {
-                    addReturnAddress:false,
-                    updateReturnAddress:false,
-                    updateReturnAddress_1:false,
-                    deleteReturnAddress:false,
+                    addReturnAddress: false,
+                    updateReturnAddress: false,
+                    updateReturnAddress_1: false,
+                    deleteReturnAddress: false
                 },
                 isShowOperate: false,
 
                 address: '',
                 form: {
-                    receiver: "",
-                    recevicePhone: "",
-                    country:'1'
+                    receiver: '',
+                    recevicePhone: '',
+                    country: '1'
                 },
                 addForm: {
-                    receiver: "",
-                    recevicePhone: "",
+                    receiver: '',
+                    recevicePhone: ''
                 },
                 addMask: false,
                 editMask: false,
-                id: "",
-                itemId: "",
+                id: '',
+                itemId: '',
                 tableData: [],
                 page: {
                     currentPage: 1,
@@ -132,10 +133,10 @@
                 provinceCode: '',
                 cityCode: '',
                 areaCode: ''
-            }
+            };
         },
         created() {
-            let winHeight = window.screen.availHeight - 520;
+            const winHeight = window.screen.availHeight - 520;
             this.height = winHeight;
             this.pControl();
         },
@@ -149,37 +150,45 @@
                 for (const k in this.p) {
                     this.p[k] = utils.pc(pApi[k]);
                 }
-                if(this.p.addReturnAddress&&this.p.updateReturnAddress&&this.p.updateReturnAddress_1&&this.p.deleteReturnAddress){
-                    this.isShowOperate=true
+                if (this.p.addReturnAddress && this.p.updateReturnAddress && this.p.updateReturnAddress_1 && this.p.deleteReturnAddress) {
+                    this.isShowOperate = true;
                 }
             },
             // 获取省市区
             getRegion(msg) {
                 this.address = msg;
-                console.log(this.address)
+                console.log(this.address);
             },
-            //获取列表
+            // 获取列表
             getList() {
-                let that = this;
-                let data = {
+                const that = this;
+                const data = {
                     url: pApi.queryReturnAddressList
                 };
                 that.tableLoading = true;
-                that.$axios
-                    .post(api.queryReturnAddressList, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.tableLoading = false;
-                            that.tableData = res.data.data;
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.tableLoading = false;
-                        }
-                    })
-                    .catch(err => {
-                        that.tableLoading = false;
-                        console.log(err)
-                    })
+                request.queryReturnAddressList(data).then(res => {
+                    console.log(res);
+                    that.tableLoading = false;
+                    that.tableData = res.data.data;
+                }).catch(err => {
+                    that.tableLoading = false;
+                    console.log(err);
+                });
+                // that.$axios
+                //     .post(api.queryReturnAddressList, data)
+                //     .then(res => {
+                //         if (res.data.code == 200) {
+                //             that.tableLoading = false;
+                //             that.tableData = res.data.data;
+                //         } else {
+                //             that.$message.warning(res.data.msg);
+                //             that.tableLoading = false;
+                //         }
+                //     })
+                //     .catch(err => {
+                //         that.tableLoading = false;
+                //         console.log(err);
+                //     });
             },
             // 添加
             addAddress() {
@@ -188,10 +197,10 @@
                 this.addForm.recevicePhone = '';
                 this.addForm.country = '1';
                 this.addForm.address = '';
-                this.itype = "add";
-                this.areaDisabled = true
+                this.itype = 'add';
+                this.areaDisabled = true;
             },
-            //详细地址选择
+            // 详细地址选择
             changeArea() {
                 if (this.itype == 'add') {
                     this.areaDisabled = this.addForm.country == 1;
@@ -199,14 +208,14 @@
                     this.areaDisabled = this.form.country == 1;
                 }
             },
-            //编辑
+            // 编辑
             editItem(row) {
                 this.editMask = true;
                 row.country = '1';
                 this.form = row;
                 this.form.recevicePhone = row.recevice_phone;
                 this.itemId = row.id;
-                this.itype = "edit";
+                this.itype = 'edit';
                 // if(row.country==1){
                 //     this.areaDisabled=true;
                 //     let reginArr=[];
@@ -217,15 +226,15 @@
                 //     this.areaDisabled=false;
                 //     this.address=''
                 // }
-                let reginArr = [];
+                const reginArr = [];
                 reginArr.push(Number(this.form.province_code), Number(this.form.city_code), Number(this.form.area_code));
                 this.address = reginArr;
             },
 
-            //添加修改确定
+            // 添加修改确定
             addOrEdit(formName) {
-                let url = "";
-                let data = {};
+                let url = '';
+                const data = {};
                 data.receiver = this[formName].receiver;
                 data.recevicePhone = this[formName].recevicePhone;
                 // data.country = this[formName].country;
@@ -236,28 +245,28 @@
                 if (data.country == 1) {
                     if (!this.address[0] || !this.address[1] || !this.address[2]) {
                         this.$message.warning('请选择省市区!');
-                        return
+                        return;
                     }
                 }
                 if (!data.address) {
                     this.$message.warning('请输入详细地址!');
-                    return
+                    return;
                 }
                 if (!data.receiver) {
                     this.$message.warning('请输入联系人!');
-                    return
+                    return;
                 }
                 if (!data.recevicePhone) {
                     this.$message.warning('请输入联系方式!');
-                    return
+                    return;
                 } else {
-                    let reg = /^(1[3-8]\d{9}|^\d{3}-?\d{8}|^\d{4}-?\d{7})$/;
+                    const reg = /^(1[3-8]\d{9}|^\d{3}-?\d{8}|^\d{4}-?\d{7})$/;
                     if (!reg.test(data.recevicePhone)) {
                         this.$message.warning('请输入正确的联系方式!');
-                        return false
+                        return false;
                     }
                 }
-                if (this.itype == "add") {
+                if (this.itype == 'add') {
                     url = api.addReturnAddress;
                     data.url = pApi.addReturnAddress;
                 } else {
@@ -285,7 +294,7 @@
                         console.log(err);
                     });
             },
-            //删除
+            // 删除
             delItem(id) {
                 this.delId = id;
                 this.delUrl = api.deleteReturnAddress;
@@ -297,15 +306,15 @@
                 this.isShowDelToast = msg;
                 this.getList();
             },
-            //取消
+            // 取消
             cancel() {
                 this.addMask = false;
                 this.editMask = false;
                 this.getList();
             },
-            //开启关闭
+            // 开启关闭
             openOrCloseItem(row, num) {
-                let data = {
+                const data = {
                     status: num,
                     id: row.id,
                     url: pApi.updateReturnAddress
@@ -326,7 +335,7 @@
                     });
             }
         }
-    }
+    };
 </script>
 
 <style lang="less">

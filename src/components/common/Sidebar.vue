@@ -255,7 +255,11 @@
                         subs: [
                             {
                                 index: 'baseParamsSet',
-                                title: '交易基础参数设置'
+                                title: '交易参数设置'
+                            },
+                            {
+                                index: 'groupBaseParamsSet',
+                                title: '拼店基础参数设置'
                             }
                         ]
                     },
@@ -308,10 +312,6 @@
                                 index: 'backAddress',
                                 title: '寄回地址管理'
                             }
-                            // {
-                            //     index: "groupBaseParamsSet",
-                            //     title: "拼店基础参数设置"
-                            // },
                             // {
                             //     index: "discountCoupon",
                             //     title: "优惠券设置"

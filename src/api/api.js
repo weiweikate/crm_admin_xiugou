@@ -290,4 +290,3 @@ export const loginByPwd = '/admin/adminLogin/pswLogin'; // 管理员账号密码
 export const addManger = '/admin/adminUser/addAdminUser'; // 添加管理员
 export const getMangerList = '/admin/adminUser/queryAdminUserPageList'; // 获取管理员列表
 export const addOrModify = '/admin/config/sysconfig/addOrModify'; // 新增修改系统配置
-
