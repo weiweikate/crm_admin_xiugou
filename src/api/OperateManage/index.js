@@ -3,7 +3,7 @@ export const bannerListUrl = '/admin/ad/queryAdList'; // 广告位列表接口
 export const delItemUrl = '/admin/ad/deleteAd'; // 删除接口
 export const addItemUrl = '/admin/ad/addAd'; // 添加接口
 export const editdUrl = '/admin/ad/updateAd'; // 修改
-export const queryUrl ='/admin/ad/findAdById'; // 查询
+export const queryUrl = '/admin/ad/findAdById'; // 查询
 // 优惠劵详情
 export const getDiscountCouponPageById = '/admin/discountCoupon/getDiscountCouponPageById';
 // 失效
@@ -20,16 +20,16 @@ export const discountCouponDealerPageList = '/admin/discountCouponDealer/discoun
 export const loseBatchDiscountCouponDealer = '/admin/discountCouponDealer/loseBatchDiscountCouponDealer';
 
 // 查询经销商层级列表
-export const getDealerLevelList='/admin/dealerLevel/getList';
-//获取一级类目
-export const getFirstList='/admin/productCategory/queryProductCategoryName';
-//获取二级类目
-export const getSecondList='/admin/productCategory/queryProductCategoryFatherid';
+export const getDealerLevelList = '/admin/dealerLevel/getList';
+// 获取一级类目
+export const getFirstList = '/admin/productCategory/queryProductCategoryName';
+// 获取二级类目
+export const getSecondList = '/admin/productCategory/queryProductCategoryFatherid';
 // 获取产品列表
 export const queryProductPageList = '/admin/product/queryProductPageList';
 
-//模板列表
-export const getAllDiscountCouponTemplate='/admin/discountCouponTemplate/getAllDiscountCouponTemplate';
+// 模板列表
+export const getAllDiscountCouponTemplate = '/admin/discountCouponTemplate/getAllDiscountCouponTemplate';
 // 问题类目列表
 export const queryHelpTypePageList = '/admin/helpType/queryHelpTypePageList';
 // 添加问题类型
@@ -37,7 +37,7 @@ export const addHelpType = '/admin/helpType/addHelpType';
 // 删除问题类型
 export const deleteHelpType = '/admin/helpType/deleteHelpType';
 // 问题列表
-export const queryHelpQuestionPageList = '/admin/helpQuestion/queryHelpQuestionPageList';
+export const queryHelpQuestionPageList = '/core/helpQuestion/queryHelpQuestionPageList';
 // 添加问题
 export const addHelpQuestion = '/admin/helpQuestion/addHelpQuestion';
 // 根据id查询问题详情
@@ -46,9 +46,9 @@ export const findHelpQuestionById = '/admin/helpQuestion/findHelpQuestionById';
 export const updateHelpQuestion = '/admin/helpQuestion/updateHelpQuestion';
 // 删除问题
 export const deleteHelpQuestion = '/admin/helpQuestion/deleteHelpQuestion';
-/**************降价拍*****************/
+/** ************降价拍*****************/
 // 降价拍商品列表
-export const operatorDepreciatelist='/admin/operActivityDepreciate/operatorDepreciatelist';
+export const operatorDepreciatelist = '/admin/operActivityDepreciate/operatorDepreciatelist';
 // 新建降价拍
 export const operatorAddDepreciate = '/admin/operActivityDepreciate/operatorAddDepreciate';
 // 结束/删除/减少库存
@@ -56,11 +56,7 @@ export const operatorUpdateDepreciatelist = '/admin/operActivityDepreciate/opera
 // 查询降价拍商品详情
 export const operatorfindById = '/admin/operActivityDepreciate/operatorfindById';
 
-
-
-
-
-/**************秒杀*****************/
+/** ************秒杀*****************/
 // 新建秒杀
 export const addOperatorSeckill = '/admin/operActivitySeckill/saveSeckillProduct';
 // 秒杀活动查询
@@ -70,9 +66,7 @@ export const updateActiviySeckillStatus = '/admin/operActivitySeckill/updateActi
 // 查看活动详情
 export const findActivitySeckillByActivityCode = '/admin/operActivitySeckill/findActivitySeckillByActivityCode';
 
-
-
-/**************优惠套餐*****************/
+/** ************优惠套餐*****************/
 // 套餐列表
 export const queryOperActivityPackagePageList = '/admin/operActivityPackage/queryOperActivityPackagePageList';
 // 批量删除（逻辑删除）与下架
@@ -100,17 +94,17 @@ export const updateOperActivityPackage = '/admin/operActivityPackage/updateOperA
 // 编辑套餐数据回显
 export const findOperActivityPackageById = '/admin/operActivityPackage/findOperActivityPackageById';
 
-/**************奖品池*****************/
-//奖品池列表
+/** ************奖品池*****************/
+// 奖品池列表
 export const queryPrizePoolList = '/admin/operPrizePool/queryPrizePoolList';
-//优惠券查询
+// 优惠券查询
 export const queryDiscountCouponList = '/admin/discountCoupon/queryDiscountCouponList';
 
-/**************公用*****************/
+/** ************公用*****************/
 // 新建商品查询
-export const queryProductByNameOrCode='admin/operator/queryProductByNameOrCode';
+export const queryProductByNameOrCode = 'admin/operator/queryProductByNameOrCode';
 // 新建商品规格查询
-export const queryProductSpecById='/admin/operator/queryProductSpecById';
+export const queryProductSpecById = '/admin/operator/queryProductSpecById';
 // 发布人列表
 export const operatorqueyByStatus = '/admin/adminUser/operatorqueyByStatus';
 // 获取一二级类目列表
@@ -118,7 +112,7 @@ export const getCategoryList = '/admin/productCategory/queryProductCategoryPageL
 // 根据类目查询品牌列表
 export const queryCategoryBrandCid = 'admin/categoryBrand/queryCategoryBrandCid';
 // 上传图片
-export const addImg='/admin/ossClient/aliyunOSSUploadImage';
+export const addImg = '/admin/ossClient/aliyunOSSUploadImage';
 // 获取供应商列表
 export const querySupplierBrandPageList = '/admin/supplierBrand/querySupplierBrandPageList';
 // 获取模板列表
@@ -183,10 +177,10 @@ export const findProductNameByProdCode = '/admin/product/findProductNameByProdCo
 export const getById = '/admin/topic/getNameById';
 // 设置
 export const updateConfigByGroupstore = '/admin/config/updateConfigByGroupstore';
-//信息
+// 信息
 export const findConfig = '/admin/config/findConfig';
 // 拼店店铺举报列表
-export const queryStoreReportPageList = '/admin/storeReport/queryStoreReportPageList'
+export const queryStoreReportPageList = '/admin/storeReport/queryStoreReportPageList';
 // 获取列表
 export const queryBadWord = '/admin/badWord/queryBadWord';
 // 删除

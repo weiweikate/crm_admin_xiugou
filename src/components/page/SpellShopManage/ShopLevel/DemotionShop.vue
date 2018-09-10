@@ -74,34 +74,34 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import utils from "@/utils/index.js";
-    import * as api from '@/api/SpellShopManage/index';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import utils from '@/utils/index.js';
     import * as pApi from '@/privilegeList/SpellShopManage/index';
+    import request from '@/http/http.js';
 
     export default {
-        components: {vBreadcrumb},
+        components: { vBreadcrumb },
 
         data() {
             return {
-                nav: ["拼店店铺管理", "店铺等级设置", "店铺降级设置"],
+                nav: ['拼店店铺管理', '店铺等级设置', '店铺降级设置'],
                 showWeekTradNo: false,
                 showMemberNoEnough: false,
                 showdemotionWeekDealerReduceOneExp: false,
                 showDemotionTotleSales: false,
                 form: {
                     //  无交易额条件
-                    demotionWeekNoSaleExp: "",
+                    demotionWeekNoSaleExp: '',
                     // 人数不足条件
-                    demotionWeekDealerReduceOneExp: "",
+                    demotionWeekDealerReduceOneExp: '',
                     // 周期交易频率
-                    demotionWeekDealerReduceOneExp: "",
-                    demotionWeekSalesFreqExp: "",
+                    demotionWeekSalesFreq: '',
+                    demotionWeekSalesFreqExp: '',
                     // 周期交易额
-                    demotionTotleSales: "",
-                    demotionTotleSalesExp: ""
+                    demotionTotleSales: '',
+                    demotionTotleSalesExp: ''
                 },
-                shopId: "",
+                shopId: '',
                 isAjax: false
             };
         },
@@ -109,26 +109,25 @@
         activated() {
             this.shopId =
                 this.$route.query.demotionShopId ||
-                sessionStorage.getItem("demotionShopId");
+                sessionStorage.getItem('demotionShopId');
             console.log(this.shopId);
-            this.getStoreStarById()
+            this.getStoreStarById();
         },
 
         methods: {
-            //根据ID获取等级
+            // 根据ID获取等级
             getStoreStarById() {
-                let data = {
+                const data = {
                     id: this.shopId
                 };
-                this.$axios.post(api.getStoreStarById, data)
-                    .then((res) => {
-                        for (let i in res.data.data) {
-                            if (res.data.data[i] == 0 || res.data.data[i] == null || res.data.data[i] == undefined) {
-                                res.data.data[i] = ''
-                            }
+                request.getStoreStarById(data).then((res) => {
+                    for (const i in res.data.data) {
+                        if (res.data.data[i] == 0 || res.data.data[i] == null || res.data.data[i] == undefined) {
+                            res.data.data[i] = '';
                         }
-                        this.form = res.data.data;
-                    }).catch((err) => {
+                    }
+                    this.form = res.data.data;
+                }).catch((err) => {
                     console.log(err);
                 });
             },
@@ -136,88 +135,87 @@
             cleanData() {
                 utils.cleanFormData(this.form);
             },
-            //保存
+            // 保存
             sure(index) {
                 let url;
                 switch (index) {
-                    case 0://无交易额条件
-                        url = api.updateStoreStarDemotionWeekNoSaleById;
+                    case 0:// 无交易额条件
+                        url = 'updateStoreStarDemotionWeekNoSaleById';
                         break;
-                    case 1://人数不足条件
-                        url = api.updateStoreStarDemotionWeekDealerById;
+                    case 1:// 人数不足条件
+                        url = 'updateStoreStarDemotionWeekDealerById';
                         break;
-                    case 2://周期交易频率
-                        url = api.updateStoreStarDemotionWeekSalesById;
+                    case 2:// 周期交易频率
+                        url = 'updateStoreStarDemotionWeekSalesById';
                         break;
-                    case 3://周期交易额
-                        url = api.updateStoreStarDemotionTotleSalesById;
+                    case 3:// 周期交易额
+                        url = 'updateStoreStarDemotionTotleSalesById';
                         break;
                 }
-                let data = this.form;
+                const data = this.form;
                 data.id = this.shopId;
-                data.url=pApi.demotionShop;
-                let flag1 = true, flag2 = true;
+                data.url = pApi.demotionShop;
+                let flag1 = true; let flag2 = true;
                 if (index == 0) {
                     flag1 = this.isEmpty(data.demotionWeekNoSaleExp, false);
-                    this.setIsAjax(flag1)
+                    this.setIsAjax(flag1);
                 } else if (index == 1) {
                     flag1 = this.isEmpty(data.demotionWeekDealerReduceOneExp, false);
-                    this.setIsAjax(flag1)
+                    this.setIsAjax(flag1);
                 } else if (index == 2) {
                     flag1 = this.isEmpty(data.demotionWeekSalesFreq, true);
                     flag2 = this.isEmpty(data.demotionWeekSalesFreqExp, false);
-                    this.setIsAjax(flag1&&flag2);
+                    this.setIsAjax(flag1 && flag2);
                 } else if (index == 3) {
                     flag1 = this.isEmpty(data.demotionTotleSales, true);
                     flag2 = this.isEmpty(data.demotionTotleSalesExp, false);
-                    this.setIsAjax(flag1&&flag2);
+                    this.setIsAjax(flag1 && flag2);
                 }
                 if (this.isAjax) {
-                    this.$axios.post(url, data)
-                        .then((res) => {
-                            this.$message.success(res.data.msg);
-                            this.showWeekTradNo = false;
-                            this.showMemberNoEnough = false;
-                            this.showdemotionWeekDealerReduceOneExp = false;
-                            this.showDemotionTotleSales = false;
-                        }).catch((err) => {
+                    request[url](data).then((res) => {
+                        this.$message.success(res.data.msg);
+                        this.showWeekTradNo = false;
+                        this.showMemberNoEnough = false;
+                        this.showdemotionWeekDealerReduceOneExp = false;
+                        this.showDemotionTotleSales = false;
+                    }).cache((err) => {
                         console.log(err);
                     });
                 }
             },
-            //值非空判断
+            // 值非空判断
             isEmpty(value, isInt) {
                 if (value == null || value == undefined || value == '') {
                     if (isInt) {
-                        this.$message.warning('请输入整数!')
+                        this.$message.warning('请输入整数!');
                     } else {
-                        this.$message.warning('请输入数值!')
+                        this.$message.warning('请输入数值!');
                     }
-                    return false
+                    return false;
                 } else {
                     if (isInt) {
-                        let reg = /^[1-9]*[1-9][0-9]*$/;
-                        return this.setReg(reg, value)
+                        const reg = /^[1-9]*[1-9][0-9]*$/;
+                        return this.setReg(reg, value);
                     } else {
-                        let reg = /^[0-9]+([.]{1}[0-9]{1,2})?$/;
-                        return this.setReg(reg, value)
+                        const reg = /^[0-9]+([.]{1}[0-9]{1,2})?$/;
+                        return this.setReg(reg, value);
                     }
                 }
             },
             setReg(reg, value) {
                 if (!reg.test(value)) {
                     this.$message.warning('请输入合法数据!');
-                    return false
+                    return false;
                 } else {
-                    return true
+                    return true;
                 }
             },
             setIsAjax(bool) {
-                let that = this;
+                const that = this;
                 if (bool) {
-                    that.isAjax = true
+                    that.isAjax = true;
                 } else {
-                    that.isAjax = false
+                    that.isAjax = false;
                 }
             }
         }

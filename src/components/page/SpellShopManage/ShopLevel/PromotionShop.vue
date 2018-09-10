@@ -160,17 +160,17 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import utils from "@/utils/index.js";
-    import * as api from '@/api/SpellShopManage/index';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import utils from '@/utils/index.js';
     import * as pApi from '@/privilegeList/SpellShopManage/index';
+    import request from '@/http/http.js';
 
     export default {
-        components: {vBreadcrumb},
+        components: { vBreadcrumb },
 
         data() {
             return {
-                nav: ["拼店店铺管理", "店铺等级设置", "店铺晋升设置"],
+                nav: ['拼店店铺管理', '店铺等级设置', '店铺晋升设置'],
                 showupgradeExp: false,
                 showNecessaryConf: false,
                 showShareBonus: false,
@@ -182,15 +182,15 @@
                 checked: [false, false, false, false, false],
                 form: {
                     // 设置升级经验值
-                    upgradeExp: "",
+                    upgradeExp: '',
                     // 设置必要条件
-                    upgradeCondDealerNum: "",
-                    upgradeCondTotleSales: "",
-                    upgradeCondProfitCtrb: "",
-                    upgradeCondAvgActivity: "",
-                    upgradeCondBonusNum: "",
+                    upgradeCondDealerNum: '',
+                    upgradeCondTotleSales: '',
+                    upgradeCondProfitCtrb: '',
+                    upgradeCondAvgActivity: '',
+                    upgradeCondBonusNum: '',
                     // 分红奖励
-                    upgradeBonusNumPerExp: "",
+                    upgradeBonusNumPerExp: '',
                     // 交易额达标奖励
                     upgradeTotleSalesAddPerExp: '',
                     // 连续交易额达标
@@ -205,7 +205,7 @@
                     // 人数达标奖励
                     upgradeDealerAddOneExp: ''
                 },
-                shopId: "",
+                shopId: '',
                 isAjax: false
             };
         },
@@ -213,27 +213,26 @@
         activated() {
             this.shopId =
                 this.$route.query.promotionShopId ||
-                sessionStorage.getItem("promotionShopId");
+                sessionStorage.getItem('promotionShopId');
             console.log(this.shopId);
-            this.getStoreStarById()
+            this.getStoreStarById();
         },
 
         methods: {
-            //根据ID获取等级
+            // 根据ID获取等级
             getStoreStarById() {
-                let data = {
+                const data = {
                     id: this.shopId
                 };
-                this.$axios.post(api.getStoreStarById, data)
-                    .then((res) => {
-                        for (let i in res.data.data) {
-                            if (res.data.data[i] == 0 || res.data.data[i] == null || res.data.data[i] == undefined) {
-                                res.data.data[i] = ''
-                            }
+                request.getStoreStarById(data).then((res) => {
+                    for (const i in res.data.data) {
+                        if (res.data.data[i] == 0 || res.data.data[i] == null || res.data.data[i] == undefined) {
+                            res.data.data[i] = '';
                         }
-                        this.form = res.data.data;
-                        this.convert(this.form.upgradeCondition);
-                    }).catch((err) => {
+                    }
+                    this.form = res.data.data;
+                    this.convert(this.form.upgradeCondition);
+                }).catch((err) => {
                     console.log(err);
                 });
             },
@@ -241,58 +240,58 @@
             cleanData() {
                 utils.cleanFormData(this.form);
             },
-            //保存
+            // 保存
             sure(index) {
                 let url;
                 switch (index) {
-                    case 0://设置升级经验值
-                        url = api.updateStoreStarUpgradeExpById;
+                    case 0:// 设置升级经验值
+                        url = 'updateStoreStarUpgradeExpById';
                         break;
-                    case 1://设置必要条件
-                        url = api.updateStoreStarUpgradeConditionById;
+                    case 1:// 设置必要条件
+                        url = 'updateStoreStarUpgradeConditionById';
                         break;
-                    case 2://分红奖励
-                        url = api.updateStoreStarUpgradeBonusById;
+                    case 2:// 分红奖励
+                        url = 'updateStoreStarUpgradeBonusById';
                         break;
-                    case 3://交易额达标奖励
-                        url = api.updateStoreStarUpgradeTotleSalesById;
+                    case 3:// 交易额达标奖励
+                        url = 'updateStoreStarUpgradeTotleSalesById';
                         break;
-                    case 4://连续交易额达标
-                        url = api.updateStoreStarUpgradeWeekSalesById;
+                    case 4:// 连续交易额达标
+                        url = 'updateStoreStarUpgradeWeekSalesById';
                         break;
-                    case 5://连续交易频率达标
-                        url = api.updateStoreStarUpgradeWeekSalesFreqById;
+                    case 5:// 连续交易频率达标
+                        url = 'updateStoreStarUpgradeWeekSalesFreqById';
                         break;
-                    case 6://单笔订单交易额
-                        url = api.updateStoreStarUpgradeOrderById;
+                    case 6:// 单笔订单交易额
+                        url = 'updateStoreStarUpgradeOrderById';
                         break;
-                    case 7://人数达标奖励
-                        url = api.updateStoreStarDemotionDealerById;
+                    case 7:// 人数达标奖励
+                        url = 'updateStoreStarDemotionDealerById';
                         break;
                 }
-                let data = this.form;
+                const data = this.form;
                 data.id = this.shopId;
-                data.url=pApi.promotionShop;
-                let flag1 = true, flag2 = true, flag3 = true, flag4 = true;
+                data.url = pApi.promotionShop;
+                let flag1 = true; let flag2 = true; let flag3 = true; let flag4 = true;
                 if (index == 0) {
                     flag1 = this.isEmpty(data.upgradeExp, false);
-                    this.setIsAjax(flag1)
+                    this.setIsAjax(flag1);
                 } else if (index == 1) {
                     this.isChecked();
                     if (this.checked[0]) {
-                        flag1 = this.isEmpty(data.upgradeCondDealerNum, true)
+                        flag1 = this.isEmpty(data.upgradeCondDealerNum, true);
                     }
                     if (this.checked[1]) {
-                        flag2 = this.isEmpty(data.upgradeCondTotleSales, false)
+                        flag2 = this.isEmpty(data.upgradeCondTotleSales, false);
                     }
                     if (this.checked[2]) {
-                        flag3 = this.isEmpty(data.upgradeCondProfitCtrb, false)
+                        flag3 = this.isEmpty(data.upgradeCondProfitCtrb, false);
                     }
                     if (this.checked[3]) {
-                        flag4 = this.isEmpty(data.upgradeCondAvgActivity, false)
+                        flag4 = this.isEmpty(data.upgradeCondAvgActivity, false);
                     }
                     if (this.checked[4]) {
-                        flag4 = this.isEmpty(data.upgradeCondBonusNum, true)
+                        flag4 = this.isEmpty(data.upgradeCondBonusNum, true);
                     }
                     this.setIsAjax(flag1 && flag2 && flag3 && flag4);
                 } else if (index == 2) {
@@ -322,18 +321,17 @@
                     this.setIsAjax(flag2);
                 }
                 if (this.isAjax) {
-                    this.$axios.post(url, data)
-                        .then((res) => {
-                            this.$message.success(res.data.msg);
-                            this.showupgradeExp = false;
-                            this.showNecessaryConf = false;
-                            this.showShareBonus = false;
-                            this.showTotalTrans = false;
-                            this.showContinTrad = false;
-                            this.showContinFrequ = false;
-                            this.showSingleOrder = false;
-                            this.showMemberUpStand = false;
-                        }).catch((err) => {
+                    request[url](data).then((res) => {
+                        this.$message.success(res.data.msg);
+                        this.showupgradeExp = false;
+                        this.showNecessaryConf = false;
+                        this.showShareBonus = false;
+                        this.showTotalTrans = false;
+                        this.showContinTrad = false;
+                        this.showContinFrequ = false;
+                        this.showSingleOrder = false;
+                        this.showMemberUpStand = false;
+                    }).catch((err) => {
                         console.log(err);
                     });
                 }
@@ -341,16 +339,16 @@
             // 遍历设置必要条件里的选中项,并进行值的换算
             isChecked() {
                 let result = 0;
-                for (let i in this.checked) {
+                for (const i in this.checked) {
                     if (this.checked[i]) {
                         result += Math.pow(2, i);
                     }
                 }
                 this.form.upgradeCondition = result;
             },
-            //将十进制数值转换成二进制
+            // 将十进制数值转换成二进制
             convert(num) {
-                let arr = [];
+                const arr = [];
                 if (num) {
                     for (let i = 0; 1; i++) {
                         if (num / 2 >= 1) {
@@ -361,48 +359,48 @@
                             break;
                         }
                     }
-                    for (let i in arr) {
+                    for (const i in arr) {
                         if (arr[i] == 1) {
-                            this.checked[i] = true
+                            this.checked[i] = true;
                         } else {
-                            this.checked[i] = false
+                            this.checked[i] = false;
                         }
                     }
                 }
             },
-            //值非空判断
+            // 值非空判断
             isEmpty(value, isInt) {
                 if (value == null || value == undefined || value == '') {
                     if (isInt) {
-                        this.$message.warning('请输入整数!')
+                        this.$message.warning('请输入整数!');
                     } else {
-                        this.$message.warning('请输入数值!')
+                        this.$message.warning('请输入数值!');
                     }
-                    return false
+                    return false;
                 } else {
                     if (isInt) {
-                        let reg = /^[1-9]*[1-9][0-9]*$/;
-                        return this.setReg(reg, value)
+                        const reg = /^[1-9]*[1-9][0-9]*$/;
+                        return this.setReg(reg, value);
                     } else {
-                        let reg = /^[0-9]+([.]{1}[0-9]{1,2})?$/;
-                        return this.setReg(reg, value)
+                        const reg = /^[0-9]+([.]{1}[0-9]{1,2})?$/;
+                        return this.setReg(reg, value);
                     }
                 }
             },
             setReg(reg, value) {
                 if (!reg.test(value)) {
                     this.$message.warning('请输入合法数据!');
-                    return false
+                    return false;
                 } else {
-                    return true
+                    return true;
                 }
             },
             setIsAjax(bool) {
-                let that = this;
+                const that = this;
                 if (bool) {
-                    that.isAjax = true
+                    that.isAjax = true;
                 } else {
-                    that.isAjax = false
+                    that.isAjax = false;
                 }
             }
         }

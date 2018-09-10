@@ -24,136 +24,138 @@
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import * as api from "@/api/OperateManage/HelpCenter/index.js";
-import Quill from "quill";
-export default {
-  components: { vBreadcrumb },
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import Quill from 'quill';
+import request from '@/http/http.js';
 
-  data() {
-    return {
-      nav: ["运营管理", "帮助中心管理", "问题管理", "编辑问题"],
-      height: "100vh",
-      questionTypeId:'',
-      questionId:'',
-      form: {
-        questionTitle: "",
-        content: ""
-      },
-      editorOption: {
-        placeholder: "请输入内容",
-        modules: {
-          // 配置富文本
-          toolbar: [
-            ["bold", "italic", "underline", "strike"],
-            ["blockquote", "code-block"],
-            [{ header: 1 }, { header: 2 }],
-            [{ direction: "rtl" }],
-            [{ size: ["small", false, "large", "huge"] }],
-            [{ header: [1, 2, 3, 4, 5, 6, false] }],
-            [{ color: [] }, { background: [] }],
-            [{ font: [] }],
-            [{ align: [] }],
-            ["clean"],
-            ["link", "image"]
-          ]
+export default {
+    components: { vBreadcrumb },
+
+    data() {
+        return {
+            nav: ['运营管理', '帮助中心管理', '问题管理', '编辑问题'],
+            height: '100vh',
+            questionTypeId: '',
+            questionId: '',
+            form: {
+                questionTitle: '',
+                content: ''
+            },
+            editorOption: {
+                placeholder: '请输入内容',
+                modules: {
+                    // 配置富文本
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote', 'code-block'],
+                        [{ header: 1 }, { header: 2 }],
+                        [{ direction: 'rtl' }],
+                        [{ size: ['small', false, 'large', 'huge'] }],
+                        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                        [{ color: [] }, { background: [] }],
+                        [{ font: [] }],
+                        [{ align: [] }],
+                        ['clean'],
+                        ['link', 'image']
+                    ]
+                }
+            },
+            uploadData: {}
+        };
+    },
+    computed: {
+        qnLocation() {
+            return 'addImg';
         }
-      },
-      uploadData: {},
-    };
-  },
-  computed: {
-    qnLocation() {
-      return api.addImg;
-    }
-  },
-  activated() {
-    this.height = window.screen.availHeight - 400;
-    this.questionTypeId = this.$route.query.questionTypeId || sessionStorage.getItem('questionTypeId');
-    this.questionId = this.$route.query.questionId || sessionStorage.getItem('questionId');
-    this.form.questionTitle = '';
-    this.form.content = '';
-    this.getQuesInfo();
-  },
-  mounted() {
+    },
+    activated() {
+        this.height = window.screen.availHeight - 400;
+        this.questionTypeId = this.$route.query.questionTypeId || sessionStorage.getItem('questionTypeId');
+        this.questionId = this.$route.query.questionId || sessionStorage.getItem('questionId');
+        this.form.questionTitle = '';
+        this.form.content = '';
+        this.getQuesInfo();
+    },
+    mounted() {
     // 为图片ICON绑定事件 getModule 为编辑器的内部属性
-    this.$refs.myQuillEditor.quill
-      .getModule("toolbar")
-      .addHandler("image", this.imgHandler);
-  },
-  methods: {
+        this.$refs.myQuillEditor.quill
+            .getModule('toolbar')
+            .addHandler('image', this.imgHandler);
+    },
+    methods: {
     // 富文本编辑器
-    onEditorChange({ editor, html, text }) {
-      this.form.content = html;
-    },
-    // 图片上传成功回调 插入到编辑器中
-    upScuccess(e, file, fileList) {
-      this.fullscreenLoading = false;
-      let vm = this;
-      let url = "";
-      if (this.uploadType === "image") {
-        // 获得文件上传后的URL地址
-        url = e.data.imageUrl;
-      }
-      if (url != null && url.length > 0) {
-        // 将文件上传后的URL地址插入到编辑器文本中
-        let value = url;
-        // this.$refs.myTextEditor.quillEditor.getSelection();
-        // 获取光标位置对象，里面有两个属性，一个是index 还有 一个length，这里要用range.index，即当前光标之前的内容长度，然后再利用 insertEmbed(length, 'image', imageUrl)，插入图片即可。
-        vm.addRange = vm.$refs.myQuillEditor.quill.getSelection();
-        value = value.indexOf("http") !== -1 ? value : "http:" + value;
-        vm.$refs.myQuillEditor.quill.insertEmbed(
-          vm.addRange !== null ? vm.addRange.index : 0,
-          vm.uploadType,
-          value,
-          Quill.sources.USER
-        ); // 调用编辑器的 insertEmbed 方法，插入URL
-        this.$message.success("插入成功");
-      } else {
-        this.$message.error(`${vm.uploadType}插入失败`);
-      }
-      this.$refs["upload"].clearFiles(); // 插入成功后清除input的内容
-    },
-    // 点击图片ICON触发事件
-    imgHandler(state) {
-      this.addRange = this.$refs.myQuillEditor.quill.getSelection();
-      if (state) {
-        let fileInput = document.getElementById("imgInput");
-        fileInput.click(); // 加一个触发事件
-      }
-      this.uploadType = "image";
-    },
-    // 获取问题信息
-    getQuesInfo(){
-      this.$axios.post(api.findHelpQuestionById,{id:this.questionId})
-      .then((res) => {
-        this.form.questionTitle = res.data.data.title || '';
-        this.form.content = res.data.data.content || '';
-      }).catch((err) => {
-        console.log(err);
-      });
-    },
-    // 提交表单
-    submitForm(){
-      let data = {};
-      data.title = this.form.questionTitle;
-      data.content = this.form.content;
-      data.typeid = this.questionTypeId;
-      data.id = this.questionId;
-      this.$axios.post(api.updateHelpQuestion,data)
-      .then((res) => {
-        this.$message.success(res.data.msg);
-        this.$router.push('/questionList');
-      }).catch((err) => {
-        console.log(err);
-      });
-    },
-    // 返回
-    goBack(){
-      sessionStorage.setItem('questionTypeId',this.questionTypeId);
-      this.$router.push({name:'/questionList',query:{questionTypeId:this.questionTypeId}});
+        onEditorChange({ editor, html, text }) {
+            this.form.content = html;
+        },
+        // 图片上传成功回调 插入到编辑器中
+        upScuccess(e, file, fileList) {
+            this.fullscreenLoading = false;
+            const vm = this;
+            let url = '';
+            if (this.uploadType === 'image') {
+                // 获得文件上传后的URL地址
+                url = e.data.imageUrl;
+            }
+            if (url != null && url.length > 0) {
+                // 将文件上传后的URL地址插入到编辑器文本中
+                let value = url;
+                // this.$refs.myTextEditor.quillEditor.getSelection();
+                // 获取光标位置对象，里面有两个属性，一个是index 还有 一个length，这里要用range.index，即当前光标之前的内容长度，然后再利用 insertEmbed(length, 'image', imageUrl)，插入图片即可。
+                vm.addRange = vm.$refs.myQuillEditor.quill.getSelection();
+                value = value.indexOf('http') !== -1 ? value : 'http:' + value;
+                vm.$refs.myQuillEditor.quill.insertEmbed(
+                    vm.addRange !== null ? vm.addRange.index : 0,
+                    vm.uploadType,
+                    value,
+                    Quill.sources.USER
+                ); // 调用编辑器的 insertEmbed 方法，插入URL
+                this.$message.success('插入成功');
+            } else {
+                this.$message.error(`${vm.uploadType}插入失败`);
+            }
+            this.$refs['upload'].clearFiles(); // 插入成功后清除input的内容
+        },
+        // 点击图片ICON触发事件
+        imgHandler(state) {
+            this.addRange = this.$refs.myQuillEditor.quill.getSelection();
+            if (state) {
+                const fileInput = document.getElementById('imgInput');
+                fileInput.click(); // 加一个触发事件
+            }
+            this.uploadType = 'image';
+        },
+        // 获取问题信息
+        getQuesInfo() {
+            const data = {
+                id: this.questionId
+            };
+            request.findHelpQuestionById(data).then(res => {
+                this.form.questionTitle = res.data.data.title || '';
+                this.form.content = res.data.data.content || '';
+            }).catch(error => {
+                console.log(error);
+            });
+        },
+        // 提交表单
+        submitForm() {
+            const data = {};
+            data.title = this.form.questionTitle;
+            data.content = this.form.content;
+            data.typeid = this.questionTypeId;
+            data.id = this.questionId;
+            request.updateHelpQuestion(data).then(res => {
+                this.$message.success(res.data.msg);
+                this.$router.push('/questionList');
+            }).catch(error => {
+                console.log(error);
+            });
+        },
+        // 返回
+        goBack() {
+            sessionStorage.setItem('questionTypeId', this.questionTypeId);
+            this.$router.push({ name: '/questionList', query: { questionTypeId: this.questionTypeId }});
+        }
     }
-  }
 };
 </script>
 <style lang='less'>

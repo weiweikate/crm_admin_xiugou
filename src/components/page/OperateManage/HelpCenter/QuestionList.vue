@@ -32,91 +32,94 @@
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import deleteToast from "@/components/common/DeleteToast";
-import * as api from '@/api/OperateManage/HelpCenter/index.js';
-import * as pApi from "@/privilegeList/OperateManage/HelpCenter/index.js";
-import utils from "@/utils/index.js";
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import deleteToast from '@/components/common/DeleteToast';
+import * as pApi from '@/privilegeList/OperateManage/HelpCenter/index.js';
+import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http.js';
+
 export default {
-  components: { vBreadcrumb,deleteToast },
-  mixins:[myMixinTable],
+    components: { vBreadcrumb, deleteToast },
+    mixins: [myMixinTable],
 
-  data() {
-    return {
-      nav: ["运营管理", "帮助中心管理"],
-      // 权限控制
-      p: {
-        addHelpQuestion:false,
-        findHelpQuestionById:false,
-        updateHelpQuestion:false,
-        deleteHelpQuestion:false
-      },
-      operate:true,
-      questionTypeId:'',
-      tableData: [],
-      height: "100vh",
-      delId:'',
-      delUrl:'',
-      delUri:'',
-      isShowDelToast:false
-    };
-  },
+    data() {
+        return {
+            nav: ['运营管理', '帮助中心管理'],
+            // 权限控制
+            p: {
+                addHelpQuestion: false,
+                findHelpQuestionById: false,
+                updateHelpQuestion: false,
+                deleteHelpQuestion: false
+            },
+            operate: true,
+            questionTypeId: '',
+            tableData: [],
+            height: '100vh',
+            delId: '',
+            delUrl: '',
+            delUri: '',
+            isShowDelToast: false
+        };
+    },
 
-  activated() {
-    this.height = window.screen.availHeight - 400;
-    this.questionTypeId = this.$route.query.questionTypeId || sessionStorage.getItem('questionTypeId');
-    this.pControl();
-    this.getList();
-  },
+    activated() {
+        this.height = window.screen.availHeight - 400;
+        this.questionTypeId = this.$route.query.questionTypeId || sessionStorage.getItem('questionTypeId');
+        this.pControl();
+        this.getList();
+    },
 
-  methods: {
+    methods: {
     // 权限控制
-    pControl() {
-      for (const k in this.p) {
-        this.p[k] = utils.pc(pApi[k]);
-      }
-      if(!this.p.findHelpQuestionById && !this.p.updateHelpQuestion && !this.p.deleteHelpQuestion){
-        this.operate = false;
-      }
-    },
-    // 获取数据
-    getList() {
-      this.$axios.post(api.queryHelpQuestionPageList,{typeid:this.questionTypeId})
-      .then((res) => {
-        this.tableData = [];
-        this.tableData = res.data.data.data;
-        this.page.totalPage = res.data.data.resultCount
-      }).catch((err) => {
-        console.log(err);
-      });
-    },
-    // 添加问题
-    addQuestion(){
-      this.$router.push({name:'addQuestion',query:{questionTypeId:this.questionTypeId}});
-    },
-    // 编辑问题
-    editQuestion(row){
-      sessionStorage.setItem('questionId',row.id);
-      this.$router.push({name:'editQuestion',query:{questionTypeId:this.questionTypeId,questionId:row.id}});
-    },
-    // 查看问题详情
-    showQuestionInfo(row){
-      sessionStorage.setItem('questionInfo',row.id);
-      this.$router.push({name:'questionInfo',query:{'questionInfo':row.id}});
-    },
-    // 删除用户
-    deleteUser(row){
-      this.delId = row.id;
-      this.delUrl = api.deleteHelpQuestion;
-      this.delUri = pApi.deleteHelpQuestion;
-      this.isShowDelToast = true;
-    },
-    deleteToast(msg) {
-      this.isShowDelToast = msg;
-      this.getList(this.page.currentPage);
-    },
-  }
+        pControl() {
+            for (const k in this.p) {
+                this.p[k] = utils.pc(pApi[k]);
+            }
+            if (!this.p.findHelpQuestionById && !this.p.updateHelpQuestion && !this.p.deleteHelpQuestion) {
+                this.operate = false;
+            }
+        },
+        // 获取数据
+        getList() {
+            const data = {
+                typeid: this.questionTypeId
+            };
+            request.queryHelpQuestionPageList(data).then(res => {
+                this.tableData = [];
+                this.tableData = res.data.data.data;
+                this.page.totalPage = res.data.data.resultCount;
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        // 添加问题
+        addQuestion() {
+            this.$router.push({ name: 'addQuestion', query: { questionTypeId: this.questionTypeId }});
+        },
+        // 编辑问题
+        editQuestion(row) {
+            sessionStorage.setItem('questionId', row.id);
+            this.$router.push({ name: 'editQuestion', query: { questionTypeId: this.questionTypeId, questionId: row.id }});
+        },
+        // 查看问题详情
+        showQuestionInfo(row) {
+            sessionStorage.setItem('questionInfo', row.id);
+            this.$router.push({ name: 'questionInfo', query: { 'questionInfo': row.id }});
+        },
+        // 删除用户
+        deleteUser(row) {
+            this.delId = row.id;
+            this.delUrl = request.deleteHelpQuestion;
+            this.delUri = pApi.deleteHelpQuestion;
+            this.isShowDelToast = true;
+        },
+        deleteToast(msg) {
+            this.isShowDelToast = msg;
+            this.getList(this.page.currentPage);
+        }
+    }
 };
 </script>
 <style lang='less' scoped>

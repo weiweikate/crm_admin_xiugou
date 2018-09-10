@@ -135,20 +135,20 @@
 </template>
 
 <script>
-    import icon from "../../../common/ico";
-    import vBreadcrumb from '../../../common/Breadcrumb.vue';
-    import region from '../../../common/Region';
-    import chooseArea from '../../../common/chooseArea';
-    import * as api from '../../../../api/BrandProduct/ShippingTemplate/index';
-    import * as pApi from '../../../../privilegeList/ShippingTemplate/index';
+    import icon from '@/components/common/ico.vue';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import region from '@/components/common/Region';
+    import chooseArea from '@/components/common/chooseArea';
+    import * as pApi from '@/privilegeList/ShippingTemplate/index';
+    import request from '@/http/http.js';
 
     export default {
-        components: {vBreadcrumb, icon, region, chooseArea},
+        components: { vBreadcrumb, icon, region, chooseArea },
         data() {
             var checkName = (rule, value, callback) => {
                 if (!value) {
                     return callback(new Error('模版名称不能为空'));
-                }else{
+                } else {
                     if (value.length > 25) {
                         callback(new Error('模版名称最多不能超过25个字'));
                     } else {
@@ -159,18 +159,18 @@
             return {
                 rules: {
                     name: [
-                        {validator: checkName, trigger: 'blur'}
+                        { validator: checkName, trigger: 'blur' }
                     ]
                 },
-                times: [{label: '2小时发货', id: 2},
-                    {label: '4小时发货', id: 4},
-                    {label: '8小时发货', id: 8},
-                    {label: '12小时发货', id: 12},
-                    {label: '当日发货', id: 24},
-                    {label: '2天内', id: 48},
-                    {label: '3天内', id: 72},
-                    {label: '4天内', id: 96},
-                    {label: '7天内', id: 168},
+                times: [{ label: '2小时发货', id: 2 },
+                    { label: '4小时发货', id: 4 },
+                    { label: '8小时发货', id: 8 },
+                    { label: '12小时发货', id: 12 },
+                    { label: '当日发货', id: 24 },
+                    { label: '2天内', id: 48 },
+                    { label: '3天内', id: 72 },
+                    { label: '4天内', id: 96 },
+                    { label: '7天内', id: 168 }
                 ],
                 chooseData: [],
                 preData: [],
@@ -182,7 +182,7 @@
                     freightType: '1',
                     provinceId: '',
                     cityId: '',
-                    areaId: '',
+                    areaId: ''
                 },
                 freightFreePrice: '',
                 startUnit: '',
@@ -193,7 +193,7 @@
                 tableIndex: '0',
                 btnLoading: false,
                 address: '',
-                includeArea: '',//所有省市区zicode以英文逗号隔开存储
+                includeArea: '', // 所有省市区zicode以英文逗号隔开存储
                 isShowArea: false,
                 areaDisabled: true,
                 showTips: false,
@@ -202,8 +202,8 @@
                 title1: '首公斤数(kg)',
                 title2: '续公斤数(kg)',
                 tips: '应输入0.00至999.99的数字，小数保留两位',
-                rows:0
-            }
+                rows: 0
+            };
         },
         activated() {
             this.form.name = '';
@@ -215,7 +215,7 @@
             this.form.cityId = '';
             this.form.areaId = '';
             this.tableData = [];
-            this.rows=0;
+            this.rows = 0;
             this.freightFreePrice = '';
             this.address = '';
             this.startUnit = '';
@@ -237,28 +237,28 @@
                 this.form.cityId = this.address[1];
                 this.form.areaId = this.address[2];
             },
-            //确认保存
+            // 确认保存
             submitForm(formName) {
-                let that = this;
+                const that = this;
                 that.$refs[formName].validate((valid) => {
                     if (!valid) {
-                        return
+                        return;
                     } else {
-                        let data = that.form;
+                        const data = that.form;
                         if (!that.form.provinceId || !that.form.cityId || !that.form.areaId) {
                             that.$message.warning('请选择省市区！');
-                            return
+                            return;
                         }
-                        if (that.form.freightType == 3) {
+                        if (that.form.freightType === 3) {
                             if (!that.freightFreePrice) {
                                 that.$message.warning('请输入满包邮的金额！');
-                                return
+                                return;
                             } else {
-                                data.freightFreePrice = that.freightFreePrice
+                                data.freightFreePrice = that.freightFreePrice;
                             }
                         }
-                        let list = [];
-                        let temp = {
+                        const list = [];
+                        const temp = {
                             startUnit: that.startUnit,
                             startPrice: that.startPrice,
                             nextUnit: that.nextUnit,
@@ -266,9 +266,9 @@
                             defaultTrue: 1
                         };
                         list.push(temp);
-                        let flag=true;
-                        that.tableData.forEach(function (v, k) {
-                            let tableTemp = {
+                        let flag = true;
+                        that.tableData.forEach(function(v, k) {
+                            const tableTemp = {
                                 includeAreaName: v.includeAreaName,
                                 includeArea: v.includeArea,
                                 startUnit: v.startUnit,
@@ -277,50 +277,42 @@
                                 nextPirce: v.nextPirce,
                                 defaultTrue: 2
                             };
-                            if(v.includeAreaName==''||v.includeArea==''||v.startUnit==''||v.startPrice==''||v.nextUnit==''||v.nextPirce==''){
-                                flag=false;
+                            if (v.includeAreaName == '' || v.includeArea == '' || v.startUnit == '' || v.startPrice == '' || v.nextUnit == '' || v.nextPirce == '') {
+                                flag = false;
                             }
                             list.push(tableTemp);
                         });
                         data.list = JSON.stringify(list);
                         data.url = pApi.addFreightTemplate;
-                        if(!flag) {
+                        if (!flag) {
                             this.$message.warning('请填写完整的运费设置!');
                             return;
                         }
-                        this.btnLoading = true;
-                        that.$axios
-                            .post(api.addFreightTemplate, data)
-                            .then(res => {
-                                if (res.data.code == 200) {
-                                    that.$message.success(res.data.msg);
-                                    that.$router.push('/shippingTemplate');
-                                    this.btnLoading = false;
-                                } else {
-                                    that.$message.warning(res.data.msg);
-                                    this.btnLoading = false;
-                                }
-                            })
-                            .catch(err => {
-                                console.log(err);
-                                this.btnLoading = false;
-                            })
+                        this.btnLoading = true
+                        request.addFreightTemplate(data).then(res => {
+                            that.$message.success(res.data.msg);
+                            that.$router.push('/shippingTemplate');
+                            this.btnLoading = false;
+                        }).catch(error => {
+                            console.log(error);
+                            this.btnLoading = false;
+                        })
                     }
-                })
+                });
             },
-            //产品发货地选择
+            // 产品发货地选择
             productArea() {
-                this.areaDisabled = this.form.country === 1;
+                this.areaDisabled = this.form.country == 1;
             },
-            //是否包邮
+            // 是否包邮
             chooseStyle() {
                 this.showTips = this.form.freightType == 2;
-                this.isShowExpress = !(this.form.freightType == 2)
+                this.isShowExpress = !(this.form.freightType == 2);
             },
-            //计价方式
+            // 计价方式
             calcType() {
-                let that = this;
-                let num = that.form.calcType;
+                const that = this;
+                const num = that.form.calcType;
                 if (num == 1) {
                     that.unit = '公斤';
                     that.title1 = '首公斤数(kg)';
@@ -338,69 +330,69 @@
                     that.tips = '应输入正整数';
                 }
             },
-            //取消
+            // 取消
             cancel() {
-                this.$router.push('/shippingTemplate')
+                this.$router.push('/shippingTemplate');
             },
-            //编辑区域
+            // 编辑区域
             editAddress(index) {
-                let that = this;
+                const that = this;
                 that.isShowArea = true;
                 that.tableIndex = index;
                 that.chooseData = that.tableData;
                 that.preData = that.tableData[index];
             },
-            //删除制定省市运费设置
+            // 删除制定省市运费设置
             delItem(row, index) {
                 this.tableData.splice(index, 1);
-                this.rows=this.rows-1;
+                this.rows = this.rows - 1;
             },
-            //选择区域
+            // 选择区域
             chooseAreaToast(getArea) {
                 this.isShowArea = false;
                 if (getArea) {
-                    let index = getArea.indexOf('IDS');
-                    this.tableData[this.tableIndex].includeAreaName = getArea.substring(0, index);//名称
-                    this.tableData[this.tableIndex].includeArea = getArea.substring(index + 4);//id
-                    console.log(getArea)
+                    const index = getArea.indexOf('IDS');
+                    this.tableData[this.tableIndex].includeAreaName = getArea.substring(0, index);// 名称
+                    this.tableData[this.tableIndex].includeArea = getArea.substring(index + 4);// id
+                    console.log(getArea);
                     // console.log(getArea.substring(0, index))
                     // console.log(getArea.substring(index + 4));//zipcode
                 }
             },
-            //增加制定省市运费设置
+            // 增加制定省市运费设置
             addSetting() {
-               if(this.rows==0){
-                   this.addRow()
-               }else{
-                   if (this.isRowEmpty()) {
-                      this.addRow()
-                   } else {
-                       this.$message.warning('请填写完整的运费设置!');
-                   }
-               }
+                if (this.rows == 0) {
+                    this.addRow();
+                } else {
+                    if (this.isRowEmpty()) {
+                        this.addRow();
+                    } else {
+                        this.$message.warning('请填写完整的运费设置!');
+                    }
+                }
             },
-            addRow(){
-                this.rows=this.rows+1;
+            addRow() {
+                this.rows = this.rows + 1;
                 this.tableData.push({
                     includeAreaName: '',
                     startUnit: '',
                     startPrice: '',
                     nextUnit: '',
                     nextPirce: ''
-                })
+                });
             },
-            //判断表格的值是否为空
+            // 判断表格的值是否为空
             isRowEmpty() {
-                let that = this;
-                let data=that.tableData[this.rows-1];
+                const that = this;
+                const data = that.tableData[this.rows - 1];
                 if (data.includeAreaName == '' || data.startUnit == '' || data.startPrice == '' || data.nextUnit == '' || data.nextPirce == '') {
-                    return false
-                }else{
-                    return true
+                    return false;
+                } else {
+                    return true;
                 }
             }
         }
-    }
+    };
 </script>
 
 <style lang="less">

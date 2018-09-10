@@ -62,46 +62,46 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import utils from "@/utils/index.js";
-    import deleteToast from "@/components/common/DeleteToast";
-    import * as api from '@/api/SpellShopManage/index';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import utils from '@/utils/index.js';
+    import deleteToast from '@/components/common/DeleteToast';
     import * as pApi from '@/privilegeList/SpellShopManage/index';
+    import request from '@/http/http.js';
 
     export default {
-        components: {vBreadcrumb, deleteToast},
+        components: { vBreadcrumb, deleteToast },
 
         data() {
             return {
                 // 权限控制
-                p:{
-                    addStoreStar:false,
-                    updateStoreStarById:false,
-                    deleteStoreStar:false,
-                    promotionShop:false,
-                    demotionShop:false,
+                p: {
+                    addStoreStar: false,
+                    updateStoreStarById: false,
+                    deleteStoreStar: false,
+                    promotionShop: false,
+                    demotionShop: false
                 },
-                isShowOperate:false,
+                isShowOperate: false,
 
-                nav: ["拼店店铺管理", "店铺等级设置"],
+                nav: ['拼店店铺管理', '店铺等级设置'],
                 diaTitle: '',
                 isShowAddShopLevel: false,
                 isShowDelToast: false,
                 tableData: [],
                 delId: 0,
-                delUrl: "http://api",
-                delUri: "",
+                delUrl: 'http://api',
+                delUri: '',
                 form: {
-                    name: "",
-                    level: "",
-                    autoUpgrade: "1",
-                    maxUser: "",
-                    groupMoney: "",
-                    remark: ""
+                    name: '',
+                    level: '',
+                    autoUpgrade: '1',
+                    maxUser: '',
+                    groupMoney: '',
+                    remark: ''
                 },
-                itype:'',
-                id:'',
-                btnLoading:false,
+                itype: '',
+                id: '',
+                btnLoading: false
             };
         },
         activated() {
@@ -121,14 +121,13 @@
 
             // 获取数据
             getList() {
-                let data={
-                    url:pApi.getAllStoreStar
+                const data = {
+                    url: pApi.getAllStoreStar
                 };
-                this.$axios.post(api.getAllStoreStar,data)
-                    .then((res) => {
-                        this.tableData = [];
-                        this.tableData = res.data.data;
-                    }).catch((err) => {
+                request.getAllStoreStar(data).then((res) => {
+                    this.tableData = [];
+                    this.tableData = res.data.data;
+                }).catch((err) => {
                     console.log(err);
                 });
             },
@@ -137,102 +136,96 @@
                 this.diaTitle = '添加店铺等级';
                 utils.cleanFormData(this.form);
                 this.isShowAddShopLevel = true;
-                this.itype='add';
+                this.itype = 'add';
                 this.getMaxLevel();
             },
             // 编辑店铺
             editShopLevel(row) {
                 this.diaTitle = '编辑店铺等级';
                 this.isShowAddShopLevel = true;
-                this.itype='edit';
-                this.id=row.id;
-                this.form.name=row.name;
-                this.form.level=row.level;
-                this.form.autoUpgrade=row.autoUpgrade.toString();
-                this.form.maxUser=row.maxUser;
-                this.form.groupMoney=row.groupMoney;
-                this.form.remark=row.remark;
+                this.itype = 'edit';
+                this.id = row.id;
+                this.form.name = row.name;
+                this.form.level = row.level;
+                this.form.autoUpgrade = row.autoUpgrade.toString();
+                this.form.maxUser = row.maxUser;
+                this.form.groupMoney = row.groupMoney;
+                this.form.remark = row.remark;
             },
-            //确认
+            // 确认
             confirmAddShopLevel() {
                 console.log(this.form);
-                let data=this.form;
-                if(!data.name){
+                const data = this.form;
+                if (!data.name) {
                     this.$message.warning('请输入等级名称!');
-                    return
+                    return;
                 }
-                if(!data.level){
+                if (!data.level) {
                     this.$message.warning('请输入层级!');
-                    return
+                    return;
                 }
-                if(!data.autoUpgrade){
+                if (!data.autoUpgrade) {
                     this.$message.warning('请选择是否自动晋级!');
-                    return
+                    return;
                 }
-                if(!data.maxUser){
+                if (!data.maxUser) {
                     this.$message.warning('请输入店铺人数!');
-                    return
+                    return;
                 }
-                if(!data.groupMoney){
+                if (!data.groupMoney) {
                     this.$message.warning('请输入拼店金额!');
-                    return
+                    return;
                 }
                 this.isShowAddShopLevel = false;
-                let url='';
-                if(this.itype=='add'){
-                    url=api.addStoreStar
-                }else{
-                    data.id=this.id;
-                    url=api.updateStoreStarById
+                let url = '';
+                if (this.itype == 'add') {
+                    url = api.addStoreStar;
+                } else {
+                    data.id = this.id;
+                    url = api.updateStoreStarById;
                 }
                 this.btnLoading = true;
-                this.$axios.post(url,data)
-                    .then((res) => {
-                        this.btnLoading = false;
-                        if(res.data.code==200){
-                            this.$message.success(res.data.msg);
-                            this.getList()
-                        }else{
-                            this.$message.warning(res.data.msg)
-                        }
-                    }).catch((err) => {
+                request.url(data).then((res) => {
+                    this.$message.success(res.data.msg);
+                    this.getList();
+                    this.btnLoading = false;
+                }).catch((err) => {
                     console.log(err);
                     this.btnLoading = false;
-                });
-
+                })
             },
-            //取消
-            cancel(){
-                this.isShowAddShopLevel=false;
-                this.getList()
+            // 取消
+            cancel() {
+                this.isShowAddShopLevel = false;
+                this.getList();
             },
-            //获取最大等级
-            getMaxLevel(){
+            // 获取最大等级
+            getMaxLevel() {
                 this.$axios.post(api.getMaxLevel, {})
                     .then((res) => {
-                      this.form.level=res.data.data
+                        this.form.level = res.data.data;
                     }).catch((err) => {
-                    console.log(err);
-                });
+                        console.log(err);
+                    });
             },
 
             // 店铺晋级
             shopPromotion(row) {
-                sessionStorage.setItem("promotionShopId", row.id);
+                sessionStorage.setItem('promotionShopId', row.id);
                 this.$router.push({
-                    name: "promotionShop",
-                    query: {promotionShopId: row.id}
+                    name: 'promotionShop',
+                    query: { promotionShopId: row.id }
                 });
             },
             // 店铺降级
             shopDemotion(row) {
-                sessionStorage.setItem("demotionShopId", row.id);
+                sessionStorage.setItem('demotionShopId', row.id);
                 this.$router.push({
-                    name: "demotionShop",
-                    query: {demotionShopId: row.id}
+                    name: 'demotionShop',
+                    query: { demotionShopId: row.id }
                 });
             },
-            //删除
+            // 删除
             delItem(id) {
                 this.delId = id;
                 this.delUrl = api.deleteStoreStar;
@@ -243,7 +236,7 @@
             deleteToast(msg) {
                 this.isShowDelToast = msg;
                 this.getList();
-            },
+            }
         }
     };
 </script>

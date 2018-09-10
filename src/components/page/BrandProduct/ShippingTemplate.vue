@@ -46,13 +46,13 @@
 </template>
 
 <script>
-import vBreadcrumb from '../../common/Breadcrumb.vue';
-import icon from '../../common/ico.vue';
-import deleteToast from '../../common/DeleteToast';
-import * as api from '../../../api/BrandProduct/ShippingTemplate/index';
-import utils from '../../../utils/index.js';
-import * as pApi from '../../../privilegeList/ShippingTemplate/index.js';
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import icon from '@/components/common/ico.vue';
+import deleteToast from '@/components/common/DeleteToast';
+import utils from '@/utils/index.js';
+import * as pApi from '@/privilegeList/ShippingTemplate/index.js';
 import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http.js';
 
 export default {
     components: {
@@ -108,21 +108,13 @@ export default {
                 url: pApi.queryFreightTemplateList
             };
             that.tableLoading = true;
-            that.$axios
-                .post(api.queryFreightTemplateList, data)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        that.tableLoading = false;
-                        that.tableData = res.data.data;
-                    } else {
-                        that.$message.warning(res.data.msg);
-                        that.tableLoading = false;
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                    that.tableLoading = false;
-                });
+            request.queryFreightTemplateList(data).then(res => {
+                that.tableLoading = false;
+                that.tableData = res.data.data;
+            }).catch(error => {
+                console.log(error);
+                that.tableLoading = false;
+            });
         },
 
         // 添加模版
@@ -142,7 +134,7 @@ export default {
         // 删除
         delItem(index, id) {
             this.delId = id;
-            this.delUrl = api.deleteFreightTemplateById;
+            this.delUrl = 'deleteFreightTemplateById';
             this.delUri = pApi.deleteFreightTemplateById;
             this.isShowDelToast = true;
         },
