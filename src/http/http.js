@@ -58,7 +58,8 @@ try {
                         }, 1000);
                         return Promise.reject(res.msg);
                     }
-                    return Promise.resolve(res);
+                    if (!res.data) return Promise.reject('返回值错误');
+                    return Promise.resolve(res.data);
                 })
                 .catch(err => {
                     return err;

@@ -48,6 +48,7 @@ const queryDictonary = {
                 this.tmpAxiosData = res.data.data;
             }).catch(err => {
                 this.dicNum++;
+                console.log(err);
                 if (this.dicNum < 3) {
                     this.queryDictonary(this.divDKey);
                 }

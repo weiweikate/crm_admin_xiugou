@@ -85,8 +85,6 @@ export const findDepartmentById = '/admin/department/findDepartmentById';
 export const updateDepartment = '/admin/department/updateDepartment';
 // 查询岗位列表
 export const queryJobList = '/admin/role/queryJobList';
-// 获取管理员列表
-export const getMangerList = '/admin/adminUser/queryAdminUserPageList';
 // 查看管理员操作日志
 export const getMangerLog = '/admin/logAdminuser/getPage';
 // 获取管理员权限列表
@@ -290,4 +288,5 @@ export const findAdminUserbyId = ['/admin/adminUser/findAdminUserById', { method
 export const loginByCode = '/admin/adminLogin/codeLogin'; // 管理员手机号登录
 export const loginByPwd = '/admin/adminLogin/pswLogin'; // 管理员账号密码登录
 export const addManger = '/admin/adminUser/addAdminUser'; // 添加管理员
+export const getMangerList = '/admin/adminUser/queryAdminUserPageList'; // 获取管理员列表
 

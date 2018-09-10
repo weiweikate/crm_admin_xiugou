@@ -181,12 +181,6 @@ export const updateConfigByGroupstore = '/admin/config/updateConfigByGroupstore'
 export const findConfig = '/admin/config/findConfig';
 // 拼店店铺举报列表
 export const queryStoreReportPageList = '/admin/storeReport/queryStoreReportPageList';
-// 获取列表
-export const queryBadWord = '/admin/badWord/queryBadWord';
-// 删除
-export const deleteBadWord = '/admin/badWord/deleteBadWord';
-// 添加
-export const addBadWord = '/admin/badWord/addBadWord';
 // 查询专题列表
 export const topicList = '/admin/topic/list';
 // 新建/编辑模版
@@ -197,3 +191,7 @@ export const getTopic = '/admin/topic/get';
 export const deleteTopic = '/admin/topic/delete';
 // 获取模板列表
 export const tplList = '/admin/topic/template/list';
+//*******************************************************************************************************************************
+export const addBadWord = '/config/sysBadWord/addBadWord'; // 添加敏感词
+export const deleteBadWord = '/config/sysBadWord/deleteBadWord'; // 删除敏感词
+export const queryBadWord = '/config/sysBadWord/queryBadWord'; // 查询敏感词列表
