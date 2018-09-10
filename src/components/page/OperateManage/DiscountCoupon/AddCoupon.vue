@@ -101,9 +101,9 @@
     import vMultichoose from '@/components/common/discountCoupon/multiChoose.vue';
     import vOnlychoose from '@/components/common/discountCoupon/onlyChoose.vue';
     import icon from '@/components/common/ico';
-    import * as api from '@/api/OperateManage/DiscountCoupon/index.js';
     import * as pApi from '@/privilegeList/OperateManage/DiscountCoupon/index.js';
     import utils from '@/utils/index.js';
+    import request from '@/http/http.js';
 
     export default {
         components: {
@@ -214,14 +214,11 @@
         methods: {
             // 优惠券模版
             getAllDiscountCouponTemplate() {
-                this.$axios
-                    .post(api.getAllDiscountCouponTemplate, {})
-                    .then(res => {
-                        this.tempArr = res.data.data;
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                request.getAllDiscountCouponTemplate({}).then(res => {
+                    this.tempArr = res.data.data;
+                }).catch(error => {
+                    console.log(error);
+                });
             },
             // 可用周期切换
             changeType() {
@@ -231,14 +228,11 @@
             getLevelList() {
                 const that = this;
                 const data = {};
-                that.$axios
-                    .post(api.getDealerLevelList, data)
-                    .then(res => {
-                        that.users = res.data.data;
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                request.getDealerLevelList(data).then(res => {
+                    that.users = res.data.data;
+                }).catch(error => {
+                    console.log(error);
+                })
             },
             // 推送人群选择
             handleCheckAllChange(val) {
@@ -387,22 +381,14 @@
 
                 data.url = pApi.addDiscountCoupon;
                 that.btnLoading = true;
-                that.$axios
-                    .post(api.addDiscountCoupon, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.$message.success(res.data.msg);
-                            that.$router.push('/discountCoupon');
-                            that.btnLoading = false;
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.btnLoading = false;
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        that.btnLoading = false;
-                    });
+                request.addDiscountCoupon(data).then(res => {
+                    that.$message.success(res.data.msg);
+                    that.$router.push('/discountCoupon');
+                    that.btnLoading = false;
+                }).catch(error => {
+                    console.log(err);
+                    that.btnLoading = false;
+                })
             },
             // 取消
             cancel() {

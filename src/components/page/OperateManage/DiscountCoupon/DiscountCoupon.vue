@@ -26,9 +26,9 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import vTabContent from "./couponList/_tabContent";
-    import * as pApi from "@/privilegeList/OperateManage/DiscountCoupon/index.js"
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import vTabContent from './couponList/_tabContent';
+    import * as pApi from '@/privilegeList/OperateManage/DiscountCoupon/index.js';
     import utils from '@/utils/index.js';
 
     export default {
@@ -39,17 +39,17 @@
 
         data() {
             return {
-                //权限控制
-                p:{
-                    addDiscountCoupon: false,
+                // 权限控制
+                p: {
+                    addDiscountCoupon: false
                 },
-                nav: ["运营管理", "优惠券设置","优惠券管理"],
-                activeName: "allCoupon",
+                nav: ['运营管理', '优惠券设置', '优惠券管理'],
+                activeName: 'allCoupon'
             };
         },
-        activated(){
-             this.activeName = "allCoupon";
-             this.pControl();
+        activated() {
+            this.activeName = 'allCoupon';
+            this.pControl();
         },
         methods: {
             // 权限控制
@@ -63,12 +63,12 @@
             },
             // 添加优惠券
             addCoupon() {
-                this.$router.push({name: "addCoupon"});
+                this.$router.push({ name: 'addCoupon' });
             },
             // 优惠券模版
             couponTemplate() {
-                this.$router.push({name: "couponTemplate"});
-            },
+                this.$router.push({ name: 'couponTemplate' });
+            }
         }
     };
 </script>

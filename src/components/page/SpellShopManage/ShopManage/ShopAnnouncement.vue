@@ -41,25 +41,27 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import deleteToast from "@/components/common/DeleteToast";
-    import * as api from '@/api/SpellShopManage/index';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import deleteToast from '@/components/common/DeleteToast';
     import * as pApi from '@/privilegeList/SpellShopManage/index';
-    import utils from "@/utils/index.js";
+    import utils from '@/utils/index.js';
+    import request from '@/http/http.js';
+    import { myMixinTable } from '@/JS/commom';
 
     export default {
-        components: {vBreadcrumb, deleteToast},
+        components: { vBreadcrumb, deleteToast },
+        mixins: [myMixinTable],
 
         data() {
             return {
                 // 权限控制
-                p:{
-                    updateStoreNotice:false,
-                    deleteStoreNotice:false,
+                p: {
+                    updateStoreNotice: false,
+                    deleteStoreNotice: false
                 },
-                isShowOperate:false,
+                isShowOperate: false,
 
-                nav: ["拼店店铺管理", "店铺公告管理"],
+                nav: ['拼店店铺管理', '店铺公告管理'],
                 isShowEdit: false,
                 isShowDelToast: false,
                 tableData: [],
@@ -69,16 +71,16 @@
                 },
                 annContent: '',
                 delId: 0,
-                delUrl: "http://api",
-                delUri: "",
+                delUrl: 'http://api',
+                delUri: '',
                 recruitShopId: '',
-                id:''
+                id: ''
             };
         },
 
         activated() {
             this.recruitShopId =
-                this.$route.query.recruitShopId || sessionStorage.getItem("recruitShopId");
+                this.$route.query.recruitShopId || sessionStorage.getItem('recruitShopId');
             this.getList();
             this.pControl();
         },
@@ -95,32 +97,22 @@
             },
             // 获取数据
             getList() {
-                let data = {
-                    storeId: this.recruitShopId,
+                const data = {
+                    storeId: this.recruitShopId
                 };
-                this.$axios.post(api.queryStoreNoticeList, data)
-                    .then((res) => {
-                        this.tableData = [];
-                        this.tableData = res.data.data.data;
-                        this.page.totalPage = res.data.data.resultCount
-                    }).catch((err) => {
-                    console.log(err);
+                request.queryStoreNoticeList(data).then(res => {
+                    this.tableData = [];
+                    this.tableData = res.data.data.data;
+                    this.page.totalPage = res.data.data.resultCount;
+                }).catch(error => {
+                    console.log(error);
                 });
-            },
-            //分页
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
-            },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
-                this.page.currentPage = val;
-                this.getList(this.page.currentPage)
             },
             // 编辑公告
             editAnnoun(row) {
                 this.annContent = row.content;
                 this.isShowEdit = true;
-                this.id=row.id
+                this.id = row.id;
             },
             confirmEdit() {
                 if (this.annContent == '') {
@@ -128,26 +120,21 @@
                     return;
                 }
                 this.isShowEdit = false;
-                let data = {
+                const data = {
                     id: this.id,
                     content: this.annContent
                 };
-                this.$axios.post(api.updateStoreNotice, data)
-                    .then((res) => {
-                        if (res.data.code == 200) {
-                            this.$message.success(res.data.msg);
-                            this.getList(this.page.currentPage)
-                        } else {
-                            this.$message.warning(res.data.msg)
-                        }
-                    }).catch((err) => {
-                    console.log(err);
+                request.updateStoreNotice(data).then(res => {
+                    this.$message.success(res.data.msg);
+                    this.getList(this.page.currentPage);
+                }).catch(error => {
+                    console.log(error);
                 });
             },
-            //删除
+            // 删除
             delItem(row) {
                 this.delId = row.id;
-                this.delUrl = api.deleteStoreNotice;
+                this.delUrl = 'deleteStoreNotice';
                 this.delUri = pApi.deleteStoreNotice;
                 this.isShowDelToast = true;
             },
@@ -157,8 +144,8 @@
                 this.getList(this.page.currentPage);
             },
             // 编号
-            handleIndex(index){
-                return index+1;
+            handleIndex(index) {
+                return index + 1;
             }
         }
     };

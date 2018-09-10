@@ -10,51 +10,51 @@
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 export default {
-  components: { vBreadcrumb },
+    components: { vBreadcrumb },
 
-  data() {
-    return {
-      nav: ["拼店店铺管理", "店铺管理", "分红详情", "分红组成"],
-      option: {
-        title: {
-          text: ""
-        },
-        tooltip: {},
-        legend: {
-          data: ["分红"]
-        },
-        xAxis: {
-          data: ["美容美妆", "百货轻奢", "母婴玩具", "水果蔬菜", "箱包服饰", "休闲零食","生鲜肉类"]
-        },
-        yAxis: {
-            splitNumber:[10]
-        },
-        series: [
-          {
-            name: "分红",
-            type: 'bar',
-            data: [1280, 650, 820, 880, 810, 1020,1400]
-          }
-        ],
-        barWidth:30,
-        color:['#33b4ff']
-      }
-    };
-  },
+    data() {
+        return {
+            nav: ['拼店店铺管理', '店铺管理', '分红详情', '分红组成'],
+            option: {
+                title: {
+                    text: ''
+                },
+                tooltip: {},
+                legend: {
+                    data: ['分红']
+                },
+                xAxis: {
+                    data: ['美容美妆', '百货轻奢', '母婴玩具', '水果蔬菜', '箱包服饰', '休闲零食', '生鲜肉类']
+                },
+                yAxis: {
+                    splitNumber: [10]
+                },
+                series: [
+                    {
+                        name: '分红',
+                        type: 'bar',
+                        data: [1280, 650, 820, 880, 810, 1020, 1400]
+                    }
+                ],
+                barWidth: 30,
+                color: ['#33b4ff']
+            }
+        };
+    },
 
-  mounted() {
-    this.echartsInit();
-  },
+    mounted() {
+        this.echartsInit();
+    },
 
-  methods: {
+    methods: {
     //  图表初始化
-    echartsInit() {
-      let chart = this.$echarts.init(this.$refs.charts);
-      chart.setOption(this.option);
+        echartsInit() {
+            const chart = this.$echarts.init(this.$refs.charts);
+            chart.setOption(this.option);
+        }
     }
-  }
 };
 </script>
 <style lang='less' scoped>

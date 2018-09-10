@@ -144,24 +144,24 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import * as api from '@/api/SpellShopManage/index';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import * as pApi from '@/privilegeList/SpellShopManage/index';
-    import utils from "@/utils/index.js";
+    import utils from '@/utils/index.js';
+    import request from '@/http/http.js';
 
     export default {
-        components: {vBreadcrumb},
+        components: { vBreadcrumb },
 
         data() {
             return {
                 // 权限控制
-                p:{
-                    getStoreMembers:false,
-                    queryStoreNoticeList:false,
+                p: {
+                    getStoreMembers: false,
+                    queryStoreNoticeList: false
                 },
 
-                nav: ["拼店店铺管理", "店铺管理", "店铺详情"],
-                shopId: "",
+                nav: ['拼店店铺管理', '店铺管理', '店铺详情'],
+                shopId: '',
                 avatar: '',
                 detail: {}
             };
@@ -169,7 +169,7 @@
 
         activated() {
             this.shopId =
-                this.$route.query.shopInfoId || sessionStorage.getItem("shopInfoId");
+                this.$route.query.shopInfoId || sessionStorage.getItem('shopInfoId');
             this.getInfo();
             this.pControl();
         },
@@ -183,20 +183,19 @@
             },
             //  获取信息
             getInfo() {
-                let data = {
+                const data = {
                     id: this.shopId
                 };
-                this.$axios.post(api.getStoreDetail, data)
-                    .then((res) => {
-                        this.detail = res.data.data
-                    }).catch((err) => {
-                    console.log(err);
-                });
+                request.getStoreDetail(data).then(res => {
+                    this.detail = res.data.data;
+                }).catch(error => {
+                    console.log(error);
+                })
             },
             // 查看店长
             showShopLeader(id) {
                 localStorage.setItem('memberDetail', id);
-                this.$router.push({path: '/memberDetail', query: {id: id}})
+                this.$router.push({ path: '/memberDetail', query: { id: id }});
             },
             // 店铺转让
             shopTransfer() {
@@ -205,7 +204,7 @@
             shareBoneMsg() {
                 sessionStorage.setItem('recruitShopId', this.shopId);
                 sessionStorage.setItem('groupMoney', this.detail.groupMoney);
-                this.$router.push({name: 'shareBonusInfo', query: {'recruitShopId': this.shopId,'groupMoney':this.detail.groupMoney}})
+                this.$router.push({ name: 'shareBonusInfo', query: { 'recruitShopId': this.shopId, 'groupMoney': this.detail.groupMoney }});
             },
             // 上传成功
             uploadSuccess(res) {
@@ -214,18 +213,18 @@
             // 拼店账户
             spellShopAcc() {
                 sessionStorage.setItem('recruitShopId', this.shopId);
-                this.$router.push({name: 'spellShopAccount', query: {'recruitShopId': this.shopId}})
+                this.$router.push({ name: 'spellShopAccount', query: { 'recruitShopId': this.shopId }});
             },
             // 成员管理
             memberManage() {
                 sessionStorage.setItem('recruitShopId', this.shopId);
                 sessionStorage.setItem('groupMoney', this.detail.groupMoney);
-                this.$router.push({name: 'shopMemberManage', query: {'recruitShopId': this.shopId,'groupMoney':this.detail.groupMoney}});
+                this.$router.push({ name: 'shopMemberManage', query: { 'recruitShopId': this.shopId, 'groupMoney': this.detail.groupMoney }});
             },
             // 店铺公告
             shopAnnouncement() {
                 sessionStorage.setItem('recruitShopId', this.shopId);
-                this.$router.push({name: 'shopAnnouncement', query: {'recruitShopId': this.shopId}})
+                this.$router.push({ name: 'shopAnnouncement', query: { 'recruitShopId': this.shopId }});
             }
         }
     };

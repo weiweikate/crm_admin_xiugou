@@ -35,7 +35,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label=" ">
-                            <el-button type="primary" @click="submitForm(1)">搜索</el-button>
+                            <el-button type="primary" @click="getList(1)">搜索</el-button>
                             <el-button @click="resetForm('form')">重置</el-button>
                         </el-form-item>
                         <el-form-item label=" ">
@@ -123,30 +123,31 @@
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import * as api from "@/api/OperateManage/DiscountCoupon/index.js";
-    import * as pApi from "@/privilegeList/OperateManage/DiscountCoupon/index.js"
+    import * as pApi from '@/privilegeList/OperateManage/DiscountCoupon/index.js';
     import utils from '@/utils/index.js';
-    import moment from 'moment'
+    import moment from 'moment';
+    import { myMixinTable } from '@/JS/commom';
+    import request from '@/http/http.js';
 
     export default {
 
         components: {
             vBreadcrumb
         },
-
+        mixins: [myMixinTable],
         data() {
             return {
-                nav: ["运营管理", "优惠券设置", "优惠券管理", "券数据"],
+                nav: ['运营管理', '优惠券设置', '优惠券管理', '券数据'],
                 // 权限控制
                 p: {
-                    addInventory:false,
-                    loseBatchDiscountCouponDealer:false
+                    addInventory: false,
+                    loseBatchDiscountCouponDealer: false
                 },
 
                 form: {
-                    getDate: "",
-                    date: "",
-                    status: ""
+                    getDate: '',
+                    date: '',
+                    status: ''
                 },
                 tableData: [],
                 tableLoading: false,
@@ -156,19 +157,19 @@
                     currentPage: 1,
                     totalPage: 0
                 },
-                addMask:false,
-                left:'',//剩余数量
-                value:'',//券值
-                repertoryNumber:'',//库存
-                params:{}//传参
+                addMask: false,
+                left: '', // 剩余数量
+                value: '', // 券值
+                repertoryNumber: '', // 库存
+                params: {}// 传参
             };
         },
 
         activated() {
-            this.params=this.$route.query||JSON.parse(sessionStorage.getItem('couponData'));
+            this.params = this.$route.query || JSON.parse(sessionStorage.getItem('couponData'));
             this.pControl();
-            this.repertoryNumber='';
-            this.submitForm(1);
+            this.repertoryNumber = '';
+            this.getList(1);
         },
 
         methods: {
@@ -180,31 +181,28 @@
                 }
             },
             //   提交表单
-            submitForm(val) {
-                let data = {
-                    page:val,
-                    status:this.form.status,
-                    discountCouponId:this.params.id,
+            getList(val) {
+                const data = {
+                    page: val,
+                    status: this.form.status,
+                    discountCouponId: this.params.id,
                     beginTime: this.form.getDate ? moment(this.form.getDate[0]).format('YYYY-MM-DD') : '',
                     endTime: this.form.getDate ? moment(this.form.getDate[1]).format('YYYY-MM-DD') : '',
                     beginStartTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
-                    endStartTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : '',
+                    endStartTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : ''
                 };
                 data.url = pApi.discountCouponDealerPageList;
                 this.page.currentPage = val;
                 this.tableLoading = true;
-                this.$axios
-                    .post(api.discountCouponDealerPageList, data)
-                    .then(res => {
-                        this.tableData = [];
-                        this.tableData = res.data.data.data;
-                        this.page.totalPage = res.data.data.resultCount;
-                        this.tableLoading = false;
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        this.tableLoading = false;
-                    });
+                request.discountCouponDealerPageList(data).then(res => {
+                    this.tableData = [];
+                    this.tableData = res.data.data.data;
+                    this.page.totalPage = res.data.data.resultCount;
+                    this.tableLoading = false;
+                }).catch(error => {
+                    console.log(error);
+                    this.tableLoading = false;
+                });
             },
             //   重置表单
             resetForm(formName) {
@@ -212,71 +210,59 @@
             },
             // 全选
             handleSelectionChange(val) {
-                let that = this;
+                const that = this;
                 this.multipleSelection = [];
                 val.forEach((v, k) => {
                     that.multipleSelection.push(v.id);
                 });
             },
-            //分页
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
-            },
-            handleCurrentChange(val) {
-                this.submitForm(val);
-            },
+
             // 查看详情
             productInfo(row) {
-                sessionStorage.setItem("productInfo", row.id);
+                sessionStorage.setItem('productInfo', row.id);
                 this.$router.push({
-                    name: "productInfo",
-                    query: {productInfoId: row.id}
+                    name: 'productInfo',
+                    query: { productInfoId: row.id }
                 });
             },
-            //添加券库存
-            addInventory(){
-                this.addMask=true;
-                this.left=this.params.left;
-                this.value=this.params.status;
+            // 添加券库存
+            addInventory() {
+                this.addMask = true;
+                this.left = this.params.left;
+                this.value = this.params.status;
             },
-            addRepertory(){
-                let data={
-                    id:this.params.id,
-                    repertoryNumber:this.repertoryNumber
+            addRepertory() {
+                const data = {
+                    id: this.params.id,
+                    repertoryNumber: this.repertoryNumber
                 };
-                if(!this.repertoryNumber){
+                if (!this.repertoryNumber) {
                     this.$message.warning('请输入库存!');
-                    return
+                    return;
                 }
-                this.$axios
-                    .post(api.addRepertory, data)
-                    .then(res => {
-                        this.addMask=false;
-                        this.submitForm(1)
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        this.tableLoading = false;
-                    });
+                request.addRepertory(data).then(res => {
+                    this.addMask = false;
+                    this.getList(1);
+                }).catch(error => {
+                    console.log(error);
+                    this.tableLoading = false;
+                });
             },
 
             // 批量操作
             batchOperate() {
-                let data = {};
-                data.ids = this.multipleSelection.join(",");
+                const data = {};
+                data.ids = this.multipleSelection.join(',');
                 data.url = pApi.loseBatchDiscountCouponDealer;
-                this.$axios
-                    .post(api.loseBatchDiscountCouponDealer, data)
-                    .then(res => {
-                        this.$message.success(res.data.data);
-                        this.isShowPop = false;
-                        this.submitForm(this.page.currentPage);
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                request.loseBatchDiscountCouponDealer(data).then(res => {
+                    this.$message.success(res.data.data);
+                    this.isShowPop = false;
+                    this.getList(this.page.currentPage);
+                }).catch(error => {
+                    console.log(error);
+                });
             }
-        },
+        }
     };
 </script>
 <style lang='less'>

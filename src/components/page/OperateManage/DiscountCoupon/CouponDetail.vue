@@ -25,10 +25,10 @@
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import * as api from "@/api/OperateManage/DiscountCoupon/index.js";
-    import * as pApi from "@/privilegeList/OperateManage/DiscountCoupon/index.js"
+    import * as pApi from '@/privilegeList/OperateManage/DiscountCoupon/index.js';
     import utils from '@/utils/index.js';
-    import moment from 'moment'
+    import moment from 'moment';
+    import request from '@/http/http.js';
 
     export default {
         components: {
@@ -36,33 +36,30 @@
         },
         data() {
             return {
-                nav: ["运营管理", "优惠券设置", "优惠券管理", "优惠券详情"],
+                nav: ['运营管理', '优惠券设置', '优惠券管理', '优惠券详情'],
                 id: '',
                 detail: {}
-            }
+            };
         },
         activated() {
             this.id = this.$route.query.couponDetail || sessionStorage.getItem('couponDetail');
-            this.getDetail()
+            this.getDetail();
         },
         methods: {
             getDetail() {
-                let data={
-                    id:this.id,
-                    url:pApi.getDiscountCouponPageById
+                const data = {
+                    id: this.id,
+                    url: pApi.getDiscountCouponPageById
                 };
-                this.$axios
-                    .post(api.getDiscountCouponPageById, data)
-                    .then(res => {
-                        this.detail = res.data.data;
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            },
+                request.getDiscountCouponPageById(data).then(res => {
+                    this.detail = res.data.data;
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
 
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>

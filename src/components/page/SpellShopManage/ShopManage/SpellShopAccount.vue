@@ -17,32 +17,34 @@
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-export default {
-  components: {vBreadcrumb},
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import request from '@/http/http.js';
 
-  data () {
-    return {
-        nav: ["拼店店铺管理", "店铺管理", "店铺详情","拼店账户"],
-        id:'',
-    };
-  },
+export default {
+    components: { vBreadcrumb },
+
+    data() {
+        return {
+            nav: ['拼店店铺管理', '店铺管理', '店铺详情', '拼店账户'],
+            id: ''
+        };
+    },
     activated() {
         this.id = this.$route.query.recruitShopId || sessionStorage.getItem('recruitShopId');
         this.getSpellINfo();
     },
-  methods: {
+    methods: {
     // 获取拼店账户详情
-    getSpellINfo(){
+        getSpellINfo() {
 
-    },
-    // 查看交易明细
-    showInfo(){
-        sessionStorage.setItem('tradeInfoId',1);
-        this.$router.push({name:'tradeInfo',query:{'tradeInfoId':1}})
+        },
+        // 查看交易明细
+        showInfo() {
+            sessionStorage.setItem('tradeInfoId', 1);
+            this.$router.push({ name: 'tradeInfo', query: { 'tradeInfoId': 1 }});
+        }
     }
-  }
-}
+};
 
 </script>
 <style lang='less' scoped>

@@ -58,30 +58,31 @@
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import moment from 'moment';
-import * as api from '@/api/SpellShopManage/index';
 import * as pApi from '@/privilegeList/SpellShopManage/index';
-import utils from "@/utils/index.js";
+import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
-export default {
-    components: {vBreadcrumb},
+import request from '@/http/http.js';
 
-    mixins:[myMixinTable],
+export default {
+    components: { vBreadcrumb },
+
+    mixins: [myMixinTable],
 
     data() {
         return {
             // 权限控制
-            p:{
-                getRecruitmentStoreDetail:false,
+            p: {
+                getRecruitmentStoreDetail: false
             },
 
-            nav: ["拼店店铺管理", "招募店铺管理"],
+            nav: ['拼店店铺管理', '招募店铺管理'],
             form: {
                 name: '',
-                date: '',
+                date: ''
             },
-            tableData: [],
+            tableData: []
         };
     },
     activated() {
@@ -97,43 +98,42 @@ export default {
         },
         // 获取数据
         getList(val) {
-            let data = {
+            const data = {
                 name: this.form.name,
                 beginTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss') : '',
                 endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss') : '',
                 page: val,
-                url:pApi.getRecruitmentStorePageList
+                url: pApi.getRecruitmentStorePageList
             };
-            this.$axios.post(api.getRecruitmentStorePageList, data)
-                .then((res) => {
-                    this.tableData = [];
-                    this.tableData = res.data.data.data;
-                    this.page.totalPage = res.data.data.resultCount
-                }).catch((err) => {
-                console.log(err);
-            });
+            request.getRecruitmentStorePageList(data).then(res => {
+                this.tableData = [];
+                this.tableData = res.data.data.data;
+                this.page.totalPage = res.data.data.resultCount;
+            }).catch(error => {
+                console.log(error);
+            })
         },
         // 查看店铺详情
         showInfo(row) {
             sessionStorage.setItem('shopInfoId', row.id);
-            this.$router.push({name: 'shopInfo', query: {'shopInfoId': row.id}})
+            this.$router.push({ name: 'shopInfo', query: { 'shopInfoId': row.id }});
             // sessionStorage.setItem('recruitShopId', row.id);
             // this.$router.push({name: 'recruitShopInfo', query: {'recruitShopId': row.id}});
         },
-        //重置表单
+        // 重置表单
         resetForm(formName) {
             this.$refs[formName].resetFields();
             this.form.date = '';
-            this.getList(this.page.currentPage)
+            this.getList(this.page.currentPage);
         },
         // 查看招募成员
-        toUserList(row){
+        toUserList(row) {
             sessionStorage.setItem('recruitShopId', row.id);
             sessionStorage.setItem('groupMoney', row.groupMoney);
-            this.$router.push({name: 'shopMemberManage', query: {'recruitShopId': row.id,'groupMoney':row.groupMoney}});
+            this.$router.push({ name: 'shopMemberManage', query: { 'recruitShopId': row.id, 'groupMoney': row.groupMoney }});
         }
     }
-}
+};
 </script>
 <style lang='less' scoped>
     .recruit-shop-man {

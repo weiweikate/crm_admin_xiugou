@@ -253,10 +253,10 @@
                         index: '9',
                         title: '运营管理',
                         subs: [
-                            // {
-                            //     index: "helpCenter",
-                            //     title: "帮助中心管理"
-                            // },
+                            {
+                                index: 'helpCenter',
+                                title: '帮助中心管理'
+                            }
                             // {
                             //     index: "noticeInformManage",
                             //     title: "公告通知管理"

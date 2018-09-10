@@ -93,29 +93,29 @@
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import moment from 'moment';
-import * as api from '@/api/SpellShopManage/index';
 import * as pApi from '@/privilegeList/SpellShopManage/index';
-import utils from "@/utils/index.js";
+import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http.js';
 
 export default {
-    components: {vBreadcrumb},
+    components: { vBreadcrumb },
 
-    mixins:[myMixinTable],
+    mixins: [myMixinTable],
 
     data() {
         return {
             // 权限控制
-            p:{
-                getStoreDetail:false,
+            p: {
+                getStoreDetail: false
             },
 
-            nav: ["拼店店铺管理", "店铺管理"],
+            nav: ['拼店店铺管理', '店铺管理'],
             shopLevelArr: [],
             tableData: [],
-            form: {},
+            form: {}
 
         };
     },
@@ -133,17 +133,16 @@ export default {
         },
         // 获取店铺等级
         getAllStoreStar() {
-            this.$axios.post(api.getAllStoreStar, {})
-                .then((res) => {
-                    this.shopLevelArr = [];
-                    this.shopLevelArr = res.data.data;
-                }).catch((err) => {
-                console.log(err);
-            });
+            request.getAllStoreStar({}).then(res => {
+                this.shopLevelArr = [];
+                this.shopLevelArr = res.data.data;
+            }).catch(error => {
+                console.log(error);
+            })
         },
         // 获取数据
         getList(val) {
-            let data = {
+            const data = {
                 name: this.form.name,
                 bonusCount: this.form.bonusCount,
                 storeNumber: this.form.storeNumber,
@@ -153,33 +152,32 @@ export default {
                 beginTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss') : '',
                 endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss') : '',
                 page: val,
-                url:pApi.getStorePageList
+                url: pApi.getStorePageList
             };
-            this.$axios.post(api.getStorePageList, data)
-                .then((res) => {
-                    this.tableData = [];
-                    this.tableData = res.data.data.data;
-                    this.page.totalPage = res.data.data.resultCount;
-                }).catch((err) => {
-                console.log(err);
-            });
+            request.getStorePageList(data).then(res => {
+                this.tableData = [];
+                this.tableData = res.data.data.data;
+                this.page.totalPage = res.data.data.resultCount;
+            }).catch(error => {
+                console.log(error);
+            })
         },
         // 查看店铺详情
         showInfo(row) {
             sessionStorage.setItem('shopInfoId', row.id);
-            this.$router.push({name: 'shopInfo', query: {'shopInfoId': row.id}})
+            this.$router.push({ name: 'shopInfo', query: { 'shopInfoId': row.id }});
         },
-        //重置表单
+        // 重置表单
         resetForm(formName) {
             this.$refs[formName].resetFields();
             this.form.date = '';
-            this.getList(this.page.currentPage)
+            this.getList(this.page.currentPage);
         },
-        //跳到成员列表
-        toUserList(row){
+        // 跳到成员列表
+        toUserList(row) {
             sessionStorage.setItem('recruitShopId', row.id);
             sessionStorage.setItem('groupMoney', row.groupMoney);
-            this.$router.push({name: 'shopMemberManage', query: {'recruitShopId': row.id,'groupMoney':row.groupMoney}});
+            this.$router.push({ name: 'shopMemberManage', query: { 'recruitShopId': row.id, 'groupMoney': row.groupMoney }});
         }
     }
 };

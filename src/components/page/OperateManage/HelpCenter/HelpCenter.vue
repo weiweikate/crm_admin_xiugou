@@ -88,7 +88,11 @@ export default {
         },
         // 获取数据
         getList() {
-            request.queryHelpTypePageList({}).then(res => {
+            const data = {
+                page: this.page.currentPage,
+                pageSize: this.page.pageSize
+            };
+            request.queryHelpTypePageList(data).then(res => {
                 this.tableData = [];
                 this.tableData = res.data.data.data;
                 this.page.totalPage = res.data.data.resultCount;

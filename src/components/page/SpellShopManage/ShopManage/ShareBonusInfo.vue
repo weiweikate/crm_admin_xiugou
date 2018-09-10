@@ -36,67 +36,60 @@
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import * as api from '@/api/SpellShopManage/index';
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import * as pApi from '@/privilegeList/SpellShopManage/index';
+import request from '@/http/http.js';
+import { myMixinTable } from '@/JS/commom';
 
 export default {
-  components: { vBreadcrumb },
+    components: { vBreadcrumb },
+    mixins: [myMixinTable],
 
-  data() {
-    return {
-      nav: ["拼店店铺管理", "店铺管理", "分红详情"],
-      tableData: [],
-      page: {
-        currentPage: 1,
-        totalPage: 0
-      },
-        shopId:'',
-        groupMoney:''
-    };
-  },
+    data() {
+        return {
+            nav: ['拼店店铺管理', '店铺管理', '分红详情'],
+            tableData: [],
+            page: {
+                currentPage: 1,
+                totalPage: 0
+            },
+            shopId: '',
+            groupMoney: ''
+        };
+    },
     activated() {
         this.shopId =
-            this.$route.query.recruitShopId || sessionStorage.getItem("recruitShopId");
+            this.$route.query.recruitShopId || sessionStorage.getItem('recruitShopId');
         this.groupMoney =
-            this.$route.query.groupMoney || sessionStorage.getItem("groupMoney");
-        this.getList(this.page.currentPage)
+            this.$route.query.groupMoney || sessionStorage.getItem('groupMoney');
+        this.getList(this.page.currentPage);
     },
-  methods: {
-      // 获取数据
-      getList(val) {
-          let data = {
-              page: val
-          };
-          this.$axios.post(api.getStoreBonusPageList, data)
-              .then((res) => {
-                  this.tableData = [];
-                  this.tableData = res.data.data.data;
-                  this.page.totalPage = res.data.data.resultCount
-              }).catch((err) => {
-              console.log(err);
-          });
-      },
-    //分页
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      this.page.currentPage = val;
-      this.submitForm(val);
-    },
-    // 分红组成
-    ShareBonusComposition(row){
-        this.$router.push({name:'shareBonusCom'})
-    },
-    // 成员贡献值
-    ShareBonusMemberVal(row){
-        sessionStorage.setItem('recruitShopId', this.shopId);
-        sessionStorage.setItem('groupMoney', this.groupMoney);
-        this.$router.push({name: 'shopMemberManage', query: {'recruitShopId': this.shopId,'groupMoney':this.groupMoney}});
+    methods: {
+        // 获取数据
+        getList(val) {
+            const data = {
+                page: val
+            };
+            request.getStoreBonusPageList(data).then(res => {
+                this.tableData = [];
+                this.tableData = res.data.data.data;
+                this.page.totalPage = res.data.data.resultCount;
+            }).catch(error => {
+                console.log(error);
+            });
+        },
+
+        // 分红组成
+        ShareBonusComposition(row) {
+            this.$router.push({ name: 'shareBonusCom' });
+        },
+        // 成员贡献值
+        ShareBonusMemberVal(row) {
+            sessionStorage.setItem('recruitShopId', this.shopId);
+            sessionStorage.setItem('groupMoney', this.groupMoney);
+            this.$router.push({ name: 'shopMemberManage', query: { 'recruitShopId': this.shopId, 'groupMoney': this.groupMoney }});
+        }
     }
-  }
 };
 </script>
 <style lang='less' scoped>

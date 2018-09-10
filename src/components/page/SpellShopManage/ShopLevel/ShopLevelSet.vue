@@ -179,20 +179,20 @@
                 this.isShowAddShopLevel = false;
                 let url = '';
                 if (this.itype == 'add') {
-                    url = api.addStoreStar;
+                    url = 'addStoreStar';
                 } else {
                     data.id = this.id;
-                    url = api.updateStoreStarById;
+                    url = 'updateStoreStarById';
                 }
                 this.btnLoading = true;
-                request.url(data).then((res) => {
+                request[url](data).then((res) => {
                     this.$message.success(res.data.msg);
                     this.getList();
                     this.btnLoading = false;
                 }).catch((err) => {
                     console.log(err);
                     this.btnLoading = false;
-                })
+                });
             },
             // 取消
             cancel() {
@@ -228,7 +228,7 @@
             // 删除
             delItem(id) {
                 this.delId = id;
-                this.delUrl = api.deleteStoreStar;
+                this.delUrl = 'deleteStoreStar';
                 this.delUri = pApi.deleteStoreStar;
                 this.isShowDelToast = true;
             },

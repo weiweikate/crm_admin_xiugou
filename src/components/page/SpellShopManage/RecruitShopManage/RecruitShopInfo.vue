@@ -73,18 +73,18 @@
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import * as api from '@/api/SpellShopManage/index';
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import * as pApi from '@/privilegeList/SpellShopManage/index';
+import request from '@/http/http.js';
 
 export default {
-    components: {vBreadcrumb},
+    components: { vBreadcrumb },
 
     data() {
         return {
-            nav: ["拼店店铺管理", "招募店铺管理", "店铺详情"],
-            shopId: "",
-            avatar: "",
+            nav: ['拼店店铺管理', '招募店铺管理', '店铺详情'],
+            shopId: '',
+            avatar: '',
             detail: {}
         };
     },
@@ -92,21 +92,20 @@ export default {
     activated() {
         this.shopId =
             this.$route.query.recruitShopId ||
-            sessionStorage.getItem("recruitShopId");
-        this.getInfo()
+            sessionStorage.getItem('recruitShopId');
+        this.getInfo();
     },
 
     methods: {
         //  获取信息
         getInfo() {
-            let data = {
+            const data = {
                 id: this.shopId
             };
-            this.$axios.post(api.getRecruitmentStoreDetail, data)
-                .then((res) => {
-                    this.detail = res.data.data
-                }).catch((err) => {
-                console.log(err);
+            request.getRecruitmentStoreDetail(data).then(res => {
+                this.detail = res.data.data;
+            }).catch(error => {
+                console.log(error);
             });
         },
         // 上传成功
@@ -116,11 +115,11 @@ export default {
         // 成员管理
         memberManage() {
             sessionStorage.setItem('recruitShopId', this.shopId);
-            this.$router.push({name: 'shopMemberManage', query: {'recruitShopId': this.shopId}});
+            this.$router.push({ name: 'shopMemberManage', query: { 'recruitShopId': this.shopId }});
         },
         // 查看店长
         showShopLeader() {
-        },
+        }
     }
 };
 </script>

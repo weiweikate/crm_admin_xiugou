@@ -97,10 +97,10 @@
 </template>
 
 <script>
-import * as api from '@/api/OperateManage/DiscountCoupon/index.js';
 import * as pApi from '@/privilegeList/OperateManage/DiscountCoupon/index.js';
 import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http.js';
 
 export default {
     props: ['name'],
@@ -168,18 +168,15 @@ export default {
             data.url = pApi.getDiscountCouponPage;
             this.page.currentPage = val;
             this.tableLoading = true;
-            this.$axios
-                .post(api.getDiscountCouponPage, data)
-                .then(res => {
-                    this.tableData = [];
-                    this.tableData = res.data.data.data;
-                    this.page.totalPage = res.data.data.resultCount;
-                    this.tableLoading = false;
-                })
-                .catch(err => {
-                    console.log(err);
-                    this.tableLoading = false;
-                });
+            request.getDiscountCouponPage(data).then(res => {
+                this.tableData = [];
+                this.tableData = res.data.data.data;
+                this.page.totalPage = res.data.data.resultCount;
+                this.tableLoading = false;
+            }).catch(error => {
+                console.log(error);
+                this.tableLoading = false;
+            });
         },
 
         // 编辑优惠券
@@ -238,31 +235,25 @@ export default {
                 this.$message.warning('请输入库存!');
                 return;
             }
-            this.$axios
-                .post(api.addRepertory, data)
-                .then(res => {
-                    this.addMask = false;
-                    this.getList(1);
-                })
-                .catch(err => {
-                    console.log(err);
-                    this.tableLoading = false;
-                });
+            request.addRepertory(data).then(res => {
+                this.addMask = false;
+                this.getList(1);
+            }).catch(error => {
+                console.log(error);
+                this.tableLoading = false;
+            });
         },
         // 失效
         loseDiscountCoupon(row) {
             const data = {
                 id: row.id
             };
-            this.$axios
-                .post(api.loseDiscountCoupon, data)
-                .then(res => {
-                    this.getList(1);
-                })
-                .catch(err => {
-                    console.log(err);
-                    this.tableLoading = false;
-                });
+            request.loseDiscountCoupon(data).then(res => {
+                this.getList(1);
+            }).catch(error => {
+                console.log(error);
+                this.tableLoading = false;
+            });
         }
     },
     filters: {
