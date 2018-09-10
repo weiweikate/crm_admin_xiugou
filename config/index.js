@@ -9,7 +9,7 @@ const path = require('path');
 // const baseURL = 'http://172.16.10.12';
 // let baseURL = "http://172.16.10.56";
 // let baseURL = "http://172.16.10.253";
-const baseURL = 'http://172.16.10.19';
+const baseURL = 'http://172.16.10.29';
 // let baseURL = "http://172.16.10.88";
 
 // const baseURL = 'https://test.dnvhot.tech';
@@ -35,11 +35,11 @@ module.exports = {
                     '^/admin': url_1 + '/admin'
                 }
             },
-            '/securityCode': {
-                target: url_3,
+            '/config': {
+                target: url_1,
                 changeOrigin: true,
                 pathRewrite: {
-                    '^/securityCode': url_3 + '/securityCode'
+                    '^/config': url_1 + '/config'
                 }
             },
             '/order': {
