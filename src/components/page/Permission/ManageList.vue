@@ -80,193 +80,186 @@
     </div>
 </template>
 <script>
-import breadcrumb from "../../common/Breadcrumb";
-import * as api from "../../../api/api.js";
-import deleteToast from "../../common/DeleteToast";
-import utils from '../../../utils/index.js'
+import breadcrumb from '../../common/Breadcrumb';
+import * as api from '../../../api/api.js';
+import deleteToast from '../../common/DeleteToast';
+import utils from '../../../utils/index.js';
 import * as pApi from '../../../privilegeList/index.js';
 import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http';
 export default {
-  components: {
-    breadcrumb,deleteToast
-  },
-  mixins:[myMixinTable],
-  data() {
-    return {
-      // 权限控制
-      p:{
-        addAdminUser:false,
-        updateAdminUser:false,
-        resetPassword:false,
-        showAdminLog:false,
-        updateAdminUserStatus:false,
-        deleteAdminUser:false,
-      },
-      isShowOperate:true,
+    components: {
+        breadcrumb, deleteToast
+    },
+    mixins: [myMixinTable],
+    data() {
+        return {
+            // 权限控制
+            p: {
+                addAdminUser: false,
+                updateAdminUser: false,
+                resetPassword: false,
+                showAdminLog: false,
+                updateAdminUserStatus: false,
+                deleteAdminUser: false
+            },
+            isShowOperate: true,
 
-      nav: ["权限管理", "管理员账号管理"],
-      isShowResetPwd:false,
-      isShowDelToast:false,
-      closeBtn:false,
-      delId:-1,
-      delUrl:'api',
-      delUri:'',
-      form: {
-        name: "",
-        phone: ""
-      },
-      pwdForm:{
-        id:'',
-        phone:'',
-        password:'',
-      },
-      tableLoading: false,
-      tableData: [],
-      height: "",
-      rules:{
-        password:[
-          { required: true, message: '请输入密码', trigger: 'blur' },
-        ]
-      }
-    };
-  },
-  created() {
-    let winHeight = window.screen.availHeight - 500;
-    this.height = winHeight;
-    this.pControl();
-  },
-  activated(){
-    this.pControl();
-    this.getList(this.page.currentPage);
-  },
-  methods: {
+            nav: ['权限管理', '管理员账号管理'],
+            isShowResetPwd: false,
+            isShowDelToast: false,
+            closeBtn: false,
+            delId: -1,
+            delUrl: 'api',
+            delUri: '',
+            form: {
+                name: '',
+                phone: ''
+            },
+            pwdForm: {
+                id: '',
+                phone: '',
+                password: ''
+            },
+            tableLoading: false,
+            tableData: [],
+            height: '',
+            rules: {
+                password: [
+                    { required: true, message: '请输入密码', trigger: 'blur' }
+                ]
+            }
+        };
+    },
+    created() {
+        const winHeight = window.screen.availHeight - 500;
+        this.height = winHeight;
+        this.pControl();
+    },
+    activated() {
+        this.pControl();
+        this.getList(this.page.currentPage);
+    },
+    methods: {
     // 权限控制
-    pControl() {
-      for (const k in this.p) {
-        this.p[k] = utils.pc(pApi[k]);
-      }
-      if(!this.p.updateAdminUser && !this.p.resetPassword && !this.p.showAdminLog && !this.p.updateAdminUserStatus){
-        this.isShowOperate = false;
-      }
-    },
-    //  获取数据
-    getList(val) {
-      let that = this;
-      let data = {};
-      data.page = val;
-      data.name = this.form.name;
-      data.phone = this.form.phone;
-      data.url = pApi.manageList;
-      this.tableLoading = true;
-      this.$axios
-        .post(api.getMangerList, data)
-        .then(res => {
-          if(res.data.code == 200){
-            that.tableData = [];
-          res.data.data.data.forEach((v,k)=>{
-            v.visible = false;
-            that.tableData.push(v);
-          })
-          that.page.totalPage = res.data.data.resultCount;
-          that.tableLoading = false;
-          }else{
-            this.$message.warning(res.data.msg);
-             that.tableLoading = false;
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          that.tableLoading = false;
-        });
-    },
+        pControl() {
+            for (const k in this.p) {
+                this.p[k] = utils.pc(pApi[k]);
+            }
+            if (!this.p.updateAdminUser && !this.p.resetPassword && !this.p.showAdminLog && !this.p.updateAdminUserStatus) {
+                this.isShowOperate = false;
+            }
+        },
+        //  获取数据
+        getList(val) {
+            const that = this;
+            const data = {};
+            data.page = val;
+            data.name = this.form.name;
+            data.phone = this.form.phone;
+            data.url = pApi.manageList;
+            this.tableLoading = true;
+            request.getMangerList(data).then(res => {
+                that.tableData = [];
+                res.data.data.forEach((v, k) => {
+                    v.visible = false;
+                    that.tableData.push(v);
+                });
+                that.page.totalPage = res.data.totalNum;
+                that.page.currentPage = res.data.currentPage;
+                that.tableLoading = false;
+            }).catch(err => {
+                that.tableLoading = false;
+            });
+        },
 
-    //   重置表单
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
+        //   重置表单
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
+        },
 
-    // 新建管理员
-    addManger(){
-      this.$router.push('/addManger');
-    },
+        // 新建管理员
+        addManger() {
+            this.$router.push('/addManger');
+        },
 
-    // 编辑管理员
-    editManger(row){
-      sessionStorage.setItem('editManger',row.id);
-      this.$router.push({name:'editManger',query:{id:row.id}});
-    },
+        // 编辑管理员
+        editManger(row) {
+            sessionStorage.setItem('editManger', row.id);
+            this.$router.push({ name: 'editManger', query: { id: row.id }});
+        },
 
-    // 查看操作日志
-    showLog(row){
-      sessionStorage.setItem('showMangeLogTmp',row.id);
-      this.$router.push({name:'showMangeLog',params:{userId: row.id}});
-    },
+        // 查看操作日志
+        showLog(row) {
+            sessionStorage.setItem('showMangeLogTmp', row.id);
+            this.$router.push({ name: 'showMangeLog', params: { userId: row.id }});
+        },
 
-    // 密码重置
-    resetPwd(row){
-      this.pwdForm = {};
-      this.pwdForm.id = row.id;
-      this.pwdForm.url = pApi.resetPassword;
-      this.isShowResetPwd = true;
-    },
-    confirmReset(formName){
-      this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.$axios.post(api.resetPassword,this.pwdForm)
-            .then(res=>{
-              if(res.data.code == 200){
-                this.$message.success(res.data.data);
-                this.isShowResetPwd = false;
-              }else{
-                this.$message.warning(res.data.msg);
-              }
-            })
-            .catch(err=>{
-              console.log(err)
-            })
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-    },
+        // 密码重置
+        resetPwd(row) {
+            this.pwdForm = {};
+            this.pwdForm.id = row.id;
+            this.pwdForm.url = pApi.resetPassword;
+            this.isShowResetPwd = true;
+        },
+        confirmReset(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.$axios.post(api.resetPassword, this.pwdForm)
+                        .then(res => {
+                            if (res.data.code == 200) {
+                                this.$message.success(res.data.data);
+                                this.isShowResetPwd = false;
+                            } else {
+                                this.$message.warning(res.data.msg);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
 
-    // 删除用户
-    deleteUser(row){
-      this.delId = row.id;
-      this.delUrl = api.deleteAdminUser;
-      this.delUri = pApi.deleteAdminUser;
-      this.isShowDelToast = true;
-    },
-    deleteToast(msg) {
-      this.isShowDelToast = msg;
-      this.getList(this.page.currentPage);
-    },
+        // 删除用户
+        deleteUser(row) {
+            this.delId = row.id;
+            this.delUrl = api.deleteAdminUser;
+            this.delUri = pApi.deleteAdminUser;
+            this.isShowDelToast = true;
+        },
+        deleteToast(msg) {
+            this.isShowDelToast = msg;
+            this.getList(this.page.currentPage);
+        },
 
-    // 账号开启/关闭
-    accountMange(row,status){
-      let data = {};
-      data.id = row.id;
-      data.status = status;
-      data.url = pApi.updateAdminUserStatus;
-      this.closeBtn = true;
-      this.$axios.post(api.updateAdminUserStatus,data)
-      .then(res=>{
-        this.closeBtn = false;
-        if(res.data.code == 200){
-          this.$message.success(res.data.data);
-          row.status = status;
-          row.visible = false;
-        }else{
-          this.$message.warning(res.data.msg);
+        // 账号开启/关闭
+        accountMange(row, status) {
+            const data = {};
+            data.id = row.id;
+            data.status = status;
+            data.url = pApi.updateAdminUserStatus;
+            this.closeBtn = true;
+            this.$axios.post(api.updateAdminUserStatus, data)
+                .then(res => {
+                    this.closeBtn = false;
+                    if (res.data.code == 200) {
+                        this.$message.success(res.data.data);
+                        row.status = status;
+                        row.visible = false;
+                    } else {
+                        this.$message.warning(res.data.msg);
+                    }
+                })
+                .catch(err => {
+                    this.closeBtn = false;
+                    console.log(err);
+                });
         }
-      })
-      .catch(err=>{
-        this.closeBtn = false;
-        console.log(err);
-      })
-    },
-  }
+    }
 };
 </script>
 <style lang="less">
