@@ -22,7 +22,7 @@
                         :total="page.totalPage">
                 </el-pagination>
             </div>
-        </el-card> 
+        </el-card>
         <!--删除弹窗-->
         <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
         <!-- 添加弹窗 -->
@@ -41,81 +41,87 @@
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-import deleteToast from "../../common/DeleteToast";
-import * as api from "@/api/OperateManage/SensitiveLibrary.js";
-import * as pApi from "@/privilegeList/OperateManage/SensitiveLibrary.js";
+import deleteToast from '../../common/DeleteToast';
+import * as api from '@/api/OperateManage/SensitiveLibrary.js';
+import * as pApi from '@/privilegeList/OperateManage/SensitiveLibrary.js';
 import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http';
 export default {
-  components: {vBreadcrumb,deleteToast},
+    components: { vBreadcrumb, deleteToast },
 
-  mixins:[myMixinTable],
+    mixins: [myMixinTable],
 
-  data () {
-    return {
+    data() {
+        return {
         // 权限控制
-        p: {
-            deleteBadWord: false,
-            addBadWord: false,
-        },
-        tableLoading:false,
-        tableData:[],
-        delId:'',   //删除id
-        delUrl:'',  //删除url
-        delUri:'',  // 权限
-        isShowDelToast:false,
-        dialogVisible:false,
-        senWord:'', // 敏感词
-        rowMsg:'', // 删除信息
-    };
-  },
+            p: {
+                deleteBadWord: false,
+                addBadWord: false
+            },
+            tableLoading: false,
+            tableData: [],
+            delId: '', // 删除id
+            delUrl: '', // 删除url
+            delUri: '', // 权限
+            isShowDelToast: false,
+            dialogVisible: false,
+            senWord: '', // 敏感词
+            rowMsg: '' // 删除信息
+        };
+    },
 
-  activated(){
-      this.getList(1);
-      this.pControl();
-  },
+    activated() {
+        this.getList(1);
+        this.pControl();
+    },
 
-  methods: {
+    methods: {
     // 权限控制
-    pControl() {
-        for (const k in this.p) {
-            this.p[k] = utils.pc(pApi[k]);
-        }
-    },
-    //  添加敏感词
-    addSen(){
-        this.$axios.post(api.addBadWord,{badWordName:this.senWord}).then(res=>{
-            this.$message.success(res.data.msg);
+        pControl() {
+            for (const k in this.p) {
+                this.p[k] = utils.pc(pApi[k]);
+            }
+        },
+        //  添加敏感词
+        addSen() {
+            request.addBadWord({ name: this.senWord }).then(res => {
+                this.$message.success(res.msg);
+                this.getList(this.page.currentPage);
+                this.dialogVisible = false;
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        //  获取数据
+        getList(val) {
+            this.tableLoading = true;
+            request.queryBadWord({ page: val, pageSize: 10 }).then(res => {
+                this.tableLoading = false;
+                this.page.totalPage = res.data.totalNum;
+                this.tableData = res.data.data;
+            }).catch(err => {
+                this.tableLoading = false;
+                console.log(err);
+            });
+        },
+        // 删除
+        delItem(row) {
+            this.delId = row.id;
+            this.delUrl = 'deleteBadWord';
+            this.delUri = pApi.deleteBadWord;
+            this.isShowDelToast = true;
+        },
+        // 删除弹窗
+        deleteToast(msg) {
+            this.isShowDelToast = msg;
             this.getList(this.page.currentPage);
-            this.dialogVisible = false;
-        })
-    },
-    //  获取数据
-    getList(val){
-        this.tableLoading = true;
-        this.$axios.post(api.queryBadWord,{page:val,pageSize:10}).then(res=>{
-            this.tableLoading = false;
-            this.page.totalPage = res.data.data.resultCount;
-            this.tableData = res.data.data.data;
-        })
-    },
-    //删除
-    delItem(row) {
-        this.delId = row.id;
-        this.delUrl = api.deleteBadWord;
-        this.delUri = pApi.deleteBadWord;
-        this.isShowDelToast = true;
-    },
-    // 删除弹窗
-    deleteToast(msg) {
-        this.isShowDelToast = msg;
-        this.getList(this.page.currentPage);
-    },
-    handleIndex(index){
-        return index+1;
+        },
+        handleIndex(index) {
+            return index + 1;
+        }
     }
-  }
-}
+};
 
 </script>
 <style lang='less' scoped>

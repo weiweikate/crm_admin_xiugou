@@ -46,28 +46,12 @@ export default {
                 const data = { id: that.id, status: that.status, url: that.uri };
                 request[url](data).then(res => {
                     that.btnLoading = false;
-                    this.$message.success('删除成功');
+                    this.$message.success(res.msg);
                     this.$emit('msg', false);
                 }).catch(err => {
                     that.tableLoading = false;
                     this.$emit('msg', false);
                 });
-                // this.$axios
-                //     .post(url, data)
-                //     .then(res => {
-                //         that.btnLoading = false;
-                //         if (res.data.code == 200) {
-                //             this.$message.success('删除成功');
-                //             this.$emit('msg', false);
-                //         } else {
-                //             this.$message.warning(res.data.msg);
-                //             this.$emit('msg', false);
-                //         }
-                //     })
-                //     .catch(err => {
-                //         that.tableLoading = false;
-                //         this.$emit('msg', false);
-                //     });
             } else {
                 this.$emit('msg', false);
             }

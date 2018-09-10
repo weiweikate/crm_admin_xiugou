@@ -105,6 +105,7 @@
                         }
                         this.btnLoading = true;
                         request[url](data).then(res => {
+                            console.log(res);
                             localStorage.setItem('ms_username', res.data.name);
                             localStorage.setItem('ms_userID', res.data.id);
                             localStorage.setItem('ms_userPhone', res.data.telephone);
@@ -159,7 +160,6 @@
             // 获取权限列表
             getUserPriList(id) {
                 request.findAdminUserbyId({ id: id }).then(res => {
-                    console.log(res);
                     const privilegeList = [];
                     res.data.adminUserPrivilegeList.forEach((v, k) => {
                         privilegeList.push(v.url);

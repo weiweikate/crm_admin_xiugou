@@ -191,7 +191,7 @@ export const getTopic = '/admin/topic/get';
 export const deleteTopic = '/admin/topic/delete';
 // 获取模板列表
 export const tplList = '/admin/topic/template/list';
-//*******************************************************************************************************************************
-export const addBadWord = '/config/sysBadWord/addBadWord'; // 添加敏感词
-export const deleteBadWord = '/config/sysBadWord/deleteBadWord'; // 删除敏感词
-export const queryBadWord = '/config/sysBadWord/queryBadWord'; // 查询敏感词列表
+//* ******************************************************************************************************************************
+export const addBadWord = '/admin/config/sysBadWord/addBadWord'; // 添加敏感词
+export const deleteBadWord = ['/admin/config/sysBadWord/deleteBadWord', { methods: 'get' }]; // 删除敏感词
+export const queryBadWord = '/admin/config/sysBadWord/queryBadWord'; // 查询敏感词列表

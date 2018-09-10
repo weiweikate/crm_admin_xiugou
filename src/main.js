@@ -50,8 +50,8 @@ router.beforeEach((to, from, next) => {
         next('/login');
     } else if (privilege.indexOf(to.meta.url) == -1 && to.path != '/404' && to.path != '/login') {
         // 权限控制
-        next('/404');
-        // next();
+        // next('/404');
+        next();
     } else if (localStorage.getItem('ms_hadFirstLogin') == 1 && to.path !== '/dashboard' && to.path !== '/login' && to.path !== '/404') {
         next('/dashboard');
     } else {
