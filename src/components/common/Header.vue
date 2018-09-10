@@ -72,7 +72,7 @@ export default {
     created() {
         this.id = localStorage.getItem('ms_userID');
         request.findAdminUserbyId({ id: this.id }).then(res => {
-            this.face = res.data.data.face;
+            this.face = res.data.face;
         })
     },
     methods: {

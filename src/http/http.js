@@ -31,7 +31,9 @@ try {
             // 添加公共权限url
             if (data.url === undefined) data.url = '/dashboard';
             if (methods === 'get') {
-                url = `${url}?${qs.stringify(data)}`;
+                data = {
+                    params: data
+                };
             }
             return axios[methods](url, data)
                 .then(res => {
@@ -58,8 +60,8 @@ try {
                         }, 1000);
                         return Promise.reject(res.msg);
                     }
-                    if (!res.data) return Promise.reject('返回值错误');
-                    return Promise.resolve(res.data);
+                    if (res.data === undefined) return Promise.reject('返回值错误');
+                    return Promise.resolve(res);
                 })
                 .catch(err => {
                     return err;

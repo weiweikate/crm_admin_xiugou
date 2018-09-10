@@ -249,6 +249,17 @@
                         ]
                     },
                     {
+                        icon: 'icon-huiyuanzhanghaoguanli',
+                        index: '11',
+                        title: '交易基础参数设置',
+                        subs: [
+                            {
+                                index: 'baseParamsSet',
+                                title: '交易基础参数设置'
+                            }
+                        ]
+                    },
+                    {
                         icon: 'icon-yunying',
                         index: '9',
                         title: '运营管理',
@@ -266,17 +277,13 @@
                             //     title: "货币比例设置"
                             // },
                             // {
-                            //     index: "baseParamsSet",
-                            //     title: "交易基础参数设置"
-                            // },
-                            // {
                             //     index: "topicManage",
                             //     title: "专题管理"
                             // },
-                            // {
-                            //     index: "sensitiveLibrary",
-                            //     title: "敏感词库"
-                            // },
+                            {
+                                index: 'sensitiveLibrary',
+                                title: '敏感词库'
+                            },
                             // {
                             //     index: "reportSpellShop",
                             //     title: "拼店店铺举报"
