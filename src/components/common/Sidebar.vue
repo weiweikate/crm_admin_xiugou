@@ -215,10 +215,10 @@
                             //     index: "joinManage",
                             //     title: "经销商邀请管理"
                             // },
-                            // {
-                            //     index: "memberManage",
-                            //     title: "会员管理"
-                            // },
+                            {
+                                index: 'memberManage',
+                                title: '会员管理'
+                            }
                             // {
                             //     index: "accountRecharge",
                             //     title: "账户充值"
@@ -324,18 +324,18 @@
                             //     index: "organizeMange",
                             //     title: "组织结构管理"
                             // },
-                            // {
-                            //     index: "manageList",
-                            //     title: "管理员账号管理"
-                            // },
+                            {
+                                index: 'manageList',
+                                title: '管理员账号管理'
+                            },
                             // {
                             //     index: "setPermission",
                             //     title: "权限设置"
                             // },
-                            // {
-                            //     index: "versionIteration",
-                            //     title: "版本迭代管理"
-                            // },
+                            {
+                                index: 'versionIteration',
+                                title: '版本迭代管理'
+                            }
                             // {
                             //     index: "dataDictionary",
                             //     title: "数据字典"

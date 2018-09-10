@@ -13,57 +13,66 @@
     </div>
 </template>
 <script>
-import icon from "./ico";
+import icon from './ico';
+import request from '@/http/http.js';
 export default {
-  props: {
-    id: {
-      require: true
+    props: {
+        id: {
+            require: true
+        },
+        url: {
+            require: true
+        },
+        uri: {
+            require: true
+        },
+        status: {}
     },
-    url: {
-      require: true
+    components: {
+        icon
     },
-    uri:{
-      require:true
+    data() {
+        return {
+            btnLoading: false
+        };
     },
-    status:{},
-  },
-  components: {
-    icon
-  },
-  data() {
-    return {
-      btnLoading: false
-    };
-  },
-  methods: {
+    methods: {
     //  取消弹窗
-    closeToask(status) {
-      if (status == true) {
-        let that = this;
-        that.btnLoading = true;
-        let url = that.url;
-        let data = {id:that.id,status:that.status,url:that.uri};
-        this.$axios
-          .post(url, data)
-          .then(res => {
-            that.btnLoading = false;
-            if(res.data.code == 200){
-              this.$message.success('删除成功');
-              this.$emit("msg", false);
-            }else{
-              this.$message.warning(res.data.msg);
-              this.$emit("msg", false);
+        closeToask(status) {
+            if (status === true) {
+                const that = this;
+                that.btnLoading = true;
+                const url = that.url;
+                const data = { id: that.id, status: that.status, url: that.uri };
+                request[url](data).then(res => {
+                    that.btnLoading = false;
+                    this.$message.success('删除成功');
+                    this.$emit('msg', false);
+                }).catch(err => {
+                    that.tableLoading = false;
+                    this.$emit('msg', false);
+                });
+                // this.$axios
+                //     .post(url, data)
+                //     .then(res => {
+                //         that.btnLoading = false;
+                //         if (res.data.code == 200) {
+                //             this.$message.success('删除成功');
+                //             this.$emit('msg', false);
+                //         } else {
+                //             this.$message.warning(res.data.msg);
+                //             this.$emit('msg', false);
+                //         }
+                //     })
+                //     .catch(err => {
+                //         that.tableLoading = false;
+                //         this.$emit('msg', false);
+                //     });
+            } else {
+                this.$emit('msg', false);
             }
-          })
-          .catch(err => {
-            that.tableLoading = false;
-            this.$emit("msg", false);
-          });
-      } else {
-          this.$emit("msg", false);
-      }
+        }
     }
-  }
 };
 </script>
 <style lang="less" scoped>

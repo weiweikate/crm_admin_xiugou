@@ -45,9 +45,9 @@
                             <template slot="title">
                                 <el-checkbox class="collapse-tit" v-model="checkAllUser[k]" @change="handleCheckAllChangeUser(checkAllUser[k],k)">{{v.title}}</el-checkbox>
                             </template>
-                            <el-checkbox-group v-model="checkedUser[k]" @change="handleCheckedUserChange(checkedUser[k],k)">     
+                            <el-checkbox-group v-model="checkedUser[k]" @change="handleCheckedUserChange(checkedUser[k],k)">
                                 <div v-for="(item,index) in v.value" :key="index">
-                                    <div class="collapse-title">{{item.title}}</div>      
+                                    <div class="collapse-title">{{item.title}}</div>
                                     <div style="overflow:hidden;margin-bottom:10px;">
                                         <div class="collapse-item">
                                             <el-checkbox v-for="(v1,k1) in item.value" :label="v1.id" :key="k1">{{v1.title}}</el-checkbox>
@@ -58,7 +58,7 @@
                         </el-collapse-item>
                     </el-collapse>
                     <el-form-item>
-                      <el-button type="primary" @click="submitForm('form')" style="margin-left:35%">提交</el-button>
+                      <el-button type="primary" :loading="btnLoading" @click="submitForm('form')" style="margin-left:35%">提交</el-button>
                       <el-button @click="resetForm('form')">重置</el-button>
                     </el-form-item>
                 </el-form>
@@ -67,173 +67,180 @@
     </div>
 </template>
 <script>
-import breadcrumb from "../../common/Breadcrumb";
-import * as api from "../../../api/api.js";
+import breadcrumb from '../../common/Breadcrumb';
+import * as api from '../../../api/api.js';
 import * as pApi from '../../../privilegeList/index.js';
+import request from '@/http/http.js';
 export default {
-  components: {
-    breadcrumb
-  },
-  data() {
-    return {
-      nav: ["权限管理", "创建账号"],
-      checkAllUser: [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-      checkedUser: [[],[],[],[],[],[],[],[],[],[],[]],
-      uploadImg:'',
-      userManList: [],
-      department: [],
-      jobList:[],
-      form: {
-        username: "",
-        phone: "",
-        departmentId: [],
-        jobId: "",
-        superior: "",
-        face: ""
-      },
-      rules:{
-        username:[{ required: true, message: '请输入姓名', trigger: 'blur' }],
-        phone:[{ required: true, message: '请输入手机号', trigger: 'blur' }],
-        departmentId:[{ required: true, message: '请输入所属部门', trigger: 'blur' }],
-        jobId:[{ required: true, message: '请输入所在岗位', trigger: 'blur' }],
-        superior:[{required: true, message: '请输入直接上级ID', trigger: 'blur' },],
-      }
-    };
-  },
-  activated(){
-    this.form = {};
-    this.checkedUser = [[],[],[],[],[],[],[],[],[],[],[]];
-    this.checkAllUser = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
-    console.log(123);
-    this.uploadImg = api.addImg;
-    this.getRoleList();
-    this.getDepartmentList();
-  },
-  methods: {
-    //提交表单
-    submitForm(formName){
-      let data= {};
-      let role = [];
-      let reg = /^1(3|4|5|6|7|8)\d{9}$/;
-      if(!reg.test(parseInt(this.form.phone))){
-        this.$message.warning('请输入正确的手机号！');
-        return;
-      }
-      this.checkedUser.forEach((v,k)=>{
-        v.forEach((val)=>{
-          role.push(val);
-        })
-      })
-      data = this.form;
-      data.role = role.join(',');
-      data.url = pApi.addAdminUser;
-      this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.$axios
-            .post(api.addManger, data)
-            .then(res => {
-              if(res.data.code == 200){
-                this.$message.success(res.data.data);
-                this.$router.push('/manageList');
-              }else{
-                this.$message.warning(res.data.msg);
-              }
-            })
-            .catch(err => {
-              console.log(err);
+    components: {
+        breadcrumb
+    },
+    data() {
+        return {
+            nav: ['权限管理', '创建账号'],
+            btnLoading: false,
+            checkAllUser: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            checkedUser: [[], [], [], [], [], [], [], [], [], [], []],
+            uploadImg: '',
+            userManList: [],
+            department: [],
+            jobList: [],
+            form: {
+                username: '',
+                phone: '',
+                departmentId: [],
+                jobId: '',
+                superior: '',
+                face: ''
+            },
+            rules: {
+                username: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+                phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+                departmentId: [{ required: true, message: '请输入所属部门', trigger: 'blur' }],
+                jobId: [{ required: true, message: '请输入所在岗位', trigger: 'blur' }],
+                superior: [{ required: true, message: '请输入直接上级ID', trigger: 'blur' }]
+            }
+        };
+    },
+    activated() {
+        this.form = {};
+        this.checkedUser = [[], [], [], [], [], [], [], [], [], [], []];
+        this.checkAllUser = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+        this.uploadImg = api.addImg;
+        this.getRoleList();
+        this.getDepartmentList();
+    },
+    methods: {
+    // 提交表单
+        submitForm(formName) {
+            let data = {};
+            const role = [];
+            const reg = /^1(3|4|5|6|7|8)\d{9}$/;
+            if (!reg.test(Number(this.form.phone))) {
+                this.$message.warning('请输入正确的手机号！');
+                return;
+            }
+            this.checkedUser.forEach((v, k) => {
+                v.forEach((val) => {
+                    role.push(val);
+                });
             });
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-    },
-    // 重置表单
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
+            data = this.form;
+            data.role = role.join(',');
+            data.url = pApi.addAdminUser;
+            this.btnLoading = true;
+            // this.$refs[formName].validate((valid) => {
+            // if (valid) {
+            console.log(data);
+            request.addManger(data).then(res => {
+                console.log(res);
+                this.btnLoading = true;
+            }).catch(err => {
+                console.log(err);
+                this.btnLoading = true;
+            });
+            //     this.$axios
+            //         .post(api.addManger, data)
+            //         .then(res => {
+            //             this.btnLoading = false;
+            //             // if (res.data.code == 200) {
+            //             //     this.$message.success(res.data.data);
+            //             //     this.$router.push('/manageList');
+            //             // } else {
+            //             //     this.$message.warning(res.data.msg);
+            //             // }
+            //         })
+            //         .catch(err => {
+            //             console.log(err);
+            //         });
+            // } else {
+            //     console.log('error submit!!');
+            //     return false;
+            // }
+            // });
+        },
+        // 重置表单
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
+        },
 
-    // 上传图片
-    uploadAvatar(res) {
-      if(res.code == 200){
-        this.form.face = res.data.imageUrl;
-      }else{
-        this.$message.warning(res.msg);
-      }
-    },
+        // 上传图片
+        uploadAvatar(res) {
+            this.form.face = res.data.imageUrl;
+        },
 
-    // 全选用户管理
-    handleCheckAllChangeUser(val,k) {
-      let tmp = [];
-      this.userManList[k].value.forEach(function(v) {
-        v.value.forEach(function (val) {  
-          tmp.push(val.id);
-        })
-      });
-      this.checkedUser[k] = val ? tmp : [];
-    },
-    handleCheckedUserChange(value,k) {
-      let itemTmp = [];
-      let checkedCount = value.length;
-      this.userManList[k].value.forEach(function(v) {
-        v.value.forEach(function (val) {  
-          itemTmp.push(val.value);
-        })
-      });
-      this.checkAllUser[k] = checkedCount == itemTmp.length;
-      this.$set(this.checkAllUser, k, this.checkAllUser[k]);
-    },
+        // 全选用户管理
+        handleCheckAllChangeUser(val, k) {
+            const tmp = [];
+            this.userManList[k].value.forEach(function(v) {
+                v.value.forEach(function(val) {
+                    tmp.push(val.id);
+                });
+            });
+            this.checkedUser[k] = val ? tmp : [];
+        },
+        handleCheckedUserChange(value, k) {
+            const itemTmp = [];
+            const checkedCount = value.length;
+            this.userManList[k].value.forEach(function(v) {
+                v.value.forEach(function(val) {
+                    itemTmp.push(val.value);
+                });
+            });
+            this.checkAllUser[k] = checkedCount == itemTmp.length;
+            this.$set(this.checkAllUser, k, this.checkAllUser[k]);
+        },
 
-    // 获取权限列表
-    getRoleList() {
-      let data = {};
-      this.$axios
-        .post(api.getRoleList, data)
-        .then(res => {
-          this.userManList = res.data.data;
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
+        // 获取权限列表
+        getRoleList() {
+            const data = {};
+            this.$axios
+                .post(api.getRoleList, data)
+                .then(res => {
+                    this.userManList = res.data.data;
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
 
-    // 获取部门列表
-    getDepartmentList(){
-      this.department = [];
-      this.$axios
-        .post(api.queryDepartmentList, {})
-        .then(res => {
-          if(res.data.code == 200){
-            res.data.data.forEach((v,k)=>{
-              this.department.push({label:v.name,value:v.id});
-            })
-          }else{
-            this.$message.warning(res.data.msg);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    // 获取岗位列表
-    getJobList(val){
-      this.jobList = [];
-      this.$axios
-        .post(api.queryJobList, {dId:val})
-        .then(res => {
-          if(res.data.code == 200){
-            res.data.data.forEach((v,k)=>{
-              this.jobList.push({label:v.name,value:v.id});
-            })
-          }else{
-            this.$message.warning(res.data.msg);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+        // 获取部门列表
+        getDepartmentList() {
+            this.department = [];
+            this.$axios
+                .post(api.queryDepartmentList, {})
+                .then(res => {
+                    if (res.data.code == 200) {
+                        res.data.data.forEach((v, k) => {
+                            this.department.push({ label: v.name, value: v.id });
+                        });
+                    } else {
+                        this.$message.warning(res.data.msg);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        // 获取岗位列表
+        getJobList(val) {
+            this.jobList = [];
+            this.$axios
+                .post(api.queryJobList, { dId: val })
+                .then(res => {
+                    if (res.data.code == 200) {
+                        res.data.data.forEach((v, k) => {
+                            this.jobList.push({ label: v.name, value: v.id });
+                        });
+                    } else {
+                        this.$message.warning(res.data.msg);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
     }
-  }
 };
 </script>
 <style lang="less">

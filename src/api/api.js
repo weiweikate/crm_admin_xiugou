@@ -91,8 +91,6 @@ export const getMangerList = '/admin/adminUser/queryAdminUserPageList';
 export const getMangerLog = '/admin/logAdminuser/getPage';
 // 获取管理员权限列表
 export const getRoleList = '/admin/privilege/queryPrivilegeList';
-// 添加管理员
-export const addManger = '/admin/adminUser/addAdminUser';
 // 重置登陆密码
 export const resetPassword = '/admin/adminUser/resetPassword';
 // 开启/关闭管理员账号
@@ -291,4 +289,5 @@ export const makeSureOrder = '/order/order/makeSureOrder';
 export const findAdminUserbyId = ['/admin/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息
 export const loginByCode = '/admin/adminLogin/codeLogin'; // 管理员手机号登录
 export const loginByPwd = '/admin/adminLogin/pswLogin'; // 管理员账号密码登录
+export const addManger = '/admin/adminUser/addAdminUser'; // 添加管理员
 
