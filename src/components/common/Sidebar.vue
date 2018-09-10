@@ -249,6 +249,17 @@
                         ]
                     },
                     {
+                        icon: 'icon-huiyuanzhanghaoguanli',
+                        index: '11',
+                        title: '交易基础参数设置',
+                        subs: [
+                            {
+                                index: 'baseParamsSet',
+                                title: '交易基础参数设置'
+                            }
+                        ]
+                    },
+                    {
                         icon: 'icon-yunying',
                         index: '9',
                         title: '运营管理',
@@ -264,10 +275,6 @@
                             // {
                             //     index: "currencyRatio",
                             //     title: "货币比例设置"
-                            // },
-                            // {
-                            //     index: "baseParamsSet",
-                            //     title: "交易基础参数设置"
                             // },
                             // {
                             //     index: "topicManage",
