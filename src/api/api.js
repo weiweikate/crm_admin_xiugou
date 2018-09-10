@@ -16,13 +16,8 @@ export const LOGIN = ['https://www.easy-mock.com/mock/5b8cdef7b4f2405353a03f5c/m
 export const indexData = '/admin/index/indexData';
 // 物流信息
 export const findExpress = '/admin/express/find';
-// 登陆相关
-// 密码登陆
-export const loginByPwd = '/admin/adminLogin/pswLogin';
-// 获取验证码
-export const getCode = '/admin/phoneCode/sendMessage';
 // 验证码登陆
-export const loginByCode = '/admin/adminLogin/codeLogin';
+// export const loginByCode = '/admin/adminLogin/codeLogin';
 
 // 首页
 // 修改密码短信验证
@@ -33,7 +28,7 @@ export const loginUpdateCheckCode = '/admin/adminLogin/loginUpdateCheckCode';
 export const loginUpdatePassword = '/admin/adminLogin/loginUpdatePassword';
 // 修改密码2
 export const updateAdminUserPassword = '/admin/adminUser/updateAdminUserPassword';
-
+//
 // 授权管理
 // 获取渠道列表
 export const permitChannelGetList = '/admin/permitChannel/getList';
@@ -67,7 +62,7 @@ export const addCategoryBrandCode = '/admin/categoryBrand/addCategoryBrandCode';
 export const productAllCode = '/securityCode/securityCode/productAllCode';
 // 失效编码
 export const loseCategoryBrandCode = '/admin/categoryBrand/loseCategoryBrandCode';
-
+//
 // 获取防伪码管理列表
 export const getRecordPage = '/securityCode/securityCodeRecord/getRecordPage';
 // 导出防伪码
@@ -78,7 +73,7 @@ export const updateCodeStatus = '/securityCode/securityCodeRecord/updateStatus';
 export const getAllgetAllActivety = '/admin/securityCodeTemplate/getSecurityCodeTemplateAll';
 // 生成防伪码
 export const productionSecurityCode = '/securityCode/securityCodeRecord/productionSecurityCode';
-
+//
 // 权限管理
 // 查询部门列表
 export const queryDepartmentList = '/admin/role/queryDepartmentList';
@@ -104,8 +99,8 @@ export const resetPassword = '/admin/adminUser/resetPassword';
 export const updateAdminUserStatus = '/admin/adminUser/updateAdminUserStatus';
 // 删除管理员账号
 export const deleteAdminUser = '/admin/adminUser/deleteUpdateAdminUser';
-// 根据ID查找管理员信息
-export const findAdminUserbyId = '/admin/adminUser/findAdminUserbyId';
+// // 根据ID查找管理员信息
+// export const findAdminUserbyId = '/admin/adminUser/findAdminUserbyId';
 // 编辑管理员
 export const updateAdminUser = '/admin/adminUser/updateAdminUser';
 // 岗位列表查询
@@ -292,4 +287,8 @@ export const addNotice = '/admin/notice/addNotice';
 export const updateNoticeStatus = '/admin/notice/updateNoticeStatus';
 
 export const makeSureOrder = '/order/order/makeSureOrder';
+//* ***************************************************************************************************************************************************************************
+export const findAdminUserbyId = ['/admin/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息
+export const loginByCode = '/admin/adminLogin/codeLogin'; // 管理员手机号登录
+export const loginByPwd = '/admin/adminLogin/pswLogin'; // 管理员账号密码登录
 

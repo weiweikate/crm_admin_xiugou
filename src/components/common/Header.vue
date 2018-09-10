@@ -45,88 +45,86 @@
     </div>
 </template>
 <script>
-import bus from "../common/bus";
-import vTags from "./Tags.vue";
+import bus from '../common/bus';
+import vTags from './Tags.vue';
 import * as api from '../../api/api.js';
-import request from '@/http/http.js'
+import request from '@/http/http.js';
 export default {
-  components: {
-    vTags
-  },
-  data() {
-    return {
-      isShowTitle: true,
-      collapse: false,
-      fullscreen: false,
-      face: "",
-      name: "请登陆",
-      message: 2
-    };
-  },
-  computed: {
-    username() {
-      let username = localStorage.getItem("ms_username");
-      return username ? username : this.name;
-    }
-  },
-  created() {
-    this.id = localStorage.getItem("ms_userID");
-    request.findAdminUserbyId({ id: this.id }).then(res=>{
-      this.face = res.data.data.face;
-    }).catch(err=>{
-
-    })
-  },
-  methods: {
+    components: {
+        vTags
+    },
+    data() {
+        return {
+            isShowTitle: true,
+            collapse: false,
+            fullscreen: false,
+            face: '',
+            name: '请登陆',
+            message: 2
+        };
+    },
+    computed: {
+        username() {
+            const username = localStorage.getItem('ms_username');
+            return username || this.name;
+        }
+    },
+    created() {
+        this.id = localStorage.getItem('ms_userID');
+        request.findAdminUserbyId({ id: this.id }).then(res => {
+            this.face = res.data.data.face;
+        })
+    },
+    methods: {
     // 用户名下拉菜单选择事件
-    handleCommand(command) {
-      if (command == "loginout") {
-        localStorage.clear();
-        sessionStorage.clear();
-        this.$router.push("/login");
-      } else if (command == "editMangerMsg") {
-        sessionStorage.setItem("editMangerMsg", "admin");
-        this.$router.push({
-          name: "editMangerMsg",
-          params: { editMangerMsg: "admin" }
-        });
-      }
-    },
-    // 侧边栏折叠
-    collapseChage() {
-      this.collapse = !this.collapse;
-      bus.$emit("collapse", this.collapse);
-      this.isShowTitle = !this.collapse;
-    },
+        handleCommand(command) {
+            if (command === 'loginout') {
+                localStorage.clear();
+                sessionStorage.clear();
+                this.$router.push('/login');
+            } else if (command === 'editMangerMsg') {
+                sessionStorage.setItem('editMangerMsg', 'admin');
+                this.$router.push({
+                    name: 'editMangerMsg',
+                    params: { editMangerMsg: 'admin' }
+                });
+            }
+        },
+        // 侧边栏折叠
+        collapseChage() {
+            this.collapse = !this.collapse;
+            bus.$emit('collapse', this.collapse);
+            this.isShowTitle = !this.collapse;
+        },
 
-    // 全屏事件
-    handleFullScreen() {
-      let element = document.documentElement;
-      if (this.fullscreen) {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitCancelFullScreen) {
-          document.webkitCancelFullScreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
+        // 全屏事件
+        handleFullScreen() {
+            const element = document.documentElement;
+            if (this.fullscreen) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitCancelFullScreen) {
+                    document.webkitCancelFullScreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            } else {
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.webkitRequestFullScreen) {
+                    element.webkitRequestFullScreen();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if (element.msRequestFullscreen) {
+                    // IE11
+                    element.msRequestFullscreen();
+                }
+            }
+            this.fullscreen = !this.fullscreen;
         }
-      } else {
-        if (element.requestFullscreen) {
-          element.requestFullscreen();
-        } else if (element.webkitRequestFullScreen) {
-          element.webkitRequestFullScreen();
-        } else if (element.mozRequestFullScreen) {
-          element.mozRequestFullScreen();
-        } else if (element.msRequestFullscreen) {
-          // IE11
-          element.msRequestFullscreen();
-        }
-      }
-      this.fullscreen = !this.fullscreen;
     }
-  }
 };
 </script>
 <style scoped>

@@ -89,7 +89,7 @@
                     if (valid) {
                         const data = this[formName];
                         let url;
-                        if (formName == 'form1') {
+                        if (formName === 'form1') {
                             url = 'loginByPwd';
                         } else {
                             url = 'loginByCode';
@@ -105,11 +105,11 @@
                         }
                         this.btnLoading = true;
                         request[url](data).then(res => {
-                            localStorage.setItem('ms_username', res.data.data.name);
-                            localStorage.setItem('ms_userID', res.data.data.id);
-                            localStorage.setItem('ms_userPhone', res.data.data.telephone);
-                            localStorage.setItem('ms_hadFirstLogin', res.data.data.hadFirstLogin);
-                            this.getUserPriList(res.data.data.id);
+                            localStorage.setItem('ms_username', res.data.name);
+                            localStorage.setItem('ms_userID', res.data.id);
+                            localStorage.setItem('ms_userPhone', res.data.telephone);
+                            localStorage.setItem('ms_hadFirstLogin', res.data.hadFirstLogin);
+                            this.getUserPriList(res.data.id);
                             this.btnLoading = false;
                         }).catch(err => {
                             this.btnLoading = false;
@@ -124,11 +124,11 @@
             // 获取验证码
             getCode() {
                 const phoneNum = this.form2.phone;
-                if (phoneNum == '') {
+                if (phoneNum === '') {
                     this.$message.warning('请输入手机号!');
                     return;
                 }
-                if (this.form2.phone.length != 11) {
+                if (this.form2.phone.length !== 11) {
                     this.$message.warning('账号长度不符');
                     return;
                 }
@@ -148,10 +148,8 @@
                     }
                 }, 1000);
                 const data = { phone: this.form2.phone, code: 'ADMIN_LOGIN_CODE' };
-                request.getCode(data).then((result) => {
+                request.getCode(data).then(res => {
                     this.$message.success(res.data.data);
-                }).catch((err) => {
-    
                 });
             },
             // tab切换
@@ -161,8 +159,9 @@
             // 获取权限列表
             getUserPriList(id) {
                 request.findAdminUserbyId({ id: id }).then(res => {
+                    console.log(res);
                     const privilegeList = [];
-                    res.data.data.adminUserPrivilegeList.forEach((v, k) => {
+                    res.data.adminUserPrivilegeList.forEach((v, k) => {
                         privilegeList.push(v.url);
                     });
                     localStorage.setItem('privilegeList', JSON.stringify(privilegeList));

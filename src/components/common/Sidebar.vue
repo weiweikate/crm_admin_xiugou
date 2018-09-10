@@ -50,7 +50,7 @@
                     },
                     {
                         icon: 'icon-shouquanfuwu',
-                        index: '3',
+                        index: '1',
                         title: '授权管理',
                         subs: [
                             // {
@@ -69,7 +69,7 @@
                     },
                     {
                         icon: 'icon-shezhi',
-                        index: '结算管理',
+                        index: '2',
                         title: '结算管理',
                         subs: [
                             // {
@@ -120,7 +120,7 @@
                     },
                     {
                         icon: 'icon-dingdan',
-                        index: '订单管理',
+                        index: '3',
                         title: '订单管理',
                         subs: [
                             // {
@@ -135,7 +135,7 @@
                     },
                     {
                         icon: 'icon-suyuan',
-                        index: '101',
+                        index: '4',
                         title: '溯源管理',
                         subs: [
                             // {
@@ -158,7 +158,7 @@
                     },
                     {
                         icon: 'icon-fenlei',
-                        index: '4',
+                        index: '5',
                         title: '品牌产品管理',
                         subs: [
                             // {
@@ -185,7 +185,7 @@
                     },
                     {
                         icon: 'icon-dianpu',
-                        index: '拼店店铺管理',
+                        index: '6',
                         title: '拼店店铺管理',
                         subs: [
                             // {
@@ -204,7 +204,7 @@
                     },
                     {
                         icon: 'icon-huiyuanzhanghaoguanli',
-                        index: '6',
+                        index: '7',
                         title: '经销商会员管理',
                         subs: [
                             // {
@@ -239,7 +239,7 @@
                     },
                     {
                         icon: 'icon-huiyuanzhanghaoguanli',
-                        index: '9',
+                        index: '8',
                         title: '服务管理',
                         subs: [
                             // {
@@ -250,7 +250,7 @@
                     },
                     {
                         icon: 'icon-yunying',
-                        index: '运营管理',
+                        index: '9',
                         title: '运营管理',
                         subs: [
                             // {
@@ -317,7 +317,7 @@
                     },
                     {
                         icon: 'icon-shezhi',
-                        index: '7',
+                        index: '10',
                         title: '权限管理',
                         subs: [
                             // {

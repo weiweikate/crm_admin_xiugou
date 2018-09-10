@@ -30,11 +30,13 @@ try {
         request[v] = function(data = {}) {
             // 添加公共权限url
             if (data.url === undefined) data.url = '/dashboard';
-            // if (methods === 'post') data = qs.stringify(data);
+            if (methods === 'get') {
+                url = `${url}?${qs.stringify(data)}`;
+            }
             return axios[methods](url, data)
                 .then(res => {
                     // 错误信息拦截
-                    if (res.data.code === 210) {
+                    if (res.code === 10004) {
                         sessionStorage.clear();
                         localStorage.clear();
                         Message.warning({
@@ -44,17 +46,17 @@ try {
                         setTimeout(function() {
                             location.reload();
                         }, 1000);
-                        return Promise.reject(res.data.msg);
+                        return Promise.reject(res.msg);
                     }
-                    if (res.data.code != '200') {
+                    if (res.code !== 10000) {
                         Message.error({
                             duration: 1000,
-                            message: res.data.msg
+                            message: res.msg
                         });
                         setTimeout(() => {
                             Message.closeAll();
                         }, 1000);
-                        return Promise.reject(res.data.msg);
+                        return Promise.reject(res.msg);
                     }
                     return Promise.resolve(res);
                 })
