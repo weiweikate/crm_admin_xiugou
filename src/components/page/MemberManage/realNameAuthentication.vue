@@ -1,0 +1,209 @@
+<template>
+    <div class="real-name-auth">
+        <v-breadcrumb :nav="['经销商会员管理','会员管理','实名认证审核']"></v-breadcrumb>
+        <el-card style="margin:10px 0 20px">
+            <el-form ref="form" :inline="true" :model="form">
+                <!-- <el-form-item prop="code" label="授权码" label-width="120">
+                    <el-input style="width:200px" placeholder="请输入用户授权码" v-model="form.code"></el-input>
+                </el-form-item> -->
+                <el-form-item prop="nickname" label="会员搜索" label-width="120">
+                    <el-input style="width:200px" placeholder="可用户ID/授权码/昵称" v-model="form.nickname"></el-input>
+                </el-form-item>
+                <el-form-item prop="idNumber" label="证件号" label-width="120">
+                    <el-input style="width:200px" placeholder="请输入用户证件号" v-model="form.idNumber"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="getList(1)">查询</el-button>
+                    <el-button @click="resetForm('form')">重置</el-button>
+                </el-form-item>
+            </el-form>
+        </el-card>
+        <div class="table-block">
+            <template>
+                <el-table  :height="height" :data="tableData" border>
+                    <el-table-column  label="编号" type="index" align="center"></el-table-column>
+                    <el-table-column  label="用户昵称" prop="nickname" align="center"></el-table-column>
+                    <!-- <el-table-column  label="会员编号" prop="" align="center"></el-table-column>
+                    <el-table-column  label="证件类型" prop="" align="center"></el-table-column> -->
+                    <el-table-column  label="真实姓名" prop="realname" align="center"></el-table-column>
+                    <el-table-column  label="证件号" prop="idcardNo" align="center"></el-table-column>
+                    <el-table-column  label="状态" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.status==0">待审核</template>
+                            <template v-if="scope.row.status==1">已通过</template>
+                            <template v-if="scope.row.status==2">未通过</template>
+                        </template>
+                    </el-table-column>
+                    <el-table-column  label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button @click="realName(scope.row)" type="primary">详细信息</el-button>
+                            <el-button v-if="scope.row.status==1 && p.dismissAudit" @click="refuseAudit(scope.row)" type="danger">驳回认证</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </template>
+            <div class="block">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </div>
+        </div>
+        <!-- 驳回认证 -->
+        <el-dialog title="驳回理由" :visible.sync="dialogVisible" width="30%">
+            <el-select v-model="freeReason" placeholder="请选择驳回理由" @change="changeReason">
+                <el-option v-for="(v,k) in reasonList" :key="k" :label="v.dValue" :value="v.dValue"></el-option>
+            </el-select>
+            <el-input style="margin-top:10px" v-model="reason" placeholder="请输入驳回理由" type="textarea" :rows="10"></el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="confirmRefuse">确 定</el-button>
+                <el-button @click="dialogVisible = false">取 消</el-button>
+            </span>
+        </el-dialog>
+    </div>
+</template>
+
+<script>
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import { getUserId, myMixinTable,queryDictonary } from '@/JS/commom.js';
+    import * as api from '@/api/api.js';
+    import * as pApi from '@/privilegeList/index.js';
+    import utils from '@/utils/index.js'
+    export default {
+        components: {
+            vBreadcrumb
+        },
+        mixins: [getUserId, myMixinTable,queryDictonary],
+        data () {
+            return {
+                p:{
+                    findDealerRealnameInfo_1:false,
+                    dismissAudit:false,
+                },
+               form:{
+                   code:'',
+                   nickname:'',
+                   idNumber:''
+               },
+                page:{
+                    currentPage:1,
+                    totalPage:0
+                },
+
+                id:'',
+                height:'',
+                tableData:[],
+                dialogVisible:false,    // 驳回审核弹窗
+                memberId:'',    // 人员id
+                reason:'', // 驳回理由
+                freeReason:'', // 快捷驳回理由
+                // 驳回理由列表
+                reasonList:[
+                    // {
+                    //     label:'请提交正确的实名认证信息',
+                    //     value:'请提交正确的实名认证信息'
+                    // },
+                    //  {
+                    //     label:'您的认证照片不符合要求，请重新认证',
+                    //     value:'您的认证照片不符合要求，请重新认证'
+                    // },
+                ]
+            }
+        },
+        activated() {
+            this.getList(this.page.currentPage);
+            this.pControl();
+        },
+        created(){
+            this.getTbaleHeight();
+        },
+        methods: {
+            // 权限控制
+            pControl() {
+                for (const k in this.p) {
+                    this.p[k] = utils.pc(pApi[k]);
+                }
+            },
+            // 获取数据
+            getList(val) {
+                let that = this;
+                let data = {
+                    page: val,
+                    code:that.form.code,
+                    nickname:that.form.nickname,
+                    idNumber:that.form.idNumber,
+                    url:pApi.queryDealerRealnamePageList
+                };
+                that.tableLoading = true;
+                that.$axios
+                    .post(api.queryDealerRealnamePageList, data)
+                    .then(res => {
+                        if (res.data.code == 200) {
+                            that.tableLoading = false;
+                            that.tableData = res.data.data.data;
+                            that.page.totalPage = res.data.data.resultCount;
+                        } else {
+                            that.$message.warning(res.data.msg);
+                            that.tableLoading = false;
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        that.tableLoading = false;
+                    })
+            },
+            //重置表单
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+                this.getList(1);
+            },
+            // 实名认证页面
+            realName(row){
+                sessionStorage.setItem('memberId', row.id);
+                this.$router.push({name: 'realNameInfo', query: {'memberId': row.id}})
+            },
+            // 驳回审核
+            async refuseAudit(row){
+                this.memberId = row.id;
+                this.freeReason = '';
+                this.reason = '';
+                this.dialogVisible = true;
+                await this.queryDictonary(6);
+                this.reasonList=this.tmpAxiosData;
+            },
+            confirmRefuse(){
+                if(this.reason == ''){
+                    this.$message.warning('请输入驳回理由');
+                    return;
+                }
+                this.$axios.post(api.dismissAudit,{id:this.memberId,reason:this.reason}).then(res=>{
+                    this.$message.success(res.data.msg);
+                    this.dialogVisible = false;
+                    this.getList(this.page.currentPage);
+                })
+            },
+            // 切换快捷回复
+            changeReason(val){
+                this.reason = val;
+            }
+        }
+    }
+</script>
+
+<style lang='less' scoped>
+.real-name-auth{
+    /deep/.el-dialog{
+        border-radius: 10px;
+        .el-dialog__header{
+            border-bottom: 1px solid #ddd;
+            .el-dialog__title{
+                color: #ff6868;
+            }
+        }
+    }
+}
+</style>
