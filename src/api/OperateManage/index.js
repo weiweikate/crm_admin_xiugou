@@ -31,11 +31,11 @@ export const queryProductPageList = '/admin/product/queryProductPageList';
 // 模板列表
 export const getAllDiscountCouponTemplate = '/admin/discountCouponTemplate/getAllDiscountCouponTemplate';
 // 问题类目列表
-export const queryHelpTypePageList = '/admin/helpType/queryHelpTypePageList';
+export const queryHelpTypePageList = '/admin/help/helpType/queryHelpTypePageList';
 // 添加问题类型
-export const addHelpType = '/admin/helpType/addHelpType';
+export const addHelpType = '/admin/help/helpType/addHelpType';
 // 删除问题类型
-export const deleteHelpType = '/admin/helpType/deleteHelpType';
+export const deleteHelpType = ['/admin/help/helpType/deleteHelpType', { method: 'get' }];
 // 问题列表
 export const queryHelpQuestionPageList = '/core/helpQuestion/queryHelpQuestionPageList';
 // 添加问题
@@ -191,7 +191,7 @@ export const getTopic = '/admin/topic/get';
 export const deleteTopic = '/admin/topic/delete';
 // 获取模板列表
 export const tplList = '/admin/topic/template/list';
-//*******************************************************************************************************************************
+//* ******************************************************************************************************************************
 export const addBadWord = '/config/sysBadWord/addBadWord'; // 添加敏感词
 export const deleteBadWord = '/config/sysBadWord/deleteBadWord'; // 删除敏感词
 export const queryBadWord = '/config/sysBadWord/queryBadWord'; // 查询敏感词列表
