@@ -1,7 +1,7 @@
 <template>
   <div class="base-params">
       <v-breadcrumb :nav="nav"></v-breadcrumb>
-      <el-card :body-style="{ padding: '20px 40px',minHeight:'60vh' }">
+      <el-card v-loading="bodyLoading" :body-style="{ padding: '20px 40px',minHeight:'60vh' }">
           <div class="currency-title">参数设置</div>
           <div class="currency-wrap">
               <span class="currency-small-title">订单取消倒计时时间设置</span><br/>
@@ -26,8 +26,6 @@
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-import * as api from '@/api/OperateManage/baseParamsSet.js';
-import * as pApi from '@/privilegeList/OperateManage/baseParamsSet.js';
 import request from '@/http/http';
 export default {
     components: { vBreadcrumb },
@@ -35,6 +33,7 @@ export default {
     data() {
         return {
             nav: ['运营管理', '交易基础参数设置'],
+            bodyLoading: false,
             btnLoading: false,
             orderCancleTime: '',
             toBeConfirmTime: '',
@@ -49,41 +48,65 @@ export default {
     },
 
     methods: {
-    //   获取数据
+        // 获取数据
         getInfo() {
-            this.$axios
-                .post(api.findSysConfig, {})
-                .then(res => {
-                    this.orderCancleTime = res.data.data.timeOrderCancel;
-                    this.toBeConfirmTime = res.data.data.timeGoodsConfirm;
-                    // this.returnGoodsTime = res.data.data.timeReturnSend;
-                    this.returnDownTime = res.data.data.timeExpressSend;
-                    this.payOvertime = res.data.data.payOvertime;
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            const data = {
+                codes: 'time_order_cancel,pay_overtime,time_goods_confirm,time_express_send'
+            };
+            this.bodyLoading = true;
+            request.queryConfig(data).then(res => {
+                this.orderCancleTime = res.data[0].value;
+                this.toBeConfirmTime = res.data[1].value;
+                this.returnDownTime = res.data[2].value;
+                this.payOvertime = res.data[3].value;
+                this.bodyLoading = false;
+            }).catch(err => {
+                this.bodyLoading = false;
+                console.log(err);
+            });
         },
         //   提交表单
         submitForm() {
-            const data = {};
-            data.timeOrderCancel = this.orderCancleTime;
-            data.timeGoodsConfirm = this.toBeConfirmTime;
-            // data.timeReturnSend = this.returnGoodsTime;
-            data.timeExpressSend = this.returnDownTime;
-            data.payOvertime = this.payOvertime;
-            data.url = pApi.updateSysConfigByTransaction;
+            const data = {
+                configVOS: [
+                    {
+                        code: 'time_order_cancel',
+                        name: '订单自动取消时间',
+                        value: this.orderCancleTime,
+                        value_type: 1,
+                        status: 1
+                    },
+                    {
+                        code: 'pay_overtime',
+                        name: '支付超时退款时间',
+                        value: this.payOvertime,
+                        value_type: 1,
+                        status: 1
+                    },
+                    {
+                        code: 'time_goods_confirm',
+                        name: '待确认收货时间',
+                        value: this.toBeConfirmTime,
+                        value_type: 1,
+                        status: 1
+                    },
+                    {
+                        code: 'time_express_send',
+                        name: '退货/换货申请运单提交倒计时',
+                        value: this.returnDownTime,
+                        value_type: 1,
+                        status: 1
+                    }
+                ]
+            };
             this.btnLoading = true;
-            this.$axios
-                .post(api.updateSysConfigByTransaction, data)
-                .then(res => {
-                    this.$message.success(res.data.msg);
-                    this.btnLoading = false;
-                })
-                .catch(err => {
-                    console.log(err);
-                    this.btnLoading = false;
-                });
+            request.addOrModifyList(data).then(res => {
+                this.$message.success(res.msg);
+                this.btnLoading = false;
+            }).catch(err => {
+                console.log(err);
+                this.btnLoading = false;
+            });
         },
         // 取消
         cancle() {

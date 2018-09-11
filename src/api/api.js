@@ -274,6 +274,8 @@ export const updateNoticeStatus = '/admin/notice/updateNoticeStatus';
 
 export const makeSureOrder = '/order/order/makeSureOrder';
 //* ***************************************************************************************************************************************************************************
+export const queryConfig = ['/admin/config/sysconfig/queryConfig', { methods: 'get' }]; // 查询系统配置
+export const addOrModifyList = '/admin/config/sysconfig/addOrModifyList'; // 批量新增系统配置
 export const findAdminUserbyId = ['/admin/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息
 export const loginByCode = '/admin/adminLogin/codeLogin'; // 管理员手机号登录
 export const loginByPwd = '/admin/adminLogin/pswLogin'; // 管理员账号密码登录
@@ -284,3 +286,4 @@ export const addOrModify = '/admin/config/sysconfig/addOrModify'; // 新增修�
 export const getRoleList = ['/admin/privilege/queryPrivilegeList', { methods: 'get' }]; // 获取管理员权限列表
 export const queryDepartmentList = ['/admin/department/queryDepartmentList', { methods: 'get' }]; // 获取岗位列表
 export const queryJobList = ['/admin/role/queryJobList', { methods: 'get' }]; // 查询岗位列表
+

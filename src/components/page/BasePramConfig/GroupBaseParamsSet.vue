@@ -1,7 +1,7 @@
 <template>
     <div class="group-base-params">
         <v-breadcrumb :nav="nav"></v-breadcrumb>
-        <el-card :body-style="{ padding: '20px 40px',minHeight:'60vh' }">
+        <el-card v-loading="bodyLoading" :body-style="{ padding: '20px 40px',minHeight:'60vh' }">
             <div class="currency-title">参数设置</div>
             <div class="currency-wrap">
                 <span class="currency-small-title">拼店招募开启人数设置</span><br/>
@@ -30,19 +30,19 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import * as api from "@/api/OperateManage/groupBaseParamsSet.js";
-    import * as pApi from "@/privilegeList/OperateManage/groupBaseParamsSet.js";
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import request from '@/http/http';
 
     export default {
-        components: {vBreadcrumb},
+        components: { vBreadcrumb },
 
         data() {
             return {
-                nav: ["运营管理", "拼店基础参数设置"],
+                nav: ['运营管理', '拼店基础参数设置'],
+                bodyLoading: false,
                 btnLoading: false,
-                storeStartNum: "",
-                storeDeposit: "",
+                storeStartNum: '',
+                storeDeposit: '',
                 mask: false
             };
         },
@@ -54,41 +54,55 @@
         methods: {
             //   获取数据
             getInfo() {
-                this.$axios
-                    .post(api.findConfig, {})
-                    .then(res => {
-                        this.storeStartNum = res.data.data.storeStartNum;
-                        this.storeDeposit = res.data.data.storeDeposit;
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                const data = {
+                    codes: 'store_start_num,store_deposit'
+                };
+                this.bodyLoading = true;
+                request.queryConfig(data).then(res => {
+                    this.storeStartNum = res.data[0].value;
+                    this.storeDeposit = res.data[1].value;
+                    this.bodyLoading = false;
+                }).catch(err => {
+                    console.log(err);
+                    this.bodyLoading = false;
+                });
             },
             //   提交表单
             submitForm() {
                 this.mask = true;
             },
             sure() {
-                let data = {};
-                data.storeStartNum = this.storeStartNum;
-                data.storeDeposit = this.storeDeposit;
-                data.url = pApi.updateConfigByGroupstore;
+                const data = {
+                    configVOS: [
+                        {
+                            code: 'store_start_num',
+                            name: '拼店招募开启人数',
+                            value: this.storeStartNum,
+                            value_type: 1,
+                            status: 1
+                        },
+                        {
+                            code: 'store_deposit',
+                            name: '拼店保证金',
+                            value: this.storeDeposit,
+                            value_type: 1,
+                            status: 1
+                        }
+                    ]
+                };
                 this.btnLoading = true;
-                this.$axios
-                    .post(api.updateConfigByGroupstore, data)
-                    .then(res => {
-                        this.$message.success(res.data.msg);
-                        this.btnLoading = false;
-                        this.mask = false
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        this.btnLoading = false;
-                    });
+                request.addOrModifyList(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.btnLoading = false;
+                    this.mask = false;
+                }).catch(err => {
+                    console.log(err);
+                    this.btnLoading = false;
+                });
             },
-            //取消
+            // 取消
             cancel() {
-                this.getInfo()
+                this.getInfo();
             }
         }
     };
