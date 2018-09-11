@@ -53,11 +53,15 @@ export default {
     //   获取省份列表
         getProvinceList() {
             this.pLoading = true;
-            request.getProvinced({}).then(res => {
+            const data = {
+                fatherCode: 0
+            };
+            request.getRegion(data).then(res => {
+                console.log(res);
                 this.provinceArr = [];
                 this.provinceArr.push({ label: '全部', value: '' });
-                res.data.data.forEach((v, k) => {
-                    this.provinceArr.push({ label: v.name, value: v.zipcode });
+                res.data.forEach((v, k) => {
+                    this.provinceArr.push({ label: v.name, value: v.code });
                     this.pLoading = false;
                 });
             }).catch(error => {
@@ -69,9 +73,9 @@ export default {
             const that = this;
             this.cLoading = true;
             const data = {
-                fatherZipcode: this.province
+                fatherCode: this.province
             };
-            request.getCity(data).then(res => {
+            request.getRegion(data).then(res => {
                 this.cityArr = [];
                 this.cityArr.push({ label: '全部', value: '' });
                 if (val == false) {
@@ -79,8 +83,8 @@ export default {
                 } else {
                     this.city = this.regionMsg[1];
                 }
-                res.data.data.forEach((v, k) => {
-                    that.cityArr.push({ label: v.name, value: v.zipcode });
+                res.data.forEach((v, k) => {
+                    that.cityArr.push({ label: v.name, value: v.code });
                     that.cLoading = false;
                 });
                 if (val == true) {
@@ -91,29 +95,6 @@ export default {
             }).catch(error => {
                 console.log(error);
             });
-            // this.$axios
-            //     .post(api.getCity, { fatherZipcode: this.province })
-            //     .then(res => {
-            //         this.cityArr = [];
-            //         this.cityArr.push({ label: '全部', value: '' });
-            //         if (val == false) {
-            //             this.city = this.cityArr[0].value;
-            //         } else {
-            //             this.city = this.regionMsg[1];
-            //         }
-            //         res.data.data.forEach((v, k) => {
-            //             that.cityArr.push({ label: v.name, value: v.zipcode });
-            //             that.cLoading = false;
-            //         });
-            //         if (val == true) {
-            //             this.getArea(true);
-            //             return;
-            //         }
-            //         this.getArea(false);
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     });
         },
         // 获取区
         getArea(val) {
@@ -128,9 +109,9 @@ export default {
                 }
                 return;
             } else {
-                data.fatherZipcode = this.city;
+                data.fatherCode = this.city;
             }
-            request.getArea(data).then(res => {
+            request.getRegion(data).then(res => {
                 this.areaArr = [];
                 this.areaArr.push({ label: '全部', value: '' });
                 if (val == false) {
@@ -138,8 +119,8 @@ export default {
                 } else {
                     this.area = this.regionMsg[2];
                 }
-                res.data.data.forEach((v, k) => {
-                    that.areaArr.push({ label: v.name, value: v.zipcode });
+                res.data.forEach((v, k) => {
+                    that.areaArr.push({ label: v.name, value: v.code });
                 });
                 this.region = [];
                 this.region.push(this.province);
@@ -151,30 +132,6 @@ export default {
             }).catch(error => {
                 console.log(error);
             });
-            // this.$axios
-            //     .post(api.getArea, data)
-            //     .then(res => {
-            //         this.areaArr = [];
-            //         this.areaArr.push({ label: '全部', value: '' });
-            //         if (val == false) {
-            //             this.area = this.areaArr[0].value;
-            //         } else {
-            //             this.area = this.regionMsg[2];
-            //         }
-            //         res.data.data.forEach((v, k) => {
-            //             that.areaArr.push({ label: v.name, value: v.zipcode });
-            //         });
-            //         this.region = [];
-            //         this.region.push(this.province);
-            //         this.region.push(this.city);
-            //         this.region.push(this.area);
-            //         if (val == false) {
-            //             this.$emit('regionMsg', this.region);
-            //         }
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     });
         },
         // 获取省市区
         getAllRegion() {

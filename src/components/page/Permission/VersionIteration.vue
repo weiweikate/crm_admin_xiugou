@@ -28,7 +28,7 @@
                     <el-form-item label="是否强制更新">
                         <el-radio-group v-model="form.forceUpdate">
                             <el-radio :label="1" value=1>是</el-radio>
-                            <el-radio :label="2" value=0>否</el-radio>
+                            <el-radio :label="0" value=0>否</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="备注说明">
@@ -97,7 +97,7 @@
             showDeleteToast(row) {
                 // 显示删除弹框
                 this.delId = row.id;
-                this.delUrl = cApi.deleteVersionRecord;
+                this.delUrl = 'deleteVersionRecord';
                 this.isShowDelToast = !this.isShowDelToast;
             },
             deleteToast(msg) {
@@ -109,18 +109,9 @@
                 // 回显信息
                 if (row) {
                     this.title = '编辑版本信息';
-                    this.$axios.post(cApi.findVersionRecordById, { id: row.id }).then(res => {
-                        this.form = {
-                            id: row.id,
-                            versionNum: res.data.data.version,
-                            coerce: res.data.data.coerce,
-                            remark: res.data.data.description,
-                            dowloadUrl: res.data.data.url || ''
-                        };
-                        this.form.type = this.activeName === 'IOS' ? 2 : 1;
-                        this.url = cApi.updateVersionRecord;
-                        this.isShowAddQues = !this.isShowAddQues;
-                    });
+                    this.url = 'updateVersionRecord';
+                    this.isShowAddQues = !this.isShowAddQues;
+                    this.form = row;
                 } else {
                     this.form.type = this.activeName === 'IOS' ? 2 : 1;
                     this.url = 'addVersionRecord';
@@ -129,13 +120,12 @@
             },
             onSubmit() {
                 // 提交表单
-                if (this.form.versionNum === '' || this.form.coerce === '' || this.form.remark === '' || this.form.dowloadUrl === '') {
+                if (this.form.version === '' || this.form.forceUpdate === '' || this.form.description === '') {
                     this.$message.warning('请填写完整信息');
                     return;
                 }
                 this.btnLoading = true;
                 request[this.url](this.form).then(res => {
-                    console.log(res);
                     this.$refs[this.activeName].getList(this.$refs[this.activeName].page.currentPage, this.$refs[this.activeName].status = this.activeName === 'IOS' ? 2 : 1);
                     this.$message.success(res.msg);
                     this.isShowAddQues = false;

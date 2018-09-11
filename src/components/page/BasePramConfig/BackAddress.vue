@@ -2,7 +2,7 @@
     <div class="delivery-address">
         <v-breadcrumb :nav="['运营管理','寄回地址管理']"></v-breadcrumb>
         <div class="table-block">
-            <el-button type="primary" style="margin-bottom: 20px" @click="addAddress" v-if="p.addReturnAddress">添加寄回点</el-button>
+            <el-button type="primary" style="margin-bottom: 20px" @click="addAddress">添加寄回点</el-button>
             <template>
                 <el-table :data="tableData" :height="height" border style="width: 100%">
                     <el-table-column type="index" label="编号" width="60" align="center"></el-table-column>
@@ -15,13 +15,13 @@
                     <el-table-column prop="recevice_phone" label="联系方式" align="center"></el-table-column>
                     <el-table-column v-if="isShowOperate" label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" v-if="scope.row.status==2&&p.updateReturnAddress_1"
+                            <el-button type="primary" size="small" v-if="scope.row.status==2"
                                        @click="openOrCloseItem(scope.row,1)">开启
                             </el-button>
-                            <el-button type="danger" size="small" v-if="scope.row.status==1&&p.updateReturnAddress_1" @click="openOrCloseItem(scope.row,2)">关闭
+                            <el-button type="danger" size="small" v-if="scope.row.status==1" @click="openOrCloseItem(scope.row,2)">关闭
                             </el-button>
-                            <el-button type="warning" size="small" v-if="p.updateReturnAddress" @click="editItem(scope.row)">编辑</el-button>
-                            <el-button type="danger" size="small" v-if="p.deleteReturnAddress" @click="delItem(scope.row.id)">删除</el-button>
+                            <el-button type="warning" size="small" @click="editItem(scope.row)">编辑</el-button>
+                            <el-button type="danger" size="small" @click="delItem(scope.row.id)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -138,22 +138,11 @@
         created() {
             const winHeight = window.screen.availHeight - 520;
             this.height = winHeight;
-            this.pControl();
         },
         activated() {
             this.getList();
-            this.pControl();
         },
         methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-                if (this.p.addReturnAddress && this.p.updateReturnAddress && this.p.updateReturnAddress_1 && this.p.deleteReturnAddress) {
-                    this.isShowOperate = true;
-                }
-            },
             // 获取省市区
             getRegion(msg) {
                 this.address = msg;

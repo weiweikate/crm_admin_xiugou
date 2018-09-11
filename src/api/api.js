@@ -109,12 +109,6 @@ export const queryTopMenuList = '/admin/privilege/queryTopMenuList';
 export const addFunctionModule = '/admin/privilege/addFunctionModule';
 // 修改头像
 export const updateAdminUserFace = 'admin/adminUser/updateAdminUserFace';
-// 根据id获取版本信息
-export const findVersionRecordById = '/admin/version/findVersionRecordById';
-// 编辑版本信息
-export const updateVersionRecord = '/admin/version/updateVersionRecord';
-// 删除版本信息
-export const deleteVersionRecord = '/admin/version/deleteVersionRecord';
 // 获取数据字典列表
 export const queryDictionaryDetailsType = '/admin/dictionary/queryDictionaryDetailsType';
 
@@ -284,4 +278,7 @@ export const queryDepartmentList = ['/admin/department/queryDepartmentList', { m
 export const queryJobList = ['/admin/role/queryJobList', { methods: 'get' }]; // 查询岗位列表
 export const queryVersionRecordPageList = '/admin/config/sysAppVersion/queryList';// 获取版本列表信息
 export const addVersionRecord = '/admin/config/sysAppVersion/add';// 新增版本信息
+export const updateVersionRecord = '/admin/config/sysAppVersion/update';// 编辑版本信息
+export const deleteVersionRecord = '/admin/config/sysAppVersion/deleteById';// 删除版本信息
+export const getRegion = ['/admin/config/sysArea/queryAreaList', { methods: 'get' }]; // 查询省市区
 
