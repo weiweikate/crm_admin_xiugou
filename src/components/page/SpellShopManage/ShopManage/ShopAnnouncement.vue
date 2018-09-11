@@ -102,8 +102,8 @@
                 };
                 request.queryStoreNoticeList(data).then(res => {
                     this.tableData = [];
-                    this.tableData = res.data.data.data;
-                    this.page.totalPage = res.data.data.resultCount;
+                    this.tableData = res.data.data;
+                    this.page.totalPage = res.data.totalNum;
                 }).catch(error => {
                     console.log(error);
                 });
@@ -125,7 +125,7 @@
                     content: this.annContent
                 };
                 request.updateStoreNotice(data).then(res => {
-                    this.$message.success(res.data.msg);
+                    // this.$message.success(res.data.msg);
                     this.getList(this.page.currentPage);
                 }).catch(error => {
                     console.log(error);

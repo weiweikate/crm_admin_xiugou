@@ -75,30 +75,20 @@ export const getAllgetAllActivety = '/admin/securityCodeTemplate/getSecurityCode
 export const productionSecurityCode = '/securityCode/securityCodeRecord/productionSecurityCode';
 //
 // 权限管理
-// 查询部门列表
-export const queryDepartmentList = '/admin/role/queryDepartmentList';
 // 添加部门
 export const addDepartment = '/admin/department/addDepartment';
 // 根据id查询部门
 export const findDepartmentById = '/admin/department/findDepartmentById';
 // 编辑部门
 export const updateDepartment = '/admin/department/updateDepartment';
-// 查询岗位列表
-export const queryJobList = '/admin/role/queryJobList';
 // 查看管理员操作日志
 export const getMangerLog = '/admin/logAdminuser/getPage';
-// 获取管理员权限列表
-export const getRoleList = '/admin/privilege/queryPrivilegeList';
 // 重置登陆密码
 export const resetPassword = '/admin/adminUser/resetPassword';
 // 开启/关闭管理员账号
 export const updateAdminUserStatus = '/admin/adminUser/updateAdminUserStatus';
 // 删除管理员账号
 export const deleteAdminUser = '/admin/adminUser/deleteUpdateAdminUser';
-// // 根据ID查找管理员信息
-// export const findAdminUserbyId = '/admin/adminUser/findAdminUserbyId';
-// 编辑管理员
-export const updateAdminUser = '/admin/adminUser/updateAdminUser';
 // 岗位列表查询
 export const queryRolePageList = '/admin/role/queryRolePageList';
 // 添加岗位
@@ -288,5 +278,9 @@ export const findAdminUserbyId = ['/admin/adminUser/findAdminUserById', { method
 export const loginByCode = '/admin/adminLogin/codeLogin'; // 管理员手机号登录
 export const loginByPwd = '/admin/adminLogin/pswLogin'; // 管理员账号密码登录
 export const addManger = '/admin/adminUser/addAdminUser'; // 添加管理员
+export const updateAdminUser = '/admin/adminUser/updateAdminUser'; // 编辑管理员
 export const getMangerList = '/admin/adminUser/queryAdminUserPageList'; // 获取管理员列表
 export const addOrModify = '/admin/config/sysconfig/addOrModify'; // 新增修改系统配置
+export const getRoleList = ['/admin/privilege/queryPrivilegeList', { methods: 'get' }]; // 获取管理员权限列表
+export const queryDepartmentList = ['/admin/department/queryDepartmentList', { methods: 'get' }]; // 获取岗位列表
+export const queryJobList = ['/admin/role/queryJobList', { methods: 'get' }]; // 查询岗位列表

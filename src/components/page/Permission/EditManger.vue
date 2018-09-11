@@ -5,11 +5,11 @@
             <div class="add-box">
                 <el-form ref="form" :model="form" :rules="rules" label-width="100px">
                     <span class="add-box-title">基础信息</span>
-                    <el-form-item prop="username" label="姓名">
-                        <el-input class="add-mange-inp" v-model="form.username"></el-input>
+                    <el-form-item prop="name" label="姓名">
+                        <el-input class="add-mange-inp" v-model="form.name"></el-input>
                     </el-form-item>
-                    <el-form-item prop="phone" label="手机号">
-                        <el-input class="add-mange-inp" v-model="form.phone"></el-input>
+                    <el-form-item prop="telephone" label="手机号">
+                        <el-input class="add-mange-inp" v-model="form.telephone"></el-input>
                     </el-form-item>
                     <div class="avatar">
                         <img v-if="form.face" :src="form.face">
@@ -25,8 +25,8 @@
                     <div class="clearfix"></div>
                     <hr width='90%' size='1' color='#ccc' class='add-box-sep'>
                     <span class="add-box-title">部门信息</span>
-                    <el-form-item prop="departmentId" label="所属部门">
-                        <el-select v-model="form.departmentId" @change="getJobList" placeholder="请选择">
+                    <el-form-item prop="deptmentId" label="所属部门">
+                        <el-select v-model="form.deptmentId" @change="getJobList" placeholder="请选择">
                             <el-option v-for="item in department" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
@@ -35,8 +35,8 @@
                             <el-option v-for="item in jobList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item prop="superior" label="直接上级">
-                        <el-input class="add-mange-inp" v-model="form.superior"></el-input>
+                    <el-form-item prop="immediateSuperior" label="直接上级">
+                        <el-input class="add-mange-inp" v-model="form.immediateSuperior"></el-input>
                     </el-form-item>
                     <hr width='90%' size='1' color='#ccc' class='add-box-sep'>
                     <span class="add-box-title">权限信息</span>
@@ -90,19 +90,19 @@ export default {
             id: '',
             bodyLoading: false,
             form: {
-                username: '',
-                phone: '',
-                departmentId: '',
+                name: '',
+                telephone: '',
+                deptmentId: '',
                 jobId: '',
-                superior: '',
+                immediateSuperior: '',
                 face: ''
             },
             rules: {
-                username: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-                phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-                departmentId: [{ required: true, message: '请输入所属部门', trigger: 'blur' }],
+                name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+                telephone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+                deptmentId: [{ required: true, message: '请输入所属部门', trigger: 'blur' }],
                 jobId: [{ required: true, message: '请输入所在岗位', trigger: 'blur' }],
-                superior: [{ required: true, message: '请输入直接上级ID', trigger: 'blur' }]
+                immediateSuperior: [{ required: true, message: '请输入直接上级ID', trigger: 'blur' }]
             }
         };
     },
@@ -115,11 +115,10 @@ export default {
     methods: {
         // 提交表单
         submitForm(formName) {
-            const that = this;
             let data = {};
             const role = [];
             const reg = /^1(3|4|5|6|7|8)\d{9}$/;
-            if (!reg.test(parseInt(this.form.phone))) {
+            if (!reg.test(Number(this.form.telephone))) {
                 this.$message.warning('请输入正确的手机号！');
                 return;
             }
@@ -131,33 +130,17 @@ export default {
             data = this.form;
             data.role = role.join(',');
             data.id = this.id;
-            data.url = pApi.updateAdminUser;
+            this.btnLoading = true;
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    this.btnLoading = true;
-                    this.$axios
-                        .post(api.updateAdminUser, data)
-                        .then(res => {
-                            if (res.data.code == 200) {
-                                this.btnLoading = false;
-                                if (this.id == localStorage.getItem('ms_userID')) {
-                                    this.$message.success('修改信息成功，请重新登陆');
-                                    setTimeout(function() {
-                                        that.$router.push('/login');
-                                    }, 1000);
-                                } else {
-                                    this.$message.success(res.data.data);
-                                    this.$router.push('/manageList');
-                                }
-                            } else {
-                                this.$message.warning(res.data.msg);
-                                this.btnLoading = false;
-                            }
-                        })
-                        .catch(err => {
-                            console.log(err);
-                            this.btnLoading = false;
-                        });
+                    request.updateAdminUser(data).then(res => {
+                        this.btnLoading = false;
+                        this.$message.success(res.msg);
+                        this.$router.push('/manageList');
+                    }).catch(err => {
+                        console.log(err);
+                        this.btnLoading = false;
+                    });
                 } else {
                     console.log('error submit!!');
                     return false;
@@ -222,76 +205,58 @@ export default {
         // 获取权限列表
         getRoleList() {
             const data = {};
-            this.$axios
-                .post(api.getRoleList, data)
-                .then(res => {
-                    this.userManList = res.data.data;
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            request.getRoleList(data).then(res => {
+                this.userManList = res.data;
+            }).catch(err => {
+                console.log(err);
+            });
         },
 
         // 获取部门列表
         getDepartmentList() {
             this.department = [];
-            this.$axios
-                .post(api.queryDepartmentList, {})
-                .then(res => {
-                    if (res.data.code == 200) {
-                        res.data.data.forEach((v, k) => {
-                            this.department.push({ label: v.name, value: v.id });
-                        });
-                    } else {
-                        this.$message.warning(res.data.msg);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            request.queryDepartmentList({}).then(res => {
+                if (res.data.length !== 0) {
+                    res.data.forEach((v, k) => {
+                        this.department.push({ label: v.name, value: v.id });
+                    });
+                }
+            }).catch(err => {
+                console.log(err);
+            });
         },
         // 获取岗位列表
-        getJobList(val, sta) {
-            this.form.jobId = '';
+        getJobList(val) {
             this.jobList = [];
-            this.$axios
-                .post(api.queryJobList, { dId: val })
-                .then(res => {
-                    if (res.data.code == 200) {
-                        res.data.data.forEach((v, k) => {
-                            if (v != null || v != undefined) {
-                                this.jobList.push({ label: v.name, value: v.id });
-                            }
-                        });
-                    } else {
-                        this.$message.warning(res.data.msg);
-                    }
-                    if (sta == 1) {
-                        this.form.jobId = this.tmpJobId;
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            this.form.jobId = '';
+            request.queryJobList({ id: val }).then(res => {
+                if (res.data.length !== 0) {
+                    res.data.forEach((v, k) => {
+                        this.jobList.push({ label: v.name, value: v.id });
+                    });
+                }
+            }).catch(err => {
+                console.log(err);
+            });
         },
-        // created
+        // 获取管理员信息
         async getCreatedMsg() {
+            this.bodyLoading = true;
             const that = this;
             this.uploadImg = api.addImg;
-            // this.getRoleList();
-            // this.getDepartmentList();
+            await this.getDepartmentList();
+            await this.getRoleList();
             this.checkAllUser = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
             this.id = this.$route.params.id || sessionStorage.getItem('editManger');
-            this.bodyLoading = true;
-            await request.findAdminUserbyId({ id: this.id, url: pApi.updateAdminUser }).then(res => {
-                this.bodyLoading = false;
+            await request.findAdminUserbyId({ id: this.id }).then(res => {
                 this.getUserPriList = [];
-                this.form.username = res.data.name;
-                this.form.phone = res.data.telephone;
-                this.form.departmentId = res.data.deptmentId;
-                this.getJobList(this.form.departmentId, 1);
-                this.tmpJobId = res.data.jobId;
-                this.form.superior = res.data.immediateSuperior;
+                this.form.name = res.data.name;
+                this.form.telephone = res.data.telephone;
+                this.form.deptmentId = res.data.deptmentId;
+                this.getJobList(this.form.deptmentId, 1);
+                this.bodyLoading = false;
+                this.form.jobId = res.data.jobId;
+                this.form.immediateSuperior = res.data.immediateSuperior;
                 this.form.face = res.data.face;
                 res.data.adminUserPrivilegeList.forEach((v, k) => {
                     this.getUserPriList.push(v.privilegeId);

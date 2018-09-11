@@ -290,7 +290,7 @@
                         }
                         this.btnLoading = true
                         request.addFreightTemplate(data).then(res => {
-                            that.$message.success(res.data.msg);
+                            // that.$message.success(res.data.msg);
                             that.$router.push('/shippingTemplate');
                             this.btnLoading = false;
                         }).catch(error => {

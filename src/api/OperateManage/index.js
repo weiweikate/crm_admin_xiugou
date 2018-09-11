@@ -180,7 +180,7 @@ export const updateConfigByGroupstore = '/admin/config/updateConfigByGroupstore'
 // 信息
 export const findConfig = '/admin/config/findConfig';
 // 拼店店铺举报列表
-export const queryStoreReportPageList = '/admin/storeReport/queryStoreReportPageList';
+export const queryStoreReportPageList = ['/admin/store/storeTipOff/query', { methods: 'get' }];
 // 查询专题列表
 export const topicList = '/admin/topic/list';
 // 新建/编辑模版

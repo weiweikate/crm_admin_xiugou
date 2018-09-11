@@ -1,41 +1,39 @@
-//店铺等级
+// 店铺等级
 // 修改等级
-export const updateStoreStarById = '/admin/storeStar/updateStoreStarById';
+export const updateStoreStarById = '/admin/store/storeStar/updateById';
 // 删除等级
 export const deleteStoreStar = '/admin/storeStar/deleteStoreStar';
 // 新增等级
-export const addStoreStar = '/admin/storeStar/addStoreStar';
+// export const addStoreStar = '/admin/storeStar/addStoreStar'; // 原型去掉
 // 根据ID获取等级
 export const getStoreStarById = '/admin/storeStar/getStoreStarById';
 // 获取所有等级
-export const getAllStoreStar = '/admin/storeStar/getAllStoreStar';
+export const getAllStoreStar = ['/admin/store/storeStar/findAll', { methods: 'get' }];
 // 获取最大等级
-export const getMaxLevel = '/admin/storeStar/getMaxLevel';
+// export const getMaxLevel = '/admin/storeStar/getMaxLevel'; // 原型去掉
 
-
-//店铺管理
-//已经开启的店铺
+// 店铺管理
+// 已经开启的店铺
 // 分红列表
 export const getStoreBonusPageList = '/admin/storeBonus/getStoreBonusPageList';
 // 分红详情
-export const getDealerBonusList = '/admin/storeBonus/getDealerBonusList';
+export const getDealerBonusList = '/admin/storeBonus/getDealerBonusList'; // 暂时不做
 // 已经开启的店铺
-export const getStorePageList = '/admin/store/getStorePageList';
+export const getStorePageList = '/admin/store/store/query';
 // 开启的店铺详情
-export const getStoreDetail = '/admin/store/getStoreDetail';
+// export const getStoreDetail = '/admin/store/getStoreDetail';
 // 成员列表
-export const getStoreMembers = '/admin/storeUser/getStoreMembers';
+export const getStoreMembers = '/admin/store/storeUser/query';
 
-//招募中的店铺
+// 招募中的店铺
 // 招募中的店铺列表
 export const getRecruitmentStorePageList = '/admin/store/getRecruitmentStorePageList';
 // 招募中的店铺详情
 export const getRecruitmentStoreDetail = '/admin/store/getRecruitmentStoreDetail';
 
-
-//店铺晋升降级
-export const demotionShop='/demotionShop';
-export const promotionShop='/promotionShop';
+// 店铺晋升降级
+export const demotionShop = '/demotionShop';
+export const promotionShop = '/promotionShop';
 // 交易额达标奖励
 export const updateStoreStarUpgradeTotleSalesById = '/admin/storeStar/updateStoreStarUpgradeTotleSalesById';
 // 人数不足条件
@@ -63,13 +61,20 @@ export const updateStoreStarUpgradeWeekSalesFreqById = '/admin/storeStar/updateS
 // 连续交易额达标
 export const updateStoreStarUpgradeWeekSalesById = '/admin/storeStar/updateStoreStarUpgradeWeekSalesById';
 
-
-//店铺公告
+// 店铺公告
 // 修改数据
-export const updateStoreNotice = '/admin/storeNotice/updateStoreNotice';
+export const updateStoreNotice = '/admin/store/storeNotice/updateById';
 // 删除数据
-export const deleteStoreNotice = '/admin/storeNotice/deleteStoreNotice';
+export const deleteStoreNotice = '/admin/store/storeNotice/delete';
 // 店铺公告列表
-export const queryStoreNoticeList = '/admin/storeNotice/queryStoreNoticeList';
+export const queryStoreNoticeList = ['/admin/store/storeNotice/findByStoreId', { methods: 'get' }];
 // 店铺公告详情
-export const findStoreNotice = '/admin/storeNotice/findStoreNotice';
+// export const findStoreNotice = '/admin/storeNotice/findStoreNotice';
+
+//* ********************************************************************************
+// 店铺列表
+export const getStoreList = '/admin/store/store/query';
+//店铺详情
+export const getStoreDetail = '/admin/store/store/getById';
+// 晋升降级设置
+export const updateStoreStar = '/admin/store/storeStar/update';

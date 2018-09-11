@@ -2,17 +2,17 @@
   <div class="question-list">
     <v-breadcrumb :nav="nav"></v-breadcrumb>
     <el-card :body-style="{ padding: '30px 60px' }">
-      <el-button v-if='p.addHelpQuestion' type="primary" @click="addQuestion">添加问题</el-button>
+      <el-button type="primary" @click="addQuestion">添加问题</el-button>
       <el-table :data="tableData" border style='margin-top:20px' :height="height">
         <el-table-column prop="id" label="编号" align="center"></el-table-column>
         <el-table-column prop="title" label="问题标题" align="center"></el-table-column>
         <el-table-column prop="helpYesNum" label="反馈有用" align="center"></el-table-column>
         <el-table-column prop="helpNoNum" label="反馈没用" align="center"></el-table-column>
-        <el-table-column v-if='operate' label="操作" align="center">
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button v-if='p.findHelpQuestionById' @click='showQuestionInfo(scope.row)' type="primary">查看详情</el-button>
-            <el-button v-if='p.updateHelpQuestion' @click="editQuestion(scope.row)" type="warning">编辑</el-button>
-            <el-button v-if='p.deleteHelpQuestion' @click="deleteUser(scope.row)" type="danger">删除</el-button>
+            <el-button @click='showQuestionInfo(scope.row)' type="primary">查看详情</el-button>
+            <el-button @click="editQuestion(scope.row)" type="warning">编辑</el-button>
+            <el-button @click="deleteUser(scope.row)" type="danger">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -46,14 +46,6 @@ export default {
     data() {
         return {
             nav: ['运营管理', '帮助中心管理'],
-            // 权限控制
-            p: {
-                addHelpQuestion: false,
-                findHelpQuestionById: false,
-                updateHelpQuestion: false,
-                deleteHelpQuestion: false
-            },
-            operate: true,
             questionTypeId: '',
             tableData: [],
             height: '100vh',
@@ -67,20 +59,10 @@ export default {
     activated() {
         this.height = window.screen.availHeight - 400;
         this.questionTypeId = this.$route.query.questionTypeId || sessionStorage.getItem('questionTypeId');
-        this.pControl();
         this.getList();
     },
 
     methods: {
-    // 权限控制
-        pControl() {
-            for (const k in this.p) {
-                this.p[k] = utils.pc(pApi[k]);
-            }
-            if (!this.p.findHelpQuestionById && !this.p.updateHelpQuestion && !this.p.deleteHelpQuestion) {
-                this.operate = false;
-            }
-        },
         // 获取数据
         getList() {
             const data = {

@@ -37,7 +37,7 @@
                     </template>
                 </el-table-column>
                 <!--<el-table-column prop="id" label="是否开启推荐" align="center"></el-table-column>-->
-                <el-table-column label="操作" align="center" v-if="p.getRecruitmentStoreDetail">
+                <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button type="primary" @click='showInfo(scope.row)'>查看详情</el-button>
                     </template>
@@ -60,7 +60,6 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import moment from 'moment';
-import * as pApi from '@/privilegeList/SpellShopManage/index';
 import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
@@ -72,10 +71,6 @@ export default {
 
     data() {
         return {
-            // 权限控制
-            p: {
-                getRecruitmentStoreDetail: false
-            },
 
             nav: ['拼店店铺管理', '招募店铺管理'],
             form: {
@@ -87,15 +82,8 @@ export default {
     },
     activated() {
         this.getList(this.page.currentPage);
-        this.pControl();
     },
     methods: {
-        // 权限控制
-        pControl() {
-            for (const k in this.p) {
-                this.p[k] = utils.pc(pApi[k]);
-            }
-        },
         // 获取数据
         getList(val) {
             const data = {
@@ -103,15 +91,17 @@ export default {
                 beginTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss') : '',
                 endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss') : '',
                 page: val,
-                url: pApi.getRecruitmentStorePageList
+                url: pApi.getRecruitmentStorePageList,
+                pageSize: this.page.pageSize,
+                status: 3
             };
-            request.getRecruitmentStorePageList(data).then(res => {
+            request.getStoreList(data).then(res => {
                 this.tableData = [];
-                this.tableData = res.data.data.data;
-                this.page.totalPage = res.data.data.resultCount;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
             }).catch(error => {
                 console.log(error);
-            })
+            });
         },
         // 查看店铺详情
         showInfo(row) {

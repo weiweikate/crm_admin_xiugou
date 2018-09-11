@@ -169,7 +169,7 @@
                 request.queryReturnAddressList(data).then(res => {
                     console.log(res);
                     that.tableLoading = false;
-                    that.tableData = res.data.data;
+                    that.tableData = res.data;
                 }).catch(err => {
                     that.tableLoading = false;
                     console.log(err);
@@ -297,7 +297,7 @@
             // 删除
             delItem(id) {
                 this.delId = id;
-                this.delUrl = api.deleteReturnAddress;
+                this.delUrl = 'deleteReturnAddress';
                 this.delUri = pApi.deleteReturnAddress;
                 this.isShowDelToast = true;
             },

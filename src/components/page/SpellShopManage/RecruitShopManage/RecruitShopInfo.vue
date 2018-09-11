@@ -102,8 +102,8 @@ export default {
             const data = {
                 id: this.shopId
             };
-            request.getRecruitmentStoreDetail(data).then(res => {
-                this.detail = res.data.data;
+            request.getStoreDetail(data).then(res => {
+                this.detail = res.data;
             }).catch(error => {
                 console.log(error);
             });

@@ -2,7 +2,7 @@
     <div class="shop-level-set">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
-            <el-button @click="addShopLevel" style="margin-bottom:20px" type="primary" v-if="p.addStoreStar">添加店铺等级</el-button>
+            <!--<el-button @click="addShopLevel" style="margin-bottom:20px" type="primary">添加店铺等级</el-button>-->
             <el-table border :data="tableData">
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column prop='name' label="名称" align="center"></el-table-column>
@@ -20,12 +20,12 @@
                         <template v-if="scope.row.autoUpgrade==1">自动</template>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" v-if="isShowOperate" align="center" minWidth="350">
+                <el-table-column label="操作" align="center" minWidth="350">
                     <template slot-scope="scope">
-                        <el-button @click="shopPromotion(scope.row)" type="primary" v-if="p.promotionShop">晋级设置</el-button>
-                        <el-button @click="shopDemotion(scope.row)" type="success" v-if="p.demotionShop">降级设置</el-button>
-                        <el-button @click="editShopLevel(scope.row)" type="warning" v-if="p.updateStoreStarById">编辑</el-button>
-                        <el-button @click="delItem(scope.row.id)" type="danger" v-if="p.deleteStoreStar">删除</el-button>
+                        <el-button @click="shopPromotion(scope.row)" type="primary">晋级设置</el-button>
+                        <el-button @click="shopDemotion(scope.row)" type="success">降级设置</el-button>
+                        <el-button @click="editShopLevel(scope.row)" type="warning">编辑</el-button>
+                        <el-button @click="delItem(scope.row.id)" type="danger">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -73,15 +73,6 @@
 
         data() {
             return {
-                // 权限控制
-                p: {
-                    addStoreStar: false,
-                    updateStoreStarById: false,
-                    deleteStoreStar: false,
-                    promotionShop: false,
-                    demotionShop: false
-                },
-                isShowOperate: false,
 
                 nav: ['拼店店铺管理', '店铺等级设置'],
                 diaTitle: '',
@@ -106,18 +97,8 @@
         },
         activated() {
             this.getList();
-            this.pControl();
         },
         methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-                if (this.p.updateStoreStarById && this.p.deleteStoreStar && this.p.promotionShop && this.p.demotionShop) {
-                    this.isShowOperate = true;
-                }
-            },
 
             // 获取数据
             getList() {
@@ -186,7 +167,7 @@
                 }
                 this.btnLoading = true;
                 request[url](data).then((res) => {
-                    this.$message.success(res.data.msg);
+                    // this.$message.success(res.data.msg);
                     this.getList();
                     this.btnLoading = false;
                 }).catch((err) => {
@@ -200,14 +181,14 @@
                 this.getList();
             },
             // 获取最大等级
-            getMaxLevel() {
-                this.$axios.post(api.getMaxLevel, {})
-                    .then((res) => {
-                        this.form.level = res.data.data;
-                    }).catch((err) => {
-                        console.log(err);
-                    });
-            },
+            // getMaxLevel() {
+            //     this.$axios.post(api.getMaxLevel, {})
+            //         .then((res) => {
+            //             this.form.level = res.data.data;
+            //         }).catch((err) => {
+            //             console.log(err);
+            //         });
+            // },
 
             // 店铺晋级
             shopPromotion(row) {

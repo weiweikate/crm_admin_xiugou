@@ -42,47 +42,55 @@
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-import * as api from "@/api/OperateManage/ReportSpellShop.js";
+import * as api from '@/api/OperateManage/ReportSpellShop.js';
 import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http.js';
+
 export default {
-  components: {vBreadcrumb},
-  mixins:[myMixinTable],
+    components: { vBreadcrumb },
+    mixins: [myMixinTable],
 
-  data () {
-    return {
-        tableData:[],
-    };
-  },
+    data() {
+        return {
+            tableData: []
+        };
+    },
 
-  activated(){
-      this.getList(this.page.currentPage);
-  },
+    activated() {
+        this.getList(this.page.currentPage);
+    },
 
-  methods: {
+    methods: {
     //   获取数据
-    getList(val){
-        this.$axios.post(api.queryStoreReportPageList,{page:val,pageSize:10}).then(res=>{
-            this.tableData = res.data.data.data;
-            this.page.totalPage = res.data.data.resultCount;
-        })
-    },
-    //   序号
-    handleIndex(index){
-        return index+1;
-    },
-    // 举报用户
-    reportUser(row){
-        sessionStorage.setItem('memberDetail',row.id);
-        this.$router.push({name:'memberDetail',query:{id:row.id}})
-    },
-    // 举报店铺
-    reportShop(row){
-        sessionStorage.setItem('shopInfoId',row.id);
-        this.$router.push({name:'shopInfo',query:{shopInfoId:row.id}})
-    },
-  }
-}
+        getList(val) {
+            const data = {
+                page: val,
+                pageSize: this.page.pageSize
+            };
+            request.queryStoreReportPageList(data).then(res => {
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
+            }).catch(error => {
+                console.log(error);
+            });
+        },
+        //   序号
+        handleIndex(index) {
+            return index + 1;
+        },
+        // 举报用户
+        reportUser(row) {
+            sessionStorage.setItem('memberDetail', row.id);
+            this.$router.push({ name: 'memberDetail', query: { id: row.id }});
+        },
+        // 举报店铺
+        reportShop(row) {
+            sessionStorage.setItem('shopInfoId', row.id);
+            this.$router.push({ name: 'shopInfo', query: { shopInfoId: row.id }});
+        }
+    }
+};
 
 </script>
 <style lang='less' scoped>
