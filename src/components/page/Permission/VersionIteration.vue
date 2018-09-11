@@ -13,11 +13,11 @@
             <el-dialog :title="title" :visible.sync="isShowAddQues" width="30%" @close='resetForm'>
                 <el-form ref="form" :model="form" label-width="80px">
                     <el-form-item label="版本号">
-                        <el-input v-model="form.versionNum"></el-input>
+                        <el-input v-model="form.version"></el-input>
                     </el-form-item>
                     <el-form-item v-if='activeName !="IOS"' label="上传APK">
-                        <el-input v-model="form.dowloadUrl"></el-input>
-                        <el-upload 
+                        <el-input v-model="form.url"></el-input>
+                        <el-upload
                             :action="upUrl"
                             :show-file-list="false"
                             :before-upload="beforeUpload"
@@ -26,13 +26,13 @@
                         </el-upload>
                     </el-form-item>
                     <el-form-item label="是否强制更新">
-                        <el-radio-group v-model="form.coerce">
+                        <el-radio-group v-model="form.forceUpdate">
                             <el-radio :label="1" value=1>是</el-radio>
-                            <el-radio :label="2" value=2>否</el-radio>
+                            <el-radio :label="0" value=0>否</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="备注说明">
-                        <el-input :maxlength="180" type="textarea" v-model="form.remark"></el-input>
+                        <el-input :maxlength="180" type="textarea" v-model="form.description"></el-input>
                     </el-form-item>
                     <el-form-item>
                       <div class="btnDiv">
@@ -48,115 +48,104 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import vVersionTemp from "./versionTemp/versionTemp";
-    import deleteToast from "@/components/common/DeleteToast";
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import vVersionTemp from './versionTemp/versionTemp';
+    import deleteToast from '@/components/common/DeleteToast';
     import * as cApi from '@/api/api';
-    import * as pApi from "@/privilegeList/OperateManage/HelpCenter/index.js";
-    import utils from '@/utils/index.js';
+    import request from '../../../http/http';
     export default {
-        components: { vBreadcrumb,deleteToast,vVersionTemp },
+        components: { vBreadcrumb, deleteToast, vVersionTemp },
 
         data() {
             return {
-                nav: ["权限设置", "版本迭代管理"],
-                activeName:'IOS',
-                isShowAddQues:false,
-                uploadLoading:false,
-                questionType:'',
-                addQuesTypeBtn:false,
-                isShowDelToast:false,
-                uploadUrl:'',
-                delId:'',
-                delUrl:'',
-                delUri:'',
-                form:{
-
-                },
-                title:"新增版本",
-                type:'', // 2：安卓 3：IOS
-                url:'',
-                btnLoading:false,
+                nav: ['权限设置', '版本迭代管理'],
+                activeName: 'IOS',
+                isShowAddQues: false,
+                uploadLoading: false,
+                questionType: '',
+                addQuesTypeBtn: false,
+                isShowDelToast: false,
+                uploadUrl: '',
+                delId: '',
+                delUrl: '',
+                delUri: '',
+                form: {},
+                title: '新增版本',
+                type: '', // 1：安卓 2：IOS
+                url: '',
+                btnLoading: false
             };
         },
-        computed:{
-            upUrl(){
+        computed: {
+            upUrl() {
                 return cApi.addFile;
             }
         },
-        activated(){
-            this.$refs[this.activeName].getList(this.$refs[this.activeName].page.currentPage,this.$refs[this.activeName].status = this.activeName == 'IOS'?3:2);
+        activated() {
+            this.$refs[this.activeName].getList(this.$refs[this.activeName].page.currentPage, this.$refs[this.activeName].status = this.activeName === 'IOS' ? 2 : 1);
         },
         methods: {
-            beforeUpload(file){
+            beforeUpload(file) {
                 // 上传之前
                 this.uploadLoading = true;
             },
-            uploadSuccess(res){
+            uploadSuccess(res) {
                 // 上传文件
                 this.form.dowloadUrl = res.data;
                 this.uploadLoading = false;
             },
-            showDeleteToast(row){
-              // 显示删除弹框
-              this.delId = row.id;
-              this.delUrl = cApi.deleteVersionRecord;
-              this.isShowDelToast = !this.isShowDelToast
+            showDeleteToast(row) {
+                // 显示删除弹框
+                this.delId = row.id;
+                this.delUrl = 'deleteVersionRecord';
+                this.isShowDelToast = !this.isShowDelToast;
             },
             deleteToast(msg) {
-               this.isShowDelToast = msg;
+                this.isShowDelToast = msg;
                 // 更新相应的模板
-                this.$refs[this.activeName].getList(this.$refs[this.activeName].page.currentPage,this.$refs[this.activeName].status = this.activeName == 'IOS'?3:2);
+                this.$refs[this.activeName].getList(this.$refs[this.activeName].page.currentPage, this.$refs[this.activeName].status = this.activeName === 'IOS' ? 2 : 1);
             },
-            addVersion(row){
-              // 回显信息
-               if(row){
-                   this.title = '编辑版本信息'
-                   this.$axios.post(cApi.findVersionRecordById,{id:row.id}).then(res=>{
-                       this.form = {
-                            id:row.id,
-                            versionNum:res.data.data.version,
-                            coerce:res.data.data.coerce,
-                            remark:res.data.data.description,
-                            dowloadUrl:res.data.data.url || '',
-                        }
-                        this.form.type = this.activeName == 'IOS'?3:2;
-                        this.url = cApi.updateVersionRecord;
-                        this.isShowAddQues = !this.isShowAddQues
-                   })
-               }else{
-                   this.form.type = this.activeName == 'IOS'?3:2;
-                   this.url = cApi.addVersionRecord;
-                   this.isShowAddQues = !this.isShowAddQues
-               }
+            addVersion(row) {
+                // 回显信息
+                if (row) {
+                    this.title = '编辑版本信息';
+                    this.url = 'updateVersionRecord';
+                    this.isShowAddQues = !this.isShowAddQues;
+                    this.form = row;
+                } else {
+                    this.form.type = this.activeName === 'IOS' ? 2 : 1;
+                    this.url = 'addVersionRecord';
+                    this.isShowAddQues = !this.isShowAddQues;
+                }
             },
-            onSubmit(){ 
+            onSubmit() {
                 // 提交表单
-                if(this.form.versionNum == ''||this.form.coerce == ''||this.form.remark == ''||this.form.dowloadUrl == ''){
+                if (this.form.version === '' || this.form.forceUpdate === '' || this.form.description === '') {
                     this.$message.warning('请填写完整信息');
                     return;
                 }
                 this.btnLoading = true;
-                this.$axios.post(this.url,this.form).then(res=>{
-                    this.$message.success(res.data.msg);
-                    this.$refs[this.activeName].getList(this.$refs[this.activeName].page.currentPage,this.$refs[this.activeName].status = this.activeName == 'IOS'?3:2);
+                request[this.url](this.form).then(res => {
+                    this.$refs[this.activeName].getList(this.$refs[this.activeName].page.currentPage, this.$refs[this.activeName].status = this.activeName === 'IOS' ? 2 : 1);
+                    this.$message.success(res.msg);
                     this.isShowAddQues = false;
                     this.btnLoading = false;
-                }).catch(err=>{
+                }).catch(err => {
+                    console.log(err);
                     this.btnLoading = false;
-                })
+                });
             },
-            resetForm(){
-                this.form ={}
+            resetForm() {
+                this.form = {};
             },
-            changeTab(val){
+            changeTab(val) {
                 // 切换tab选项卡
-                if(val.name == 'IOS'){
-                    this.$refs[this.activeName].getList(this.$refs[this.activeName].page.currentPage,this.$refs[this.activeName].status = 3);
-                }else{
-                    this.$refs[this.activeName].getList(this.$refs[this.activeName].page.currentPage,this.$refs[this.activeName].status = 2);
+                if (val.name == 'IOS') {
+                    this.$refs[this.activeName].getList(this.$refs[this.activeName].page.currentPage, this.$refs[this.activeName].status = 2);
+                } else {
+                    this.$refs[this.activeName].getList(this.$refs[this.activeName].page.currentPage, this.$refs[this.activeName].status = 1);
                 }
-            },
+            }
         }
     };
 </script>

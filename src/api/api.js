@@ -109,16 +109,6 @@ export const queryTopMenuList = '/admin/privilege/queryTopMenuList';
 export const addFunctionModule = '/admin/privilege/addFunctionModule';
 // 修改头像
 export const updateAdminUserFace = 'admin/adminUser/updateAdminUserFace';
-// 新增版本信息
-export const addVersionRecord = '/admin/version/addVersionRecord';
-// 获取版本列表信息
-export const queryVersionRecordPageList = '/admin/version/queryVersionRecordPageList';
-// 根据id获取版本信息
-export const findVersionRecordById = '/admin/version/findVersionRecordById';
-// 编辑版本信息
-export const updateVersionRecord = '/admin/version/updateVersionRecord';
-// 删除版本信息
-export const deleteVersionRecord = '/admin/version/deleteVersionRecord';
 // 获取数据字典列表
 export const queryDictionaryDetailsType = '/admin/dictionary/queryDictionaryDetailsType';
 
@@ -274,6 +264,8 @@ export const updateNoticeStatus = '/admin/notice/updateNoticeStatus';
 
 export const makeSureOrder = '/order/order/makeSureOrder';
 //* ***************************************************************************************************************************************************************************
+export const queryConfig = ['/admin/config/sysconfig/queryConfig', { methods: 'get' }]; // 查询系统配置
+export const addOrModifyList = '/admin/config/sysconfig/addOrModifyList'; // 批量新增系统配置
 export const findAdminUserbyId = ['/admin/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息
 export const loginByCode = '/admin/adminLogin/codeLogin'; // 管理员手机号登录
 export const loginByPwd = '/admin/adminLogin/pswLogin'; // 管理员账号密码登录
@@ -284,3 +276,9 @@ export const addOrModify = '/admin/config/sysconfig/addOrModify'; // 新增修�
 export const getRoleList = ['/admin/privilege/queryPrivilegeList', { methods: 'get' }]; // 获取管理员权限列表
 export const queryDepartmentList = ['/admin/department/queryDepartmentList', { methods: 'get' }]; // 获取岗位列表
 export const queryJobList = ['/admin/role/queryJobList', { methods: 'get' }]; // 查询岗位列表
+export const queryVersionRecordPageList = '/admin/config/sysAppVersion/queryList';// 获取版本列表信息
+export const addVersionRecord = '/admin/config/sysAppVersion/add';// 新增版本信息
+export const updateVersionRecord = '/admin/config/sysAppVersion/update';// 编辑版本信息
+export const deleteVersionRecord = '/admin/config/sysAppVersion/deleteById';// 删除版本信息
+export const getRegion = ['/admin/config/sysArea/queryAreaList', { methods: 'get' }]; // 查询省市区
+

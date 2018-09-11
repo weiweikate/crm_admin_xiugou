@@ -209,7 +209,7 @@
                     {
                         icon: 'icon-huiyuanzhanghaoguanli',
                         index: '7',
-                        title: '经销商会员管理',
+                        title: '会员管理',
                         subs: [
                             // {
                             //     index: "levelManage",
