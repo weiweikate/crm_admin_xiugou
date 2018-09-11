@@ -110,7 +110,7 @@ export default {
             that.tableLoading = true;
             request.queryFreightTemplateList(data).then(res => {
                 that.tableLoading = false;
-                that.tableData = res.data.data;
+                that.tableData = res.data;
             }).catch(error => {
                 console.log(error);
                 that.tableLoading = false;
