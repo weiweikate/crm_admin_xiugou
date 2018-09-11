@@ -6,7 +6,12 @@
       <el-table :data="tableData" border style='margin-top:20px' :height="height">
         <el-table-column prop="id" label="编号" align="center"></el-table-column>
         <el-table-column prop="name" label="问题类目" align="center"></el-table-column>
-        <el-table-column prop="problemNum" label="问题数量" align="center"></el-table-column>
+        <el-table-column label="图片" align="center">
+            <template slot-scope="scope">
+                <img :src="scope.row.imgUrl" alt="">
+            </template>
+        </el-table-column>
+        <el-table-column prop="num" label="问题数量" align="center"></el-table-column>
         <el-table-column v-if='operate' label="操作" align="center">
           <template slot-scope="scope">
             <el-button v-if='p.queryHelpQuestionPageList' type="primary" @click="questionList(scope.row)">问题列表</el-button>
@@ -24,9 +29,20 @@
             :total="page.totalPage">
         </el-pagination>
       </div>
-      <el-dialog title="添加问题类目" :visible.sync="isShowAddQues" width="30%">
-        <span>问题类型</span>
-        <el-input v-model="questionType" class="input-sty" placeholder="请输入问题类型"></el-input>
+      <el-dialog title="添加问题类目" :visible.sync="isShowAddQues" width="40%">
+          <div class="add-item">
+              <span>问题类型</span>
+              <el-input v-model="questionType" class="input-sty" placeholder="请输入问题类型"></el-input>
+          </div>
+       <div class="add-item">
+           <span>选择图片</span>
+           <el-input readonly v-model="imgUrl" auto-complete="off"></el-input>
+           <el-upload class="icon-uploader"
+                      action="/admin/ossClient/aliyunOSSUploadImage"
+                      :on-success="handleAvatarSuccess">
+               <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
+           </el-upload>
+       </div>
         <span slot="footer">
           <el-button type="primary" :loading="addQuesTypeBtn" @click="confirmAddQuesType">确 定</el-button>
           <el-button @click="isShowAddQues = false">取 消</el-button>
@@ -65,6 +81,7 @@ export default {
             tableData: [],
             height: '100vh',
             questionType: '',
+            imgUrl: '',
             delId: '',
             delUrl: '',
             delUri: '',
@@ -94,8 +111,8 @@ export default {
             };
             request.queryHelpTypePageList(data).then(res => {
                 this.tableData = [];
-                this.tableData = res.data.data.data;
-                this.page.totalPage = res.data.data.resultCount;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
             }).catch(error => {
                 console.log(error);
             });
@@ -108,10 +125,11 @@ export default {
         confirmAddQuesType() {
             this.addQuesTypeBtn = true;
             const data = {
-                name: this.questionType
+                name: this.questionType,
+                imgUrl: '34234234'
             };
             request.addHelpType(data).then(res => {
-                this.$message.success(res.data.msg);
+                // this.$message.success(res.data.msg);
                 this.getList(this.page.currentPage);
                 this.addQuesTypeBtn = false;
                 this.isShowAddQues = false;
@@ -136,12 +154,22 @@ export default {
         deleteToast(msg) {
             this.isShowDelToast = msg;
             this.getList(this.page.currentPage);
+        },
+        // 上传图片
+        handleAvatarSuccess(res, file) {
+            this.imgUrl = res.data.imageUrl;
         }
     }
 };
 </script>
 <style lang='less'>
 .help-center {
+    img{
+        width: 38px;
+        height: 38px;
+        border-radius: 5px;
+        vertical-align: middle;
+    }
   .input-sty{
     width: 210px;
   }
@@ -157,6 +185,36 @@ export default {
         color: #ff4e4e;
       }
     }
+      .el-input--small,.el-input__inner{
+          width: 200px;
+      }
   }
+    .add-item{
+        height: 40px;
+        line-height: 40px;
+    }
+
+    .el-dialog .el-upload--text {
+        width: 100px;
+        height: 40px;
+        border: none;
+    }
+    .icon-uploader {
+        float: right;
+        height: 33px;
+    }
+    .icon-uploader .el-button--small {
+        border-radius: 5px;
+        width: 100px;
+    }
+    .el-upload--text .el-icon-upload {
+        line-height: 0;
+        margin: 0;
+        color: #fff;
+        font-size: 14px;
+    }
+    .el-upload-list {
+        display: none;
+    }
 }
 </style>

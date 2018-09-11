@@ -46,7 +46,7 @@ export default {
                 const data = { id: that.id, status: that.status, url: that.uri };
                 request[url](data).then(res => {
                     that.btnLoading = false;
-                    this.$message.success(res.msg);
+                    // this.$message.success(res.msg);
                     this.$emit('msg', false);
                 }).catch(err => {
                     that.tableLoading = false;

@@ -130,8 +130,8 @@ export default {
                 id: this.questionId
             };
             request.findHelpQuestionById(data).then(res => {
-                this.form.questionTitle = res.data.data.title || '';
-                this.form.content = res.data.data.content || '';
+                this.form.questionTitle = res.data.title || '';
+                this.form.content = res.data.content || '';
             }).catch(error => {
                 console.log(error);
             });
@@ -141,10 +141,10 @@ export default {
             const data = {};
             data.title = this.form.questionTitle;
             data.content = this.form.content;
-            data.typeid = this.questionTypeId;
+            data.typeId = this.questionTypeId;
             data.id = this.questionId;
             request.updateHelpQuestion(data).then(res => {
-                this.$message.success(res.data.msg);
+                // this.$message.success(res.data.msg);
                 this.$router.push('/questionList');
             }).catch(error => {
                 console.log(error);
@@ -153,7 +153,7 @@ export default {
         // 返回
         goBack() {
             sessionStorage.setItem('questionTypeId', this.questionTypeId);
-            this.$router.push({ name: '/questionList', query: { questionTypeId: this.questionTypeId }});
+            this.$router.push({ name: 'questionList', query: { questionTypeId: this.questionTypeId }});
         }
     }
 };

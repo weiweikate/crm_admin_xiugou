@@ -31,21 +31,21 @@ export const queryProductPageList = '/admin/product/queryProductPageList';
 // 模板列表
 export const getAllDiscountCouponTemplate = '/admin/discountCouponTemplate/getAllDiscountCouponTemplate';
 // 问题类目列表
-export const queryHelpTypePageList = '/admin/helpType/queryHelpTypePageList';
+export const queryHelpTypePageList = '/admin/help/helpType/queryHelpTypePageList';
 // 添加问题类型
-export const addHelpType = '/admin/helpType/addHelpType';
+export const addHelpType = '/admin/help/helpType/addHelpType';
 // 删除问题类型
-export const deleteHelpType = '/admin/helpType/deleteHelpType';
+export const deleteHelpType = ['/admin/help/helpType/deleteHelpType', { methods: 'get' }];
 // 问题列表
-export const queryHelpQuestionPageList = '/core/helpQuestion/queryHelpQuestionPageList';
+export const queryHelpQuestionPageList = '/admin/help/helpQuestion/queryHelpQuestionPageList';
 // 添加问题
-export const addHelpQuestion = '/admin/helpQuestion/addHelpQuestion';
+export const addHelpQuestion = '/admin/help/helpQuestion/addHelpQuestion';
 // 根据id查询问题详情
-export const findHelpQuestionById = '/admin/helpQuestion/findHelpQuestionById';
+export const findHelpQuestionById = ['/admin/help/helpQuestion/findHelpQuestionById', { methods: 'get' }];
 // 编辑问题详情
-export const updateHelpQuestion = '/admin/helpQuestion/updateHelpQuestion';
+export const updateHelpQuestion = '/admin/help/helpQuestion/updateHelpQuestion';
 // 删除问题
-export const deleteHelpQuestion = '/admin/helpQuestion/deleteHelpQuestion';
+export const deleteHelpQuestion = ['/admin/help/helpQuestion/deleteHelpQuestion', { methods: 'get' }];
 /** ************降价拍*****************/
 // 降价拍商品列表
 export const operatorDepreciatelist = '/admin/operActivityDepreciate/operatorDepreciatelist';

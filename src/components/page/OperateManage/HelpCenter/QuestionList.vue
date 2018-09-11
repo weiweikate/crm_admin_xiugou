@@ -6,8 +6,8 @@
       <el-table :data="tableData" border style='margin-top:20px' :height="height">
         <el-table-column prop="id" label="编号" align="center"></el-table-column>
         <el-table-column prop="title" label="问题标题" align="center"></el-table-column>
-        <el-table-column prop="help_yes_num" label="反馈有用" align="center"></el-table-column>
-        <el-table-column prop="help_no_num" label="反馈没用" align="center"></el-table-column>
+        <el-table-column prop="helpYesNum" label="反馈有用" align="center"></el-table-column>
+        <el-table-column prop="helpNoNum" label="反馈没用" align="center"></el-table-column>
         <el-table-column v-if='operate' label="操作" align="center">
           <template slot-scope="scope">
             <el-button v-if='p.findHelpQuestionById' @click='showQuestionInfo(scope.row)' type="primary">查看详情</el-button>
@@ -84,12 +84,14 @@ export default {
         // 获取数据
         getList() {
             const data = {
-                typeid: this.questionTypeId
+                typeid: this.questionTypeId,
+                page: this.page.currentPage,
+                pageSize: this.page.pageSize
             };
             request.queryHelpQuestionPageList(data).then(res => {
                 this.tableData = [];
-                this.tableData = res.data.data.data;
-                this.page.totalPage = res.data.data.resultCount;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
             }).catch(err => {
                 console.log(err);
             });
@@ -108,10 +110,10 @@ export default {
             sessionStorage.setItem('questionInfo', row.id);
             this.$router.push({ name: 'questionInfo', query: { 'questionInfo': row.id }});
         },
-        // 删除用户
+        // 删除
         deleteUser(row) {
             this.delId = row.id;
-            this.delUrl = request.deleteHelpQuestion;
+            this.delUrl = 'deleteHelpQuestion';
             this.delUri = pApi.deleteHelpQuestion;
             this.isShowDelToast = true;
         },
