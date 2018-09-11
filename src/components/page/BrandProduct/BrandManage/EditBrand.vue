@@ -10,13 +10,6 @@
                     <el-form-item prop="area" label="品牌区域">
                         <el-input placeholder="请输入品牌区域" v-model="form.area"></el-input>
                     </el-form-item>
-                    <el-form-item class="classify-area" prop="productcIds" label="品牌类目">
-                        <!--<v-choosearea @productcIds="productcIds" @brandsId="brandsId" v-model="form.productcIds" :detailData="detailData"-->
-                                      <!--:addOrUp="isUp?'update':''"></v-choosearea>-->
-                        <v-choosearea @productcIds="productcIds" v-model="form.productcIds" :detailData="detailData"
-                                      :addOrUp="'update'"></v-choosearea>
-                        <div class="clearfix"></div>
-                    </el-form-item>
                     <el-form-item prop="original_img" label="品牌logo">
                         <el-upload
                                 class="avatar-uploader"
@@ -48,25 +41,22 @@
 
 </template>
 <script>
-    import icon from "../../../common/ico";
-    import vBreadcrumb from '../../../common/Breadcrumb.vue';
-    import vChoosearea from '../../../common/chooseClassify.vue';
-    import * as api from '../../../../api/api'
-    import * as pApi from '../../../../privilegeList/index.js';
+    import icon from '@/components/common/ico';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import request from '@/http/http.js';
 
     export default {
         components: {
-            vBreadcrumb, icon, vChoosearea
+            vBreadcrumb, icon
         },
         data() {
             return {
                 form: {
-                    name: "",
+                    name: '',
                     original_img: '',
                     small_img: '',
                     area: '',
-                    status: '1',
-                    productcIds: ''
+                    status: '1'
                 },
                 detailData: [],
                 btnLoading: false,
@@ -74,113 +64,86 @@
                 checkAll: false,
                 rules: {
                     name: [
-                        {required: true, message: "请输入品牌名称", trigger: "blur"}
+                        { required: true, message: '请输入品牌名称', trigger: 'blur' }
                     ],
                     area: [
-                        {required: true, message: "请输入品牌区域", trigger: "blur"}
+                        { required: true, message: '请输入品牌区域', trigger: 'blur' }
                     ],
                     productcIds: [
-                        {required: true, message: "请选择品牌类目", trigger: "blur"}
+                        { required: true, message: '请选择品牌类目', trigger: 'blur' }
                     ],
                     original_img: [
-                        {required: true, message: "请上传品牌LOGO", trigger: "blur"}
+                        { required: true, message: '请上传品牌LOGO', trigger: 'blur' }
                     ]
                 },
-                isUp: false,//添加false，修改true
                 id: '',
-                addBrand:''
-            }
+                addBrand: ''
+            };
         },
         activated() {
-            let that = this;
+            const that = this;
             that.id = that.$route.query.brandId || sessionStorage.getItem('brandId');
             that.getDetail();
         },
         methods: {
-            //获取详情
+            // 获取详情
             getDetail() {
-                let that = this;
-                let data = {
+                const that = this;
+                const data = {
                     id: that.id
                 };
                 that.loading = true;
-                that.$axios
-                    .post(api.findBrandById, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.loading = false;
-                            that.form = res.data.data.product;
-                            that.form.status=that.form.status.toString();
-                            that.detailData = res.data.data.userProduct;
-                        } else {
-                            that.loading = false;
-                            that.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        that.loading = false
-                    })
+                request.findBrandById(data).then(res => {
+                    that.loading = false;
+                    that.form = res.data.data.product;
+                    that.form.status = that.form.status.toString();
+                    that.detailData = res.data.data.userProduct;
+                }).catch(error => {
+                    that.loading = false;
+                });
             },
             handlePreview(file) {
                 console.log(file);
             },
-            //上传图片
+            // 上传图片
             handleAvatarSuccess(res, file) {
                 this.form.original_img = res.data.imageUrl;
                 this.form.small_img = res.data.imageThumbUrl;
             },
-            productcIds(productcIds) {
-                this.form.productcIds = productcIds.join(',');
-            },
-            // brandsId(brandsId) {
-            // },
             handleRemove() {
-                this.form.original_img = ''
+                this.form.original_img = '';
             },
             // 提交表单
             submitForm(form) {
-                let that = this;
+                const that = this;
                 that.btnLoading = true;
                 that.$refs[form].validate(valid => {
                     if (valid) {
-                        let data = {};
+                        const data = {};
                         data.originalImg = this[form].original_img;
                         data.smallImg = this[form].small_img;
-                        data.name=this[form].name;
-                        data.area=this[form].area;
-                        data.status=this[form].status;
-                        data.productcIds=this[form].productcIds;
+                        data.name = this[form].name;
+                        data.area = this[form].area;
+                        data.status = this[form].status;
                         data.id = that.id;
-                        data.url = pApi.updateBrand;
-                        this.$axios
-                            .post(api.updateBrand, data)
-                            .then(res => {
-                                if (res.data.code == 200) {
-                                    that.$message.success(res.data.msg);
-                                    setTimeout(function () {
-                                        that.$router.push('/brandManage');
-                                        that.btnLoading = false;
-                                    }, 1000)
-                                } else {
-                                    that.$message.warning(res.data.msg);
-                                    that.btnLoading = false;
-                                }
-                            })
-                            .catch(err => {
-                                console.log(err);
-                                that.btnLoading = false;
-                            });
+                        request.updateBrand(data).then(res => {
+                            that.$router.push('/brandManage');
+                            that.btnLoading = false;
+                        }).catch(error => {
+                            console.log(error);
+                            that.btnLoading = false;
+                        });
                     } else {
-                        console.log("error submit!!");
+                        console.log('error submit!!');
                         that.btnLoading = false;
                         return false;
                     }
                 });
             },
-            //取消
+            // 取消
             cancel() {
                 this.$router.push('/brandManage');
-            },
+            }
         }
     };
 </script>

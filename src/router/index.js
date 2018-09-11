@@ -156,6 +156,12 @@ export default new Router({
                     meta: { title: '店铺等级设置', url: '/admin/storeStar/getAllStoreStar' }
                 },
                 {
+                    name: 'reportSpellShop',
+                    path: '/reportSpellShop',
+                    component: resolve => require(['../components/page/SpellShopManage/reportSpellShop/ReportSpellShop.vue'], resolve),
+                    meta: { title: '拼店店铺举报', url: '/admin/storeReport/queryStoreReportPageList' }
+                },
+                {
                     name: 'promotionShop',
                     path: '/promotionShop',
                     component: resolve => require(['../components/page/SpellShopManage/ShopLevel/PromotionShop.vue'], resolve),
@@ -574,12 +580,6 @@ export default new Router({
                     path: '/sensitiveLibrary',
                     component: resolve => require(['../components/page/OperateManage/SensitiveLibrary.vue'], resolve),
                     meta: { title: '敏感词库', url: '/admin/badWord/queryBadWord' }
-                },
-                {
-                    name: 'reportSpellShop',
-                    path: '/reportSpellShop',
-                    component: resolve => require(['../components/page/OperateManage/ReportSpellShop.vue'], resolve),
-                    meta: { title: '拼店店铺举报', url: '/admin/storeReport/queryStoreReportPageList' }
                 },
                 {
                     name: 'questionList',

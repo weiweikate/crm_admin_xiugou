@@ -5,12 +5,12 @@
             <p class="small-title">基础设置</p>
             <el-button @click="showWeekTradNo = true" type="success">无交易额条件</el-button>
             <el-button @click="showMemberNoEnough = true" type="success">人数不足条件</el-button>
-            <el-button @click="showdemotionWeekDealerReduceOneExp = true" type="success">周期交易频率</el-button>
+            <el-button @click="showdemotionWeekUserReduceOneExp = true" type="success">周期交易频率</el-button>
             <el-button @click="showDemotionTotleSales = true" type="success">周期交易额</el-button>
             <!--<el-button @click="showNecessaryConf = true" type="success">平均活跃度</el-button>-->
         </el-card>
         <!-- 无交易额条件 -->
-        <el-dialog title="每周交易额无成长" :visible.sync="showWeekTradNo" width="25%" open="cleanData">
+        <el-dialog title="每周交易额无成长" :visible.sync="showWeekTradNo" width="30%"open="cleanData">
             <p class="dialog-item">
                 <span class="dialog-title">扣除经验值</span>
                 <el-input class="dialog-inp" v-model="form.demotionWeekNoSaleExp" placeholder="请输入数值"></el-input>
@@ -22,12 +22,12 @@
         </span>
         </el-dialog>
         <!-- 人数不足条件 -->
-        <el-dialog title="人数不足条件" :visible.sync="showMemberNoEnough" width="25%" open="cleanData">
+        <el-dialog title="人数不足条件" :visible.sync="showMemberNoEnough" width="30%"open="cleanData">
             <p class="dialog-item">
                 <span style="margin-left:30px">人数每减少1人，则扣除</span>
             </p>
             <p class="dialog-item">
-                <el-input class="dialog-inp" style="margin-left:30px" v-model="form.demotionWeekDealerReduceOneExp"
+                <el-input class="dialog-inp" style="margin-left:30px" v-model="form.demotionWeekUserReduceOneExp"
                           placeholder="请输入数值"></el-input>
                 分
             </p>
@@ -37,7 +37,7 @@
         </span>
         </el-dialog>
         <!-- 周期交易频率 -->
-        <el-dialog title="每周交易频率" :visible.sync="showdemotionWeekDealerReduceOneExp" width="25%" open="cleanData">
+        <el-dialog title="每周交易频率" :visible.sync="showdemotionWeekUserReduceOneExp" width="30%"open="cleanData">
             <p class="dialog-item">
                 <span class="dialog-title">交易频率低于</span>
                 <el-input class="dialog-inp" v-model="form.demotionWeekSalesFreq" placeholder="请输入数值"></el-input>
@@ -50,11 +50,11 @@
             </p>
             <span slot="footer">
             <el-button type="primary" @click="sure(2)">确 定</el-button>
-            <el-button @click="showdemotionWeekDealerReduceOneExp = false">取 消</el-button>
+            <el-button @click="showdemotionWeekUserReduceOneExp = false">取 消</el-button>
         </span>
         </el-dialog>
         <!-- 周期交易额 -->
-        <el-dialog title="每周交易额" :visible.sync="showDemotionTotleSales" width="25%" open="cleanData">
+        <el-dialog title="每周交易额" :visible.sync="showDemotionTotleSales" width="30%"open="cleanData">
             <p class="dialog-item">
                 <span class="dialog-title">交易额低于</span>
                 <el-input class="dialog-inp" v-model="form.demotionTotleSales" placeholder="请输入数值"></el-input>
@@ -86,13 +86,13 @@
                 nav: ['拼店店铺管理', '店铺等级设置', '店铺降级设置'],
                 showWeekTradNo: false,
                 showMemberNoEnough: false,
-                showdemotionWeekDealerReduceOneExp: false,
+                showdemotionWeekUserReduceOneExp: false,
                 showDemotionTotleSales: false,
                 form: {
                     //  无交易额条件
                     demotionWeekNoSaleExp: '',
                     // 人数不足条件
-                    demotionWeekDealerReduceOneExp: '',
+                    demotionWeekUserReduceOneExp: '',
                     // 周期交易频率
                     demotionWeekSalesFreq: '',
                     demotionWeekSalesFreqExp: '',
@@ -120,12 +120,7 @@
                     id: this.shopId
                 };
                 request.getStoreStarById(data).then((res) => {
-                    for (const i in res.data.data) {
-                        if (res.data.data[i] == 0 || res.data.data[i] == null || res.data.data[i] == undefined) {
-                            res.data.data[i] = '';
-                        }
-                    }
-                    this.form = res.data.data;
+                    this.form = res.data;
                 }).catch((err) => {
                     console.log(err);
                 });
@@ -163,7 +158,7 @@
                     flag1 = this.isEmpty(data.demotionWeekNoSaleExp, false);
                     this.setIsAjax(flag1);
                 } else if (index == 1) {
-                    flag1 = this.isEmpty(data.demotionWeekDealerReduceOneExp, false);
+                    flag1 = this.isEmpty(data.demotionWeekUserReduceOneExp, false);
                     this.setIsAjax(flag1);
                 } else if (index == 2) {
                     flag1 = this.isEmpty(data.demotionWeekSalesFreq, true);
@@ -176,12 +171,13 @@
                 }
                 if (this.isAjax) {
                     request.updateStoreStar(data).then((res) => {
-                        // this.$message.success(res.data.msg);
+                        this.$message.success('设置成功');
                         this.showWeekTradNo = false;
                         this.showMemberNoEnough = false;
-                        this.showdemotionWeekDealerReduceOneExp = false;
+                        this.showdemotionWeekUserReduceOneExp = false;
                         this.showDemotionTotleSales = false;
-                    }).cache((err) => {
+                        this.getStoreStarById()
+                    }).catch((err) => {
                         console.log(err);
                     });
                 }

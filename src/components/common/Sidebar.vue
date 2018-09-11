@@ -173,10 +173,10 @@
                             //     index: "productList",
                             //     title: "产品管理"
                             // },
-                            // {
-                            //     index: "shippingTemplate",
-                            //     title: "运费模板"
-                            // },
+                            {
+                                index: 'shippingTemplate',
+                                title: '运费模板'
+                            }
                             // {
                             //     index: "giftManage",
                             //     title: "产品礼包设置"
@@ -199,6 +199,10 @@
                             {
                                 index: 'recruitShopManage',
                                 title: '招募店铺管理'
+                            },
+                            {
+                                index: 'reportSpellShop',
+                                title: '拼店店铺举报'
                             }
                         ]
                     },
@@ -296,10 +300,6 @@
                             //     title: "敏感词库"
                             // },
                             // {
-                            //     index: "reportSpellShop",
-                            //     title: "拼店店铺举报"
-                            // },
-                            // {
                             //     index: "advertisingManage",
                             //     title: "广告位管理"
                             // },
@@ -371,48 +371,48 @@
 </script>
 
 <style lang='less'>
-    .sidebar {
-        display: block;
-        position: absolute;
-        width: 220px;
-        left: 0;
-        top: 70px;
-        bottom: 0;
-        background-color: #222d32;
-        overflow-y: scroll;
-        .el-submenu__title {
-            font-size: 16px;
-        }
-        .el-menu-item {
-            font-size: 16px;
-        }
-        .el-menu-item .is-active,
-        .el-submenu .is-active {
-            border-left: 5px solid #ff1e30;
-            background-color: rgba(255, 255, 255, 0.2) !important;
-        }
-        .el-menu-item:hover {
-            color: white !important;
-            background-color: rgba(255, 255, 255, 0.2) !important;
-        }
-        .search-area {
-            height: 150px;
-            text-align: center;
-            .logo-img {
-                width: 128px;
-                height: 128px;
-                margin-top: 15px;
-                border-radius: 64px;
-                background-color: white;
-            }
+.sidebar {
+    display: block;
+    position: absolute;
+    width: 220px;
+    left: 0;
+    top: 70px;
+    bottom: 0;
+    background-color: #222d32;
+    overflow-y: scroll;
+    .el-submenu__title {
+        font-size: 16px;
+    }
+    .el-menu-item {
+        font-size: 16px;
+    }
+    .el-menu-item .is-active,
+    .el-submenu .is-active {
+        border-left: 5px solid #ff1e30;
+        background-color: rgba(255, 255, 255, 0.2) !important;
+    }
+    .el-menu-item:hover {
+        color: white !important;
+        background-color: rgba(255, 255, 255, 0.2) !important;
+    }
+    .search-area {
+        height: 150px;
+        text-align: center;
+        .logo-img {
+            width: 128px;
+            height: 128px;
+            margin-top: 15px;
+            border-radius: 64px;
+            background-color: white;
         }
     }
+}
 
-    .sidebar-el-menu:not(.el-menu--collapse) {
-        width: 200px;
-    }
+.sidebar-el-menu:not(.el-menu--collapse) {
+    width: 200px;
+}
 
-    .sidebar > ul {
-        height: 100%;
-    }
+.sidebar > ul {
+    height: 100%;
+}
 </style>

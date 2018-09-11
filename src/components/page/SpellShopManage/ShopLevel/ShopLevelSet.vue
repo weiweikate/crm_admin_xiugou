@@ -20,17 +20,17 @@
                         <template v-if="scope.row.autoUpgrade==1">自动</template>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center" minWidth="350">
+                <el-table-column label="操作" align="center" minWidth="300">
                     <template slot-scope="scope">
                         <el-button @click="shopPromotion(scope.row)" type="primary">晋级设置</el-button>
                         <el-button @click="shopDemotion(scope.row)" type="success">降级设置</el-button>
                         <el-button @click="editShopLevel(scope.row)" type="warning">编辑</el-button>
-                        <el-button @click="delItem(scope.row.id)" type="danger">删除</el-button>
+                        <!--<el-button @click="delItem(scope.row.id)" type="danger">删除</el-button>-->
                     </template>
                 </el-table-column>
             </el-table>
         </el-card>
-        <el-dialog :title="diaTitle" :visible.sync="isShowAddShopLevel" width="25%">
+        <el-dialog :title="diaTitle" :visible.sync="isShowAddShopLevel" width="30%">
             <el-form :model="form" label-width="100px">
                 <el-form-item prop="name" label="等级名称">
                     <el-input v-model="form.name" placeholder="请输入等级名称"></el-input>
@@ -102,12 +102,9 @@
 
             // 获取数据
             getList() {
-                const data = {
-                    url: pApi.getAllStoreStar
-                };
-                request.getAllStoreStar(data).then((res) => {
+                request.getAllStoreStar({}).then((res) => {
                     this.tableData = [];
-                    this.tableData = res.data.data;
+                    this.tableData = res.data;
                 }).catch((err) => {
                     console.log(err);
                 });
@@ -135,7 +132,6 @@
             },
             // 确认
             confirmAddShopLevel() {
-                console.log(this.form);
                 const data = this.form;
                 if (!data.name) {
                     this.$message.warning('请输入等级名称!');

@@ -2,7 +2,7 @@
     <div class="brand-manage">
         <v-breadcrumb :nav="['品牌产品管理','运费模板']"></v-breadcrumb>
         <div class="table-block">
-            <el-button v-if="p.addFreightTemplate" type="primary" style="margin-bottom: 20px" @click="addTemplate">添加模板</el-button>
+            <el-button type="primary" style="margin-bottom: 20px" @click="addTemplate">添加模板</el-button>
             <template>
                 <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
                     <el-table-column type="index" label="运费模板编号" width="100" align="center"></el-table-column>
@@ -28,12 +28,12 @@
                         </template>
                     </el-table-column>-->
                     <el-table-column prop="num" label="使用数" align="center"></el-table-column>
-                    <el-table-column v-if="isShowOperate" min-width="100" label="模板设置" align="center">
+                    <el-table-column min-width="100" label="模板设置" align="center">
                         <template slot-scope="scope">
-                            <!--<el-button v-if="p.updateFreightTemplateById" type="primary" size="small">设为默认</el-button>-->
-                            <el-button  v-if="p.updateFreightTemplateById" type="warning" size="small" @click="editItem(scope.$index,scope.row.id)">编辑模板
+                            <!--<el-button type="primary" size="small">设为默认</el-button>-->
+                            <el-button type="warning" size="small" @click="editItem(scope.$index,scope.row.id)">设置模板
                             </el-button>
-                            <el-button v-if="p.deleteFreightTemplateById" type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除模板
+                            <el-button type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除模板
                             </el-button>
                         </template>
                     </el-table-column>
@@ -61,13 +61,6 @@ export default {
     mixins: [myMixinTable],
     data() {
         return {
-            // 权限控制
-            p: {
-                addFreightTemplate: false,
-                updateFreightTemplateById: false,
-                deleteFreightTemplateById: false
-            },
-            isShowOperate: true,
 
             tableData: [],
             tableLoading: false,
@@ -85,30 +78,16 @@ export default {
         };
     },
     created() {
-        this.pControl();
     },
     activated() {
-        this.pControl();
         this.getList();
     },
     methods: {
-        // 权限控制
-        pControl() {
-            for (const k in this.p) {
-                this.p[k] = utils.pc(pApi[k]);
-            }
-            if (!this.p.updateFreightTemplateById && !this.p.deleteFreightTemplateById) {
-                this.isShowOperate = false;
-            }
-        },
         // 获取列表
         getList() {
             const that = this;
-            const data = {
-                url: pApi.queryFreightTemplateList
-            };
             that.tableLoading = true;
-            request.queryFreightTemplateList(data).then(res => {
+            request.queryFreightTemplateList({}).then(res => {
                 that.tableLoading = false;
                 that.tableData = res.data;
             }).catch(error => {

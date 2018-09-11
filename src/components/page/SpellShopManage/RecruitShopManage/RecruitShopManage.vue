@@ -10,6 +10,7 @@
                     <el-date-picker
                         v-model="form.date"
                         type="datetimerange"
+                        format="yyyy-MM-dd"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"
                     >
@@ -88,15 +89,15 @@ export default {
         getList(val) {
             const data = {
                 name: this.form.name,
-                beginTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss') : '',
-                endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss') : '',
+                beginTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
+                endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : '',
                 page: val,
-                url: pApi.getRecruitmentStorePageList,
-                pageSize: this.page.pageSize,
+                size: this.page.pageSize,
                 status: 3
             };
             request.getStoreList(data).then(res => {
                 this.tableData = [];
+                if (!res.data) return;
                 this.tableData = res.data.data;
                 this.page.totalPage = res.data.totalNum;
             }).catch(error => {

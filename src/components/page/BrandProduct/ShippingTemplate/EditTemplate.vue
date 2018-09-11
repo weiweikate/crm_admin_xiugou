@@ -140,7 +140,6 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import region from '@/components/common/Region';
     import chooseArea from '@/components/common/chooseArea';
-    import * as pApi from '@/privilegeList/ShippingTemplate/index';
     import request from '@/http/http.js';
 
     export default {
@@ -220,7 +219,6 @@
                 const that = this;
                 const data = {
                     id: that.id
-                    // url:pApi.findFreightTemplateById
                 };
                 that.loading = true;
                 that.$axios
@@ -316,18 +314,17 @@
                             list.push(tableTemp);
                         });
                         data.list = JSON.stringify(list);
-                        data.url = pApi.updateFreightTemplateById;
                         if (!flag) {
                             this.$message.warning('请填写完整的运费设置!');
                             return;
                         }
                         this.btnLoading = true;
                         request.updateFreightTemplateById(data).then(res => {
-                            that.$message.success(res.data.msg);
+                            // that.$message.success(res.data.msg);
                             that.$router.push('/shippingTemplate');
                             this.btnLoading = false;
                         }).catch(error => {
-                            console.log(err);
+                            console.log(error);
                             this.btnLoading = false;
                         });
                     }

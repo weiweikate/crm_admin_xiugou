@@ -26,6 +26,7 @@
                     <el-date-picker
                         v-model="form.date"
                         type="datetimerange"
+                        format="yyyy-MM-dd"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"
                     >
@@ -47,12 +48,12 @@
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="店铺名称" align="center"></el-table-column>
-                <el-table-column prop="id" label="店铺ID" align="center"></el-table-column>
-                <el-table-column prop="storeStarName" label="店铺等级" align="center"></el-table-column>
-                <el-table-column prop="storeUser" label="店长" align="center"></el-table-column>
+                <el-table-column prop="storeNumber" label="店铺ID" align="center"></el-table-column>
+                <el-table-column prop="starName" label="店铺等级" align="center"></el-table-column>
+                <el-table-column prop="storeUserName" label="店长" align="center"></el-table-column>
                 <el-table-column label="成员数" align="center">
                     <template slot-scope="scope">
-                        <template><span @click="toUserList(scope.row)" class="color-blue">{{scope.row.hadUser}}</span></template>
+                        <template><span @click="toUserList(scope.row)" class="color-blue">{{scope.row.storeUserNum}}</span></template>
                     </template>
                 </el-table-column>
                 <el-table-column label="创建时间" align="center">
@@ -124,7 +125,7 @@ export default {
         getAllStoreStar() {
             request.getAllStoreStar({}).then(res => {
                 this.shopLevelArr = [];
-                this.shopLevelArr = res.data.data;
+                this.shopLevelArr = res.data;
             }).catch(error => {
                 console.log(error);
             });
@@ -136,15 +137,16 @@ export default {
                 bonusCount: this.form.bonusCount,
                 storeNumber: this.form.storeNumber,
                 storeStar: this.form.storeStar,
-                maxTradeMoney: this.form.maxTradeMoney,
-                minTradeMoney: this.form.minTradeMoney,
-                beginTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss') : '',
-                endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss') : '',
+                maxMoney: this.form.maxTradeMoney,
+                minMoney: this.form.minTradeMoney,
+                startTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
+                endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : '',
                 page: val,
-                pageSize: this.page.pagesize
+                size: this.page.pageSize
             };
             request.getStoreList(data).then(res => {
                 this.tableData = [];
+                if (!res.data) return;
                 this.tableData = res.data.data;
                 this.page.totalPage = res.data.totalNum;
             }).catch(error => {
@@ -165,8 +167,7 @@ export default {
         // 跳到成员列表
         toUserList(row) {
             sessionStorage.setItem('recruitShopId', row.id);
-            sessionStorage.setItem('groupMoney', row.groupMoney);
-            this.$router.push({ name: 'shopMemberManage', query: { 'recruitShopId': row.id, 'groupMoney': row.groupMoney }});
+            this.$router.push({ name: 'shopMemberManage', query: { 'recruitShopId': row.id}});
         }
     }
 };

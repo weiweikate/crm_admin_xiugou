@@ -2,7 +2,7 @@
     <div class="second-classify">
         <v-breadcrumb :nav="['品牌产品管理','产品分类管理',name]"></v-breadcrumb>
         <div class="table-block">
-            <el-button v-if="p.addProductCategory_2" type="primary" style="margin-bottom: 20px" @click="addClassify">添加二级类目</el-button>
+            <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加二级类目</el-button>
             <template>
                 <el-table :data="tableData" :height="height" border style="width: 100%">
                     <el-table-column prop="id" label="ID" align="center"></el-table-column>
@@ -19,11 +19,11 @@
                             <template v-if="scope.row.status == 2">禁用</template>
                         </template>
                     </el-table-column>
-                    <el-table-column v-if="isShowOperate" min-width="160" label="操作" align="center">
+                    <el-table-column min-width="160" label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button type="primary" size="small" @click="toThirdClassify(scope.row.id)">三级类目</el-button>
-                            <el-button v-if="p.updateProductCategory_2" type="warning" size="small" @click="editItem(scope.row)">编辑</el-button>
-                            <el-button v-if="p.deleteProductCategory_2" type="danger" size="small" @click="delItem(scope.row.id)">删除</el-button>
+                            <el-button type="warning" size="small" @click="editItem(scope.row)">编辑</el-button>
+                            <el-button type="danger" size="small" @click="delItem(scope.row.id)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -103,13 +103,13 @@
 </template>
 
 <script>
-import vBreadcrumb from "../../common/Breadcrumb.vue";
-import icon from "../../common/ico.vue";
-import deleteToast from "../../common/DeleteToast";
-import * as api from "../../../api/api";
-import utils from '../../../utils/index.js'
-import * as pApi from '../../../privilegeList/index.js';
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import icon from '@/components/common/ico.vue';
+import deleteToast from '@/components/common/DeleteToast';
+import utils from '@/utils/index.js';
+import * as pApi from '@/privilegeList/index.js';
 import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http.js';
 
 export default {
     components: {
@@ -117,163 +117,127 @@ export default {
         icon,
         deleteToast
     },
-    mixins:[myMixinTable],
+    mixins: [myMixinTable],
     data() {
         return {
-            // 权限控制
-            p:{
-                addProductCategory_2:false,
-                updateProductCategory_2:false,
-                deleteProductCategory_2:false,
-            },
-            isShowOperate:true,
 
             tableData: [],
             // 类目类型
-            type:'',
-            height: "",
+            type: '',
+            height: '',
             addMask: false,
             editMask: false,
             isShowDelToast: false,
-            formLabelWidth: "100px",
+            formLabelWidth: '100px',
             form: {
-                name: "",
-                status: "1",
-                img: ""
+                name: '',
+                status: '1',
+                img: ''
             },
             addForm: {
-                name: "",
-                status: "1",
-                img: ""
+                name: '',
+                status: '1',
+                img: ''
             },
-            title: "添加二级类目",
-            id: "",
-            itemId: "",
-            name: "",
-            itype: "",
+            title: '添加二级类目',
+            id: '',
+            itemId: '',
+            name: '',
+            itype: '',
             delId: 66,
-            delUrl: "http://api",
-            delUri:''
+            delUrl: 'http://api',
+            delUri: ''
         };
     },
     created() {
-        let winHeight = window.screen.availHeight - 500;
+        const winHeight = window.screen.availHeight - 500;
         this.height = winHeight;
-        this.pControl();
     },
     activated() {
-        this.pControl();
         this.name =
             this.$route.query.name ||
-            JSON.parse(sessionStorage.getItem("secondClassify").name);
+            JSON.parse(sessionStorage.getItem('secondClassify').name);
         this.id =
             this.$route.query.id ||
-            JSON.parse(sessionStorage.getItem("secondClassify").id);
+            JSON.parse(sessionStorage.getItem('secondClassify').id);
         this.type =
             this.$route.query.type ||
-            JSON.parse(sessionStorage.getItem("secondClassify").type);
+            JSON.parse(sessionStorage.getItem('secondClassify').type);
         this.getList(this.page.currentPage);
     },
     methods: {
-        // 权限控制
-        pControl() {
-            for (const k in this.p) {
-                this.p[k] = utils.pc(pApi[k]);
-            }
-            if (!this.p.updateProductCategory_2 && !this.p.deleteProductCategory_2) {
-                this.isShowOperate = false;
-            }
-        },
-        //获取列表
+        // 获取列表
         getList(val) {
-            let that = this;
-            let data = {
+            const that = this;
+            const data = {
                 page: val,
                 fatherid: this.id,
-                url:pApi.queryProductCategoryPageList_2
+                pageSize: this.page.pageSize
             };
-            this.$axios
-                .post(api.getCategoryList, data)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        this.tableData = [];
-                        this.tableData = res.data.data.data;
-                        this.page.totalPage = res.data.data.resultCount;
-                    } else {
-                        this.$message.warning(res.data.msg);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            request.getCategoryList(data).then(res => {
+                this.tableData = [];
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
+            }).catch(error => {
+                console.log(error);
+            });
         },
         // 添加二级类目
         addClassify() {
-            this.title = "添加二级类目";
+            this.title = '添加二级类目';
             this.addMask = true;
-            this.addForm.name='';
-            this.addForm.img='';
-            this.addForm.status='1';
-            this.itype = "add";
+            this.addForm.name = '';
+            this.addForm.img = '';
+            this.addForm.status = '1';
+            this.itype = 'add';
         },
-        //编辑
+        // 编辑
         editItem(row) {
-            this.title = "编辑二级类目";
+            this.title = '编辑二级类目';
             this.editMask = true;
             row.status = row.status.toString();
             this.form = row;
             this.itemId = row.id;
-            this.itype = "edit";
+            this.itype = 'edit';
         },
-        //添加修改确定
+        // 添加修改确定
         addOrEdit(formName) {
-            let url = "";
-            let data = {};
+            let url = '';
+            const data = {};
             data.name = this[formName].name;
             data.img = this[formName].img;
             data.status = this[formName].status;
             data.type = this.type;
-            if(!data.name){
+            if (!data.name) {
                 this.$message.warning('请输入类目名称!');
-                return
+                return;
             }
-            if(!data.img){
+            if (!data.img) {
                 this.$message.warning('请上传类目图标!');
-                return
+                return;
             }
-            if (this.itype == "add") {
-                url = api.addCategory;
+            if (this.itype == 'add') {
+                url = 'addCategory';
                 data.fatherid = this.id;
-                data.url = pApi.addProductCategory_2;
             } else {
-                url = api.editCategory;
+                url = 'editCategory';
                 data.id = this.itemId;
-                data.url = pApi.updateProductCategory_2;
             }
             this.btnLoading = true;
-            this.$axios
-                .post(url, data)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        this.$message.success(res.data.msg);
-                        this.btnLoading = false;
-                        this.addMask = false;
-                        this.editMask = false;
-                        this.getList(this.page.currentPage);
-                    } else {
-                        this.btnLoading = false;
-                        this.$message.warning(res.data.msg);
-                        this.getList(this.page.currentPage);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            request[url](data).then(res => {
+                // this.$message.success(res.data.msg);
+                this.btnLoading = false;
+                this.addMask = false;
+                this.editMask = false;
+                this.getList(this.page.currentPage);
+            }).catch(error => {
+                console.log(error);
+            });
         },
-        //删除
+        // 删除
         delItem(id) {
             this.delId = id;
-            this.delUrl = api.deleteCategory;
+            this.delUrl = 'deleteCategory';
             this.delUri = pApi.deleteProductCategory_2;
             this.isShowDelToast = true;
         },
@@ -282,24 +246,24 @@ export default {
             this.isShowDelToast = msg;
             this.getList(this.page.currentPage);
         },
-        //上传图片
+        // 上传图片
         handleAvatarSuccess(res, file) {
-            if (this.itype == "add") {
+            if (this.itype == 'add') {
                 this.addForm.img = res.data.imageUrl;
             } else {
                 this.form.img = res.data.imageUrl;
             }
         },
-        //取消
+        // 取消
         cancel() {
             this.addMask = false;
             this.editMask = false;
             this.getList(this.page.currentPage);
         },
-        //跳转到三级类目
-        toThirdClassify(id){
-            sessionStorage.setItem('secondId',id);
-            this.$router.push({path:'/thirdClassify',query:{secondId:id}});
+        // 跳转到三级类目
+        toThirdClassify(id) {
+            sessionStorage.setItem('secondId', id);
+            this.$router.push({ path: '/thirdClassify', query: { secondId: id }});
         }
     }
 };

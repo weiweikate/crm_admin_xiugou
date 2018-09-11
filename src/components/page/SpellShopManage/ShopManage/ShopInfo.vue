@@ -19,19 +19,19 @@
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>店铺ID：{{detail.id}}</span>
+                            <span>店铺ID：{{detail.storeNumber}}</span>
                         </p>
                     </div>
                     <div class="shop-right">
                         <p class="shop-msg">
-                            <span>店铺等级：{{detail.storeStarName}}</span>
+                            <span>店铺等级：{{detail.starName}}</span>
                         </p>
                     </div>
                 </div>
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>保证金：￥{{detail.deposit}}</span>
+                            <span>保证金：￥{{detail.deposit||0}}</span>
                         </p>
                     </div>
                     <div class="shop-right">
@@ -43,14 +43,14 @@
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>店长：<span @click="showShopLeader(detail.dealerId)" class="font-href">{{detail.storeUser}}</span></span>
+                            <span>店长：<span @click="showShopLeader(detail.userId)" class="font-href">{{detail.storeUserName}}</span></span>
                             <span class="inf">实名认证</span>
                             <!--<span @click="shopTransfer" class="font-href">店铺转让</span>-->
                         </p>
                     </div>
                     <div class="shop-right">
                         <p class="shop-msg">
-                            <span>店铺成员数：{{detail.hadUser}}/{{detail.maxUser}}</span>
+                            <span>店铺成员数：{{detail.storeUserName?detail.storeUserName:0}}/{{detail.maxUser}}</span>
                         </p>
                     </div>
                 </div>
@@ -83,9 +83,9 @@
                         </p>
                     </div>
                 </div>
-                <!--<div class="shop-wrap">-->
-                    <!--<div class="shop-left">-->
-                        <!--<p class="shop-msg">-->
+                <!--<div class="reportSpellShop-wrap">-->
+                    <!--<div class="reportSpellShop-left">-->
+                        <!--<p class="reportSpellShop-msg">-->
                             <!--<span>店铺拼店分红总额：￥{{detail.totalTradeVolume+detail.tradeVolume}}</span>-->
                             <!--<span style="color:red">(已经交易的加上现阶段未分红的总额)</span>-->
                         <!--</p>-->
@@ -102,21 +102,21 @@
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>店铺分红总金额：￥{{detail.totalTradeVolume}}</span>
+                            <span>店铺分红总金额：￥{{detail.totalTradeVolume||0}}</span>
                         </p>
                     </div>
                 </div>
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>店长分红总金额：￥{{detail.bossBonus}}</span>
+                            <span>店长分红总金额：￥{{detail.bossBonus||0}}</span>
                         </p>
                     </div>
                 </div>
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>店员分红总金额：￥{{detail.saleBonus}}</span>
+                            <span>店员分红总金额：￥{{detail.saleBonus||0}}</span>
                         </p>
                     </div>
                 </div>
@@ -175,10 +175,10 @@
                     id: this.shopId
                 };
                 request.getStoreDetail(data).then(res => {
-                    this.detail = res.data.data;
+                    this.detail = res.data;
                 }).catch(error => {
                     console.log(error);
-                })
+                });
             },
             // 查看店长
             showShopLeader(id) {

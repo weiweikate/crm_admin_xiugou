@@ -68,12 +68,13 @@ export default {
         // 获取数据
         getList(val) {
             const data = {
-                page: val
+                page: val,
+                pageSize: this.page.pageSize
             };
             request.getStoreBonusPageList(data).then(res => {
                 this.tableData = [];
-                this.tableData = res.data.data.data;
-                this.page.totalPage = res.data.data.resultCount;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
             }).catch(error => {
                 console.log(error);
             });

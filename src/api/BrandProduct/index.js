@@ -25,7 +25,7 @@ export const queryProductSpecById = '/admin/giftBag/queryProductSpecById';
 // 添加礼包产品
 export const addGiftBagProduct = '/admin/giftBag/addGiftBagProduct';
 // 获取礼包产品信息
-export const queryGiftBagProductById = '/admin/giftBag/queryGiftBagProductById'
+export const queryGiftBagProductById = '/admin/giftBag/queryGiftBagProductById';
 // 根据id删除产品礼包信息
 export const deleteGiftBagProductById = '/admin/giftBag/deleteGiftBagProductById';
 // 价格添加
@@ -66,7 +66,7 @@ export const queryCategoryBrandCid = 'admin/categoryBrand/queryCategoryBrandCid'
 // 添加产品
 export const addProduct = '/admin/product/addProduct';
 // 上传图片
-export const addImg='/admin/ossClient/aliyunOSSUploadImage';
+export const addImg = '/admin/ossClient/aliyunOSSUploadImage';
 // 获取供应商列表
 export const querySupplierBrandPageList = '/admin/supplierBrand/querySupplierBrandPageList';
 // 获取模板列表
@@ -86,11 +86,11 @@ export const deleteSaleSpecValue = '/admin/saleSpecValue/deleteSaleSpecValue';
 // 提交产品规格
 export const addProductSpec = '/admin/price/addProductSpec';
 // 获取产品价格
-export const queryProductPriceSaleSpecList = '/admin/price/queryProductPriceSaleSpecList'
+export const queryProductPriceSaleSpecList = '/admin/price/queryProductPriceSaleSpecList';
 // 保存产品价格
-export const updateProductPrice = '/admin/price/updateProductPrice'
+export const updateProductPrice = '/admin/price/updateProductPrice';
 // 获取库存列表
-export const queryProductStockList = '/admin/price/queryProductStockList'
+export const queryProductStockList = '/admin/price/queryProductStockList';
 // 保存库存信息
 export const updateProductStock = '/admin/price/updateProductStock';
 // 产品审核操作
@@ -106,20 +106,24 @@ export const updateProduct = '/admin/product/updateProduct';
 export const infoParmByCategoryId = '/admin/infoParm/infoParmByCategoryIdList';
 // 省市区接口
 // 根据分区获取省市区
-export const getProvinceListGroupByDistrict='/admin/area/getProvinceListGroupByDistrict';
+export const getProvinceListGroupByDistrict = '/admin/area/getProvinceListGroupByDistrict';
 // 根据市code获取区
-export const getAreaList='/admin/area/getAreaList';
-//根据省code获取市
-export const getCityList='/admin/area/getCityList';
+export const getAreaList = '/admin/area/getAreaList';
+// 根据省code获取市
+export const getCityList = '/admin/area/getCityList';
 // 获取省接口
-export const getProvinceList='/admin/area/getProvinceList';
-//添加运费模板接口
-export const addFreightTemplate='/admin/freightTemplate/addFreightTemplate';
-//查询列表
-export const queryFreightTemplateList='/admin/freightTemplate/queryFreightTemplateList';
-//查看详情
-export const findFreightTemplateById='/admin/freightTemplate/findFreightTemplateById';
-//修改邮费模板
-export const updateFreightTemplateById='/admin/freightTemplate/updateFreightTemplateById';
-//删除运费模板接口
-export const deleteFreightTemplateById='/admin/freightTemplate/deleteFreightTemplateById';
+export const getProvinceList = '/admin/area/getProvinceList';
+
+// 查看详情
+export const findFreightTemplateById = '/admin/freightTemplate/findFreightTemplateById';
+// 修改邮费模板
+export const updateFreightTemplateById = '/admin/freightTemplate/updateFreightTemplateById';
+// 删除运费模板接口
+export const deleteFreightTemplateById = '/admin/freightTemplate/deleteFreightTemplateById';
+
+//* *****************************************
+// 运费模版
+// 查询列表
+export const queryFreightTemplateList = '/admin//product/freightTemplate/queryFreightTemplateList';
+// 添加运费模板接口
+export const addFreightTemplate = '/admin/product/freightTemplate/addFreightTemplate';

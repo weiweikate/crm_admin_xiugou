@@ -2,7 +2,7 @@
     <div class="brand-product">
         <v-breadcrumb :nav="['品牌产品管理','产品分类管理']"></v-breadcrumb>
         <div class="table-block">
-            <el-button v-if="p.addProductCategory_1" type="primary" style="margin-bottom: 20px" @click="addClassify">添加一级类目</el-button>
+            <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加一级类目</el-button>
             <template>
                 <el-table :data="tableData"  border style="width: 100%">
                     <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
@@ -24,14 +24,14 @@
                             <template v-if="scope.row.status == 2">禁用</template>
                         </template>
                     </el-table-column>
-                    <el-table-column v-if="isShowOperate" label="操作" min-width="160" align="center">
+                    <el-table-column label="操作" min-width="160" align="center">
                         <template slot-scope="scope">
-                            <el-button v-if="p.addProductCategory_2" type="primary" size="small" @click="toSecondClassify(scope.$index,scope.row)">
+                            <el-button type="primary" size="small" @click="toSecondClassify(scope.$index,scope.row)">
                                 二级类目
                             </el-button>
-                            <el-button v-if="p.updateProductCategory_1" type="warning" size="small" @click="editItem(scope.$index,scope.row)">编辑
+                            <el-button type="warning" size="small" @click="editItem(scope.$index,scope.row)">编辑
                             </el-button>
-                            <el-button v-if="p.deleteProductCategory_1" type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除
+                            <el-button type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除
                             </el-button>
                         </template>
                     </el-table-column>
@@ -89,7 +89,7 @@
                 <el-form-item prop="img" label="类目图标" :label-width="formLabelWidth" class="icon-area">
                     <el-input readonly v-model="form.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
-                               action="/admin/ossClient/aliyunOSSUploadImage"
+                               action="/admin/common/upload/oss"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
@@ -118,13 +118,13 @@
 </template>
 
 <script>
-import vBreadcrumb from "../../common/Breadcrumb.vue";
-import icon from "../../common/ico.vue";
-import deleteToast from "../../common/DeleteToast";
-import * as api from "../../../api/api";
-import utils from '../../../utils/index.js'
-import * as pApi from '../../../privilegeList/index.js';
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import icon from '@/components/common/ico.vue';
+import deleteToast from '@/components/common/DeleteToast';
+import utils from '@/utils/index.js';
+import * as pApi from '@/privilegeList/index.js';
 import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http.js';
 
 export default {
     components: {
@@ -133,159 +133,126 @@ export default {
         deleteToast
     },
 
-    mixins:[myMixinTable],
+    mixins: [myMixinTable],
 
     data() {
         return {
-            // 权限控制
-            p:{
-                addProductCategory_1:false,
-                updateProductCategory_1:false,
-                deleteProductCategory_1:false,
-                addProductCategory_2:false,
-            },
-            isShowOperate:true,
 
             tableData: [],
             page: {
                 currentPage: 1,
                 totalPage: 0
             },
-            itype: "",
-            height: "",
+            itype: '',
+            height: '',
             addMask: false,
             editMask: false,
             isShowDelToast: false,
             btnLoading: false,
-            formLabelWidth: "100px",
+            formLabelWidth: '100px',
             form: {
-                name: "",
-                status: "1",
-                img: "",
-                type:""
+                name: '',
+                status: '1',
+                img: '',
+                type: ''
             },
             addForm: {
-                name: "",
-                status: "1",
-                img: "",
-                type:""
+                name: '',
+                status: '1',
+                img: '',
+                type: ''
             },
             id: '',
-            title: "添加一级类目",
+            title: '添加一级类目',
             delId: 0,
-            delUrl: "http://api",
-            delUri:'',
+            delUrl: 'http://api',
+            delUri: ''
         };
     },
     created() {
-        this.pControl();
     },
-    activated(){
-        this.pControl();
+    activated() {
         this.getList(this.page.currentPage);
     },
     methods: {
-        // 权限控制
-        pControl() {
-            for (const k in this.p) {
-                this.p[k] = utils.pc(pApi[k]);
-            }
-            if (!this.p.updateProductCategory_1 && !this.p.deleteProductCategory_1 && !this.p.addProductCategory_2) {
-                this.isShowOperate = false;
-            }
-        },
-        //获取列表
+        // 获取列表
         getList(val) {
-            let that = this;
-            let data = {
+            const that = this;
+            const data = {
                 page: val,
-                url:pApi.queryProductCategoryPageList_1
+                pageSize: this.page.pageSize
             };
-            this.$axios
-                .post(api.getCategoryList, data)
-                .then(res => {
-                    that.tableData = [];
-                    that.tableData = res.data.data.data;
-                    that.page.totalPage = res.data.data.resultCount;
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            request.getCategoryList(data).then(res => {
+                that.tableData = [];
+                that.tableData = res.data.data;
+                that.page.totalPage = res.data.totalNum;
+            }).catch(error => {
+                console.log(error);
+            });
         },
         // 添加一级类目
         addClassify() {
-            this.title = "添加一级类目";
+            this.title = '添加一级类目';
             this.addMask = true;
-            this.addForm.name='';
-            this.addForm.img='';
-            this.addForm.status='1';
-            this.itype = "add";
+            this.addForm.name = '';
+            this.addForm.img = '';
+            this.addForm.status = '1';
+            this.itype = 'add';
         },
-        //编辑
+        // 编辑
         editItem(index, row) {
-            this.title = "编辑一级类目";
+            this.title = '编辑一级类目';
             this.editMask = true;
             this.form.name = row.name;
             this.form.status = row.status.toString();
             this.form.img = row.img;
             this.form.type = row.type.toString();
             this.id = row.id;
-            this.itype = "edit";
+            this.itype = 'edit';
         },
-        //添加修改确定
+        // 添加修改确定
         addOrEdit(formName) {
-            let url = "";
-            let data = {};
+            let url = '';
+            const data = {};
             data.name = this[formName].name;
             data.img = this[formName].img;
             data.status = this[formName].status;
             data.type = this[formName].type;
-            if(!data.name){
+            if (!data.name) {
                 this.$message.warning('请输入类目名称!');
-                return
+                return;
             }
-            if(!data.img){
+            if (!data.img) {
                 this.$message.warning('请上传类目图标!');
-                return
+                return;
             }
-            if (this.itype == "add") {
-                url = api.addCategory;
-                data.url = pApi.addProductCategory_1;
+            if (this.itype == 'add') {
+                url = 'addCategory';
             } else {
-                url = api.editCategory;
-                data.url = pApi.updateProductCategory_1;
+                url = 'editCategory';
                 data.id = this.id;
             }
             this.btnLoading = true;
-            this.$axios
-                .post(url, data)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        this.$message.success(res.data.msg);
-                        this.btnLoading = false;
-                        this.addMask = false;
-                        this.editMask = false;
-                        this.getList(this.page.currentPage);
-                    } else {
-                        this.btnLoading = false;
-                        this.$message.warning(res.data.msg);
-                        this.getList(this.page.currentPage);
-                    }
-                })
-                .catch(err => {
-                    this.btnLoading = false;
-                    console.log(err);
-                });
+            request[url](data).then(res => {
+                // this.$message.success(res.data.msg);
+                this.btnLoading = false;
+                this.addMask = false;
+                this.editMask = false;
+                this.getList(this.page.currentPage);
+            }).catch(error => {
+                this.btnLoading = false;
+                console.log(error);
+            });
         },
-        //跳到二级类目页面
+        // 跳到二级类目页面
         toSecondClassify(index, row) {
-            sessionStorage.setItem('secondClassify', JSON.stringify({name: row.name, id: row.id,type:row.type}));
-            this.$router.push({path: "/secondClassify", query: {name: row.name, id: row.id,type:row.type}});
+            sessionStorage.setItem('secondClassify', JSON.stringify({ name: row.name, id: row.id, type: row.type }));
+            this.$router.push({ path: '/secondClassify', query: { name: row.name, id: row.id, type: row.type }});
         },
-        //删除
+        // 删除
         delItem(index, id) {
             this.delId = id;
-            this.delUrl = api.deleteCategory;
+            this.delUrl = 'deleteCategory';
             this.delUri = pApi.deleteProductCategory_1;
             this.isShowDelToast = true;
         },
@@ -294,18 +261,18 @@ export default {
             this.isShowDelToast = msg;
             this.getList(this.page.currentPage);
         },
-        //上传图片
+        // 上传图片
         handleAvatarSuccess(res, file) {
-            if (this.itype == "add") {
+            if (this.itype == 'add') {
                 this.addForm.img = res.data.imageUrl;
             } else {
                 this.form.img = res.data.imageUrl;
             }
         },
-        //取消
-        cancel(){
-            this.addMask=false;
-            this.editMask=false;
+        // 取消
+        cancel() {
+            this.addMask = false;
+            this.editMask = false;
             this.getList(this.page.currentPage);
         }
     }

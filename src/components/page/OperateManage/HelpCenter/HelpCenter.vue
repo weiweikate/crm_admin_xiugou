@@ -38,7 +38,7 @@
            <span>选择图片</span>
            <el-input readonly v-model="imgUrl" auto-complete="off"></el-input>
            <el-upload class="icon-uploader"
-                      action="/admin/ossClient/aliyunOSSUploadImage"
+                      action="/common/upload/oss"
                       :on-success="handleAvatarSuccess">
                <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
            </el-upload>

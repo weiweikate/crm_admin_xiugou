@@ -4,19 +4,19 @@
         <el-card :body-style="{ padding: '30px' }">
             <el-table :data="tableData" border>
                 <el-table-column type="index" :index='handleIndex' label="序号" align="center"></el-table-column>
-                <el-table-column prop="nickname" label="举报用户" align="center">
+                <el-table-column prop="userName" label="举报用户" align="center">
                     <template slot-scope="scope">
-                        <span class="report-cur" @click="reportUser(scope.row)">{{scope.row.nickname}}</span>
+                        <span class="report-cur" @click="reportUser(scope.row)">{{scope.row.userName}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="name" label="举报店铺" align="center">
+                <el-table-column prop="storeName" label="举报店铺" align="center">
                     <template slot-scope="scope">
-                        <span class="report-cur" @click="reportShop(scope.row)">{{scope.row.name}}</span>
+                        <span class="report-cur" @click="reportShop(scope.row)">{{scope.row.storeName}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="create_time" label="举报时间" align="center">
-                    <template slot-scope="scope" v-if='scope.row.create_time'>
-                        {{scope.row.create_time | formatDate}}
+                <el-table-column prop="createTime" label="举报时间" align="center">
+                    <template slot-scope="scope" v-if='scope.row.createTime'>
+                        {{scope.row.createTime | formatDate}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="content" label="举报内容" align="center"></el-table-column>
@@ -66,9 +66,10 @@ export default {
         getList(val) {
             const data = {
                 page: val,
-                pageSize: this.page.pageSize
+                size: this.page.pageSize
             };
-            request.queryStoreReportPageList(data).then(res => {
+            request.getStoreTipOffList(data).then(res => {
+                if (!res.data) return;
                 this.tableData = res.data.data;
                 this.page.totalPage = res.data.totalNum;
             }).catch(error => {
@@ -81,13 +82,13 @@ export default {
         },
         // 举报用户
         reportUser(row) {
-            sessionStorage.setItem('memberDetail', row.id);
-            this.$router.push({ name: 'memberDetail', query: { id: row.id }});
+            sessionStorage.setItem('memberDetail', row.userId);
+            this.$router.push({ name: 'memberDetail', query: { id: row.userId }});
         },
         // 举报店铺
         reportShop(row) {
-            sessionStorage.setItem('shopInfoId', row.id);
-            this.$router.push({ name: 'shopInfo', query: { shopInfoId: row.id }});
+            sessionStorage.setItem('shopInfoId', row.storeId);
+            this.$router.push({ name: 'shopInfo', query: { shopInfoId: row.storeId }});
         }
     }
 };

@@ -20,7 +20,7 @@
             </el-form>
         </el-card>
         <div class="table-block">
-            <el-button v-if="p.addBrand" type="primary" style="margin-bottom: 20px" @click="addBrand">添加品牌</el-button>
+            <el-button type="primary" style="margin-bottom: 20px" @click="addBrand">添加品牌</el-button>
             <template>
                 <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
                     <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
@@ -43,12 +43,12 @@
                             <template v-if="scope.row.status == 2">停用</template>
                         </template>
                     </el-table-column>
-                    <el-table-column v-if="isShowOperate" min-width="100" label="操作" align="center">
+                    <el-table-column min-width="100" label="操作" align="center">
                         <template slot-scope="scope">
                             <!--<el-button type="primary" size="small" @click="toBrand(scope.$index,scope.row)">品牌页</el-button>-->
-                            <el-button  v-if="p.updateBrand" type="warning" size="small" @click="editItem(scope.$index,scope.row.id)">编辑
+                            <el-button type="warning" size="small" @click="editItem(scope.$index,scope.row.id)">编辑
                             </el-button>
-                            <el-button v-if="p.deleteBrand" type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除
+                            <el-button type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除
                             </el-button>
                         </template>
                     </el-table-column>
@@ -71,28 +71,21 @@
 </template>
 
 <script>
-    import vBreadcrumb from '../../common/Breadcrumb.vue';
-    import icon from '../../common/ico.vue';
-    import deleteToast from "../../common/DeleteToast";
-    import * as api from '../../../api/api';
-    import utils from '../../../utils/index.js'
-    import * as pApi from '../../../privilegeList/index.js';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import icon from '@/components/common/ico.vue';
+    import deleteToast from '@/components/common/DeleteToast';
+    import utils from '@/utils/index.js';
+    import * as pApi from '@/privilegeList/index.js';
     import { myMixinTable } from '@/JS/commom';
+    import request from '@/http/http.js';
 
     export default {
         components: {
             vBreadcrumb, icon, deleteToast
         },
-        mixins:[myMixinTable],
+        mixins: [myMixinTable],
         data() {
             return {
-                // 权限控制
-                p:{
-                    addBrand:false,
-                    updateBrand:false,
-                    deleteBrand:false,
-                },
-                isShowOperate:true,
 
                 tableData: [],
                 tableLoading: false,
@@ -107,64 +100,51 @@
                 },
                 delId: '',
                 delUrl: '',
-                delUri:''
-            }
+                delUri: ''
+            };
         },
         created() {
-            this.pControl();
         },
         activated() {
-            this.pControl();
-            this.getList(this.page.currentPage)
+            this.getList(this.page.currentPage);
         },
         methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-                if (!this.p.updateBrand && !this.p.deleteBrand) {
-                    this.isShowOperate = false;
-                }
-            },
-            //获取列表
+            // 获取列表
             getList(val) {
-                let that = this;
-                let data = {
+                const that = this;
+                const data = {
                     page: val,
-                    status:that.form.status,
-                    name:that.form.name,
-                    url:pApi.queryBrandPageList
+                    pageSize: this.page.pageSize,
+                    status: that.form.status,
+                    name: that.form.name
                 };
                 that.tableLoading = true;
-                that.$axios
-                    .post(api.getBrandList, data)
-                    .then(res => {
-                        that.tableLoading = false;
-                        that.tableData = res.data.data.data;
-                        that.page.totalPage = res.data.data.resultCount;
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        that.tableLoading = false;
-                    })
+                request.getBrandList(data).then(res => {
+                    that.tableLoading = false;
+                    if (!res.data) return;
+                    that.tableData = res.data.data;
+                    that.page.totalPage = res.data.totalNum;
+                }).catch(error => {
+                    console.log(error);
+                    that.tableLoading = false;
+                });
             },
             // 添加品牌
             addBrand() {
                 // sessionStorage.setItem('addBrand', '1');
-                this.$router.push({path: '/addBrand'})
+                this.$router.push({ path: '/addBrand' });
             },
-            //编辑
+            // 编辑
             editItem(index, id) {
                 sessionStorage.setItem('brandId', id);
-                this.$router.push({path: '/editBrand', query: {brandId: id}})
+                this.$router.push({ path: '/editBrand', query: { brandId: id }});
             },
 
-            //跳到品牌页面
+            // 跳到品牌页面
             // toBrand(index,row){
             //     this.$router.push({ path: "/addOrUpBrand", query: { params: row } });
             // },
-            //删除
+            // 删除
             delItem(index, id) {
                 this.delId = id;
                 this.delUrl = api.deleteBrand;
@@ -179,17 +159,17 @@
             //   重置表单
             resetForm(formName) {
                 this.$refs[formName].resetFields();
-                this.getList(this.page.currentPage)
+                this.getList(this.page.currentPage);
             },
-            //跳到产品列表页
-            toProductList(id){
-                sessionStorage.setItem('brandId',id);
-                sessionStorage.setItem('flag',2);
+            // 跳到产品列表页
+            toProductList(id) {
+                sessionStorage.setItem('brandId', id);
+                sessionStorage.setItem('flag', 2);
                 // sessionStorage.removeItem('supplierId');
-                this.$router.push({ path: "/productList", query: { brandId: id,'flag':2 } });
+                this.$router.push({ path: '/productList', query: { brandId: id, 'flag': 2 }});
             }
         }
-    }
+    };
 </script>
 
 <style lang="less">

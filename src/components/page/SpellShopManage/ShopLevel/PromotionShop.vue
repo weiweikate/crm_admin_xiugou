@@ -15,7 +15,7 @@
             <el-button @click="showMemberUpStand = true" type="success">人数达标奖励</el-button>
         </el-card>
         <!-- 设置升级经验值 -->
-        <el-dialog title="所需经验值设置" :visible.sync="showupgradeExp" width="25%" open="cleanData">
+        <el-dialog title="所需经验值设置" :visible.sync="showupgradeExp" width="30%"open="cleanData">
             <p class="dialog-item">
                 <span class="dialog-title">所需经验值设置</span>
                 <el-input class="dialog-inp" v-model="form.upgradeExp" placeholder="请输入数值"></el-input>
@@ -26,12 +26,12 @@
         </span>
         </el-dialog>
         <!-- 设置必要条件 -->
-        <el-dialog title="设置必要条件" :visible.sync="showNecessaryConf" width="25%" open="cleanData">
+        <el-dialog title="设置必要条件" :visible.sync="showNecessaryConf" width="30%"open="cleanData">
             <div class="necessary-box">
                 <p class="necessary-title">必要条件:</p>
                 <div class="dialog-nec-item">
                     <el-checkbox v-model="checked[0]"><span class="dialog-nec-title">人员数</span></el-checkbox>
-                    <el-input class="dialog-nec-inp" v-model="form.upgradeCondDealerNum" placeholder="请输入数值"></el-input>
+                    <el-input class="dialog-nec-inp" v-model="form.upgradeCondUserNum" placeholder="请输入数值"></el-input>
                 </div>
                 <div class="dialog-nec-item">
                     <el-checkbox v-model="checked[1]"><span class="dialog-nec-title">交易总额达到</span></el-checkbox>
@@ -59,7 +59,7 @@
         </span>
         </el-dialog>
         <!-- 分红奖励 -->
-        <el-dialog title="经验值设置" :visible.sync="showShareBonus" width="25%" open="cleanData">
+        <el-dialog title="经验值设置" :visible.sync="showShareBonus" width="30%"open="cleanData">
             <p class="dialog-item">
                 <span style="margin-left:30px">达成分红次数1次，则获得</span>
             </p>
@@ -74,7 +74,7 @@
         </span>
         </el-dialog>
         <!-- 交易额达标奖励 -->
-        <el-dialog title="经验值设置" :visible.sync="showTotalTrans" width="25%" open="cleanData">
+        <el-dialog title="经验值设置" :visible.sync="showTotalTrans" width="30%"open="cleanData">
             <p class="dialog-item">
                 <span style="margin-left:30px">总交易额增加1元，则增加</span>
             </p>
@@ -89,7 +89,7 @@
         </span>
         </el-dialog>
         <!-- 连续交易额达标 -->
-        <el-dialog title="经验值设置" :visible.sync="showContinTrad" width="25%" open="cleanData">
+        <el-dialog title="经验值设置" :visible.sync="showContinTrad" width="30%"open="cleanData">
             <p style="font-size:16px;font-weight:700;margin-left:30px">每周交易额达到：</p>
             <p class="dialog-item">
                 <span class="dialog-title">交易额</span>
@@ -107,7 +107,7 @@
         </span>
         </el-dialog>
         <!-- 连续交易频率达标 -->
-        <el-dialog title="经验值设置" :visible.sync="showContinFrequ" width="25%" open="cleanData">
+        <el-dialog title="经验值设置" :visible.sync="showContinFrequ" width="30%"open="cleanData">
             <p style="font-size:16px;font-weight:700;margin-left:30px">每周交易频次达到：</p>
             <p class="dialog-item">
                 <span class="dialog-title">交易频次</span>
@@ -125,7 +125,7 @@
         </span>
         </el-dialog>
         <!-- 单笔订单交易额 -->
-        <el-dialog title="经验值设置" :visible.sync="showSingleOrder" width="25%" open="cleanData">
+        <el-dialog title="经验值设置" :visible.sync="showSingleOrder" width="30%"open="cleanData">
             <p class="dialog-item">
                 <span class="dialog-title">单笔订单交易额</span>
                 <el-input class="dialog-inp" v-model="form.upgradeOrderPrice" placeholder="请输入数值"></el-input>
@@ -142,13 +142,13 @@
         </span>
         </el-dialog>
         <!-- 人数达标奖励 -->
-        <el-dialog title="经验值设置" :visible.sync="showMemberUpStand" width="25%" open="cleanData">
+        <el-dialog title="经验值设置" :visible.sync="showMemberUpStand" width="30%"open="cleanData">
             <p class="dialog-item">
                 <span style="margin-left:30px">每增加1人则获得</span>
             </p>
             <p class="dialog-item">
                 <span class="dialog-title">获得经验值</span>
-                <el-input class="dialog-inp" v-model="form.upgradeDealerAddOneExp" placeholder="请输入数值"></el-input>
+                <el-input class="dialog-inp" v-model="form.upgradeUserAddOneExp" placeholder="请输入数值"></el-input>
                 分
             </p>
             <span slot="footer">
@@ -183,7 +183,7 @@
                     // 设置升级经验值
                     upgradeExp: '',
                     // 设置必要条件
-                    upgradeCondDealerNum: '',
+                    upgradeCondUserNum: '',
                     upgradeCondTotleSales: '',
                     upgradeCondProfitCtrb: '',
                     upgradeCondAvgActivity: '',
@@ -202,7 +202,7 @@
                     upgradeOrderPrice: '',
                     upgradeOrderPriceExp: '',
                     // 人数达标奖励
-                    upgradeDealerAddOneExp: ''
+                    upgradeUserAddOneExp: ''
                 },
                 shopId: '',
                 isAjax: false
@@ -224,12 +224,7 @@
                     id: this.shopId
                 };
                 request.getStoreStarById(data).then((res) => {
-                    for (const i in res.data.data) {
-                        if (res.data.data[i] == 0 || res.data.data[i] == null || res.data.data[i] == undefined) {
-                            res.data.data[i] = '';
-                        }
-                    }
-                    this.form = res.data.data;
+                    this.form = res.data;
                     this.convert(this.form.upgradeCondition);
                 }).catch((err) => {
                     console.log(err);
@@ -249,31 +244,31 @@
                         break;
                     case 1:// 设置必要条件
                         // url = 'updateStoreStarUpgradeConditionById';
-                        type = 2;
+                        type = 8;
                         break;
                     case 2:// 分红奖励
                         // url = 'updateStoreStarUpgradeBonusById';
-                        type = 3;
+                        type = 2;
                         break;
                     case 3:// 交易额达标奖励
                         // url = 'updateStoreStarUpgradeTotleSalesById';
-                        type = 4;
+                        type = 3;
                         break;
                     case 4:// 连续交易额达标
                         // url = 'updateStoreStarUpgradeWeekSalesById';
-                        type = 5;
+                        type = 4;
                         break;
                     case 5:// 连续交易频率达标
                         // url = 'updateStoreStarUpgradeWeekSalesFreqById';
-                        type = 6;
+                        type = 5;
                         break;
                     case 6:// 单笔订单交易额
                         // url = 'updateStoreStarUpgradeOrderById';
-                        type = 7;
+                        type = 6;
                         break;
                     case 7:// 人数达标奖励
                         // url = 'updateStoreStarDemotionDealerById';
-                        type = 8;
+                        type = 7;
                         break;
                 }
                 const data = this.form;
@@ -286,7 +281,7 @@
                 } else if (index == 1) {
                     this.isChecked();
                     if (this.checked[0]) {
-                        flag1 = this.isEmpty(data.upgradeCondDealerNum, true);
+                        flag1 = this.isEmpty(data.upgradeCondUserNum, true);
                     }
                     if (this.checked[1]) {
                         flag2 = this.isEmpty(data.upgradeCondTotleSales, false);
@@ -324,12 +319,12 @@
                     this.setIsAjax(flag1 && flag2);
                 } else if (index == 7) {
                     // flag1=this.isEmpty(data.upgradeWeekSalesNum,false);
-                    flag2 = this.isEmpty(data.upgradeDealerAddOneExp, false);
+                    flag2 = this.isEmpty(data.upgradeUserAddOneExp, false);
                     this.setIsAjax(flag2);
                 }
                 if (this.isAjax) {
                     request.updateStoreStar(data).then((res) => {
-                        this.$message.success(res.data.msg);
+                        this.$message.success('设置成功');
                         this.showupgradeExp = false;
                         this.showNecessaryConf = false;
                         this.showShareBonus = false;
@@ -338,6 +333,7 @@
                         this.showContinFrequ = false;
                         this.showSingleOrder = false;
                         this.showMemberUpStand = false;
+                        this.getStoreStarById();
                     }).catch((err) => {
                         console.log(err);
                     });
@@ -449,14 +445,14 @@
             width: 90%;
             margin: 10px 0px;
             .el-checkbox {
-                width: 35%;
+                width: 40%;
             }
             .dialog-nec-title {
                 margin: 0 10px 0 0px;
             }
             .dialog-nec-inp {
                 margin-right: 10px;
-                width: 55%;
+                width: 50%;
             }
         }
         .necessary-box {
