@@ -30,7 +30,7 @@ try {
         // 接口方法
         request[v] = function(data = {}) {
             // 添加公共权限url
-            if (data.url === undefined) data.url = '/dashboard';
+            if (data.url === undefined) data.uri = '/dashboard';
             if (methods === 'get') {
                 data = {
                     params: data

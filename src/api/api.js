@@ -109,10 +109,6 @@ export const queryTopMenuList = '/admin/privilege/queryTopMenuList';
 export const addFunctionModule = '/admin/privilege/addFunctionModule';
 // 修改头像
 export const updateAdminUserFace = 'admin/adminUser/updateAdminUserFace';
-// 新增版本信息
-export const addVersionRecord = '/admin/version/addVersionRecord';
-// 获取版本列表信息
-export const queryVersionRecordPageList = '/admin/version/queryVersionRecordPageList';
 // 根据id获取版本信息
 export const findVersionRecordById = '/admin/version/findVersionRecordById';
 // 编辑版本信息
@@ -286,4 +282,6 @@ export const addOrModify = '/admin/config/sysconfig/addOrModify'; // 新增修�
 export const getRoleList = ['/admin/privilege/queryPrivilegeList', { methods: 'get' }]; // 获取管理员权限列表
 export const queryDepartmentList = ['/admin/department/queryDepartmentList', { methods: 'get' }]; // 获取岗位列表
 export const queryJobList = ['/admin/role/queryJobList', { methods: 'get' }]; // 查询岗位列表
+export const queryVersionRecordPageList = '/admin/config/sysAppVersion/queryList';// 获取版本列表信息
+export const addVersionRecord = '/admin/config/sysAppVersion/add';// 新增版本信息
 
