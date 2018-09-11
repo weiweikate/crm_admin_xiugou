@@ -76,7 +76,6 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import utils from '@/utils/index.js';
-    import * as pApi from '@/privilegeList/SpellShopManage/index';
     import request from '@/http/http.js';
 
     export default {
@@ -137,24 +136,28 @@
             },
             // 保存
             sure(index) {
-                let url;
+                let type;
                 switch (index) {
                     case 0:// 无交易额条件
-                        url = 'updateStoreStarDemotionWeekNoSaleById';
+                        // url = 'updateStoreStarDemotionWeekNoSaleById';
+                        type = 9;
                         break;
                     case 1:// 人数不足条件
-                        url = 'updateStoreStarDemotionWeekDealerById';
+                        // url = 'updateStoreStarDemotionWeekDealerById';
+                        type = 10;
                         break;
                     case 2:// 周期交易频率
-                        url = 'updateStoreStarDemotionWeekSalesById';
+                        // url = 'updateStoreStarDemotionWeekSalesById';
+                        type = 11;
                         break;
                     case 3:// 周期交易额
-                        url = 'updateStoreStarDemotionTotleSalesById';
+                        // url = 'updateStoreStarDemotionTotleSalesById';
+                        type = 12;
                         break;
                 }
                 const data = this.form;
                 data.id = this.shopId;
-                data.url = pApi.demotionShop;
+                data.type = type;
                 let flag1 = true; let flag2 = true;
                 if (index == 0) {
                     flag1 = this.isEmpty(data.demotionWeekNoSaleExp, false);
@@ -172,8 +175,8 @@
                     this.setIsAjax(flag1 && flag2);
                 }
                 if (this.isAjax) {
-                    request[url](data).then((res) => {
-                        this.$message.success(res.data.msg);
+                    request.updateStoreStar(data).then((res) => {
+                        // this.$message.success(res.data.msg);
                         this.showWeekTradNo = false;
                         this.showMemberNoEnough = false;
                         this.showdemotionWeekDealerReduceOneExp = false;

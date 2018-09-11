@@ -66,10 +66,10 @@
                         <el-button @click="spellShopAcc" type="primary">拼店账户</el-button>
                     </p>
                     <p style="margin-top:10px">
-                        <el-button @click="memberManage" type="primary" v-if="p.getStoreMembers">成员管理</el-button>
+                        <el-button @click="memberManage" type="primary">成员管理</el-button>
                     </p>
                     <p style="margin-top:10px">
-                        <el-button @click="shopAnnouncement" type="primary" v-if="p.queryStoreNoticeList">店铺公告管理</el-button>
+                        <el-button @click="shopAnnouncement" type="primary">店铺公告管理</el-button>
                     </p>
                 </div>
             </div>
@@ -145,7 +145,7 @@
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import * as pApi from '@/privilegeList/SpellShopManage/index';
+    // import * as pApi from '@/privilegeList/SpellShopManage/index';
     import utils from '@/utils/index.js';
     import request from '@/http/http.js';
 
@@ -154,11 +154,6 @@
 
         data() {
             return {
-                // 权限控制
-                p: {
-                    getStoreMembers: false,
-                    queryStoreNoticeList: false
-                },
 
                 nav: ['拼店店铺管理', '店铺管理', '店铺详情'],
                 shopId: '',
@@ -171,16 +166,9 @@
             this.shopId =
                 this.$route.query.shopInfoId || sessionStorage.getItem('shopInfoId');
             this.getInfo();
-            this.pControl();
         },
 
         methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-            },
             //  获取信息
             getInfo() {
                 const data = {

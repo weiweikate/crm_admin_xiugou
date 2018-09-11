@@ -84,8 +84,8 @@ export default {
                         item.preBonus = '';
                     }
                 }
-                this.tableData = res.data.data.data;
-                this.page.totalPage = res.data.data.resultCount;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
             }).cache((err) => {
                 console.log(err);
             });

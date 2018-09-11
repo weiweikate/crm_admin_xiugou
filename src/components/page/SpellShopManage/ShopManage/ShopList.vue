@@ -71,7 +71,7 @@
                         <template v-if="scope.row.status==3">招募中</template>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" v-if="p.getStoreDetail" align="center">
+                <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button @click="showInfo(scope.row)" type="primary">查看详情</el-button>
                     </template>
@@ -107,10 +107,6 @@ export default {
 
     data() {
         return {
-            // 权限控制
-            p: {
-                getStoreDetail: false
-            },
 
             nav: ['拼店店铺管理', '店铺管理'],
             shopLevelArr: [],
@@ -122,15 +118,8 @@ export default {
     activated() {
         this.getList(this.page.currentPage);
         this.getAllStoreStar();
-        this.pControl();
     },
     methods: {
-        // 权限控制
-        pControl() {
-            for (const k in this.p) {
-                this.p[k] = utils.pc(pApi[k]);
-            }
-        },
         // 获取店铺等级
         getAllStoreStar() {
             request.getAllStoreStar({}).then(res => {
@@ -138,7 +127,7 @@ export default {
                 this.shopLevelArr = res.data.data;
             }).catch(error => {
                 console.log(error);
-            })
+            });
         },
         // 获取数据
         getList(val) {
@@ -152,15 +141,15 @@ export default {
                 beginTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss') : '',
                 endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss') : '',
                 page: val,
-                url: pApi.getStorePageList
+                pageSize: this.page.pagesize
             };
-            request.getStorePageList(data).then(res => {
+            request.getStoreList(data).then(res => {
                 this.tableData = [];
-                this.tableData = res.data.data.data;
-                this.page.totalPage = res.data.data.resultCount;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
             }).catch(error => {
                 console.log(error);
-            })
+            });
         },
         // 查看店铺详情
         showInfo(row) {

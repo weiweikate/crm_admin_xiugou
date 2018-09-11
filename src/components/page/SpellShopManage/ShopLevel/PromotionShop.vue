@@ -162,7 +162,6 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import utils from '@/utils/index.js';
-    import * as pApi from '@/privilegeList/SpellShopManage/index';
     import request from '@/http/http.js';
 
     export default {
@@ -242,36 +241,44 @@
             },
             // 保存
             sure(index) {
-                let url;
+                let type;
                 switch (index) {
                     case 0:// 设置升级经验值
-                        url = 'updateStoreStarUpgradeExpById';
+                        // url = 'updateStoreStarUpgradeExpById';
+                        type = 1;
                         break;
                     case 1:// 设置必要条件
-                        url = 'updateStoreStarUpgradeConditionById';
+                        // url = 'updateStoreStarUpgradeConditionById';
+                        type = 2;
                         break;
                     case 2:// 分红奖励
-                        url = 'updateStoreStarUpgradeBonusById';
+                        // url = 'updateStoreStarUpgradeBonusById';
+                        type = 3;
                         break;
                     case 3:// 交易额达标奖励
-                        url = 'updateStoreStarUpgradeTotleSalesById';
+                        // url = 'updateStoreStarUpgradeTotleSalesById';
+                        type = 4;
                         break;
                     case 4:// 连续交易额达标
-                        url = 'updateStoreStarUpgradeWeekSalesById';
+                        // url = 'updateStoreStarUpgradeWeekSalesById';
+                        type = 5;
                         break;
                     case 5:// 连续交易频率达标
-                        url = 'updateStoreStarUpgradeWeekSalesFreqById';
+                        // url = 'updateStoreStarUpgradeWeekSalesFreqById';
+                        type = 6;
                         break;
                     case 6:// 单笔订单交易额
-                        url = 'updateStoreStarUpgradeOrderById';
+                        // url = 'updateStoreStarUpgradeOrderById';
+                        type = 7;
                         break;
                     case 7:// 人数达标奖励
-                        url = 'updateStoreStarDemotionDealerById';
+                        // url = 'updateStoreStarDemotionDealerById';
+                        type = 8;
                         break;
                 }
                 const data = this.form;
                 data.id = this.shopId;
-                data.url = pApi.promotionShop;
+                data.type = type;
                 let flag1 = true; let flag2 = true; let flag3 = true; let flag4 = true;
                 if (index == 0) {
                     flag1 = this.isEmpty(data.upgradeExp, false);
@@ -321,7 +328,7 @@
                     this.setIsAjax(flag2);
                 }
                 if (this.isAjax) {
-                    request[url](data).then((res) => {
+                    request.updateStoreStar(data).then((res) => {
                         this.$message.success(res.data.msg);
                         this.showupgradeExp = false;
                         this.showNecessaryConf = false;
