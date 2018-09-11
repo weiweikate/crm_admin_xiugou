@@ -614,13 +614,13 @@ export default new Router({
                 {
                     name: 'baseParamsSet',
                     path: '/baseParamsSet',
-                    component: resolve => require(['../components/page/OperateManage/BaseParamsSet.vue'], resolve),
+                    component: resolve => require(['../components/page/BasePramConfig/BaseParamsSet.vue'], resolve),
                     meta: { title: '交易基础参数设置', url: '/admin/sysConfig/updateSysConfigByTransaction' }
                 },
                 {
                     name: 'groupBaseParamsSet',
                     path: '/groupBaseParamsSet',
-                    component: resolve => require(['../components/page/OperateManage/GroupBaseParamsSet.vue'], resolve),
+                    component: resolve => require(['../components/page/BasePramConfig/GroupBaseParamsSet.vue'], resolve),
                     meta: { title: '拼店基础参数设置', url: '/admin/sysConfig/updateSysConfigByTransaction' }
                 },
                 {
@@ -680,7 +680,7 @@ export default new Router({
                 {
                     name: 'backAddress',
                     path: '/backAddress',
-                    component: resolve => require(['../components/page/OperateManage/BackAddress.vue'], resolve),
+                    component: resolve => require(['../components/page/BasePramConfig/BackAddress.vue'], resolve),
                     meta: { title: '寄回地址管理', url: '/admin/returnAddress/queryReturnAddressList' }
                 },
                 {

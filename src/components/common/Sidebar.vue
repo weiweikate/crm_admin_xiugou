@@ -260,8 +260,11 @@
                             {
                                 index: 'groupBaseParamsSet',
                                 title: '拼店基础参数设置'
-                            }
-                        ]
+                            },
+                            {
+                                index: 'backAddress',
+                                title: '寄回地址管理'
+                            }]
                     },
                     {
                         icon: 'icon-yunying',
@@ -271,7 +274,7 @@
                             {
                                 index: 'helpCenter',
                                 title: '帮助中心管理'
-                            },
+                            }
                             // {
                             //     index: "noticeInformManage",
                             //     title: "公告通知管理"
@@ -312,10 +315,6 @@
                             //     index: "deliveryAddress",
                             //     title: "提货地址设置"
                             // },
-                            {
-                                index: 'backAddress',
-                                title: '寄回地址管理'
-                            }
                             // {
                             //     index: "discountCoupon",
                             //     title: "优惠券设置"
