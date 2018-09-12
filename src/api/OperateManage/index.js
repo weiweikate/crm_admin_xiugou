@@ -137,8 +137,6 @@ export const deleteHotWordsById = '/admin/hotWord/deleteHotWordsById';
 export const updateHotWordsStatusById = '/admin/hotWord/updateHotWordsStatusById';
 // 修改热词信息
 export const updateHotWordsById = '/admin/hotWord/updateHotWordsById';
-// 所有词分页列表
-export const getAllWordsByPage = '/admin/hotWord/getAllWordsByPage';
 // 分页列表
 export const queryReturnAddressList = '/admin/returnAddress/queryReturnAddressList';
 // 添加寄回地址
@@ -195,3 +193,5 @@ export const tplList = '/admin/topic/template/list';
 export const addBadWord = '/admin/config/sysBadWord/addBadWord'; // 添加敏感词
 export const deleteBadWord = ['/admin/config/sysBadWord/deleteBadWord', { methods: 'get' }]; // 删除敏感词
 export const queryBadWord = '/admin/config/sysBadWord/queryBadWord'; // 查询敏感词列表
+export const getAllWordsByPage = '/admin/hotWord/getAllWordsByPage'; // 关键词分页列表
+

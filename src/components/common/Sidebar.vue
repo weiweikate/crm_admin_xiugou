@@ -282,7 +282,7 @@
                             {
                                 index: 'labelManage',
                                 title: '标签管理'
-                            }
+                            },
                             // {
                             //     index: "noticeInformManage",
                             //     title: "公告通知管理"
@@ -311,10 +311,10 @@
                             //     index: "featured",
                             //     title: "推荐位管理"
                             // },
-                            // {
-                            //     index: "allKeyWords",
-                            //     title: "搜索关键词"
-                            // },
+                            {
+                                index: 'allKeyWords',
+                                title: '搜索关键词'
+                            }
                             // {
                             //     index: "deliveryAddress",
                             //     title: "提货地址设置"

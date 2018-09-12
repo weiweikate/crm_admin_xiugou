@@ -46,4 +46,9 @@ export const updateSupplierDeleteById = '/admin/supplier/updateSupplierDeleteByI
 export const queryBrandPageList = '/admin/brand/queryBrandPageList';
 // 根据二级类目id字符串查询品牌
 export const queryCategoryBrandByCId = '/admin/categoryBrand/queryCategoryBrandByCId';
+// ******************************************************************************************************************************************************************************
+export const queryUserPageList = '/admin/user/queryUserPageList';// 会员列表
+export const findDealerById = ['/admin/user/findUserDetailById', { methods: 'get' }]; // 会员详情
+export const updateDealerById = '/admin/user/updateUserById'; // 修改经销商信息 1：基础 2：授权
+export const findDealerTreeById = ['/admin/user/findUserTreeInfo', { methods: 'get' }]; // 会员树状图
 

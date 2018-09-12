@@ -182,16 +182,9 @@ export const findInviteInfo = '/admin/invite/findInviteInfo';
 export const createWxQrcode = '/admin/invite/createWxQrcode';
 
 // 经销商会员管理
-// 会员列表
-export const getDealerPageList = '/admin/dealer/queryDealerPageList';
-// 会员详情
-export const findDealerById = '/admin/dealer/findDealerById';
-// 修改授权信息
-export const updateDealerPermitById = '/admin/dealer/updateDealerPermitById';
-// 根据id修改经销商信息
-export const updateDealerById = '/admin/dealer/updateDealerById';
-// 用户的树状结构
-export const findDealerTreeById = '/admin/dealer/findDealerTreeById';
+
+
+
 // 关闭用户
 export const stopDealerById = '/admin/dealer/stopDealerById';
 // 开启用户
@@ -257,6 +250,7 @@ export const updateNoticeStatus = '/admin/notice/updateNoticeStatus';
 
 export const makeSureOrder = '/order/order/makeSureOrder';
 //* ***************************************************************************************************************************************************************************
+export const uploadImg = '/common/upload/oss'; // 上传图片
 export const queryConfig = ['/admin/config/sysconfig/queryConfig', { methods: 'get' }]; // 查询系统配置
 export const addOrModifyList = '/admin/config/sysconfig/addOrModifyList'; // 批量新增系统配置
 export const findAdminUserbyId = ['/admin/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息

@@ -23,9 +23,6 @@ export default {
         url: {
             require: true
         },
-        uri: {
-            require: true
-        },
         status: {}
     },
     components: {
@@ -43,12 +40,12 @@ export default {
                 const that = this;
                 that.btnLoading = true;
                 const url = that.url;
-                const data = { id: that.id, status: that.status, url: that.uri };
+                const data = { id: that.id, status: that.status };
                 request[url](data).then(res => {
                     that.btnLoading = false;
-                    if(res.code===10000){
+                    if (res.code === 10000) {
                         this.$message.success('删除成功');
-                    }else{
+                    } else {
                         this.$message.success(res.msg);
                     }
                     this.$emit('msg', false);

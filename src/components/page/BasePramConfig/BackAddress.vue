@@ -12,8 +12,8 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="receiver" label="联系人" align="center"></el-table-column>
-                    <el-table-column prop="recevice_phone" label="联系方式" align="center"></el-table-column>
-                    <el-table-column v-if="isShowOperate" label="操作" align="center">
+                    <el-table-column prop="recevicePhone" label="联系方式" align="center"></el-table-column>
+                    <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button type="primary" size="small" v-if="scope.row.status==2"
                                        @click="openOrCloseItem(scope.row,1)">开启
@@ -86,9 +86,6 @@
     import icon from '@/components/common/ico.vue';
     import region from '@/components/common/Region';
     import deleteToast from '@/components/common/DeleteToast';
-    import * as api from '@/api/OperateManage/BackAddress';
-    import utils from '@/utils/index.js';
-    import * as pApi from '@/privilegeList/OperateManage/BackAddress';
     import request from '@/http/http';
 
     export default {
@@ -97,15 +94,6 @@
         },
         data() {
             return {
-                // 权限控制
-                p: {
-                    addReturnAddress: false,
-                    updateReturnAddress: false,
-                    updateReturnAddress_1: false,
-                    deleteReturnAddress: false
-                },
-                isShowOperate: false,
-
                 address: '',
                 form: {
                     receiver: '',
@@ -146,38 +134,19 @@
             // 获取省市区
             getRegion(msg) {
                 this.address = msg;
-                console.log(this.address);
             },
             // 获取列表
             getList() {
                 const that = this;
-                const data = {
-                    url: pApi.queryReturnAddressList
-                };
+                const data = {};
                 that.tableLoading = true;
                 request.queryReturnAddressList(data).then(res => {
-                    console.log(res);
                     that.tableLoading = false;
                     that.tableData = res.data;
                 }).catch(err => {
                     that.tableLoading = false;
                     console.log(err);
                 });
-                // that.$axios
-                //     .post(api.queryReturnAddressList, data)
-                //     .then(res => {
-                //         if (res.data.code == 200) {
-                //             that.tableLoading = false;
-                //             that.tableData = res.data.data;
-                //         } else {
-                //             that.$message.warning(res.data.msg);
-                //             that.tableLoading = false;
-                //         }
-                //     })
-                //     .catch(err => {
-                //         that.tableLoading = false;
-                //         console.log(err);
-                //     });
             },
             // 添加
             addAddress() {
@@ -191,7 +160,7 @@
             },
             // 详细地址选择
             changeArea() {
-                if (this.itype == 'add') {
+                if (this.itype === 'add') {
                     this.areaDisabled = this.addForm.country == 1;
                 } else {
                     this.areaDisabled = this.form.country == 1;
@@ -202,21 +171,11 @@
                 this.editMask = true;
                 row.country = '1';
                 this.form = row;
-                this.form.recevicePhone = row.recevice_phone;
+                this.form.recevicePhone = row.recevicePhone;
                 this.itemId = row.id;
                 this.itype = 'edit';
-                // if(row.country==1){
-                //     this.areaDisabled=true;
-                //     let reginArr=[];
-                //     reginArr.push(Number(this.form.province_code),Number(this.form.city_code),Number(this.form.area_code));
-                //     this.address=reginArr;
-                //     console.log(this.address)
-                // }else{
-                //     this.areaDisabled=false;
-                //     this.address=''
-                // }
                 const reginArr = [];
-                reginArr.push(Number(this.form.province_code), Number(this.form.city_code), Number(this.form.area_code));
+                reginArr.push(Number(this.form.provinceCode), Number(this.form.cityCode), Number(this.form.areaCode));
                 this.address = reginArr;
             },
 
@@ -226,7 +185,6 @@
                 const data = {};
                 data.receiver = this[formName].receiver;
                 data.recevicePhone = this[formName].recevicePhone;
-                // data.country = this[formName].country;
                 data.provinceCode = this.address[0];
                 data.cityCode = this.address[1];
                 data.areaCode = this.address[2];
@@ -255,39 +213,29 @@
                         return false;
                     }
                 }
-                if (this.itype == 'add') {
-                    url = api.addReturnAddress;
-                    data.url = pApi.addReturnAddress;
+                if (this.itype === 'add') {
+                    url = 'addReturnAddress';
                 } else {
-                    url = api.updateReturnAddress;
+                    url = 'modifyReturnAddress';
                     data.id = this.itemId;
-                    data.url = pApi.updateReturnAddress;
                 }
                 this.btnLoading = true;
-                this.$axios
-                    .post(url, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            this.$message.success(res.data.msg);
-                            this.btnLoading = false;
-                            this.addMask = false;
-                            this.editMask = false;
-                            this.getList(this.page.currentPage);
-                        } else {
-                            this.btnLoading = false;
-                            this.$message.warning(res.data.msg);
-                            this.getList(this.page.currentPage);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                request[url](data).then(res => {
+                    this.$message.success(res.msg);
+                    this.btnLoading = false;
+                    this.addMask = false;
+                    this.editMask = false;
+                    this.getList(this.page.currentPage);
+                }).catch(err => {
+                    this.btnLoading = false;
+                    console.log(err);
+                });
             },
             // 删除
             delItem(id) {
                 this.delId = id;
                 this.delUrl = 'deleteReturnAddress';
-                this.delUri = pApi.deleteReturnAddress;
+                this.delUri = '/dashboard';
                 this.isShowDelToast = true;
             },
             // 删除弹窗
@@ -303,25 +251,16 @@
             },
             // 开启关闭
             openOrCloseItem(row, num) {
-                const data = {
-                    status: num,
-                    id: row.id,
-                    url: pApi.updateReturnAddress
-                };
-                this.$axios
-                    .post(api.updateReturnAddress, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            this.$message.success(res.data.msg);
-                            this.getList(this.page.currentPage);
-                        } else {
-                            this.btnLoading = false;
-                            this.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                const data = {};
+                Object.assign(data, row);
+                data.status = num;
+                request.modifyReturnAddress(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.getList(this.page.currentPage);
+                    console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                });
             }
         }
     };

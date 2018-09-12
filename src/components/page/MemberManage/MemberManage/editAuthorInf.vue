@@ -5,37 +5,24 @@
             <div class="mask-content">
                 <el-form>
                     <el-form-item label="授权码:" class="special">
-                        {{permit.code}}
+                        {{dealer.code}}
                     </el-form-item>
                     <el-form-item label="授权层级" class="special">
-                        <el-select v-model="permit.level" placeholder="全部层级">
+                        <el-select v-model="dealer.level" placeholder="全部层级">
                             <el-option label="全部层级" value=""></el-option>
                             <el-option :label="item.name" :value="item.id" v-for="(item,index) in levelList"
                                        :key="index"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="经销商类型" class="special">
-                        <el-select v-model="permit.d_type">
-                            <el-option label="网信经销商" value="1"></el-option>
-                            <el-option label="供货经销商" value="2"></el-option>
-                            <el-option label="网红经销商" value="3"></el-option>
-                        </el-select>
-                    </el-form-item>
                     <el-form-item label="上级代理:" class="special">
-                        <el-input v-model="permit.up_dealerid" @blur="sureUpdate" size="medium"></el-input>
+                        <el-input v-model="dealer.upUserName" @blur="sureUpdate" size="medium"></el-input>
                         <span class="tip">请输入上级代理</span>
-                    </el-form-item>
-                    <el-form-item label="是否启用" class="special">
-                        <el-radio-group v-model="permit.pickedUp">
-                            <el-radio label="1">是</el-radio>
-                            <el-radio label="2">否</el-radio>
-                        </el-radio-group>
                     </el-form-item>
                 </el-form>
             </div>
             <div class="submit-btn">
                 <div style="margin-left: -73px;width: 100%">
-                    <el-button type="primary" @click="submitForm('form')">确认修改</el-button>
+                    <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">确认修改</el-button>
                     <el-button @click="closeToask">取消</el-button>
                 </div>
             </div>
@@ -60,7 +47,7 @@
 <script>
     import icon from '../../../common/ico';
     import * as api from '../../../../api/api';
-    import * as pApi from '../../../../privilegeList/index.js';
+    import request from '@/http/http';
     export default {
         components: {
             icon
@@ -69,7 +56,7 @@
             id: {
                 require: true
             },
-            permit: {
+            dealer: {
                 require: true
             }
         },
@@ -78,15 +65,15 @@
                 isUpdateUperMask: false,
                 levelList: [], // 用户层级列表
                 num: '',
-                oldId: ''
+                oldId: '',
+                btnLoading: false
             };
         },
         created() {
             this.getLevelList();
-            this.permit.level = this.permit.level_id;
-            this.oldId = this.permit.id;
-            this.permit.d_type = this.permit.d_type.toString();
-            this.permit.pickedUp = this.permit.picked_up.toString();
+            this.dealer.level = this.dealer.levelId;
+            this.oldId = this.dealer.id;
+            this.dealer.dtype = this.dealer.dtype.toString();
         },
         methods: {
             // 获取用户层级列表
@@ -99,7 +86,7 @@
                         if (res.data.code == 200) {
                             that.levelList = res.data.data;
                             for (const i in res.data.data) {
-                                if (that.permit.level_id == res.data.data[i].id) {
+                                if (that.dealer.level_id == res.data.data[i].id) {
                                     that.num = i;
                                 }
                             }
@@ -117,43 +104,49 @@
             },
             // 提交表单
             submitForm() {
-                const that = this;
-                that.closeToask();
+                this.closeToask();
                 const data = {};
-                data.id = that.id;
-                data.dType = that.permit.d_type;
-                data.levelId = that.permit.level;
-                data.pickedUp = that.permit.pickedUp;
-                data.url = pApi.updateDealerPermitById;
-                if (that.oldId != that.permit.up_dealerid) {
-                    data.upDealerid = that.permit.up_dealerid;
-                }
-                that.$axios
-                    .post(api.updateDealerPermitById, data)
-                    .then(res => {
-                        that.btnLoading = false;
-                        if (res.data.code == 200) {
-                            that.$message.success('修改成功');
-                            that.$emit('msg', false);
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.$emit('msg', false);
-                        }
-                    })
-                    .catch(err => {
-                        that.tableLoading = false;
-                        that.$emit('msg', false);
-                    });
+                data.id = this.id;
+                data.levelId = this.dealer.level;
+                data.upUserid = this.dealer.upUserName;
+                data.updateType = 2;
+                this.btnLoading = true;
+                request.updateDealerById(data).then(res => {
+                    this.btnLoading = false;
+                    this.$message.success(res.msg);
+                    this.$emit('msg', false);
+                    console.log(res);
+                }).catch(err => {
+                    this.$emit('msg', false);
+                    this.btnLoading = false;
+                    console.log(err);
+                });
+                // that.$axios
+                //     .post(api.updateDealerdealerById, data)
+                //     .then(res => {
+                //         that.btnLoading = false;
+                //         if (res.data.code == 200) {
+                //             that.$message.success('修改成功');
+                //             that.$emit('msg', false);
+                //         } else {
+                //             that.$message.warning(res.data.msg);
+                //             that.$emit('msg', false);
+                //         }
+                //     })
+                //     .catch(err => {
+                //         that.tableLoading = false;
+                //         that.$emit('msg', false);
+                //     });
             },
             sureUpdate() {
-                if (this.oldId != this.permit.id) {
+                if (this.oldId != this.dealer.id) {
                     this.isUpdateUperMask = true;
                 }
             },
             closeUpdateUperMask(status) {
                 this.isUpdateUperMask = false;
                 if (!status) {
-                    this.permit.id = this.oldId;
+                    this.dealer.id = this.oldId;
                 }
             }
         }

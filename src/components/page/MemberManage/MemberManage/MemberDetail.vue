@@ -8,78 +8,65 @@
                         <h3>基础信息</h3>
                     </div>
                     <div class="item-row">
-                        <div class="item">用户ID：{{dealer.id}}({{dealer.code}})</div>
+                        <div class="item">会员ID：{{dealer.id}}</div>
                         <div class="item">微信openid：{{dealer.openid}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item">昵称：{{dealer.nickname}}</div>
-                        <div class="item">身份证号：{{dealer.idcard}}</div>
+                        <div class="item">微信号：{{dealer.wechatId}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item">手机号：{{dealer.phone}}</div>
-                        <div class="item">系统版本：{{dealer.system_version}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item">姓名：{{dealer.realname}}</div>
-                        <div class="item">微信版权获取区域：{{dealer.wechat_area}}</div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item">微信号：{{dealer.wecaht_id}}</div>
-                        <div class="item">最近登录时间：{{dealer.last_login_time|formatDate}}</div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item">注册时间：{{dealer.reg_time|formatDate}}</div>
-                        <div class="item">本日登录：{{dealer.day_count}}</div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item">手机型号：{{dealer.device}}</div>
-                        <div class="item">本月登录：{{dealer.month_count}}</div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item">微信版本：{{dealer.wecaht_version}}</div>
-                        <div class="item">共登录次数：{{dealer.all_count}}</div>
+                        <div class="item">身份证号：{{dealer.idcard}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item">地址信息 ：{{dealer.addrPreFix}}{{dealer.address}}</div>
                     </div>
+                    <div class="item-row">
+                        <div class="item">注册时间：{{dealer.regTime|formatDate}}</div>
+                        <div class="item">最近登录时间：{{dealer.lastLoginTime|formatDate}}</div>
+                    </div>
                 </div>
                 <div class="center">
-                    <el-button v-if="p.updateDealerById" @click="updateBasicInf">修改</el-button>
+                    <el-button @click="updateBasicInf">修改</el-button>
                 </div>
                 <div class="right">
                     <div>
                         <img class="img" v-if="dealer.head_img" :src="dealer.head_img" alt="">
                         <img class="img" v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
+                    <!--<div>-->
+                        <!--<el-button type="primary" @click="btnClicked('/lowerMemberManage')">-->
+                            <!--下级代理({{dealer.sub_level_num}})-->
+                        <!--</el-button>-->
+                    <!--</div>-->
                     <div>
-                        <el-button type="primary" @click="btnClicked('/lowerMemberManage')">
-                            下级代理({{dealer.sub_level_num}})
-                        </el-button>
-                    </div>
-                    <div>
-                        <el-button type="primary" v-if="p.findDealerTreeById" @click="btnClicked('/memberTree')"
+                        <el-button type="primary" @click="btnClicked('/memberTree')"
                                    style="margin-left: 0">查看会员树状图
                         </el-button>
                     </div>
-                    <div>
-                        <el-button type="primary" @click="btnClicked('/operateLog')" style="margin-left: 0">用户操作日志
-                        </el-button>
-                    </div>
-                    <div>
-                        <el-button type="primary" v-if="p.queryDealerAccount" @click="btnClicked('/memberAccount')"
-                                   style="margin-left: 0">他的账户
-                        </el-button>
-                    </div>
+                    <!--<div>-->
+                        <!--<el-button type="primary" @click="btnClicked('/operateLog')" style="margin-left: 0">用户操作日志-->
+                        <!--</el-button>-->
+                    <!--</div>-->
+                    <!--<div>-->
+                        <!--<el-button type="primary" @click="btnClicked('/memberAccount')"-->
+                                   <!--style="margin-left: 0">他的账户-->
+                        <!--</el-button>-->
+                    <!--</div>-->
                     <div>
                         <el-button type="primary" @click="realName"
                                    style="margin-left: 0">实名信息
                         </el-button>
                     </div>
-                    <div v-if='storeId'>
-                        <el-button type="primary" @click="shopInfo"
-                                   style="margin-left: 0">店铺信息
-                        </el-button>
-                    </div>
+                    <!--<div v-if='storeId'>-->
+                        <!--<el-button type="primary" @click="shopInfo"-->
+                                   <!--style="margin-left: 0">店铺信息-->
+                        <!--</el-button>-->
+                    <!--</div>-->
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -89,24 +76,23 @@
                         <h3>授权信息</h3>
                     </div>
                     <div class="item-row">
-                        <div class="item">上级代理：{{permit.realname}}({{permit.code}})</div>
-                        <div class="item">经销商类型：
-                            <span v-if="permit.d_type==1">网信经销商</span>
-                            <span v-if="permit.d_type==2">供货经销商</span>
-                            <span v-if="permit.d_type==3">网红经销商</span>
+                        <div class="item">上级代理：{{dealer.upUserName}}</div>
+                        <div class="item">会员类型：
+                            <span v-if="dealer.dtype==1">网信经销商</span>
+                            <span v-if="dealer.dtype==2">供货经销商</span>
+                            <span v-if="dealer.dtype==3">网红经销商</span>
                         </div>
                     </div>
                     <div class="item-row">
-                        <div class="item">授权码：{{permit.code}}</div>
-                        <div class="item">授权层级：{{permit.levelName}}级</div>
+                        <div class="item">授权码：{{dealer.code}}</div>
+                        <div class="item">授权层级：{{dealer.levelName}}级</div>
                     </div>
                     <div class="item-row">
-                        <div class="item">经验值：{{permit.experience}}</div>
-                        <div class="item">是否启用：<span v-if="permit.picked_up==1">是</span><span v-else>否</span></div>
+                        <div class="item">经验值：{{dealer.experience}}</div>
                     </div>
                 </div>
                 <div class="center">
-                    <el-button v-if="p.updateDealerPermitById" @click="updateAuthorInf">修改</el-button>
+                    <el-button @click="updateAuthorInf">修改</el-button>
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -197,7 +183,7 @@
         <!--基础信息修改弹窗-->
         <edit-basic @msg='basicToast' :dealer='dealer' :id="id" v-if="isShowEditBasic"></edit-basic>
         <!--授权信息修改弹窗-->
-        <edit-author @msg='authorToast' :permit='permit' :id="id" v-if="isShowEditAuthor"></edit-author>
+        <edit-author @msg='authorToast' :dealer='dealer' :id="id" v-if="isShowEditAuthor"></edit-author>
     </div>
 </template>
 
@@ -207,8 +193,7 @@
     import editAuthor from './editAuthorInf';
     import icon from '@/components/common/ico.vue';
     import * as api from '@/api/api';
-    import utils from '@/utils/index.js';
-    import * as pApi from '@/privilegeList/index.js';
+    import request from '@/http/http';
 
     export default {
         components: {
@@ -216,17 +201,7 @@
         },
         data: function() {
             return {
-                // 权限控制
-                p: {
-                    updateDealerById: false,
-                    updateDealerPermitById: false,
-                    findDealerTreeById: false,
-                    queryDealerAccount: false,
-                    findDealerRealnameInfo_1: false
-                },
-
                 dealer: {},
-                permit: {},
                 dynamicTags: [],
                 inputVisible: false,
                 inputValue: '',
@@ -247,15 +222,8 @@
             this.id =
                 this.$route.query.id || sessionStorage.getItem('memberDetail');
             this.getDetail();
-            this.pControl();
         },
         methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-            },
             basicToast(msg) {
                 const that = this;
                 that.isShowEditBasic = msg;
@@ -272,32 +240,15 @@
             },
             // 获取详情
             getDetail() {
-                const that = this;
                 const data = {
-                    id: that.id,
-                    url: pApi.findDealerById
+                    id: this.id
                 };
-                that.loading = true;
-                that.$axios
-                    .post(api.findDealerById, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.loading = false;
-                            that.storeId = res.data.data.storeId || null;
-                            that.otherStore = res.data.data.otherStore || '';
-                            that.myStore = res.data.data.myStore || '';
-                            that.dealer = res.data.data.dealer;
-                            that.permit = res.data.data.permit;
-                            that.dynamicTags = res.data.data.tagDealer;
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.loading = false;
-                        }
-                    })
-                    .catch(err => {
-                        that.loading = false;
-                        console.log(err);
-                    });
+                this.loading = true;
+                request.findDealerById(data).then(res => {
+                    this.dealer = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 删除标签
             handleClose(tag) {
@@ -368,17 +319,6 @@
             backToList() {
                 this.$router.push('/memberManage');
             },
-            // 跳到下级代理页面
-            //    toLowerAgent() {
-            //        sessionStorage.setItem('memberId', that.id);
-            //        this.$router.push({path: '/lowerMemberManage'})
-            //    },
-            // 跳到会员树状图页面
-            //    toMemberTree() {
-            //        let that = this;
-            //        sessionStorage.setItem('memberId', that.id);
-            //        this.$router.push({path: '/memberTree', query: {'memberId': that.id}})
-            //    },
             // 修改基础信息
             updateBasicInf() {
                 this.isShowEditBasic = true;
@@ -387,18 +327,7 @@
             updateAuthorInf() {
                 this.isShowEditAuthor = true;
             },
-            // 跳到用户日志
-            //    toOperateLog(){
-            //        let id=this.id;
-            //        sessionStorage.setItem('memberId',id);
-            //        this.$router.push({path:'/operateLog',query: {'memberId': id}})
-            //    },
-            // 跳到他的账户
-            //    toAccount(){
-            //        let id=this.id;
-            //        sessionStorage.setItem('memberId',id);
-            //        this.$router.push({path:'/memberAccount',query: {'memberId': id}})
-            //    },
+            //页面跳转
             btnClicked(page) {
                 const id = this.id;
                 sessionStorage.setItem('memberId', id);
