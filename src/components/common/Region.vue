@@ -57,7 +57,6 @@ export default {
                 fatherCode: 0
             };
             request.getRegion(data).then(res => {
-                console.log(res);
                 this.provinceArr = [];
                 this.provinceArr.push({ label: '全部', value: '' });
                 res.data.forEach((v, k) => {

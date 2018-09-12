@@ -23,9 +23,6 @@ export default {
         url: {
             require: true
         },
-        uri: {
-            require: true
-        },
         status: {}
     },
     components: {
@@ -43,7 +40,7 @@ export default {
                 const that = this;
                 that.btnLoading = true;
                 const url = that.url;
-                const data = { id: that.id, status: that.status, url: that.uri };
+                const data = { id: that.id, status: that.status };
                 request[url](data).then(res => {
                     that.btnLoading = false;
                     this.$message.success('删除成功');
