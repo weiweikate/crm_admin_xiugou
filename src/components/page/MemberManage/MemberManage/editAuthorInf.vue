@@ -14,13 +14,6 @@
                                        :key="index"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="经销商类型" class="special">
-                        <el-select v-model="dealer.dtype">
-                            <el-option label="网信经销商" value="1"></el-option>
-                            <el-option label="供货经销商" value="2"></el-option>
-                            <el-option label="网红经销商" value="3"></el-option>
-                        </el-select>
-                    </el-form-item>
                     <el-form-item label="上级代理:" class="special">
                         <el-input v-model="dealer.upUserName" @blur="sureUpdate" size="medium"></el-input>
                         <span class="tip">请输入上级代理</span>
@@ -114,12 +107,9 @@
                 this.closeToask();
                 const data = {};
                 data.id = this.id;
-                data.dtype = this.dealer.dtype;
                 data.levelId = this.dealer.level;
+                data.upUserid = this.dealer.upUserName;
                 data.updateType = 2;
-                if (this.oldId != this.dealer.upUserid) {
-                    data.upDealerid = this.dealer.upUserName;
-                }
                 this.btnLoading = true;
                 request.updateDealerById(data).then(res => {
                     this.btnLoading = false;

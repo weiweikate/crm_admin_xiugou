@@ -5,8 +5,8 @@
             <div class="wrap">
                 <span class='title'>基本信息</span>
                 <p>证件类型：{{detail.drType==1?'身份证':'身份证'}}</p>
-                <p>姓名：{{detail.realName}}</p>
-                <p>身份证号：{{detail.idcardNo}}</p>
+                <p>姓名：{{detail.myRealName}}</p>
+                <p>身份证号：{{detail.myCardNum}}</p>
                 <span class='title'>图片</span>
                 <div class="info">
                     <div class="card" v-for="(v,k) in img" :key="k">
@@ -18,52 +18,59 @@
     </div>
 </template>
 <script>
-import breadcrumb from '../../common/Breadcrumb'
-import * as api from '../../../api/api.js';
-import * as pApi from '../../../privilegeList/index.js';
-import {getUserId} from '../../../JS/commom.js';
+import breadcrumb from '@/components/common/Breadcrumb';
+import * as api from '@/api/api.js';
+import request from '@/http/http';
+import { getUserId } from '@/JS/commom.js';
 
 export default {
     components: {
         breadcrumb
     },
     mixins: [getUserId],
-    data () {
+    data() {
         return {
-            nav: ["经销商会员管理", "会员管理", "会员详情","实名认证"],
-            img:[],
-            detail:{},
-            id:''
-        }
+            nav: ['经销商会员管理', '会员管理', '会员详情', '实名认证'],
+            img: [],
+            detail: {},
+            id: ''
+        };
     },
-    activated(){
+    activated() {
         this.id = this.$route.query.memberId || sessionStorage.getItem('memberId');
         this.getUserId();
-        this.getDetail()
+        this.getDetail();
     },
-    methods:{
-        getDetail(){
-            let that=this;
-            that.img=[];
-            let data={
-                id:that.id,
+    methods: {
+        getDetail() {
+            const that = this;
+            that.img = [];
+            const data = {
+                id: that.id
             };
-            that.$axios
-                .post(api.findDealerRealnameInfo, data)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        that.detail = res.data.data;
-                        that.img.push(res.data.data.frontPhoto,res.data.data.backPhoto)
-                    } else {
-                        that.$message.warning(res.data.msg);
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+            request.findDealerById(data).then(res => {
+                console.log(res);
+                that.detail = res.data;
+                that.img.push(res.data.frontPhoto, res.data.backPhoto);
+            }).catch(err => {
+                console.log(err);
+            });
+            // that.$axios
+            //     .post(api.findDealerRealnameInfo, data)
+            //     .then(res => {
+            //         if (res.data.code == 200) {
+            //             that.detail = res.data.data;
+            //             that.img.push(res.data.data.frontPhoto, res.data.data.backPhoto);
+            //         } else {
+            //             that.$message.warning(res.data.msg);
+            //         }
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     });
         }
     }
-}
+};
 </script>
 <style lang='less' scoped>
 .realname-info{
@@ -79,8 +86,9 @@ export default {
             line-height: 25px;
         }
         .info{
+            overflow: hidden;
             .card{
-                display: inline-block;
+                float: left;
                 width: 265px;
                 height: 165px;
                 border: 1px solid #ccc;
@@ -88,6 +96,7 @@ export default {
                 margin: 5px 11px;
                 padding: 10px;
                 box-sizing: border-box;
+                margin-left: 10px;
                 img{
                     width: 100%;
                     height: 100%;

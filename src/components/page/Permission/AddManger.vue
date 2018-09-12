@@ -68,8 +68,7 @@
 </template>
 <script>
 import breadcrumb from '../../common/Breadcrumb';
-import * as api from '../../../api/api.js';
-import * as pApi from '../../../privilegeList/index.js';
+import * as api from '@/api/api.js';
 import request from '@/http/http.js';
 export default {
     components: {
@@ -106,7 +105,7 @@ export default {
         this.form = {};
         this.checkedUser = [[], [], [], [], [], [], [], [], [], [], []];
         this.checkAllUser = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
-        this.uploadImg = api.addImg;
+        this.uploadImg = api.uploadImg;
         this.getRoleList();
         this.getDepartmentList();
     },
@@ -127,7 +126,6 @@ export default {
             });
             data = this.form;
             data.role = role.join(',');
-            data.url = pApi.addAdminUser;
             this.btnLoading = true;
             this.$refs[formName].validate((valid) => {
                 if (valid) {

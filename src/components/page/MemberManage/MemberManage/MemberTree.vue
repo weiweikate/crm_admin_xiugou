@@ -144,50 +144,26 @@
             getDetail() {
                 const that = this;
                 const data = {
-                    id: that.id,
+                    id: that.id
                 };
                 that.loading = true;
                 request.findDealerTreeById(data).then(res => {
-                    res.data.data.dealerAndUp.checked = false;
-                    that.dealerAndUp = res.data.data.dealerAndUp;
-                    that.lower.totalCount = res.data.data.totalCount;
-                    for (const i in res.data.data.firstList) {
-                        res.data.data.firstList[i].checked = false;
-                        for (const j in res.data.data.firstList[i].secList) {
-                            res.data.data.firstList[i].secList[j].checked = false;
+                    console.log(res);
+                    res.data.userAndUp.checked = false;
+                    that.dealerAndUp = res.data.userAndUp;
+                    that.lower.totalCount = res.data.totalCount;
+                    for (const i in res.data.firstList) {
+                        res.data.firstList[i].checked = false;
+                        for (const j in res.data.firstList[i].secList) {
+                            res.data.firstList[i].secList[j].checked = false;
                         }
-                        that.firstList.push(res.data.data.firstList[i]);
+                        that.firstList.push(res.data.firstList[i]);
                     }
                     that.loading = false;
-                    console.log(res);
                 }).catch(err => {
                     that.loading = false;
                     console.log(err);
                 });
-                // this.$axios
-                //     .post(api.findDealerTreeById, data)
-                //     .then(res => {
-                //         if (res.data.code == 200) {
-                //             res.data.data.dealerAndUp.checked = false;
-                //             that.dealerAndUp = res.data.data.dealerAndUp;
-                //             that.lower.totalCount = res.data.data.totalCount;
-                //             for (const i in res.data.data.firstList) {
-                //                 res.data.data.firstList[i].checked = false;
-                //                 for (const j in res.data.data.firstList[i].secList) {
-                //                     res.data.data.firstList[i].secList[j].checked = false;
-                //                 }
-                //                 that.firstList.push(res.data.data.firstList[i]);
-                //             }
-                //             that.loading = false;
-                //         } else {
-                //             that.loading = false;
-                //             that.$message.warning(res.data.msg);
-                //         }
-                //     })
-                //     .catch(err => {
-                //         console.log(err);
-                //         that.loading = false;
-                //     });
             },
             // 查询
             search() {
@@ -284,7 +260,7 @@
                 vertical-align: middle;
             }
             .direct-item {
-                width: 460px;
+                /*width: 460px;*/
                 height: 60px;
                 line-height: 60px;
                 border-radius: 5px;

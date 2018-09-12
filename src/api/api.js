@@ -257,6 +257,7 @@ export const updateNoticeStatus = '/admin/notice/updateNoticeStatus';
 
 export const makeSureOrder = '/order/order/makeSureOrder';
 //* ***************************************************************************************************************************************************************************
+export const uploadImg = '/common/upload/oss'; // 上传图片
 export const queryConfig = ['/admin/config/sysconfig/queryConfig', { methods: 'get' }]; // 查询系统配置
 export const addOrModifyList = '/admin/config/sysconfig/addOrModifyList'; // 批量新增系统配置
 export const findAdminUserbyId = ['/admin/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息

@@ -18,7 +18,7 @@ const baseURL = 'http://172.16.10.19';
 
 // 测试地址不需要端口号
 const url_1 = baseURL + ':8190';
-const url_3 = baseURL + ':8188';
+const url_2 = baseURL + ':8180';
 const url_4 = baseURL + ':8103';
 // const url_1 = baseURL;
 // const url_3 = baseURL;
@@ -37,11 +37,11 @@ module.exports = {
                     '^/admin': url_1 + '/admin'
                 }
             },
-            '/config': {
-                target: url_1,
+            '/common': {
+                target: url_2,
                 changeOrigin: true,
                 pathRewrite: {
-                    '^/config': url_1 + '/config'
+                    '^/common': url_2 + '/common'
                 }
             },
             '/order': {

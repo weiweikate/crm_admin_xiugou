@@ -26,19 +26,6 @@
                         <el-option label="网红经销商" value="3"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item>
-                    <el-button @click="getList(1)" type="primary">查询</el-button>
-                    <el-button @click="resetForm('form')">重置</el-button>
-                </el-form-item>
-            </el-form>
-        </el-card>
-        <div class="table-block">
-            <el-form ref="exportForm" :inline="true" :model="exportForm" class="search-area">
-                <el-form-item>
-                    <div style="display: inline-block;margin-right: 20px">
-                        <region @regionMsg='getRegion' :regionMsg='address'></region>
-                    </div>
-                </el-form-item>
                 <el-form-item prop="levelId" label="用户层级" label-width="120">
                     <el-select v-model="exportForm.levelId" placeholder="全部层级">
                         <el-option label="全部层级" value=""></el-option>
@@ -47,62 +34,69 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-button @click="exportData" type="primary">导出</el-button>
+                    <div style="display: inline-block;margin-right: 20px">
+                        <region @regionMsg='getRegion' :regionMsg='address'></region>
+                    </div>
+                </el-form-item>
+                <el-form-item>
+                    <el-button @click="getList(1)" type="primary">查询</el-button>
+                    <!--<el-button @click="resetForm('form')">重置</el-button>-->
                 </el-form-item>
             </el-form>
-            <template>
-                <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
-                    <el-table-column prop="id" label="用户ID" width="60" align="center"></el-table-column>
-                    <el-table-column prop="nickname" label="用户昵称" align="center"></el-table-column>
-                    <el-table-column prop="phone" label="手机号" align="center"></el-table-column>
-                    <el-table-column label="授权层级" align="center">
-                        <template slot-scope="scope">{{scope.row.levelName}}</template>
-                    </el-table-column>
-                    <el-table-column prop="day_count" label="本日登录" align="center"></el-table-column>
-                    <el-table-column prop="month_count" label="本月登录" align="center"></el-table-column>
-                    <el-table-column label="最近登录时间" align="center">
-                        <template slot-scope="scope">
-                            <template>{{scope.row.last_logintime|formatDate}}</template>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="code" label="授权码" align="center"></el-table-column>
-                    <el-table-column label="经销商类型" align="center">
-                        <template slot-scope="scope">
-                            <template v-if='scope.row.d_type == 1'>网信经销商</template>
-                            <template v-else-if='scope.row.d_type == 2'>供货经销商</template>
-                            <template v-else-if='scope.row.d_type == 3'>网红经销商</template>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="addrPreFix" label="区域/省市区" align="center"></el-table-column>
-                    <!--<el-table-column prop="style" label="渠道" width="100"></el-table-column>-->
-                    <el-table-column label="下级" align="center">
-                        <template slot-scope="scope">
-                            <span style="cursor: pointer;color:#ff6868"
-                                  @click="toLower(scope.row.id)">{{scope.row.sub_level_num}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="状态" align="center">
-                        <template slot-scope="scope">
-                            <template v-if="scope.row.status==1">待激活</template>
-                            <template v-if="scope.row.status==2">正常</template>
-                            <template v-if="scope.row.status==3">已关闭</template>
-                        </template>
-                    </el-table-column>
-                    <el-table-column min-width="160" label="操作" align="center">
-                        <template slot-scope="scope">
-                            <el-button type="warning"  size="small"
-                                       @click="detailItem(scope.$index,scope.row)">详情
-                            </el-button>
-                            <!--<el-button type="danger" v-if="scope.row.status!=3" size="small"-->
-                                       <!--@click="updateStatusItem(scope.$index,scope.row.id,1)">关闭-->
-                            <!--</el-button>-->
-                            <!--<el-button type="danger" v-if="scope.row.status==3" size="small"-->
-                                       <!--@click="updateStatusItem(scope.$index,scope.row.id,2)">开启-->
-                            <!--</el-button>-->
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </template>
+        </el-card>
+        <div class="table-block">
+            <el-button type="primary" style="margin-bottom: 10px">导出</el-button>
+            <el-table v-loading="tableLoading" :data="tableData" stripe border style="width: 100%">
+                <el-table-column prop="id" label="用户ID" width="60" align="center"></el-table-column>
+                <el-table-column prop="nickname" label="用户昵称" align="center"></el-table-column>
+                <el-table-column prop="phone" label="手机号" align="center"></el-table-column>
+                <el-table-column label="授权层级" align="center">
+                    <template slot-scope="scope">{{scope.row.levelName}}</template>
+                </el-table-column>
+                <el-table-column prop="day_count" label="本日登录" align="center"></el-table-column>
+                <el-table-column prop="month_count" label="本月登录" align="center"></el-table-column>
+                <el-table-column label="最近登录时间" align="center">
+                    <template slot-scope="scope">
+                        <template>{{scope.row.last_logintime|formatDate}}</template>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="code" label="授权码" align="center"></el-table-column>
+                <el-table-column label="经销商类型" align="center">
+                    <template slot-scope="scope">
+                        <template v-if='scope.row.d_type == 1'>网信经销商</template>
+                        <template v-else-if='scope.row.d_type == 2'>供货经销商</template>
+                        <template v-else-if='scope.row.d_type == 3'>网红经销商</template>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="addrPreFix" label="区域/省市区" align="center"></el-table-column>
+                <!--<el-table-column prop="style" label="渠道" width="100"></el-table-column>-->
+                <el-table-column label="下级" align="center">
+                    <template slot-scope="scope">
+                        <span style="cursor: pointer;color:#ff6868"
+                              @click="toLower(scope.row.id)">{{scope.row.sub_level_num}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="状态" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.status==1">待激活</template>
+                        <template v-if="scope.row.status==2">正常</template>
+                        <template v-if="scope.row.status==3">已关闭</template>
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="160" label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="primary"  size="small"
+                                   @click="detailItem(scope.$index,scope.row)">详情
+                        </el-button>
+                        <!--<el-button type="danger" v-if="scope.row.status!=3" size="small"-->
+                                   <!--@click="updateStatusItem(scope.$index,scope.row.id,1)">关闭-->
+                        <!--</el-button>-->
+                        <!--<el-button type="danger" v-if="scope.row.status==3" size="small"-->
+                                   <!--@click="updateStatusItem(scope.$index,scope.row.id,2)">开启-->
+                        <!--</el-button>-->
+                    </template>
+                </el-table-column>
+            </el-table>
             <div class="block">
                 <el-pagination
                         background

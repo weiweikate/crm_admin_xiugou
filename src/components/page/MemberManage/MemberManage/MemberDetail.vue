@@ -246,7 +246,6 @@
                 this.loading = true;
                 request.findDealerById(data).then(res => {
                     this.dealer = res.data;
-                    console.log(res);
                 }).catch(err => {
                     console.log(err);
                 });
