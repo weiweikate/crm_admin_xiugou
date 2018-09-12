@@ -161,14 +161,14 @@
                         index: '5',
                         title: '品牌产品管理',
                         subs: [
-                            // {
-                            //     index: "brandProductClassify",
-                            //     title: "产品分类管理"
-                            // },
-                            // {
-                            //     index: "brandManage",
-                            //     title: "品牌管理"
-                            // },
+                            {
+                                index: 'brandProductClassify',
+                                title: '产品分类管理'
+                            },
+                            {
+                                index: 'brandManage',
+                                title: '品牌管理'
+                            },
                             // {
                             //     index: "productList",
                             //     title: "产品管理"
@@ -246,10 +246,10 @@
                         index: '8',
                         title: '服务管理',
                         subs: [
-                            // {
-                            //     index: "feedBack",
-                            //     title: "问题反馈"
-                            // }
+                            {
+                                index: 'feedBack',
+                                title: '问题反馈'
+                            }
                         ]
                     },
                     {
@@ -278,6 +278,10 @@
                             {
                                 index: 'helpCenter',
                                 title: '帮助中心管理'
+                            },
+                            {
+                                index: 'labelManage',
+                                title: '标签管理'
                             }
                             // {
                             //     index: "noticeInformManage",

@@ -1,14 +1,14 @@
 <template>
     <div class="second-classify">
-        <v-breadcrumb :nav="['品牌产品管理','产品分类管理',name]"></v-breadcrumb>
+        <v-breadcrumb :nav="['品牌产品管理','产品分类管理',superiorName,name]"></v-breadcrumb>
         <div class="table-block">
             <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加三级类目</el-button>
             <template>
                 <el-table :data="tableData" :height="height" border style="width: 100%">
                     <el-table-column prop="id" label="ID" align="center"></el-table-column>
                     <el-table-column prop="name" label="三级分类" align="center"></el-table-column>
-                    <el-table-column prop="name" label="二级分类" align="center"></el-table-column>
-                    <el-table-column prop="product_name" label="一级分类" align="center"></el-table-column>
+                    <el-table-column prop="superiorName" label="二级分类" align="center"></el-table-column>
+                    <el-table-column prop="className" label="一级分类" align="center"></el-table-column>
                     <el-table-column label="图标" align="center">
                         <template slot-scope="scope">
                             <img :src="scope.row.img" alt="">
@@ -22,7 +22,7 @@
                     </el-table-column>
                     <el-table-column min-width="160" label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" @click="toDetailParam(scope.row.id)">产品详细参数</el-button>
+                            <el-button type="primary" size="small" @click="toDetailParam(scope.row)">产品详细参数</el-button>
                             <el-button type="warning" size="small" @click="editItem(scope.row)">编辑</el-button>
                             <el-button type="danger" size="small" @click="delItem(scope.row.id)">删除</el-button>
                         </template>
@@ -46,11 +46,12 @@
             <el-form v-model="addForm">
                 <el-form-item label="类目名称" :label-width="formLabelWidth">
                     <el-input v-model="addForm.name" auto-complete="off"></el-input>
+                    <span style="font-size: 12px;color: #aaa">（2-16位汉字字母组合）</span>
                 </el-form-item>
                 <el-form-item label="类目图标" :label-width="formLabelWidth" class="icon-area">
                     <el-input readonly v-model="addForm.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
-                               action="/admin/ossClient/aliyunOSSUploadImage"
+                               action="/common/upload/oss"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
@@ -74,11 +75,12 @@
             <el-form v-model="form">
                 <el-form-item label="类目名称" :label-width="formLabelWidth">
                     <el-input v-model="form.name" auto-complete="off"></el-input>
+                    <span style="font-size: 12px;color: #aaa">（2-16位汉字字母组合）</span>
                 </el-form-item>
                 <el-form-item label="类目图标" :label-width="formLabelWidth" class="icon-area">
                     <el-input readonly v-model="form.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
-                               action="/admin/ossClient/aliyunOSSUploadImage"
+                               action="/common/upload/oss"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
@@ -144,6 +146,7 @@ export default {
             id: '',
             itemId: '',
             name: '',
+            superiorName: '',
             itype: '',
             delId: 66,
             delUrl: 'http://api',
@@ -157,13 +160,16 @@ export default {
     activated() {
         this.name =
             this.$route.query.name ||
-            JSON.parse(sessionStorage.getItem('secondClassify').name);
+            JSON.parse(sessionStorage.getItem('thirdClassify').name);
         this.id =
             this.$route.query.id ||
-            JSON.parse(sessionStorage.getItem('secondClassify').id);
+            JSON.parse(sessionStorage.getItem('thirdClassify').id);
         this.type =
             this.$route.query.type ||
-            JSON.parse(sessionStorage.getItem('secondClassify').type);
+            JSON.parse(sessionStorage.getItem('thirdClassify').type);
+        this.superiorName =
+            this.$route.query.superiorName ||
+            JSON.parse(sessionStorage.getItem('thirdClassify').superiorName);
         this.getList(this.page.currentPage);
     },
     methods: {
@@ -172,10 +178,11 @@ export default {
             const that = this;
             const data = {
                 page: val,
-                fatherid: this.id,
-                pageSize: this.page.pageSize
+                fatherId: this.id,
+                pageSize: this.page.pageSize,
+                level: 3
             };
-            request.getCategoryList(data).then(res => {
+            request.queryProductCategoryList(data).then(res => {
                 this.tableData = [];
                 this.tableData = res.data.data;
                 this.page.totalPage = res.data.totalNum;
@@ -206,11 +213,19 @@ export default {
             let url = '';
             const data = {};
             data.name = this[formName].name;
-            data.img = this[formName].img;
+            // data.img = this[formName].img;
+            data.img = 'http://example.adios.com/a.png';
             data.status = this[formName].status;
             data.type = this.type;
+            data.level = 3;
+            data.fatherId = this.id;
             if (!data.name) {
                 this.$message.warning('请输入类目名称!');
+                return;
+            }
+            const reg = /^[A-Za-z\u4e00-\u9fa5]{2,16}$/;
+            if (!reg.test(data.name)) {
+                this.$message.warning('请输入2-16位汉字字母的组合!');
                 return;
             }
             if (!data.img) {
@@ -218,10 +233,9 @@ export default {
                 return;
             }
             if (this.itype == 'add') {
-                url = 'addCategory';
-                data.fatherid = this.id;
+                url = 'addProductCategory';
             } else {
-                url = 'editCategory';
+                url = 'modifyProductCategory';
                 data.id = this.itemId;
             }
             this.btnLoading = true;
@@ -238,7 +252,7 @@ export default {
         // 删除
         delItem(id) {
             this.delId = id;
-            this.delUrl = 'deleteCategory';
+            this.delUrl = 'deleteProductCategory';
             this.delUri = pApi.deleteProductCategory_2;
             this.isShowDelToast = true;
         },
@@ -262,9 +276,9 @@ export default {
             this.getList(this.page.currentPage);
         },
         // 跳转到产品详细参数
-        toDetailParam(id) {
-            sessionStorage.setItem('thirdId', id);
-            this.$router.push({ path: '/thirdClassify', query: { thirdId: id }});
+        toDetailParam(row) {
+            sessionStorage.setItem('productDetailParam', JSON.stringify({ name: row.name, id: row.id, type: row.type, superiorName: row.superiorName, className: row.className }));
+            this.$router.push({ path: '/productDetailParam', query: { name: row.name, id: row.id, type: row.type, superiorName: row.superiorName, className: row.className }});
         }
     }
 };

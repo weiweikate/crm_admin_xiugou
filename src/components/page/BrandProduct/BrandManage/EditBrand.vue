@@ -19,9 +19,9 @@
                                 :on-remove="handleRemove"
                                 :on-success="handleAvatarSuccess"
                         >
-                            <img v-if="form.original_img" :src="form.original_img" class="avatar">
+                            <img v-if="form.imgUrl" :src="form.imgUrl" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                            <el-input v-model="form.small_img"></el-input>
+                            <el-input v-model="form.imgUrl"></el-input>
                         </el-upload>
                     </el-form-item>
                     <el-form-item prop="status" label="是否启用">
@@ -53,8 +53,7 @@
             return {
                 form: {
                     name: '',
-                    original_img: '',
-                    small_img: '',
+                    imgUrl: '',
                     area: '',
                     status: '1'
                 },
@@ -69,12 +68,9 @@
                     area: [
                         { required: true, message: '请输入品牌区域', trigger: 'blur' }
                     ],
-                    productcIds: [
-                        { required: true, message: '请选择品牌类目', trigger: 'blur' }
-                    ],
-                    original_img: [
-                        { required: true, message: '请上传品牌LOGO', trigger: 'blur' }
-                    ]
+                    // imgUrl: [
+                    //     { required: true, message: '请上传品牌LOGO', trigger: 'blur' }
+                    // ]
                 },
                 id: '',
                 addBrand: ''
@@ -93,11 +89,10 @@
                     id: that.id
                 };
                 that.loading = true;
-                request.findBrandById(data).then(res => {
+                request.findProductBrand(data).then(res => {
                     that.loading = false;
-                    that.form = res.data.data.product;
+                    that.form = res.data;
                     that.form.status = that.form.status.toString();
-                    that.detailData = res.data.data.userProduct;
                 }).catch(error => {
                     that.loading = false;
                 });
@@ -107,8 +102,7 @@
             },
             // 上传图片
             handleAvatarSuccess(res, file) {
-                this.form.original_img = res.data.imageUrl;
-                this.form.small_img = res.data.imageThumbUrl;
+                this.form.imgUrl = res.data.imageUrl;
             },
             handleRemove() {
                 this.form.original_img = '';
@@ -119,14 +113,13 @@
                 that.btnLoading = true;
                 that.$refs[form].validate(valid => {
                     if (valid) {
-                        const data = {};
-                        data.originalImg = this[form].original_img;
-                        data.smallImg = this[form].small_img;
-                        data.name = this[form].name;
-                        data.area = this[form].area;
+                        const data = this[form];
+                        // data.imgUrl = this[form].imgUrl;
+                        // data.name = this[form].name;
+                        // data.area = this[form].area;
                         data.status = this[form].status;
                         data.id = that.id;
-                        request.updateBrand(data).then(res => {
+                        request.updateProductBrand(data).then(res => {
                             that.$router.push('/brandManage');
                             that.btnLoading = false;
                         }).catch(error => {

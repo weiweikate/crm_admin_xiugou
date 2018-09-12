@@ -40,11 +40,12 @@
            <el-upload class="icon-uploader"
                       action="/common/upload/oss"
                       :on-success="handleAvatarSuccess">
-               <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
+               <el-button size="small" type="primary"><i class="el-icon-upload"></i>添加图片</el-button>
            </el-upload>
        </div>
+          <span style="margin-left: 60px;color: #aaa;font-size: 12px;">请上传3M以内jpg,jpeg,png格式的图片</span>
         <span slot="footer">
-          <el-button type="primary" :loading="addQuesTypeBtn" @click="confirmAddQuesType">确 定</el-button>
+          <el-button type="primary" :loading="addQuesTypeBtn" @click="confirmAddQuesType">添 加</el-button>
           <el-button @click="isShowAddQues = false">取 消</el-button>
         </span>
       </el-dialog>
@@ -92,13 +93,16 @@ export default {
                 page: this.page.currentPage,
                 pageSize: this.page.pageSize
             };
-            request.queryHelpTypePageList(data).then(res => {
-                this.tableData = [];
-                this.tableData = res.data.data;
-                this.page.totalPage = res.data.totalNum;
-            }).catch(error => {
-                console.log(error);
-            });
+            request
+                .queryHelpTypePageList(data)
+                .then(res => {
+                    this.tableData = [];
+                    this.tableData = res.data.data;
+                    this.page.totalPage = res.data.totalNum;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         },
         // 添加问题类目
         addQuestionCate() {
@@ -111,21 +115,27 @@ export default {
                 name: this.questionType,
                 imgUrl: '34234234'
             };
-            request.addHelpType(data).then(res => {
-                // this.$message.success(res.data.msg);
-                this.getList(this.page.currentPage);
-                this.addQuesTypeBtn = false;
-                this.isShowAddQues = false;
-            }).catch(error => {
-                console.log(error);
-                this.addQuesTypeBtn = false;
-                this.isShowAddQues = false;
-            });
+            request
+                .addHelpType(data)
+                .then(res => {
+                    // this.$message.success(res.data.msg);
+                    this.getList(this.page.currentPage);
+                    this.addQuesTypeBtn = false;
+                    this.isShowAddQues = false;
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.addQuesTypeBtn = false;
+                    this.isShowAddQues = false;
+                });
         },
         // 问题列表
         questionList(row) {
             sessionStorage.setItem('questionTypeId', row.id);
-            this.$router.push({ name: 'questionList', query: { 'questionTypeId': row.id }});
+            this.$router.push({
+                name: 'questionList',
+                query: { questionTypeId: row.id }
+            });
         },
         // 删除用户
         deleteUser(row) {
@@ -147,32 +157,33 @@ export default {
 </script>
 <style lang='less'>
 .help-center {
-    img{
+    img {
         width: 38px;
         height: 38px;
         border-radius: 5px;
         vertical-align: middle;
     }
-  .input-sty{
-    width: 210px;
-  }
-  .block {
-    float: right;
-    margin: 10px 0 10px 0;
-  }
-  .el-dialog{
-    border-radius:10px;
-    .el-dialog__header{
-      border-bottom: 1px solid #dfdfdf;
-      .el-dialog__title{
-        color: #ff4e4e;
-      }
+    .input-sty {
+        width: 210px;
     }
-      .el-input--small,.el-input__inner{
-          width: 200px;
-      }
-  }
-    .add-item{
+    .block {
+        float: right;
+        margin: 10px 0 10px 0;
+    }
+    .el-dialog {
+        border-radius: 10px;
+        .el-dialog__header {
+            border-bottom: 1px solid #dfdfdf;
+            .el-dialog__title {
+                color: #ff4e4e;
+            }
+        }
+        .el-input--small,
+        .el-input__inner {
+            width: 200px;
+        }
+    }
+    .add-item {
         height: 40px;
         line-height: 40px;
     }

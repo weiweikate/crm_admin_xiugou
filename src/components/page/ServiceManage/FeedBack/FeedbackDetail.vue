@@ -38,8 +38,8 @@
                         处理人：{{username}}
                     </div>
                     <div style="margin-top: 30px" v-if="detail.status==1">
-                        <el-button type="primary" v-if="p.updateFeedback_2" v-loading="btnLoading" @click="update('reply')">确认回复</el-button>
-                        <el-button type="success" v-if="p.updateFeedback" v-loading="btnLoading" @click="update('update')">修改问题类型</el-button>
+                        <el-button type="primary" v-loading="btnLoading" @click="update('reply')">确认回复</el-button>
+                        <el-button type="success" v-loading="btnLoading" @click="update('update')">修改问题类型</el-button>
                         <el-button @click="cancel">取消</el-button>
                     </div>
                 </div>
@@ -71,11 +71,11 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import icon from '@/components/common/ico.vue';
-    import * as api from '@/api/api';
     import moment from 'moment';
     import utils from '@/utils/index.js';
     import * as pApi from '@/privilegeList/index.js';
     import { queryDictonary } from '@/JS/commom';
+    import request from '@/http/http.js';
 
     export default {
         components: {
@@ -84,11 +84,6 @@
         mixins: [queryDictonary],
         data() {
             return {
-                // 权限控制
-                p: {
-                    updateFeedback: false,
-                    updateFeedback_2: false
-                },
 
                 typeList: [], // 问题类型
                 dValue: '', // 问题类型
@@ -113,56 +108,37 @@
             this.getDetail();
             this.username = localStorage.getItem('ms_username');
             this.userId = localStorage.getItem('ms_userID');
-            this.pControl();
         },
         methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-            },
             // 获取详情
             async getDetail() {
                 const that = this;
                 await this.queryDictonary(5);
                 that.typeList = that.tmpAxiosData;
                 const data = {
-                    id: that.id,
-                    url: pApi.feedbackDetail
+                    id: that.id
                 };
                 that.loading = true;
-                that.$axios
-                    .post(api.feedbackDetail, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            const detailInf = res.data.data.detail_record;
-                            // that.detail=Object.assign(detailInf[0]);
-                            const temp = detailInf[0];
-                            temp.checked = true;
-                            temp.type_key = temp.type_key.toString();
-                            that.detail = Object.assign(temp);
-                            for (const i in res.data.data.history_record) {
-                                const item = res.data.data.history_record[i];
-                                item.type_key = item.type_key.toString();
-                                item.checked = false;
-                                item.dValue = that.typeList[item.type_key];
-                            }
-                            that.list = res.data.data.history_record;
-                            that.loading = false;
-                        } else {
-                            that.loading = false;
-                            that.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        that.loading = false;
-                    });
+                request.findFeedbackById(data).then(res => {
+                    const detailInf = res.data.data.detail_record;
+                    const temp = detailInf[0];
+                    temp.checked = true;
+                    temp.type_key = temp.type_key.toString();
+                    that.detail = Object.assign(temp);
+                    for (const i in res.data.data.history_record) {
+                        const item = res.data.data.history_record[i];
+                        item.type_key = item.type_key.toString();
+                        item.checked = false;
+                        item.dValue = that.typeList[item.type_key];
+                    }
+                    that.list = res.data.data.history_record;
+                    that.loading = false;
+                }).catch(error => {
+                    that.loading = false;
+                });
             },
             // 展开
             expandItem(item) {
-                // this.list[index].checked = !this.list[index].checked
-                // let id=item.id;
                 this.id = item.id;
                 this.getDetail();
             },
@@ -178,33 +154,20 @@
                 };
                 if (status == 'reply') { // 回复
                     params.replyContent = that.detail.reply_content;
-                    params.url = pApi.updateFeedback_2;
                     if (!params.replyContent) {
                         that.$message.warning('请输入回复内容!');
                         return;
                     }
                 } else {
                     params.typeKey = that.detail.type_key;
-                    params.url = pApi.updateFeedback;
                 }
                 that.btnLoading = true;
-                that.$axios
-                    .post(api.updateFeedback, params)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.btnLoading = false;
-                            that.$message.success(res.data.msg);
-                            setTimeout(function() {
-                                that.$router.push('/feedBack');
-                            }, 1000);
-                        } else {
-                            that.btnLoading = false;
-                            that.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        that.btnLoading = false;
-                    });
+                request.updateFeedback(params).then(res => {
+                    that.btnLoading = false;
+                    that.$router.push('/feedBack');
+                }).catch(error => {
+                    that.btnLoading = false;
+                });
             }
         }
     };

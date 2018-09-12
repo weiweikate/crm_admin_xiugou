@@ -46,7 +46,11 @@ export default {
                 const data = { id: that.id, status: that.status, url: that.uri };
                 request[url](data).then(res => {
                     that.btnLoading = false;
-                    this.$message.success('删除成功');
+                    if(res.code===10000){
+                        this.$message.success('删除成功');
+                    }else{
+                        this.$message.success(res.msg);
+                    }
                     this.$emit('msg', false);
                 }).catch(err => {
                     that.tableLoading = false;

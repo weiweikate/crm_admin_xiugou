@@ -13,15 +13,15 @@
                     <el-form-item prop="original_img" label="品牌logo">
                         <el-upload
                                 class="avatar-uploader"
-                                action="/admin/ossClient/aliyunOSSUploadImage"
+                                action="/common/upload/oss"
                                 :show-file-list="false"
                                 :on-preview="handlePreview"
                                 :on-remove="handleRemove"
                                 :on-success="handleAvatarSuccess"
                         >
-                            <img v-if="form.original_img" :src="form.original_img" class="avatar">
+                            <img v-if="form.imgUrl" :src="form.imgUrl" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                            <el-input v-model="form.small_img"></el-input>
+                            <el-input v-model="form.imgUrl"></el-input>
                         </el-upload>
                     </el-form-item>
                     <el-form-item prop="status" label="是否启用">
@@ -53,9 +53,8 @@
             return {
                 form: {
                     name: '',
-                    original_img: '',
-                    small_img: '',
                     area: '',
+                    imgUrl: '',
                     status: '1'
                 },
                 detailData: [],
@@ -69,12 +68,9 @@
                     area: [
                         { required: true, message: '请输入品牌区域', trigger: 'blur' }
                     ],
-                    productcIds: [
-                        { required: true, message: '请选择品牌类目', trigger: 'blur' }
-                    ],
-                    original_img: [
-                        { required: true, message: '请上传品牌LOGO', trigger: 'blur' }
-                    ],
+                    // imgUrl: [
+                    //     { required: true, message: '请上传品牌LOGO', trigger: 'blur' }
+                    // ],
                     status: [
                         { required: true, message: '是否启用', trigger: 'blur' }
                     ]
@@ -85,8 +81,7 @@
         },
         activated() {
             this.form.name = '';
-            this.form.original_img = '';
-            this.form.small_img = '';
+            this.form.imgUrl = '';
             this.form.area = '';
             this.form.status = '1';
         },
@@ -96,11 +91,10 @@
             },
             // 上传图片
             handleAvatarSuccess(res, file) {
-                this.form.original_img = res.data.imageUrl;
-                this.form.small_img = res.data.imageThumbUrl;
+                this.form.imgUrl = res.data.imageUrl;
             },
             handleRemove() {
-                this.form.original_img = '';
+                this.form.imgUrl = '';
             },
             // 提交表单
             submitForm(form) {
@@ -109,12 +103,11 @@
                 that.$refs[form].validate(valid => {
                     if (valid) {
                         const data = {};
-                        data.originalImg = this[form].original_img;
-                        data.smallImg = this[form].small_img;
+                        data.imgUrl = 'http://example.adios.com/a.png';
                         data.name = this[form].name;
                         data.area = this[form].area;
                         data.status = this[form].status;
-                        request.addBrand(data).then(res => {
+                        request.addProductBrand(data).then(res => {
                             that.$router.push('/brandManage');
                             that.btnLoading = false;
                         }).catch(error => {
@@ -167,25 +160,6 @@
             width: 112px;
         }
 
-        .clearfix {
-            clear: both;
-            content: ''
-        }
-        .select-area {
-            width: 500px;
-            max-height: 150px;
-            overflow-x: hidden;
-            overflow-y: auto;
-            border: 1px solid #eee;
-            border-radius: 10px;
-        }
-        .select-area .el-checkbox {
-            margin: 0 10px 0
-        }
-        .select-area .el-checkbox-group {
-            font-size: 12px;
-            line-height: 10px
-        }
         .submit-btn {
             padding: 0 50px 20px 100px
         }

@@ -54,11 +54,12 @@
             <el-form v-model="addForm">
                 <el-form-item prop="name" label="类目名称" :label-width="formLabelWidth">
                     <el-input v-model="addForm.name" auto-complete="off"></el-input>
+                    <span style="font-size: 12px;color: #aaa">（2-16位汉字字母组合）</span>
                 </el-form-item>
                 <el-form-item prop="img" label="类目图标" :label-width="formLabelWidth" class="icon-area">
                     <el-input readonly v-model="addForm.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
-                               action="/admin/ossClient/aliyunOSSUploadImage"
+                               action="/common/upload/oss"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
@@ -71,8 +72,8 @@
                 </el-form-item>
                 <el-form-item prop="type" label="类目类型" :label-width="formLabelWidth">
                     <el-select v-model="addForm.type">
-                        <el-option label="普通" value='1'></el-option>
-                        <el-option label="礼包" value='2'></el-option>
+                        <el-option label="普通类目" value='1'></el-option>
+                        <el-option label="隐藏类目" value='2'></el-option>
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -85,11 +86,12 @@
             <el-form v-model="form">
                 <el-form-item prop="name" label="类目名称" :label-width="formLabelWidth">
                     <el-input v-model="form.name" auto-complete="off"></el-input>
+                    <span style="font-size: 12px;color: #aaa">（2-16位汉字字母组合）</span>
                 </el-form-item>
                 <el-form-item prop="img" label="类目图标" :label-width="formLabelWidth" class="icon-area">
                     <el-input readonly v-model="form.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
-                               action="/admin/common/upload/oss"
+                               action="/common/upload/oss"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
@@ -102,8 +104,8 @@
                 </el-form-item>
                 <el-form-item prop="type" label="类目类型" :label-width="formLabelWidth">
                     <el-select disabled v-model="form.type">
-                        <el-option label="普通" value='1'></el-option>
-                        <el-option label="礼包" value='2'></el-option>
+                        <el-option label="普通类目" value='1'></el-option>
+                        <el-option label="隐藏类目" value='2'></el-option>
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -180,9 +182,11 @@ export default {
             const that = this;
             const data = {
                 page: val,
-                pageSize: this.page.pageSize
+                pageSize: this.page.pageSize,
+                level: 1,
+                fatherId: 0
             };
-            request.getCategoryList(data).then(res => {
+            request.queryProductCategoryList(data).then(res => {
                 that.tableData = [];
                 that.tableData = res.data.data;
                 that.page.totalPage = res.data.totalNum;
@@ -215,11 +219,19 @@ export default {
             let url = '';
             const data = {};
             data.name = this[formName].name;
-            data.img = this[formName].img;
+            // data.img = this[formName].img;
+            data.img = 'http://example.adios.com/a.png';
             data.status = this[formName].status;
             data.type = this[formName].type;
+            data.level = 1;
+            data.fatherId = 0;
             if (!data.name) {
                 this.$message.warning('请输入类目名称!');
+                return;
+            }
+            const reg = /^[A-Za-z\u4e00-\u9fa5]{2,16}$/;
+            if (!reg.test(data.name)) {
+                this.$message.warning('请输入2-16位汉字字母的组合!');
                 return;
             }
             if (!data.img) {
@@ -227,9 +239,9 @@ export default {
                 return;
             }
             if (this.itype == 'add') {
-                url = 'addCategory';
+                url = 'addProductCategory';
             } else {
-                url = 'editCategory';
+                url = 'modifyProductCategory';
                 data.id = this.id;
             }
             this.btnLoading = true;
@@ -252,8 +264,7 @@ export default {
         // 删除
         delItem(index, id) {
             this.delId = id;
-            this.delUrl = 'deleteCategory';
-            this.delUri = pApi.deleteProductCategory_1;
+            this.delUrl = 'deleteProductCategory';
             this.isShowDelToast = true;
         },
         // 删除弹窗

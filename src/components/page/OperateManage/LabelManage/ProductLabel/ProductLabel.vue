@@ -1,12 +1,12 @@
 <template>
     <div class="second-classify">
-        <v-breadcrumb :nav="['品牌产品管理','产品分类管理',className,superiorName,name]"></v-breadcrumb>
+        <v-breadcrumb :nav="['运营管理','标签管理','产品标签类型管理']"></v-breadcrumb>
         <div class="table-block">
-            <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加详细参数</el-button>
+            <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加产品标签类型</el-button>
             <template>
                 <el-table :data="tableData" border style="width: 100%">
                     <el-table-column type="index" label="编号" align="center"></el-table-column>
-                    <el-table-column prop="param" label="参数名称" align="center"></el-table-column>
+                    <el-table-column prop="param" label="类型" align="center"></el-table-column>
                     <el-table-column  label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button type="danger" size="small" @click="delItem(scope.row.id)">删除</el-button>
@@ -20,7 +20,7 @@
         <!--添加产品详细参数弹窗-->
         <el-dialog :title="title" :visible.sync="addMask">
             <el-form v-model="form">
-                <el-form-item label="参数名称" :label-width="formLabelWidth">
+                <el-form-item label="类型名称" :label-width="formLabelWidth">
                     <el-input v-model="form.param" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
@@ -64,7 +64,7 @@ export default {
             form: {
                 param: ''
             },
-            title: '添加产品详细参数',
+            title: '添加标签类型',
             id: '',
             itemId: '',
             name: '',
@@ -79,21 +79,6 @@ export default {
     created() {
     },
     activated() {
-        this.name =
-            this.$route.query.name ||
-            JSON.parse(sessionStorage.getItem('productDetailParam').name);
-        this.id =
-            this.$route.query.id ||
-            JSON.parse(sessionStorage.getItem('productDetailParam').id);
-        this.type =
-            this.$route.query.type ||
-            JSON.parse(sessionStorage.getItem('productDetailParam').type);
-        this.superiorName =
-            this.$route.query.superiorName ||
-            JSON.parse(sessionStorage.getItem('productDetailParam').superiorName);
-        this.className =
-            this.$route.query.className ||
-            JSON.parse(sessionStorage.getItem('productDetailParam').className);
         this.getList(this.page.currentPage);
     },
     methods: {
@@ -109,7 +94,7 @@ export default {
                 console.log(error);
             });
         },
-        // 添加三级类目
+        // 添加
         addClassify() {
             this.addMask = true;
             this.form.param = '';
@@ -120,7 +105,7 @@ export default {
             data.param = this[formName].param;
             data.categoryId = this.id;
             if (!data.param) {
-                this.$message.warning('请输入类目名称!');
+                this.$message.warning('请输入类型名称!');
                 return;
             }
             this.btnLoading = true;

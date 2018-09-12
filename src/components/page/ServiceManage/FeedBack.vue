@@ -79,7 +79,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="adminName" label="处理人" align="center"></el-table-column>
-                    <el-table-column v-if="p.feedbackDetail" label="操作" align="center">
+                    <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button type="primary" size="small" @click="detailItem(scope.$index,scope.row)">查看详情
                             </el-button>
@@ -105,11 +105,12 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import icon from '@/components/common/ico.vue';
-    import * as api from '@/api/api';
     import moment from 'moment';
     import utils from '@/utils/index.js';
     import * as pApi from '@/privilegeList/index.js';
     import { myMixinTable, queryDictonary } from '@/JS/commom';
+    import request from '@/http/http.js';
+
     export default {
         components: {
             vBreadcrumb, icon
@@ -117,10 +118,6 @@
         mixins: [myMixinTable, queryDictonary],
         data() {
             return {
-                // 权限控制
-                p: {
-                    feedbackDetail: false
-                },
 
                 typeList: [], // 问题类型
                 tableData: [],
@@ -142,20 +139,12 @@
         created() {
             const winHeight = window.screen.availHeight - 520;
             this.height = winHeight;
-            this.pControl();
         },
         activated() {
             this.getList(this.page.currentPage);
             this.getLevelList();
-            this.pControl();
         },
         methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-            },
             // 获取列表
             async getList(val) {
                 const that = this;
@@ -164,6 +153,7 @@
                 that.tableData = [];
                 const data = {
                     page: val,
+                    size: this.page.pageSize,
                     level: that.form.level,
                     type: that.form.type,
                     status: that.form.status,
@@ -172,39 +162,28 @@
                     beginTime: that.form.date ? moment(that.form.date[0]).format('YYYY-MM-DD') : '',
                     endTime: that.form.date ? moment(that.form.date[1]).format('YYYY-MM-DD') : ''
                 };
-                data.url = pApi.feedbackList;
                 that.tableLoading = true;
-                that.$axios
-                    .post(api.feedbackList, data)
-                    .then(res => {
-                        that.tableLoading = false;
-                        res.data.data.data.forEach(function(v, k) {
-                            v.type_key = that.typeList[v.type_key - 1].dValue;
-                            that.tableData.push(v);
-                        });
-                        that.page.totalPage = res.data.data.resultCount;
-                    })
-                    .catch(err => {
-                        that.tableLoading = false;
-                        console.log(err);
+                request.queryFeedbackList(data).then(res => {
+                    that.tableLoading = false;
+                    res.data.data.forEach(function(v, k) {
+                        v.type_key = that.typeList[v.type_key - 1].dValue;
+                        that.tableData.push(v);
                     });
+                    that.page.totalPage = res.data.totalNum;
+                }).catch(error => {
+                    that.tableLoading = false;
+                    console.log(error);
+                });
             },
             // 获取用户层级列表
             getLevelList() {
                 const that = this;
                 const data = {};
-                that.$axios
-                    .post(api.getDealerLevelList, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.levelList = res.data.data;
-                        } else {
-                            that.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                request.getDealerLevelList({}).then(res => {
+                    that.levelList = res.data.data;
+                }).catch(error => {
+                    console.log(error);
+                });
             },
             // 详情
             detailItem(index, row) {

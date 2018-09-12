@@ -65,6 +65,12 @@ export default new Router({
                     meta: { title: '三级类目', url: '/admin/productCategory/queryProductCategoryPageList_2' }
                 },
                 {
+                    name: 'productDetailParam',
+                    path: '/productDetailParam',
+                    component: resolve => require(['../components/page/BrandProduct/ProductDetailParam.vue'], resolve),
+                    meta: { title: '三级类目', url: '/admin/productCategory/queryProductCategoryPageList_2' }
+                },
+                {
                     name: 'brandManage',
                     path: '/brandManage',
                     component: resolve => require(['../components/page/BrandProduct/BrandManage.vue'], resolve),
@@ -838,6 +844,18 @@ export default new Router({
                     path: '/blockStockActivity',
                     component: resolve => require(['../components/page/OperateManage/MarketTools/PrizePoll/BlockStockActivity.vue'], resolve),
                     meta: { title: '冻结库存活动', url: '/blockStockActivity' }
+                },
+                {
+                    name: 'labelManage',
+                    path: '/labelManage',
+                    component: resolve => require(['../components/page/OperateManage/LabelManage/LabelManage.vue'], resolve),
+                    meta: { title: '标签管理', url: '/labelManage' }
+                },
+                {
+                    name: 'productLabel',
+                    path: '/productLabel',
+                    component: resolve => require(['../components/page/OperateManage/LabelManage/ProductLabel/ProductLabel.vue'], resolve),
+                    meta: { title: '产品标签', url: '/productLabel' }
                 },
                 // 订单管理
                 {

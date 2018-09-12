@@ -26,15 +26,14 @@
                     <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
                     <el-table-column prop="name" label="品牌名称" align="center"></el-table-column>
                     <el-table-column prop="area" label="品牌区域" align="center"></el-table-column>
-                    <el-table-column prop="category" label="品牌分类" align="center"></el-table-column>
                     <el-table-column label="品牌LOGO" align="center">
                         <template slot-scope="scope">
-                            <img :src="scope.row.original_img" alt="">
+                            <img :src="scope.row.imgUrl" alt="">
                         </template>
                     </el-table-column>
                     <el-table-column label="产品数" align="center">
                         <template slot-scope="scope">
-                            <template><span class="color-blue" @click="toProductList(scope.row.id)">{{scope.row.num}}</span></template>
+                            <template><span class="color-blue" @click="toProductList(scope.row.id)">{{scope.row.porductNum}}</span></template>
                         </template>
                     </el-table-column>
                     <el-table-column label="状态" align="center">
@@ -75,7 +74,6 @@
     import icon from '@/components/common/ico.vue';
     import deleteToast from '@/components/common/DeleteToast';
     import utils from '@/utils/index.js';
-    import * as pApi from '@/privilegeList/index.js';
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http.js';
 
@@ -119,7 +117,7 @@
                     name: that.form.name
                 };
                 that.tableLoading = true;
-                request.getBrandList(data).then(res => {
+                request.getProductBrandList(data).then(res => {
                     that.tableLoading = false;
                     if (!res.data) return;
                     that.tableData = res.data.data;
@@ -147,8 +145,7 @@
             // 删除
             delItem(index, id) {
                 this.delId = id;
-                this.delUrl = api.deleteBrand;
-                this.delUri = pApi.deleteBrand;
+                this.delUrl = 'deleteProductBrand';
                 this.isShowDelToast = true;
             },
             // 删除弹窗

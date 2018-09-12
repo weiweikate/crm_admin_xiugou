@@ -149,13 +149,6 @@ export const getProvinced = '/admin/area/getProvinceList';
 export const getCity = '/admin/area/getCityList';
 export const getArea = '/admin/area/getAreaList';
 
-// 问题反馈
-// 反馈列表
-export const feedbackList = '/admin/feedback/queryFeedbackList';
-// 问题详情
-export const feedbackDetail = '/admin/feedback/findFeedbackByid';
-// 修改反馈详情
-export const updateFeedback = '/admin/feedback/updateFeedback';
 
 // 经销商层级管理
 // 查询经销商层级列表
@@ -281,4 +274,12 @@ export const addVersionRecord = '/admin/config/sysAppVersion/add';// 新增版�
 export const updateVersionRecord = '/admin/config/sysAppVersion/update';// 编辑版本信息
 export const deleteVersionRecord = '/admin/config/sysAppVersion/deleteById';// 删除版本信息
 export const getRegion = ['/admin/config/sysArea/queryAreaList', { methods: 'get' }]; // 查询省市区
+
+// 问题反馈
+// 反馈列表
+export const queryFeedbackList = '/admin/userFeedback/queryFeedbackList';
+// 问题详情
+export const findFeedbackById = '/admin/userFeedback/findFeedbackById';
+// 修改反馈详情
+export const updateFeedback = '/admin/feedback/updateFeedback';
 
