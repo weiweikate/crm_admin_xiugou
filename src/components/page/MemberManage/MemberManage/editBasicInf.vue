@@ -18,7 +18,7 @@
                                 <el-input v-model="dealer.nickname" placeholder="请输入昵称" size="medium"></el-input>
                             </el-form-item>
                             <el-form-item label="微信号">
-                                <el-input v-model="dealer.wecaht_id" placeholder="请输入微信号" size="medium"></el-input>
+                                <el-input v-model="dealer.wechatId" placeholder="请输入微信号" size="medium"></el-input>
                             </el-form-item>
                         </div>
                         <div class="form-item">
@@ -66,8 +66,7 @@
 <script>
     import icon from '@/components/common/ico';
     import region from '@/components/common/Region';
-    import * as api from '@/api/api';
-    import * as pApi from '@/privilegeList/index.js';
+    import request from '@/http/http';
     export default {
         components: {
             icon, region
@@ -151,9 +150,9 @@
                 data.idcard = that.dealer.idcard;
                 data.nickname = that.dealer.nickname;
                 data.phone = that.dealer.phone;
-                data.wecahtId = that.dealer.wecaht_id;
+                data.wechatId = that.dealer.wechatId;
                 data.realname = that.dealer.realname;
-                data.url = pApi.updateDealerById;
+                data.updateType = 1;
                 if (that.address) {
                     data.provinceId = that.address[0];
                     if (that.address[1]) {
@@ -167,26 +166,19 @@
                         data.areaId = '';
                     }
                 }
-                if (that.phone == false || that.idCard == false) {
+                if (that.phone === false || that.idCard === false) {
                     return false;
                 }
                 that.addrPreFix = that.address;
-                that.$axios
-                    .post(api.updateDealerById, data)
-                    .then(res => {
-                        that.btnLoading = false;
-                        if (res.data.code == 200) {
-                            that.$message.success('修改成功');
-                            this.$emit('msg', false);
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            this.$emit('msg', false);
-                        }
-                    })
-                    .catch(err => {
-                        that.tableLoading = false;
-                        that.$emit('msg', false);
-                    });
+                request.updateDealerById(data).then(res => {
+                    that.btnLoading = false;
+                    that.$message.success(res.msg);
+                    that.$emit('msg', false);
+                }).catch(err => {
+                    that.$emit('msg', false);
+                    that.btnLoading = false;
+                    console.log(err);
+                });
                 that.closeToask();
             }
         }

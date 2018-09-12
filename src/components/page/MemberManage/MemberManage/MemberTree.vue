@@ -104,6 +104,7 @@
     import icon from '../../../common/ico.vue';
     import * as api from '../../../../api/api';
     import * as pApi from '../../../../privilegeList/index.js';
+    import request from '@/http/http';
 
     export default {
         components: {
@@ -125,80 +126,96 @@
                     checked: false
                 },
                 checked: false,
-                loading:false
-            }
+                loading: false
+            };
         },
         activated() {
-            this.firstList=[];
-            this.lower.totalCount='';
-            this.lower.checked=false;
-            this.checked=false;
+            this.firstList = [];
+            this.lower.totalCount = '';
+            this.lower.checked = false;
+            this.checked = false;
             this.id =
                 this.$route.query.memberId ||
-                JSON.parse(sessionStorage.getItem("memberId"));
-            this.getDetail()
+                JSON.parse(sessionStorage.getItem('memberId'));
+            this.getDetail();
         },
         methods: {
-            //获取列表
+            // 获取列表
             getDetail() {
-                let that = this;
-                let data = {
+                const that = this;
+                const data = {
                     id: that.id,
-                    url:pApi.findDealerTreeById
                 };
-                that.loading=true;
-                this.$axios
-                    .post(api.findDealerTreeById, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            res.data.data.dealerAndUp.checked = false;
-                            that.dealerAndUp = res.data.data.dealerAndUp;
-                            that.lower.totalCount = res.data.data.totalCount;
-                            for (let i in res.data.data.firstList) {
-                                res.data.data.firstList[i].checked = false;
-                                for (let j in res.data.data.firstList[i].secList) {
-                                    res.data.data.firstList[i].secList[j].checked = false;
-                                }
-                                that.firstList.push(res.data.data.firstList[i]);
-                            }
-                            that.loading=false;
-                        }else{
-                            that.loading=false;
-                            that.$message.warning(res.data.msg);
+                that.loading = true;
+                request.findDealerTreeById(data).then(res => {
+                    res.data.data.dealerAndUp.checked = false;
+                    that.dealerAndUp = res.data.data.dealerAndUp;
+                    that.lower.totalCount = res.data.data.totalCount;
+                    for (const i in res.data.data.firstList) {
+                        res.data.data.firstList[i].checked = false;
+                        for (const j in res.data.data.firstList[i].secList) {
+                            res.data.data.firstList[i].secList[j].checked = false;
                         }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        that.loading=false;
-                    })
+                        that.firstList.push(res.data.data.firstList[i]);
+                    }
+                    that.loading = false;
+                    console.log(res);
+                }).catch(err => {
+                    that.loading = false;
+                    console.log(err);
+                });
+                // this.$axios
+                //     .post(api.findDealerTreeById, data)
+                //     .then(res => {
+                //         if (res.data.code == 200) {
+                //             res.data.data.dealerAndUp.checked = false;
+                //             that.dealerAndUp = res.data.data.dealerAndUp;
+                //             that.lower.totalCount = res.data.data.totalCount;
+                //             for (const i in res.data.data.firstList) {
+                //                 res.data.data.firstList[i].checked = false;
+                //                 for (const j in res.data.data.firstList[i].secList) {
+                //                     res.data.data.firstList[i].secList[j].checked = false;
+                //                 }
+                //                 that.firstList.push(res.data.data.firstList[i]);
+                //             }
+                //             that.loading = false;
+                //         } else {
+                //             that.loading = false;
+                //             that.$message.warning(res.data.msg);
+                //         }
+                //     })
+                //     .catch(err => {
+                //         console.log(err);
+                //         that.loading = false;
+                //     });
             },
-            //查询
+            // 查询
             search() {
 
             },
-            //展开收起上级代理
+            // 展开收起上级代理
             expandHigher() {
                 this.dealerAndUp.checked = !this.dealerAndUp.checked;
             },
-            //展开收起下级代理
+            // 展开收起下级代理
             expandLower() {
                 this.lower.checked = !this.lower.checked;
             },
-            //展开收起直接代理
+            // 展开收起直接代理
             expendDirect() {
                 this.checked = !this.checked;
             },
-            //展开收起直接代理
+            // 展开收起直接代理
             expendIndirect(index) {
                 this.firstList[index].checked = !this.firstList[index].checked;
             },
             // 跳到详情页
             toDetail(id) {
                 localStorage.setItem('memberDetail', id);
-                this.$router.push({path: '/memberDetail', query: {id: id}})
+                this.$router.push({ path: '/memberDetail', query: { id: id }});
             }
         }
-    }
+    };
 </script>
 
 <style lang="less">

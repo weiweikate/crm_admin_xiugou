@@ -46,7 +46,6 @@
     import vBreadcrumb from '../../common/Breadcrumb.vue';
     import icon from '../../common/ico.vue';
     import * as api from '../../../api/OperateManage/allKeysWords';
-    import utils from '../../../utils/index.js'
     import * as pApi from '../../../privilegeList/OperateManage/allKeysWords';
     import { myMixinTable } from '@/JS/commom';
 
@@ -54,90 +53,76 @@
         components: {
             vBreadcrumb, icon
         },
-        mixins:[myMixinTable],
+        mixins: [myMixinTable],
         data() {
             return {
-                // 权限控制
-                p: {
-
-                },
-                isShowOperate: true,
-
                 editForm: {
-                    wordName: "",
-                    rank: "",
+                    wordName: '',
+                    rank: ''
                 },
                 addForm: {
-                    wordName: "",
-                    rank: "",
+                    wordName: '',
+                    rank: ''
                 },
                 addMask: false,
                 editMask: false,
-                id: "",
-                itemId: "",
+                id: '',
+                itemId: '',
                 tableData: [],
                 height: '',
                 tipsMask: false,
                 info: '',
                 form: {
-                    wordName: '',
+                    wordName: ''
                 },
                 isShowDelToast: false,
-                btnLoading: false,
-            }
+                btnLoading: false
+            };
         },
         created() {
-            let winHeight = window.screen.availHeight - 520;
+            const winHeight = window.screen.availHeight - 520;
             this.height = winHeight;
-            this.pControl();
         },
         activated() {
             this.getList();
-            this.pControl();
         },
         methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-            },
-            //获取列表
+            // 获取列表
             getList(val) {
-                let that = this;
-                let data = {
+                const that = this;
+                const data = {
                     page: val,
-                    wordName: that.form.wordName,
+                    wordName: that.form.wordName
                 };
                 data.url = pApi.getAllWordsByPage;
                 that.tableLoading = true;
-                that.$axios
-                    .post(api.getAllWordsByPage, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.tableLoading = false;
-                            that.tableData = res.data.data.data;
-                            that.page.totalPage = res.data.data.resultCount;
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.tableLoading = false;
-                        }
-                    })
-                    .catch(err => {
-                        that.tableLoading = false;
-                        console.log(err)
-                    })
+                // that.$axios
+                //     .post(api.getAllWordsByPage, data)
+                //     .then(res => {
+                //         if (res.data.code == 200) {
+                //             that.tableLoading = false;
+                //             that.tableData = res.data.data.data;
+                //             that.page.totalPage = res.data.data.resultCount;
+                //         } else {
+                //             that.$message.warning(res.data.msg);
+                //             that.tableLoading = false;
+                //         }
+                //     })
+                //     .catch(err => {
+                //         that.tableLoading = false;
+                //         console.log(err);
+                //     });
             },
 
-            //重置表单
+            // 重置表单
             resetForm(formName) {
                 this.$refs[formName].resetFields();
                 this.form.wordName = '';
-                this.getList(this.page.currentPage)
-            },
+                this.getList(this.page.currentPage);
+            }
 
         }
-    }
+    };
 </script>
 
 <style lang="less">
