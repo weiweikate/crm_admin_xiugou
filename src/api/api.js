@@ -189,8 +189,7 @@ export const findInviteInfo = '/admin/invite/findInviteInfo';
 export const createWxQrcode = '/admin/invite/createWxQrcode';
 
 // 经销商会员管理
-// 会员列表
-export const getDealerPageList = '/admin/dealer/queryDealerPageList';
+
 // 会员详情
 export const findDealerById = '/admin/dealer/findDealerById';
 // 修改授权信息

@@ -46,4 +46,6 @@ export const updateSupplierDeleteById = '/admin/supplier/updateSupplierDeleteByI
 export const queryBrandPageList = '/admin/brand/queryBrandPageList';
 // 根据二级类目id字符串查询品牌
 export const queryCategoryBrandByCId = '/admin/categoryBrand/queryCategoryBrandByCId';
+// ******************************************************************************************************************************************************************************
+export const queryUserPageList = '/admin/user/queryUserPageList';// 会员列表
 

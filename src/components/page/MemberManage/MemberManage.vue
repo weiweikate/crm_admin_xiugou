@@ -47,7 +47,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-button v-if="p.exportDealerListExcel" @click="exportData" type="primary">导出</el-button>
+                    <el-button @click="exportData" type="primary">导出</el-button>
                 </el-form-item>
             </el-form>
             <template>
@@ -88,17 +88,17 @@
                             <template v-if="scope.row.status==3">已关闭</template>
                         </template>
                     </el-table-column>
-                    <el-table-column v-if="isShowOperate" min-width="160" label="操作" align="center">
+                    <el-table-column min-width="160" label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="warning" v-if="p.findDealerById" size="small"
+                            <el-button type="warning"  size="small"
                                        @click="detailItem(scope.$index,scope.row)">详情
                             </el-button>
-                            <el-button type="danger" v-if="scope.row.status!=3&&p.stopDealerById" size="small"
-                                       @click="updateStatusItem(scope.$index,scope.row.id,1)">关闭
-                            </el-button>
-                            <el-button type="danger" v-if="scope.row.status==3&&p.openDealerById" size="small"
-                                       @click="updateStatusItem(scope.$index,scope.row.id,2)">开启
-                            </el-button>
+                            <!--<el-button type="danger" v-if="scope.row.status!=3" size="small"-->
+                                       <!--@click="updateStatusItem(scope.$index,scope.row.id,1)">关闭-->
+                            <!--</el-button>-->
+                            <!--<el-button type="danger" v-if="scope.row.status==3" size="small"-->
+                                       <!--@click="updateStatusItem(scope.$index,scope.row.id,2)">开启-->
+                            <!--</el-button>-->
                         </template>
                     </el-table-column>
                 </el-table>
@@ -140,10 +140,10 @@ import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
 import region from '@/components/common/Region';
 import * as api from '@/api/api';
-import utils from '@/utils/index.js';
 import * as pApi from '@/privilegeList/index.js';
 import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http';
 
 export default {
     components: {
@@ -152,15 +152,6 @@ export default {
     mixins: [myMixinTable],
     data() {
         return {
-            // 权限控制
-            p: {
-                stopDealerById: false,
-                openDealerById: false,
-                exportDealerListExcel: false,
-                findDealerById: false
-            },
-            isShowOperate: true,
-
             tableData: [],
             tableLoading: false,
             btnLoading: false,
@@ -187,24 +178,11 @@ export default {
             btnTxt: ''
         };
     },
-    created() {
-        this.pControl();
-    },
     activated() {
         this.getList(this.page.currentPage);
-        this.getLevelList();
-        this.pControl();
+        // this.getLevelList();
     },
     methods: {
-        // 权限控制
-        pControl() {
-            for (const k in this.p) {
-                this.p[k] = utils.pc(pApi[k]);
-            }
-            if (!this.p.stopDealerById && !this.p.findDealerById && !this.p.openDealerById) {
-                this.isShowOperate = false;
-            }
-        },
         // 获取列表
         getList(val) {
             const that = this;
@@ -225,24 +203,15 @@ export default {
                 data.cityId = '';
                 data.areaId = '';
             }
-            data.url = pApi.getDealerPageList;
             that.tableLoading = true;
-            that.$axios
-                .post(api.getDealerPageList, data)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        that.tableLoading = false;
-                        that.tableData = res.data.data.data;
-                        that.page.totalPage = res.data.data.resultCount;
-                    } else {
-                        that.$message.warning(res.data.msg);
-                        that.tableLoading = false;
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                    that.tableLoading = false;
-                });
+            request.queryUserPageList(data).then(res => {
+                that.tableLoading = false;
+                that.tableData = res.data.data;
+                that.page.totalPage = res.data.totalNum;
+            }).catch(err => {
+                that.tableLoading = false;
+                console.log(err);
+            });
         },
         // 获取用户层级列表
         getLevelList() {
