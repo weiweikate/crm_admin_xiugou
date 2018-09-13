@@ -3,14 +3,8 @@
         <v-breadcrumb :nav="['经销商会员管理','会员管理']"></v-breadcrumb>
         <el-card style="margin:10px 0 20px">
             <el-form ref="form" :inline="true" :model="form">
-                <el-form-item prop="id" label="用户ID" label-width="120">
-                    <el-input style="width:200px" placeholder="请输入用户ID" v-model="form.id"></el-input>
-                </el-form-item>
-                <el-form-item prop="nickname" label="用户昵称" label-width="120">
-                    <el-input style="width:200px" placeholder="请输入用户昵称" v-model="form.nickname"></el-input>
-                </el-form-item>
-                <el-form-item prop="code" label="授权码" label-width="120">
-                    <el-input style="width:200px" placeholder="请输入授权码" v-model="form.code"></el-input>
+                <el-form-item prop="id" label="会员搜索" label-width="120">
+                    <el-input style="width:200px" placeholder="可通过用户ID/授权码/昵称" v-model="form.id"></el-input>
                 </el-form-item>
                 <el-form-item prop="idcard" label="证件号" label-width="120">
                     <el-input style="width:200px" placeholder="请输入证件号" v-model="form.idcard"></el-input>
@@ -19,7 +13,7 @@
                     <el-input style="width:200px" placeholder="请输入手机号" v-model="form.phone"></el-input>
                 </el-form-item>
                 <el-form-item prop="dType" label="会员类型" label-width="120">
-                    <el-select v-model="form.dType" placeholder="请选择会员类型">
+                    <el-select v-model="form.userType" placeholder="请选择会员类型">
                         <el-option label="请选择会员类型" value=""></el-option>
                         <el-option label="网信经销商" value="1"></el-option>
                         <el-option label="供货经销商" value="2"></el-option>
@@ -61,11 +55,12 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="code" label="授权码" align="center"></el-table-column>
-                <el-table-column label="经销商类型" align="center">
+                <el-table-column prop="idcard" label="证件号" align="center"></el-table-column>
+                <el-table-column label="会员类型" align="center">
                     <template slot-scope="scope">
-                        <template v-if='scope.row.d_type == 1'>网信经销商</template>
-                        <template v-else-if='scope.row.d_type == 2'>供货经销商</template>
-                        <template v-else-if='scope.row.d_type == 3'>网红经销商</template>
+                        <template v-if='scope.row.userType == 1'>网信经销商</template>
+                        <template v-else-if='scope.row.userType == 2'>供货经销商</template>
+                        <template v-else-if='scope.row.userType == 3'>网红经销商</template>
                     </template>
                 </el-table-column>
                 <el-table-column prop="addrPreFix" label="区域/省市区" align="center"></el-table-column>
@@ -154,11 +149,8 @@ export default {
             formLabelWidth: '100px',
             form: {
                 id: '',
-                nickName: '',
-                code: '',
-                idCard: '',
                 phone: '',
-                dType: ''
+                userType: ''
             },
             exportForm: {
                 levelId: ''
@@ -200,8 +192,9 @@ export default {
             that.tableLoading = true;
             request.queryUserPageList(data).then(res => {
                 that.tableLoading = false;
+                that.tableData = [];
                 that.tableData = res.data.data;
-                that.page.totalPage = res.data.totalNum;
+                that.page.totalPage = res.data.totalPage;
             }).catch(err => {
                 that.tableLoading = false;
                 console.log(err);

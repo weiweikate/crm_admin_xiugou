@@ -2,11 +2,11 @@
 
 const path = require('path');
 
-const baseURL = 'http://172.16.10.29';
+// const baseURL = 'http://172.16.10.29';
 
 // let baseURL = "http://172.16.10.69";
 
-// const baseURL = 'http://172.16.10.100';
+const baseURL = 'http://172.16.10.100/admin/';
 // const baseURL = 'http://172.16.10.12';
 // let baseURL = "http://172.16.10.56";
 // let baseURL = "http://172.16.10.253";

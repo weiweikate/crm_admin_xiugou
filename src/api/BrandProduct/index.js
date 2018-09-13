@@ -122,40 +122,40 @@ export const deleteFreightTemplateById = '/admin/freightTemplate/deleteFreightTe
 //* ******************************************************************************************************************
 // 运费模版
 // 查询列表
-export const queryFreightTemplateList = '/admin//product/freightTemplate/queryFreightTemplateList';
+export const queryFreightTemplateList = '/product/freightTemplate/queryFreightTemplateList';
 // 添加运费模板接口
-export const addFreightTemplate = '/admin/product/freightTemplate/addFreightTemplate';
+export const addFreightTemplate = '/product/freightTemplate/addFreightTemplate';
 
 // 品牌管理
 // 产品品牌列表
-export const getProductBrandList = '/admin/product/productBrand/queryProductBrandList';
+export const getProductBrandList = '/product/productBrand/queryProductBrandList';
 // 查看品牌
-export const findProductBrand = ['/admin/product/productBrand/findProductBrand', { methods: 'get' }];
+export const findProductBrand = ['/product/productBrand/findProductBrand', { methods: 'get' }];
 // 新增产品品牌
-export const addProductBrand = '/admin/product/productBrand/addProductBrand';
+export const addProductBrand = '/product/productBrand/addProductBrand';
 // 修改产品品牌
-export const updateProductBrand = '/admin/product/productBrand/modifyProductBrand';
+export const updateProductBrand = '/product/productBrand/modifyProductBrand';
 // 删除产品品牌
-export const deleteProductBrand = ['/admin/product/productBrand/deleteProductBrand', { methods: 'get' }];
+export const deleteProductBrand = ['/product/productBrand/deleteProductBrand', { methods: 'get' }];
 
 // 产品分类
 // 查询产品品类列表
-export const queryProductCategoryList = '/admin/product/productCategory/queryProductCategoryList';
+export const queryProductCategoryList = '/product/productCategory/queryProductCategoryList';
 // 新增产品品类
-export const addProductCategory = '/admin/product/productCategory/addProductCategory';
+export const addProductCategory = '/product/productCategory/addProductCategory';
 // 修改产品品类
-export const modifyProductCategory = '/admin/product/productCategory/modifyProductCategory';
+export const modifyProductCategory = '/product/productCategory/modifyProductCategory';
 // 删除品类
-export const deleteProductCategory = ['/admin/product/productCategory/deleteProductCategory', { methods: 'get' }];
+export const deleteProductCategory = ['/product/productCategory/deleteProductCategory', { methods: 'get' }];
 // 查看产品品类
-export const findProductCategory = '/admin/product/productCategory/findProductCategory';
+export const findProductCategory = '/product/productCategory/findProductCategory';
 
 // 产品详情参数
 // 产品详情参数列表
-export const queryProductCategoryParamList = ['/admin/product/productCategoryParam/queryProductCategoryParamList', { methods: 'get' }];
+export const queryProductCategoryParamList = ['/product/productCategoryParam/queryProductCategoryParamList', { methods: 'get' }];
 // 新增产品详情参数
-export const addProductCategoryParam = '/admin/product/productCategoryParam/addProductCategoryParam';
+export const addProductCategoryParam = '/product/productCategoryParam/addProductCategoryParam';
 // 删除产品详情参数
-export const deleteProductCategoryParam = ['/admin/product/productCategoryParam/deleteProductCategoryParam', { methods: 'get' }];
-export const queryProductPageList = ['/admin/product/product/queryProductPageList', { methods: 'post' }]; // 查询产品列表
+export const deleteProductCategoryParam = ['/product/productCategoryParam/deleteProductCategoryParam', { methods: 'get' }];
+export const queryProductPageList = ['/product/product/queryProductPageList', { methods: 'post' }]; // 查询产品列表
 

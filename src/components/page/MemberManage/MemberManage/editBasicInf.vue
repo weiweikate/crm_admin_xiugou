@@ -90,8 +90,8 @@
         },
         created() {
             const reginArr = [];
-            if (this.dealer.province_id) {
-                reginArr.push(this.dealer.province_id, this.dealer.city_id, this.dealer.area_id);
+            if (this.dealer.provinceId) {
+                reginArr.push(this.dealer.provinceId, this.dealer.cityId, this.dealer.areaId);
                 this.address = reginArr;
             }
             this.img = this.dealer.head_img;

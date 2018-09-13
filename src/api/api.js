@@ -245,33 +245,33 @@ export const updateNoticeStatus = '/admin/notice/updateNoticeStatus';
 
 export const makeSureOrder = '/order/order/makeSureOrder';
 //* ***************************************************************************************************************************************************************************
-export const uploadImg = '/common/upload/oss'; // 上传图片
-export const queryConfig = ['/admin/config/sysconfig/queryConfig', { methods: 'get' }]; // 查询系统配置
-export const addOrModifyList = '/admin/config/sysconfig/addOrModifyList'; // 批量新增系统配置
-export const findAdminUserbyId = ['/admin/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息
-export const loginByCode = '/admin/adminLogin/codeLogin'; // 管理员手机号登录
-export const loginByPwd = '/admin/adminLogin/pswLogin'; // 管理员账号密码登录
-export const addManger = '/admin/adminUser/addAdminUser'; // 添加管理员
-export const updateAdminUser = '/admin/adminUser/updateAdminUser'; // 编辑管理员
-export const getMangerList = '/admin/adminUser/queryAdminUserPageList'; // 获取管理员列表
-export const addOrModify = '/admin/config/sysconfig/addOrModify'; // 新增修改系统配置
-export const getRoleList = ['/admin/privilege/queryPrivilegeList', { methods: 'get' }]; // 获取管理员权限列表
-export const queryDepartmentList = ['/admin/department/queryDepartmentList', { methods: 'get' }]; // 获取岗位列表
-export const queryJobList = ['/admin/role/queryJobList', { methods: 'get' }]; // 查询岗位列表
-export const queryVersionRecordPageList = '/admin/config/sysAppVersion/queryList';// 获取版本列表信息
-export const addVersionRecord = '/admin/config/sysAppVersion/add';// 新增版本信息
-export const updateVersionRecord = '/admin/config/sysAppVersion/update';// 编辑版本信息
-export const deleteVersionRecord = '/admin/config/sysAppVersion/deleteById';// 删除版本信息
-export const getRegion = ['/admin/config/sysArea/queryAreaList', { methods: 'get' }]; // 查询省市区
-export const getUserLevelList = ['/admin/user/getLevelList', { methods: 'get' }]; // 查询会员层级
+export const uploadImg = '/gateway/common/upload/oss'; // 上传图片
+export const queryConfig = ['/config/sysconfig/queryConfig', { methods: 'get' }]; // 查询系统配置
+export const addOrModifyList = '/config/sysconfig/addOrModifyList'; // 批量新增系统配置
+export const findAdminUserbyId = ['/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息
+export const loginByCode = '/adminLogin/codeLogin'; // 管理员手机号登录
+export const loginByPwd = '/adminLogin/pswLogin'; // 管理员账号密码登录
+export const addManger = '/adminUser/addAdminUser'; // 添加管理员
+export const updateAdminUser = '/adminUser/updateAdminUser'; // 编辑管理员
+export const getMangerList = '/adminUser/queryAdminUserPageList'; // 获取管理员列表
+export const addOrModify = '/config/sysconfig/addOrModify'; // 新增修改系统配置
+export const getRoleList = ['/privilege/queryPrivilegeList', { methods: 'get' }]; // 获取管理员权限列表
+export const queryDepartmentList = ['/department/queryDepartmentList', { methods: 'get' }]; // 获取岗位列表
+export const queryJobList = ['/role/queryJobList', { methods: 'get' }]; // 查询岗位列表
+export const queryVersionRecordPageList = '/config/sysAppVersion/queryList';// 获取版本列表信息
+export const addVersionRecord = '/config/sysAppVersion/add';// 新增版本信息
+export const updateVersionRecord = '/config/sysAppVersion/update';// 编辑版本信息
+export const deleteVersionRecord = '/config/sysAppVersion/deleteById';// 删除版本信息
+export const getRegion = ['/config/sysArea/queryAreaList', { methods: 'get' }]; // 查询省市区
+export const getUserLevelList = ['/user/getLevelList', { methods: 'get' }]; // 查询会员层级
 // 获取数据字典列表
-export const queryDictionaryDetailsType = ['/admin/config/dictionary/queryDictionaryTypeList', { methods: 'get' }];
+export const queryDictionaryDetailsType = ['/config/dictionary/queryDictionaryTypeList', { methods: 'get' }];
 
 // 问题反馈
 // 反馈列表
-export const queryFeedbackList = '/admin/userFeedback/queryFeedbackList';
+export const queryFeedbackList = '/userFeedback/queryFeedbackList';
 // 问题详情
-export const findFeedbackById = '/admin/userFeedback/findFeedbackById';
+export const findFeedbackById = '/userFeedback/findFeedbackById';
 // 修改反馈详情
-export const updateFeedback = '/admin/feedback/updateFeedback';
+export const updateFeedback = '/feedback/updateFeedback';
 

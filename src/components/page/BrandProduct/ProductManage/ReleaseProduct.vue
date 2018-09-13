@@ -7,9 +7,6 @@
             <el-form-item label="产品名称">
                 <el-input style="width:300px" :maxlength="16" v-model="form.name" placeholder="请输入产品名称"></el-input>
             </el-form-item>
-            <!-- <el-form-item label="产品ID">
-                <el-input style="width:300px" v-model="form.prodCode" placeholder="请输入产品ID"></el-input>
-            </el-form-item> -->
             <el-form-item label="产品图片">
                 <draggable style="display:inline-block" v-model="imgArr" :move="getdata" @update="datadragEnd">
                     <transition-group>
@@ -93,437 +90,436 @@
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import draggable from "vuedraggable";
-import Quill from "quill";
-import icon from "@/components/common/ico";
-import * as api from "@/api/BrandProduct/ProductMange/index.js";
-import * as pApi from "@/privilegeList/BrandProduct/ProductMange/index.js";
-import utils from "@/utils/index.js";
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import draggable from 'vuedraggable';
+import Quill from 'quill';
+import icon from '@/components/common/ico';
+import * as api from '@/api/BrandProduct/ProductMange/index.js';
+import * as pApi from '@/privilegeList/BrandProduct/ProductMange/index.js';
+import utils from '@/utils/index.js';
 export default {
-  components: {
-    draggable,
-    vBreadcrumb,
-    icon
-  },
+    components: {
+        draggable,
+        vBreadcrumb,
+        icon
+    },
 
-  data() {
-    return {
-      nav: ["品牌产品管理", "产品管理", "发布产品"],
-      isUseUpload: false,
-      showSaleTime: false,
-      uploadImg: "",
-      imgArr:[],
-      itemList: [],
-      brandArr:[],
-      freightTemplateArr:[],
-      supplierArr:[],
-      shipperArr:[{label:'平台发货',value:'1'},{label:'供应商发货',value:'2'}],
-      aferServiceDays:[
-        {label:'无售后服务',value:'0'},
-        {label:'到货后7天',value:'7'},
-        {label:'到货后15天',value:'15'},
-        {label:'到货后30天',value:'30'},
-        {label:'到货后6个月',value:'180'},
-        {label:'到货后1年',value:'365'},
-        {label:'到货后2年',value:'730'},
-        {label:'到货后3年',value:'1095'},
-      ],
-      itemProps: {
-        value: "value",
-        children: "children",
-      },
-      proCategoryArr: [],
-      form: {
-        name: "",
-        firstCategoryId: "",
-        secCategoryId:"",
-        brandId: "",
-        supplierId: "",
-        sendfrom:"",
-        weight: "",
-        volume: "",
-        freightTemplateId: "",
-        aferServiceDays: "",
-        content: "",
-        tagId:'',
-        originalImg:'',
-        smallImg:''
-      },
-      productParam:[], // 产品参数
-      editorOption: {
-        placeholder: "请输入内容",
-        modules: {
-          // 配置富文本
-          toolbar: [
-            ["bold", "italic", "underline", "strike"],
-            ["blockquote", "code-block"],
-            [{ header: 1 }, { header: 2 }],
-            [{ direction: "rtl" }],
-            [{ size: ["small", false, "large", "huge"] }],
-            [{ header: [1, 2, 3, 4, 5, 6, false] }],
-            [{ color: [] }, { background: [] }],
-            [{ font: [] }],
-            [{ align: [] }],
-            ["clean"],
-            ["link", "image"]
-          ]
-        }
-      },
-      uploadData: {},
-      uploadType: "", // 上传的文件类型（图片、视频）,
-      selectedTagArr:[],
-      tagArr:[],
-      tagName:'',
-      proItemArr:[]
-    };
-  },
-
-  computed: {
-    qnLocation() {
-      return location.protocol === "http:" ? api.addImg : api.addImg;
-    }
-  },
-
-  activated() {
-    this.uploadImg = api.addImg;
-    this.imgArr = [];
-    this.proItemArr = [];
-    this.selectedTagArr = [];
-    // 获取一级类目
-    this.getFirstItem();
-    // 获取运费模板
-    this.getFreightTemplate();
-    // 获取所有标签
-    this.getAllTags();
-    utils.cleanFormData(this.form);
-  },
-
-  mounted() {
-      // 为图片ICON绑定事件 getModule 为编辑器的内部属性
-      this.$refs.myQuillEditor.quill
-          .getModule("toolbar")
-          .addHandler("image", this.imgHandler);
-  },
-
-  methods: {
-    // 提交表单前进行判断
-    beforeSubmit(){
-      if(this.imgArr.length == 0){
-        this.$message.warning('请添加产品图片');
-        return false;
-      }else if(this.selectedTagArr.length == 0){
-        this.$message.warning('请添加产品标签');
-        return false;
-      }else if(!(parseInt(this.form.weight) >= 0)){
-        this.$message.warning('请输入正确的重量');
-        return false;
-      }else if(!(parseInt(this.form.volume) >= 0)){
-        this.$message.warning('请输入正确的体积');
-        return false;
-      }
-      if(this.productParam.length == 0){
-        this.$message.warning('请输入产品参数');
-        return false;
-      }
-      return true;
-    },
-    // 提交表单
-    submitForm(){
-      let isCanSubmit = this.beforeSubmit();
-      if(!isCanSubmit){
-        return;
-      }
-      let tmp=[],tmpSmalUrll=[],tmpOriUrl = [];
-      this.selectedTagArr.forEach((v,k)=>{
-        tmp.push(v.value)
-      })
-      this.form.tagId = tmp.join(',');
-      this.imgArr.forEach((v,k)=>{
-        tmpSmalUrll.push(v.smallUrl);
-        tmpOriUrl.push(v.originUrl);
-      })
-      this.form.smallImg = JSON.stringify(tmpSmalUrll);
-      this.form.originalImg = JSON.stringify(tmpOriUrl);
-      this.form.type = 2;
-      let data = {};
-      data = this.form;
-      data.url = pApi.addProduct;
-      let paramTmp = [];
-      this.productParam.forEach((v,k)=>{
-        paramTmp.push({parmId: v.id, parmValue: v.value})
-      })
-      data.specStr = JSON.stringify(paramTmp);
-      this.$axios.post(api.addProduct,data)
-      .then(res=>{
-        this.$message.success(res.data.data);
-        this.$router.push('/productList');
-      })
-      .catch(err=>{
-        console.log(err);
-      })
-    },
-    beforeUploadArr(){
-      this.$message.warning("上传中...");
-    },
-    //  图片上传/拖拽
-    getdata(evt) {
-      //   console.log(evt.draggedContext.element.url);
-    },
-    datadragEnd(evt) {
-      //   console.log(this.imgArr);
-    },
-    successUpload(res) {
-      if (res.code == 200) {
-        if (this.imgArr.length >= 5) {
-          this.isUseUpload = true;
-          this.$message.warning("最多只能上传五张图片");
-          return;
-        }
-        this.imgArr.push({originUrl:res.data.imageUrl,smallUrl:res.data.imageThumbUrl});
-        this.$message.success("上传成功");
-      } else {
-        this.$message.warning(res.data.msg);
-      }
-    },
-    // 删除图片
-    deleteImg(img) {
-      let index = -1;
-      this.imgArr.forEach((v,k) => {
-          if(v.originUrl == img.originUrl){
-            index = k;
-          }
-      });
-      if (index == -1) {
-        return;
-      }
-      this.imgArr.splice(index, 1);
-      if (this.imgArr.length < 5) {
-        this.isUseUpload = false;
-      }
-    },
-    // 自定义售后周期
-    defSaleTime() {
-      this.form.aferServiceDays = "";
-      this.showSaleTime = !this.showSaleTime;
-    },
-    // 富文本编辑器
-    onEditorChange({ editor, html, text }) {
-      this.form.content = html;
-    },
-    // 图片上传成功回调 插入到编辑器中
-    upScuccess(e, file, fileList) {
-      this.fullscreenLoading = false;
-      let vm = this;
-      let url = "";
-      if (this.uploadType === "image") {
-        // 获得文件上传后的URL地址
-        url = e.data.imageUrl;
-        this.form.original_img = e.data.imageUrl;
-        this.form.small_img = e.data.imageThumbUrl;
-      }
-      if (url != null && url.length > 0) {
-        // 将文件上传后的URL地址插入到编辑器文本中
-        let value = url;
-        // this.$refs.myTextEditor.quillEditor.getSelection();
-        // 获取光标位置对象，里面有两个属性，一个是index 还有 一个length，这里要用range.index，即当前光标之前的内容长度，然后再利用 insertEmbed(length, 'image', imageUrl)，插入图片即可。
-        vm.addRange = vm.$refs.myQuillEditor.quill.getSelection();
-        value = value.indexOf("http") !== -1 ? value : "http:" + value;
-        vm.$refs.myQuillEditor.quill.insertEmbed(
-          vm.addRange !== null ? vm.addRange.index : 0,
-          vm.uploadType,
-          value,
-          Quill.sources.USER
-        ); // 调用编辑器的 insertEmbed 方法，插入URL
-        this.$message.success("插入成功");
-      } else {
-        this.$message.error(`${vm.uploadType}插入失败`);
-      }
-      this.$refs["upload"].clearFiles(); // 插入成功后清除input的内容
-    },
-    // 点击图片ICON触发事件
-    imgHandler(state) {
-      this.addRange = this.$refs.myQuillEditor.quill.getSelection();
-      if (state) {
-        let fileInput = document.getElementById("imgInput");
-        fileInput.click(); // 加一个触发事件
-      }
-      this.uploadType = "image";
-    },
-    // 关闭标签
-    handleClose(index,value) {
-      this.selectedTagArr.splice(index,1);
-      this.tagArr.forEach((v,k)=>{
-        if(value.label == v.label){
-          this.tagArr[k].selected = false;
-        }
-      })
-    },
-    // 加入新的标签
-    addTag(){
-      if(this.tagName == ''){
-        this.$message.warning('请输入正确的标签');
-        return;
-      }
-      let tmp = false;
-      this.tagArr.forEach((v,k)=>{
-        if(this.tagName == v.label){
-          tmp = true;
-        }
-      })
-      if(!tmp){
-        let data = {};
-        data.name = this.tagName;
-        data.url = pApi.addProduct;
-        data.type = 2;
-        this.$axios.post(api.addTagLibrary,data)
-        .then(res=>{
-          this.$message.success('添加成功!');
-          this.tagName = '';
-          this.getAllTags();
-        })
-        .catch(err=>{
-          console.log(err)
-        })
-
-      }else{
-        this.$message.warning('标签已经添加，请不要重复添加!');
-      }
-    },
-    // 添加标签
-    insertTag(v){
-      if(this.selectedTagArr.length >19){
-        this.$message.warning('最多添加20个标签');
-        return;
-      }
-      v.selected = true;
-      this.selectedTagArr.push({label:v.label,value:v.value});
-    },
-    // 获取一级类目
-    getFirstItem() {
-        this.itemList = [];
-      this.$axios
-        .post(api.getCategoryList, { fatherid: 0 ,pageSize:1000000, url:pApi.addProduct})
-        .then(res => {
-            res.data.data.data.forEach((v,k)=>{
-                this.itemList.push({label:v.name,value:v.id,children:[]});
-                this.handleItemChange(v.id)
-            })
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    // 获取二级类目
-    handleItemChange(val){
-        let index = 0;
-        this.itemList.forEach((v,k)=>{
-            if(v.value == val){
-                index = k;
-            }
-        })
-        let data ={};
-        data.fatherid = val;
-        data.pageSize = 1000000;
-        data.url = pApi.addProduct;
-        this.itemList[index].children = [];
-        this.$axios
-        .post(api.getCategoryList, data)
-        .then(res => {
-            res.data.data.data.forEach((v,k)=>{
-                this.itemList[index].children.push({label:v.name,value:v.id});
-            })
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    // 获取品牌列表
-    getProItemId(val){
-      this.form.brandId = ''
-      let id = this.form.secCategoryId = val[1];
-      this.form.firstCategoryId = val[0];
-      this.form.secCategoryId = val[1];
-      this.brandArr = [];
-      this.getProductParam(val[1])
-      this.$axios
-        .post(api.queryCategoryBrandCid, {cId:id,pageSize:1000000,url:pApi.addProduct})
-        .then(res => {
-            res.data.data.forEach((v,k)=>{
-              this.brandArr.push({label:v.name,value:v.id})
-            })
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    // 获取供应商列表
-    getSupplyList(){
-      this.supplierId = '';
-      let data = {};
-      this.supplierArr = [];
-      data.firstCategoryId = this.form.firstCategoryId;
-      data.secCategoryId = this.form.secCategoryId;
-      data.brandId = this.form.brandId;
-      data.pageSize = 1000000;
-      data.url = pApi.addProduct;
-      this.$axios
-        .post(api.querySupplierBrandPageList, data)
-        .then(res => {
-            res.data.data.forEach((v,k)=>{
-              this.supplierArr.push({label:v.name,value:v.supplier_id})
-            })
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    // 获取运费模板列表
-    getFreightTemplate(){
-      this.freightTemplateArr = [];
-      this.$axios
-        .post(api.getFreightTemplateList, {url:pApi.addProduct})
-        .then(res => {
-            res.data.data.forEach((v,k)=>{
-              this.freightTemplateArr.push({label:v.name,value:v.id})
-            })
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    // 获取所有标签
-    getAllTags(){
-      this.tagArr = [];
-       this.$axios
-        .post(api.queryTagLibraryList, {url:pApi.addProduct,type:2})
-        .then(res => {
-            res.data.data.forEach((v,k)=>{
-              this.tagArr.push({label:v.name,value:v.id})
-            })
-            this.tagArr.forEach((v,k) => {
-              this.selectedTagArr.forEach((v1,k1)=>{
-                if(v.value == v1.value){
-                  v.selected = true;
+    data() {
+        return {
+            nav: ['品牌产品管理', '产品管理', '发布产品'],
+            isUseUpload: false,
+            showSaleTime: false,
+            uploadImg: '',
+            imgArr: [],
+            itemList: [],
+            brandArr: [],
+            freightTemplateArr: [],
+            supplierArr: [],
+            shipperArr: [{ label: '平台发货', value: '1' }, { label: '供应商发货', value: '2' }],
+            aferServiceDays: [
+                { label: '无售后服务', value: '0' },
+                { label: '到货后7天', value: '7' },
+                { label: '到货后15天', value: '15' },
+                { label: '到货后30天', value: '30' },
+                { label: '到货后6个月', value: '180' },
+                { label: '到货后1年', value: '365' },
+                { label: '到货后2年', value: '730' },
+                { label: '到货后3年', value: '1095' }
+            ],
+            itemProps: {
+                value: 'value',
+                children: 'children'
+            },
+            proCategoryArr: [],
+            form: {
+                name: '',
+                firstCategoryId: '',
+                secCategoryId: '',
+                brandId: '',
+                supplierId: '',
+                sendfrom: '',
+                weight: '',
+                volume: '',
+                freightTemplateId: '',
+                aferServiceDays: '',
+                content: '',
+                tagId: '',
+                originalImg: '',
+                smallImg: ''
+            },
+            productParam: [], // 产品参数
+            editorOption: {
+                placeholder: '请输入内容',
+                modules: {
+                    // 配置富文本
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote', 'code-block'],
+                        [{ header: 1 }, { header: 2 }],
+                        [{ direction: 'rtl' }],
+                        [{ size: ['small', false, 'large', 'huge'] }],
+                        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                        [{ color: [] }, { background: [] }],
+                        [{ font: [] }],
+                        [{ align: [] }],
+                        ['clean'],
+                        ['link', 'image']
+                    ]
                 }
-              })
-            });
-        })
-        .catch(err => {
-          console.log(err);
-        });
+            },
+            uploadData: {},
+            uploadType: '', // 上传的文件类型（图片、视频）,
+            selectedTagArr: [],
+            tagArr: [],
+            tagName: '',
+            proItemArr: []
+        };
     },
-    // 获取产品参数
-    getProductParam(secId){
-      this.$axios.post(api.infoParmByCategoryIdList,{categoryId:secId}).then(res=>{
-        this.productParam = [];
-        res.data.data.forEach((v,k)=>{
-          v.value = '';
-          this.productParam.push(v);
-        })
-      })
+
+    computed: {
+        qnLocation() {
+            return location.protocol === 'http:' ? api.addImg : api.addImg;
+        }
+    },
+
+    activated() {
+        this.uploadImg = api.addImg;
+        this.imgArr = [];
+        this.proItemArr = [];
+        this.selectedTagArr = [];
+        // 获取一级类目
+        this.getFirstItem();
+        // 获取运费模板
+        this.getFreightTemplate();
+        // 获取所有标签
+        this.getAllTags();
+        utils.cleanFormData(this.form);
+    },
+
+    mounted() {
+        // 为图片ICON绑定事件 getModule 为编辑器的内部属性
+        this.$refs.myQuillEditor.quill
+            .getModule('toolbar')
+            .addHandler('image', this.imgHandler);
+    },
+
+    methods: {
+    // 提交表单前进行判断
+        beforeSubmit() {
+            if (this.imgArr.length == 0) {
+                this.$message.warning('请添加产品图片');
+                return false;
+            } else if (this.selectedTagArr.length == 0) {
+                this.$message.warning('请添加产品标签');
+                return false;
+            } else if (!(parseInt(this.form.weight) >= 0)) {
+                this.$message.warning('请输入正确的重量');
+                return false;
+            } else if (!(parseInt(this.form.volume) >= 0)) {
+                this.$message.warning('请输入正确的体积');
+                return false;
+            }
+            if (this.productParam.length == 0) {
+                this.$message.warning('请输入产品参数');
+                return false;
+            }
+            return true;
+        },
+        // 提交表单
+        submitForm() {
+            const isCanSubmit = this.beforeSubmit();
+            if (!isCanSubmit) {
+                return;
+            }
+            const tmp = []; const tmpSmalUrll = []; const tmpOriUrl = [];
+            this.selectedTagArr.forEach((v, k) => {
+                tmp.push(v.value);
+            });
+            this.form.tagId = tmp.join(',');
+            this.imgArr.forEach((v, k) => {
+                tmpSmalUrll.push(v.smallUrl);
+                tmpOriUrl.push(v.originUrl);
+            });
+            this.form.smallImg = JSON.stringify(tmpSmalUrll);
+            this.form.originalImg = JSON.stringify(tmpOriUrl);
+            this.form.type = 2;
+            let data = {};
+            data = this.form;
+            data.url = pApi.addProduct;
+            const paramTmp = [];
+            this.productParam.forEach((v, k) => {
+                paramTmp.push({ parmId: v.id, parmValue: v.value });
+            });
+            data.specStr = JSON.stringify(paramTmp);
+            this.$axios.post(api.addProduct, data)
+                .then(res => {
+                    this.$message.success(res.data.data);
+                    this.$router.push('/productList');
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        beforeUploadArr() {
+            this.$message.warning('上传中...');
+        },
+        //  图片上传/拖拽
+        getdata(evt) {
+            //   console.log(evt.draggedContext.element.url);
+        },
+        datadragEnd(evt) {
+            //   console.log(this.imgArr);
+        },
+        successUpload(res) {
+            if (res.code == 200) {
+                if (this.imgArr.length >= 5) {
+                    this.isUseUpload = true;
+                    this.$message.warning('最多只能上传五张图片');
+                    return;
+                }
+                this.imgArr.push({ originUrl: res.data.imageUrl, smallUrl: res.data.imageThumbUrl });
+                this.$message.success('上传成功');
+            } else {
+                this.$message.warning(res.data.msg);
+            }
+        },
+        // 删除图片
+        deleteImg(img) {
+            let index = -1;
+            this.imgArr.forEach((v, k) => {
+                if (v.originUrl == img.originUrl) {
+                    index = k;
+                }
+            });
+            if (index == -1) {
+                return;
+            }
+            this.imgArr.splice(index, 1);
+            if (this.imgArr.length < 5) {
+                this.isUseUpload = false;
+            }
+        },
+        // 自定义售后周期
+        defSaleTime() {
+            this.form.aferServiceDays = '';
+            this.showSaleTime = !this.showSaleTime;
+        },
+        // 富文本编辑器
+        onEditorChange({ editor, html, text }) {
+            this.form.content = html;
+        },
+        // 图片上传成功回调 插入到编辑器中
+        upScuccess(e, file, fileList) {
+            this.fullscreenLoading = false;
+            const vm = this;
+            let url = '';
+            if (this.uploadType === 'image') {
+                // 获得文件上传后的URL地址
+                url = e.data.imageUrl;
+                this.form.original_img = e.data.imageUrl;
+                this.form.small_img = e.data.imageThumbUrl;
+            }
+            if (url != null && url.length > 0) {
+                // 将文件上传后的URL地址插入到编辑器文本中
+                let value = url;
+                // this.$refs.myTextEditor.quillEditor.getSelection();
+                // 获取光标位置对象，里面有两个属性，一个是index 还有 一个length，这里要用range.index，即当前光标之前的内容长度，然后再利用 insertEmbed(length, 'image', imageUrl)，插入图片即可。
+                vm.addRange = vm.$refs.myQuillEditor.quill.getSelection();
+                value = value.indexOf('http') !== -1 ? value : 'http:' + value;
+                vm.$refs.myQuillEditor.quill.insertEmbed(
+                    vm.addRange !== null ? vm.addRange.index : 0,
+                    vm.uploadType,
+                    value,
+                    Quill.sources.USER
+                ); // 调用编辑器的 insertEmbed 方法，插入URL
+                this.$message.success('插入成功');
+            } else {
+                this.$message.error(`${vm.uploadType}插入失败`);
+            }
+            this.$refs['upload'].clearFiles(); // 插入成功后清除input的内容
+        },
+        // 点击图片ICON触发事件
+        imgHandler(state) {
+            this.addRange = this.$refs.myQuillEditor.quill.getSelection();
+            if (state) {
+                const fileInput = document.getElementById('imgInput');
+                fileInput.click(); // 加一个触发事件
+            }
+            this.uploadType = 'image';
+        },
+        // 关闭标签
+        handleClose(index, value) {
+            this.selectedTagArr.splice(index, 1);
+            this.tagArr.forEach((v, k) => {
+                if (value.label == v.label) {
+                    this.tagArr[k].selected = false;
+                }
+            });
+        },
+        // 加入新的标签
+        addTag() {
+            if (this.tagName == '') {
+                this.$message.warning('请输入正确的标签');
+                return;
+            }
+            let tmp = false;
+            this.tagArr.forEach((v, k) => {
+                if (this.tagName == v.label) {
+                    tmp = true;
+                }
+            });
+            if (!tmp) {
+                const data = {};
+                data.name = this.tagName;
+                data.url = pApi.addProduct;
+                data.type = 2;
+                this.$axios.post(api.addTagLibrary, data)
+                    .then(res => {
+                        this.$message.success('添加成功!');
+                        this.tagName = '';
+                        this.getAllTags();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            } else {
+                this.$message.warning('标签已经添加，请不要重复添加!');
+            }
+        },
+        // 添加标签
+        insertTag(v) {
+            if (this.selectedTagArr.length > 19) {
+                this.$message.warning('最多添加20个标签');
+                return;
+            }
+            v.selected = true;
+            this.selectedTagArr.push({ label: v.label, value: v.value });
+        },
+        // 获取一级类目
+        getFirstItem() {
+            this.itemList = [];
+            this.$axios
+                .post(api.getCategoryList, { fatherid: 0, pageSize: 1000000, url: pApi.addProduct })
+                .then(res => {
+                    res.data.data.data.forEach((v, k) => {
+                        this.itemList.push({ label: v.name, value: v.id, children: [] });
+                        this.handleItemChange(v.id);
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        // 获取二级类目
+        handleItemChange(val) {
+            let index = 0;
+            this.itemList.forEach((v, k) => {
+                if (v.value == val) {
+                    index = k;
+                }
+            });
+            const data = {};
+            data.fatherid = val;
+            data.pageSize = 1000000;
+            data.url = pApi.addProduct;
+            this.itemList[index].children = [];
+            this.$axios
+                .post(api.getCategoryList, data)
+                .then(res => {
+                    res.data.data.data.forEach((v, k) => {
+                        this.itemList[index].children.push({ label: v.name, value: v.id });
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        // 获取品牌列表
+        getProItemId(val) {
+            this.form.brandId = '';
+            const id = this.form.secCategoryId = val[1];
+            this.form.firstCategoryId = val[0];
+            this.form.secCategoryId = val[1];
+            this.brandArr = [];
+            this.getProductParam(val[1]);
+            this.$axios
+                .post(api.queryCategoryBrandCid, { cId: id, pageSize: 1000000, url: pApi.addProduct })
+                .then(res => {
+                    res.data.data.forEach((v, k) => {
+                        this.brandArr.push({ label: v.name, value: v.id });
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        // 获取供应商列表
+        getSupplyList() {
+            this.supplierId = '';
+            const data = {};
+            this.supplierArr = [];
+            data.firstCategoryId = this.form.firstCategoryId;
+            data.secCategoryId = this.form.secCategoryId;
+            data.brandId = this.form.brandId;
+            data.pageSize = 1000000;
+            data.url = pApi.addProduct;
+            this.$axios
+                .post(api.querySupplierBrandPageList, data)
+                .then(res => {
+                    res.data.data.forEach((v, k) => {
+                        this.supplierArr.push({ label: v.name, value: v.supplier_id });
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        // 获取运费模板列表
+        getFreightTemplate() {
+            this.freightTemplateArr = [];
+            this.$axios
+                .post(api.getFreightTemplateList, { url: pApi.addProduct })
+                .then(res => {
+                    res.data.data.forEach((v, k) => {
+                        this.freightTemplateArr.push({ label: v.name, value: v.id });
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        // 获取所有标签
+        getAllTags() {
+            this.tagArr = [];
+            this.$axios
+                .post(api.queryTagLibraryList, { url: pApi.addProduct, type: 2 })
+                .then(res => {
+                    res.data.data.forEach((v, k) => {
+                        this.tagArr.push({ label: v.name, value: v.id });
+                    });
+                    this.tagArr.forEach((v, k) => {
+                        this.selectedTagArr.forEach((v1, k1) => {
+                            if (v.value == v1.value) {
+                                v.selected = true;
+                            }
+                        });
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        // 获取产品参数
+        getProductParam(secId) {
+            this.$axios.post(api.infoParmByCategoryIdList, { categoryId: secId }).then(res => {
+                this.productParam = [];
+                res.data.data.forEach((v, k) => {
+                    v.value = '';
+                    this.productParam.push(v);
+                });
+            });
+        }
     }
-  }
 };
 </script>
 <style lang='less'>

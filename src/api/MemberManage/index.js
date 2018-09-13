@@ -36,8 +36,6 @@ export const getProvinceList = '/admin/area/getProvinceList';
 export const addSupplier = '/admin/supplier/addSupplier';
 // 编辑供应商
 export const updateSupplier = '/admin/supplier/updateSupplier';
-// 分页查询供应商列表
-export const querySupplierPageList = '/admin/supplier/querySupplierPageList';
 // 根据ID查询详情
 export const findSupplierById = '/admin/supplier/findSupplierById';
 // 停启用供应商
@@ -47,8 +45,9 @@ export const queryBrandPageList = '/admin/brand/queryBrandPageList';
 // 根据二级类目id字符串查询品牌
 export const queryCategoryBrandByCId = '/admin/categoryBrand/queryCategoryBrandByCId';
 // ******************************************************************************************************************************************************************************
-export const queryUserPageList = '/admin/user/queryUserPageList';// 会员列表
-export const findDealerById = ['/admin/user/findUserDetailById', { methods: 'get' }]; // 会员详情
-export const updateDealerById = '/admin/user/updateUserById'; // 修改经销商信息 1：基础 2：授权
-export const findDealerTreeById = ['/admin/user/findUserTreeInfo', { methods: 'get' }]; // 会员树状图
+export const queryUserPageList = '/user/queryUserPageList';// 会员列表
+export const findDealerById = ['/user/findUserDetailById', { methods: 'get' }]; // 会员详情
+export const updateDealerById = '/user/updateUserById'; // 修改经销商信息 1：基础 2：授权
+export const findDealerTreeById = ['/user/findUserTreeInfo', { methods: 'get' }]; // 会员树状图
+export const queryProductSupplierList = '/product/productSupplier/queryProductSupplierList'; // 分页查询供应商列表
 

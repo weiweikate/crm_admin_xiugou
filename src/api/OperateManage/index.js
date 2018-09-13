@@ -188,17 +188,17 @@ export const deleteTopic = '/admin/topic/delete';
 // 获取模板列表
 export const tplList = '/admin/topic/template/list';
 //* ******************************************************************************************************************************
-export const addBadWord = '/admin/config/sysBadWord/addBadWord'; // 添加敏感词
-export const deleteBadWord = ['/admin/config/sysBadWord/deleteBadWord', { methods: 'get' }]; // 删除敏感词
-export const queryBadWord = '/admin/config/sysBadWord/queryBadWord'; // 查询敏感词列表
-export const getAllWordsByPage = '/admin/hotWord/getAllWordsByPage'; // 关键词分页列表
+export const addBadWord = '/config/sysBadWord/addBadWord'; // 添加敏感词
+export const deleteBadWord = ['/config/sysBadWord/deleteBadWord', { methods: 'get' }]; // 删除敏感词
+export const queryBadWord = '/config/sysBadWord/queryBadWord'; // 查询敏感词列表
+export const getAllWordsByPage = '/hotWord/getAllWordsByPage'; // 关键词分页列表
 
 // 优惠券
 // 分页查询优惠券
-export const queryCouponList = '/admin/coupon/queryCouponList';
+export const queryCouponList = '/coupon/queryCouponList';
 // 添加修改优惠券
-export const addOrModifyCoupon = '/admin/coupon/addOrModifyCoupon';
+export const addOrModifyCoupon = '/coupon/addOrModifyCoupon';
 // 通过id查询优惠券信息
-export const findCouponById = ['/admin/coupon/findById', { methods: 'get' }];
+export const findCouponById = ['/coupon/findById', { methods: 'get' }];
 // 查询运费模板
-export const queryTemplateList = ['/admin/coupon/template/queryTemplateList', { methods: 'get' }];
+export const queryTemplateList = ['/coupon/template/queryTemplateList', { methods: 'get' }];

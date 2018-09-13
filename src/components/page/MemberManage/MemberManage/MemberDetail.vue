@@ -23,7 +23,7 @@
                         <div class="item">身份证号：{{dealer.idcard}}</div>
                     </div>
                     <div class="item-row">
-                        <div class="item">地址信息 ：{{dealer.addrPreFix}}{{dealer.address}}</div>
+                        <div class="item">地址信息 ：{{dealer.province}}{{dealer.city}}{{dealer.area}}{{dealer.address}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item">注册时间：{{dealer.regTime|formatDate}}</div>
@@ -141,54 +141,6 @@
                 </div>
                 <div class="clearfix"></div>
             </div>
-            <!-- <div class="others-inf-area line">
-                <div class="left">
-                    <div class="title">
-                        <h3>其他信息</h3>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-row">
-                            <div class="item">获得荣誉：<span class="color-blue">{{dealer.id}}</span></div>
-                            <div class="item">消费金额：<span class="color-red">{{dealer.id}}</span>/元</div>
-                        </div>
-                        <div class="item-row">
-                            <div class="item">活跃度积分：{{dealer.id}}分</div>
-                            <div class="item">活跃等级：{{dealer.id}}</div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-            </div> -->
-            <!--<div class="user-tag-area">-->
-                <!--<div class="title">-->
-                    <!--<h3>用户标签</h3>-->
-                <!--</div>-->
-                <!--<div class="tags-area">-->
-                    <!--<el-tag-->
-                        <!--:key="tag.tagName"-->
-                        <!--v-for="tag in dynamicTags"-->
-                        <!--closable-->
-                        <!--color="#fff"-->
-                        <!--:disable-transitions="false"-->
-                        <!--@close="handleClose(tag.id)">-->
-                        <!--{{tag.tagName}}-->
-                    <!--</el-tag>-->
-                    <!--<div style="margin-top: 20px">-->
-                        <!--<el-input-->
-                            <!--class="input-new-tag"-->
-                            <!--v-if="inputVisible"-->
-                            <!--v-model="inputValue"-->
-                            <!--ref="saveTagInput"-->
-                            <!--@keyup.enter.native="handleInputConfirm"-->
-                            <!--@blur="handleInputConfirm"-->
-                            <!--placeholder="请输入标签文字"-->
-                        <!--&gt;-->
-                        <!--</el-input>-->
-                        <!--<el-button type="primary" class="button-new-tag" @click="showInput" v-if="dynamicTags.length<20">添加标签</el-button>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
             <div style="margin:50px">
                 <el-button type="primary" @click="backToList">返回列表</el-button>
             </div>

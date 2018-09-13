@@ -222,7 +222,7 @@
                             {
                                 index: 'memberManage',
                                 title: '会员管理'
-                            }
+                            },
                             // {
                             //     index: "accountRecharge",
                             //     title: "账户充值"
@@ -231,10 +231,10 @@
                             //     index: "realNameAuthentication",
                             //     title: "实名制认证审核"
                             // },
-                            // {
-                            //     index: "supplierManage",
-                            //     title: "供应商管理"
-                            // }
+                            {
+                                index: 'supplierManage',
+                                title: '供应商管理'
+                            }
                             // {
                             //     index: "activityParams",
                             //     title: "活跃度参数设置"
