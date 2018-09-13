@@ -212,10 +212,9 @@
             getDetail() {
                 const data = {
                     id: this.id,
-                    url: pApi.getDiscountCouponPageById
                 };
-                request.getDiscountCouponPageById(data).then(res => {
-                    const detail = res.data.data;
+                request.findCouponById(data).then(res => {
+                    const detail = res.data;
                     this.form.name = detail.name;
                     this.form.type = detail.type;
                     if (this.form.type == 'DK') {
@@ -224,7 +223,7 @@
                     this.form.value = detail.value;
                     this.form.discountCouponTemplateId = detail.discountCouponTemplateId;
                     this.form.remark = detail.remark;
-                    this.categoryType = res.data.data.categoryType;
+                    this.categoryType = res.data.categoryType;
                     this.useConditions = detail.useConditions;
                     this.getProducts = {
                         firstCategoryIds: detail.firstCategoryIds,
@@ -467,10 +466,9 @@
                 } else {
                     data.useConditions = 0;
                 }
-                data.url = pApi.updateDiscountCouponById;
                 that.btnLoading = true;
-                request.updateDiscountCouponById(data).then(res => {
-                    that.$message.warning(res.data.msg);
+                request.addOrModifyCoupon(data).then(res => {
+                    // that.$message.warning(res.data.msg);
                     that.$router.push('/discountCoupon');
                     that.btnLoading = false;
                 }).catch(error => {

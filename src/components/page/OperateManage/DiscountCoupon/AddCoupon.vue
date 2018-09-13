@@ -101,7 +101,6 @@
     import vMultichoose from '@/components/common/discountCoupon/multiChoose.vue';
     import vOnlychoose from '@/components/common/discountCoupon/onlyChoose.vue';
     import icon from '@/components/common/ico';
-    import * as pApi from '@/privilegeList/OperateManage/DiscountCoupon/index.js';
     import utils from '@/utils/index.js';
     import request from '@/http/http.js';
 
@@ -379,10 +378,9 @@
                     data.expirationReminder = 0;
                 }
 
-                data.url = pApi.addDiscountCoupon;
                 that.btnLoading = true;
-                request.addDiscountCoupon(data).then(res => {
-                    that.$message.success(res.data.msg);
+                request.addOrModifyCoupon(data).then(res => {
+                    // that.$message.success(res.data.msg);
                     that.$router.push('/discountCoupon');
                     that.btnLoading = false;
                 }).catch(error => {

@@ -149,7 +149,6 @@ export const getProvinced = '/admin/area/getProvinceList';
 export const getCity = '/admin/area/getCityList';
 export const getArea = '/admin/area/getAreaList';
 
-
 // 经销商层级管理
 // 查询经销商层级列表
 export const getDealerLevelList = '/admin/dealerLevel/getList';
@@ -182,8 +181,6 @@ export const findInviteInfo = '/admin/invite/findInviteInfo';
 export const createWxQrcode = '/admin/invite/createWxQrcode';
 
 // 经销商会员管理
-
-
 
 // 关闭用户
 export const stopDealerById = '/admin/dealer/stopDealerById';

@@ -153,7 +153,7 @@
                 that.tableData = [];
                 const data = {
                     page: val,
-                    size: this.page.pageSize,
+                    pageSize: this.page.pageSize,
                     level: that.form.level,
                     type: that.form.type,
                     status: that.form.status,
