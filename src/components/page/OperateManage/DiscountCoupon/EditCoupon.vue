@@ -14,7 +14,7 @@
                     </el-select>
                 </el-form-item>
                 <div class="line"></div>
-                <el-form-item label="券值" v-if="form.type!='ZK'">
+                <el-form-item label="券值" v-if="form.type!=3">
                     <el-input v-model="form.value" placeholder="请输入券值"></el-input>
                     元
                 </el-form-item>
@@ -30,7 +30,7 @@
                                    :value="v.id"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="使用限制" style="margin-top: 30px" v-if="form.type!='DK'&&form.type!='DJ'">
+                <el-form-item label="使用限制" style="margin-top: 30px" v-if="form.type!=4&&form.type!=2">
                     满
                     <el-input v-model="useConditions" placeholder="请输入金额"></el-input>
                     元可用
@@ -60,8 +60,8 @@
                     <!--<div>{{item.firstCategoryName}}-{{item.secCategoryName}}</div>-->
                     <!--<div>产品ID:{{item.products}}</div>-->
                     <!--</template>-->
-                    <v-onlychoose @getProductIds="getProductIds" :getProducts="getProducts" :isOnly="isOnly" v-show="form.type=='DK'"></v-onlychoose>
-                    <v-multichoose @getProductIds="getProductIds" :getProducts="getProducts" :isOnly="isOnly" v-show="form.type!='DK'"></v-multichoose>
+                    <v-onlychoose @getProductIds="getProductIds" :getProducts="getProducts" :isOnly="isOnly" v-show="form.type==4"></v-onlychoose>
+                    <v-multichoose @getProductIds="getProductIds" :getProducts="getProducts" :isOnly="isOnly" v-show="form.type!=4"></v-multichoose>
 
                 </el-form-item>
                 <el-form-item label="可使用用户层级" class="role-choose">
@@ -125,7 +125,7 @@
                 // 表单
                 form: {
                     name: '',
-                    type: 'DJ',
+                    type: 2,
                     value: '',
                     discountCouponTemplateId: '',
                     totalNumber: '',
@@ -134,16 +134,16 @@
                 },
                 typeArr: [{// 优惠券类型
                     name: '满减券(商品满额可用)',
-                    type: 'MJ'
+                    type: 1
                 }, {
                     name: '抵价券(商品直接抵价)',
-                    type: 'DJ'
+                    type: 2
                 }, {
                     name: '折扣券(打折百分比券)',
-                    type: 'ZK'
+                    type: 3
                 }, {
                     name: '抵扣券',
-                    type: 'DK'
+                    type: 4
                 }],
                 discountArr: [{// 折扣值
                     name: '1折',
@@ -202,7 +202,7 @@
             this.isOnly = false;
             utils.cleanFormData(this.form);
 
-            this.getAllDiscountCouponTemplate();// 加载优惠券模版
+            this.queryTemplateList();// 加载优惠券模版
             this.id = this.$route.query.couponId || sessionStorage.getItem('couponId');// 获取id
             this.getDetail();// 加载详情
         },
@@ -211,13 +211,13 @@
             // 获取优惠券详情
             getDetail() {
                 const data = {
-                    id: this.id,
+                    id: this.id
                 };
                 request.findCouponById(data).then(res => {
                     const detail = res.data;
                     this.form.name = detail.name;
                     this.form.type = detail.type;
-                    if (this.form.type == 'DK') {
+                    if (this.form.type == 4) {
                         this.isOnly = true;
                     }
                     this.form.value = detail.value;
@@ -267,40 +267,41 @@
             },
             // 加载层级
             showLevel(dealerLevelIds) {
-                this.users = [], this.checkedUsers = [];
-                request.getDealerLevelList({}).then(res => {
+                this.users = [];
+                this.checkedUsers = [];
+                request.getUserLevelList({}).then(res => {
                     let count = 0;
                     const arr = dealerLevelIds.split(',');
-                    if (resData.data.code == 200) {
-                        for (const i in resData.data.data) {
-                            const name = resData.data.data[i].name;
+                    if (res.code == 10000) {
+                        for (const i in res.data) {
+                            const name = res.data[i].name;
                             if (this.users.indexOf(name) == -1) {
-                                this.users.push(resData.data.data[i]);
+                                this.users.push(res.data[i]);
                             }
                             for (const j in arr) {
-                                if (arr[j] == resData.data.data[i].id) {
+                                if (arr[j] == res.data[i].id) {
                                     count++;
-                                    this.checkedUsers.push(resData.data.data[i]);
+                                    this.checkedUsers.push(res.data[i]);
                                 }
                             }
                         }
-                        if (count == resData.data.data.length) {
+                        if (count == res.data.length) {
                             this.checkAll = true;
                             this.isIndeterminate = false;
                         } else {
                             this.isIndeterminate = true;
                         }
                     } else {
-                        this.$message.warning(res.data.msg);
+                        this.$message.warning(res.msg);
                     }
                 }).catch(error => {
                     console.log(error);
                 });
             },
             // 优惠券模版
-            getAllDiscountCouponTemplate() {
-                request.getAllDiscountCouponTemplate({}).then(res => {
-                    this.tempArr = res.data.data;
+            queryTemplateList() {
+                request.queryTemplateList({}).then(res => {
+                    this.tempArr = res.data;
                 }).catch(error => {
                     console.log(error);
                 });
@@ -358,7 +359,7 @@
                     return;
                 }
                 if (!data.value) {
-                    if (data.type != 'ZK') {
+                    if (data.type != 3) {
                         this.$message.warning('请输入券值!');
                     } else {
                         this.$message.warning('请选中折扣值!');
@@ -389,7 +390,7 @@
                     this.$message.warning('请输入可用周期数据!');
                     return;
                 }
-                if (this.form.type == 'DK') {
+                if (this.form.type == 4) {
                     if (!that.productList.firstCategoryIds || !that.productList.secCategoryIds || !that.productList.products) {
                         this.$message.warning('请选择可用品类!');
                         return;

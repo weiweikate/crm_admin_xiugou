@@ -505,17 +505,17 @@
                 }).catch(error => {
                     console.log(error);
                     that.loading = false;
-                })
+                });
             },
             // 选择产品
             chooseProduct(item, index) {
                 if (this.productChecked[index]) {
-                    this.addTags(3, item);// 增加产品Ids标签值
+                    this.addTags(4, item);// 增加产品Ids标签值
                     if (this.products.indexOf(item.id) == -1) {
                         this.products.push(item.id);
                     }
                 } else {
-                    this.deleteTags(3, item, 'false');// 移除产品Ids标签值
+                    this.deleteTags(4, item, 'false');// 移除产品Ids标签值
                     if (this.products.indexOf(item.id) != -1) {
                         for (const i in this.products) {
                             if (this.products[i] == item.id) {
@@ -562,10 +562,10 @@
 
             // 二级类目产品列表选中改变一二级类目值
             changePreValues(item, style, num) {
-                const tempIds = num == 1 ? this.firstCategoryIds : this.secCategoryIds;
-                const tempNames = num == 1 ? this.firstCategoryNames : this.secCategoryNames;
-                if (style == 'add') {
-                    if (tempIds.indexOf(item.id) == -1) {
+                const tempIds = num === 1 ? this.firstCategoryIds : num === 2 ? this.secCategoryIds : this.thirdCategoryIds;
+                const tempNames = num === 1 ? this.firstCategoryNames : num === 2 ? this.secCategoryNames : this.thirdCategoryNames;
+                if (style === 'add') {
+                    if (tempIds.indexOf(item.id) === -1) {
                         tempIds.push(item.id);
                         tempNames.push(item.name);
                     }
@@ -581,13 +581,13 @@
             },
             // 一级类目二级类目选中取消改变二级类目产品列表值
             changeNextValues(num, index) {
-                const tempChecked = num == 1 ? this.firstChecked : this.secondChecked;
-                const tempNextChecked = num == 1 ? this.secondChecked : this.productChecked;
+                const tempChecked = num === 1 ? this.firstChecked : num === 2 ? this.secondChecked : this.thirdChecked;
+                const tempNextChecked = num === 1 ? this.secondChecked : num === 2 ? this.thirdChecked : this.productChecked;
                 const tempThirdChecked = this.productChecked;
                 for (const i in tempNextChecked) {
                     tempNextChecked[i] = tempChecked[index];
                 }
-                if (num == 1) { // 清除第三级的选中状态
+                if (num === 1) { // 清除第三级的选中状态
                     for (const j in tempThirdChecked) {
                         tempThirdChecked[j] = false;
                     }
@@ -596,10 +596,10 @@
             },
             // 增加标签值
             addTags(num, item) {
-                const tag = num == 1 ? this.firstClassifyTags : num == 2 ? this.secondClassifyTags : this.productTags;
-                const tagIds = num == 1 ? this.firstTagIds : num == 2 ? this.secondTagIds : this.productTagIds;
-                const preClassifyId = num == 2 ? this.firstCategoryId : this.secCategoryId;// 对应上一级类目id
-                const preTagIds = num == 2 ? this.secondTagIds : this.productTagIds;// 对应上一级标签ids;
+                const tag = num === 1 ? this.firstClassifyTags : num === 2 ? this.secondClassifyTags : num === 3 ? this.thirdClassifyTags : this.productTags;
+                const tagIds = num === 1 ? this.firstTagIds : num === 2 ? this.secondTagIds : num === 3 ? this.thirdTagIds : this.productTagIds;
+                const preClassifyId = num === 2 ? this.firstCategoryId : num === 3 ? this.secCategoryId : this.thirdCategoryId;// 对应上一级类目id
+                const preTagIds = num === 2 ? this.secondTagIds : num === 3 ? this.thirdTagIds : this.productTagIds;// 对应上一级标签ids;
                 if (tagIds.indexOf(item.id) == -1) {
                     if (num != 1) {
                         if (preTagIds.indexOf(preClassifyId) == -1) {
@@ -615,11 +615,11 @@
             // 移除标签
             deleteTags(num, item, isTag) {
                 const classifyIds = [];// 选择框数据ids
-                const tagIds = num == 1 ? this.firstTagIds : num == 2 ? this.secondTagIds : this.productTagIds;
-                const tag = num == 1 ? this.firstClassifyTags : num == 2 ? this.secondClassifyTags : this.productTags;
-                const classify = num == 1 ? this.first : num == 2 ? this.second : this.productList;
-                const classifyChecked = num == 1 ? this.firstChecked : num == 2 ? this.secondChecked : this.productChecked;
-                const ids = num == 1 ? this.firstCategoryIds : num == 2 ? this.secondTagIds : this.productIds;
+                const tagIds = num === 1 ? this.firstTagIds : num === 2 ? this.secondTagIds : num === 3 ? this.thirdTagIds : this.productTagIds;
+                const tag = num === 1 ? this.firstClassifyTags : num === 2 ? this.secondClassifyTags : num === 3 ? this.thirdClassifyTags : this.productTags;
+                const classify = num === 1 ? this.first : num === 2 ? this.second : num === 3 ? this.third : this.productList;
+                const classifyChecked = num === 1 ? this.firstChecked : num === 2 ? this.secondChecked : num === 3 ? this.thirdChecked : this.productChecked;
+                const ids = num === 1 ? this.firstCategoryIds : num === 2 ? this.secondTagIds : num === 3 ? this.thirdTagIds : this.productIds;
 
                 for (const i in tagIds) {
                     if (item.id == tagIds[i]) {
@@ -627,7 +627,7 @@
                         tagIds.splice(i, 1);
                     }
                 }
-                if (isTag == 'true') { // 删除标签移除选择框
+                if (isTag === 'true') { // 删除标签移除选择框
                     classify.forEach(function(v, k) {
                         classifyIds.push(v.id);
                     });
@@ -635,9 +635,9 @@
                         if (item.id == classifyIds[i]) {
                             classifyChecked[i] = false;
                             this.$set(classifyChecked, i, classifyChecked[i]);
-                            if (num != 3) {
+                            if (num !== 4) {
                                 this.changeNextValues(num, i);
-                                if (num == 1) {
+                                if (num === 1) {
                                     this.isFirstAllCheck();
                                 }
                             }
@@ -705,15 +705,15 @@
         }
         .check-area {
             float: left;
-            width: 200px;
+            width: 180px;
             font-size: 12px;
             color: #999;
             border: 1px solid #dfdfdf;
             margin-right: 10px;
             border-radius: 5px;
         }
-        .check-area:nth-child(3) {
-            width: 440px;
+        .check-area:nth-child(4) {
+            width: 380px;
         }
 
         .title {
@@ -742,7 +742,7 @@
         .clearfix {
             clear: both;
         }
-        .product-name{
+        .product-name {
             margin-left: 10px;
         }
     }

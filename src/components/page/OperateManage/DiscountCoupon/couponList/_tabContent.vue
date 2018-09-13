@@ -5,21 +5,21 @@
             <el-table-column prop="name" label="券名称" align="center"></el-table-column>
             <el-table-column label="券类型" align="center">
                 <template slot-scope="scope">
-                   <template v-if="scope.row.type=='MJ'">满减</template>
-                   <template v-if="scope.row.type=='DJ'">抵价</template>
-                   <template v-if="scope.row.type=='ZK'">折扣</template>
-                   <template v-if="scope.row.type=='DK'">抵扣</template>
+                   <template v-if="scope.row.type==1">满减</template>
+                   <template v-if="scope.row.type==2">抵价</template>
+                   <template v-if="scope.row.type==3">折扣</template>
+                   <template v-if="scope.row.type==4">抵扣</template>
                 </template>
             </el-table-column>
             <el-table-column label="券值" align="center">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.type=='ZK'">{{Number(scope.row.value)/10}}折</template>
+                    <template v-if="scope.row.type==3">{{Number(scope.row.value)/10}}折</template>
                     <template v-else>{{scope.row.value}}元</template>
                 </template>
             </el-table-column>
             <el-table-column label="限制" align="center">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.type=='ZK'||scope.row.type=='MJ'">满{{scope.row.useConditions}}</template>
+                    <template v-if="scope.row.type==3||scope.row.type==1">满{{scope.row.useConditions}}</template>
                 </template>
             </el-table-column>
             <el-table-column label="可用周期" align="center">
@@ -172,7 +172,7 @@ export default {
         // 券数据
         couponData(row) {
             let status;
-            if (row.type == 'DK') { // 折扣
+            if (row.type === 3) { // 折扣
                 status = 0;
             } else {
                 status = 1;
@@ -202,7 +202,7 @@ export default {
             this.addMask = true;
             this.left = row.totalNumber - row.hadUseNumber;
             this.id = row.id;
-            if (row.type == 'DK') {
+            if (row.type === 4) {
                 this.value = row.value + '折';
             } else {
                 this.value = row.value + '元';

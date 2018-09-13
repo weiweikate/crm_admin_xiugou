@@ -202,3 +202,5 @@ export const queryCouponList = '/admin/coupon/queryCouponList';
 export const addOrModifyCoupon = '/admin/coupon/addOrModifyCoupon';
 // 通过id查询优惠券信息
 export const findCouponById = ['/admin/coupon/findById', { methods: 'get' }];
+// 查询运费模板
+export const queryTemplateList = ['/admin/coupon/template/queryTemplateList', { methods: 'get' }];
