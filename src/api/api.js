@@ -109,8 +109,6 @@ export const queryTopMenuList = '/admin/privilege/queryTopMenuList';
 export const addFunctionModule = '/admin/privilege/addFunctionModule';
 // 修改头像
 export const updateAdminUserFace = 'admin/adminUser/updateAdminUserFace';
-// 获取数据字典列表
-export const queryDictionaryDetailsType = '/admin/dictionary/queryDictionaryDetailsType';
 
 // 品牌产品管理
 // 获取一二级类目列表
@@ -149,7 +147,6 @@ export const getProvinced = '/admin/area/getProvinceList';
 export const getCity = '/admin/area/getCityList';
 export const getArea = '/admin/area/getAreaList';
 
-
 // 经销商层级管理
 // 查询经销商层级列表
 export const getDealerLevelList = '/admin/dealerLevel/getList';
@@ -182,8 +179,6 @@ export const findInviteInfo = '/admin/invite/findInviteInfo';
 export const createWxQrcode = '/admin/invite/createWxQrcode';
 
 // 经销商会员管理
-
-
 
 // 关闭用户
 export const stopDealerById = '/admin/dealer/stopDealerById';
@@ -269,6 +264,8 @@ export const updateVersionRecord = '/admin/config/sysAppVersion/update';// 编�
 export const deleteVersionRecord = '/admin/config/sysAppVersion/deleteById';// 删除版本信息
 export const getRegion = ['/admin/config/sysArea/queryAreaList', { methods: 'get' }]; // 查询省市区
 export const getUserLevelList = ['/admin/user/getLevelList', { methods: 'get' }]; // 查询会员层级
+// 获取数据字典列表
+export const queryDictionaryDetailsType = ['/admin/config/dictionary/queryDictionaryTypeList', { methods: 'get' }];
 
 // 问题反馈
 // 反馈列表

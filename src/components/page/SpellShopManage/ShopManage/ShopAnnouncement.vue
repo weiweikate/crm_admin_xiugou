@@ -10,7 +10,7 @@
                         <template>{{scope.row.createTime|formatDate}}</template>
                     </template>
                 </el-table-column>
-                <el-table-column prop="userName" label="发布人" align="center"></el-table-column>
+                <!--<el-table-column prop="userName" label="发布人" align="center"></el-table-column>-->
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button @click="editAnnoun(scope.row)" type="primary">编辑</el-button>

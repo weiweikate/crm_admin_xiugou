@@ -14,7 +14,7 @@
                     </el-select>
                 </el-form-item>
                 <div class="line"></div>
-                <el-form-item label="券值" v-if="form.type!='ZK'">
+                <el-form-item label="券值" v-if="form.type!=3">
                     <el-input v-model="form.value" placeholder="请输入券值"></el-input>
                     元
                 </el-form-item>
@@ -30,7 +30,7 @@
                                    :value="v.id"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="使用限制" style="margin-top: 30px" v-if="form.type!='DJ'&&form.type!='DK'">
+                <el-form-item label="使用限制" style="margin-top: 30px" v-if="form.type!=2&&form.type!=4">
                     满
                     <el-input v-model="useConditions" placeholder="请输入金额"></el-input>
                     元可用
@@ -60,7 +60,7 @@
                         <!--<div>{{item.firstCategoryName}}-{{item.secCategoryName}}</div>-->
                         <!--<div>产品ID:{{item.products}}</div>-->
                     <!--</template>-->
-                    <v-multichoose @getProductIds="getProductIds" v-if="form.type!='DK'"></v-multichoose>
+                    <v-multichoose @getProductIds="getProductIds" v-if="form.type!=4"></v-multichoose>
                     <v-onlychoose @getProductIds="getProductIds" v-else></v-onlychoose>
                 </el-form-item>
                 <el-form-item label="可使用用户层级" class="role-choose">
@@ -101,7 +101,6 @@
     import vMultichoose from '@/components/common/discountCoupon/multiChoose.vue';
     import vOnlychoose from '@/components/common/discountCoupon/onlyChoose.vue';
     import icon from '@/components/common/ico';
-    import * as pApi from '@/privilegeList/OperateManage/DiscountCoupon/index.js';
     import utils from '@/utils/index.js';
     import request from '@/http/http.js';
 
@@ -133,16 +132,16 @@
                 },
                 typeArr: [{// 优惠券类型
                     name: '满减券(商品满额可用)',
-                    type: 'MJ'
+                    type: 1
                 }, {
                     name: '抵价券(商品直接抵价)',
-                    type: 'DJ'
+                    type: 2
                 }, {
                     name: '折扣券(打折百分比券)',
-                    type: 'ZK'
+                    type: 3
                 }, {
                     name: '抵扣券',
-                    type: 'DK'
+                    type: 4
                 }],
                 discountArr: [{// 折扣值
                     name: '1折',
@@ -193,7 +192,7 @@
         activated() {
             utils.cleanFormData(this.form);
             this.getLevelList();// 加载用户层级
-            this.getAllDiscountCouponTemplate();// 优惠券模版
+            this.queryTemplateList();// 优惠券模版
             // 数据清除
             this.isIndeterminate = false;
             this.checkAll = false;
@@ -213,9 +212,9 @@
 
         methods: {
             // 优惠券模版
-            getAllDiscountCouponTemplate() {
-                request.getAllDiscountCouponTemplate({}).then(res => {
-                    this.tempArr = res.data.data;
+            queryTemplateList() {
+                request.queryTemplateList({}).then(res => {
+                    this.tempArr = res.data;
                 }).catch(error => {
                     console.log(error);
                 });
@@ -227,9 +226,8 @@
             // 获取用户层级列表
             getLevelList() {
                 const that = this;
-                const data = {};
-                request.getDealerLevelList(data).then(res => {
-                    that.users = res.data.data;
+                request.getUserLevelList({}).then(res => {
+                    that.users = res.data;
                 }).catch(error => {
                     console.log(error);
                 })
@@ -283,7 +281,7 @@
                     return;
                 }
                 if (!data.value) {
-                    if (data.type != 'ZK') {
+                    if (data.type != 3) {
                         this.$message.warning('请输入券值!');
                     } else {
                         this.$message.warning('请选中折扣值!');
@@ -312,7 +310,7 @@
                     this.$message.warning('请输入可用周期数据!');
                     return;
                 }
-                if (this.form.type == 'DK') {
+                if (this.form.type == 4) {
                     if (!that.productList.firstCategoryIds || !that.productList.secCategoryIds || !that.productList.products) {
                         this.$message.warning('请选择可用品类!');
                         return;
@@ -379,10 +377,9 @@
                     data.expirationReminder = 0;
                 }
 
-                data.url = pApi.addDiscountCoupon;
                 that.btnLoading = true;
-                request.addDiscountCoupon(data).then(res => {
-                    that.$message.success(res.data.msg);
+                request.addOrModifyCoupon(data).then(res => {
+                    // that.$message.success(res.data.msg);
                     that.$router.push('/discountCoupon');
                     that.btnLoading = false;
                 }).catch(error => {

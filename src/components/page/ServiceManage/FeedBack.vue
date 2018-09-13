@@ -51,9 +51,9 @@
                     <el-table-column prop="nickname" label="用户" align="center"></el-table-column>
                     <el-table-column label="类型" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.d_type == 1">网信经销商</template>
-                            <template v-if="scope.row.d_type == 2">供货经销商</template>
-                            <template v-if="scope.row.d_type == 3">网红经销商</template>
+                            <template v-if="scope.row.dtype == 1">网信经销商</template>
+                            <template v-if="scope.row.dtype == 2">供货经销商</template>
+                            <template v-if="scope.row.dtype == 3">网红经销商</template>
                         </template>
                     </el-table-column>
                     <el-table-column prop="levelName" label="层级" align="center"></el-table-column>
@@ -61,15 +61,15 @@
                     <el-table-column prop="address" label="所在区域" align="center"></el-table-column>
                     <el-table-column label="反馈时间" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.create_time|formatDate}}
+                            {{scope.row.createTime|formatDate}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="type_key" label="问题类型" width="100" align="center">
+                    <el-table-column prop="typeKey" label="问题类型" width="100" align="center">
                         <!--<template slot-scope="scope">-->
-                            <!--<template v-if="scope.row.type_key == 1">账户问题</template>-->
-                            <!--<template v-if="scope.row.type_key == 2">营销问题</template>-->
-                            <!--<template v-if="scope.row.type_key == 3">购买流程</template>-->
-                            <!--<template v-if="scope.row.type_key == 4">推广机制</template>-->
+                            <!--<template v-if="scope.row.typeKey == 1">账户问题</template>-->
+                            <!--<template v-if="scope.row.typeKey == 2">营销问题</template>-->
+                            <!--<template v-if="scope.row.typeKey == 3">购买流程</template>-->
+                            <!--<template v-if="scope.row.typeKey == 4">推广机制</template>-->
                         <!--</template>-->
                     </el-table-column>
                     <el-table-column label="状态" width="100" align="center">
@@ -153,7 +153,7 @@
                 that.tableData = [];
                 const data = {
                     page: val,
-                    size: this.page.pageSize,
+                    pageSize: this.page.pageSize,
                     level: that.form.level,
                     type: that.form.type,
                     status: that.form.status,
@@ -166,7 +166,7 @@
                 request.queryFeedbackList(data).then(res => {
                     that.tableLoading = false;
                     res.data.data.forEach(function(v, k) {
-                        v.type_key = that.typeList[v.type_key - 1].dValue;
+                        // v.typeKey = that.typeList[v.typeKey - 1].dValue;
                         that.tableData.push(v);
                     });
                     that.page.totalPage = res.data.totalNum;
@@ -179,8 +179,8 @@
             getLevelList() {
                 const that = this;
                 const data = {};
-                request.getDealerLevelList({}).then(res => {
-                    that.levelList = res.data.data;
+                request.getUserLevelList({}).then(res => {
+                    that.levelList = res.data;
                 }).catch(error => {
                     console.log(error);
                 });

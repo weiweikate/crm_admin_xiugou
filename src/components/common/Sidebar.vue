@@ -314,15 +314,15 @@
                             {
                                 index: 'allKeyWords',
                                 title: '搜索关键词'
-                            }
+                            },
                             // {
                             //     index: "deliveryAddress",
                             //     title: "提货地址设置"
                             // },
-                            // {
-                            //     index: "discountCoupon",
-                            //     title: "优惠券设置"
-                            // },
+                            {
+                                index: 'discountCoupon',
+                                title: '优惠券设置'
+                            }
                             // {
                             //     index: "marketToolsManage",
                             //     title: "营销工具管理"

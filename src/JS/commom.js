@@ -1,4 +1,4 @@
-import * as api from '@/api/api';
+import request from '@/http/http.js';
 const getUserId = {
     methods: {
         getUserId() {
@@ -44,7 +44,10 @@ const queryDictonary = {
     methods: {
         async queryDictonary(dKey = 1) {
             this.divDKey = dKey;
-            await this.$axios.post(api.queryDictionaryDetailsType, { dType: dKey }).then(res => {
+            const data = {
+                dType: dKey
+            };
+            await request.queryDictionaryDetailsType(data).then(res => {
                 this.tmpAxiosData = res.data.data;
             }).catch(err => {
                 this.dicNum++;

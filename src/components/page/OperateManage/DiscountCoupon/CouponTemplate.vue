@@ -4,7 +4,6 @@
         <el-card>
             <div class="area">
                 <div class="item" v-for="(item,k) in list" :key="k">
-                    <div class="title">{{item.name}}</div>
                     <img :src="item.imgUrl" alt="">
                 </div>
             </div>
@@ -31,9 +30,9 @@
         methods: {
             // 获取模板列表
             getTplList() {
-                request.tplList({}).then(res => {
-                    if (!res.data.data) return false;
-                    this.list = res.data.data;
+                request.queryTemplateList({}).then(res => {
+                    if (!res.data) return false;
+                    this.list = res.data;
                 }).catch(error => {
                     console.log(error);
                 });
@@ -45,18 +44,14 @@
 <style lang="less" scoped>
     .coupon-template{
         .area{
-            display: flex;
-            justify-content: flex-start;
-            overflow-x: auto;
             .item{
-                margin-right: 100px;
-                text-align: center;
                 .title{
                     color: #ff6868;
                 }
                 img{
                     width: 375px;
-                    height:1277px
+                    height: 200px;
+                    border-radius: 20px;
                 }
             }
         }

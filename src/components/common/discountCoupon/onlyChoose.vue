@@ -18,6 +18,21 @@
                 <div v-if="second.length>0" class="data-area">
                     <el-radio-group v-model="secCategoryName">
                         <div v-for="(item,index) in second" :key="index">
+                            <el-radio @change="getThird(item,true)"
+                                      :label="item.name" :value="item.id">
+                            </el-radio>
+                        </div>
+                    </el-radio-group>
+                </div>
+                <div v-else class="nodata">
+                    暂无数据~
+                </div>
+            </div>
+            <div class="check-area">
+                <div class="title">三级类目</div>
+                <div v-if="third.length>0" class="data-area">
+                    <el-radio-group v-model="secCategoryName">
+                        <div v-for="(item,index) in third" :key="index">
                             <el-radio @change="getProductList(item,true)"
                                       :label="item.name" :value="item.id">
                             </el-radio>
@@ -65,10 +80,17 @@
                         {{secondClassifyTag.name}}
                     </el-tag>
                 </div>
+                <div v-if="thirdClassifyTag.name">
+                    三级类目：
+                    <el-tag
+                        closable @close="deleteTags(3)">
+                        {{thirdClassifyTag.name}}
+                    </el-tag>
+                </div>
                 <div v-if="productTag.id">
                     产品ID：
                     <el-tag
-                        closable @close="deleteTags(3)">
+                        closable @close="deleteTags(4)">
                         {{productTag.id}}
                     </el-tag>
                 </div>
@@ -78,71 +100,85 @@
     </div>
 </template>
 <script>
-    import icon from "@/components/common/ico";
-    import * as api from "@/api/OperateManage/DiscountCoupon/index.js";
-    import * as pApi from "@/privilegeList/OperateManage/DiscountCoupon/index.js";
+    import icon from '@/components/common/ico';
+    import request from '@/http/http.js';
 
     export default {
         components: {
             icon
         },
-        props: ['getProducts','isOnly'],
+        props: ['getProducts', 'isOnly'],
         data() {
             return {
-                first: [],//一级类目
-                second: [],//二级类目
-                productList: [],//产品列表
-                firstCategoryId: '',//一级类目id
-                secCategoryId: '',//二级类目id
-                productId: '',//产品id
-                firstCategoryName: '',//一级类目名称
-                secCategoryName: '', //二级类目名称
-                productName:'',//产品名称
-                loading: false,//数据加载层
-                firstClassifyTag: {},//一级类目标签
-                secondClassifyTag: {},//二级类目标签
-                productTag: {},//产品标签
+                first: [], // 一级类目
+                second: [], // 二级类目
+                third: [], // 二级类目
+                productList: [], // 产品列表
+                firstCategoryId: '', // 一级类目id
+                secCategoryId: '', // 二级类目id
+                thirdCategoryId: '', // 三级类目id
+                productId: '', // 产品id
+                firstCategoryName: '', // 一级类目名称
+                secCategoryName: '', // 二级类目名称
+                thirdCategoryName: '', // 三级类目名称
+                productName: '', // 产品名称
+                loading: false, // 数据加载层
+                firstClassifyTag: {}, // 一级类目标签
+                secondClassifyTag: {}, // 二级类目标签
+                thirdClassifyTag: {}, // 三级类目标签
+                productTag: {}// 产品标签
 
             };
         },
         watch: {
             getProducts(params) {
-               this.resetValue();
-                if(params.firstCategoryIds){
-                    this.firstCategoryId=params.firstCategoryIds;
-                    this.firstCategoryName=params.firstCategoryNames;
-                    this.firstClassifyTag={
-                        id:this.firstCategoryId,
-                        name:this.firstCategoryName
-                    }
-                }else{
-                    this.firstCategoryId='';
-                    this.firstCategoryNames='';
+                this.resetValue();
+                if (params.firstCategoryIds) {
+                    this.firstCategoryId = params.firstCategoryIds;
+                    this.firstCategoryName = params.firstCategoryNames;
+                    this.firstClassifyTag = {
+                        id: this.firstCategoryId,
+                        name: this.firstCategoryName
+                    };
+                } else {
+                    this.firstCategoryId = '';
+                    this.firstCategoryNames = '';
                 }
-                if(params.secCategoryIds){
-                    this.secCategoryId=params.secCategoryIds;
-                    this.secCategoryName=params.secCategoryNames;
-                    this.secondClassifyTag={
-                        id:this.secCategoryId,
-                        name:this.secCategoryName
-                    }
-                }else{
-                    this.secCategoryId='';
-                    this.secCategoryName='';
+                if (params.secCategoryIds) {
+                    this.secCategoryId = params.secCategoryIds;
+                    this.secCategoryName = params.secCategoryNames;
+                    this.secondClassifyTag = {
+                        id: this.secCategoryId,
+                        name: this.secCategoryName
+                    };
+                } else {
+                    this.secCategoryId = '';
+                    this.secCategoryName = '';
                 }
-                if(params.products){
-                    this.productId=params.products;
-                    this.productName=params.productNames;
-                    this.productTag={
-                        id:this.productId
-                    }
-                }else{
-                    this.productId='';
+                if (params.thirdCategoryIds) {
+                    this.thirdCategoryId = params.thirdCategoryIds;
+                    this.thirdCategoryName = params.thirdCategoryNames;
+                    this.thirdClassifyTag = {
+                        id: this.thirdCategoryId,
+                        name: this.thirdCategoryName
+                    };
+                } else {
+                    this.thirdCategoryId = '';
+                    this.thirdCategoryName = '';
+                }
+                if (params.products) {
+                    this.productId = params.products;
+                    this.productName = params.productNames;
+                    this.productTag = {
+                        id: this.productId
+                    };
+                } else {
+                    this.productId = '';
                 }
                 this.getFirst();
-                if(this.isOnly){
-                    this.getSecond(this.firstClassifyTag,false);
-                    this.getProductList(this.secondClassifyTag,false)
+                if (this.isOnly) {
+                    this.getSecond(this.firstClassifyTag, false);
+                    this.getProductList(this.secondClassifyTag, false);
                 }
             }
         },
@@ -151,131 +187,166 @@
             this.resetValue();
         },
         methods: {
-            resetValue(){
-                this.firstClassifyTag={};
-                this.secondClassifyTag={};
-                this.productTag={};
+            resetValue() {
+                this.firstClassifyTag = {};
+                this.secondClassifyTag = {};
+                this.thirdClassifyTag = {};
+                this.productTag = {};
             },
             getFirst() {
-                let that = this;
+                const that = this;
                 that.loading = true;
-                //获取一级类目并回显选中状态
-                that.$axios
-                    .post(api.getFirstList, {})
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.first = res.data.data;
-                            that.loading = false
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.loading = false
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        that.loading = false
-                    })
+                const data = {
+                    page: 1,
+                    pageSize: 10000,
+                    level: 1,
+                    fatherId: 0
+                };
+                // 获取一级类目并回显选中状态
+                request.queryProductCategoryList(data).then(res => {
+                    that.first = res.data;
+                    that.loading = false;
+                }).catch(error => {
+                    console.log(error);
+                    that.loading = false;
+                });
             },
-            //获取二级类目
+            // 获取二级类目
             // item选中项 index选中索引值
-            getSecond(item,status) {
-                let that = this;
-                if(status){
+            getSecond(item, status) {
+                const that = this;
+                if (status) {
                     that.firstCategoryName = item.name;
-                    that.firstClassifyTag=[];
+                    that.firstClassifyTag = [];
                     that.second = [];
-                    that.productList=[];
+                    that.third = [];
+                    that.productList = [];
                     that.secondClassifyTag = [];
+                    that.thirdClassifyTag = [];
                     that.productTag = [];
                 }
                 that.firstCategoryId = item.id;
-                let data = {
-                    fatherid: item.id,
+                const data = {
+                    fatherId: item.id,
+                    page: 1,
+                    pageSize: 10000,
+                    level: 2
                 };
                 that.loading = false;
-                //获取二级类目并回显选中状态
-                that.$axios
-                    .post(api.getSecondList, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.second = res.data.data;
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.loading = false
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        that.loading = false
-                    });
-                this.transValue()//向父组件传值
+                // 获取二级类目并回显选中状态
+                request.queryProductCategoryList(data).then(res => {
+                    that.second = res.data;
+                }).catch(err => {
+                    console.log(err);
+                    that.loading = false;
+                });
+                this.transValue();// 向父组件传值
             },
-            //获取产品列表
+            // 获取三级类目
             // item选中项 index选中索引值
-            getProductList(item,status) {
-                let that = this;
-                if(status){
+            getThird(item, status) {
+                const that = this;
+                if (status) {
+                    that.secCategoryName = item.name;
+                    that.firstClassifyTag = [];
+                    that.second = [];
+                    that.third = [];
+                    that.productList = [];
+                    that.secondClassifyTag = [];
+                    that.thirdClassifyTag = [];
+                    that.productTag = [];
+                }
+                that.secCategoryId = item.id;
+                const data = {
+                    fatherId: item.id,
+                    page: 1,
+                    pageSize: 10000,
+                    level: 3
+                };
+                that.loading = false;
+                // 获取二级类目并回显选中状态
+                request.queryProductCategoryList(data).then(res => {
+                    that.third = res.data;
+                }).catch(err => {
+                    console.log(err);
+                    that.loading = false;
+                });
+                this.transValue();// 向父组件传值
+            },
+            // 获取产品列表
+            // item选中项 index选中索引值
+            getProductList(item, status) {
+                const that = this;
+                if (status) {
                     that.productList = [];
                     that.productTag = [];
                     that.products = [];
-                    that.secondClassifyTag=item;
+                    that.thirdClassifyTag = item;
                 }
-                that.secCategoryId = item.id;
-                let data = {
+                that.thirdCategoryId = item.id;
+                const data = {
                     page: 1,
                     pageSize: 10000,
                     firstCategoryId: that.firstCategoryId,
                     secCategoryId: that.secCategoryId,
-                    url: pApi.queryProductPageList
+                    thirdCategoryId: that.thirdCategoryId
                 };
                 that.loading = false;
-                //获取产品列表并回显选中状态
-                that.$axios
-                    .post(api.queryProductPageList, data)
-                    .then(res => {
-                        that.productList = res.data.data.data;
-                        that.loading = false
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        that.loading = false
-                    });
-                this.transValue()//向父组件传值
+                // 获取产品列表并回显选中状态
+                request.queryProductPageList(data).then(res => {
+                    that.productList = res.data;
+                    that.loading = false;
+                }).catch(err => {
+                    console.log(err);
+                    that.loading = false;
+                });
+                this.transValue();// 向父组件传值
             },
-            //选择产品
+            // 选择产品
             chooseProduct(item) {
-                this.productTag=item;
-                this.productName=item.name;
-                this.productId=item.id;
-                this.transValue()//向父组件传值
+                this.productTag = item;
+                this.productName = item.name;
+                this.productId = item.id;
+                this.transValue();// 向父组件传值
             },
-            //删除标签
-            deleteTags(num){
-                if(num==1){
-                    this.firstCategoryName='';
-                    this.firstClassifyTag={};
-                    this.second=[];
-                    this.productList=[];
+            // 删除标签
+            deleteTags(num) {
+                if (num === 1) {
+                    this.firstCategoryName = '';
+                    this.firstClassifyTag = {};
+                    this.second = [];
+                    this.third = [];
+                    this.productList = [];
                     this.deleteTags(2);
-                    this.deleteTags(3)
-                }else if(num==2){
-                    this.secCategoryName='';
-                    this.secondClassifyTag={};
-                    this.productList=[];
-                    this.deleteTags(3)
-                }else{
-                    this.productName='';
-                    this.productTag={}
+                    this.deleteTags(3);
+                    this.deleteTags(4);
+                } else if (num === 2) {
+                    this.secCategoryName = '';
+                    this.secondClassifyTag = {};
+                    this.secondClassifyTag = {};
+                    this.productList = [];
+                    this.deleteTags(3);
+                    this.deleteTags(4);
+                } else if (num === 3) {
+                    this.secCategoryName = '';
+                    this.secondClassifyTag = {};
+                    this.secondClassifyTag = {};
+                    this.productList = [];
+                    this.deleteTags(4);
+                } else {
+                    this.productName = '';
+                    this.productTag = {};
                 }
             },
-            //向父组件传值
+            // 向父组件传值
             transValue() {
-                let productList = {
+                const productList = {
                     firstCategoryIds: this.firstCategoryId,
                     secCategoryIds: this.secCategoryId,
+                    thirdCategoryIds: this.thirdCategoryId,
                     products: this.productId
                 };
-                this.$emit('getProductIds', JSON.stringify(productList))
+                this.$emit('getProductIds', JSON.stringify(productList));
             }
         }
     };
@@ -325,15 +396,15 @@
         }
         .check-area {
             float: left;
-            width: 200px;
+            width: 180px;
             font-size: 12px;
             color: #999;
             border: 1px solid #dfdfdf;
             margin-right: 10px;
             border-radius: 5px;
         }
-        .check-area:nth-child(3) {
-            width: 440px;
+        .check-area:nth-child(4) {
+            width: 380px;
         }
 
         .title {

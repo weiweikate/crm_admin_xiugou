@@ -193,3 +193,12 @@ export const deleteBadWord = ['/admin/config/sysBadWord/deleteBadWord', { method
 export const queryBadWord = '/admin/config/sysBadWord/queryBadWord'; // 查询敏感词列表
 export const getAllWordsByPage = '/admin/hotWord/getAllWordsByPage'; // 关键词分页列表
 
+// 优惠券
+// 分页查询优惠券
+export const queryCouponList = '/admin/coupon/queryCouponList';
+// 添加修改优惠券
+export const addOrModifyCoupon = '/admin/coupon/addOrModifyCoupon';
+// 通过id查询优惠券信息
+export const findCouponById = ['/admin/coupon/findById', { methods: 'get' }];
+// 查询运费模板
+export const queryTemplateList = ['/admin/coupon/template/queryTemplateList', { methods: 'get' }];

@@ -5,21 +5,21 @@
             <el-table-column prop="name" label="券名称" align="center"></el-table-column>
             <el-table-column label="券类型" align="center">
                 <template slot-scope="scope">
-                   <template v-if="scope.row.type=='MJ'">满减</template>
-                   <template v-if="scope.row.type=='DJ'">抵价</template>
-                   <template v-if="scope.row.type=='ZK'">折扣</template>
-                   <template v-if="scope.row.type=='DK'">抵扣</template>
+                   <template v-if="scope.row.type==1">满减</template>
+                   <template v-if="scope.row.type==2">抵价</template>
+                   <template v-if="scope.row.type==3">折扣</template>
+                   <template v-if="scope.row.type==4">抵扣</template>
                 </template>
             </el-table-column>
             <el-table-column label="券值" align="center">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.type=='ZK'">{{Number(scope.row.value)/10}}折</template>
+                    <template v-if="scope.row.type==3">{{Number(scope.row.value)/10}}折</template>
                     <template v-else>{{scope.row.value}}元</template>
                 </template>
             </el-table-column>
             <el-table-column label="限制" align="center">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.type=='ZK'||scope.row.type=='MJ'">满{{scope.row.useConditions}}</template>
+                    <template v-if="scope.row.type==3||scope.row.type==1">满{{scope.row.useConditions}}</template>
                 </template>
             </el-table-column>
             <el-table-column label="可用周期" align="center">
@@ -37,7 +37,7 @@
                     <template v-else>{{scope.row.totalNumber}}</template>
                 </template>
             </el-table-column>
-            <el-table-column prop="hadUseNumber" label="已使用" align="center"></el-table-column>
+            <el-table-column prop="hasUsed" label="已使用" align="center"></el-table-column>
             <el-table-column prop="" label="是否礼包周期券" align="center">
                 <template slot-scope="scope">
                     <template v-if='scope.row.hadPeriod == 0'>否</template>
@@ -50,20 +50,20 @@
                     <template v-else-if='scope.row.status == 0'>已结束</template>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="150" v-if="isShowOpr">
+            <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
                         <template>
                             <div style="float: left">
-                                <el-button @click="editCoupon(scope.row)" v-if="p.updateDiscountCouponById" type="primary">编辑</el-button>
+                                <el-button @click="editCoupon(scope.row)" type="primary">编辑</el-button>
                                 <br>
-                                <el-button @click="loseDiscountCoupon(scope.row)" v-if="p.loseDiscountCoupon&&scope.row.status==1" type="danger">失效</el-button>
+                                <el-button @click="loseDiscountCoupon(scope.row)" v-if="scope.row.status==1" type="danger">失效</el-button>
                             </div>
                             <div style="float: left">
-                                <div class="blue" @click="couponData(scope.row)" v-if="p.discountCouponDealerPageList">券数据
+                                <div class="blue" @click="couponData(scope.row)">券数据
                                 </div>
-                                <div class="blue" @click="couponDetail(scope.row)" v-if="p.getDiscountCouponPageById">查看详情
+                                <div class="blue" @click="couponDetail(scope.row)">查看详情
                                 </div>
-                                <div class="blue"  v-if="scope.row.status==1&&p.addRepertory&&scope.row.totalNumber != -1" @click="addInventory(scope.row)">增加券库存
+                                <div class="blue"  v-if="scope.row.status==1&&scope.row.totalNumber != -1" @click="addInventory(scope.row)">增加券库存
                                 </div>
                             </div>
                             <div style="clear: both"></div>
@@ -97,7 +97,6 @@
 </template>
 
 <script>
-import * as pApi from '@/privilegeList/OperateManage/DiscountCoupon/index.js';
 import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
@@ -109,15 +108,6 @@ export default {
 
     data() {
         return {
-            // 权限控制
-            p: {
-                updateDiscountCouponById: false,
-                loseDiscountCoupon: false,
-                discountCouponDealerPageList: false,
-                getDiscountCouponPageById: false,
-                addRepertory: false
-            },
-            isShowOpr: true,
 
             status: '',
             tableData: [],
@@ -132,7 +122,6 @@ export default {
     },
 
     activated() {
-        this.pControl();
         this.getList(1);
     },
 
@@ -147,31 +136,24 @@ export default {
         } else if (n == 'ended') {
             this.status = '0';
         }
-        this.pControl();
         this.getList(1);
     },
     methods: {
-        // 权限控制
-        pControl() {
-            for (const k in this.p) {
-                this.p[k] = utils.pc(pApi[k]);
-            }
-            if (!this.p.updateDiscountCouponById && !this.p.loseDiscountCoupon && !this.p.discountCouponDealerPageList && !this.p.getDiscountCouponPageById && !this.p.addRepertory) {
-                this.isShowOpr = false;
-            }
-        },
-        //   提交表单
+        //  提交表单
         getList(val) {
-            const data = {};
+            const data = {
+                page: val,
+                status: this.status,
+                pageSize: this.page.pageSize
+            };
             data.page = val;
             data.status = this.status;
-            data.url = pApi.getDiscountCouponPage;
             this.page.currentPage = val;
             this.tableLoading = true;
-            request.getDiscountCouponPage(data).then(res => {
+            request.queryCouponList(data).then(res => {
                 this.tableData = [];
-                this.tableData = res.data.data.data;
-                this.page.totalPage = res.data.data.resultCount;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
                 this.tableLoading = false;
             }).catch(error => {
                 console.log(error);
@@ -190,7 +172,7 @@ export default {
         // 券数据
         couponData(row) {
             let status;
-            if (row.type == 'DK') { // 折扣
+            if (row.type === 3) { // 折扣
                 status = 0;
             } else {
                 status = 1;
@@ -220,7 +202,7 @@ export default {
             this.addMask = true;
             this.left = row.totalNumber - row.hadUseNumber;
             this.id = row.id;
-            if (row.type == 'DK') {
+            if (row.type === 4) {
                 this.value = row.value + '折';
             } else {
                 this.value = row.value + '元';
