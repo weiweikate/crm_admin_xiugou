@@ -174,7 +174,7 @@ export default {
     },
     activated() {
         this.getList(this.page.currentPage);
-        // this.getLevelList();
+        this.getLevelList();
     },
     methods: {
         // 获取列表
@@ -209,16 +209,12 @@ export default {
         },
         // 获取用户层级列表
         getLevelList() {
-            const that = this;
             const data = {};
-            that.$axios
-                .post(api.getDealerLevelList, data)
-                .then(res => {
-                    that.levelList = res.data.data;
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            request.getUserLevelList(data).then(res => {
+                this.levelList = res.data;
+            }).catch(err => {
+                console.log(err);
+            });
         },
         // 跳到下级列表
         toLower(id) {

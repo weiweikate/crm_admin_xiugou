@@ -268,6 +268,7 @@ export const addVersionRecord = '/admin/config/sysAppVersion/add';// 新增版�
 export const updateVersionRecord = '/admin/config/sysAppVersion/update';// 编辑版本信息
 export const deleteVersionRecord = '/admin/config/sysAppVersion/deleteById';// 删除版本信息
 export const getRegion = ['/admin/config/sysArea/queryAreaList', { methods: 'get' }]; // 查询省市区
+export const getUserLevelList = ['/admin/user/getLevelList', { methods: 'get' }]; // 查询会员层级
 
 // 问题反馈
 // 反馈列表

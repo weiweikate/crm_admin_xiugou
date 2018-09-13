@@ -2,5 +2,5 @@
 module.exports = {
     NODE_ENV: '"test"',
     EVN_CONFIG: '"test"',
-    API_ROOT: '"https://sg.dnvhot.tech/"'
+    API_ROOT: '"https://testapi.sharegoodsmall.com/"'
 };

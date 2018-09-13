@@ -230,7 +230,7 @@
                 // 开设的店铺
                 myStore: '',
                 // 消费金额
-                money:0
+                money: 0
             };
         },
         activated() {
@@ -277,7 +277,7 @@
             updateAuthorInf() {
                 this.isShowEditAuthor = true;
             },
-            //页面跳转
+            // 页面跳转
             btnClicked(page) {
                 const id = this.id;
                 sessionStorage.setItem('memberId', id);
