@@ -1,6 +1,6 @@
 <template>
     <div class="tab-content">
-        <el-button v-if="p.addProduct" @click="releaseProduct" class="add-product" type="primary">添加产品</el-button>
+        <el-button @click="releaseProduct" class="add-product" type="primary">添加产品</el-button>
         <div class="search-pane">
             <el-form :model="form" ref='form' inline label-width="100px">
                 <el-form-item prop="name" label="产品名称">
@@ -81,25 +81,25 @@
             <el-table-column label="操作" min-width="220">
                 <template slot-scope="scope">
                     <div class="operate">
-                        <el-button v-if='p.queryProductStockList' @click="inventoryManage(scope.row)" type="primary">
+                        <el-button @click="inventoryManage(scope.row)" type="primary">
                             库存管理
                         </el-button>
-                        <el-button v-if='p.querySaleSpecList && scope.row.status != 4' @click="specificationsManage(scope.row)" type="primary">
+                        <el-button v-if='scope.row.status != 4' @click="specificationsManage(scope.row)" type="primary">
                             规格管理
                         </el-button>
-                        <el-button v-if='p.queryProductPriceSaleSpecList && scope.row.status != 4' @click="priceManage(scope.row)"
+                        <el-button v-if='scope.row.status != 4' @click="priceManage(scope.row)"
                                    type="primary">价格管理
                         </el-button>
                         <template
-                            v-if='(scope.row.status == 1 || scope.row.status == 5) && name == "auditProduct" && p.updateProductStatus'>
+                            v-if='(scope.row.status == 1 || scope.row.status == 5) && name == "auditProduct"'>
                             <el-button @click="auditProduct(scope.row,2)" type="primary">通过审核</el-button>
                             <el-button @click="auditProduct(scope.row,3)" type="danger">驳回审核</el-button>
                         </template>
                         <template v-else>
-                            <el-button v-if='p.findProductAllDataById && scope.row.status != 4 && scope.row.status != 2'
+                            <el-button v-if='scope.row.status != 4 && scope.row.status != 2'
                                        @click="editProduct(scope.row)" type="success">编辑产品
                             </el-button>
-                            <template v-if='p.updateProductShelves'>
+                            <template >
                                 <el-button v-if='scope.row.status == 4' @click="productStatus(scope.row,'5')"
                                            type="warning">产品下架
                                 </el-button>
@@ -142,61 +142,49 @@
 </template>
 
 <script>
-import * as api from "@/api/BrandProduct/ProductMange/index.js";
-import * as pApi from "@/privilegeList/BrandProduct/ProductMange/index.js";
+import * as api from '@/api/BrandProduct/ProductMange/index.js';
+import * as pApi from '@/privilegeList/BrandProduct/ProductMange/index.js';
 import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
 
 export default {
-    props: ["name"],
+    props: ['name'],
     components: {},
 
-    mixins:[myMixinTable],
+    mixins: [myMixinTable],
 
     data() {
         return {
-            // 权限控制
-            p: {
-                addProduct: false,
-                queryProductStockList: false,
-                querySaleSpecList: false,
-                queryProductPriceSaleSpecList: false,
-                findProductAllDataById: false,
-                updateProductShelves: false,
-                findProductById: false,
-                updateProductStatus: false
-            },
-
             itemList: [],
             defItem: [],
             itemProps: {
-                value: "value",
-                children: "children"
+                value: 'value',
+                children: 'children'
             },
-            status: "",
+            status: '',
             form: {
-                name: "",
-                prodCode: "",
-                barCode: "",
-                firstCategoryId: "",
-                secCategoryId: "",
-                saleMin: "",
-                saleMax: "",
-                priceMin: "",
-                priceMax: ""
+                name: '',
+                prodCode: '',
+                barCode: '',
+                firstCategoryId: '',
+                secCategoryId: '',
+                saleMin: '',
+                saleMax: '',
+                priceMin: '',
+                priceMax: ''
             },
             tableData: [],
             tableLoading: false,
             isShowPop: false,
             multipleSelection: [],
-            //品牌管理页面跳转传参
+            // 品牌管理页面跳转传参
             brandId: '',
-            //供应商详情页面跳转传参
+            // 供应商详情页面跳转传参
             supplierId: '',
             firstCategoryId: '',
             secCategoryId: '',
             brand_id: '',
-            flag: ''//1供应商品类 2供应商品牌 3品牌
+            flag: ''// 1供应商品类 2供应商品牌 3品牌
         };
     },
 
@@ -207,47 +195,38 @@ export default {
         this.secCategoryId = this.$route.query.secCategoryId || sessionStorage.getItem('secCategoryId');
         this.brand_id = this.$route.query.brand_id || sessionStorage.getItem('brand_id');
         this.flag = this.$route.query.flag || sessionStorage.getItem('flag');
-        if(this.flag){
-            this.status = "4";
+        if (this.flag) {
+            this.status = '4';
         }
-        this.pControl();
         this.getList(1);
     },
 
     mounted() {
-        let n = this.name;
+        const n = this.name;
         this.brandId = this.$route.query.brandId || sessionStorage.getItem('brandId');
         this.supplierId = this.$route.query.supplierId || sessionStorage.getItem('supplierId');
         this.firstCategoryId = this.$route.query.firstCategoryId || sessionStorage.getItem('firstCategoryId');
         this.secCategoryId = this.$route.query.secCategoryId || sessionStorage.getItem('secCategoryId');
         this.brand_id = this.$route.query.brand_id || sessionStorage.getItem('brand_id');
         this.flag = this.$route.query.flag || sessionStorage.getItem('flag');
-        if(this.flag){
-            this.status = "4";
+        if (this.flag) {
+            this.status = '4';
         }
-        if (n == "allProduct") {
-            this.status = "";
-        } else if (n == "upProduct") {
-            this.status = "4";
-        } else if (n == "downProduct") {
-            this.status = "5";
-        } else if (n == "auditProduct") {
-            this.status = "7";
-        } else if (n == "modifyProduct") {
-            this.status = "3";
+        if (n === 'allProduct') {
+            this.status = '';
+        } else if (n === 'upProduct') {
+            this.status = '4';
+        } else if (n === 'downProduct') {
+            this.status = '5';
+        } else if (n === 'auditProduct') {
+            this.status = '7';
+        } else if (n === 'modifyProduct') {
+            this.status = '3';
         }
-        this.pControl();
         this.getFirstItem();
         this.getList(1);
     },
     methods: {
-
-        // 权限控制
-        pControl() {
-            for (const k in this.p) {
-                this.p[k] = utils.pc(pApi[k]);
-            }
-        },
         //   提交表单
         getList(val) {
             let data = {};
@@ -270,13 +249,13 @@ export default {
                     data.brandId = this.brandId;
                     data.firstCategoryId = '';
                     data.secCategoryId = '';
-                    data.supplierId = ''
+                    data.supplierId = '';
                 }
             } else {
                 data.firstCategoryId = this.form.firstCategoryId;
                 data.secCategoryId = this.form.secCategoryId;
                 data.supplierId = '';
-                data.brandId = ''
+                data.brandId = '';
             }
             this.page.currentPage = val;
             this.tableLoading = true;
@@ -296,17 +275,17 @@ export default {
         },
         //   重置表单
         resetForm(formName) {
-            this.form.saleMax = "";
-            this.form.priceMax = "";
-            this.form.firstCategoryId = "";
-            this.form.secCategoryId = "";
+            this.form.saleMax = '';
+            this.form.priceMax = '';
+            this.form.firstCategoryId = '';
+            this.form.secCategoryId = '';
             this.defItem = [];
             this.$refs[formName].resetFields();
-            this.getList(1)
+            this.getList(1);
         },
         // 全选
         handleSelectionChange(val) {
-            let that = this;
+            const that = this;
             this.multipleSelection = [];
             val.forEach((v, k) => {
                 that.multipleSelection.push(v.id);
@@ -314,46 +293,46 @@ export default {
         },
         // 发布产品
         releaseProduct() {
-            this.$router.push({name: "releaseProduct"});
+            this.$router.push({ name: 'releaseProduct' });
         },
         // 编辑产品
         editProduct(row) {
-            sessionStorage.setItem("releaseProduct", row.id);
+            sessionStorage.setItem('releaseProduct', row.id);
             this.$router.push({
-                name: "editProduct",
-                query: {releaseProductId: row.id}
+                name: 'editProduct',
+                query: { releaseProductId: row.id }
             });
         },
         // 规格管理
         specificationsManage(row) {
-            let tmp = [];
+            const tmp = [];
             tmp.push(row.sec_category_id);
             tmp.push(row.id);
-            sessionStorage.setItem("productSpecifications", JSON.stringify(tmp));
+            sessionStorage.setItem('productSpecifications', JSON.stringify(tmp));
             this.$router.push({
-                name: "productSpecifications",
-                query: {releaseProductId: JSON.stringify(tmp)}
+                name: 'productSpecifications',
+                query: { releaseProductId: JSON.stringify(tmp) }
             });
         },
         // 价格管理
         priceManage(row) {
-            sessionStorage.setItem("priceManage", row.id);
+            sessionStorage.setItem('priceManage', row.id);
             this.$router.push({
-                name: "priceManage",
-                query: {priceManageId: row.id}
+                name: 'priceManage',
+                query: { priceManageId: row.id }
             });
         },
         // 库存管理
         inventoryManage(row) {
-            sessionStorage.setItem("productInventory", row.id);
+            sessionStorage.setItem('productInventory', row.id);
             this.$router.push({
-                name: "productInventory",
-                query: {productInventoryId: row.id}
+                name: 'productInventory',
+                query: { productInventoryId: row.id }
             });
         },
         // 产品上架/下架
         productStatus(row, status) {
-            let data = {};
+            const data = {};
             data.productId = row.id;
             data.status = status;
             data.url = pApi.updateProductShelves;
@@ -362,7 +341,7 @@ export default {
                 .then(res => {
                     this.$message.success(res.data.data);
                     row.status = status;
-                    this.getList(this.page.currentPage)
+                    this.getList(this.page.currentPage);
                 })
                 .catch(err => {
                     console.log(err);
@@ -370,7 +349,7 @@ export default {
         },
         // 通过/不通过审核
         auditProduct(row, status) {
-            let data = {};
+            const data = {};
             data.productId = row.id;
             data.status = status;
             data.url = pApi.updateProductStatus;
@@ -379,7 +358,7 @@ export default {
                 .then(res => {
                     row.status = status;
                     this.$message.success(res.data.data);
-                    this.getList(this.page.currentPage)
+                    this.getList(this.page.currentPage);
                 })
                 .catch(err => {
                     console.log(err);
@@ -387,20 +366,20 @@ export default {
         },
         // 查看详情
         productInfo(row) {
-            sessionStorage.setItem("productInfo", row.id);
+            sessionStorage.setItem('productInfo', row.id);
             this.$router.push({
-                name: "productInfo",
-                query: {productInfoId: row.id}
+                name: 'productInfo',
+                query: { productInfoId: row.id }
             });
         },
         // 获取一级类目
         getFirstItem() {
             this.itemList = [];
             this.$axios
-                .post(api.getCategoryList, {fatherid: 0, url: pApi.queryProductPageList})
+                .post(api.getCategoryList, { fatherid: 0, url: pApi.queryProductPageList })
                 .then(res => {
                     res.data.data.data.forEach((v, k) => {
-                        this.itemList.push({label: v.name, value: v.id, children: []});
+                        this.itemList.push({ label: v.name, value: v.id, children: [] });
                     });
                 })
                 .catch(err => {
@@ -415,14 +394,14 @@ export default {
                     index = k;
                 }
             });
-            let data = {};
+            const data = {};
             data.fatherid = val[0];
             data.url = pApi.queryProductPageList;
             this.$axios
                 .post(api.getCategoryList, data)
                 .then(res => {
                     res.data.data.data.forEach((v, k) => {
-                        this.itemList[index].children.push({label: v.name, value: v.id});
+                        this.itemList[index].children.push({ label: v.name, value: v.id });
                     });
                 })
                 .catch(err => {
@@ -436,8 +415,8 @@ export default {
         },
         // 批量操作
         batchOperate(status) {
-            let data = {};
-            data.ids = this.multipleSelection.join(",");
+            const data = {};
+            data.ids = this.multipleSelection.join(',');
             data.status = status;
             data.url = pApi.updateBatchProductStatus;
             this.$axios

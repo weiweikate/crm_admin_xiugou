@@ -85,7 +85,7 @@
                     </div>
                     <div class="item-row">
                         <div class="item">授权码：{{dealer.code}}</div>
-                        <div class="item">授权层级：{{dealer.levelName}}级</div>
+                        <div class="item">授权层级：{{dealer.levelName}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item">经验值：{{dealer.experience}}</div>
@@ -128,6 +128,19 @@
                 </div>
                 <div class="clearfix"></div>
             </div>
+            <div class="promote-inf-area line">
+                <div class="left">
+                    <div class="title">
+                        <h3>其他信息</h3>
+                    </div>
+                    <div class="item-row">
+                        <div class="item">
+                            <span>消费金额{{money}}元</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
             <!-- <div class="others-inf-area line">
                 <div class="left">
                     <div class="title">
@@ -147,35 +160,35 @@
                 </div>
                 <div class="clearfix"></div>
             </div> -->
-            <div class="user-tag-area">
-                <div class="title">
-                    <h3>用户标签</h3>
-                </div>
-                <div class="tags-area">
-                    <el-tag
-                        :key="tag.tagName"
-                        v-for="tag in dynamicTags"
-                        closable
-                        color="#fff"
-                        :disable-transitions="false"
-                        @close="handleClose(tag.id)">
-                        {{tag.tagName}}
-                    </el-tag>
-                    <div style="margin-top: 20px">
-                        <el-input
-                            class="input-new-tag"
-                            v-if="inputVisible"
-                            v-model="inputValue"
-                            ref="saveTagInput"
-                            @keyup.enter.native="handleInputConfirm"
-                            @blur="handleInputConfirm"
-                            placeholder="请输入标签文字"
-                        >
-                        </el-input>
-                        <el-button type="primary" class="button-new-tag" @click="showInput" v-if="dynamicTags.length<20">添加标签</el-button>
-                    </div>
-                </div>
-            </div>
+            <!--<div class="user-tag-area">-->
+                <!--<div class="title">-->
+                    <!--<h3>用户标签</h3>-->
+                <!--</div>-->
+                <!--<div class="tags-area">-->
+                    <!--<el-tag-->
+                        <!--:key="tag.tagName"-->
+                        <!--v-for="tag in dynamicTags"-->
+                        <!--closable-->
+                        <!--color="#fff"-->
+                        <!--:disable-transitions="false"-->
+                        <!--@close="handleClose(tag.id)">-->
+                        <!--{{tag.tagName}}-->
+                    <!--</el-tag>-->
+                    <!--<div style="margin-top: 20px">-->
+                        <!--<el-input-->
+                            <!--class="input-new-tag"-->
+                            <!--v-if="inputVisible"-->
+                            <!--v-model="inputValue"-->
+                            <!--ref="saveTagInput"-->
+                            <!--@keyup.enter.native="handleInputConfirm"-->
+                            <!--@blur="handleInputConfirm"-->
+                            <!--placeholder="请输入标签文字"-->
+                        <!--&gt;-->
+                        <!--</el-input>-->
+                        <!--<el-button type="primary" class="button-new-tag" @click="showInput" v-if="dynamicTags.length<20">添加标签</el-button>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
             <div style="margin:50px">
                 <el-button type="primary" @click="backToList">返回列表</el-button>
             </div>
@@ -215,7 +228,9 @@
                 // 参与的店铺
                 otherStore: '',
                 // 开设的店铺
-                myStore: ''
+                myStore: '',
+                // 消费金额
+                money:0
             };
         },
         activated() {
@@ -249,71 +264,6 @@
                 }).catch(err => {
                     console.log(err);
                 });
-            },
-            // 删除标签
-            handleClose(tag) {
-                this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
-                this.deleteTag(tag);
-            },
-            deleteTag(tag) {
-                const that = this;
-                const data = {
-                    id: tag
-                };
-                that.$axios
-                    .post(api.deleteTagDealer, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.loading = false;
-                            that.$message.success(res.data.msg);
-                            that.getDetail();
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.loading = false;
-                        }
-                    })
-                    .catch(err => {
-                        that.loading = false;
-                        console.log(err);
-                    });
-            },
-            // 添加标签
-            showInput() {
-                this.inputVisible = true;
-                this.$nextTick(_ => {
-                    this.$refs.saveTagInput.$refs.input.focus();
-                });
-            },
-            handleInputConfirm() {
-                const inputValue = this.inputValue;
-                if (inputValue) {
-                    for (const i in this.dynamicTags) {
-                        if (this.dynamicTags[i].tagName == inputValue) {
-                            this.$message.warning('标签名不能重复!');
-                            return;
-                        }
-                    }
-                    const data = {
-                        dealerId: this.id,
-                        name: inputValue
-                    };
-                    this.addTag(data, inputValue);
-                }
-                this.inputVisible = false;
-                this.inputValue = '';
-            },
-            addTag(data, inputValue) {
-                const that = this;
-                that.$axios
-                    .post(api.addTagDealer, data)
-                    .then(res => {
-                        that.loading = false;
-                        that.getDetail();
-                    })
-                    .catch(err => {
-                        that.loading = false;
-                        console.log(err);
-                    });
             },
             // 返回列表
             backToList() {

@@ -70,7 +70,7 @@
             };
         },
         created() {
-            this.getLevelList();
+            // this.getLevelList();
             this.dealer.level = this.dealer.levelId;
             this.oldId = this.dealer.id;
             this.dealer.dtype = this.dealer.dtype.toString();

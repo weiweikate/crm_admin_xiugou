@@ -121,7 +121,7 @@ export const updateFreightTemplateById = '/admin/freightTemplate/updateFreightTe
 // 删除运费模板接口
 export const deleteFreightTemplateById = '/admin/freightTemplate/deleteFreightTemplateById';
 
-//* *****************************************
+//* ******************************************************************************************************************
 // 运费模版
 // 查询列表
 export const queryFreightTemplateList = '/admin//product/freightTemplate/queryFreightTemplateList';

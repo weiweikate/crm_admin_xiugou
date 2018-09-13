@@ -61,185 +61,155 @@
     </div>
 </template>
 <script>
-import breadcrumb from "../../common/Breadcrumb";
-import icon from "../../common/ico";
-import * as api from '../../../api/api.js';
-import utils from '../../../utils/index.js'
+import breadcrumb from '@/components/common/Breadcrumb';
+import icon from '@/components/common/ico';
+import * as api from '@/api/api.js';
+import request from '@/http/http';
 import * as pApi from '../../../privilegeList/index.js';
 export default {
-  components: {
-    breadcrumb,
-    icon
-  },
-  data() {
-    return {
-      nav: ["权限管理", "管理员基础信息修改"],
-      isShowEditPwd: false,
-      code:true,
-      uploadImg:'',
-      name:'',
-      telephone:'',
-      deptmentName:'',
-      jobName:'',
-      immediateSuperior:'',
-      privilege:[],
-      face:'',
-      id:'',
-      form: {
-        phone: "",
-        code:'',
-        password:'',
-        repeatPwd:'',
-      },
-      rules: {
-          phone:[{ required: true, message: '请输入电话号码', trigger: 'blur' }],
-          code:[{ required: true, message: '请输入验证码', trigger: 'blur' }],
-          password:[{ required: true, message: '请输入密码', trigger: 'blur' }],
-      }
-    };
-  },
-  created() {
-    this.uploadImg = api.addImg;
-    this.id = localStorage.getItem('ms_userID');
-    this.$axios.post(api.findAdminUserbyId,{id:this.id})
-    .then(res=>{
-        if(res.data.code == 200){
-            this.name = res.data.data.name;
-            this.telephone = res.data.data.telephone;
-            this.deptmentName = res.data.data.deptmentName;
-            this.jobName = res.data.data.jobName;
-            this.immediateSuperior = res.data.data.immediateSuperior;
-            this.face = res.data.data.face;
-            this.privilege = [];
-            res.data.data.adminUserPrivilegeList.forEach((v,k)=>{
-                this.privilege.push(v.name);
-            })
-        }else{
-            this.$message.warning(res.data.msg);
-        }
-    })
-    .catch(err=>{
-        console.log(err)
-    })
-  },
-  activated() {
-    this.uploadImg = api.addImg;
-    this.id = localStorage.getItem('ms_userID');
-    this.$axios.post(api.findAdminUserbyId,{id:this.id})
-    .then(res=>{
-        if(res.data.code == 200){
-            this.name = res.data.data.name;
-            this.telephone = res.data.data.telephone;
-            this.deptmentName = res.data.data.deptmentName;
-            this.jobName = res.data.data.jobName;
-            this.immediateSuperior = res.data.data.immediateSuperior;
-            this.face = res.data.data.face;
-            this.privilege = [];
-            res.data.data.adminUserPrivilegeList.forEach((v,k)=>{
-                this.privilege.push(v.name);
-            })
-        }else{
-            this.$message.warning(res.data.msg);
-        }
-    })
-    .catch(err=>{
-        console.log(err)
-    })
-  },
-  methods:{
-    //  修改信息
-      editPwd(){
-          this.form = {};
-          this.isShowEditPwd = true;
-      },
-      confirmEditPwd(formName){
-          this.$refs[formName].validate((valid) => {
-          if (valid) {
-              if(this.form.password != this.form.repeatPwd){
-                  this.$message.warning('两次密码输入不一致');
-                  return;
-              }
-              let data = {};
-              data.id = this.id;
-              data.phone = this.form.phone;
-              data.password = this.form.password;
-              data.code = this.form.code;
-              data.url = pApi.updateAdminUserPassword;
-              this.$axios.post(api.updateAdminUserPassword,data)
-              .then(res=>{
-                  if(res.data.code == 200){
-                      this.$message.success(res.data.msg);
-                  }else{
-                      this.$message.warning(res.data.msg);
-                  }
-              })
-              .catch(err=>{
-                  console.log(res.data)
-              })
-            this.isShowEditPwd = false;
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
-
-    // 上传图片
-    uploadAvatar(res) {
-        let imageUrl = res.data.imageUrl;
-      if(res.code == 200){
-          let data = {};
-          data.id = this.id;
-          data.url = pApi.updateAdminUserFace;
-          data.face = res.data.imageUrl;
-          this.$axios.post(api.updateAdminUserFace,data)
-          .then(res=>{
-            if(res.data.code == 200){
-                this.$message.success(res.data.data);
-                this.face = imageUrl;
-            }else{
-                this.$message.warning(res.data.msg);
+    components: {
+        breadcrumb,
+        icon
+    },
+    data() {
+        return {
+            nav: ['权限管理', '管理员基础信息修改'],
+            isShowEditPwd: false,
+            code: true,
+            uploadImg: '',
+            name: '',
+            telephone: '',
+            deptmentName: '',
+            jobName: '',
+            immediateSuperior: '',
+            privilege: [],
+            face: '',
+            id: '',
+            form: {
+                phone: '',
+                code: '',
+                password: '',
+                repeatPwd: ''
+            },
+            rules: {
+                phone: [{ required: true, message: '请输入电话号码', trigger: 'blur' }],
+                code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+                password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
             }
-          })
-          .catch(err=>{
+        };
+    },
+    activated() {
+        this.uploadImg = api.addImg;
+        this.id = localStorage.getItem('ms_userID');
+        request.findAdminUserbyId({ id: this.id }).then(res => {
+            this.name = res.data.name;
+            this.telephone = res.data.telephone;
+            this.deptmentName = res.data.deptmentName;
+            this.jobName = res.data.jobName;
+            this.immediateSuperior = res.data.immediateSuperior;
+            this.face = res.data.face;
+            this.privilege = [];
+            res.data.adminUserPrivilegeList.forEach((v, k) => {
+                this.privilege.push(v.name);
+            });
+        }).catch(err => {
             console.log(err);
-          })
-      }else{
-        this.$message.warning(res.msg);
-      }
+        });
     },
-    //  获取验证码
-     getCode(){
-      if(this.form.phone == ''){
-        this.$message.warning('请输入手机号');
-        return;
-      }
-      let that = this;
-      this.code = false;
-      this.codeTime = 60;
-      let timer = setInterval(function(){
-          that.codeTime--;
-          if(that.codeTime <=0){
-              that.code = true;
-              clearInterval(timer);
-          }
-      },1000)
-      let data = {};
-      data.phone = this.form.phone;
-      data.code = 'ADMIN_FIRSTLOGIN_CODE';
-      this.$axios.post(api.sendUpdatePwdCode,data)
-      .then(res=>{
-        if(res.data.code == 200){
-          this.$message.success('已发送验证码');
-        }else{
-          this.$message.warning(res.data.msg);
+    methods: {
+    //  修改信息
+        editPwd() {
+            this.form = {};
+            this.isShowEditPwd = true;
+        },
+        confirmEditPwd(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    if (this.form.password != this.form.repeatPwd) {
+                        this.$message.warning('两次密码输入不一致');
+                        return;
+                    }
+                    const data = {};
+                    data.id = this.id;
+                    data.phone = this.form.phone;
+                    data.password = this.form.password;
+                    data.code = this.form.code;
+                    data.url = pApi.updateAdminUserPassword;
+                    this.$axios.post(api.updateAdminUserPassword, data)
+                        .then(res => {
+                            if (res.data.code == 200) {
+                                this.$message.success(res.data.msg);
+                            } else {
+                                this.$message.warning(res.data.msg);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(res.data);
+                        });
+                    this.isShowEditPwd = false;
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
+
+        // 上传图片
+        uploadAvatar(res) {
+            const imageUrl = res.data.imageUrl;
+            if (res.code == 200) {
+                const data = {};
+                data.id = this.id;
+                data.url = pApi.updateAdminUserFace;
+                data.face = res.data.imageUrl;
+                this.$axios.post(api.updateAdminUserFace, data)
+                    .then(res => {
+                        if (res.data.code == 200) {
+                            this.$message.success(res.data.data);
+                            this.face = imageUrl;
+                        } else {
+                            this.$message.warning(res.data.msg);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            } else {
+                this.$message.warning(res.msg);
+            }
+        },
+        //  获取验证码
+        getCode() {
+            if (this.form.phone == '') {
+                this.$message.warning('请输入手机号');
+                return;
+            }
+            const that = this;
+            this.code = false;
+            this.codeTime = 60;
+            const timer = setInterval(function() {
+                that.codeTime--;
+                if (that.codeTime <= 0) {
+                    that.code = true;
+                    clearInterval(timer);
+                }
+            }, 1000);
+            const data = {};
+            data.phone = this.form.phone;
+            data.code = 'ADMIN_FIRSTLOGIN_CODE';
+            this.$axios.post(api.sendUpdatePwdCode, data)
+                .then(res => {
+                    if (res.data.code == 200) {
+                        this.$message.success('已发送验证码');
+                    } else {
+                        this.$message.warning(res.data.msg);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         }
-      })
-      .catch(err=>{
-        console.log(err);
-      })
-    },
-  }
+    }
 };
 </script>
 <style lang="less">

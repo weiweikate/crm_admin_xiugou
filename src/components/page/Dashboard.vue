@@ -218,10 +218,10 @@ export default {
     },
 
     activated() {
-        this.getDashboardInfo();
+        // this.getDashboardInfo();
     },
     mounted() {
-        this.getDashboardInfo();
+        // this.getDashboardInfo();
     },
     methods: {
     //  获取首页数据
