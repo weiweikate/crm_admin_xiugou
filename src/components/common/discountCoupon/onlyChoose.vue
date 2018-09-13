@@ -16,7 +16,7 @@
             <div class="check-area">
                 <div class="title">二级类目</div>
                 <div v-if="second.length>0" class="data-area">
-                    <el-radio-group v-model="secCategoryName">
+                    <el-radio-group v-model="secondCategoryName">
                         <div v-for="(item,index) in second" :key="index">
                             <el-radio @change="getThird(item,true)"
                                       :label="item.name" :value="item.id">
@@ -31,7 +31,7 @@
             <div class="check-area">
                 <div class="title">三级类目</div>
                 <div v-if="third.length>0" class="data-area">
-                    <el-radio-group v-model="secCategoryName">
+                    <el-radio-group v-model="thirdCategoryName">
                         <div v-for="(item,index) in third" :key="index">
                             <el-radio @change="getProductList(item,true)"
                                       :label="item.name" :value="item.id">
@@ -115,11 +115,11 @@
                 third: [], // 二级类目
                 productList: [], // 产品列表
                 firstCategoryId: '', // 一级类目id
-                secCategoryId: '', // 二级类目id
+                secondCategoryId: '', // 二级类目id
                 thirdCategoryId: '', // 三级类目id
                 productId: '', // 产品id
                 firstCategoryName: '', // 一级类目名称
-                secCategoryName: '', // 二级类目名称
+                secondCategoryName: '', // 二级类目名称
                 thirdCategoryName: '', // 三级类目名称
                 productName: '', // 产品名称
                 loading: false, // 数据加载层
@@ -144,16 +144,16 @@
                     this.firstCategoryId = '';
                     this.firstCategoryNames = '';
                 }
-                if (params.secCategoryIds) {
-                    this.secCategoryId = params.secCategoryIds;
-                    this.secCategoryName = params.secCategoryNames;
+                if (params.secondCategoryIds) {
+                    this.secondCategoryId = params.secondCategoryIds;
+                    this.secondCategoryName = params.secondCategoryNames;
                     this.secondClassifyTag = {
-                        id: this.secCategoryId,
-                        name: this.secCategoryName
+                        id: this.secondCategoryId,
+                        name: this.secondCategoryName
                     };
                 } else {
-                    this.secCategoryId = '';
-                    this.secCategoryName = '';
+                    this.secondCategoryId = '';
+                    this.secondCategoryName = '';
                 }
                 if (params.thirdCategoryIds) {
                     this.thirdCategoryId = params.thirdCategoryIds;
@@ -200,11 +200,12 @@
                     page: 1,
                     pageSize: 10000,
                     level: 1,
-                    fatherId: 0
+                    fatherId: 0,
+                    pstatus: 2
                 };
                 // 获取一级类目并回显选中状态
                 request.queryProductCategoryList(data).then(res => {
-                    that.first = res.data;
+                    that.first = res.data.data;
                     that.loading = false;
                 }).catch(error => {
                     console.log(error);
@@ -217,7 +218,7 @@
                 const that = this;
                 if (status) {
                     that.firstCategoryName = item.name;
-                    that.firstClassifyTag = [];
+                    that.firstClassifyTag = item;
                     that.second = [];
                     that.third = [];
                     that.productList = [];
@@ -230,12 +231,13 @@
                     fatherId: item.id,
                     page: 1,
                     pageSize: 10000,
-                    level: 2
+                    level: 2,
+                    pstatus: 2
                 };
                 that.loading = false;
                 // 获取二级类目并回显选中状态
                 request.queryProductCategoryList(data).then(res => {
-                    that.second = res.data;
+                    that.second = res.data.data;
                 }).catch(err => {
                     console.log(err);
                     that.loading = false;
@@ -247,26 +249,25 @@
             getThird(item, status) {
                 const that = this;
                 if (status) {
-                    that.secCategoryName = item.name;
-                    that.firstClassifyTag = [];
-                    that.second = [];
+                    that.secondCategoryName = item.name;
+                    that.secondClassifyTag = item;
                     that.third = [];
                     that.productList = [];
-                    that.secondClassifyTag = [];
                     that.thirdClassifyTag = [];
                     that.productTag = [];
                 }
-                that.secCategoryId = item.id;
+                that.secondCategoryId = item.id;
                 const data = {
                     fatherId: item.id,
                     page: 1,
                     pageSize: 10000,
-                    level: 3
+                    level: 3,
+                    pstatus: 2
                 };
                 that.loading = false;
                 // 获取二级类目并回显选中状态
                 request.queryProductCategoryList(data).then(res => {
-                    that.third = res.data;
+                    that.third = res.data.data;
                 }).catch(err => {
                     console.log(err);
                     that.loading = false;
@@ -288,7 +289,7 @@
                     page: 1,
                     pageSize: 10000,
                     firstCategoryId: that.firstCategoryId,
-                    secCategoryId: that.secCategoryId,
+                    secondCategoryId: that.secondCategoryId,
                     thirdCategoryId: that.thirdCategoryId
                 };
                 that.loading = false;
@@ -321,16 +322,16 @@
                     this.deleteTags(3);
                     this.deleteTags(4);
                 } else if (num === 2) {
-                    this.secCategoryName = '';
+                    this.secondCategoryName = '';
                     this.secondClassifyTag = {};
                     this.secondClassifyTag = {};
                     this.productList = [];
                     this.deleteTags(3);
                     this.deleteTags(4);
                 } else if (num === 3) {
-                    this.secCategoryName = '';
-                    this.secondClassifyTag = {};
-                    this.secondClassifyTag = {};
+                    this.thirdCategoryName = '';
+                    this.thirdClassifyTag = {};
+                    this.thirdClassifyTag = {};
                     this.productList = [];
                     this.deleteTags(4);
                 } else {
@@ -342,7 +343,7 @@
             transValue() {
                 const productList = {
                     firstCategoryIds: this.firstCategoryId,
-                    secCategoryIds: this.secCategoryId,
+                    secondCategoryIds: this.secondCategoryId,
                     thirdCategoryIds: this.thirdCategoryId,
                     products: this.productId
                 };

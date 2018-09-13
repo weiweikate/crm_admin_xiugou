@@ -271,7 +271,7 @@ export const queryDictionaryDetailsType = ['/config/dictionary/queryDictionaryTy
 // 反馈列表
 export const queryFeedbackList = '/userFeedback/queryFeedbackList';
 // 问题详情
-export const findFeedbackById = '/userFeedback/findFeedbackById';
+export const findFeedbackById = ['/userFeedback/findFeedbackDetailById', { methods: 'get' }];
 // 修改反馈详情
-export const updateFeedback = '/feedback/updateFeedback';
+export const updateFeedback = '/userFeedback/updateDetailById';
 

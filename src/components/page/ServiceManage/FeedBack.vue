@@ -12,7 +12,7 @@
                     <el-form-item prop="type" label="问题类型" label-width="120">
                         <el-select v-model="form.type" placeholder="请选择">
                             <el-option label="请选择" value=""></el-option>
-                            <el-option v-for="(v,k) in typeList" :key="k" :label="v.dValue" :value="v.dKey"></el-option>
+                            <el-option v-for="(v,k) in typeList" :key="k" :label="v.detailId" :value="v.value"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item prop="date" label="时间" label-width="120">
@@ -64,7 +64,7 @@
                             {{scope.row.createTime|formatDate}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="typeKey" label="问题类型" width="100" align="center">
+                    <el-table-column prop="problemName" label="问题类型" width="100" align="center">
                         <!--<template slot-scope="scope">-->
                             <!--<template v-if="scope.row.typeKey == 1">账户问题</template>-->
                             <!--<template v-if="scope.row.typeKey == 2">营销问题</template>-->
@@ -107,7 +107,6 @@
     import icon from '@/components/common/ico.vue';
     import moment from 'moment';
     import utils from '@/utils/index.js';
-    import * as pApi from '@/privilegeList/index.js';
     import { myMixinTable, queryDictonary } from '@/JS/commom';
     import request from '@/http/http.js';
 
@@ -148,7 +147,7 @@
             // 获取列表
             async getList(val) {
                 const that = this;
-                await this.queryDictonary(5);
+                await this.queryDictonary('WTLX');
                 that.typeList = that.tmpAxiosData;
                 that.tableData = [];
                 const data = {
@@ -166,7 +165,6 @@
                 request.queryFeedbackList(data).then(res => {
                     that.tableLoading = false;
                     res.data.data.forEach(function(v, k) {
-                        // v.typeKey = that.typeList[v.typeKey - 1].dValue;
                         that.tableData.push(v);
                     });
                     that.page.totalPage = res.data.totalNum;

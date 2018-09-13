@@ -11,15 +11,15 @@
                         联系电话：{{detail.phone}}
                     </div>
                     <div class="detail-item">
-                        用户层级：{{detail.remark}}
+                        用户层级：{{detail.levelName}}
                     </div>
                     <div class="detail-item">
                         所在区域：{{detail.address}}
                     </div>
                     <div class="detail-item">
                         反馈问题类型：
-                        <el-select placeholder="请选择" v-model="detail.type_key">
-                            <el-option v-for="(v,k) in typeList" :key="k" :label="v.dValue" :value="v.dKey"></el-option>
+                        <el-select placeholder="请选择" v-model="detail.typeKey">
+                            <el-option v-for="(v,k) in typeList" :key="k" :label="v.detailId" :value="v.value"></el-option>
                         </el-select>
                     </div>
                     <div class="detail-title">问题描述：</div>
@@ -28,11 +28,11 @@
                     </div>
                     <div class="detail-title">图片：</div>
                     <div>
-                        <img v-if="detail.original_img" :src="detail.original_img" alt="">
+                        <img v-for="(item,index) in detail.imgList" :key="index" :src="item.originalImg" alt="">
                     </div>
                     <div class="detail-title">回复：</div>
                     <div>
-                        <el-input type="textarea" v-model="detail.reply_content"></el-input>
+                        <el-input type="textarea" v-model="detail.replyContent"></el-input>
                     </div>
                     <div class="detail-item">
                         处理人：{{username}}
@@ -48,17 +48,17 @@
                         <div class="item" style="width: 15%">反馈人：{{item.nickname}}</div>
                         <div class="item" style="width: 18%">反馈问题类型：
                         <template>
-                            <template>{{item.dValue}}</template>
+                            <template>{{item.problemName}}</template>
                         </template>
                         </div>
-                        <div class="item" style="width: 20%">反馈时间：{{item.create_time|formatDate}}</div>
+                        <div class="item" style="width: 20%">反馈时间：{{item.createTime|formatDate}}</div>
                         <div class="item" style="width: 10%">状态：
                             <template>
                                 <template v-if="item.status == 1">待处理</template>
                                 <template v-if="item.status == 2">已处理</template>
                             </template>
                         </div>
-                        <div class="item" style="width: 20%">处理时间：{{item.reply_time|formatDate}}</div>
+                        <div class="item" style="width: 20%">处理时间：{{item.replyTime|formatDate}}</div>
                         <div class="item" style="width: 10%">处理人员：{{item.adminName}}</div>
                         <div class="item" style="width: 4%"><i :class="item.checked?'el-icon-caret-bottom':'el-icon-caret-top'"></i></div>
                     </div>
@@ -73,7 +73,6 @@
     import icon from '@/components/common/ico.vue';
     import moment from 'moment';
     import utils from '@/utils/index.js';
-    import * as pApi from '@/privilegeList/index.js';
     import { queryDictonary } from '@/JS/commom';
     import request from '@/http/http.js';
 
@@ -95,7 +94,7 @@
                 username: '',
                 userId: '',
                 item: {
-                    type_key: '1'
+                    typeKey: '1'
                 },
                 typeKey: '',
                 replyContent: ''
@@ -113,25 +112,17 @@
             // 获取详情
             async getDetail() {
                 const that = this;
-                await this.queryDictonary(5);
+                await this.queryDictonary('WTLX');
                 that.typeList = that.tmpAxiosData;
                 const data = {
                     id: that.id
                 };
                 that.loading = true;
                 request.findFeedbackById(data).then(res => {
-                    const detailInf = res.data.data.detail_record;
-                    const temp = detailInf[0];
-                    temp.checked = true;
-                    temp.type_key = temp.type_key.toString();
-                    that.detail = Object.assign(temp);
-                    for (const i in res.data.data.history_record) {
-                        const item = res.data.data.history_record[i];
-                        item.type_key = item.type_key.toString();
-                        item.checked = false;
-                        item.dValue = that.typeList[item.type_key];
-                    }
-                    that.list = res.data.data.history_record;
+                    that.detail = res.data;
+                    that.detail.checked = true;
+                    that.detail.typeKey = that.detail.typeKey.toString();
+                    that.list = res.data.historyList;
                     that.loading = false;
                 }).catch(error => {
                     that.loading = false;
@@ -153,13 +144,13 @@
                     id: that.id
                 };
                 if (status == 'reply') { // 回复
-                    params.replyContent = that.detail.reply_content;
+                    params.replyContent = that.detail.replyContent;
                     if (!params.replyContent) {
                         that.$message.warning('请输入回复内容!');
                         return;
                     }
                 } else {
-                    params.typeKey = that.detail.type_key;
+                    params.typeKey = that.detail.typeKey;
                 }
                 that.btnLoading = true;
                 request.updateFeedback(params).then(res => {
