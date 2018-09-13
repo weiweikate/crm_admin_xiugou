@@ -6,7 +6,7 @@ const path = require('path');
 
 // let baseURL = "http://172.16.10.69";
 
-const baseURL = 'http://172.16.10.100/admin/';
+const baseURL = 'http://172.16.10.100';
 // const baseURL = 'http://172.16.10.12';
 // let baseURL = "http://172.16.10.56";
 // let baseURL = "http://172.16.10.253";
@@ -18,9 +18,9 @@ const baseURL = 'http://172.16.10.100/admin/';
 // const baseURL = 'https://test.dnvhot.tech';
 
 // 测试地址不需要端口号
-const url_1 = baseURL + ':8190';
-const url_2 = baseURL + ':8180';
-const url_4 = baseURL + ':8103';
+const url_1 = baseURL + ':8190/admin/';
+const url_2 = baseURL + ':8180/admin/';
+const url_4 = baseURL + ':8103/admin/';
 // const url_1 = baseURL;
 // const url_3 = baseURL;
 // const url_4 = baseURL;
