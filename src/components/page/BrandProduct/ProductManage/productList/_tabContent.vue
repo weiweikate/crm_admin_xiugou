@@ -4,7 +4,7 @@
         <div class="search-pane">
             <el-form :model="form" ref='form' inline label-width="100px">
                 <el-form-item prop="name" label="产品名称">
-                    <el-input v-model.trim="form.name" placeholder="请输入产品名称"></el-input>
+                    <el-input v-model.trim="form.productName" placeholder="请输入产品名称"></el-input>
                 </el-form-item>
                 <el-form-item prop="prodCode" label="产品ID号">
                     <el-input v-model.trim="form.prodCode" placeholder="请输入产品ID"></el-input>
@@ -17,9 +17,9 @@
                                  @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
                 </el-form-item>
                 <el-form-item prop="saleMin" label="总销量">
-                    <el-input style="width:95px" v-model.trim="form.saleMin"></el-input>
+                    <el-input style="width:95px" v-model.trim="form.salesMin"></el-input>
                     -
-                    <el-input style="width:95px" v-model.trim="form.saleMax"></el-input>
+                    <el-input style="width:95px" v-model.trim="form.salesMax"></el-input>
                 </el-form-item>
                 <el-form-item prop="priceMin" label="价格">
                     <el-input style="width:95px" v-model.trim="form.priceMin">
@@ -142,9 +142,7 @@
 </template>
 
 <script>
-import * as api from '@/api/BrandProduct/ProductMange/index.js';
-import * as pApi from '@/privilegeList/BrandProduct/ProductMange/index.js';
-import utils from '@/utils/index.js';
+import request from '@/http/http';
 import { myMixinTable } from '@/JS/commom';
 
 export default {
@@ -163,13 +161,14 @@ export default {
             },
             status: '',
             form: {
-                name: '',
+                productName: '',
                 prodCode: '',
                 barCode: '',
                 firstCategoryId: '',
                 secCategoryId: '',
-                saleMin: '',
-                saleMax: '',
+                thirdCategoryId: '',
+                salesMin: '',
+                salesMax: '',
                 priceMin: '',
                 priceMax: ''
             },
@@ -219,7 +218,7 @@ export default {
         } else if (n === 'downProduct') {
             this.status = '5';
         } else if (n === 'auditProduct') {
-            this.status = '7';
+            this.status = '1';
         } else if (n === 'modifyProduct') {
             this.status = '3';
         }
@@ -232,8 +231,7 @@ export default {
             let data = {};
             data = this.form;
             data.page = val;
-            data.status = this.status;
-            data.url = pApi.queryProductPageList;
+            data.statusParam = this.status;
             if (this.flag) {
                 if (this.flag == 0) {
                     data.supplierId = this.supplierId;
@@ -257,28 +255,21 @@ export default {
                 data.supplierId = '';
                 data.brandId = '';
             }
-            this.page.currentPage = val;
             this.tableLoading = true;
-
-            this.$axios
-                .post(api.queryProductPageList, data)
-                .then(res => {
-                    this.tableData = [];
-                    this.tableData = res.data.data.data;
-                    this.page.totalPage = res.data.data.resultCount;
-                    this.tableLoading = false;
-                })
-                .catch(err => {
-                    console.log(err);
-                    this.tableLoading = false;
-                });
+            request.queryProductPageList({ productPageParamVO: data }).then(res => {
+                this.tableLoading = false;
+            }).catch(err => {
+                console.log(err);
+                this.tableLoading = false;
+            });
         },
         //   重置表单
         resetForm(formName) {
-            this.form.saleMax = '';
+            this.form.salesMax = '';
             this.form.priceMax = '';
             this.form.firstCategoryId = '';
             this.form.secCategoryId = '';
+            this.form.thirdCategoryId = '';
             this.defItem = [];
             this.$refs[formName].resetFields();
             this.getList(1);
@@ -375,50 +366,70 @@ export default {
         // 获取一级类目
         getFirstItem() {
             this.itemList = [];
-            this.$axios
-                .post(api.getCategoryList, { fatherid: 0, url: pApi.queryProductPageList })
-                .then(res => {
-                    res.data.data.data.forEach((v, k) => {
-                        this.itemList.push({ label: v.name, value: v.id, children: [] });
-                    });
-                })
-                .catch(err => {
-                    console.log(err);
+            request.queryProductCategoryList({ fatherId: 0, level: 1, pageSize: 100000 }).then(res => {
+                res.data.data.forEach((v, k) => {
+                    this.itemList.push({ label: v.name, value: v.id, children: [] });
                 });
+            }).catch(err => {
+                console.log(err);
+            });
         },
-        // 获取二级类目
+        // 获取二三级类目
         handleItemChange(val) {
             let index = 0;
-            this.itemList.forEach((v, k) => {
-                if (v.value == val[0]) {
-                    index = k;
-                }
-            });
             const data = {};
-            data.fatherid = val[0];
-            data.url = pApi.queryProductPageList;
-            this.$axios
-                .post(api.getCategoryList, data)
-                .then(res => {
-                    res.data.data.data.forEach((v, k) => {
-                        this.itemList[index].children.push({ label: v.name, value: v.id });
+            data.pageSize = 100000;
+            if (val[1]) {
+                let tmpIndex = 0;
+                this.itemList.forEach((v, k) => {
+                    if (v.value == val[0]) {
+                        tmpIndex = k;
+                        v.children.forEach((value, key) => {
+                            if (value.value == val[1]) {
+                                index = key;
+                            }
+                        });
+                    }
+                });
+                data.fatherId = val[1];
+                data.level = 3;
+                request.queryProductCategoryList(data).then(res => {
+                    this.itemList[tmpIndex].children[index].children = [];
+                    res.data.data.forEach((v, k) => {
+                        this.itemList[tmpIndex].children[index].children.push({ label: v.name, value: v.id });
                     });
-                })
-                .catch(err => {
+                }).catch(err => {
                     console.log(err);
                 });
+            } else {
+                this.itemList.forEach((v, k) => {
+                    if (v.value == val[0]) {
+                        index = k;
+                    }
+                });
+                data.fatherId = val[0];
+                data.level = 2;
+                request.queryProductCategoryList(data).then(res => {
+                    this.itemList[index].children = [];
+                    res.data.data.forEach((v, k) => {
+                        this.itemList[index].children.push({ label: v.name, value: v.id, children: [] });
+                    });
+                }).catch(err => {
+                    console.log(err);
+                });
+            }
         },
-        // 获取一二级类目id
+        // 获取一二三级类目id
         getProItemId(val) {
             this.form.firstCategoryId = val[0];
             this.form.secCategoryId = val[1];
+            this.form.thirdCategoryId = val[2];
         },
         // 批量操作
         batchOperate(status) {
             const data = {};
             data.ids = this.multipleSelection.join(',');
             data.status = status;
-            data.url = pApi.updateBatchProductStatus;
             this.$axios
                 .post(api.updateBatchProductStatus, data)
                 .then(res => {

@@ -8,7 +8,7 @@ axios.defaults.baseURL = process.env.API_ROOT;
 
 axios.defaults.timeout = 20000;
 
-axios.defaults.headers.post['Content-Type'] = 'application/json';
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 
 var loading;
 axios.interceptors.request.use(config => {

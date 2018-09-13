@@ -59,8 +59,6 @@ export const couponControl = '/admin/giftBag/couponControl';
 
 // 根据二级分类查询参数
 export const infoParmByCategoryIdList = '/admin/giftBag/queryGiftBagInfoParamByCategoryIdList';
-// 获取产品列表
-export const queryProductPageList = '/admin/product/queryProductPageList';
 // 根据类目查询品牌列表
 export const queryCategoryBrandCid = 'admin/categoryBrand/queryCategoryBrandCid';
 // 添加产品
@@ -159,4 +157,5 @@ export const queryProductCategoryParamList = ['/admin/product/productCategoryPar
 export const addProductCategoryParam = '/admin/product/productCategoryParam/addProductCategoryParam';
 // 删除产品详情参数
 export const deleteProductCategoryParam = ['/admin/product/productCategoryParam/deleteProductCategoryParam', { methods: 'get' }];
+export const queryProductPageList = ['/admin/product/product/queryProductPageList', { methods: 'post' }]; // 查询产品列表
 

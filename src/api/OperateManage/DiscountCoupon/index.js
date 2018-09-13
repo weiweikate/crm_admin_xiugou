@@ -23,8 +23,6 @@ export const getDealerLevelList='/admin/dealerLevel/getList';
 export const getFirstList='/admin/productCategory/queryProductCategoryName';
 //获取二级类目
 export const getSecondList='/admin/productCategory/queryProductCategoryFatherid';
-// 获取产品列表
-export const queryProductPageList = '/admin/product/queryProductPageList';
 
 //模板列表
 export const getAllDiscountCouponTemplate='/admin/discountCouponTemplate/getAllDiscountCouponTemplate';

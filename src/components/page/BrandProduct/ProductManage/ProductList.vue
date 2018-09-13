@@ -15,6 +15,9 @@
                 <el-tab-pane label="审核产品" name="auditProduct">
                     <v-tab-content v-if="activeName == 'auditProduct'" :name='activeName'></v-tab-content>
                 </el-tab-pane>
+                <!--<el-tab-pane label="推荐产品" name="auditProduct">-->
+                    <!--<v-tab-content v-if="activeName == 'auditProduct'" :name='activeName'></v-tab-content>-->
+                <!--</el-tab-pane>-->
                 <!-- <el-tab-pane label="待修改产品" name="modifyProduct"><v-tab-content v-if="activeName == 'modifyProduct'" :name='activeName'></v-tab-content></el-tab-pane> -->
             </el-tabs>
         </el-card>
@@ -23,8 +26,8 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import vTabContent from "./productList/_tabContent";
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import vTabContent from './productList/_tabContent';
 
     export default {
         components: {
@@ -34,21 +37,21 @@
 
         data() {
             return {
-                nav: ["品牌产品管理", "产品管理"],
-                activeName: "allProduct",
+                nav: ['品牌产品管理', '产品管理'],
+                activeName: 'allProduct'
             };
         },
-        activated(){
+        activated() {
             this.flag = this.$route.query.flag || sessionStorage.getItem('flag');
-            if(this.flag){
-                this.activeName = "upProduct";
-            }else{
-                this.activeName = "allProduct";
+            if (this.flag) {
+                this.activeName = 'upProduct';
+            } else {
+                this.activeName = 'allProduct';
             }
         },
-        beforeRouteLeave (to, from, next) {
+        beforeRouteLeave(to, from, next) {
             sessionStorage.removeItem('flag');
-            next()
+            next();
         },
         methods: {
             handleClick(tab) {
