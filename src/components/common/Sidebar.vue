@@ -169,10 +169,10 @@
                                 index: 'brandManage',
                                 title: '品牌管理'
                             },
-                            // {
-                            //     index: "productList",
-                            //     title: "产品管理"
-                            // },
+                            {
+                                index: 'productList',
+                                title: '产品管理'
+                            },
                             {
                                 index: 'shippingTemplate',
                                 title: '运费模板'

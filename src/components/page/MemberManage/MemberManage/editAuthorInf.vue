@@ -9,7 +9,6 @@
                     </el-form-item>
                     <el-form-item label="授权层级" class="special">
                         <el-select v-model="dealer.level" placeholder="全部层级">
-                            <el-option label="全部层级" value=""></el-option>
                             <el-option :label="item.name" :value="item.id" v-for="(item,index) in levelList"
                                        :key="index"></el-option>
                         </el-select>
@@ -45,8 +44,7 @@
     </div>
 </template>
 <script>
-    import icon from '../../../common/ico';
-    import * as api from '../../../../api/api';
+    import icon from '@/components/common/ico';
     import request from '@/http/http';
     export default {
         components: {
@@ -78,25 +76,17 @@
         methods: {
             // 获取用户层级列表
             getLevelList() {
-                const that = this;
                 const data = {};
-                that.$axios
-                    .post(api.getDealerLevelList, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.levelList = res.data.data;
-                            for (const i in res.data.data) {
-                                if (that.dealer.level_id == res.data.data[i].id) {
-                                    that.num = i;
-                                }
-                            }
-                        } else {
-                            that.$message.warning(res.data.msg);
+                request.getUserLevelList(data).then(res => {
+                    this.levelList = res.data;
+                    for (const i in res.data) {
+                        if (this.dealer.levelId === res.data[i].id) {
+                            this.num = i;
                         }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             //  取消弹窗
             closeToask() {
@@ -115,28 +105,11 @@
                     this.btnLoading = false;
                     this.$message.success(res.msg);
                     this.$emit('msg', false);
-                    console.log(res);
                 }).catch(err => {
                     this.$emit('msg', false);
                     this.btnLoading = false;
                     console.log(err);
                 });
-                // that.$axios
-                //     .post(api.updateDealerdealerById, data)
-                //     .then(res => {
-                //         that.btnLoading = false;
-                //         if (res.data.code == 200) {
-                //             that.$message.success('修改成功');
-                //             that.$emit('msg', false);
-                //         } else {
-                //             that.$message.warning(res.data.msg);
-                //             that.$emit('msg', false);
-                //         }
-                //     })
-                //     .catch(err => {
-                //         that.tableLoading = false;
-                //         that.$emit('msg', false);
-                //     });
             },
             sureUpdate() {
                 if (this.oldId != this.dealer.id) {
