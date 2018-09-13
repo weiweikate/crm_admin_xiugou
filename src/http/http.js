@@ -21,10 +21,10 @@ try {
         let url = '';
         let methods = 'post';
         if (typeof value === 'string') {
-            url = value;
+            url = `/admin${value}`;
             methods = 'post';
         } else if (value.length) {
-            url = value[0];
+            url = `/admin${value[0]}`;
             methods = value[1]['methods'];
         }
         // 接口方法
