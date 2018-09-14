@@ -158,4 +158,5 @@ export const addProductCategoryParam = '/product/productCategoryParam/addProduct
 // 删除产品详情参数
 export const deleteProductCategoryParam = ['/product/productCategoryParam/deleteProductCategoryParam', { methods: 'get' }];
 export const queryProductPageList = ['/product/product/queryProductPageList', { methods: 'post' }]; // 查询产品列表
+export const findProductBrandListNoStop = ['/product/productBrand/findProductBrandList', { methods: 'get' }]; // 查询品牌列表，不含停用
 

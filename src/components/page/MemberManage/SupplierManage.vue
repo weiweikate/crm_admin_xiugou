@@ -28,8 +28,8 @@
                     <el-table-column prop="name" label="供应商名称" align="center"></el-table-column>
                     <el-table-column label="供应商类型" width="100" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.itype==1">产品供应商</template>
-                            <template v-if="scope.row.itype==2">服务供应商</template>
+                            <template v-if="scope.row.type==1">产品供应商</template>
+                            <template v-if="scope.row.type==2">服务供应商</template>
                         </template>
                     </el-table-column>
                     <el-table-column prop="mobile" label="手机号" align="center"></el-table-column>
@@ -38,7 +38,7 @@
                         <template slot-scope="scope">
                             <template v-if="scope.row.country==2">海外</template>
                             <template v-else>
-                                {{scope.row.province_name}}{{scope.row.city_name}}{{scope.row.area_name}}
+                                {{scope.row.provinceName}}{{scope.row.cityName}}{{scope.row.areaName}}
                             </template>
                         </template>
                     </el-table-column>
@@ -158,40 +158,27 @@
                 data.page = val;
                 const addrss = that.address;
                 if (addrss && addrss[0]) {
-                    data.provinceId = addrss[0];
+                    data.provinceCode = addrss[0];
                     if (addrss[1]) {
-                        data.cityId = addrss[1];
+                        data.cityCode = addrss[1];
                     }
                     if (addrss[2]) {
-                        data.areaId = addrss[2];
+                        data.areaCode = addrss[2];
                     }
                 } else {
-                    data.provinceId = '';
-                    data.cityId = '';
-                    data.areaId = '';
+                    data.provinceCode = '';
+                    data.cityCode = '';
+                    data.areaCode = '';
                 }
                 that.tableLoading = true;
                 request.queryProductSupplierList(data).then(res => {
-                    console.log(res);
+                    that.tableLoading = false;
+                    that.tableData = res.data.data;
+                    that.page.totalPage = res.data.totalNum;
                 }).catch(err => {
+                    that.tableLoading = false;
                     console.log(err);
                 });
-                // that.$axios
-                //     .post(api.querySupplierPageList, data)
-                //     .then(res => {
-                //         if (res.data.code == 200) {
-                //             that.tableLoading = false;
-                //             that.tableData = res.data.data.data;
-                //             that.page.totalPage = res.data.data.resultCount;
-                //         } else {
-                //             that.$message.warning(res.data.msg);
-                //             that.tableLoading = false;
-                //         }
-                //     })
-                //     .catch(err => {
-                //         console.log(err);
-                //         that.tableLoading = false;
-                //     });
             },
             // 详情
             detailItem(index, row) {
@@ -228,25 +215,17 @@
                 } else {
                     data.status = 2;
                 }
-                data.url = pApi.updateSupplierDeleteById;
                 that.btnLoading = true;
-                that.$axios
-                    .post(api.updateSupplierDeleteById, data)
-                    .then(res => {
-                        that.btnLoading = false;
-                        if (res.data.code == 200) {
-                            that.getList(that.page.currentPage);
-                            that.tipsMask = false;
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.tipsMask = false;
-                            that.btnLoading = false;
-                        }
-                    })
-                    .catch(err => {
-                        that.btnLoading = false;
-                        that.tipsMask = false;
-                    });
+                request.stopProductSupplier(data).then(res => {
+                    console.log(res);
+                    that.getList(that.page.currentPage);
+                    that.btnLoading = false;
+                    that.tipsMask = false;
+                }).catch(err => {
+                    console.log(err);
+                    that.btnLoading = false;
+                    that.tipsMask = false;
+                });
             },
             // 添加供应商
             addSupplier() {

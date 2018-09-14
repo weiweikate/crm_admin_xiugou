@@ -7,14 +7,14 @@
                     <el-form-item prop="name" label="供应商名称">
                         <el-input placeholder="请输入供应商名称" v-model="form.name"></el-input>
                     </el-form-item>
-                    <el-form-item prop="name" label="供应商类型" placeholder="请选择">
-                        <el-select v-model="form.itype">
+                    <el-form-item prop="type" label="供应商类型" placeholder="请选择">
+                        <el-select v-model="form.type">
                             <el-option label="产品供应商" value="1">产品供应商</el-option>
                             <el-option label="服务供应商" value="2">服务供应商</el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item prop="name" label="供应商姓名">
-                        <el-input placeholder="请输入供应商姓名" v-model="form.username"></el-input>
+                    <el-form-item prop="userName" label="供应商姓名">
+                        <el-input placeholder="请输入供应商姓名" v-model="form.userName"></el-input>
                     </el-form-item>
                     <el-form-item prop="name" label="联系方式" class="phone-area">
                         <el-input class="small-inp" v-model="first"></el-input>
@@ -35,15 +35,14 @@
                             <el-input placeholder="请输入详细地址" v-model="form.address"></el-input>
                         </div>
                     </el-form-item>
-                    <el-form-item class="classify-area" prop="productcIds" label="供应产品品类品牌">
-                        <v-choosearea @productcIds="productcIds" v-model="form.list" :detailData="detailData"
-                                      :addOrUp="isUp?'update':''" :isSearch='true' :isSupplider='true'></v-choosearea>
-                        <div class="clearfix"></div>
-                        <div class="intent">
-                            <v-choosebrand @brandids="brandids" v-model="form.brandids" :secIds='secIds' :detailData="detailData"
-                                           :addOrUp="isUp?'update':''"></v-choosebrand>
-                        </div>
-
+                    <el-form-item prop="brandIds" label="供应产品品类品牌">
+                        <el-transfer
+                            :titles="['品牌列表','已选择品牌']"
+                            filterable
+                            filter-placeholder="请输入品牌名称"
+                            v-model="brandIds"
+                            :data="brandList">
+                        </el-transfer>
                     </el-form-item>
                     <el-form-item label="供应商账号">
                         <el-input placeholder="请输入银行名称" v-model="form.bankName"></el-input>
@@ -55,7 +54,9 @@
                     <el-form-item prop="bankUsername" label="持卡人">
                         <el-input placeholder="请输入持卡人姓名" v-model="form.bankUsername"></el-input>
                     </el-form-item>
-
+                    <el-form-item prop="endTime" label="供应商结算帐期：">
+                        <p>每月15号</p>
+                    </el-form-item>
                     <div class="submit-btn">
                         <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">确认保存</el-button>
                         <el-button @click="cancel">取消</el-button>
@@ -67,94 +68,62 @@
 
 </template>
 <script>
-    import icon from "../../../common/ico";
-    import vBreadcrumb from '../../../common/Breadcrumb.vue';
-    import vChoosearea from '../../../common/chooseClassify.vue';
-    import vChoosebrand from '../../../common/SupplierChooseBrand.vue';
-    import region from '../../../common/Region';
-    import * as api from '../../../../api/MemberManage/SupplierManage/index'
-    import * as pApi from '../../../../privilegeList/MemberManage/SupplierManage/index.js';
+    import icon from '@/components/common/ico';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import region from '@/components/common/Region';
+    import request from '@/http/http';
 
     export default {
         components: {
-            vBreadcrumb, icon, vChoosearea, region, vChoosebrand
+            vBreadcrumb, icon, region
         },
         data() {
             return {
                 form: {
-                    name: "",
-                    username: "",
-                    mobile: "",
-                    itype: '1',
+                    name: '',
+                    userName: '',
+                    mobile: '',
+                    type: '1',
                     country: '1',
-                    list: '',
-                    brandids: '',
                     address: '',
                     bankName: '',
                     bankOpening: '',
                     bankCard: '',
-                    bankUsername: '',
+                    bankUsername: ''
                 },
                 first: '',
                 second: '',
                 detailData: [],
                 btnLoading: false,
-                isUp: false,//添加false，修改true
+                isUp: false, // 添加false，修改true
                 id: '',
                 address: '',
                 areaDisabled: true,
                 phone: true,
-                 // 二级类目ids
-                secIds:'',
-            }
+                // 二级类目ids
+                secIds: '',
+                brandList: [], // 品牌列表
+                brandIds: []
+            };
         },
         activated() {
-            this.form.name = '';
-            this.form.username = '';
-            this.form.mobile = '';
-            this.form.itype = '1';
-            this.form.country = '1';
-            this.form.list = '';
-            this.form.brandids = '';
-            this.form.address = '';
-            this.form.bankName = '';
-            this.form.bankOpening = '';
-            this.form.bankCard = '';
-            this.form.bankUsername = '';
-            this.first = '';
-            this.second = '';
-            this.address = '';
-            this.btnLoading = false;
-            this.areaDisabled = true;
-            this.phone = true;
-            this.detailData = [];
+            this.getBrandList();
         },
         methods: {
             // 获取省市区
             getRegion(msg) {
                 this.address = msg;
-                this.form.provinceId = this.address[0];
-                this.form.cityId = this.address[1];
-                this.form.areaId = this.address[2];
+                this.form.provinceCode = this.address[0];
+                this.form.cityCode = this.address[1];
+                this.form.areaCode = this.address[2];
             },
-            //供应商地址选择
+            // 供应商地址选择
             supplierArea() {
                 this.areaDisabled = this.form.country === 1;
             },
-            productcIds(productcIds) {
-                let tmpId = [];
-                productcIds.forEach(function(v){
-                    tmpId.push(v.secCategoryId);
-                })
-                this.secIds = tmpId.join(',')
-                this.form.list = JSON.stringify(productcIds);
-            },
-            brandids(brandids) {
-                this.form.brandids = brandids.join(',');
-            },
             checkPhone() {
-                let that = this;
-                let reg = /^1[3-8]\d{9}$/;
+                const that = this;
+                const reg = /^1[3-8]\d{9}$/;
                 if (!reg.test(that.form.mobile)) {
                     that.$message.warning('请输入正确的手机号格式!');
                     that.phone = false;
@@ -165,100 +134,89 @@
             },
             // 提交表单
             submitForm(form) {
-                let that = this;
+                const that = this;
                 if (!that[form].name) {
                     that.$message.warning('请输入供货商名称!');
-                    return
+                    return;
                 }
-                if (!that[form].username) {
+                if (!that[form].userName) {
                     that.$message.warning('请输入供应商姓名!');
-                    return
+                    return;
                 }
                 if (!that[form].mobile) {
                     that.$message.warning('请输入联系方式!');
-                    return
+                    return;
                 }
                 if (that.form.country == 1) {
-                    if (!that.form.provinceId || !that.form.cityId || !that.form.areaId) {
+                    if (!that.form.provinceCode || !that.form.cityCode || !that.form.areaCode) {
                         that.$message.warning('请选择供应商地址!');
-                        return
+                        return;
                     }
                 }
                 if (!that[form].address) {
                     that.$message.warning('请输入详细地址!');
-                    return
-                }
-                if (that.form.list.length == 2) {
-                    that.$message.warning('请选择供应产品品类!');
-                    return
-                }
-                if (!that.form.brandids) {
-                    that.$message.warning('请选择供应产品品牌!');
-                    return
+                    return;
                 }
                 if (!that.form.bankName) {
                     that.$message.warning('请输入银行名称!');
-                    return
+                    return;
                 }
                 if (!that.form.bankOpening) {
                     that.$message.warning('请输入请输入开户支行!');
-                    return
+                    return;
                 }
                 if (!that.form.bankCard) {
                     that.$message.warning('请输入银行卡号!');
-                    return
+                    return;
                 }
-                // else {
-                //     let reg = /^([1-9]{1})(\d{14}|\d{18})$/;
-                //     if (!reg.test(that.form.bankCard)) {
-                //         that.$message.warning('请输入合法的银行卡号!');
-                //         return
-                //     }
-                // }
-                let reg = /^([1-9]{1})(\d{14}|\d{18})$/;
+                const reg = /^([1-9]{1})(\d{14}|\d{18})$/;
                 if (!reg.test(that.form.bankCard)) {
                     that.$message.warning('请输入合法的银行卡号!');
-                    return
+                    return;
                 }
                 if (!that.form.bankUsername) {
                     that.$message.warning('请输入持卡人姓名!');
-                    return
+                    return;
                 }
                 if (that.phone == false) {
-                    return false
+                    return false;
                 }
                 that.btnLoading = true;
-                let data = that[form];
+                const data = that[form];
+                data.brandids = this.brandIds;
                 data.telephone = that.first + that.second;
-                data.url = pApi.addSupplier;
-                this.$axios
-                    .post(api.addSupplier, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.$message.success(res.data.msg);
-                            setTimeout(function () {
-                                that.$router.push('/supplierManage');
-                                that.btnLoading = false;
-                            }, 1000)
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.btnLoading = false;
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        that.btnLoading = false;
-                    });
+                request.addProductSupplier(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.$router.push('/supplierManage');
+                    that.btnLoading = false;
+                }).catch(err => {
+                    console.log(err);
+                    that.btnLoading = false;
+                });
             },
-            //取消
+            // 获取品牌列表
+            getBrandList() {
+                request.findProductBrandListNoStop({ name: '' }).then(res => {
+                    this.brandList = [];
+                    res.data.forEach(v => {
+                        this.brandList.push({ label: v.name, key: v.id });
+                    });
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            // 取消
             cancel() {
                 this.$router.push('/supplierManage');
-            },
+            }
         }
-    }
+    };
 </script>
 <style lang="less">
     .supplier-box {
+        /deep/.el-transfer-panel{
+            width: auto;
+        }
         .label {
             width: 100px;
             text-align: right;

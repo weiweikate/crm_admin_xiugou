@@ -13,7 +13,7 @@ const path = require('path');
 
 const baseURL = 'http://172.16.10.19';
 
-// const baseURL = 'http://172.16.10.100';
+const baseURL = 'http://172.16.10.100';
 
 // const baseURL = 'https://test.dnvhot.tech';
 

@@ -32,14 +32,6 @@ export const getAreaList = '/admin/area/getAreaList';
 export const getCityList = '/admin/area/getCityList';
 // 获取省接口
 export const getProvinceList = '/admin/area/getProvinceList';
-// 添加供应商
-export const addSupplier = '/admin/supplier/addSupplier';
-// 编辑供应商
-export const updateSupplier = '/admin/supplier/updateSupplier';
-// 根据ID查询详情
-export const findSupplierById = '/admin/supplier/findSupplierById';
-// 停启用供应商
-export const updateSupplierDeleteById = '/admin/supplier/updateSupplierDeleteById';
 // 分页品牌列表
 export const queryBrandPageList = '/admin/brand/queryBrandPageList';
 // 根据二级类目id字符串查询品牌
@@ -50,4 +42,8 @@ export const findDealerById = ['/user/findUserDetailById', { methods: 'get' }]; 
 export const updateDealerById = '/user/updateUserById'; // 修改经销商信息 1：基础 2：授权
 export const findDealerTreeById = ['/user/findUserTreeInfo', { methods: 'get' }]; // 会员树状图
 export const queryProductSupplierList = '/product/productSupplier/queryProductSupplierList'; // 分页查询供应商列表
+export const addProductSupplier = '/product/productSupplier/addProductSupplier'; // 添加供应商
+export const updateSupplier = '/product/productSupplier/modifyProductSupplier'; // 编辑供应商
+export const stopProductSupplier = '/product/productSupplier/stopProductSupplier'; // 停启用供应商
+export const findSupplierById = ['/product/productSupplier/findProductSupplier', { methods: 'get' }]; // 查看供应商详情
 
