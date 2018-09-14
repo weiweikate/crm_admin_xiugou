@@ -25,9 +25,6 @@
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import * as pApi from '@/privilegeList/OperateManage/DiscountCoupon/index.js';
-    import utils from '@/utils/index.js';
-    import moment from 'moment';
     import request from '@/http/http.js';
 
     export default {
@@ -49,10 +46,9 @@
             getDetail() {
                 const data = {
                     id: this.id,
-                    url: pApi.getDiscountCouponPageById
                 };
-                request.getDiscountCouponPageById(data).then(res => {
-                    this.detail = res.data.data;
+                request.findCouponById(data).then(res => {
+                    this.detail = res.data;
                 }).catch(error => {
                     console.log(error);
                 });

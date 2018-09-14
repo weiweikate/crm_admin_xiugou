@@ -42,13 +42,14 @@ const queryDictonary = {
         };
     },
     methods: {
-        async queryDictonary(dKey = 1) {
+        async queryDictonary(dKey = 'WTLX') {
             this.divDKey = dKey;
             const data = {
-                dType: dKey
+                code: dKey
             };
             await request.queryDictionaryDetailsType(data).then(res => {
-                this.tmpAxiosData = res.data.data;
+                console.log(res)
+                this.tmpAxiosData = res.data;
             }).catch(err => {
                 this.dicNum++;
                 console.log(err);
