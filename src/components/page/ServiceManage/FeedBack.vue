@@ -176,7 +176,6 @@
             // 获取用户层级列表
             getLevelList() {
                 const that = this;
-                const data = {};
                 request.getUserLevelList({}).then(res => {
                     that.levelList = res.data;
                 }).catch(error => {

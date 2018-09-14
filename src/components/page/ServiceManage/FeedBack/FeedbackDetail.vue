@@ -28,11 +28,11 @@
                     </div>
                     <div class="detail-title">图片：</div>
                     <div>
-                        <img v-for="(item,index) in detail.imgList" :key="index" :src="item.originalImg" alt="">
+                        <img v-for="(item,index) in detail.imgList" :key="index" :src="item" alt="">
                     </div>
                     <div class="detail-title">回复：</div>
                     <div>
-                        <el-input type="textarea" v-model="detail.replyContent"></el-input>
+                        <el-input type="textarea" readonly="detail.status==2" v-model="detail.replyContent"></el-input>
                     </div>
                     <div class="detail-item">
                         处理人：{{username}}

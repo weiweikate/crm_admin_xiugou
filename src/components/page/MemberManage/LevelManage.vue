@@ -1,8 +1,8 @@
 <template>
     <div class="level">
-        <v-breadcrumb :nav="['经销商会员管理','经销商层级管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['会员管理','会员层级管理']"></v-breadcrumb>
         <div class="table-block">
-            <el-button type="primary" v-if="p.addDealerLevel" style="margin-bottom: 20px" @click="addClassify">添加层级</el-button>
+            <!--<el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加层级</el-button>-->
             <template>
                 <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
                     <el-table-column prop="id" label="层级编码" width="120" align="center"></el-table-column>
@@ -31,14 +31,14 @@
                             <template v-if="scope.row.autoUp == 2">否</template>
                         </template>
                     </el-table-column>
-                    <el-table-column v-if="isShowOperate" min-width="350px" label="操作" align="center">
+                    <el-table-column min-width="350px" label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" v-if="p.promotionManage" @click="upSet(scope.$index,scope.row)">晋级设置</el-button>
-                            <el-button type="warning" size="small" v-if="p.degradeManage" @click="downSet(scope.$index,scope.row)">降级设置</el-button>
+                            <el-button type="primary" size="small" @click="upSet(scope.$index,scope.row)">晋级设置</el-button>
+                            <el-button type="warning" size="small" @click="downSet(scope.$index,scope.row)">降级设置</el-button>
                             <!--<el-button type="primary" size="small" @click="priceLevel(scope.$index,scope.row)">价格阶层</el-button>-->
-                            <el-button type="success" v-if="p.updateDealerLevel" size="small" @click="editItem(scope.$index,scope.row)">编辑
+                            <el-button type="success" size="small" @click="editItem(scope.$index,scope.row)">编辑
                             </el-button>
-                            <el-button type="danger" v-if="p.deleteDealerLevelById" size="small" @click="delItem(scope.$index,scope.row.id)">删除
+                            <el-button type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除
                             </el-button>
                         </template>
                     </el-table-column>
@@ -151,27 +151,20 @@
 </template>
 
 <script>
-    import vBreadcrumb from '../../common/Breadcrumb.vue';
-    import icon from '../../common/ico.vue';
-    import deleteToast from '../../common/DeleteToast';
-    import * as api from '../../../api/api';
-    import utils from '../../../utils/index.js';
-    import * as pApi from '../../../privilegeList/index.js';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import icon from '@/components/common/ico.vue';
+    import deleteToast from '@/components/common/DeleteToast';
+    import utils from '@/utils/index.js';
+    import request from '@/http/http.js';
+    import { myMixinTable } from '@/JS/commom';
+
     export default {
         components: {
             vBreadcrumb, icon, deleteToast
         },
+        mixins: [myMixinTable],
         data() {
             return {
-                // 权限控制
-                p: {
-                    addDealerLevel: false,
-                    updateDealerLevel: false,
-                    deleteDealerLevelById: false,
-                    degradeManage: false,
-                    promotionManage: false
-                },
-                isShowOperate: true,
 
                 tableData: [],
                 height: '',
@@ -207,22 +200,11 @@
             };
         },
         created() {
-            this.pControl();
         },
         activated() {
             this.getList();
-            this.pControl();
         },
         methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-                if (!this.p.updateDealerLevel && !this.p.deleteDealerLevelById && !this.p.promotionManage && !this.p.degradeManage) {
-                    this.isShowOperate = false;
-                }
-            },
             // 取消
             cancel() {
                 this.addMask = false;
@@ -232,25 +214,18 @@
             // 获取列表
             getList(val) {
                 const that = this;
-                const data = {};
-                data.url = pApi.getDealerLevelList;
+                const data = {
+                    page: 1,
+                    pageSize: this.page.pageSize
+                };
                 that.tableLoading = true;
-                that.$axios
-                    .post(api.getDealerLevelList, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.tableLoading = false;
-                            that.tableData = res.data.data;
-                            // that.page.totalPage = res.data.resultCount;
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.tableLoading = false;
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        that.tableLoading = false;
-                    });
+                request.getList(data).then(res => {
+                    that.tableLoading = false;
+                    that.tableData = res.data;
+                }).catch(err => {
+                    console.log(err);
+                    that.tableLoading = false;
+                });
             },
             // 添加层级
             addClassify() {
@@ -277,7 +252,7 @@
             },
             // 添加修改确定
             addOrEdit(formName) {
-                let url = '';
+                const url = '';
                 const data = {};
                 data.name = this[formName].name;
                 data.level = this[formName].level;
@@ -289,45 +264,35 @@
                 data.allowGroupStore = this[formName].allowGroupStore;
                 data.allowCreateStore = this[formName].allowCreateStore;
                 data.remark = this[formName].remark;
-                if (!this.isUp) {
-                    url = api.addDealerLevel;
-                    data.url = pApi.addDealerLevel;
-                } else {
-                    url = api.updateDealerLevel;
-                    data.id = this.id;
-                    data.url = pApi.updateDealerLevel;
-                }
+                // if (!this.isUp) {
+                //     url = 'addDealerLevel';
+                // } else {
+                //     url = 'updateUserLevel';
+                //     data.id = this.id;
+                // }
+                data.id = this.id;
                 this.btnLoading = true;
-                this.$axios
-                    .post(url, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            this.$message.success(res.data.msg);
-                            this.btnLoading = false;
-                            this.addMask = false;
-                            this.editMask = false;
-                            this.getList();
-                        } else {
-                            this.btnLoading = false;
-                            this.$message.warning(res.data.msg);
-                            this.getList();
-                        }
-                    })
-                    .catch(err => {
-                        this.btnLoading = false;
-                        console.log(err);
-                    });
+                request.updateUserLevel(data).then(res => {
+                    // this.$message.success(res.data.msg);
+                    this.btnLoading = false;
+                    this.addMask = false;
+                    this.editMask = false;
+                    this.getList();
+                }).catch(err => {
+                    this.btnLoading = false;
+                    console.log(err);
+                });
             },
 
             // 晋级设置
             upSet(index, row) {
-                sessionStorage.setItem('MemberRow', JSON.stringify(row));
-                this.$router.push({ path: '/promotionManage', query: { MemberRow: JSON.stringify(row) }});
+                sessionStorage.setItem('MemberId', row.id);
+                this.$router.push({ path: '/promotionManage', query: { MemberId: row.id }});
             },
             // 降级设置
             downSet(index, row) {
-                sessionStorage.setItem('MemberRow', JSON.stringify(row));
-                this.$router.push({ path: '/degradeManage', query: { MemberRow: JSON.stringify(row) }});
+                sessionStorage.setItem('MemberId', row.id);
+                this.$router.push({ path: '/degradeManage', query: { MemberId: row.id }});
             },
             // //价格阶层
             // priceLevel(index,row){
@@ -336,8 +301,7 @@
             // 删除
             delItem(index, id) {
                 this.delId = id;
-                this.delUrl = api.deleteDealerLevelById;
-                this.delUri = pApi.deleteDealerLevelById;
+                this.delUrl = 'deleteDealerLevelById';
                 this.isShowDelToast = true;
             },
             // 删除弹窗

@@ -211,13 +211,13 @@
                         index: '7',
                         title: '会员管理',
                         subs: [
-                            // {
-                            //     index: "levelManage",
-                            //     title: "经销商层级管理"
-                            // },
+                            {
+                                index: 'levelManage',
+                                title: '会员层级管理'
+                            },
                             // {
                             //     index: "joinManage",
-                            //     title: "经销商邀请管理"
+                            //     title: "会员邀请管理"
                             // },
                             {
                                 index: 'memberManage',

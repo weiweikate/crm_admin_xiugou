@@ -41,15 +41,15 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import * as api from '@/api/MemberManage/DegradeManage/DegradeManage.js'
-    import * as pApi from '@/privilegeList/MemberManage/DegradeManage/DegradeManage.js'
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import request from '@/http/http.js';
+
     export default {
-        components: {vBreadcrumb},
+        components: { vBreadcrumb },
 
         data() {
             return {
-                nav: ["经销商会员管理", "经销商层级管理", "降级设置"],
+                nav: ['会员管理', '会员层级管理', '降级设置'],
                 mask: false,
                 title: ['每周未登录则', '每周交易额是否达标'],
                 index: 0,
@@ -60,95 +60,96 @@
             };
         },
         activated() {
-            this.row = this.$route.query.MemberRow ? JSON.parse(this.$route.query.MemberRow) : JSON.parse(sessionStorage.getItem('MemberRow'));
-            this.id = this.row.id;
+            this.id = this.$route.query.memberId || sessionStorage.getItem('memberId');
+            this.checked = [false, false, false, false, false];
         },
         methods: {
-            //获取详情
+            // 获取详情
             getDetail() {
-                for (let i in this.row) {
-                    if (this.row[i] == 0 || this.row[i] == null || this.row[i] == undefined) {
-                        this.row[i] = ''
-                    }
-                }
-                this.form = this.row;
+                const data = {
+                    id: this.id
+                };
+                request.findUserLevelUpgradeDemotionById(data).then((res) => {
+                    this.form = res.data;
+                    this.convert(this.form.upgradeCondition);
+                }).catch((err) => {
+                    console.log(err);
+                });
             },
-            //显示弹窗
+            // 显示弹窗
             showMask(num) {
                 this.index = num;
                 this.mask = true;
-                this.getDetail();//加载详情
+                this.getDetail();// 加载详情
             },
-            //保存
+            // 保存
             submit(formName, index) {
                 let url;
                 switch (index) {
-                    case 0://设置降级经验值
-                        url = api.updateDealerLevelDemotionWeekNologinScoreById;
+                    case 0:// 设置降级经验值
+                        url = 'updateUserLevelDemotionWeekNologinScoreById';
                         break;
-                    case 1://设置必要条件
-                        url = api.updateDealerLevelDemotionWeekSalesById;
+                    case 1:// 设置必要条件
+                        url = 'updateUserLevelDeWeekSalesById';
                         break;
                 }
-                let data = this[formName];
+                const data = this[formName];
                 data.id = this.id;
-                let flag1=true,flag2=true;
+                let flag1 = true; let flag2 = true;
                 if (index == 0) {
-                    flag1=this.isEmpty(data.demotionWeekNologinExp, false);
-                    this.setIsAjax(flag1)
+                    flag1 = this.isEmpty(data.demotionWeekNologinExp, false);
+                    this.setIsAjax(flag1);
                 } else if (index == 1) {
-                    flag1=this.isEmpty(data.demotionWeekSalesNum,true);
-                    flag2=this.isEmpty(data.demotionWeekSalesNumExp,false);
-                    this.setIsAjax(flag1&&flag2);
+                    flag1 = this.isEmpty(data.demotionWeekSalesNum, true);
+                    flag2 = this.isEmpty(data.demotionWeekSalesNumExp, false);
+                    this.setIsAjax(flag1 && flag2);
                 }
-                if(this.isAjax){
-                    this.$axios.post(url, data)
-                        .then((res) => {
-                            this.$message.success(res.data.msg);
-                            this.mask = false;
-                        }).catch((err) => {
+                if (this.isAjax) {
+                    request[url](data).then(res => {
+                        // this.$message.success(res.data.msg);
+                        this.mask = false;
+                    }).catch(err => {
                         console.log(err);
                     });
                 }
             },
-            //值非空判断
+            // 值非空判断
             isEmpty(value, isInt) {
                 if (value == null || value == undefined || value == '') {
                     if (isInt) {
-                        this.$message.warning('请输入人数!')
+                        this.$message.warning('请输入人数!');
                     } else {
-                        this.$message.warning('请输入数值!')
+                        this.$message.warning('请输入数值!');
                     }
-                    return false
+                    return false;
                 } else {
-                    if(isInt){
-                        let reg=/^[1-9]*[1-9][0-9]*$/;
-                        return this.setReg(reg,value)
-                    }else{
-                        let reg=/^[0-9]+([.]{1}[0-9]{1,2})?$/;
-                        return this.setReg(reg,value)
-
+                    if (isInt) {
+                        const reg = /^[1-9]*[1-9][0-9]*$/;
+                        return this.setReg(reg, value);
+                    } else {
+                        const reg = /^[0-9]+([.]{1}[0-9]{1,2})?$/;
+                        return this.setReg(reg, value);
                     }
                 }
             },
-            setReg(reg,value){
-                if(!reg.test(value)){
+            setReg(reg, value) {
+                if (!reg.test(value)) {
                     this.$message.warning('请输入合法数据!');
-                    return false
-                }else{
-                    return true
+                    return false;
+                } else {
+                    return true;
                 }
             },
-            setIsAjax(bool){
-                let that=this;
-                if(bool){
-                    that.isAjax=true
-                }else{
-                    that.isAjax=false
+            setIsAjax(bool) {
+                const that = this;
+                if (bool) {
+                    that.isAjax = true;
+                } else {
+                    that.isAjax = false;
                 }
             }
         }
-    }
+    };
 
 </script>
 <style lang='less'>

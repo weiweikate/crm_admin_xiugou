@@ -195,16 +195,15 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import * as api from '@/api/MemberManage/PromotionManage/PromotionManage.js'
-    import * as pApi from '@/privilegeList/MemberManage/PromotionManage/PromotionManage.js'
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import request from '@/http/http.js';
 
     export default {
-        components: {vBreadcrumb},
+        components: { vBreadcrumb },
 
         data() {
             return {
-                nav: ["经销商会员管理", "经销商层级管理", "升级设置"],
+                nav: ['会员管理', '会员层级管理', '升级设置'],
                 mask: false,
                 title: ['设置升级经验值', '设置必要条件', '设置直接邀请条件', '设置间接邀请条件', '设置个人交易额条件', '设置直接交易额条件', '设置间接交易额条件', '设置连续交易额条件', '设置连续交易额频次条件', '设置一次性交易条件', '代币充值'],
                 index: 0,
@@ -216,134 +215,128 @@
             };
         },
         activated() {
-            this.row = this.$route.query.MemberRow ? JSON.parse(this.$route.query.MemberRow) : JSON.parse(sessionStorage.getItem('MemberRow'));
-            this.id = this.row.id;
+            this.id = this.$route.query.memberId || sessionStorage.getItem('memberId');
             this.checked = [false, false, false, false, false];
         },
         methods: {
-            //获取详情
+            // 获取详情
             getDetail() {
-                for (let i in this.row) {
-                    if (this.row[i] == 0 || this.row[i] == null || this.row[i] == undefined) {
-                        this.row[i] = ''
-                    }
-                }
-                this.form = this.row;
-                this.convert(this.form.upgradeCondition);
+                const data = {
+                    id: this.id
+                };
+                request.findUserLevelUpgradeDemotionById(data).then((res) => {
+                    this.form = res.data;
+                    this.convert(this.form.upgradeCondition);
+                }).catch((err) => {
+                    console.log(err);
+                });
             },
-            //显示弹窗
+            // 显示弹窗
             showMask(num) {
                 this.index = num;
                 this.mask = true;
-                this.getDetail();//加载详情
+                this.getDetail();// 加载详情
             },
-            //保存
+            // 保存
             submit(formName, index) {
                 let url;
                 switch (index) {
-                    case 0://设置升级经验值
-                        url = api.updateDealerLevelUpgradeExpById;
+                    case 0:// 设置升级经验值
+                        url = 'updateUserLevelUpExpById';
                         break;
-                    case 1://设置必要条件
-                        url = api.updateDealerLevelUpgradeConditionById;
+                    case 1:// 设置必要条件
+                        url = 'updateUserLevelUpConditionById';
                         break;
-                    case 2://设置直接邀请条件
-                        url = api.updateDealerLevelUpgradeExpById;
+                    case 2:// 设置直接邀请条件
+                        url = 'updateUserLevelUpgradeDirectById';
                         break;
-                    case 3://设置间接邀请条件
-                        url = api.updateDealerLevelUpgradeDirectById;
+                    case 3:// 设置间接邀请条件
+                        url = 'updateUserLevelUpIndirectById';
                         break;
-                    case 4://设置个人交易额条件
-                        url = api.updateDealerLevelUpgradePerSalesById;
+                    case 4:// 设置个人交易额条件
+                        url = 'updateUserLevelUpPerSalesById';
                         break;
-                    case 5://设置直接交易额条件
-                        url = api.updateDealerLevelUpgradeDirectSalesById;
+                    case 5:// 设置直接交易额条件
+                        url = 'updateUserLevelUpDirectSalesById';
                         break;
-                    case 6://设置间接交易额条件
-                        url = api.updateDealerLevelUpgradeIndirectSalesById;
+                    case 6:// 设置间接交易额条件
+                        url = 'updateUserLevelUpIndirectSalesById';
                         break;
-                    case 7://设置连续交易额条件
-                        url = api.updateDealerLevelUpgradeWeekSalesById;
+                    case 7:// 设置连续交易额条件
+                        url = 'updateUserLevelUpWeekSalesById';
                         break;
-                    case 8://设置连续交易额频次条件
-                        url = api.updateDealerLevelUpgradeWeekSalesFreqById;
+                    case 8:// 设置连续交易额频次条件
+                        url = 'updateUserLevelUpWeekSalesFreqById';
                         break;
-                    case 9://设置一次性交易条件
-                        url = api.updateDealerLevelUpgradeBuyById;
+                    case 9:// 设置一次性交易条件
+                        url = 'updateUserLevelUpBuyById';
                         break;
-                    case 10://代币充值
-                        url = api.updateDealerLevelUpgradeTokenCoinBuyById;
+                    case 10:// 代币充值
+                        url = 'updateUserLevelUpTokenCoinBuyById';
                         break;
                 }
-                let data = this[formName];
+                const data = this[formName];
                 data.id = this.id;
-                let flag1=true,flag2=true,flag3=true,flag4=true;
+                let flag1 = true; let flag2 = true; let flag3 = true; let flag4 = true;
                 if (index == 0) {
-                    flag1=this.isEmpty(data.upgradeExp, false);
-                    this.setIsAjax(flag1)
+                    flag1 = this.isEmpty(data.upgradeExp, false);
+                    this.setIsAjax(flag1);
                 } else if (index == 1) {
                     this.isChecked();
-                    if(this.checked[0]){
-                        flag1=this.isEmpty(data.upgradeCondDirectNum,true)
+                    if (this.checked[0]) {
+                        flag1 = this.isEmpty(data.upgradeCondDirectNum, true);
                     }
-                    if(this.checked[1]){
-                        flag2=this.isEmpty(data.upgradeCondIndirectNum,true)
+                    if (this.checked[1]) {
+                        flag2 = this.isEmpty(data.upgradeCondIndirectNum, true);
                     }
-                    if(this.checked[2]){
-                        flag3=this.isEmpty(data.upgradeCondPerSales,false)
+                    if (this.checked[2]) {
+                        flag3 = this.isEmpty(data.upgradeCondPerSales, false);
                     }
-                    if(this.checked[3]){
-                        flag4=this.isEmpty(data.upgradeCondGroupSales,false)
+                    if (this.checked[3]) {
+                        flag4 = this.isEmpty(data.upgradeCondGroupSales, false);
                     }
                     if (this.checked[4]) {
-                        data.upgradeCondBuyGift = 1
+                        data.upgradeCondBuyGift = 1;
                     } else {
-                        data.upgradeCondBuyGift = 0
+                        data.upgradeCondBuyGift = 0;
                     }
-                    this.setIsAjax(flag1&&flag2&&flag3&&flag4);
+                    this.setIsAjax(flag1 && flag2 && flag3 && flag4);
                 } else if (index == 2) {
-                    // flag1=this.isEmpty(data.upgradeDirectNum,true);
-                    flag2=this.isEmpty(data.upgradeDirectPerExp,false);
-                    this.setIsAjax(flag2);
-                }else if (index == 3) {
-                    // flag1=this.isEmpty(data.upgradeIndirectNum,true);
-                    flag2=this.isEmpty(data.upgradeIndirectPerExp,false);
-                    this.setIsAjax(flag2);
-                }else if (index == 4) {
-                    // flag1=this.isEmpty(data.upgradePerSalesNum,false);
-                    flag2=this.isEmpty(data.upgradePerSalesOneExp,false);
-                    this.setIsAjax(flag2);
-                }else if (index == 5) {
-                    // flag1=this.isEmpty(data.upgradeDirectSalesNum,false);
-                    flag2=this.isEmpty(data.upgradeDirectSalesOneExp,false);
-                    this.setIsAjax(flag2);
-                }else if (index == 6) {
-                    // flag1=this.isEmpty(data.upgradeIndirectSalesNum,false);
-                    flag2=this.isEmpty(data.upgradeIndirectSalesOneExp,false);
-                    this.setIsAjax(flag2);
-                }else if (index == 7) {
-                    flag1=this.isEmpty(data.upgradeWeekSalesNum,false);
-                    flag2=this.isEmpty(data.upgradeWeekSalesNumExp,false);
-                    this.setIsAjax(flag1&&flag2);
-                }else if (index == 8) {
-                    flag1=this.isEmpty(data.upgradeWeekSalesFreq,true);
-                    flag2=this.isEmpty(data.upgradeWeekSalesFreqExp,false);
-                    this.setIsAjax(flag1&&flag2);
-                }else if (index == 9) {
-                    flag1=this.isEmpty(data.upgradeBuyNum,false);
-                    flag2=this.isEmpty(data.upgradeBuyNumExp,false);
-                    this.setIsAjax(flag1&&flag2);
-                }else if (index == 10) {
-                    // flag1=this.isEmpty(data.upgradeTokenCoinBuyNum,true);
-                    flag2=this.isEmpty(data.upgradeTokenCoinBuyOneExp,false);
-                    this.setIsAjax(flag2);
+                    flag1 = this.isEmpty(data.upgradeDirectPerExp, false);
+                    this.setIsAjax(flag1);
+                } else if (index == 3) {
+                    flag1 = this.isEmpty(data.upgradeIndirectPerExp, false);
+                    this.setIsAjax(flag1);
+                } else if (index == 4) {
+                    flag1 = this.isEmpty(ddata.upgradePerSalesOneExp, false);
+                    this.setIsAjax(flag1);
+                } else if (index == 5) {
+                    flag1 = this.isEmpty(data.upgradeDirectSalesOneExp, false);
+                    this.setIsAjax(flag1);
+                } else if (index == 6) {
+                    flag1 = this.isEmpty(data.upgradeIndirectSalesOneExp, false);
+                    this.setIsAjax(flag1);
+                } else if (index == 7) {
+                    flag1 = this.isEmpty(data.upgradeWeekSalesNum, false);
+                    flag2 = this.isEmpty(data.upgradeWeekSalesNumExp, false);
+                    this.setIsAjax(flag1 && flag2);
+                } else if (index == 8) {
+                    flag1 = this.isEmpty(data.upgradeWeekSalesFreq, true);
+                    flag2 = this.isEmpty(data.upgradeWeekSalesFreqExp, false);
+                    this.setIsAjax(flag1 && flag2);
+                } else if (index == 9) {
+                    flag1 = this.isEmpty(data.upgradeBuyNum, false);
+                    flag2 = this.isEmpty(data.upgradeBuyNumExp, false);
+                    this.setIsAjax(flag1 && flag2);
+                } else if (index == 10) {
+                    flag1 = this.isEmpty(data.upgradeTokenCoinBuyOneExp, false);
+                    this.setIsAjax(flag1);
                 }
-                if(this.isAjax){
-                    this.$axios.post(url, data)
-                        .then((res) => {
-                            this.$message.success(res.data.msg);
-                            this.mask = false;
-                        }).catch((err) => {
+                if (this.isAjax) {
+                    request[url](data).then(res => {
+                        this.$message.success(res.data.msg);
+                        this.mask = false;
+                    }).catch(err => {
                         console.log(err);
                     });
                 }
@@ -351,16 +344,16 @@
             // 遍历设置必要条件里的选中项,并进行值的换算
             isChecked() {
                 let result = 0;
-                for (let i in this.checked) {
+                for (const i in this.checked) {
                     if (this.checked[i]) {
                         result += Math.pow(2, i);
                     }
                 }
                 this.form.upgradeCondition = result;
             },
-            //将十进制数值转换成二进制
+            // 将十进制数值转换成二进制
             convert(num) {
-                let arr = [];
+                const arr = [];
                 if (num) {
                     for (let i = 0; 1; i++) {
                         if (num / 2 >= 1) {
@@ -371,52 +364,52 @@
                             break;
                         }
                     }
-                    for (let i in arr) {
+                    for (const i in arr) {
                         if (arr[i] == 1) {
-                            this.checked[i] = true
+                            this.checked[i] = true;
                         } else {
-                            this.checked[i] = false
+                            this.checked[i] = false;
                         }
                     }
                 }
             },
-            //值非空判断
+            // 值非空判断
             isEmpty(value, isInt) {
                 if (value == null || value == undefined || value == '') {
                     if (isInt) {
-                        this.$message.warning('请输入人数!')
+                        this.$message.warning('请输入人数!');
                     } else {
-                        this.$message.warning('请输入参数!')
+                        this.$message.warning('请输入参数!');
                     }
-                    return false
+                    return false;
                 } else {
-                    if(isInt){
-                        let reg=/^[1-9]*[1-9][0-9]*$/;
-                        return this.setReg(reg,value)
-                    }else{
-                        let reg=/^[0-9]+([.]{1}[0-9]{1,2})?$/;
-                        return this.setReg(reg,value)
+                    if (isInt) {
+                        const reg = /^[1-9]*[1-9][0-9]*$/;
+                        return this.setReg(reg, value);
+                    } else {
+                        const reg = /^[0-9]+([.]{1}[0-9]{1,2})?$/;
+                        return this.setReg(reg, value);
                     }
                 }
             },
-            setReg(reg,value){
-                if(!reg.test(value)){
+            setReg(reg, value) {
+                if (!reg.test(value)) {
                     this.$message.warning('请输入合法数据!');
-                    return false
-                }else{
-                    return true
+                    return false;
+                } else {
+                    return true;
                 }
             },
-            setIsAjax(bool){
-                let that=this;
-                if(bool){
-                    that.isAjax=true
-                }else{
-                    that.isAjax=false
+            setIsAjax(bool) {
+                const that = this;
+                if (bool) {
+                    that.isAjax = true;
+                } else {
+                    that.isAjax = false;
                 }
             }
         }
-    }
+    };
 
 </script>
 <style lang='less'>
