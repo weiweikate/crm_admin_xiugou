@@ -203,7 +203,7 @@
 
         data() {
             return {
-                nav: ['经销商会员管理', '经销商层级管理', '升级设置'],
+                nav: ['会员管理', '会员层级管理', '升级设置'],
                 mask: false,
                 title: ['设置升级经验值', '设置必要条件', '设置直接邀请条件', '设置间接邀请条件', '设置个人交易额条件', '设置直接交易额条件', '设置间接交易额条件', '设置连续交易额条件', '设置连续交易额频次条件', '设置一次性交易条件', '代币充值'],
                 index: 0,
@@ -215,20 +215,21 @@
             };
         },
         activated() {
-            this.row = this.$route.query.MemberRow ? JSON.parse(this.$route.query.MemberRow) : JSON.parse(sessionStorage.getItem('MemberRow'));
-            this.id = this.row.id;
+            this.id = this.$route.query.memberId || sessionStorage.getItem('memberId');
             this.checked = [false, false, false, false, false];
         },
         methods: {
             // 获取详情
             getDetail() {
-                for (const i in this.row) {
-                    if (this.row[i] == 0 || this.row[i] == null || this.row[i] == undefined) {
-                        this.row[i] = '';
-                    }
-                }
-                this.form = this.row;
-                this.convert(this.form.upgradeCondition);
+                const data = {
+                    id: this.id
+                };
+                request.findUserLevelUpgradeDemotionById(data).then((res) => {
+                    this.form = res.data;
+                    this.convert(this.form.upgradeCondition);
+                }).catch((err) => {
+                    console.log(err);
+                });
             },
             // 显示弹窗
             showMask(num) {
@@ -241,37 +242,37 @@
                 let url;
                 switch (index) {
                     case 0:// 设置升级经验值
-                        url = 'updateDealerLevelUpgradeExpById';
+                        url = 'updateUserLevelUpExpById';
                         break;
                     case 1:// 设置必要条件
-                        url = 'updateDealerLevelUpgradeConditionById';
+                        url = 'updateUserLevelUpConditionById';
                         break;
                     case 2:// 设置直接邀请条件
-                        url = 'updateDealerLevelUpgradeExpById';
+                        url = 'updateUserLevelUpgradeDirectById';
                         break;
                     case 3:// 设置间接邀请条件
-                        url = 'updateDealerLevelUpgradeDirectById';
+                        url = 'updateUserLevelUpIndirectById';
                         break;
                     case 4:// 设置个人交易额条件
-                        url = 'updateDealerLevelUpgradePerSalesById';
+                        url = 'updateUserLevelUpPerSalesById';
                         break;
                     case 5:// 设置直接交易额条件
-                        url = 'updateDealerLevelUpgradeDirectSalesById';
+                        url = 'updateUserLevelUpDirectSalesById';
                         break;
                     case 6:// 设置间接交易额条件
-                        url = 'updateDealerLevelUpgradeIndirectSalesById';
+                        url = 'updateUserLevelUpIndirectSalesById';
                         break;
                     case 7:// 设置连续交易额条件
-                        url = 'updateDealerLevelUpgradeWeekSalesById';
+                        url = 'updateUserLevelUpWeekSalesById';
                         break;
                     case 8:// 设置连续交易额频次条件
-                        url = 'updateDealerLevelUpgradeWeekSalesFreqById';
+                        url = 'updateUserLevelUpWeekSalesFreqById';
                         break;
                     case 9:// 设置一次性交易条件
-                        url = 'updateDealerLevelUpgradeBuyById';
+                        url = 'updateUserLevelUpBuyById';
                         break;
                     case 10:// 代币充值
-                        url = 'updateDealerLevelUpgradeTokenCoinBuyById';
+                        url = 'updateUserLevelUpTokenCoinBuyById';
                         break;
                 }
                 const data = this[formName];
@@ -301,25 +302,20 @@
                     }
                     this.setIsAjax(flag1 && flag2 && flag3 && flag4);
                 } else if (index == 2) {
-                    // flag1=this.isEmpty(data.upgradeDirectNum,true);
-                    flag2 = this.isEmpty(data.upgradeDirectPerExp, false);
-                    this.setIsAjax(flag2);
+                    flag1 = this.isEmpty(data.upgradeDirectPerExp, false);
+                    this.setIsAjax(flag1);
                 } else if (index == 3) {
-                    // flag1=this.isEmpty(data.upgradeIndirectNum,true);
-                    flag2 = this.isEmpty(data.upgradeIndirectPerExp, false);
-                    this.setIsAjax(flag2);
+                    flag1 = this.isEmpty(data.upgradeIndirectPerExp, false);
+                    this.setIsAjax(flag1);
                 } else if (index == 4) {
-                    // flag1=this.isEmpty(data.upgradePerSalesNum,false);
-                    flag2 = this.isEmpty(data.upgradePerSalesOneExp, false);
-                    this.setIsAjax(flag2);
+                    flag1 = this.isEmpty(ddata.upgradePerSalesOneExp, false);
+                    this.setIsAjax(flag1);
                 } else if (index == 5) {
-                    // flag1=this.isEmpty(data.upgradeDirectSalesNum,false);
-                    flag2 = this.isEmpty(data.upgradeDirectSalesOneExp, false);
-                    this.setIsAjax(flag2);
+                    flag1 = this.isEmpty(data.upgradeDirectSalesOneExp, false);
+                    this.setIsAjax(flag1);
                 } else if (index == 6) {
-                    // flag1=this.isEmpty(data.upgradeIndirectSalesNum,false);
-                    flag2 = this.isEmpty(data.upgradeIndirectSalesOneExp, false);
-                    this.setIsAjax(flag2);
+                    flag1 = this.isEmpty(data.upgradeIndirectSalesOneExp, false);
+                    this.setIsAjax(flag1);
                 } else if (index == 7) {
                     flag1 = this.isEmpty(data.upgradeWeekSalesNum, false);
                     flag2 = this.isEmpty(data.upgradeWeekSalesNumExp, false);
@@ -333,9 +329,8 @@
                     flag2 = this.isEmpty(data.upgradeBuyNumExp, false);
                     this.setIsAjax(flag1 && flag2);
                 } else if (index == 10) {
-                    // flag1=this.isEmpty(data.upgradeTokenCoinBuyNum,true);
-                    flag2 = this.isEmpty(data.upgradeTokenCoinBuyOneExp, false);
-                    this.setIsAjax(flag2);
+                    flag1 = this.isEmpty(data.upgradeTokenCoinBuyOneExp, false);
+                    this.setIsAjax(flag1);
                 }
                 if (this.isAjax) {
                     request[url](data).then(res => {

@@ -49,7 +49,7 @@
 
         data() {
             return {
-                nav: ['经销商会员管理', '经销商层级管理', '降级设置'],
+                nav: ['会员管理', '会员层级管理', '降级设置'],
                 mask: false,
                 title: ['每周未登录则', '每周交易额是否达标'],
                 index: 0,
@@ -60,18 +60,21 @@
             };
         },
         activated() {
-            this.row = this.$route.query.MemberRow ? JSON.parse(this.$route.query.MemberRow) : JSON.parse(sessionStorage.getItem('MemberRow'));
-            this.id = this.row.id;
+            this.id = this.$route.query.memberId || sessionStorage.getItem('memberId');
+            this.checked = [false, false, false, false, false];
         },
         methods: {
             // 获取详情
             getDetail() {
-                for (const i in this.row) {
-                    if (this.row[i] == 0 || this.row[i] == null || this.row[i] == undefined) {
-                        this.row[i] = '';
-                    }
-                }
-                this.form = this.row;
+                const data = {
+                    id: this.id
+                };
+                request.findUserLevelUpgradeDemotionById(data).then((res) => {
+                    this.form = res.data;
+                    this.convert(this.form.upgradeCondition);
+                }).catch((err) => {
+                    console.log(err);
+                });
             },
             // 显示弹窗
             showMask(num) {
@@ -84,10 +87,10 @@
                 let url;
                 switch (index) {
                     case 0:// 设置降级经验值
-                        url = 'updateDealerLevelDemotionWeekNologinScoreById';
+                        url = 'updateUserLevelDemotionWeekNologinScoreById';
                         break;
                     case 1:// 设置必要条件
-                        url = 'updateDealerLevelDemotionWeekSalesById';
+                        url = 'updateUserLevelDeWeekSalesById';
                         break;
                 }
                 const data = this[formName];
