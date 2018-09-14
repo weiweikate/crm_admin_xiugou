@@ -244,19 +244,19 @@ export default new Router({
                     name: 'levelManage',
                     path: '/levelManage',
                     component: resolve => require(['../components/page/MemberManage/LevelManage.vue'], resolve),
-                    meta: { title: '经销商层级管理', url: '/admin/dealerLevel/getList' }
+                    meta: { title: '会员层级管理', url: '/admin/dealerLevel/getList' }
                 },
                 {
                     name: 'joinManage',
                     path: '/joinManage',
                     component: resolve => require(['../components/page/MemberManage/JoinManage.vue'], resolve),
-                    meta: { title: '经销商加盟管理', url: '/admin/invite/queryInvitePageList' }
+                    meta: { title: '会员加盟管理', url: '/admin/invite/queryInvitePageList' }
                 },
                 {
                     name: 'memberManage',
                     path: '/memberManage',
                     component: resolve => require(['../components/page/MemberManage/MemberManage.vue'], resolve),
-                    meta: { title: '经销商会员管理', url: '/admin/dealer/queryDealerPageList' }
+                    meta: { title: '会员管理', url: '/admin/dealer/queryDealerPageList' }
                 },
                 {
                     name: 'lowerMemberManage',

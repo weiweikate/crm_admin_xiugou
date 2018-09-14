@@ -62,6 +62,7 @@
         activated() {
             this.id = this.$route.query.memberId || sessionStorage.getItem('memberId');
             this.checked = [false, false, false, false, false];
+            this.getDetail();
         },
         methods: {
             // 获取详情
@@ -96,10 +97,10 @@
                 const data = this[formName];
                 data.id = this.id;
                 let flag1 = true; let flag2 = true;
-                if (index == 0) {
+                if (index === 0) {
                     flag1 = this.isEmpty(data.demotionWeekNologinExp, false);
                     this.setIsAjax(flag1);
-                } else if (index == 1) {
+                } else if (index === 1) {
                     flag1 = this.isEmpty(data.demotionWeekSalesNum, true);
                     flag2 = this.isEmpty(data.demotionWeekSalesNumExp, false);
                     this.setIsAjax(flag1 && flag2);
@@ -108,6 +109,7 @@
                     request[url](data).then(res => {
                         // this.$message.success(res.data.msg);
                         this.mask = false;
+                        this.getDetail();
                     }).catch(err => {
                         console.log(err);
                     });

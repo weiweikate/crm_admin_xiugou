@@ -217,6 +217,7 @@
         activated() {
             this.id = this.$route.query.memberId || sessionStorage.getItem('memberId');
             this.checked = [false, false, false, false, false];
+            this.getDetail();
         },
         methods: {
             // 获取详情
@@ -278,10 +279,10 @@
                 const data = this[formName];
                 data.id = this.id;
                 let flag1 = true; let flag2 = true; let flag3 = true; let flag4 = true;
-                if (index == 0) {
+                if (index === 0) {
                     flag1 = this.isEmpty(data.upgradeExp, false);
                     this.setIsAjax(flag1);
-                } else if (index == 1) {
+                } else if (index === 1) {
                     this.isChecked();
                     if (this.checked[0]) {
                         flag1 = this.isEmpty(data.upgradeCondDirectNum, true);
@@ -301,41 +302,42 @@
                         data.upgradeCondBuyGift = 0;
                     }
                     this.setIsAjax(flag1 && flag2 && flag3 && flag4);
-                } else if (index == 2) {
+                } else if (index === 2) {
                     flag1 = this.isEmpty(data.upgradeDirectPerExp, false);
                     this.setIsAjax(flag1);
-                } else if (index == 3) {
+                } else if (index === 3) {
                     flag1 = this.isEmpty(data.upgradeIndirectPerExp, false);
                     this.setIsAjax(flag1);
-                } else if (index == 4) {
-                    flag1 = this.isEmpty(ddata.upgradePerSalesOneExp, false);
+                } else if (index === 4) {
+                    flag1 = this.isEmpty(data.upgradePerSalesOneExp, false);
                     this.setIsAjax(flag1);
-                } else if (index == 5) {
+                } else if (index === 5) {
                     flag1 = this.isEmpty(data.upgradeDirectSalesOneExp, false);
                     this.setIsAjax(flag1);
-                } else if (index == 6) {
+                } else if (index === 6) {
                     flag1 = this.isEmpty(data.upgradeIndirectSalesOneExp, false);
                     this.setIsAjax(flag1);
-                } else if (index == 7) {
+                } else if (index === 7) {
                     flag1 = this.isEmpty(data.upgradeWeekSalesNum, false);
                     flag2 = this.isEmpty(data.upgradeWeekSalesNumExp, false);
                     this.setIsAjax(flag1 && flag2);
-                } else if (index == 8) {
+                } else if (index === 8) {
                     flag1 = this.isEmpty(data.upgradeWeekSalesFreq, true);
                     flag2 = this.isEmpty(data.upgradeWeekSalesFreqExp, false);
                     this.setIsAjax(flag1 && flag2);
-                } else if (index == 9) {
+                } else if (index === 9) {
                     flag1 = this.isEmpty(data.upgradeBuyNum, false);
                     flag2 = this.isEmpty(data.upgradeBuyNumExp, false);
                     this.setIsAjax(flag1 && flag2);
-                } else if (index == 10) {
+                } else if (index === 10) {
                     flag1 = this.isEmpty(data.upgradeTokenCoinBuyOneExp, false);
                     this.setIsAjax(flag1);
                 }
                 if (this.isAjax) {
                     request[url](data).then(res => {
-                        this.$message.success(res.data.msg);
+                        // this.$message.success(res.data.msg);
                         this.mask = false;
+                        this.getDetail();
                     }).catch(err => {
                         console.log(err);
                     });

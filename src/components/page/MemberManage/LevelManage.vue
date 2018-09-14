@@ -43,6 +43,16 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <div class="block">
+                    <el-pagination
+                        background
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="page.currentPage"
+                        layout="total, prev, pager, next, jumper"
+                        :total="page.totalPage">
+                    </el-pagination>
+                </div>
             </template>
         </div>
 
@@ -221,7 +231,8 @@
                 that.tableLoading = true;
                 request.getList(data).then(res => {
                     that.tableLoading = false;
-                    that.tableData = res.data;
+                    that.tableData = res.data.data;
+                    this.page.totalPage = res.data.totalNum;
                 }).catch(err => {
                     console.log(err);
                     that.tableLoading = false;
@@ -286,13 +297,13 @@
 
             // 晋级设置
             upSet(index, row) {
-                sessionStorage.setItem('MemberId', row.id);
-                this.$router.push({ path: '/promotionManage', query: { MemberId: row.id }});
+                sessionStorage.setItem('memberId', row.id);
+                this.$router.push({ path: '/promotionManage', query: { memberId: row.id }});
             },
             // 降级设置
             downSet(index, row) {
-                sessionStorage.setItem('MemberId', row.id);
-                this.$router.push({ path: '/degradeManage', query: { MemberId: row.id }});
+                sessionStorage.setItem('memberId', row.id);
+                this.$router.push({ path: '/degradeManage', query: { memberId: row.id }});
             },
             // //价格阶层
             // priceLevel(index,row){
@@ -301,7 +312,7 @@
             // 删除
             delItem(index, id) {
                 this.delId = id;
-                this.delUrl = 'deleteDealerLevelById';
+                this.delUrl = 'deleteUserLevelById';
                 this.isShowDelToast = true;
             },
             // 删除弹窗
