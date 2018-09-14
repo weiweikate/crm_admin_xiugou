@@ -299,10 +299,10 @@
                             //     index: "topicManage",
                             //     title: "专题管理"
                             // },
-                            // {
-                            //     index: "sensitiveLibrary",
-                            //     title: "敏感词库"
-                            // },
+                            {
+                                index: 'sensitiveLibrary',
+                                title: '敏感词库'
+                            },
                             // {
                             //     index: "advertisingManage",
                             //     title: "广告位管理"

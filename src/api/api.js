@@ -242,7 +242,7 @@ export const getNoticeDetailById = '/admin/notice/findNoticeDetailById';
 export const addNotice = '/admin/notice/addNotice';
 // 修改公告/通知状态
 export const updateNoticeStatus = '/admin/notice/updateNoticeStatus';
-
+export const getDealerPageList = 'aa';
 export const makeSureOrder = '/order/order/makeSureOrder';
 //* ***************************************************************************************************************************************************************************
 export const uploadImg = '/gateway/common/upload/oss'; // 上传图片

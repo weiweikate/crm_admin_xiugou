@@ -41,20 +41,20 @@
             <el-table-column prop="name" label="产品名称" min-width="300">
                 <template slot-scope="scope">
                     <div class="product-img">
-                        <img :src="scope.row.img_url">
+                        <img :src="scope.row.imgUrl">
                     </div>
                     <p class="product-name">{{scope.row.name}}</p>
-                    <p class="product-id">产品ID：{{scope.row.prod_code}}</p>
+                    <p class="product-id">产品ID：{{scope.row.prodCode}}</p>
                 </template>
             </el-table-column>
             <el-table-column label="产品类目" align="center" min-width="120">
                 <template slot-scope="scope">
-                    {{scope.row.firstName}}<br/>{{scope.row.secondName}}
+                    {{scope.row.firstCategoryName}}<br/>{{scope.row.secCategoryName}}
                 </template>
             </el-table-column>
             <el-table-column label="产品售价" align="center" min-width="50">
                 <template slot-scope="scope">
-                    {{scope.row.original_price == undefined?'0':scope.row.original_price | formatPrice}}
+                    {{scope.row.originalPrice == undefined?'0':scope.row.originalPrice | formatPrice}}
                 </template>
             </el-table-column>
             <el-table-column prop="stock" label="库存" align="center" min-width="50"></el-table-column>
@@ -65,7 +65,7 @@
             </el-table-column>
             <el-table-column label="发布时间/发布人" align="center" min-width="120">
                 <template slot-scope="scope">
-                    {{scope.row.create_time | formatDate}}<br/>{{`产品编辑:${scope.row.create_admin}`}}
+                    {{scope.row.createTime | formatDate}}<br/>{{`产品编辑:${scope.row.createAdmin}`}}
                 </template>
             </el-table-column>
             <el-table-column prop="" label="状态" align="center" min-width="50">
@@ -111,7 +111,7 @@
                                 </el-button>
                             </template>
                         </template>
-                        <el-button v-if="p.findProductById" @click="productInfo(scope.row)" type="primary">查看详情
+                        <el-button @click="productInfo(scope.row)" type="primary">查看详情
                         </el-button>
                     </div>
                 </template>
@@ -257,6 +257,8 @@ export default {
             }
             this.tableLoading = true;
             request.queryProductPageList({ productPageParamVO: data }).then(res => {
+                this.tableData = [];
+                this.tableData = res.data.data;
                 this.tableLoading = false;
             }).catch(err => {
                 console.log(err);

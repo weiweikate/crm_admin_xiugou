@@ -22,6 +22,7 @@
                 <div class="upload-tip">建议尺寸：800*800,拖拽图片可以改变顺序，第一张为默认头图</div>
             </el-form-item>
             <el-form-item label="产品分类">
+                <el-cascader @change='getProItemId' v-model="defItem" :options="itemList" @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
                 <el-cascader filterable  @change='getProItemId' v-model="proItemArr" :options="itemList" :props="itemProps"></el-cascader>
                 <span style="margin-left:30px">产品品牌</span>
                 <el-select filterable @change="getSupplyList" v-model="form.brandId" placeholder="请选择">
@@ -97,6 +98,7 @@ import icon from '@/components/common/ico';
 import * as api from '@/api/BrandProduct/ProductMange/index.js';
 import * as pApi from '@/privilegeList/BrandProduct/ProductMange/index.js';
 import utils from '@/utils/index.js';
+import request from '@/http/http';
 export default {
     components: {
         draggable,
@@ -135,6 +137,7 @@ export default {
                 name: '',
                 firstCategoryId: '',
                 secCategoryId: '',
+                thirdCategoryId: '',
                 brandId: '',
                 supplierId: '',
                 sendfrom: '',
@@ -398,60 +401,64 @@ export default {
         // 获取一级类目
         getFirstItem() {
             this.itemList = [];
-            this.$axios
-                .post(api.getCategoryList, { fatherid: 0, pageSize: 1000000, url: pApi.addProduct })
-                .then(res => {
-                    res.data.data.data.forEach((v, k) => {
-                        this.itemList.push({ label: v.name, value: v.id, children: [] });
-                        this.handleItemChange(v.id);
-                    });
-                })
-                .catch(err => {
-                    console.log(err);
+            request.queryProductCategoryList({ fatherId: 0, level: 1, pageSize: 100000 }).then(res => {
+                res.data.data.forEach((v, k) => {
+                    this.itemList.push({ label: v.name, value: v.id, children: [] });
                 });
+            }).catch(err => {
+                console.log(err);
+            });
         },
-        // 获取二级类目
+        // 获取二三级类目
         handleItemChange(val) {
             let index = 0;
-            this.itemList.forEach((v, k) => {
-                if (v.value == val) {
-                    index = k;
-                }
-            });
             const data = {};
-            data.fatherid = val;
-            data.pageSize = 1000000;
-            data.url = pApi.addProduct;
-            this.itemList[index].children = [];
-            this.$axios
-                .post(api.getCategoryList, data)
-                .then(res => {
-                    res.data.data.data.forEach((v, k) => {
-                        this.itemList[index].children.push({ label: v.name, value: v.id });
+            data.pageSize = 100000;
+            if (val[1]) {
+                let tmpIndex = 0;
+                this.itemList.forEach((v, k) => {
+                    if (v.value == val[0]) {
+                        tmpIndex = k;
+                        v.children.forEach((value, key) => {
+                            if (value.value == val[1]) {
+                                index = key;
+                            }
+                        });
+                    }
+                });
+                data.fatherId = val[1];
+                data.level = 3;
+                request.queryProductCategoryList(data).then(res => {
+                    this.itemList[tmpIndex].children[index].children = [];
+                    res.data.data.forEach((v, k) => {
+                        this.itemList[tmpIndex].children[index].children.push({ label: v.name, value: v.id });
                     });
-                })
-                .catch(err => {
+                }).catch(err => {
                     console.log(err);
                 });
+            } else {
+                this.itemList.forEach((v, k) => {
+                    if (v.value == val[0]) {
+                        index = k;
+                    }
+                });
+                data.fatherId = val[0];
+                data.level = 2;
+                request.queryProductCategoryList(data).then(res => {
+                    this.itemList[index].children = [];
+                    res.data.data.forEach((v, k) => {
+                        this.itemList[index].children.push({ label: v.name, value: v.id, children: [] });
+                    });
+                }).catch(err => {
+                    console.log(err);
+                });
+            }
         },
-        // 获取品牌列表
+        // 获取一二三级类目id
         getProItemId(val) {
-            this.form.brandId = '';
-            const id = this.form.secCategoryId = val[1];
             this.form.firstCategoryId = val[0];
             this.form.secCategoryId = val[1];
-            this.brandArr = [];
-            this.getProductParam(val[1]);
-            this.$axios
-                .post(api.queryCategoryBrandCid, { cId: id, pageSize: 1000000, url: pApi.addProduct })
-                .then(res => {
-                    res.data.data.forEach((v, k) => {
-                        this.brandArr.push({ label: v.name, value: v.id });
-                    });
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            this.form.thirdCategoryId = val[2];
         },
         // 获取供应商列表
         getSupplyList() {
