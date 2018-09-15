@@ -9,16 +9,16 @@
                     <el-table-column prop="name" label="模板名称" align="center"></el-table-column>
                     <el-table-column label="是否包邮" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.freight_type==1">自定义运费</template>
-                            <template v-if="scope.row.freight_type==2">平台承担运费</template>
-                            <template v-if="scope.row.freight_type==3">满{{scope.row.freight_free_price}}包邮</template>
+                            <template v-if="scope.row.freightType==1">自定义运费</template>
+                            <template v-if="scope.row.freightType==2">平台承担运费</template>
+                            <template v-if="scope.row.freightType==3">满{{scope.row.freightFreePrice}}包邮</template>
                         </template>
                     </el-table-column>
                     <el-table-column label="计价方式" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.calc_type==1">按重量</template>
-                            <template v-if="scope.row.calc_type==2">按体积</template>
-                            <template v-if="scope.row.calc_type==3">按件数量</template>
+                            <template v-if="scope.row.calcType==1">按重量</template>
+                            <template v-if="scope.row.calcType==2">按体积</template>
+                            <template v-if="scope.row.calcType==3">按件数量</template>
                         </template>
                     </el-table-column>
                    <!-- <el-table-column label="状态" width="180" align="center">
@@ -33,7 +33,7 @@
                             <!--<el-button type="primary" size="small">设为默认</el-button>-->
                             <el-button type="warning" size="small" @click="editItem(scope.$index,scope.row.id)">设置模板
                             </el-button>
-                            <el-button type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除模板
+                            <el-button type="danger" v-if="scope.row.num==0" size="small" @click="delItem(scope.$index,scope.row.id)">删除模板
                             </el-button>
                         </template>
                     </el-table-column>

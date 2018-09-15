@@ -13,7 +13,7 @@
                     <el-form-item prop="original_img" label="品牌logo">
                         <el-upload
                                 class="avatar-uploader"
-                                action="/common/upload/oss"
+                                action="/admin/common/upload/oss"
                                 :show-file-list="false"
                                 :on-preview="handlePreview"
                                 :on-remove="handleRemove"
@@ -91,7 +91,7 @@
             },
             // 上传图片
             handleAvatarSuccess(res, file) {
-                this.form.imgUrl = res.data.imageUrl;
+                this.form.imgUrl = res.data;
             },
             handleRemove() {
                 this.form.imgUrl = '';
@@ -102,11 +102,7 @@
                 that.btnLoading = true;
                 that.$refs[form].validate(valid => {
                     if (valid) {
-                        const data = {};
-                        data.imgUrl = 'http://example.adios.com/a.png';
-                        data.name = this[form].name;
-                        data.area = this[form].area;
-                        data.status = this[form].status;
+                        const data = this[form];
                         request.addProductBrand(data).then(res => {
                             that.$router.push('/brandManage');
                             that.btnLoading = false;

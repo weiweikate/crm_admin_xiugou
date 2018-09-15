@@ -39,7 +39,6 @@ import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
 import deleteToast from '@/components/common/DeleteToast';
 import utils from '@/utils/index.js';
-import * as pApi from '@/privilegeList/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 
@@ -81,19 +80,19 @@ export default {
     activated() {
         this.name =
             this.$route.query.name ||
-            JSON.parse(sessionStorage.getItem('productDetailParam').name);
+            JSON.parse(sessionStorage.getItem('productDetailParam')).name;
         this.id =
             this.$route.query.id ||
-            JSON.parse(sessionStorage.getItem('productDetailParam').id);
+            JSON.parse(sessionStorage.getItem('productDetailParam')).id;
         this.type =
             this.$route.query.type ||
-            JSON.parse(sessionStorage.getItem('productDetailParam').type);
+            JSON.parse(sessionStorage.getItem('productDetailParam')).type;
         this.superiorName =
             this.$route.query.superiorName ||
-            JSON.parse(sessionStorage.getItem('productDetailParam').superiorName);
+            JSON.parse(sessionStorage.getItem('productDetailParam')).superiorName;
         this.className =
             this.$route.query.className ||
-            JSON.parse(sessionStorage.getItem('productDetailParam').className);
+            JSON.parse(sessionStorage.getItem('productDetailParam')).className;
         this.getList(this.page.currentPage);
     },
     methods: {
@@ -116,8 +115,7 @@ export default {
         },
         // 添加确定
         addOrEdit(formName) {
-            const data = {};
-            data.param = this[formName].param;
+            const data = this[formName];
             data.categoryId = this.id;
             if (!data.param) {
                 this.$message.warning('请输入类目名称!');

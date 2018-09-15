@@ -53,7 +53,6 @@
 </template>
 
 <script>
-    // import index from '../../router';
     import request from '@/http/http.js';
 
     export default {
@@ -248,10 +247,10 @@
                 that.expandId = id;// 重新赋值，供下一次判断使用
 
                 const data = {
-                    fatherZipcode: id
+                    fatherCode: id
                 };
                 that.loading = true;
-                request.getCityList(data).then(res => {
+                request.getRegion(data).then(res => {
                     that.checkAll[index].provinceCheck[k].checkedCities = res.data.data;
                     that.checkAll[index].provinceCheck[k].count = res.data.data.length;
 

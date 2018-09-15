@@ -13,7 +13,7 @@
                     <el-form-item prop="original_img" label="品牌logo">
                         <el-upload
                                 class="avatar-uploader"
-                                action="/admin/ossClient/aliyunOSSUploadImage"
+                                action="/admin/common/upload/oss"
                                 :show-file-list="false"
                                 :on-preview="handlePreview"
                                 :on-remove="handleRemove"
@@ -102,7 +102,7 @@
             },
             // 上传图片
             handleAvatarSuccess(res, file) {
-                this.form.imgUrl = res.data.imageUrl;
+                this.form.imgUrl = res.data;
             },
             handleRemove() {
                 this.form.original_img = '';
@@ -114,10 +114,6 @@
                 that.$refs[form].validate(valid => {
                     if (valid) {
                         const data = this[form];
-                        // data.imgUrl = this[form].imgUrl;
-                        // data.name = this[form].name;
-                        // data.area = this[form].area;
-                        data.status = this[form].status;
                         data.id = that.id;
                         request.updateProductBrand(data).then(res => {
                             that.$router.push('/brandManage');

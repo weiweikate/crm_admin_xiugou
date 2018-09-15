@@ -33,11 +33,10 @@
                         <el-radio-group v-model="form.freightType" @change="chooseStyle">
                             <el-radio label="1">自定义运费</el-radio>
                             <el-radio label="2">平台承担运费</el-radio>
-                            <el-radio label="3">满
-                                <el-input class="small-inp" v-model="freightFreePrice"></el-input>
-                                元包邮
-                            </el-radio>
                         </el-radio-group>
+                        <el-checkbox v-model="checked" style="margin-left: 30px">满
+                            <el-input class="small-inp" v-model="freightFreePrice"></el-input>
+                            元包邮</el-checkbox>
                     </el-form-item>
                     <div v-if="isShowExpress">
                         <el-form-item prop="status" label="计价方式">
@@ -183,6 +182,7 @@
                     cityId: '',
                     areaId: ''
                 },
+                checked: false,
                 freightFreePrice: '',
                 startUnit: '',
                 startPrice: '',
@@ -248,13 +248,12 @@
                             that.$message.warning('请选择省市区！');
                             return;
                         }
-                        if (that.form.freightType === 3) {
+                        if (that.checked) {
                             if (!that.freightFreePrice) {
-                                that.$message.warning('请输入满包邮的金额！');
+                                that.$message.warning('请输入满包邮金额！');
                                 return;
-                            } else {
-                                data.freightFreePrice = that.freightFreePrice;
                             }
+                            data.freightFreePrice = that.freightFreePrice;
                         }
                         const list = [];
                         const temp = {

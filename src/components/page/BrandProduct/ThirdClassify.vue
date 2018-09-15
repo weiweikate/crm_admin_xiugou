@@ -51,7 +51,7 @@
                 <el-form-item label="类目图标" :label-width="formLabelWidth" class="icon-area">
                     <el-input readonly v-model="addForm.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
-                               action="/common/upload/oss"
+                               action="/admin/common/upload/oss"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
@@ -80,7 +80,7 @@
                 <el-form-item label="类目图标" :label-width="formLabelWidth" class="icon-area">
                     <el-input readonly v-model="form.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
-                               action="/common/upload/oss"
+                               action="/admin/common/upload/oss"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
@@ -110,7 +110,6 @@ import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
 import deleteToast from '@/components/common/DeleteToast';
 import utils from '@/utils/index.js';
-import * as pApi from '@/privilegeList/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 
@@ -159,17 +158,13 @@ export default {
     },
     activated() {
         this.name =
-            this.$route.query.name ||
-            JSON.parse(sessionStorage.getItem('thirdClassify').name);
+            this.$route.query.name || JSON.parse(sessionStorage.getItem('thirdClassify')).name;
         this.id =
-            this.$route.query.id ||
-            JSON.parse(sessionStorage.getItem('thirdClassify').id);
+            this.$route.query.id || JSON.parse(sessionStorage.getItem('thirdClassify')).id;
         this.type =
-            this.$route.query.type ||
-            JSON.parse(sessionStorage.getItem('thirdClassify').type);
+            this.$route.query.type || JSON.parse(sessionStorage.getItem('thirdClassify')).type;
         this.superiorName =
-            this.$route.query.superiorName ||
-            JSON.parse(sessionStorage.getItem('thirdClassify').superiorName);
+            this.$route.query.superiorName ||JSON.parse(sessionStorage.getItem('thirdClassify')).superiorName;
         this.getList(this.page.currentPage);
     },
     methods: {
@@ -211,11 +206,7 @@ export default {
         // 添加修改确定
         addOrEdit(formName) {
             let url = '';
-            const data = {};
-            data.name = this[formName].name;
-            // data.img = this[formName].img;
-            data.img = 'http://example.adios.com/a.png';
-            data.status = this[formName].status;
+            const data = this[formName];
             data.type = this.type;
             data.level = 3;
             data.fatherId = this.id;
@@ -253,7 +244,6 @@ export default {
         delItem(id) {
             this.delId = id;
             this.delUrl = 'deleteProductCategory';
-            this.delUri = pApi.deleteProductCategory_2;
             this.isShowDelToast = true;
         },
         // 删除弹窗
@@ -264,9 +254,9 @@ export default {
         // 上传图片
         handleAvatarSuccess(res, file) {
             if (this.itype == 'add') {
-                this.addForm.img = res.data.imageUrl;
+                this.addForm.img = res.data;
             } else {
-                this.form.img = res.data.imageUrl;
+                this.form.img = res.data;
             }
         },
         // 取消

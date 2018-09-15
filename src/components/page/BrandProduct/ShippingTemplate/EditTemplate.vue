@@ -33,11 +33,10 @@
                         <el-radio-group v-model="form.freightType" @change="chooseStyle">
                             <el-radio label="1">自定义运费</el-radio>
                             <el-radio label="2">平台承担运费</el-radio>
-                            <el-radio label="3">满
-                                <el-input class="small-inp" v-model="freightFreePrice"></el-input>
-                                元包邮
-                            </el-radio>
                         </el-radio-group>
+                        <el-checkbox v-model="checked" style="margin-left: 30px">满
+                            <el-input class="small-inp" v-model="freightFreePrice"></el-input>
+                            元包邮</el-checkbox>
                     </el-form-item>
                     <div v-if="isShowExpress">
                         <el-form-item prop="status" label="计价方式">
@@ -184,6 +183,7 @@
                     cityId: '',
                     areaId: ''
                 },
+                checked: false,
                 freightFreePrice: '',
                 startUnit: '',
                 startPrice: '',
@@ -221,43 +221,36 @@
                     id: that.id
                 };
                 that.loading = true;
-                that.$axios
-                    .post(api.findFreightTemplateById, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.loading = false;
-                            const freightTemplate = res.data.data.freightTemplate;
-                            that.form.name = freightTemplate.name;
-                            that.form.country = freightTemplate.country.toString();
-                            that.form.calcType = freightTemplate.calcType ? freightTemplate.calcType.toString() : '1';
-                            that.form.freightType = freightTemplate.freightType.toString();
-                            that.sendDays = freightTemplate.sendDays;
-                            that.freightFreePrice = freightTemplate.freightFreePrice;
-                            // that.detailData = res.data.data.userProduct;
-                            const reginArr = [];
-                            reginArr.push(freightTemplate.provinceId, freightTemplate.cityId, freightTemplate.areaId);
-                            that.address = reginArr;
-                            that.form.provinceId = freightTemplate.provinceId;
-                            that.form.cityId = freightTemplate.cityId;
-                            that.form.areaId = freightTemplate.areaId;
-                            that.isShowExpress = !(freightTemplate.freightType == 2);
-                            const list = res.data.data.list;
-                            that.startUnit = list[0].startUnit;
-                            that.startPrice = list[0].startPrice;
-                            that.nextUnit = list[0].nextUnit;
-                            that.nextPirce = list[0].nextPirce;
-                            for (let i = 1; i < list.length; i++) {
-                                that.tableData.push(list[i]);
-                            }
-                            that.rows = list.length - 1;
-                        } else {
-                            that.loading = false;
-                            that.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        that.loading = false;
-                    });
+                request.findFreightTemplateById(data).then(res => {
+                    that.loading = false;
+                    const freightTemplate = res.data.data.freightTemplate;
+                    that.form.name = freightTemplate.name;
+                    that.form.country = freightTemplate.country.toString();
+                    that.form.calcType = freightTemplate.calcType ? freightTemplate.calcType.toString() : '1';
+                    that.form.freightType = freightTemplate.freightType.toString();
+                    that.sendDays = freightTemplate.sendDays;
+                    that.freightFreePrice = freightTemplate.freightFreePrice;
+                    if (that.freightFreePrice) that.checked = true;
+                    // that.detailData = res.data.data.userProduct;
+                    const reginArr = [];
+                    reginArr.push(freightTemplate.provinceId, freightTemplate.cityId, freightTemplate.areaId);
+                    that.address = reginArr;
+                    that.form.provinceId = freightTemplate.provinceId;
+                    that.form.cityId = freightTemplate.cityId;
+                    that.form.areaId = freightTemplate.areaId;
+                    that.isShowExpress = !(freightTemplate.freightType == 2);
+                    const list = res.data.data.list;
+                    that.startUnit = list[0].startUnit;
+                    that.startPrice = list[0].startPrice;
+                    that.nextUnit = list[0].nextUnit;
+                    that.nextPirce = list[0].nextPirce;
+                    for (let i = 1; i < list.length; i++) {
+                        that.tableData.push(list[i]);
+                    }
+                    that.rows = list.length - 1;
+                }).catch(err => {
+                    that.loading = false;
+                });
             },
             // 获取省市区
             getRegion(msg) {
@@ -280,13 +273,12 @@
                             that.$message.warning('请选择省市区！');
                             return;
                         }
-                        if (that.form.freightType == 3) {
+                        if (that.checked) {
                             if (!that.freightFreePrice) {
-                                that.$message.warning('请输入满包邮的金额！');
+                                that.$message.warning('请输入满包邮金额！');
                                 return;
-                            } else {
-                                data.freightFreePrice = that.freightFreePrice;
                             }
+                            data.freightFreePrice = that.freightFreePrice;
                         }
                         const list = [];
                         const temp = {

@@ -29,7 +29,7 @@
             :total="page.totalPage">
         </el-pagination>
       </div>
-      <el-dialog title="添加问题类目" :visible.sync="isShowAddQues" width="40%">
+      <el-dialog title="添加问题类目" :visible.sync="isShowAddQues">
           <div class="add-item">
               <span>问题类型</span>
               <el-input v-model="questionType" class="input-sty" placeholder="请输入问题类型"></el-input>
@@ -38,7 +38,7 @@
            <span>选择图片</span>
            <el-input readonly v-model="imgUrl" auto-complete="off"></el-input>
            <el-upload class="icon-uploader"
-                      action="/common/upload/oss"
+                      action="/admin/common/upload/oss"
                       :on-success="handleAvatarSuccess">
                <el-button size="small" type="primary"><i class="el-icon-upload"></i>添加图片</el-button>
            </el-upload>
@@ -113,7 +113,7 @@ export default {
             this.addQuesTypeBtn = true;
             const data = {
                 name: this.questionType,
-                imgUrl: '34234234'
+                imgUrl: this.imgUrl
             };
             request
                 .addHelpType(data)
@@ -141,7 +141,6 @@ export default {
         deleteUser(row) {
             this.delId = row.id;
             this.delUrl = 'deleteHelpType';
-            this.delUri = pApi.deleteHelpType;
             this.isShowDelToast = true;
         },
         deleteToast(msg) {
@@ -150,7 +149,7 @@ export default {
         },
         // 上传图片
         handleAvatarSuccess(res, file) {
-            this.imgUrl = res.data.imageUrl;
+            this.imgUrl = res.data;
         }
     }
 };
@@ -172,6 +171,7 @@ export default {
     }
     .el-dialog {
         border-radius: 10px;
+        width: 430px;
         .el-dialog__header {
             border-bottom: 1px solid #dfdfdf;
             .el-dialog__title {

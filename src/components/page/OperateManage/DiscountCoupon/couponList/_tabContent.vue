@@ -151,7 +151,7 @@ export default {
             this.page.currentPage = val;
             this.tableLoading = true;
             request.queryCouponList(data).then(res => {
-                if (!res.data.data) return;
+                if (!res.data) return;
                 this.tableData = [];
                 this.tableData = res.data.data;
                 this.page.totalPage = res.data.totalNum;

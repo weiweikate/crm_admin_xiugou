@@ -68,7 +68,7 @@ export default new Router({
                     name: 'productDetailParam',
                     path: '/productDetailParam',
                     component: resolve => require(['../components/page/BrandProduct/ProductDetailParam.vue'], resolve),
-                    meta: { title: '三级类目', url: '/admin/productCategory/queryProductCategoryPageList_2' }
+                    meta: { title: '产品详细参数', url: '/admin/productCategory/queryProductCategoryPageList_2' }
                 },
                 {
                     name: 'brandManage',
