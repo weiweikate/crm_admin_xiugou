@@ -23,7 +23,7 @@
                                     {{province.name}}
                                 <template><i style="margin-right: 10px" class="el-icon-caret-bottom"></i></template>
                                  <template>
-                                    <el-card v-if="showCities&&expandId==province.zipcode" class="city-area">
+                                    <el-card v-if="showCities&&expandId==province.code" class="city-area">
                                         <i style="margin-right: 10px;" class="el-icon-close"
                                            @click.stop="showCities=false"></i>
                                             <el-checkbox
@@ -99,7 +99,7 @@
             // 将表格中获取到的数据封装成[{provinceId:**,provinceName:**,cityIds:[],cityNames:[]}]的格式，供回显数据使用
             // allChooseProvinceIds代表表格中所有选中的省，allCityIds,allCityNames代表所以市
             // preChooseProvinceIds代表编辑表格当前行中所有选中的省，preCityIds,preCityNames代表所以市
-            // zipcode规则：前两位代表省,中间两位代表市,最后两位代表区
+            // code：前两位代表省,中间两位代表市,最后两位代表区
             getAllData(data) {
                 let arrData = []; let tempData = []; let tempProvinceIds = []; let tempCityIds = []; let tempCityNames = [];
                 if (data instanceof Array) {
@@ -164,7 +164,7 @@
                 const data = {};
                 request.getProvinceListGroupByDistrict(data).then(res => {
                     const arr = ['', '华东', '华南', '华中', '华北', '西北', '西南', '东北', '港澳台', '海外'];
-                    for (const i in res.data.data) {
+                    for (const i in res.data) {
                         const temp = {
                             isChecked: false,
                             isDisabled: false,
@@ -172,38 +172,38 @@
                             count: 0,
                             provinceCheck: []
                         };
-                        for (const j in res.data.data[i]) {
+                        for (const j in res.data[i]) {
                             const tempProvinceCheck = {
                                 isChecked: false,
                                 isDisabled: false,
                                 isIndeterminate: false,
                                 cityCheck: [],
                                 cityDisabled: [],
-                                name: res.data.data[i][j].name,
-                                zipcode: res.data.data[i][j].zipcode,
+                                name: res.data[i][j].name,
+                                code: res.data[i][j].code,
                                 count: 0,
                                 ids: [],
                                 names: [],
                                 checkedCities: []
                             };
-                            let tempZipCode = res.data.data[i][j].zipcode;
-                            if (typeof res.data.data[i][j].zipcode !== 'string') {
-                                tempZipCode = res.data.data[i][j].zipcode.toString();
+                            let tempCode = res.data[i][j].code;
+                            if (typeof res.data[i][j].code !== 'string') {
+                                tempCode = res.data[i][j].code.toString();
                             }
 
                             for (const a in that.allChooseData) {
-                                if (that.allChooseData[a].provinceId == tempZipCode) {
+                                if (that.allChooseData[a].provinceId == tempCode) {
                                     tempProvinceCheck.isChecked = true;
                                     tempProvinceCheck.ids = that.allChooseData[a].cityIds;
                                     tempProvinceCheck.names = that.allChooseData[a].cityNames;
-                                    if (that.preChooseProvinceIds.indexOf(tempZipCode) == -1) {
+                                    if (that.preChooseProvinceIds.indexOf(tempCode) == -1) {
                                         tempProvinceCheck.isDisabled = true;
                                         for (const c in that.allChooseData[a].cityIds) {
                                             tempProvinceCheck.cityDisabled[c] = true;
                                         }
                                     } else {
                                         for (const p in that.preChooseData) {
-                                            if (that.preChooseData[p].provinceId == tempZipCode) {
+                                            if (that.preChooseData[p].provinceId == tempCode) {
                                                 if (that.preChooseData[p].cityIds.length < that.allChooseData[a].cityIds.length) {
                                                     tempProvinceCheck.isDisabled = true;
                                                 }
@@ -219,7 +219,7 @@
                         const tempArea = {
                             name: arr[i],
                             id: i,
-                            value: res.data.data[i]
+                            value: res.data[i]
                         };
                         that.area.push(tempArea);
                         for (const i in that.checkAll) {
@@ -251,15 +251,16 @@
                 };
                 that.loading = true;
                 request.getRegion(data).then(res => {
-                    that.checkAll[index].provinceCheck[k].checkedCities = res.data.data;
-                    that.checkAll[index].provinceCheck[k].count = res.data.data.length;
-
-                    for (const kk in res.data.data) {
-                        const v = res.data.data[kk];
-                        that.checkAll[index].provinceCheck[k].cityCheck[kk] = false;
+                    that.checkAll[index].provinceCheck[k].checkedCities = res.data;
+                    that.checkAll[index].provinceCheck[k].count = res.data.length;
+                    for (const kk in res.data) {
+                        const v = res.data[kk];
+                        if (!that.checkAll[index].provinceCheck[k].cityCheck[kk]) {
+                            that.checkAll[index].provinceCheck[k].cityCheck[kk] = false;
+                        }
                         that.checkAll[index].provinceCheck[k].cityDisabled[kk] = false;
                         // 数据回显
-                        const tempId = typeof v.zipcode === 'string' ? v.zipcode : v.zipcode.toString();
+                        const tempId = typeof v.code === 'string' ? v.code : v.code.toString();
                         id = typeof id === 'string' ? id : id.toString();
                         if (that.allChooseProvinceIds.indexOf(id) != -1) {
                             if (that.allCityIds.indexOf(tempId) != -1) {
@@ -281,7 +282,7 @@
                                 that.checkAll[index].provinceCheck[k].cityCheck[kk] = false;
                                 that.handelDeleteData(tempId, v.name);
                             } else {
-                                const tempProvinceId = that.checkAll[index].provinceCheck[k].zipcode;
+                                const tempProvinceId = that.checkAll[index].provinceCheck[k].code;
                                 if (!that.checkAll[index].provinceCheck[k].cityDisabled[kk]) {
                                     that.checkAll[index].provinceCheck[k].cityCheck[kk] = true;
                                     that.handelChooseData('all', tempProvinceId, index, k, tempId, v.name);
@@ -312,7 +313,7 @@
                         }
 
                         // 判断是否全选
-                        if (that.checkAll[index].provinceCheck[k].ids.length > 0 && that.checkAll[index].provinceCheck[k].ids.length < res.data.data.length) {
+                        if (that.checkAll[index].provinceCheck[k].ids.length > 0 && that.checkAll[index].provinceCheck[k].ids.length < res.data.length) {
                             that.checkAll[index].provinceCheck[k].isIndeterminate = true;
                         } else {
                             that.checkAll[index].provinceCheck[k].isIndeterminate = false;
@@ -331,7 +332,7 @@
                 if (that.checkAll[index].isChecked) {
                     that.checkAll[index].provinceCheck.forEach(function(v, k) {
                         that.checkAll[index].provinceCheck[k].isChecked = true;
-                        that.getCityList(v.zipcode, 'checked', index, k, v.name);
+                        that.getCityList(v.code, 'checked', index, k, v.name);
                     });
                 } else {
                     that.expandId = -1;
@@ -348,19 +349,19 @@
             // 省对应的全选操作
             handleCheckAll(val, k, index) {
                 const that = this;
-                that.getCityList(val.zipcode, 'checked', index, k, val.name);
+                that.getCityList(val.code, 'checked', index, k, val.name);
                 that.areaCheckedAll(index);
                 that.checkAll[index].provinceCheck[k].isIndeterminate = false;
             },
             expandItem(val, k, index) {
-                this.expandId = val.zipcode;
-                this.getCityList(val.zipcode, 'expand', index, k, val.name);
+                this.expandId = val.code;
+                this.getCityList(val.code, 'expand', index, k, val.name);
             },
             // 单独操作市
             handleCheckedCities(kk, k, index, city, e) {
                 const that = this;
-                const tempId = typeof city.zipcode === 'string' ? city.zipcode : city.zipcode.toString();
-                let tempProvinceId = that.checkAll[index].provinceCheck[k].zipcode;
+                const tempId = typeof city.code === 'string' ? city.code : city.code.toString();
+                let tempProvinceId = that.checkAll[index].provinceCheck[k].code;
                 if (typeof tempProvinceId !== 'string') tempProvinceId = tempProvinceId.toString();
                 that.$set(that.checkAll[index].provinceCheck[k].cityCheck, kk, e);
                 if (e) { // 选中

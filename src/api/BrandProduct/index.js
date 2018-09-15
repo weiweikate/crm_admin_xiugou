@@ -103,8 +103,7 @@ export const updateProduct = '/admin/product/updateProduct';
 // 根据二级分类查询参数
 export const infoParmByCategoryId = '/admin/infoParm/infoParmByCategoryIdList';
 // 省市区接口
-// 根据分区获取省市区
-export const getProvinceListGroupByDistrict = '/admin/area/getProvinceListGroupByDistrict';
+
 // 根据市code获取区
 export const getAreaList = '/admin/area/getAreaList';
 // 根据省code获取市
@@ -125,6 +124,8 @@ export const deleteFreightTemplateById = '/admin/freightTemplate/deleteFreightTe
 export const queryFreightTemplateList = '/product/freightTemplate/queryFreightTemplateList';
 // 添加运费模板接口
 export const addFreightTemplate = '/product/freightTemplate/addFreightTemplate';
+// 根据分区获取省市区
+export const getProvinceListGroupByDistrict = ['/config/sysArea/getProvinceListGroupByDistrict', { methods: 'get' }];
 
 // 品牌管理
 // 产品品牌列表

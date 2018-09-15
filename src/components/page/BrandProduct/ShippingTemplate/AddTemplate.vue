@@ -253,6 +253,7 @@
                                 that.$message.warning('请输入满包邮金额！');
                                 return;
                             }
+                            data.freightType = 3;
                             data.freightFreePrice = that.freightFreePrice;
                         }
                         const list = [];

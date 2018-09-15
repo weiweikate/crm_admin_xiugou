@@ -65,7 +65,7 @@ export default {
     },
     computed: {
         qnLocation() {
-            return 'addImg';
+            return '/admin/common/upload/oss';
         }
     },
     activated() {
@@ -94,7 +94,7 @@ export default {
             let url = '';
             if (this.uploadType === 'image') {
                 // 获得文件上传后的URL地址
-                url = e.data.imageUrl;
+                url = e.data;
             }
             if (url != null && url.length > 0) {
                 // 将文件上传后的URL地址插入到编辑器文本中

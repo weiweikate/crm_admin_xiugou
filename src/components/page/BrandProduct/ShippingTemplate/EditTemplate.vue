@@ -223,14 +223,14 @@
                 that.loading = true;
                 request.findFreightTemplateById(data).then(res => {
                     that.loading = false;
-                    const freightTemplate = res.data.data.freightTemplate;
+                    const freightTemplate = res.data.freightTemplate;
                     that.form.name = freightTemplate.name;
                     that.form.country = freightTemplate.country.toString();
                     that.form.calcType = freightTemplate.calcType ? freightTemplate.calcType.toString() : '1';
                     that.form.freightType = freightTemplate.freightType.toString();
                     that.sendDays = freightTemplate.sendDays;
                     that.freightFreePrice = freightTemplate.freightFreePrice;
-                    if (that.freightFreePrice) that.checked = true;
+                    if (freightTemplate.freightType === 3) that.checked = true;
                     // that.detailData = res.data.data.userProduct;
                     const reginArr = [];
                     reginArr.push(freightTemplate.provinceId, freightTemplate.cityId, freightTemplate.areaId);
@@ -238,7 +238,7 @@
                     that.form.provinceId = freightTemplate.provinceId;
                     that.form.cityId = freightTemplate.cityId;
                     that.form.areaId = freightTemplate.areaId;
-                    that.isShowExpress = !(freightTemplate.freightType == 2);
+                    that.isShowExpress = !(freightTemplate.freightType === 2);
                     const list = res.data.data.list;
                     that.startUnit = list[0].startUnit;
                     that.startPrice = list[0].startPrice;
@@ -278,6 +278,7 @@
                                 that.$message.warning('请输入满包邮金额！');
                                 return;
                             }
+                            data.freightType = 3;
                             data.freightFreePrice = that.freightFreePrice;
                         }
                         const list = [];
