@@ -28,22 +28,7 @@ export const getSecondList = '/admin/productCategory/queryProductCategoryFatheri
 
 // 模板列表
 export const getAllDiscountCouponTemplate = '/admin/discountCouponTemplate/getAllDiscountCouponTemplate';
-// 问题类目列表
-export const queryHelpTypePageList = '/admin/help/helpType/queryHelpTypePageList';
-// 添加问题类型
-export const addHelpType = '/admin/help/helpType/addHelpType';
-// 删除问题类型
-export const deleteHelpType = ['/admin/help/helpType/deleteHelpType', { methods: 'get' }];
-// 问题列表
-export const queryHelpQuestionPageList = '/admin/help/helpQuestion/queryHelpQuestionPageList';
-// 添加问题
-export const addHelpQuestion = '/admin/help/helpQuestion/addHelpQuestion';
-// 根据id查询问题详情
-export const findHelpQuestionById = ['/admin/help/helpQuestion/findHelpQuestionById', { methods: 'get' }];
-// 编辑问题详情
-export const updateHelpQuestion = '/admin/help/helpQuestion/updateHelpQuestion';
-// 删除问题
-export const deleteHelpQuestion = ['/admin/help/helpQuestion/deleteHelpQuestion', { methods: 'get' }];
+
 /** ************降价拍*****************/
 // 降价拍商品列表
 export const operatorDepreciatelist = '/admin/operActivityDepreciate/operatorDepreciatelist';
@@ -202,3 +187,21 @@ export const addOrModifyCoupon = '/coupon/addOrModifyCoupon';
 export const findCouponById = ['/coupon/findById', { methods: 'get' }];
 // 查询运费模板
 export const queryTemplateList = ['/coupon/template/queryTemplateList', { methods: 'get' }];
+
+//帮助中心
+// 问题类目列表
+export const queryHelpTypePageList = '/help/helpType/queryHelpTypePageList';
+// 添加问题类型
+export const addHelpType = '/help/helpType/addHelpType';
+// 删除问题类型
+export const deleteHelpType = ['/help/helpType/deleteHelpType', { methods: 'get' }];
+// 问题列表
+export const queryHelpQuestionPageList = '/help/helpQuestion/queryHelpQuestionPageList';
+// 添加问题
+export const addHelpQuestion = '/help/helpQuestion/addHelpQuestion';
+// 根据id查询问题详情
+export const findHelpQuestionById = ['/help/helpQuestion/findHelpQuestionById', { methods: 'get' }];
+// 编辑问题详情
+export const updateHelpQuestion = '/help/helpQuestion/updateHelpQuestion';
+// 删除问题
+export const deleteHelpQuestion = ['/help/helpQuestion/deleteHelpQuestion', { methods: 'get' }];
