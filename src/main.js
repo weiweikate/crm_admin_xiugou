@@ -25,7 +25,7 @@ Vue.filter('formatDate', function(value) {
     if (!value) {
         return '';
     }
-    return moment(value).format('YYYY-MM-DD HH:mm:ss');
+    return moment(value).format('YYYY-MM-DD');
 });
 Vue.filter('handleMoney', function(val) {
     return `￥${val}`;

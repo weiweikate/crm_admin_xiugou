@@ -106,9 +106,6 @@ export default {
             }
         };
     },
-    mounted() {
-    // this.getCreatedMsg();
-    },
     activated() {
         this.getCreatedMsg();
     },
@@ -177,7 +174,8 @@ export default {
 
         // 上传图片
         uploadAvatar(res) {
-            this.form.face = res.data.imageUrl;
+            this.form.face = res.data;
+            this.$set(this.form,'face',res.data);
         },
 
         // 全选用户管理
@@ -243,7 +241,7 @@ export default {
         async getCreatedMsg() {
             this.bodyLoading = true;
             const that = this;
-            this.uploadImg = api.addImg;
+            this.uploadImg = api.uploadImg;
             await this.getDepartmentList();
             await this.getRoleList();
             this.checkAllUser = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];

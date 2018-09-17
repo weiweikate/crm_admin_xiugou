@@ -62,11 +62,11 @@
                                    style="margin-left: 0">实名信息
                         </el-button>
                     </div>
-                    <!--<div v-if='storeId'>-->
-                        <!--<el-button type="primary" @click="shopInfo"-->
-                                   <!--style="margin-left: 0">店铺信息-->
-                        <!--</el-button>-->
-                    <!--</div>-->
+                    <div v-if='storeId'>
+                        <el-button type="primary" @click="shopInfo"
+                                   style="margin-left: 0">店铺信息
+                        </el-button>
+                    </div>
                 </div>
                 <div class="clearfix"></div>
             </div>
