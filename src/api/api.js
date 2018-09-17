@@ -245,7 +245,7 @@ export const updateNoticeStatus = '/admin/notice/updateNoticeStatus';
 export const getDealerPageList = 'aa';
 export const makeSureOrder = '/order/order/makeSureOrder';
 //* ***************************************************************************************************************************************************************************
-export const uploadImg = '/common/upload/oss'; // 上传图片
+export const uploadImg = '/admin/common/upload/oss'; // 上传图片
 export const queryConfig = ['/config/sysconfig/queryConfig', { methods: 'get' }]; // 查询系统配置
 export const addOrModifyList = '/config/sysconfig/addOrModifyList'; // 批量新增系统配置
 export const findAdminUserbyId = ['/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息
@@ -266,7 +266,6 @@ export const getRegion = ['/config/sysArea/queryAreaList', { methods: 'get' }]; 
 export const getUserLevelList = ['/user/getLevelList', { methods: 'get' }]; // 查询会员层级
 // 获取数据字典列表
 export const queryDictionaryDetailsType = ['/config/dictionary/queryDictionaryTypeList', { methods: 'get' }];
-
 // 问题反馈
 // 反馈列表
 export const queryFeedbackList = '/userFeedback/queryFeedbackList';

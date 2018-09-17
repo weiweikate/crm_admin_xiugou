@@ -215,10 +215,10 @@
                                 index: 'levelManage',
                                 title: '会员层级管理'
                             },
-                            // {
-                            //     index: "joinManage",
-                            //     title: "会员邀请管理"
-                            // },
+                            {
+                                index: 'joinManage',
+                                title: '会员邀请管理'
+                            },
                             {
                                 index: 'memberManage',
                                 title: '会员管理'

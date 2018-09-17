@@ -21,10 +21,10 @@ try {
         let url = '';
         let methods = 'post';
         if (typeof value === 'string') {
-            url = `/admin${value}`;
+            url = value;
             methods = 'post';
         } else if (value.length) {
-            url = `/admin${value[0]}`;
+            url = value[0];
             methods = value[1]['methods'];
         }
         // 接口方法
@@ -36,10 +36,10 @@ try {
                     params: data
                 };
             }
-            return axios[methods](url, data)
+            return axios[methods](`/admin${url}`, data)
                 .then(res => {
                     // 错误信息拦截
-                    if (res.code === 10004) {
+                    if (res.code === (10004 || 7004)) {
                         sessionStorage.clear();
                         localStorage.clear();
                         Message.warning({
