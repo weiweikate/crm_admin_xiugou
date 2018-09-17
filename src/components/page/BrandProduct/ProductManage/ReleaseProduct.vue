@@ -17,7 +17,6 @@
                             <icon ico='icon-shanchu'></icon>
                         </div>
                         <video :src="videoUrl" controls="controls"></video>
-                        <!--<img class="uImg" :src="videoUrl">-->
                     </div>
                     <draggable style="display:inline-block" v-model="imgArr" :move="getdata" @update="datadragEnd">
                         <transition-group>
@@ -25,7 +24,7 @@
                                 <div class="delImg" @click="deleteImg(v)">
                                     <icon ico='icon-shanchu'></icon>
                                 </div>
-                                <img class="uImg" :src="v.imgUrl">
+                                <img class="uImg" :src="v.originalImg">
                             </div>
                         </transition-group>
                     </draggable>
@@ -40,16 +39,16 @@
                                  @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
                     <span style="margin-left:30px">产品品牌</span>
                     <el-select filterable @change="getSupplyList" v-model="form.brandId" placeholder="请选择">
-                        <el-option v-for="(v,k) in brandArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                        <el-option v-for="(v,k) in brandArr" :key="k" :label="v.name" :value="v.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="供应商">
-                    <el-select v-model="form.supplierId" placeholder="下拉搜索供应商">
-                        <el-option v-for="(v,k) in supplierArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                    <el-select @change="getBrandList" v-model="form.supplierId" placeholder="下拉搜索供应商">
+                        <el-option v-for="(v,k) in supplierArr" :key="k" :label="v.name" :value="v.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="发货方">
-                    <el-select v-model="form.sendfrom" placeholder="选择发货方">
+                    <el-select v-model="form.sendMode" placeholder="选择发货方">
                         <el-option v-for="(v,k) in shipperArr" :key="k" :label="v.label" :value="v.value"></el-option>
                     </el-select>
                 </el-form-item>
@@ -63,17 +62,17 @@
                 <div class="pro-title">运费其他</div>
                 <el-form-item label="选择运费模板">
                     <el-select v-model="form.freightTemplateId" placeholder="请选择模板">
-                        <el-option v-for="(v,k) in freightTemplateArr" :key="k" :label="v.label"
-                                   :value="v.value"></el-option>
+                        <el-option v-for="(v,k) in freightTemplateArr" :key="k" :label="v.name"
+                                   :value="v.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="售后周期">
                     <transition name="fade">
-                        <el-select v-if="!showSaleTime" v-model="form.aferServiceDays" placeholder="请选择售后周期">
+                        <el-select v-if="!showSaleTime" v-model="form.afterSaleServiceDays" placeholder="请选择售后周期">
                             <el-option v-for="(v,k) in aferServiceDays" :key="k" :label="v.label"
                                        :value="v.value"></el-option>
                         </el-select>
-                        <el-input v-if='showSaleTime' v-model="form.aferServiceDays" style="width:215px"
+                        <el-input v-if='showSaleTime' v-model="form.afterSaleServiceDays" style="width:215px"
                                   placeholder="请输入售后周期"></el-input>
                     </transition>
                     <el-button @click="defSaleTime">自定义</el-button>
@@ -135,7 +134,7 @@
                                :disabled="v.selected" :class="{'selected-btn':v.selected}">{{v.label}}
                     </el-button>
                 </div>
-                <el-button type="primary" @click="submitForm">确认发布</el-button>
+                <el-button type="primary" :loading="btnLoading" @click="submitForm">确认发布</el-button>
                 <el-button>取消</el-button>
             </el-form>
         </el-card>
@@ -148,7 +147,6 @@
     import Quill from 'quill';
     import icon from '@/components/common/ico';
     import * as api from '@/api/api.js';
-    import * as pApi from '@/privilegeList/BrandProduct/ProductMange/index.js';
     import utils from '@/utils/index.js';
     import request from '@/http/http';
 
@@ -193,13 +191,13 @@
                     thirdCategoryId: '',
                     brandId: '',
                     supplierId: '',
-                    sendfrom: '',
+                    sendMode: '',
                     freightTemplateId: '',
-                    aferServiceDays: '',
+                    afterSaleServiceDays: '',
                     content: '',
-                    tagId: '',
-                    originalImg: '',
-                    smallImg: ''
+                    imgFileList: [],
+                    restrictions: 0,
+                    productParamValueVOList: []
                 },
                 // 使用限制
                 limit: {
@@ -241,7 +239,8 @@
                 selectedTagArr: [],
                 tagArr: [],
                 tagName: '',
-                proItemArr: []
+                proItemArr: [],
+                btnLoading: false
             };
         },
 
@@ -255,11 +254,14 @@
             this.uploadImg = api.uploadImg;
             this.imgArr = [];
             this.proItemArr = [];
+            this.videoUrl = '';
             this.selectedTagArr = [];
             // 获取一级类目
             this.getFirstItem();
+            // 获取品牌列表
+            this.getBrandList();
             // 获取运费模板
-            // this.getFreightTemplate();
+            this.getFreightTemplate();
             // 获取所有标签
             // this.getAllTags();
             utils.cleanFormData(this.form);
@@ -280,13 +282,7 @@
                     return false;
                 } else if (this.selectedTagArr.length == 0) {
                     this.$message.warning('请添加产品标签');
-                    return false;
-                } else if (!(parseInt(this.form.weight) >= 0)) {
-                    this.$message.warning('请输入正确的重量');
-                    return false;
-                } else if (!(parseInt(this.form.volume) >= 0)) {
-                    this.$message.warning('请输入正确的体积');
-                    return false;
+                    // return false;
                 }
                 if (this.productParam.length == 0) {
                     this.$message.warning('请输入产品参数');
@@ -296,40 +292,47 @@
             },
             // 提交表单
             submitForm() {
-                const isCanSubmit = this.beforeSubmit();
-                if (!isCanSubmit) {
-                    return;
+                // const isCanSubmit = this.beforeSubmit();
+                // if (!isCanSubmit) {
+                //     return;
+                // }
+                this.form.restrictions = Number(this.form.restrictions);
+                if (this.limit.notSupportCoupon) {
+                    this.form.restrictions += 1;
                 }
-                const tmp = [];
-                const tmpSmalUrll = [];
-                const tmpOriUrl = [];
-                this.selectedTagArr.forEach((v, k) => {
-                    tmp.push(v.value);
+                if (this.limit.notSupportScore) {
+                    this.form.restrictions += 2;
+                }
+                if (this.limit.notSupportRetMoney) {
+                    this.form.restrictions += 4;
+                }
+                if (this.limit.notSupportRetChange) {
+                    this.form.restrictions += 8;
+                }
+                if (this.limit.notSupportRetGoods) {
+                    this.form.restrictions += 16;
+                }
+                this.productParam.forEach(v => {
+                    this.form.productParamValueVOList.push({ paramId: v.id, value: v.value });
                 });
-                this.form.tagId = tmp.join(',');
-                this.imgArr.forEach((v, k) => {
-                    tmpSmalUrll.push(v.smallUrl);
-                    tmpOriUrl.push(v.originUrl);
+                this.form.imgUrl = this.imgArr[0].originalImg;
+                this.form.imgFileList = this.imgArr;
+                const data = this.form;
+                data.productParamValueVOList = this.form.productParamValueVOList;
+                data.videoUrl = this.videoUrl;
+                data.buyLimit = this.purchaseLimit ? this.purchasevalue : 0;
+                data.beginTime = this.setBuyTime[0] === undefined ? '' : utils.formatTime(this.setBuyTime[0], 1);
+                data.endTime = this.setBuyTime[1] === undefined ? '' : utils.formatTime(this.setBuyTime[1], 1);
+                data.productTagDTOList = [{ tagId: 1 }];
+                this.btnLoading = true;
+                request.addProduct(data).then(res => {
+                    this.btnLoading = false;
+                    this.$message.success(res.msg);
+                    this.$router.push('/productList');
+                }).catch(err => {
+                    this.btnLoading = false;
+                    console.log(err);
                 });
-                this.form.smallImg = JSON.stringify(tmpSmalUrll);
-                this.form.originalImg = JSON.stringify(tmpOriUrl);
-                this.form.type = 2;
-                let data = {};
-                data = this.form;
-                data.url = pApi.addProduct;
-                const paramTmp = [];
-                this.productParam.forEach((v, k) => {
-                    paramTmp.push({ parmId: v.id, parmValue: v.value });
-                });
-                data.specStr = JSON.stringify(paramTmp);
-                this.$axios.post(api.addProduct, data)
-                    .then(res => {
-                        this.$message.success(res.data.data);
-                        this.$router.push('/productList');
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
             },
             beforeUploadArr() {
                 this.$message.warning('上传中...');
@@ -339,7 +342,9 @@
                 //   console.log(evt.draggedContext.element.url);
             },
             datadragEnd(evt) {
-                //   console.log(this.imgArr);
+                this.imgArr.forEach((v, k) => {
+                    v.sort = k + 1;
+                });
             },
             successUpload(res, status) {
                 if (status === 1) {
@@ -351,7 +356,7 @@
                     this.$message.warning('最多只能上传五张图片');
                     return;
                 }
-                this.imgArr.push({ imgUrl: res.data });
+                this.imgArr.push({ originalImg: res.data, smallImg: res.data, status: 1, sort: this.imgArr.length + 1 });
                 this.$message.success('上传成功');
             },
             // 删除图片
@@ -442,7 +447,6 @@
                 if (!tmp) {
                     const data = {};
                     data.name = this.tagName;
-                    data.url = pApi.addProduct;
                     data.type = 2;
                     this.$axios.post(api.addTagLibrary, data)
                         .then(res => {
@@ -531,46 +535,44 @@
                 this.form.thirdCategoryId = val[2];
                 this.getProductParam(val[2]);
             },
-            // 获取供应商列表
-            getSupplyList() {
-                this.supplierId = '';
-                const data = {};
-                this.supplierArr = [];
-                data.firstCategoryId = this.form.firstCategoryId;
-                data.secCategoryId = this.form.secCategoryId;
-                data.brandId = this.form.brandId;
-                data.pageSize = 1000000;
-                data.url = pApi.addProduct;
-                this.$axios
-                    .post(api.querySupplierBrandPageList, data)
-                    .then(res => {
-                        res.data.data.forEach((v, k) => {
-                            this.supplierArr.push({ label: v.name, value: v.supplier_id });
-                        });
-                    })
-                    .catch(err => {
+            // 获取品牌列表
+            getBrandList(val) {
+                if (val) {
+                    request.findBySupplierId({ id: val }).then(res => {
+                        this.brandArr = res.data;
+                    }).catch(err => {
                         console.log(err);
                     });
+                } else {
+                    request.findProductBrandListNoStop({}).then(res => {
+                        this.brandArr = res.data;
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                }
+            },
+            // 获取供应商列表
+            getSupplyList(val) {
+                request.findByBrandId({ id: val }).then(res => {
+                    this.supplierArr = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 获取运费模板列表
             getFreightTemplate() {
                 this.freightTemplateArr = [];
-                this.$axios
-                    .post(api.getFreightTemplateList, { url: pApi.addProduct })
-                    .then(res => {
-                        res.data.data.forEach((v, k) => {
-                            this.freightTemplateArr.push({ label: v.name, value: v.id });
-                        });
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                request.queryFreightTemplateList({}).then(res => {
+                    this.freightTemplateArr = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 获取所有标签
             getAllTags() {
                 this.tagArr = [];
                 this.$axios
-                    .post(api.queryTagLibraryList, { url: pApi.addProduct, type: 2 })
+                    .post(api.queryTagLibraryList, { type: 2 })
                     .then(res => {
                         res.data.data.forEach((v, k) => {
                             this.tagArr.push({ label: v.name, value: v.id });

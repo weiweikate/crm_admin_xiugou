@@ -56,23 +56,8 @@ export const deleteCouponByCouponId = '/admin/giftBag/deleteCouponByCouponId';
 export const queryCouponList = '/admin/giftBag/queryCouponList';
 // 添加优惠券
 export const couponControl = '/admin/giftBag/couponControl';
-
-// 根据二级分类查询参数
-export const infoParmByCategoryIdList = '/admin/giftBag/queryGiftBagInfoParamByCategoryIdList';
-// 根据类目查询品牌列表
-export const queryCategoryBrandCid = 'admin/categoryBrand/queryCategoryBrandCid';
-// 添加产品
-export const addProduct = '/admin/product/addProduct';
-// 上传图片
-export const addImg = '/admin/ossClient/aliyunOSSUploadImage';
-// 获取供应商列表
-export const querySupplierBrandPageList = '/admin/supplierBrand/querySupplierBrandPageList';
-// 获取模板列表
-export const getFreightTemplateList = '/admin/freightTemplate/getFreightTemplateList';
 // 添加新标签
 export const addTagLibrary = '/admin/tagLibrary/addTagLibrary';
-// 根据id获取产品详情
-export const findProductById = '/admin/product/findProductById';
 // 根据二级id产品id获取产品信息
 export const querySaleSpecList = '/admin/saleSpec/querySaleSpecList';
 // 编辑产品，根据id获取产品信息
@@ -97,8 +82,6 @@ export const updateProductStatus = '/admin/product/updateProductStatus';
 export const updateProductShelves = '/admin/product/updateProductShelves';
 // 批量操作
 export const updateBatchProductStatus = '/admin/product/updateBatchProductStatus';
-// 编辑产品
-export const updateProduct = '/admin/product/updateProduct';
 
 // 根据二级分类查询参数
 export const infoParmByCategoryId = '/admin/infoParm/infoParmByCategoryIdList';
@@ -134,8 +117,6 @@ export const getProductBrandList = '/product/productBrand/queryProductBrandList'
 export const findProductBrand = ['/product/productBrand/findProductBrand', { methods: 'get' }];
 // 新增产品品牌
 export const addProductBrand = '/product/productBrand/addProductBrand';
-// 修改产品品牌
-export const updateProductBrand = '/product/productBrand/modifyProductBrand';
 // 删除产品品牌
 export const deleteProductBrand = ['/product/productBrand/deleteProductBrand', { methods: 'get' }];
 
@@ -158,6 +139,11 @@ export const queryProductCategoryParamList = ['/product/productCategoryParam/que
 export const addProductCategoryParam = '/product/productCategoryParam/addProductCategoryParam';
 // 删除产品详情参数
 export const deleteProductCategoryParam = ['/product/productCategoryParam/deleteProductCategoryParam', { methods: 'get' }];
+export const addProduct = '/product/product/addProduct'; // 添加产品
 export const queryProductPageList = ['/product/product/queryProductPageList', { methods: 'post' }]; // 查询产品列表
 export const findProductBrandListNoStop = ['/product/productBrand/findProductBrandList', { methods: 'get' }]; // 查询品牌列表，不含停用
+export const findByBrandId = ['/product/productSupplierBrand/findByBrandId', { methods: 'get' }]; // 根据品牌ID查询供应商列表
+export const findBySupplierId = ['/product/productSupplierBrand/findBySupplierId', { methods: 'get' }]; // 根据供应商ID查询品牌列表
+export const findProductById = ['/product/product/findProductById', { methods: 'get' }]; // 查询产品详情
+export const updateProduct = ['/product/product/updateProduct', { methods: 'post' }]; // 修改产品信息
 
