@@ -13,7 +13,7 @@
                     <el-form-item prop="original_img" label="品牌logo">
                         <el-upload
                                 class="avatar-uploader"
-                                action="/admin/common/upload/oss"
+                                :action="uploadImg"
                                 :show-file-list="false"
                                 :on-preview="handlePreview"
                                 :on-remove="handleRemove"
@@ -44,6 +44,7 @@
     import icon from '@/components/common/ico';
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import request from '@/http/http.js';
+    import * as api from '@/api/api.js';
 
     export default {
         components: {
@@ -76,7 +77,8 @@
                     ]
                 },
                 id: '',
-                addBrand: ''
+                addBrand: '',
+                uploadImg: ''
             };
         },
         activated() {
@@ -84,6 +86,7 @@
             this.form.imgUrl = '';
             this.form.area = '';
             this.form.status = '1';
+            this.uploadImg = api.uploadImg;
         },
         methods: {
             handlePreview(file) {

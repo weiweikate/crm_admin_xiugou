@@ -47,7 +47,7 @@
                 <div class="title">产品
                     <el-input
                         placeholder="请输入产品名称或者ID进行查找"
-                        suffix-icon="el-icon-search">
+                        suffix-icon="el-icon-search" v-model="param">
                     </el-input>
                 </div>
                 <div v-if="productList.length>0" class="data-area">
@@ -151,11 +151,13 @@
                 secondTagIds: [], // 二级类目标签ids
                 thirddTagIds: [], // 三级类目标签ids
                 productTagIds: [], // 产品标签ids
-                checkedList: []// 选中数据，主要用于一级类目与产品列表的关联回显
+                checkedList: [], // 选中数据，主要用于一级类目与产品列表的关联回显
+                param: ''// 产品查询参数
             };
         },
         watch: {
             getProducts(params) {
+                console.log(params)
                 this.resetValue();
                 if (params.firstCategoryIds) {
                     if (params.firstCategoryIds.indexOf(',') == -1) {
@@ -352,7 +354,7 @@
                 that.firstCategoryName = item.name;
                 if (that.firstChecked[index]) { // 改变对应一级类目的选中值
                     that.addTags(1, item);// 增加一级类目标签值
-                    // that.changePreValues(item, 'add', 1);
+                    that.changePreValues(item, 'add', 1);
                     that.second.forEach(function(v, k) {
                         that.deleteTags(2, v, 'false');// 删除二级类目标签值
                     });
@@ -500,12 +502,13 @@
                     page: 1,
                     pageSize: 10000,
                     firstCategoryId: that.firstCategoryId,
-                    secondCategoryId: that.secondCategoryId,
-                    thirdCategoryId: that.thirdCategoryId
+                    secCategoryId: that.secondCategoryId,
+                    thirdCategoryId: that.thirdCategoryId,
+                    param: this.param
                 };
                 that.loading = false;
                 // 获取产品列表并回显选中状态
-                request.queryProductPageList(data).then(res => {
+                request.queryProductList(data).then(res => {
                     that.productList = res.data;
                     res.data.forEach(function(v, k) {
                         if (that.productTagIds.indexOf(v.id) != -1 || that.thirdChecked[index]) {
@@ -678,9 +681,11 @@
                 const productList = {
                     firstCategoryIds: this.firstCategoryIds,
                     secondCategoryIds: this.secondCategoryIds,
+                    thirdCategoryIds: this.thirdCategoryIds,
                     products: this.products,
                     checkAll: this.checkAll
                 };
+                console.log(productList)
 
                 this.$emit('getProductIds', JSON.stringify(productList));
             },

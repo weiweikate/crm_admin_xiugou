@@ -183,12 +183,18 @@ export const getAllWordsByPage = '/hotWord/getAllWordsByPage'; // 关键词分�
 export const queryCouponList = '/coupon/queryCouponList';
 // 添加修改优惠券
 export const addOrModifyCoupon = '/coupon/addOrModifyCoupon';
+// 添加库存
+export const addCouponStock = '/coupon/addStock';
+// 失效优惠券
+export const deleteCouponById = ['/coupon/deleteById', { methods: 'get' }];
 // 通过id查询优惠券信息
 export const findCouponById = ['/coupon/findById', { methods: 'get' }];
 // 查询运费模板
 export const queryTemplateList = ['/coupon/template/queryTemplateList', { methods: 'get' }];
+// 查询产品列表
+export const queryProductList = '/product/product/queryProductList';
 
-//帮助中心
+// 帮助中心
 // 问题类目列表
 export const queryHelpTypePageList = '/help/helpType/queryHelpTypePageList';
 // 添加问题类型

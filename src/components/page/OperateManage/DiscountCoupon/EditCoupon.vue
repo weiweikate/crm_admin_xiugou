@@ -25,7 +25,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="券模板">
-                    <el-select v-model="form.discountCouponTemplateId" placeholder="请选择券模板">
+                    <el-select v-model="form.couponTemplateId" placeholder="请选择券模板">
                         <el-option v-for="(v,k) in tempArr" :key="k" :label="v.name"
                                    :value="v.id"></el-option>
                     </el-select>
@@ -41,18 +41,13 @@
                         天内有效
                     </div>
                     <el-checkbox v-model="isDay">设置为礼包周期优惠券</el-checkbox>
-                    <div>领到券当天后
-                        <el-input class="sml-inp" v-model="monthOrWeek" :disabled="!isDay"></el-input>
-                        <el-select class="sml-inp" v-model="type" @change="changeType" :disabled="!isDay">
-                            <el-option label="月" value="3">月</el-option>
-                            <el-option label="周" value="2">周</el-option>
-                        </el-select>
-                        开始生效，次{{tipInf}}当天生效
-                        <div>例:领券日期为当月5日，如1月后生效，则次月5日生效，再次月的5日凌晨失效</div>
+                    <div v-if="isDay">领到券当天后
+                        <el-input class="sml-inp" v-model="waitDays"></el-input>天，开始生效，
+                        <el-input class="sml-inp" v-model="effectiveDays"></el-input>天后失效。
                     </div>
                 </el-form-item>
                 <el-form-item label="到期提醒">
-                    <el-checkbox v-model="expirationReminder">到期前4天提醒一次</el-checkbox>
+                    <el-checkbox v-model="remindFlag">到期前<el-input v-model="remindDays" class="sml-inp"></el-input>天提醒一次</el-checkbox>
                 </el-form-item>
                 <el-form-item label="可用品类">
                     <!--<div @click="chooseBrand"><span class="choose-brand">请选择品类</span></div>-->
@@ -80,13 +75,13 @@
                     <span><el-checkbox style="margin-left: 10px" v-model="totalNumber">不限制</el-checkbox></span>
                 </el-form-item>
                 <el-form-item label="每人限额">
-                    <el-input class="mid-inp" v-model="form.maxDealerGetNumber" :disabled="maxDealerGetNumber"></el-input>
+                    <el-input class="mid-inp" v-model="form.getLimit" :disabled="getLimit"></el-input>
                     张
-                    <span><el-checkbox style="margin-left: 10px" v-model="maxDealerGetNumber">不限制</el-checkbox></span>
+                    <span><el-checkbox style="margin-left: 10px" v-model="getLimit">不限制</el-checkbox></span>
                 </el-form-item>
 
                 <el-form-item label="优惠券说明">
-                    <el-input type="textarea" v-model="form.remark" placeholder="请输入说明"></el-input>
+                    <el-input type="textarea" v-model="form.remarks" placeholder="请输入说明"></el-input>
                 </el-form-item>
 
                 <el-button type="primary" :loading="btnLoading" @click="submitForm">提交</el-button>
@@ -127,10 +122,10 @@
                     name: '',
                     type: 2,
                     value: '',
-                    discountCouponTemplateId: '',
+                    couponTemplateId: '',
                     totalNumber: '',
-                    maxDealerGetNumber: '',
-                    remark: ''
+                    getLimit: '',
+                    remarks: ''
                 },
                 typeArr: [{// 优惠券类型
                     name: '满减券(商品满额可用)',
@@ -175,13 +170,14 @@
                 }],
                 tempArr: [], // 优惠券模版
                 isChooseBrand: false, // 选择品类弹窗
-                expirationReminder: '', // 是否到期提醒
+                remindFlag: '', // 是否到期提醒
+                remindDays: '', // 到期前几天提示
                 data: {
                     totalNumber: '', // 发放数量
-                    maxDealerGetNumber: ''// 每人限额
+                    getLimit: ''// 每人限额
                 },
                 totalNumber: false, // 发放数量是否限制
-                maxDealerGetNumber: false, // 每人限额是否限制
+                getLimit: false, // 每人限额是否限制
                 productList: [], // 产品列表
                 day: '', // 可用周期天
                 monthOrWeek: '', // 可用周期月、周
@@ -221,34 +217,40 @@
                         this.isOnly = true;
                     }
                     this.form.value = detail.value;
-                    this.form.discountCouponTemplateId = detail.discountCouponTemplateId;
-                    this.form.remark = detail.remark;
+                    this.form.couponTemplateId = detail.couponTemplateId;
+                    this.form.remarks = detail.remarks;
                     this.categoryType = res.data.categoryType;
                     this.useConditions = detail.useConditions;
                     this.getProducts = {
                         firstCategoryIds: detail.firstCategoryIds,
                         secondCategoryIds: detail.secondCategoryIds,
+                        thirdCategoryIds: detail.thirdCategoryIds,
                         products: detail.productIds,
                         firstCategoryNames: detail.firstCategoryNames,
                         secondCategoryNames: detail.secondCategoryNames,
+                        thirdCategoryNames: detail.thirdCategoryNames,
                         productNames: detail.productNames
                     };
-                    if (detail.hadPeriod == 1) { // 1是周期礼包，0不是
+                    if (detail.cycleFlag == 1) { // 1是周期礼包，0不是
                         this.isDay = true;
-                        this.monthOrWeek = detail.period;
-                        this.type = detail.periodType;
-                        this.tipInf = this.type == 3 ? '月' : '周';
+                        this.waitDays = detail.waitDays;
+                        this.effectiveDays = detail.effectiveDays;
                     } else {
                         this.isDay = false;
-                        this.day = detail.period;
+                        this.day = detail.effectiveDays;
                     }
-                    this.expirationReminder = detail.expirationReminder == 1;// 1提醒2不提醒
-                    this.form.dealerLevelIds = detail.dealerLevelIds;
-                    this.showLevel(detail.dealerLevelIds);
-                    if (detail.maxDealerGetNumber == -1) {
-                        this.maxDealerGetNumber = true;
+                    this.remindFlag = detail.remindFlag == 1;// 1提醒2不提醒
+                    this.remindDays = detail.remindDays;// 几天前提醒
+                    const userLevelIds = [];
+                    for (const i in detail.userLevel) {
+                        userLevelIds.push(detail.userLevel[i].userLevelId);
+                    }
+                    this.form.userLevelId = userLevelIds.join(',');
+                    this.showLevel(userLevelIds.join(','));
+                    if (detail.getLimit == -1) {
+                        this.getLimit = true;
                     } else {
-                        this.form.maxDealerGetNumber = detail.maxDealerGetNumber;
+                        this.form.getLimit = detail.getLimit;
                     }
                     if (detail.totalNumber == -1) {
                         this.totalNumber = true;
@@ -258,6 +260,7 @@
                     const temp = {
                         firstCategoryIds: detail.firstCategoryIds,
                         secondCategoryIds: detail.secondCategoryIds,
+                        thirdCategoryIds: detail.thirdCategoryIds,
                         productIds: detail.productIds
                     };
                     this.productIds = temp;
@@ -266,12 +269,12 @@
                 });
             },
             // 加载层级
-            showLevel(dealerLevelIds) {
+            showLevel(userLevelId) {
                 this.users = [];
                 this.checkedUsers = [];
                 request.getUserLevelList({}).then(res => {
                     let count = 0;
-                    const arr = dealerLevelIds.split(',');
+                    const arr = userLevelId.split(',');
                     if (res.code == 10000) {
                         for (const i in res.data) {
                             const name = res.data[i].name;
@@ -306,10 +309,6 @@
                     console.log(error);
                 });
             },
-            // 可用周期切换
-            changeType() {
-                this.tipInf = this.type == 3 ? '月' : '周';
-            },
             // 推送人群选择
             handleCheckAllChange(val) {
                 const that = this;
@@ -320,9 +319,9 @@
                     for (let i = 0; i < that.users.length; i++) {
                         result += that.users[i].id + ',';
                     }
-                    that.form.dealerLevelIds = result.slice(0, -1);
+                    that.form.userLevelId = result.slice(0, -1);
                 } else {
-                    that.form.dealerLevelIds = '';
+                    that.form.userLevelId = '';
                 }
             },
             handleCheckedUsersChange(value) {
@@ -336,7 +335,7 @@
                         }
                     }
                 }
-                that.form.dealerLevelIds = result.slice(0, -1);
+                that.form.userLevelId = result.slice(0, -1);
                 that.checkAll = checkedCount === that.users.length;
                 that.isIndeterminate = checkedCount > 0 && checkedCount < that.users.length;
             },
@@ -366,7 +365,7 @@
                     }
                     return;
                 }
-                if (!data.discountCouponTemplateId) {
+                if (!data.couponTemplateId) {
                     this.$message.warning('请选择券模板!');
                     return;
                 }
@@ -378,17 +377,21 @@
                 data.id = this.id;
 
                 if (!this.isDay) {
-                    data.periodType = 1;// 周期类型 日
-                    data.period = this.day;
-                    data.hadPeriod = 0;
+                    data.effectiveDays = this.day;
+                    if (!data.effectiveDays) {
+                        this.$message.warning('请输入可用周期数据!');
+                        return;
+                    }
+                    data.waitDays = 0;
+                    data.cycleFlag = 0;
                 } else {
-                    data.periodType = this.type;
-                    data.period = this.monthOrWeek;
-                    data.hadPeriod = 1;
-                }
-                if (!data.period) {
-                    this.$message.warning('请输入可用周期数据!');
-                    return;
+                    data.waitDays = this.waitDays;
+                    data.effectiveDays = this.effectiveDays;
+                    data.cycleFlag = 1;
+                    if (!data.effectiveDays || !data.waitDays) {
+                        this.$message.warning('请输入可用周期数据!');
+                        return;
+                    }
                 }
                 if (this.form.type == 4) {
                     if (!that.productList.firstCategoryIds || !that.productList.secondCategoryIds || !that.productList.products) {
@@ -406,19 +409,20 @@
                     }
                     data.categoryType = 5;
                 } else {
-                    let firstCategoryIds = []; let secondCategoryIds = []; let productIds = [];
+                    let firstCategoryIds = []; let secondCategoryIds = []; let thirdCategoryIds = []; let productIds = [];
                     firstCategoryIds = that.productList.firstCategoryIds;
                     secondCategoryIds = that.productList.secondCategoryIds;
+                    thirdCategoryIds = that.productList.thirdCategoryIds;
                     productIds = that.productList.products;
-                    if (that.productList.length == 0) {
+                    // if (that.productList.length == 0) {
+                    //     this.$message.warning('请选择可用品类!');
+                    //     return;
+                    // } else {
+                    if (firstCategoryIds.length == 0 && secondCategoryIds.length == 0 && productIds.length == 0) {
                         this.$message.warning('请选择可用品类!');
                         return;
-                    } else {
-                        if (firstCategoryIds.length == 0 && secondCategoryIds.length == 0 && productIds.length == 0) {
-                            this.$message.warning('请选择可用品类!');
-                            return;
-                        }
                     }
+                    // }
                     if (that.productList.checkAll) {
                         data.categoryType = 1;// 全品类
                     } else {
@@ -435,6 +439,7 @@
 
                     data.firstCategoryIds = firstCategoryIds.length ? firstCategoryIds.join(',') : '';
                     data.secondCategoryIds = secondCategoryIds.length ? secondCategoryIds.join(',') : '';
+                    data.thirdCategoryIds = thirdCategoryIds.length ? thirdCategoryIds.join(',') : '';
                     data.productIds = productIds.length ? productIds.join(',') : '';
                 }
                 if (!this.checkedUsers) {
@@ -449,18 +454,23 @@
                         return;
                     }
                 }
-                if (that.maxDealerGetNumber) {
-                    data.maxDealerGetNumber = -1;
+                if (that.getLimit) {
+                    data.getLimit = -1;
                 } else {
                     if (!data.totalNumber) {
                         this.$message.warning('请输入每人限额!');
                         return;
                     }
                 }
-                if (that.expirationReminder) {
-                    data.expirationReminder = 1;
+                if (that.remindFlag) {
+                    data.remindFlag = 1;
+                    data.remindDays = this.remindDays;
+                    if (!data.remindDays) {
+                        this.$message.warning('请输入到期前提醒天数!');
+                        return;
+                    }
                 } else {
-                    data.expirationReminder = 0;
+                    data.remindFlag = 0;
                 }
                 if (this.useConditions) {
                     data.useConditions = this.useConditions;

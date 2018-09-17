@@ -13,7 +13,7 @@
                     <el-form-item prop="original_img" label="品牌logo">
                         <el-upload
                                 class="avatar-uploader"
-                                action="/admin/common/upload/oss"
+                                :action="uploadImg"
                                 :show-file-list="false"
                                 :on-preview="handlePreview"
                                 :on-remove="handleRemove"
@@ -44,6 +44,7 @@
     import icon from '@/components/common/ico';
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import request from '@/http/http.js';
+    import * as api from '@/api/api.js';
 
     export default {
         components: {
@@ -73,13 +74,15 @@
                     // ]
                 },
                 id: '',
-                addBrand: ''
+                addBrand: '',
+                uploadImg: '',
             };
         },
         activated() {
             const that = this;
             that.id = that.$route.query.brandId || sessionStorage.getItem('brandId');
             that.getDetail();
+            this.uploadImg = api.uploadImg;
         },
         methods: {
             // 获取详情

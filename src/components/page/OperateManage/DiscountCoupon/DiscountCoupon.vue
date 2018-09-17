@@ -10,9 +10,9 @@
                 <el-tab-pane label="全部券" name="allCoupon">
                     <v-tab-content v-if="activeName == 'allCoupon'" :name='activeName'></v-tab-content>
                 </el-tab-pane>
-                <!--<el-tab-pane label="未开始" name="notStart">-->
-                    <!--<v-tab-content v-if="activeName == 'notStart'" :name='activeName'></v-tab-content>-->
-                <!--</el-tab-pane>-->
+                <el-tab-pane label="未开始" name="notStart">
+                    <v-tab-content v-if="activeName == 'notStart'" :name='activeName'></v-tab-content>
+                </el-tab-pane>
                 <el-tab-pane label="进行中" name="start">
                     <v-tab-content v-if="activeName == 'start'" :name='activeName'></v-tab-content>
                 </el-tab-pane>

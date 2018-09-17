@@ -27,6 +27,7 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import Quill from 'quill';
 import request from '@/http/http.js';
+import * as api from '@/api/api.js';
 
 export default {
     components: { vBreadcrumb },
@@ -65,7 +66,7 @@ export default {
     },
     computed: {
         qnLocation() {
-            return '/admin/common/upload/oss';
+            return api.uploadImg;
         }
     },
     activated() {

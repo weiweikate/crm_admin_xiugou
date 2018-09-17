@@ -27,6 +27,7 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import Quill from 'quill';
 import request from '@/http/http.js';
+import * as api from '@/api/api.js';
 
 export default {
     components: { vBreadcrumb },
@@ -59,12 +60,12 @@ export default {
                     ]
                 }
             },
-            uploadData: {}
+            uploadData: {},
         };
     },
     computed: {
         qnLocation() {
-            return '/admin/common/upload/oss';
+            return api.uploadImg;
         }
     },
     activated() {
@@ -72,6 +73,7 @@ export default {
         this.questionTypeId = this.$route.query.questionTypeId || sessionStorage.getItem('questionTypeId');
         this.form.questionTitle = '';
         this.form.content = '';
+        this.uploadImg = api.uploadImg;
     },
     mounted() {
     // 为图片ICON绑定事件 getModule 为编辑器的内部属性

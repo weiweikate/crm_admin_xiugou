@@ -14,7 +14,7 @@
                 <div class="info">
                     <div class="tip">
                         <div>优惠券说明：</div>
-                        <div>优惠券仅限于但商品购物使用，只有满足消费{{detail.useConditions}}元才可使用</div>
+                        <div>优惠券仅限于单商品购物使用，只有满足消费{{detail.useConditions}}元才可使用</div>
                     </div>
                 </div>
             </div>
