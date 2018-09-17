@@ -1,7 +1,7 @@
 <template>
     <div class="release-product">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
-        <el-card :body-style="{ padding: '20px 45px',color:'#666' }">
+        <el-card v-loading="bodyLoading" :body-style="{ padding: '20px 45px',color:'#666' }">
             <div class="pro-title">基本信息</div>
             <el-form :model="form" ref="form" label-width="100px">
                 <el-form-item label="产品名称">
@@ -169,16 +169,16 @@
                 brandArr: [],
                 freightTemplateArr: [],
                 supplierArr: [],
-                shipperArr: [{ label: '平台发货', value: '1' }, { label: '供应商发货', value: '2' }],
+                shipperArr: [{ label: '平台发货', value: 1 }, { label: '供应商发货', value: 2 }],
                 aferServiceDays: [
-                    { label: '无售后服务', value: '0' },
-                    { label: '到货后7天', value: '7' },
-                    { label: '到货后15天', value: '15' },
-                    { label: '到货后30天', value: '30' },
-                    { label: '到货后6个月', value: '180' },
-                    { label: '到货后1年', value: '365' },
-                    { label: '到货后2年', value: '730' },
-                    { label: '到货后3年', value: '1095' }
+                    { label: '无售后服务', value: 0 },
+                    { label: '到货后7天', value: 7 },
+                    { label: '到货后15天', value: 15 },
+                    { label: '到货后30天', value: 30 },
+                    { label: '到货后6个月', value: 180 },
+                    { label: '到货后1年', value: 365 },
+                    { label: '到货后2年', value: 730 },
+                    { label: '到货后3年', value: 1095 }
                 ],
                 itemProps: {
                     value: 'value',
@@ -241,7 +241,8 @@
                 tagArr: [],
                 tagName: '',
                 proItemArr: [],
-                btnLoading: false
+                btnLoading: false,
+                bodyLoading: false
             };
         },
 
@@ -257,6 +258,7 @@
             this.proItemArr = [];
             this.videoUrl = '';
             this.selectedTagArr = [];
+            this.productParam = [];
             this.getInfo();
             utils.cleanFormData(this.form);
         },
@@ -270,17 +272,53 @@
 
         methods: {
             // 获取产品信息
-            getInfo() {
+            async getInfo() {
+                this.bodyLoading = true;
                 this.productId = this.$route.query.releaseProduct || sessionStorage.getItem('releaseProduct');
                 // 获取一级类目
-                this.getFirstItem();
+                await this.getFirstItem();
                 // 获取品牌列表
-                this.getBrandList();
+                await this.getBrandList();
                 // 获取运费模板
-                this.getFreightTemplate();
+                await this.getFreightTemplate();
                 request.findProductById({ id: this.productId }).then(res => {
-                    console.log(res);
+                    // this.form = res.data
+                    this.form.name = res.data.name;
+                    this.form.firstCategoryId = Number(res.data.firstCategoryId);
+                    this.proItemArr.push(this.form.firstCategoryId);
+                    this.handleItemChange(this.proItemArr);
+                    this.form.secCategoryId = Number(res.data.secCategoryId);
+                    this.proItemArr.push(this.form.secCategoryId);
+                    this.handleItemChange(this.proItemArr);
+                    this.form.thirdCategoryId = Number(res.data.thirdCategoryId);
+                    this.proItemArr.push(this.form.thirdCategoryId);
+                    this.form.brandId = res.data.brandId;
+                    this.form.supplierId = res.data.supplierId;
+                    this.getSupplyList(this.form.brandId);
+                    this.form.sendMode = res.data.sendMode;
+                    this.form.freightTemplateId = res.data.freightTemplateId;
+                    this.form.afterSaleServiceDays = res.data.afterSaleServiceDays;
+                    this.form.content = res.data.content;
+                    this.imgArr = res.data.imgFileList;
+                    this.form.restrictions = Number(res.data.restrictions);
+                    this.limit.notSupportCoupon = (this.form.restrictions & 1) !== 0;
+                    this.limit.notSupportScore = (this.form.restrictions & 2) !== 0;
+                    this.limit.notSupportRetMoney = (this.form.restrictions & 4) !== 0;
+                    this.limit.notSupportRetChange = (this.form.restrictions & 8) !== 0;
+                    this.limit.notSupportRetGoods = (this.form.restrictions & 16) !== 0;
+                    this.purchaseLimit = res.data.buyLimit !== 0;
+                    this.purchasevalue = res.data.buyLimit;
+                    this.setBuyTime.push(res.data.beginTime);
+                    this.setBuyTime.push(res.data.endTime);
+                    this.isSetBuTime = !!res.data.beginTime;
+                    this.videoUrl = res.data.videoUrl;
+                    res.data.productParamValueVOList.forEach((v, k) => {
+                        this.productParam.push({ param: v.param, id: v.paramId, value: v.paramValue });
+                    });
+                    this.bodyLoading = false;
+                    console.log((this.form.restrictions) & 16 !== 0);
                 }).catch(err => {
+                    this.bodyLoading = false;
                     console.log(err);
                 });
             },
@@ -305,7 +343,7 @@
                 // if (!isCanSubmit) {
                 //     return;
                 // }
-                this.form.restrictions = Number(this.form.restrictions);
+                this.form.restrictions = 0;
                 if (this.limit.notSupportCoupon) {
                     this.form.restrictions += 1;
                 }
@@ -322,7 +360,7 @@
                     this.form.restrictions += 16;
                 }
                 this.productParam.forEach(v => {
-                    this.form.productParamValueVOList.push({ paramId: v.id, value: v.value });
+                    this.form.productParamValueVOList.push({ paramId: v.id, paramValue: v.value });
                 });
                 this.form.imgUrl = this.imgArr[0].originalImg;
                 this.form.imgFileList = this.imgArr;
@@ -492,7 +530,7 @@
                 });
             },
             // 获取二三级类目
-            handleItemChange(val) {
+            async handleItemChange(val) {
                 let index = 0;
                 const data = {};
                 data.pageSize = 100000;
@@ -511,7 +549,7 @@
                     data.fatherId = val[1];
                     data.level = 3;
                     data.pstatus = 2;
-                    request.queryProductCategoryList(data).then(res => {
+                    await request.queryProductCategoryList(data).then(res => {
                         this.itemList[tmpIndex].children[index].children = [];
                         res.data.data.forEach((v, k) => {
                             this.itemList[tmpIndex].children[index].children.push({ label: v.name, value: v.id });
@@ -528,7 +566,7 @@
                     data.fatherId = val[0];
                     data.level = 2;
                     data.pstatus = 2;
-                    request.queryProductCategoryList(data).then(res => {
+                    await request.queryProductCategoryList(data).then(res => {
                         this.itemList[index].children = [];
                         res.data.data.forEach((v, k) => {
                             this.itemList[index].children.push({ label: v.name, value: v.id, children: [] });
@@ -600,8 +638,8 @@
                     });
             },
             // 获取产品参数
-            getProductParam(secId) {
-                request.queryProductCategoryParamList({ id: secId }).then(res => {
+            async getProductParam(secId) {
+                await request.queryProductCategoryParamList({ id: secId }).then(res => {
                     this.productParam = [];
                     res.data.forEach((v, k) => {
                         v.value = '';
