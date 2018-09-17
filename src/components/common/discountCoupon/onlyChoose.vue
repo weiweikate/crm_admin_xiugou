@@ -126,7 +126,8 @@
                 firstClassifyTag: {}, // 一级类目标签
                 secondClassifyTag: {}, // 二级类目标签
                 thirdClassifyTag: {}, // 三级类目标签
-                productTag: {}// 产品标签
+                productTag: {}, // 产品标签
+                param: ''// 产品参数
 
             };
         },
@@ -289,8 +290,9 @@
                     page: 1,
                     pageSize: 10000,
                     firstCategoryId: that.firstCategoryId,
-                    secondCategoryId: that.secondCategoryId,
-                    thirdCategoryId: that.thirdCategoryId
+                    secCategoryId: that.secondCategoryId,
+                    thirdCategoryId: that.thirdCategoryId,
+                    param: this.param
                 };
                 that.loading = false;
                 // 获取产品列表并回显选中状态

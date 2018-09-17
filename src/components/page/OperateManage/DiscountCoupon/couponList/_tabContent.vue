@@ -25,10 +25,10 @@
             <el-table-column label="可用周期" align="center">
                 <template slot-scope="scope">/</template>
             </el-table-column>
-            <el-table-column prop="dealerLevelIds" label="可使用用户" align="center"></el-table-column>
+            <el-table-column prop="userLevelIds" label="可使用用户" align="center"></el-table-column>
             <el-table-column label="领取人/次" align="center">
                 <template slot-scope="scope">
-                    {{scope.row.hadReceivePerson}}/{{scope.row.hadReceiveCount}}
+                    {{scope.row.hadReceivePerson?scope.row.hadReceivePerson:'0'}}/{{scope.row.hadReceiveCount?scope.row.hadReceiveCount:'0'}}
                 </template>
             </el-table-column>
             <el-table-column label="优惠券库存" align="center">
@@ -40,13 +40,14 @@
             <el-table-column prop="hasUsed" label="已使用" align="center"></el-table-column>
             <el-table-column prop="" label="是否礼包周期券" align="center">
                 <template slot-scope="scope">
-                    <template v-if='scope.row.hadPeriod == 0'>否</template>
+                    <template v-if='scope.row.cycleFlag == 0'>否</template>
                     <template v-else-if='scope.row.status == 1'>是</template>
                 </template>
             </el-table-column>
             <el-table-column prop="" label="状态" align="center">
                 <template slot-scope="scope">
-                    <template v-if='scope.row.status == 1'>进行中</template>
+                    <template v-if='scope.row.status == 1'>未开始</template>
+                    <template v-if='scope.row.status == 2'>进行中</template>
                     <template v-else-if='scope.row.status == 0'>已结束</template>
                 </template>
             </el-table-column>
@@ -56,14 +57,14 @@
                             <div style="float: left">
                                 <el-button @click="editCoupon(scope.row)" type="primary">编辑</el-button>
                                 <br>
-                                <el-button @click="loseDiscountCoupon(scope.row)" v-if="scope.row.status==1" type="danger">失效</el-button>
+                                <el-button @click="loseDiscountCoupon(scope.row)" v-if="scope.row.status!=0" type="danger">失效</el-button>
                             </div>
                             <div style="float: left">
                                 <div class="blue" @click="couponData(scope.row)">券数据
                                 </div>
                                 <div class="blue" @click="couponDetail(scope.row)">查看详情
                                 </div>
-                                <div class="blue"  v-if="scope.row.status==1&&scope.row.totalNumber != -1" @click="addInventory(scope.row)">增加券库存
+                                <div class="blue"  v-if="scope.row.status!=0&&scope.row.totalNumber!=-1" @click="addInventory(scope.row)">增加券库存
                                 </div>
                             </div>
                             <div style="clear: both"></div>
@@ -77,6 +78,7 @@
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="page.currentPage"
+                :page-size="page.pageSize"
                 layout="total, prev, pager, next, jumper"
                 :total="page.totalPage">
             </el-pagination>
@@ -85,7 +87,7 @@
             <div class="content">
                 <div class="item"><span>剩余库存：</span>{{left}}份</div>
                 <div class="item"><span>券值：</span>{{value}}</div>
-                <div class="item"><span>追加数量：</span><el-input v-model="repertoryNumber"></el-input></div>
+                <div class="item"><span>追加数量：</span><el-input v-model="num"></el-input></div>
                 <div style="text-align: center;margin-top: 30px">
                     <el-button type="primary" @click="addRepertory">确定</el-button>
                     <el-button @click="addMask=false">取消</el-button>
@@ -116,7 +118,7 @@ export default {
             addMask: false,
             left: '', // 剩余数量
             value: '', // 券值
-            repertoryNumber: '', // 库存
+            num: '', // 库存
             id: ''// 优惠券id
         };
     },
@@ -127,13 +129,13 @@ export default {
 
     mounted() {
         const n = this.name;
-        if (n == 'allCoupon') {
+        if (n === 'allCoupon') {
             this.status = '';
-        } else if (n == 'notStart') {
-            this.status = '5';
-        } else if (n == 'start') {
+        } else if (n === 'notStart') {
             this.status = '1';
-        } else if (n == 'ended') {
+        } else if (n === 'start') {
+            this.status = '2';
+        } else if (n === 'ended') {
             this.status = '0';
         }
         this.getList(1);
@@ -153,6 +155,16 @@ export default {
             request.queryCouponList(data).then(res => {
                 if (!res.data) return;
                 this.tableData = [];
+                for (const i in res.data.data) {
+                    if (res.data.data[i].couponUserLevelList) {
+                        const userLevelIds = [];
+                        for (const j in res.data.data[i].couponUserLevelList) {
+                            userLevelIds.push(res.data.data[i].couponUserLevelList[j].name);
+                        }
+                        res.data.data[i].userLevelIds = userLevelIds.join(',');
+                    }
+                    // this.tableData.push(res.data.data[i])
+                }
                 this.tableData = res.data.data;
                 this.page.totalPage = res.data.totalNum;
                 this.tableLoading = false;
@@ -178,7 +190,7 @@ export default {
             } else {
                 status = 1;
             }
-            const left = row.totalNumber - row.hadUseNumber;// 剩余数量
+            const left = row.totalNumber - row.hasUsed;// 剩余数量
             const params = {
                 id: row.id,
                 left: left,
@@ -201,7 +213,7 @@ export default {
         // 添加券库存
         addInventory(row) {
             this.addMask = true;
-            this.left = row.totalNumber - row.hadUseNumber;
+            this.left = row.totalNumber - row.hasUsed;
             this.id = row.id;
             if (row.type === 4) {
                 this.value = row.value + '折';
@@ -212,13 +224,13 @@ export default {
         addRepertory() {
             const data = {
                 id: this.id,
-                repertoryNumber: this.repertoryNumber
+                num: this.num
             };
-            if (!this.repertoryNumber) {
+            if (!this.num) {
                 this.$message.warning('请输入库存!');
                 return;
             }
-            request.addRepertory(data).then(res => {
+            request.addCouponStock(data).then(res => {
                 this.addMask = false;
                 this.getList(1);
             }).catch(error => {
@@ -231,7 +243,7 @@ export default {
             const data = {
                 id: row.id
             };
-            request.loseDiscountCoupon(data).then(res => {
+            request.deleteCouponById(data).then(res => {
                 this.getList(1);
             }).catch(error => {
                 console.log(error);

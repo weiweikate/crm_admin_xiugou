@@ -25,6 +25,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="page.currentPage"
+            :page-size="page.pageSize"
             layout="total, prev, pager, next, jumper"
             :total="page.totalPage">
         </el-pagination>
@@ -38,7 +39,7 @@
            <span>选择图片</span>
            <el-input readonly v-model="imgUrl" auto-complete="off"></el-input>
            <el-upload class="icon-uploader"
-                      action="/admin/common/upload/oss"
+                      :action="uploadImg"
                       :on-success="handleAvatarSuccess">
                <el-button size="small" type="primary"><i class="el-icon-upload"></i>添加图片</el-button>
            </el-upload>
@@ -61,6 +62,7 @@ import * as pApi from '@/privilegeList/OperateManage/HelpCenter/index.js';
 import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
+import * as api from '@/api/api.js';
 
 export default {
     components: { vBreadcrumb, deleteToast },
@@ -79,12 +81,14 @@ export default {
             delId: '',
             delUrl: '',
             delUri: '',
-            isShowDelToast: false
+            isShowDelToast: false,
+            uploadImg: ''
         };
     },
     activated() {
         this.height = window.screen.availHeight - 400;
         this.getList();
+        this.uploadImg = api.uploadImg;
     },
     methods: {
         // 获取数据

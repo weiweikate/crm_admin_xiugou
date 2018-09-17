@@ -14,6 +14,7 @@
                             <img :src="scope.row.img" alt="">
                         </template>
                     </el-table-column>
+                    <el-table-column prop="porductNum" label="产品数" align="center"></el-table-column>
                     <el-table-column prop="status" label="状态" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.status == 1">启用</template>
@@ -35,6 +36,7 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="page.currentPage"
+                    :page-size="page.pageSize"
                     layout="total, prev, pager, next, jumper"
                     :total="page.totalPage">
                 </el-pagination>
