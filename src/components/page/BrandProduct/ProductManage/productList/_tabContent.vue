@@ -103,10 +103,7 @@
                                 <el-button v-if='scope.row.status == 4' @click="productStatus(scope.row,'5')"
                                            type="warning">产品下架
                                 </el-button>
-                                <el-button v-else-if="scope.row.status == 2" @click="productStatus(scope.row,'4')"
-                                           type="warning">产品上架
-                                </el-button>
-                                <el-button v-if="scope.row.status == 5" @click="productStatus(scope.row,'4')"
+                                <el-button v-else-if="scope.row.status == 2 || scope.row.status == 5" @click="productStatus(scope.row,'4')"
                                            type="warning">产品上架
                                 </el-button>
                             </template>
@@ -326,36 +323,46 @@ export default {
         // 产品上架/下架
         productStatus(row, status) {
             const data = {};
-            data.productId = row.id;
+            data.id = row.id;
             data.status = status;
-            data.url = pApi.updateProductShelves;
-            this.$axios
-                .post(api.updateProductShelves, data)
-                .then(res => {
-                    this.$message.success(res.data.data);
-                    row.status = status;
-                    this.getList(this.page.currentPage);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            request.updateProductStatusById(data).then(res => {
+                this.$message.success(res.msg);
+                row.status = status;
+            }).catch(err => {
+                console.log(err);
+            });
+            // this.$axios
+            //     .post(api.updateProductShelves, data)
+            //     .then(res => {
+            //         this.$message.success(res.data.data);
+            //         row.status = status;
+            //         this.getList(this.page.currentPage);
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     });
         },
         // 通过/不通过审核
         auditProduct(row, status) {
             const data = {};
-            data.productId = row.id;
+            data.id = row.id;
             data.status = status;
-            data.url = pApi.updateProductStatus;
-            this.$axios
-                .post(api.updateProductStatus, data)
-                .then(res => {
-                    row.status = status;
-                    this.$message.success(res.data.data);
-                    this.getList(this.page.currentPage);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            request.updateProductStatusById(data).then(res => {
+                this.$message.success(res.msg);
+                row.status = status;
+            }).catch(err => {
+                console.log(err);
+            });
+            // this.$axios
+            //     .post(api.updateProductStatus, data)
+            //     .then(res => {
+            //         row.status = status;
+            //         this.$message.success(res.data.data);
+            //         this.getList(this.page.currentPage);
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     });
         },
         // 查看详情
         productInfo(row) {
@@ -432,16 +439,23 @@ export default {
             const data = {};
             data.ids = this.multipleSelection.join(',');
             data.status = status;
-            this.$axios
-                .post(api.updateBatchProductStatus, data)
-                .then(res => {
-                    this.$message.success(res.data.data);
-                    this.isShowPop = false;
-                    this.getList(this.page.currentPage);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            request.updateBatchProductStatus(data).then(res => {
+                this.$message.success(res.msg);
+                this.isShowPop = false;
+                this.getList(this.page.currentPage);
+            }).catch(err => {
+                console.log(err);
+            });
+            // this.$axios
+            //     .post(api.updateBatchProductStatus, data)
+            //     .then(res => {
+            //         this.$message.success(res.data.data);
+            //         this.isShowPop = false;
+            //         this.getList(this.page.currentPage);
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     });
         }
     },
     filters: {

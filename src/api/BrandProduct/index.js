@@ -58,12 +58,8 @@ export const queryCouponList = '/admin/giftBag/queryCouponList';
 export const couponControl = '/admin/giftBag/couponControl';
 // 添加新标签
 export const addTagLibrary = '/admin/tagLibrary/addTagLibrary';
-// 根据二级id产品id获取产品信息
-export const querySaleSpecList = '/admin/saleSpec/querySaleSpecList';
 // 编辑产品，根据id获取产品信息
 export const findProductAllDataById = '/admin/product/findProductAllDataById';
-// 添加规格
-export const addSaleSpecValue = '/admin/saleSpecValue/addSaleSpecValue';
 // 删除规格
 export const deleteSaleSpecValue = '/admin/saleSpecValue/deleteSaleSpecValue';
 // 提交产品规格
@@ -80,8 +76,6 @@ export const updateProductStock = '/admin/price/updateProductStock';
 export const updateProductStatus = '/admin/product/updateProductStatus';
 // 产品上架/下架操作
 export const updateProductShelves = '/admin/product/updateProductShelves';
-// 批量操作
-export const updateBatchProductStatus = '/admin/product/updateBatchProductStatus';
 
 // 根据二级分类查询参数
 export const infoParmByCategoryId = '/admin/infoParm/infoParmByCategoryIdList';
@@ -146,4 +140,10 @@ export const findByBrandId = ['/product/productSupplierBrand/findByBrandId', { m
 export const findBySupplierId = ['/product/productSupplierBrand/findBySupplierId', { methods: 'get' }]; // 根据供应商ID查询品牌列表
 export const findProductById = ['/product/product/findProductById', { methods: 'get' }]; // 查询产品详情
 export const updateProduct = ['/product/product/updateProduct', { methods: 'post' }]; // 修改产品信息
+export const queryProductSpecList = ['/product/productSpecPrice/queryProductSpecPriceList', { methods: 'get' }]; // 获取产品规格列表
+export const addSaleSpecValue = '/product/productSpec/addProductSpec'; // 添加规格
+export const updateProductSpec = '/product/productSpecPrice/updateProductSpec'; // 修改规格
+export const addProductSpecPrice = '/product/productSpecPrice/addProductSpecPrice'; // 添加产品规格价格
+export const updateProductStatusById = '/product/product/updateProductStatusById'; // 修改产品状态
+export const updateBatchProductStatus = '/product/product/updateBatchProductStatus'; // 批量下架删除产品
 

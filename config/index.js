@@ -12,17 +12,17 @@ const path = require('path');
 
 // const baseURL = 'http://172.16.10.100';
 
-const baseURL = 'http://172.16.10.12';
+// const baseURL = 'http://172.16.10.12';
 // const baseURL = 'http://172.16.10.100';
-// const baseURL = 'https://test.dnvhot.tech';
+const baseURL = 'http://testadmin.sharegoodsmall.com';
 
 // 测试地址不需要端口号
-const url_1 = baseURL + ':8190';
-const url_2 = baseURL + ':8180';
-const url_4 = baseURL + ':8103';
-// const url_1 = baseURL;
-// const url_3 = baseURL;
-// const url_4 = baseURL;
+// const url_1 = baseURL + ':8190';
+// const url_2 = baseURL + ':8180';
+// const url_4 = baseURL + ':8103';
+const url_1 = baseURL;
+const url_2 = baseURL;
+const url_4 = baseURL;
 
 module.exports = {
     dev: {
