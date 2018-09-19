@@ -9,12 +9,8 @@ const path = require('path');
 // let baseURL = "http://172.16.10.56";
 // let baseURL = "http://172.16.10.253";
 // const baseURL = 'http://172.16.10.19';
-
-// const baseURL = 'http://172.16.10.100';
-
 const baseURL = 'http://172.16.10.12';
-// const baseURL = 'http://172.16.10.100';
-// const baseURL = 'https://test.dnvhot.tech';
+// const baseURL = 'https:/、/test.dnvhot.tech';
 
 // 测试地址不需要端口号
 const url_1 = baseURL + ':8190';
