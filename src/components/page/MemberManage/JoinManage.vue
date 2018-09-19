@@ -17,14 +17,12 @@
             <el-button @click="sendInvite" style="margin-bottom: 20px" type="primary">发起邀请</el-button>
             <template>
                 <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
-                    <el-table-column prop="id" label="邀请记录编码" align="center"></el-table-column>
-                    <el-table-column prop="levelName" label="邀请层级" align="center"></el-table-column>
-                    <el-table-column prop="dayLogin" label="授权渠道" align="center"></el-table-column>
-                    <el-table-column prop="monthLogin" label="邀请代理品牌" align="center"></el-table-column>
-                    <el-table-column prop="lastLoginTime" label="邀请时间" align="center">
-                        <template slot-scope="scope">{{scope.row.create_time|formatDate}}</template>
+                    <el-table-column prop="id" label="邀请记录ID" align="center"></el-table-column>
+                    <el-table-column prop="levelId" label="邀请层级" align="center"></el-table-column>
+                    <el-table-column prop="invalidTime" label="邀请时间" align="center">
+                        <template slot-scope="scope">{{scope.row.invalidTime|formatDate}}</template>
                     </el-table-column>
-                    <el-table-column prop="adminUser" label="发起者" align="center"></el-table-column>
+                    <el-table-column prop="adminName" label="发起者" align="center"></el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button type="warning" size="small" @click="detailItem(scope.$index,scope.row)">详情</el-button>
@@ -83,30 +81,13 @@ export default {
             };
             this.tableLoading = true;
             request.queryList(data).then(res => {
-                console.log(res);
-                this.tableData = res.data;
-                this.page.totalPage = res.data.resultCount;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
                 this.tableLoading = false;
             }).catch(err => {
                 console.log(err);
                 this.tableLoading = false;
             });
-            // that.$axios
-            //     .post(api.getInvitePageList, data)
-            //     .then(res => {
-            //         if (res.data.code == 200) {
-            //             that.tableLoading = false;
-            //             that.tableData = res.data.data.data;
-            //             that.page.totalPage = res.data.data.resultCount;
-            //         } else {
-            //             that.$message.warning(res.data.msg);
-            //             that.tableLoading = false;
-            //         }
-            //     })
-            //     .catch(err => {
-            //         that.tableLoading = false;
-            //         console.log(err);
-            //     });
         },
         // 详情
         detailItem(index, row) {

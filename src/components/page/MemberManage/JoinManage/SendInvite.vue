@@ -11,9 +11,9 @@
                                  :class="num==index?'checked':''">
                                 <div class="upper">
                                     <icon class="icon" ico="icon-zhucedengluyonghuming"></icon>
-                                    <div>{{item.name}}</div>
+                                    <div>{{item.level}}</div>
                                 </div>
-                                <div class="downer">已有人数：{{item.dealerNum}}</div>
+                                <div class="downer">已有人数：{{item.count}}</div>
                             </div>
                         </el-form-item>
                         <div class="title-item">邀请经销商类型</div>
@@ -116,12 +116,11 @@
 
 </template>
 <script>
-    import icon from '../../../common/ico';
-    import vBreadcrumb from '../../../common/Breadcrumb.vue';
-    import * as api from '../../../../api/api';
-    import vChoosearea from '../../../common/chooseBrand.vue';
+    import icon from '@/components/common/ico';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import vChoosearea from '@/components/common/chooseBrand.vue';
     import moment from 'moment';
-    import * as pApi from '../../../../privilegeList/index.js';
+    import request from '@/http/http';
 
     export default {
         components: {
@@ -211,20 +210,12 @@
             },
             // 获取邀请层级列表
             getLevelList() {
-                const that = this;
                 const data = {};
-                that.$axios
-                    .post(api.getLevelListWithDealerCount, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.levelList = res.data.data;
-                        } else {
-                            that.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                request.queryLevelGroupUserCount({}).then(res => {
+                    this.levelList = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 选择邀请层级
             checkLevel(index, id) {
@@ -379,25 +370,14 @@
                     that.$message.warning('请设置失效时间!');
                     return;
                 }
-                data.url = pApi.addInvite;
                 that.btnLoading = true;
-                this.$axios
-                    .post(api.addInvite, data)
-                    .then(res => {
-                        that.btnLoading = false;
-                        if (res.data.code == 200) {
-                            that.$message.success(res.data.msg);
-                            setTimeout(function() {
-                                that.$router.push('/joinManage');
-                            }, 1000);
-                        } else {
-                            that.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        that.btnLoading = false;
-                    });
+                request.addInvite(data).then(res => {
+                    that.btnLoading = false;
+                    this.$router.replace('/joinManage');
+                }).catch(err => {
+                    that.btnLoading = false;
+                    console.log(err);
+                });
                 // } else {
                 //     console.log("error submit!!");
                 //     that.btnLoading = false;

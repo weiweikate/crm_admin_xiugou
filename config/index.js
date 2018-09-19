@@ -13,8 +13,6 @@ const baseURL = 'http://172.16.10.29';
 // const baseURL = 'http://172.16.10.12';
 // const baseURL = 'https:/、/test.dnvhot.tech';
 
-// const baseURL = 'http://172.16.10.100';
-
 // const baseURL = 'http://testadmin.sharegoodsmall.com';
 
 // 测试地址不需要端口号

@@ -39,15 +39,15 @@ try {
             return axios[methods](`/admin${url}`, data)
                 .then(res => {
                     // 错误信息拦截
-                    if (res.code === (10004 || 7004)) {
+                    if (res.code === 10004 || res.code === 70004) {
                         sessionStorage.clear();
                         localStorage.clear();
                         Message.warning({
                             duration: 1000,
-                            message: '登陆超时，请重新登陆'
+                            message: res.msg
                         });
                         setTimeout(function() {
-                            location.reload();
+                            // location.reload();
                         }, 1000);
                         return Promise.reject(res.msg);
                     }
