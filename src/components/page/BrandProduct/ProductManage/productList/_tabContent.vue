@@ -21,12 +21,12 @@
                     -
                     <el-input style="width:95px" v-model.trim="form.salesMax"></el-input>
                 </el-form-item>
-                <el-form-item prop="priceMin" label="价格">
-                    <el-input style="width:95px" v-model.trim="form.priceMin">
+                <el-form-item prop="minPrice" label="价格">
+                    <el-input style="width:95px" v-model.trim="form.minPrice">
                         <template slot="prepend">￥</template>
                     </el-input>
                     -
-                    <el-input style="width:95px" v-model.trim="form.priceMax">
+                    <el-input style="width:95px" v-model.trim="form.maxPrice">
                         <template slot="prepend">￥</template>
                     </el-input>
                 </el-form-item>
@@ -54,7 +54,7 @@
             </el-table-column>
             <el-table-column label="产品售价" align="center" min-width="50">
                 <template slot-scope="scope">
-                    {{scope.row.originalPrice == undefined?'0':scope.row.originalPrice | formatPrice}}
+                    {{scope.row.maxPrice == undefined?'0':scope.row.maxPrice | formatPrice}}
                 </template>
             </el-table-column>
             <el-table-column prop="stock" label="库存" align="center" min-width="50"></el-table-column>
@@ -166,8 +166,8 @@ export default {
                 thirdCategoryId: '',
                 salesMin: '',
                 salesMax: '',
-                priceMin: '',
-                priceMax: ''
+                minPrice: '',
+                maxPrice: ''
             },
             tableData: [],
             tableLoading: false,
@@ -253,9 +253,10 @@ export default {
                 data.brandId = '';
             }
             this.tableLoading = true;
-            request.queryProductPageList({ productPageParamVO: data }).then(res => {
+            request.queryProductPageList(data).then(res => {
                 this.tableData = [];
                 this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
                 this.tableLoading = false;
             }).catch(err => {
                 console.log(err);
@@ -265,7 +266,7 @@ export default {
         //   重置表单
         resetForm(formName) {
             this.form.salesMax = '';
-            this.form.priceMax = '';
+            this.form.maxPrice = '';
             this.form.firstCategoryId = '';
             this.form.secCategoryId = '';
             this.form.thirdCategoryId = '';
@@ -331,16 +332,6 @@ export default {
             }).catch(err => {
                 console.log(err);
             });
-            // this.$axios
-            //     .post(api.updateProductShelves, data)
-            //     .then(res => {
-            //         this.$message.success(res.data.data);
-            //         row.status = status;
-            //         this.getList(this.page.currentPage);
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     });
         },
         // 通过/不通过审核
         auditProduct(row, status) {
@@ -353,16 +344,6 @@ export default {
             }).catch(err => {
                 console.log(err);
             });
-            // this.$axios
-            //     .post(api.updateProductStatus, data)
-            //     .then(res => {
-            //         row.status = status;
-            //         this.$message.success(res.data.data);
-            //         this.getList(this.page.currentPage);
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     });
         },
         // 查看详情
         productInfo(row) {

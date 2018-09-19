@@ -66,8 +66,6 @@ export const deleteSaleSpecValue = '/admin/saleSpecValue/deleteSaleSpecValue';
 export const addProductSpec = '/admin/price/addProductSpec';
 // 获取产品价格
 export const queryProductPriceSaleSpecList = '/admin/price/queryProductPriceSaleSpecList';
-// 保存产品价格
-export const updateProductPrice = '/admin/price/updateProductPrice';
 // 获取库存列表
 export const queryProductStockList = '/admin/price/queryProductStockList';
 // 保存库存信息
@@ -146,4 +144,10 @@ export const updateProductSpec = '/product/productSpecPrice/updateProductSpec'; 
 export const addProductSpecPrice = '/product/productSpecPrice/addProductSpecPrice'; // 添加产品规格价格
 export const updateProductStatusById = '/product/product/updateProductStatusById'; // 修改产品状态
 export const updateBatchProductStatus = '/product/product/updateBatchProductStatus'; // 批量下架删除产品
+export const updateProductPrice = '/product/productSpecPrice/updateProductPrice'; // 保存产品价格
+export const queryProductSpecPriceList = ['/product/productSpecPrice/queryProductSpecPriceList', { methods: 'get' }]; // 查询产品价格列表
+export const queryProductSpecStockList = ['/product/productSpecStock/queryProductSpecStockList', { methods: 'get' }]; // 查询产品库存列表
+export const addProductSpecStock = ['/product/productSpecStock/addProductSpecStock', { methods: 'post' }]; // 添加产品库存
+export const updateProductSpecStock = ['/product/productSpecStock/updateProductSpecStock', { methods: 'post' }]; // 修改产品库存
+export const findProductDetailsById = ['/product/product/findProductDetailsById', { methods: 'get' }]; // 查看产品详情
 

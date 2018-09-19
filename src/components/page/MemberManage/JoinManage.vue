@@ -14,7 +14,7 @@
                 </el-form>
             </el-card>
         <div class="table-block">
-            <el-button v-if="p.addInvite" @click="sendInvite" style="margin-bottom: 20px" type="primary">发起邀请</el-button>
+            <el-button @click="sendInvite" style="margin-bottom: 20px" type="primary">发起邀请</el-button>
             <template>
                 <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
                     <el-table-column prop="id" label="邀请记录编码" align="center"></el-table-column>
@@ -25,7 +25,7 @@
                         <template slot-scope="scope">{{scope.row.create_time|formatDate}}</template>
                     </el-table-column>
                     <el-table-column prop="adminUser" label="发起者" align="center"></el-table-column>
-                    <el-table-column v-if="p.findInviteInfo" label="操作" align="center">
+                    <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button type="warning" size="small" @click="detailItem(scope.$index,scope.row)">详情</el-button>
                             <el-button type="danger" size="small" @click="watchItem(scope.$index,scope.row.id)">查看邀请</el-button>
@@ -51,94 +51,84 @@
 <script>
 import vBreadcrumb from '../../common/Breadcrumb.vue';
 import icon from '../../common/ico.vue';
-import * as api from '../../../api/api';
-import utils from '../../../utils/index.js'
-import * as pApi from '../../../privilegeList/index.js';
+import request from '@/http/http';
 import { myMixinTable } from '@/JS/commom';
 export default {
     components: {
-        vBreadcrumb,icon
+        vBreadcrumb, icon
     },
-    mixins:[myMixinTable],
+    mixins: [myMixinTable],
     data() {
         return {
-            // 权限控制
-            p:{
-                addInvite:false,
-                findInviteInfo:false
+            tableData: [],
+            tableLoading: false,
+            height: '',
+            formLabelWidth: '100px',
+            form: {
+                initiator: ''
             },
-
-            tableData:[],
-            tableLoading:false,
-            height:'',
-            formLabelWidth:'100px',
-            form:{
-                initiator:''
-            },
-            selected:''
-        }
+            selected: ''
+        };
     },
-    created(){
-        this.pControl();
-    },
-    activated(){
+    activated() {
         this.getList(this.page.currentPage);
-        this.pControl();
     },
     methods: {
-        // 权限控制
-        pControl() {
-            for (const k in this.p) {
-                this.p[k] = utils.pc(pApi[k]);
-            }
-        },
-        //获取列表
+        // 获取列表
         getList(val) {
-            let that = this;
-            let data = {
+            const data = {
                 page: val,
-                initiator:that.form.initiator
+                pageSize: this.page.pageSize,
+                adminName: this.form.initiator
             };
-            data.url=pApi.getInvitePageList;
-            that.tableLoading = true;
-            that.$axios
-                .post(api.getInvitePageList, data)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        that.tableLoading=false;
-                        that.tableData=res.data.data.data;
-                        that.page.totalPage = res.data.data.resultCount;
-                    } else {
-                        that.$message.warning(res.data.msg);
-                        that.tableLoading=false;
-                    }
-                })
-                .catch(err => {
-                    that.tableLoading = false;
-                    console.log(err)
-                })
+            this.tableLoading = true;
+            request.queryList(data).then(res => {
+                console.log(res);
+                this.tableData = res.data;
+                this.page.totalPage = res.data.resultCount;
+                this.tableLoading = false;
+            }).catch(err => {
+                console.log(err);
+                this.tableLoading = false;
+            });
+            // that.$axios
+            //     .post(api.getInvitePageList, data)
+            //     .then(res => {
+            //         if (res.data.code == 200) {
+            //             that.tableLoading = false;
+            //             that.tableData = res.data.data.data;
+            //             that.page.totalPage = res.data.data.resultCount;
+            //         } else {
+            //             that.$message.warning(res.data.msg);
+            //             that.tableLoading = false;
+            //         }
+            //     })
+            //     .catch(err => {
+            //         that.tableLoading = false;
+            //         console.log(err);
+            //     });
         },
-        //详情
-        detailItem(index,row){
-            sessionStorage.setItem('inviteDetail',JSON.stringify({ id:row.id }));
-            this.$router.push({path:'/inviteDetail',query:{id:row.id}})
+        // 详情
+        detailItem(index, row) {
+            sessionStorage.setItem('inviteDetail', JSON.stringify({ id: row.id }));
+            this.$router.push({ path: '/inviteDetail', query: { id: row.id }});
         },
-        //查看邀请
-        watchItem(index,id){
-            sessionStorage.setItem('inviteLink',id);
-            this.$router.push({path:'/inviteLink',query:{inviteLink:id}})
+        // 查看邀请
+        watchItem(index, id) {
+            sessionStorage.setItem('inviteLink', id);
+            this.$router.push({ path: '/inviteLink', query: { inviteLink: id }});
         },
-        //发起邀请
-        sendInvite(){
-            this.$router.push('/sendInvite')
+        // 发起邀请
+        sendInvite() {
+            this.$router.push('/sendInvite');
         },
-        //重置表单
+        // 重置表单
         resetForm(formName) {
             this.$refs[formName].resetFields();
-            this.getList(this.page.currentPage)
-        },
+            this.getList(this.page.currentPage);
+        }
     }
-}
+};
 </script>
 
 <style>
