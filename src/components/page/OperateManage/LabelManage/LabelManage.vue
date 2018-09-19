@@ -33,9 +33,9 @@
                 nav: ['运营管理', '标签管理'],
                 list: [
                     {
-                        img: 'static/img/productLabel.png',
+                        img: 'static/img/package.png',
                         title: '产品标签类型设置',
-                        content: '产品标签类型分组',
+                        content: '产品标签分组',
                         page: '/productLabel'
                     }]
             };

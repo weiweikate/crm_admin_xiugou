@@ -237,7 +237,8 @@ export default {
                 page: 1,
                 pageSize: 10000,
                 level: 1,
-                fatherId: 0
+                fatherId: 0,
+                status: 1
             };
             // 获取一级类目并回显选中状态
             request.queryProductCategoryList(data).then(res => {
@@ -278,7 +279,8 @@ export default {
                 fatherId: item.id,
                 page: 1,
                 pageSize: 10000,
-                level: 2
+                level: 2,
+                status: 1
             };
             this.loading = false;
             // 获取二级类目并回显选中状态
@@ -315,7 +317,8 @@ export default {
                 fatherId: item.id,
                 page: 1,
                 pageSize: 10000,
-                level: 3
+                level: 3,
+                status: 1
             };
             this.loading = false;
             // 获取三级类目并回显选中状态

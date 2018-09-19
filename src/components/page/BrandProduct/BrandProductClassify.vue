@@ -2,8 +2,8 @@
     <div class="brand-product">
         <v-breadcrumb :nav="['品牌产品管理','产品品牌分类管理']"></v-breadcrumb>
         <div class="table-block">
-            <el-button type="success" style="margin-bottom: 20px" @click="hotClassifyManage">热门分类管理</el-button>
             <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加一级类目</el-button>
+            <el-button type="success" style="margin-bottom: 20px" @click="hotClassifyManage">热门分类管理</el-button>
             <template>
                 <el-table :data="tableData"  border style="width: 100%">
                     <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
@@ -13,6 +13,7 @@
                             <img :src="scope.row.img" alt="">
                         </template>
                     </el-table-column>
+                    <el-table-column prop="sort" label="排序" align="center"></el-table-column>
                     <el-table-column label="显示/隐藏" align="center">
                         <template slot-scope="scope">
                             <template v-if='scope.row.type == 1'>显示</template>
@@ -146,7 +147,6 @@ export default {
 
     data() {
         return {
-
             tableData: [],
             page: {
                 currentPage: 1,
@@ -178,8 +178,7 @@ export default {
             delUri: ''
         };
     },
-    created() {
-    },
+    created() {},
     activated() {
         this.getList(this.page.currentPage);
     },
@@ -193,13 +192,16 @@ export default {
                 level: 1,
                 fatherId: 0
             };
-            request.queryProductCategoryList(data).then(res => {
-                that.tableData = [];
-                that.tableData = res.data.data;
-                that.page.totalPage = res.data.totalNum;
-            }).catch(error => {
-                console.log(error);
-            });
+            request
+                .queryProductCategoryList(data)
+                .then(res => {
+                    that.tableData = [];
+                    that.tableData = res.data.data;
+                    that.page.totalPage = res.data.totalNum;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         },
         // 添加一级类目
         addClassify() {
@@ -207,6 +209,7 @@ export default {
             this.addMask = true;
             this.addForm.name = '';
             this.addForm.img = '';
+            this.addForm.sort = '';
             this.addForm.status = '1';
             this.itype = 'add';
         },
@@ -217,6 +220,7 @@ export default {
             this.form.name = row.name;
             this.form.status = row.status.toString();
             this.form.img = row.img;
+            this.form.sort = row.sort;
             this.form.type = row.type.toString();
             this.id = row.id;
             this.itype = 'edit';
@@ -251,21 +255,29 @@ export default {
                 data.id = this.id;
             }
             this.btnLoading = true;
-            request[url](data).then(res => {
-                // this.$message.success(res.data.msg);
-                this.btnLoading = false;
-                this.addMask = false;
-                this.editMask = false;
-                this.getList(this.page.currentPage);
-            }).catch(error => {
-                this.btnLoading = false;
-                console.log(error);
-            });
+            request[url](data)
+                .then(res => {
+                    // this.$message.success(res.data.msg);
+                    this.btnLoading = false;
+                    this.addMask = false;
+                    this.editMask = false;
+                    this.getList(this.page.currentPage);
+                })
+                .catch(error => {
+                    this.btnLoading = false;
+                    console.log(error);
+                });
         },
         // 跳到二级类目页面
         toSecondClassify(index, row) {
-            sessionStorage.setItem('secondClassify', JSON.stringify({ name: row.name, id: row.id, type: row.type }));
-            this.$router.push({ path: '/secondClassify', query: { name: row.name, id: row.id, type: row.type }});
+            sessionStorage.setItem(
+                'secondClassify',
+                JSON.stringify({ name: row.name, id: row.id, type: row.type })
+            );
+            this.$router.push({
+                path: '/secondClassify',
+                query: { name: row.name, id: row.id, type: row.type }
+            });
         },
         // 删除
         delItem(index, id) {
@@ -301,75 +313,75 @@ export default {
 </script>
 
 <style lang="less">
-    .brand-product {
-        /*表格样式*/
-        .table-block {
-            padding: 20px 20px 60px;
-            background: #fff;
-        }
-        img {
-            width: 38px;
-            height: 38px;
-            border-radius: 5px;
-            vertical-align: middle;
-        }
-        .block {
-            float: right;
-            margin-top: 10px;
-        }
-
-        /*弹窗样式*/
-        .el-dialog {
-            width: 530px;
-            border-radius: 10px;
-        }
-        .el-dialog__header {
-            border-bottom: 1px solid #eee;
-            padding: 20px 20px 10px 50px;
-        }
-        .el-dialog__title {
-            color: #ff6868;
-        }
-        .el-dialog .el-input {
-            display: inline;
-        }
-        .el-dialog .el-input__inner {
-            width: 360px;
-        }
-        .el-select .el-input__inner {
-            width: 200px;
-        }
-        .el-dialog .el-upload--text {
-            width: 100px;
-            height: 40px;
-            border: none;
-        }
-        .icon-area .el-input__inner {
-            width: 240px;
-        }
-        .el-input__suffix {
-            line-height: 24px;
-        }
-        .icon-uploader {
-            float: right;
-            margin-right: 31px;
-            height: 33px;
-        }
-        .icon-uploader .el-button--small {
-            border-radius: 5px;
-            width: 100px;
-        }
-        .el-upload--text .el-icon-upload {
-            line-height: 0;
-            margin: 0;
-            color: #fff;
-            font-size: 14px;
-        }
-        .el-dialog__footer {
-            margin-right: 30px;
-        }
-        .el-upload-list {
-            display: none;
-        }
+.brand-product {
+    /*表格样式*/
+    .table-block {
+        padding: 20px 20px 60px;
+        background: #fff;
     }
+    img {
+        width: 38px;
+        height: 38px;
+        border-radius: 5px;
+        vertical-align: middle;
+    }
+    .block {
+        float: right;
+        margin-top: 10px;
+    }
+
+    /*弹窗样式*/
+    .el-dialog {
+        width: 530px;
+        border-radius: 10px;
+    }
+    .el-dialog__header {
+        border-bottom: 1px solid #eee;
+        padding: 20px 20px 10px 50px;
+    }
+    .el-dialog__title {
+        color: #ff6868;
+    }
+    .el-dialog .el-input {
+        display: inline;
+    }
+    .el-dialog .el-input__inner {
+        width: 360px;
+    }
+    .el-select .el-input__inner {
+        width: 200px;
+    }
+    .el-dialog .el-upload--text {
+        width: 100px;
+        height: 40px;
+        border: none;
+    }
+    .icon-area .el-input__inner {
+        width: 240px;
+    }
+    .el-input__suffix {
+        line-height: 24px;
+    }
+    .icon-uploader {
+        float: right;
+        margin-right: 31px;
+        height: 33px;
+    }
+    .icon-uploader .el-button--small {
+        border-radius: 5px;
+        width: 100px;
+    }
+    .el-upload--text .el-icon-upload {
+        line-height: 0;
+        margin: 0;
+        color: #fff;
+        font-size: 14px;
+    }
+    .el-dialog__footer {
+        margin-right: 30px;
+    }
+    .el-upload-list {
+        display: none;
+    }
+}
 </style>

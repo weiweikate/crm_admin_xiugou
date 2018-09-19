@@ -1,0 +1,207 @@
+<template>
+    <div class="second-classify">
+        <v-breadcrumb :nav="['运营管理','标签管理','产品品类','产品二级类目']"></v-breadcrumb>
+        <div class="table-block">
+            <template>
+                <el-table :data="tableData" border style="width: 100%">
+                    <el-table-column type="index" label="ID" align="center"></el-table-column>
+                    <el-table-column prop="param" label="二级分类" align="center"></el-table-column>
+                    <el-table-column prop="num" label="一级分类" align="center"></el-table-column>
+                    <el-table-column label="图标" align="center">
+                        <template slot-scope="scope">
+                            <img :src="scope.row.img" alt="">
+                        </template>
+                    </el-table-column>
+                    <el-table-column  label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="danger" size="small" @click="delItem(scope.row.id)">标签设置</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </template>
+
+        </div>
+
+    </div>
+</template>
+
+<script>
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import icon from '@/components/common/ico.vue';
+import deleteToast from '@/components/common/DeleteToast';
+import utils from '@/utils/index.js';
+import * as pApi from '@/privilegeList/index.js';
+import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http.js';
+
+export default {
+    components: {
+        vBreadcrumb,
+        icon,
+        deleteToast
+    },
+    mixins: [myMixinTable],
+    data() {
+        return {
+
+            tableData: [],
+            // 类目类型
+            type: '',
+            height: '',
+            addMask: false,
+            editMask: false,
+            isShowDelToast: false,
+            formLabelWidth: '100px',
+            form: {
+                param: ''
+            },
+            title: '添加标签类型',
+            id: '',
+            itemId: '',
+            name: '',
+            superiorName: '',
+            className: '',
+            itype: '',
+            delId: 66,
+            delUrl: 'http://api',
+            delUri: ''
+        };
+    },
+    created() {
+    },
+    activated() {
+        this.getList(this.page.currentPage);
+    },
+    methods: {
+        // 获取列表
+        getList(val) {
+            request.querySysTagLibraryList({}).then(res => {
+                this.tableData = [];
+                this.tableData = res.data;
+            }).catch(error => {
+                console.log(error);
+            });
+        },
+        // 添加
+        addClassify() {
+            this.addMask = true;
+            this.form.param = '';
+        },
+        // 添加确定
+        addOrEdit(formName) {
+            const data = {};
+            data.param = this[formName].param;
+            data.categoryId = this.id;
+            if (!data.param) {
+                this.$message.warning('请输入类型名称!');
+                return;
+            }
+            this.btnLoading = true;
+            request.addProductCategoryParam(data).then(res => {
+                // this.$message.success(res.data.msg);
+                this.btnLoading = false;
+                this.addMask = false;
+                this.editMask = false;
+                this.getList(this.page.currentPage);
+            }).catch(error => {
+                console.log(error);
+            });
+        },
+        // 删除
+        delItem(id) {
+            this.delId = id;
+            this.delUrl = 'deleteProductCategoryParam';
+            this.isShowDelToast = true;
+        },
+        // 删除弹窗
+        deleteToast(msg) {
+            this.isShowDelToast = msg;
+            this.getList(this.page.currentPage);
+        },
+        // 取消
+        cancel() {
+            this.addMask = false;
+            this.editMask = false;
+            this.getList(this.page.currentPage);
+        },
+        //二级类目
+        toSecondClassify(id){
+            this.$router.push('/secondClassify');
+        }
+    }
+};
+</script>
+
+<style lang="less">
+    .second-classify {
+        /*表格样式*/
+        .table-block {
+            padding: 20px 20px 60px;
+            background: #fff;
+        }
+        img {
+            width: 38px;
+            height: 38px;
+            border-radius: 5px;
+            vertical-align: middle;
+        }
+        .block {
+            float: right;
+            margin-top: 10px;
+        }
+
+        /*弹窗样式*/
+        .el-dialog {
+            width: 530px;
+            border-radius: 10px;
+        }
+        .el-dialog__header {
+            border-bottom: 1px solid #eee;
+            padding: 20px 20px 10px 50px;
+        }
+        .el-dialog__title {
+            color: #ff6868;
+        }
+        .el-dialog .el-input {
+            display: inline;
+        }
+        .el-dialog .el-input__inner {
+            width: 360px;
+        }
+        .el-select .el-input__inner {
+            width: 200px;
+        }
+        .el-dialog .el-upload--text {
+            width: 100px;
+            height: 40px;
+            border: none;
+        }
+        .icon-area .el-input__inner {
+            width: 240px;
+        }
+        .el-input__suffix {
+            line-height: 24px;
+        }
+        .icon-uploader {
+            float: right;
+            margin-right: 31px;
+            height: 33px;
+        }
+        .icon-uploader .el-button--small {
+            border-radius: 5px;
+            width: 100px;
+        }
+        .el-upload--text .el-icon-upload {
+            line-height: 0;
+            margin: 0;
+            color: #fff;
+            font-size: 14px;
+        }
+        .el-dialog__footer {
+            margin-right: 30px;
+        }
+        .el-upload-list {
+            display: none;
+        }
+    }
+</style>
