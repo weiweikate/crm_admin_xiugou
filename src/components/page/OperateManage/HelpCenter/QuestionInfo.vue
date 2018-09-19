@@ -19,7 +19,7 @@ export default {
 
     data() {
         return {
-            nav: ['帮助中心管理', '问题管理', '产看问题'],
+            nav: ['帮助中心管理', '问题管理', '查看问题'],
             questionId: '',
             title: '',
             content: ''

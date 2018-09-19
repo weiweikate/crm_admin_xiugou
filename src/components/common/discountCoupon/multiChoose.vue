@@ -157,7 +157,7 @@
         },
         watch: {
             getProducts(params) {
-                console.log(params)
+                console.log(params);
                 this.resetValue();
                 if (params.firstCategoryIds) {
                     if (params.firstCategoryIds.indexOf(',') == -1) {
@@ -250,7 +250,7 @@
                     pageSize: 10000,
                     level: 1,
                     fatherId: 0,
-                    pstatus: 2
+                    status: 1
                 };
                 // 获取一级类目并回显选中状态
                 request.queryProductCategoryList(data).then(res => {
@@ -391,7 +391,7 @@
                     page: 1,
                     pageSize: 10000,
                     level: 2,
-                    pstatus: 2
+                    status: 1
                 };
                 that.loading = false;
                 // 获取二级类目并回显选中状态
@@ -453,7 +453,7 @@
                     page: 1,
                     pageSize: 10000,
                     level: 3,
-                    pstatus: 2
+                    status: 1
                 };
                 that.loading = false;
                 // 获取三级类目并回显选中状态
@@ -685,7 +685,6 @@
                     products: this.products,
                     checkAll: this.checkAll
                 };
-                console.log(productList)
 
                 this.$emit('getProductIds', JSON.stringify(productList));
             },

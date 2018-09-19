@@ -1,7 +1,8 @@
 <template>
     <div class="brand-product">
-        <v-breadcrumb :nav="['品牌产品管理','产品分类管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['品牌产品管理','产品品牌分类管理']"></v-breadcrumb>
         <div class="table-block">
+            <el-button type="success" style="margin-bottom: 20px" @click="hotClassifyManage">热门分类管理</el-button>
             <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加一级类目</el-button>
             <template>
                 <el-table :data="tableData"  border style="width: 100%">
@@ -65,10 +66,10 @@
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
                 </el-form-item>
-                <el-form-item prop="status" label="状态" :label-width="formLabelWidth">
+                <el-form-item prop="status" label="是否启用" :label-width="formLabelWidth">
                     <el-select v-model="addForm.status">
-                        <el-option label="启用" value='1'></el-option>
-                        <el-option label="禁用" value='2'></el-option>
+                        <el-option label="是" value='1'></el-option>
+                        <el-option label="否" value='2'></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="type" label="类目类型" :label-width="formLabelWidth">
@@ -76,6 +77,9 @@
                         <el-option label="普通类目" value='1'></el-option>
                         <el-option label="隐藏类目" value='2'></el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item prop="name" label="APP排序" :label-width="formLabelWidth">
+                    <el-input v-model="addForm.sort" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -97,10 +101,10 @@
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
                 </el-form-item>
-                <el-form-item prop="status" label="状态" :label-width="formLabelWidth">
+                <el-form-item prop="status" label="是否启用" :label-width="formLabelWidth">
                     <el-select v-model="form.status">
-                        <el-option label="启用" value='1'></el-option>
-                        <el-option label="禁用" value='2'></el-option>
+                        <el-option label="是" value='1'></el-option>
+                        <el-option label="否" value='2'></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="type" label="类目类型" :label-width="formLabelWidth">
@@ -108,6 +112,9 @@
                         <el-option label="普通类目" value='1'></el-option>
                         <el-option label="隐藏类目" value='2'></el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item prop="name" label="APP排序" :label-width="formLabelWidth">
+                    <el-input v-model="form.sort" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -218,7 +225,6 @@ export default {
         addOrEdit(formName) {
             let url = '';
             const data = this[formName];
-            data.type = this[formName].type;
             data.level = 1;
             data.fatherId = 0;
             if (!data.name) {
@@ -232,6 +238,10 @@ export default {
             }
             if (!data.img) {
                 this.$message.warning('请上传类目图标!');
+                return;
+            }
+            if (!data.sort) {
+                this.$message.warning('请输入排序!');
                 return;
             }
             if (this.itype == 'add') {
@@ -281,6 +291,10 @@ export default {
             this.addMask = false;
             this.editMask = false;
             this.getList(this.page.currentPage);
+        },
+        // 热门分类管理
+        hotClassifyManage() {
+            this.$router.push('/hotClassifyManage');
         }
     }
 };

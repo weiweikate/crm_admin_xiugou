@@ -1,6 +1,6 @@
 <template>
     <div class="second-classify">
-        <v-breadcrumb :nav="['品牌产品管理','产品分类管理',className,superiorName,name]"></v-breadcrumb>
+        <v-breadcrumb :nav="['品牌产品管理','产品品牌分类管理',className,superiorName,name]"></v-breadcrumb>
         <div class="table-block">
             <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加详细参数</el-button>
             <template>
@@ -99,7 +99,7 @@ export default {
         // 获取列表
         getList(val) {
             const data = {
-                id: this.id,
+                id: this.id
             };
             request.queryProductCategoryParamList(data).then(res => {
                 this.tableData = [];

@@ -369,11 +369,20 @@
                             this.checked[i] = false;
                         }
                     }
+                    this.dealData();
                 }
+            },
+            // 值处理为空
+            dealData() {
+                this.form.upgradeCondUserNum = this.checked[0] ? this.form.upgradeCondUserNum : '';
+                this.form.upgradeCondTotleSales = this.checked[1] ? this.form.upgradeCondTotleSales : '';
+                this.form.upgradeCondProfitCtrb = this.checked[2] ? this.form.upgradeCondProfitCtrb : '';
+                this.form.upgradeCondAvgActivity = this.checked[3] ? this.form.upgradeCondAvgActivity : '';
+                this.form.upgradeCondBonusNum = this.checked[3] ? this.form.upgradeCondBonusNum : '';
             },
             // 值非空判断
             isEmpty(value, isInt) {
-                if (value == null || value == undefined || value == '') {
+                if (value === null || value === undefined || value === '') {
                     if (isInt) {
                         this.$message.warning('请输入整数!');
                     } else {

@@ -43,7 +43,7 @@
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>店长：<span @click="showShopLeader" class="font-href">{{detail.storeUser}}</span></span>
+                            <span>店长：<span @click="showShopLeader" class="font-href">{{detail.storeUserName}}</span></span>
                             <span class="inf">实名认证</span>
                         </p>
                     </div>

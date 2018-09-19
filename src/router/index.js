@@ -50,7 +50,7 @@ export default new Router({
                     name: 'brandProductClassify',
                     path: '/brandProductClassify',
                     component: resolve => require(['../components/page/BrandProduct/BrandProductClassify.vue'], resolve),
-                    meta: { title: '产品分类管理', url: '/admin/productCategory/queryProductCategoryPageList_1' }
+                    meta: { title: '产品品牌分类管理', url: '/admin/productCategory/queryProductCategoryPageList_1' }
                 },
                 {
                     name: 'secondClassify',
@@ -63,6 +63,12 @@ export default new Router({
                     path: '/thirdClassify',
                     component: resolve => require(['../components/page/BrandProduct/ThirdClassify.vue'], resolve),
                     meta: { title: '三级类目', url: '/admin/productCategory/queryProductCategoryPageList_2' }
+                },
+                {
+                    name: 'hotClassifyManage',
+                    path: '/hotClassifyManage',
+                    component: resolve => require(['../components/page/BrandProduct/HotClassifyManage/HotClassifyManage.vue'], resolve),
+                    meta: { title: '热门分类管理', url: '/admin/productCategory/queryProductCategoryPageList_2' }
                 },
                 {
                     name: 'productDetailParam',

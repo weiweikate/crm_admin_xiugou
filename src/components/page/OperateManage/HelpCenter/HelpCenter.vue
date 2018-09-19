@@ -40,6 +40,7 @@
            <el-input readonly v-model="imgUrl" auto-complete="off"></el-input>
            <el-upload class="icon-uploader"
                       :action="uploadImg"
+                      :before-upload="beforeAvatarUpload"
                       :on-success="handleAvatarSuccess">
                <el-button size="small" type="primary"><i class="el-icon-upload"></i>添加图片</el-button>
            </el-upload>
@@ -112,6 +113,7 @@ export default {
         addQuestionCate() {
             this.isShowAddQues = true;
             this.questionType = '';
+            this.imgUrl = '';
         },
         confirmAddQuesType() {
             this.addQuesTypeBtn = true;
@@ -154,6 +156,14 @@ export default {
         // 上传图片
         handleAvatarSuccess(res, file) {
             this.imgUrl = res.data;
+        },
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
+            const isLt3M = file.size / 1024 / 1024 < 3;
+            if (!isLt3M || !isJPG) {
+                this.$message.error('请上传3M以内jpg,jpeg,png格式的图片!');
+            }
+            return isJPG && isLt3M;
         }
     }
 };

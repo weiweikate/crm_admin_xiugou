@@ -1,6 +1,6 @@
 <template>
     <div class="second-classify">
-        <v-breadcrumb :nav="['品牌产品管理','产品分类管理',name]"></v-breadcrumb>
+        <v-breadcrumb :nav="['品牌产品管理','产品品牌分类管理',name]"></v-breadcrumb>
         <div class="table-block">
             <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加二级类目</el-button>
             <template>
@@ -65,6 +65,9 @@
                         <el-option label="否" value="2"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item prop="name" label="APP排序" :label-width="formLabelWidth">
+                    <el-input v-model="addForm.sort" auto-complete="off"></el-input>
+                </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="addOrEdit('addForm')">确 认</el-button>
@@ -93,6 +96,9 @@
                         <el-option label="是" value="1"></el-option>
                         <el-option label="否" value="2"></el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item prop="name" label="APP排序" :label-width="formLabelWidth">
+                    <el-input v-model="form.sort" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -161,7 +167,7 @@ export default {
         this.id =
             this.$route.query.id || JSON.parse(sessionStorage.getItem('secondClassify')).id;
         this.type =
-            this.$route.query.type ||JSON.parse(sessionStorage.getItem('secondClassify')).type;
+            this.$route.query.type || JSON.parse(sessionStorage.getItem('secondClassify')).type;
         this.getList(this.page.currentPage);
     },
     methods: {
@@ -218,6 +224,10 @@ export default {
             }
             if (!data.img) {
                 this.$message.warning('请上传类目图标!');
+                return;
+            }
+            if (!data.sort) {
+                this.$message.warning('请输入排序!');
                 return;
             }
             if (this.itype == 'add') {

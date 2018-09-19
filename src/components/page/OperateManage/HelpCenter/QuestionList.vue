@@ -67,7 +67,7 @@ export default {
         // 获取数据
         getList() {
             const data = {
-                typeid: this.questionTypeId,
+                typeId: this.questionTypeId,
                 page: this.page.currentPage,
                 pageSize: this.page.pageSize
             };

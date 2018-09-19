@@ -117,7 +117,7 @@
             },
             // 值非空判断
             isEmpty(value, isInt) {
-                if (value == null || value == undefined || value == '') {
+                if (value === null || value === undefined || value === '') {
                     if (isInt) {
                         this.$message.warning('请输入人数!');
                     } else {

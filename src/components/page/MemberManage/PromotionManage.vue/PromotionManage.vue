@@ -54,22 +54,22 @@
                 <h3>必要条件：</h3>
                 <el-form-item>
                     <el-checkbox label="直接邀请人数" value="0" v-model="checked[0]"></el-checkbox>
-                    <el-input v-model="form.upgradeCondDirectNum" placeholder="请输入数值" auto-complete="off"></el-input>
+                    <el-input v-model="form.upgradeCondDirectNum" :disabled="!checked[0]" placeholder="请输入数值" auto-complete="off"></el-input>
                     <span>人</span>
                 </el-form-item>
                 <el-form-item>
                     <el-checkbox label="团队邀请人数" value="1" v-model="checked[1]"></el-checkbox>
-                    <el-input v-model="form.upgradeCondIndirectNum" placeholder="请输入数值" auto-complete="off"></el-input>
+                    <el-input v-model="form.upgradeCondIndirectNum" :disabled="!checked[1]" placeholder="请输入数值" auto-complete="off"></el-input>
                     <span>人</span>
                 </el-form-item>
                 <el-form-item>
                     <el-checkbox label="交易额" value="2" v-model="checked[2]"></el-checkbox>
-                    <el-input v-model="form.upgradeCondPerSales" placeholder="请输入数值" auto-complete="off"></el-input>
+                    <el-input v-model="form.upgradeCondPerSales" :disabled="!checked[2]" placeholder="请输入数值" auto-complete="off"></el-input>
                     <span>元</span>
                 </el-form-item>
                 <el-form-item>
                     <el-checkbox label="团队交易额" value="3" v-model="checked[3]"></el-checkbox>
-                    <el-input v-model="form.upgradeCondGroupSales" placeholder="请输入数值" auto-complete="off"></el-input>
+                    <el-input v-model="form.upgradeCondGroupSales" :disabled="!checked[3]" placeholder="请输入数值" auto-complete="off"></el-input>
                     <span>元</span>
                 </el-form-item>
                 <el-form-item>
@@ -373,11 +373,19 @@
                             this.checked[i] = false;
                         }
                     }
+                    this.dealData();
                 }
+            },
+            // 值处理为空
+            dealData() {
+                this.form.upgradeCondDirectNum = this.checked[0] ? this.form.upgradeCondDirectNum : '';
+                this.form.upgradeCondIndirectNum = this.checked[1] ? this.form.upgradeCondIndirectNum : '';
+                this.form.upgradeCondPerSales = this.checked[2] ? this.form.upgradeCondPerSales : '';
+                this.form.upgradeCondGroupSales = this.checked[3] ? this.form.upgradeCondGroupSales : '';
             },
             // 值非空判断
             isEmpty(value, isInt) {
-                if (value == null || value == undefined || value == '') {
+                if (value == null || value === undefined || value === '') {
                     if (isInt) {
                         this.$message.warning('请输入人数!');
                     } else {

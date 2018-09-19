@@ -27,8 +27,8 @@
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="店铺名称" align="center"></el-table-column>
                 <el-table-column prop="id" label="店铺ID" align="center"></el-table-column>
-                <el-table-column prop="storeUser" label="店长" align="center"></el-table-column>
-                <el-table-column prop="storeNumber" label="招募成员" align="center">
+                <el-table-column prop="storeUserName" label="店长" align="center"></el-table-column>
+                <el-table-column prop="storeUserNum" label="招募成员" align="center">
                     <template slot-scope="scope">
                         <template><span @click="toUserList(scope.row)" class="color-blue">{{scope.row.hadUser}}</span></template>                    </template>
                 </el-table-column>

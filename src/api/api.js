@@ -243,6 +243,8 @@ export const addNotice = '/admin/notice/addNotice';
 // 修改公告/通知状态
 export const updateNoticeStatus = '/admin/notice/updateNoticeStatus';
 export const getDealerPageList = 'aa';
+export const addTagLibrary = 'aa';
+export const queryTagLibraryList = 'aa';
 export const makeSureOrder = '/order/order/makeSureOrder';
 //* ***************************************************************************************************************************************************************************
 export const uploadImg = '/admin/common/upload/oss'; // 上传图片

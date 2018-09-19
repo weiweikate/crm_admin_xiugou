@@ -13,6 +13,8 @@ export const addProductSupplier = '/product/productSupplier/addProductSupplier';
 export const updateSupplier = '/product/productSupplier/modifyProductSupplier'; // 编辑供应商
 export const stopProductSupplier = '/product/productSupplier/stopProductSupplier'; // 停启用供应商
 export const findSupplierById = ['/product/productSupplier/findProductSupplier', { methods: 'get' }]; // 查看供应商详情
+export const addInvite = ['/user/invite/addInvite', { methods: 'post' }]; // 增加邀请配置
+export const queryList = ['/user/invite/queryList', { methods: 'post' }]; // 获取邀请列表
 
 // 会员层级
 // 查询层级list

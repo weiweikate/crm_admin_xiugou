@@ -46,14 +46,14 @@
     </div>
 </template>
 <script>
-    import icon from "./ico";
-    import * as api from '../../api/api'
+    import icon from './ico';
+    import * as api from '../../api/api';
 
     export default {
         components: {
             icon
         },
-        props:['productcIds','isLevel','brands'],
+        props: ['productcIds', 'isLevel', 'brands'],
         data() {
             return {
                 value: '',
@@ -65,41 +65,41 @@
                 brandIndex: '0',
                 brandId: '',
                 classifyId: [],
-                brandsId:[],
+                brandsId: [],
                 delBrandId: '',
                 delClassifyId: [],
-                loading: false,
+                loading: false
             };
         },
         created() {
-            //获取品牌列表并默认加载第一个品牌对于的品类列表
-            let that = this;
+            // 获取品牌列表并默认加载第一个品牌对于的品类列表
+            const that = this;
             that.search(that.value);
         },
         methods: {
-            //根据品牌名称查询
+            // 根据品牌名称查询
             search(name) {
-                let that = this;
-                let data = {
+                const that = this;
+                const data = {
                     name: name
                 };
                 that.loading = true;
-                let url='';
-                if(that.isLevel){
-                    url=api.getList
-                }else{
-                    url=api.getFirstList
+                let url = '';
+                if (that.isLevel) {
+                    url = api.getList;
+                } else {
+                    url = api.getFirstList;
                 }
                 that.$axios
                     .post(url, data)
                     .then(res => {
                         that.loading = false;
                         if (res.data.code == 200) {
-                            for (let i in res.data.data) {
+                            for (const i in res.data.data) {
                                 res.data.data[i].checked = false;
                                 res.data.data[0].checked = true;
                                 res.data.data[i].allChecked = false;
-                                res.data.data[i].classifyList=[]
+                                res.data.data[i].classifyList = [];
                             }
                             that.brandList = res.data.data;
                             that.brandName = that.brandList[0].name;
@@ -113,20 +113,20 @@
                     .catch(err => {
                         console.log(err);
                         that.loading = false;
-                    })
+                    });
             },
-            //获取品牌下品类列表
+            // 获取品牌下品类列表
             getClassifyList(index, id) {
-                let that = this;
-                that.brandList[index].classifyList=[];
-                let data = {
-                    fatherid: id,
+                const that = this;
+                that.brandList[index].classifyList = [];
+                const data = {
+                    fatherid: id
                 };
-                let url='';
-                if(that.isLevel){
-                    url=api.getProductCategoryList
-                }else{
-                    url=api.getSecondList
+                let url = '';
+                if (that.isLevel) {
+                    url = api.getProductCategoryList;
+                } else {
+                    url = api.getSecondList;
                 }
                 that.loading = true;
                 that.$axios
@@ -134,14 +134,14 @@
                     .then(res => {
                         that.loading = false;
                         if (res.data.code == 200) {
-                            for (let i in res.data.data) {
-                                let itemId=res.data.data[i].id;
-                                if(that.classifyId.indexOf(itemId)==-1&&that.brandList[index].classifyList.indexOf(itemId)==-1){
+                            for (const i in res.data.data) {
+                                const itemId = res.data.data[i].id;
+                                if (that.classifyId.indexOf(itemId) == -1 && that.brandList[index].classifyList.indexOf(itemId) == -1) {
                                     res.data.data[i].checked = false;
                                     res.data.data[i].hasChecked = false;
                                 }
                             }
-                            that.brandList[index].classifyList=res.data.data;
+                            that.brandList[index].classifyList = res.data.data;
                         } else {
                             that.$message.warning(res.data.msg);
                         }
@@ -150,20 +150,19 @@
                         console.log(err);
                         that.loading = false;
                     });
-
             },
-            //选择品牌
+            // 选择品牌
             chooseBrand(item, index) {
-                let that = this;
+                const that = this;
                 that.brandName = that.brandList[index].name;
                 that.brandIndex = index;
                 that.brandId = item.id;
-                if(that.brandsId.indexOf(item.id)==-1){
-                    that.brandsId.push(item.id)
+                if (that.brandsId.indexOf(item.id) == -1) {
+                    that.brandsId.push(item.id);
                 }
-                that.$emit('brandsId',that.brandsId);
+                that.$emit('brandsId', that.brandsId);
                 that.getClassifyList(index, item.id);
-                for (let i in that.brandList) {
+                for (const i in that.brandList) {
                     if (i == index) {
                         that.brandList[i].checked = true;
                     } else {
@@ -171,21 +170,21 @@
                     }
                 }
             },
-            //选择品类
+            // 选择品类
             chooseClassify(item, index) {
-                let that = this;
-                item.checked = !item.checked;//添加样式
-                let id = item.id;
-                let name = item.name;
+                const that = this;
+                item.checked = !item.checked;// 添加样式
+                const id = item.id;
+                const name = item.name;
                 if (item.checked) {
                     that.classifyId.push(id);
                     that.classifyName.push(name);
                     that.tempChooseList.push({
                         brandId: that.brandList[that.brandIndex].id,
                         brandName: that.brandList[that.brandIndex].name
-                    })
+                    });
                 } else {
-                    for (let i in that.classifyId) {
+                    for (const i in that.classifyId) {
                         if (id == that.classifyId[i]) {
                             that.classifyId.splice(i, 1);
                             that.classifyName.splice(i, 1);
@@ -194,12 +193,12 @@
                     }
                 }
             },
-            //添加品类
+            // 添加品类
             addBrandClassify() {
-                let that = this;
+                const that = this;
                 that.chooseList = [];
-                for (let i in that.tempChooseList) {
-                    let param = {
+                for (const i in that.tempChooseList) {
+                    const param = {
                         brandId: that.tempChooseList[i].brandId,
                         classifyId: that.classifyId[i],
                         name: that.tempChooseList[i].brandName + '-' + that.classifyName[i],
@@ -209,11 +208,11 @@
                     that.changeClassifyList(that.tempChooseList[i].brandId, that.classifyId[i], 'add');
                     that.brandIsAllCheck();
                 }
-                that.$emit('productcIds',that.classifyId)
+                that.$emit('productcIds', that.classifyId);
             },
-            //选中已选择的品类
+            // 选中已选择的品类
             delItem(item, index) {
-                let that = this;
+                const that = this;
                 item.checked = !item.checked;
                 if (that.chooseList[index].checked) {
                     if (that.delClassifyId.indexOf(item.classifyId) == -1) {
@@ -221,18 +220,18 @@
                         that.delClassifyId.push(item.classifyId);
                     }
                 } else {
-                    for (let i in that.delClassifyId) {
+                    for (const i in that.delClassifyId) {
                         if (item.classifyId == that.delClassifyId[i]) {
                             that.delClassifyId.splice(i, 1);
                         }
                     }
                 }
             },
-            //删除品类
+            // 删除品类
             delBrandClassify() {
-                let that = this;
-                for (let i in that.delClassifyId) {
-                    for (let j in that.chooseList) {
+                const that = this;
+                for (const i in that.delClassifyId) {
+                    for (const j in that.chooseList) {
                         if (that.delClassifyId[i] == that.chooseList[j].classifyId && that.chooseList[j].checked) {
                             that.changeClassifyList(that.chooseList[j].brandId, that.delClassifyId[i], 'del');
                             that.brandIsAllCheck();
@@ -243,34 +242,34 @@
                         }
                     }
                 }
-                that.$emit('productcIds',that.classifyId)
+                that.$emit('productcIds', that.classifyId);
             },
             // 判断品牌是否已被全选
             brandIsAllCheck() {
-                let that = this;
-                for (let i in that.brandList) {
+                const that = this;
+                for (const i in that.brandList) {
                     let num = 0;
-                    for (let j in that.brandList[i].classifyList) {
+                    for (const j in that.brandList[i].classifyList) {
                         if (that.brandList[i].classifyList[j].hasChecked) {
                             num++;
                         }
                         if (num == that.brandList[i].classifyList.length) {
-                            that.brandList[i].allChecked = true
+                            that.brandList[i].allChecked = true;
                         } else {
-                            that.brandList[i].allChecked = false
+                            that.brandList[i].allChecked = false;
                         }
                     }
                 }
             },
-            //改变品类容器节点
+            // 改变品类容器节点
             changeClassifyList(brandId, classifyId, addOrDel) {
-                let that = this;
-                for (let i in that.brandList) {
+                const that = this;
+                for (const i in that.brandList) {
                     if (that.brandList[i].id == brandId) {
-                        for (let j in that.brandList[i].classifyList) {
+                        for (const j in that.brandList[i].classifyList) {
                             if (that.brandList[i].classifyList[j].id == classifyId && ((!that.brandList[i].classifyList[j].hasChecked && addOrDel == 'add') || (that.brandList[i].classifyList[j].hasChecked && addOrDel == 'del'))) {
                                 that.brandList[i].classifyList[j].hasChecked = !that.brandList[i].classifyList[j].hasChecked;
-                                that.brandList[i].classifyList[j].checked = false
+                                that.brandList[i].classifyList[j].checked = false;
                             }
                         }
                     }

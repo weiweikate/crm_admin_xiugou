@@ -17,149 +17,163 @@
           </el-table-column>
         </el-table>
       </el-card>
-      
+
   </div>
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import * as api from "@/api/BrandProduct/ProductMange/index.js";
-import * as pApi from "@/privilegeList/BrandProduct/ProductMange/index.js";
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import * as api from '@/api/BrandProduct/ProductMange/index.js';
+import * as pApi from '@/privilegeList/BrandProduct/ProductMange/index.js';
+import request from '@/http/http';
 export default {
-  components: {
-    vBreadcrumb
-  },
-
-  data() {
-    return {
-      nav: ["品牌产品管理", "产品管理", "产品库存管理"],
-      productId:'',
-      btnLoading: false,
-      btnStyle:'primary',
-      unit: "1",
-      unitArr: [
-        { label: "包", value: "1" }, 
-        { label: "箱", value: "2" }, 
-        { label: "件", value: "3" }, 
-        { label: "条", value: "4" }, 
-        { label: "盒", value: "5" }, 
-        { label: "KG", value: "6" }, 
-        { label: "吨", value: "7" }, 
-        { label: "平米", value: "8" }, 
-        { label: "立方", value: "9" }, 
-      ],
-      tableData: []
-    };
-  },
-
-  computed: {
-    unitName() {
-      let u = "";
-      this.unitArr.forEach((v, k) => {
-        if (v.value == this.unit) {
-          u = v.label;
-        }
-      });
-      return u;
-    }
-  },
-
-  activated() {
-    this.productId =
-      this.$route.query.productInventoryId ||
-      sessionStorage.getItem("productInventory");
-    this.getInfo();
-  },
-
-  methods: {
-    // 获取库存信息
-    getInfo() {
-      this.tableData = [];
-      this.$axios
-        .post(api.queryProductStockList, { productId: this.productId,url:pApi.queryProductStockList })
-        .then(res => {
-          res.data.data.forEach((v, k) => {
-            v.btnStyle = 'primary';
-            this.tableData.push(v);
-          });
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    components: {
+        vBreadcrumb
     },
-    // 保存表单信息
-    saveMsg(row) {
-      let data = {};
-      data.id = row.id;
-      data.stock = row.stock;
-      data.stock_unit = this.unit;
-      data.url=pApi.queryProductStockList;
-      var reg = /^\d+(?=\.{0,1}\d+$|$)/;
-      if(!reg.test(row.stock)){
-        this.$message.warning('请输入正确的库存');
-        return;
-      }
-      this.btnLoading = true;
-      this.$axios
-        .post(api.updateProductStock, data)
-        .then(res => {
-          this.$message.success(res.data.msg);
-          this.btnLoading = false;
-          row.btnStyle = 'success';
-        })
-        .catch(err => {
-          console.log(err);
-          this.btnLoading = false;
-        });
+
+    data() {
+        return {
+            nav: ['品牌产品管理', '产品管理', '产品库存管理'],
+            productId: '',
+            btnLoading: false,
+            btnStyle: 'primary',
+            unit: '1',
+            unitArr: [
+                { label: '包', value: '1' },
+                { label: '箱', value: '2' },
+                { label: '件', value: '3' },
+                { label: '条', value: '4' },
+                { label: '盒', value: '5' },
+                { label: 'KG', value: '6' },
+                { label: '吨', value: '7' },
+                { label: '平米', value: '8' },
+                { label: '立方', value: '9' }
+            ],
+            tableData: []
+        };
     },
-    // 表头下拉框改变
-    tableHeadChange(value) {
-      this.unit = value;
-    },
-    // 表头处理
-    renderHeader(h, { column, $index }) {
-      return [
-        h(
-          "div",
-          {
-            style: {
-              margin: "8px -20px 0 0"
-            }
-          },
-          ["总库存"]
-        ),
-        h(
-          "el-select",
-          {
-            style: {
-              display: "inline-block",
-              width: "120px",
-              "margin-top": "8px"
-            },
-            attrs: {
-              value: this.unit,
-              placeholder: ""
-            },
-            on: {
-              change: this.tableHeadChange
-            }
-          },
-          this.unitArr.map((v, k) => {
-            return h("el-option", {
-              attrs: {
-                label: v.label,
-                value: v.value
-              }
+
+    computed: {
+        unitName() {
+            let u = '';
+            this.unitArr.forEach((v, k) => {
+                if (v.value == this.unit) {
+                    u = v.label;
+                }
             });
-          })
-        )
-      ];
+            return u;
+        }
     },
-    // 恢复按钮样式
-    changeBtnStyle(row){
-      row.btnStyle = 'primary';
+
+    activated() {
+        this.productId =
+      this.$route.query.productInventoryId ||
+      sessionStorage.getItem('productInventory');
+        this.getInfo();
+    },
+
+    methods: {
+    // 获取库存信息
+        getInfo() {
+            this.tableData = [];
+            request.queryProductSpecStockList({ productId: this.productId }).then(res => {
+                res.data.forEach((v, k) => {
+                    this.unit = v.stockUnit;
+                    // 1.修改 2.添加
+                    if (!v.id) {
+                        v.flag = 2;
+                    } else {
+                        v.flag = 1;
+                    }
+                    v.btnStyle = 'primary';
+                    this.tableData.push(v);
+                });
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        // 保存表单信息
+        saveMsg(row) {
+            const data = {
+                priceId: row.priceId,
+                stock: row.stock,
+                stockUnit: this.unit
+            };
+            var reg = /^\d+(?=\.{0,1}\d+$|$)/;
+            if (!reg.test(row.stock)) {
+                this.$message.warning('请输入正确的库存');
+                return;
+            }
+            this.btnLoading = true;
+            if (row.flag === 1) {
+                data.id = row.id;
+                request.updateProductSpecStock(data).then(res => {
+                    this.$message.success(res.msg);
+                    row.btnStyle = 'success';
+                    this.btnLoading = false;
+                }).catch(err => {
+                    console.log(err);
+                    this.btnLoading = false;
+                });
+            } else {
+                request.addProductSpecStock(data).then(res => {
+                    this.$message.success(res.msg);
+                    row.btnStyle = 'success';
+                    this.btnLoading = false;
+                }).catch(err => {
+                    console.log(err);
+                    this.btnLoading = false;
+                });
+            }
+        },
+        // 表头下拉框改变
+        tableHeadChange(value) {
+            this.unit = value;
+        },
+        // 表头处理
+        renderHeader(h, { column, $index }) {
+            return [
+                h(
+                    'div',
+                    {
+                        style: {
+                            margin: '8px -20px 0 0'
+                        }
+                    },
+                    ['总库存']
+                ),
+                h(
+                    'el-select',
+                    {
+                        style: {
+                            display: 'inline-block',
+                            width: '120px',
+                            'margin-top': '8px'
+                        },
+                        attrs: {
+                            value: this.unit,
+                            placeholder: ''
+                        },
+                        on: {
+                            change: this.tableHeadChange
+                        }
+                    },
+                    this.unitArr.map((v, k) => {
+                        return h('el-option', {
+                            attrs: {
+                                label: v.label,
+                                value: v.value
+                            }
+                        });
+                    })
+                )
+            ];
+        },
+        // 恢复按钮样式
+        changeBtnStyle(row) {
+            row.btnStyle = 'primary';
+        }
     }
-  }
 };
 </script>
 <style lang='less'>

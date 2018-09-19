@@ -16,53 +16,52 @@
             </el-form-item>
           </el-form>
       </el-card>
-        
+
   </div>
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import * as api from "@/api/BrandProduct/ProductMange/index.js";
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import request from '@/http/http';
 export default {
-  components: {
-    vBreadcrumb
-  },
+    components: {
+        vBreadcrumb
+    },
 
-  data() {
-    return {
-      nav: ["品牌产品管理", "产品管理", "产品详情"],
-      productId:'',
-      name: "",
-      productImg: [],
-      productItem: "",
-      productBrand: "",
-      productDetail: ''
-    };
-  },
+    data() {
+        return {
+            nav: ['品牌产品管理', '产品管理', '产品详情'],
+            productId: '',
+            name: '',
+            productImg: [],
+            productItem: '',
+            productBrand: '',
+            productDetail: ''
+        };
+    },
 
-  activated() {
-    this.productId = this.$route.query.productInfoId || sessionStorage.getItem('productInfo');
-    this.getList();
-  },
+    activated() {
+        this.productId = this.$route.query.productInfoId || sessionStorage.getItem('productInfo');
+        this.getList();
+    },
 
-  methods: {
-    getList(){
-      this.$axios.post(api.findProductById,{productId:this.productId})
-      .then((res) => {
-        this.productImg = [];
-        res.data.data.ImgUrl.forEach((v,k)=>{
-          this.productImg.push(v.original_img)
-        })
-        this.productDetail = res.data.data.infoValue;
-        this.name = res.data.data.product.name;
-        this.productItem = res.data.data.product.firstName+'-'+res.data.data.product.secondName;
-        this.productBrand = res.data.data.product.brand_id;
-        this.productDetail = res.data.data.product.content;
-      }).catch((err) => {
-          console.log(err)
-      });
+    methods: {
+        getList() {
+            request.findProductDetailsById({ id: this.productId }).then(res => {
+                this.productImg = [];
+                this.productDetail = res.data.infoValue;
+                this.name = res.data.name;
+                this.productItem = res.data.firstCategoryName + '-' + res.data.secCategoryName;
+                this.productBrand = res.data.brandName;
+                this.productDetail = res.data.content;
+                res.data.imgFileList.forEach((v, k) => {
+                    this.productImg.push(v.originalImg);
+                });
+            }).catch(err => {
+                console.log(err);
+            });
+        }
     }
-  }
 };
 </script>
 <style lang='less'>

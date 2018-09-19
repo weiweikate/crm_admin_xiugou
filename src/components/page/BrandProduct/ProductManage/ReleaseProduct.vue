@@ -313,7 +313,7 @@
                     this.form.restrictions += 16;
                 }
                 this.productParam.forEach(v => {
-                    this.form.productParamValueVOList.push({ paramId: v.id, value: v.value });
+                    this.form.productParamValueVOList.push({ paramId: v.id, paramValue: v.value });
                 });
                 this.form.imgUrl = this.imgArr[0].originalImg;
                 this.form.imgFileList = this.imgArr;
