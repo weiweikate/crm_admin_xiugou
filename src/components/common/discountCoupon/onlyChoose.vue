@@ -298,6 +298,7 @@
                     if (!res.data) return;
                     for (const i in res.data.data) {
                         res.data.data[i].labelName = `产品ID:` + item.id + '&nbsp;&nbsp;' + item.name;
+                        this.$set(res.data.data, i, res.data.data[i]);
                     }
                     that.productList = res.data.data;
                     console.log(that.productList);

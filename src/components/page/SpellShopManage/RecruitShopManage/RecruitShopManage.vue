@@ -108,7 +108,8 @@ export default {
         // 查看店铺详情
         showInfo(row) {
             sessionStorage.setItem('shopInfoId', row.id);
-            this.$router.push({ name: 'shopInfo', query: { 'shopInfoId': row.id }});
+            sessionStorage.setItem('status', 2);
+            this.$router.push({ name: 'shopInfo', query: { 'shopInfoId': row.id, status: 2 }});
             // sessionStorage.setItem('recruitShopId', row.id);
             // this.$router.push({name: 'recruitShopInfo', query: {'recruitShopId': row.id}});
         },

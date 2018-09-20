@@ -157,7 +157,8 @@ export default {
         // 查看店铺详情
         showInfo(row) {
             sessionStorage.setItem('shopInfoId', row.id);
-            this.$router.push({ name: 'shopInfo', query: { 'shopInfoId': row.id }});
+            sessionStorage.setItem('status', 1);
+            this.$router.push({ name: 'shopInfo', query: { 'shopInfoId': row.id,status:1 }});
         },
         // 重置表单
         resetForm(formName) {

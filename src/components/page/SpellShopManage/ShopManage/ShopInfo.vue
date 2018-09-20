@@ -155,7 +155,7 @@
         data() {
             return {
 
-                nav: ['拼店店铺管理', '店铺管理', '店铺详情'],
+                nav: ['拼店管理', '店铺管理', '店铺详情'],
                 shopId: '',
                 avatar: '',
                 detail: {}
@@ -165,6 +165,13 @@
         activated() {
             this.shopId =
                 this.$route.query.shopInfoId || sessionStorage.getItem('shopInfoId');
+            this.status =
+                this.$route.query.status || sessionStorage.getItem('status');
+            if (status === 2) {
+                this.nav = ['拼店店铺管理', '招募店铺详情'];
+            } else {
+                this.nav = ['拼店管理', '店铺管理', '店铺详情'];
+            }
             this.getInfo();
         },
 
