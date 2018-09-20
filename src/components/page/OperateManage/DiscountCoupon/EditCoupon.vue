@@ -275,27 +275,23 @@
                 request.getUserLevelList({}).then(res => {
                     let count = 0;
                     const arr = userLevelId.split(',');
-                    if (res.code == 10000) {
-                        for (const i in res.data) {
-                            const name = res.data[i].name;
-                            if (this.users.indexOf(name) == -1) {
-                                this.users.push(res.data[i]);
-                            }
-                            for (const j in arr) {
-                                if (arr[j] == res.data[i].id) {
-                                    count++;
-                                    this.checkedUsers.push(res.data[i]);
-                                }
+                    for (const i in res.data) {
+                        const name = res.data[i].name;
+                        if (this.users.indexOf(name) == -1) {
+                            this.users.push(res.data[i]);
+                        }
+                        for (const j in arr) {
+                            if (arr[j] == res.data[i].id) {
+                                count++;
+                                this.checkedUsers.push(res.data[i]);
                             }
                         }
-                        if (count == res.data.length) {
-                            this.checkAll = true;
-                            this.isIndeterminate = false;
-                        } else {
-                            this.isIndeterminate = true;
-                        }
+                    }
+                    if (count == res.data.length) {
+                        this.checkAll = true;
+                        this.isIndeterminate = false;
                     } else {
-                        this.$message.warning(res.msg);
+                        this.isIndeterminate = true;
                     }
                 }).catch(error => {
                     console.log(error);

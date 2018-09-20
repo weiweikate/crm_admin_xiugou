@@ -29,21 +29,23 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item prop="status" label="是否包邮">
+                    <el-form-item label="邮费方式">
                         <el-radio-group v-model="form.freightType" @change="chooseStyle">
                             <el-radio label="1">自定义运费</el-radio>
                             <el-radio label="2">平台承担运费</el-radio>
                         </el-radio-group>
-                        <el-checkbox v-model="checked" style="margin-left: 30px">满
-                            <el-input class="small-inp" v-model="freightFreePrice"></el-input>
+                    </el-form-item>
+                    <el-form-item class="address-item" label="是否满包邮">
+                        <el-checkbox v-model="checked">满
+                            <el-input class="small-inp" :disabled="!checked" v-model="freightFreePrice"></el-input>
                             元包邮</el-checkbox>
                     </el-form-item>
                     <div v-if="isShowExpress">
                         <el-form-item prop="status" label="计价方式">
                             <el-radio-group v-model="form.calcType" @change="calcType">
                                 <el-radio label="1">按重量</el-radio>
-                                <!--<el-radio label="2">按体积</el-radio>-->
-                                <!--<el-radio label="3">按件数量</el-radio>-->
+                                <el-radio label="2" disabled>按体积</el-radio>
+                                <el-radio label="3" disabled>按件数量</el-radio>
                             </el-radio-group>
                         </el-form-item>
                         <div class="express">
@@ -95,6 +97,12 @@
                                 </el-table-column>
                             </el-table>
                             <div><span class="color-blue" @click="addSetting()">增加制定省市运费设置</span></div>
+                        </el-form-item>
+                        <el-form-item label="是否启用">
+                            <el-radio-group v-model="form.status" @change="chooseStyle">
+                                <el-radio label="1">启用</el-radio>
+                                <el-radio label="2">关闭</el-radio>
+                            </el-radio-group>
                         </el-form-item>
                     </div>
                     <!--<el-form-item prop="status" label="是否启用">-->
@@ -178,9 +186,10 @@
                     country: '1',
                     calcType: '1',
                     freightType: '1',
-                    provinceId: '',
-                    cityId: '',
-                    areaId: ''
+                    provinceCode: '',
+                    cityCode: '',
+                    areaCode: '',
+                    status: '1'
                 },
                 checked: false,
                 freightFreePrice: '',
@@ -210,9 +219,10 @@
             this.form.country = '1';
             this.form.calcType = '1';
             this.form.freightType = '1';
-            this.form.provinceId = '';
-            this.form.cityId = '';
-            this.form.areaId = '';
+            this.form.provinceCode = '';
+            this.form.cityCode = '';
+            this.form.areaCode = '';
+            this.form.status = '1';
             this.tableData = [];
             this.rows = 0;
             this.freightFreePrice = '';
@@ -232,9 +242,9 @@
             // 获取省市区
             getRegion(msg) {
                 this.address = msg;
-                this.form.provinceId = this.address[0];
-                this.form.cityId = this.address[1];
-                this.form.areaId = this.address[2];
+                this.form.provinceCode = this.address[0];
+                this.form.cityCode = this.address[1];
+                this.form.areaCode = this.address[2];
             },
             // 确认保存
             submitForm(formName) {
@@ -244,7 +254,7 @@
                         return;
                     } else {
                         const data = that.form;
-                        if (!that.form.provinceId || !that.form.cityId || !that.form.areaId) {
+                        if (!that.form.provinceCode || !that.form.cityCode || !that.form.areaCode) {
                             that.$message.warning('请选择省市区！');
                             return;
                         }
@@ -253,7 +263,6 @@
                                 that.$message.warning('请输入满包邮金额！');
                                 return;
                             }
-                            data.freightType = 3;
                             data.freightFreePrice = that.freightFreePrice;
                         }
                         const list = [];
@@ -262,33 +271,39 @@
                             startPrice: that.startPrice,
                             nextUnit: that.nextUnit,
                             nextPirce: that.nextPirce,
-                            defaultTrue: 1
+                            freightTemplateInfoDetailList: [{
+                                provinceCode: '',
+                                cityCodes: '',
+                                provinceName: '',
+                                cityNames: ''
+                            }]
                         };
                         list.push(temp);
                         let flag = true;
                         that.tableData.forEach(function(v, k) {
                             const tableTemp = {
-                                includeAreaName: v.includeAreaName,
-                                includeArea: v.includeArea,
+                                freightTemplateInfoDetailList: v.freightTemplateInfoDetailList,
                                 startUnit: v.startUnit,
                                 startPrice: v.startPrice,
                                 nextUnit: v.nextUnit,
-                                nextPirce: v.nextPirce,
-                                defaultTrue: 2
+                                nextPirce: v.nextPirce
                             };
-                            if (v.includeAreaName == '' || v.includeArea == '' || v.startUnit == '' || v.startPrice == '' || v.nextUnit == '' || v.nextPirce == '') {
+                            if (v.provinceCode == '' || v.startUnit == '' || v.startPrice == '' || v.nextUnit == '' || v.nextPirce == '') {
                                 flag = false;
                             }
                             list.push(tableTemp);
                         });
-                        data.list = JSON.stringify(list);
+                        // data.freightTemplateInfoList = JSON.stringify(list);
+                        data.freightTemplateInfoList = list;
                         if (!flag) {
                             this.$message.warning('请填写完整的运费设置!');
                             return;
                         }
                         this.btnLoading = true;
+                        // console.log(data);
+                        // return;
                         request.addFreightTemplate(data).then(res => {
-                            // that.$message.success(res.data.msg);
+                            that.$message.success(res.msg);
                             that.$router.push('/shippingTemplate');
                             this.btnLoading = false;
                         }).catch(error => {
@@ -348,13 +363,27 @@
             // 选择区域
             chooseAreaToast(getArea) {
                 this.isShowArea = false;
+                this.tableData[this.tableIndex].freightTemplateInfoDetailList = [];
                 if (getArea) {
-                    const index = getArea.indexOf('IDS');
-                    this.tableData[this.tableIndex].includeAreaName = getArea.substring(0, index);// 名称
-                    this.tableData[this.tableIndex].includeArea = getArea.substring(index + 4);// id
-                    console.log(getArea);
+                    // const index = getArea.indexOf('IDS');
+                    // this.tableData[this.tableIndex].includeAreaName = getArea.substring(0, index);// 名称
+                    // this.tableData[this.tableIndex].includeArea = getArea.substring(index + 4);// id
                     // console.log(getArea.substring(0, index))
                     // console.log(getArea.substring(index + 4));//zipcode
+                    let includeAreaName = ''; let includeArea = '';
+                    for (const i in getArea) {
+                        includeAreaName += getArea[i].provinceName + ':' + getArea[i].cityNames + ',';
+                        includeArea += getArea[i].provinceCode + ':' + getArea[i].cityCodes + ',';
+                        const tempItem = {
+                            provinceCode: getArea[i].provinceCode,
+                            cityCodes: getArea[i].cityCodes,
+                            provinceName: getArea[i].provinceName,
+                            cityNames: getArea[i].cityNames
+                        };
+                        this.tableData[this.tableIndex].freightTemplateInfoDetailList.push(tempItem);
+                    }
+                    this.tableData[this.tableIndex].includeAreaName = includeAreaName.slice(0, -1);
+                    this.tableData[this.tableIndex].includeArea = includeArea.slice(0, -1);
                 }
             },
             // 增加制定省市运费设置
@@ -376,7 +405,8 @@
                     startUnit: '',
                     startPrice: '',
                     nextUnit: '',
-                    nextPirce: ''
+                    nextPirce: '',
+                    freightTemplateInfoDetailList: []
                 });
             },
             // 判断表格的值是否为空

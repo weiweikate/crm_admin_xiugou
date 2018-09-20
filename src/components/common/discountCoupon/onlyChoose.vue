@@ -54,9 +54,8 @@
                     <el-radio-group v-model="productName">
                         <div v-for="(item,index) in productList" :key="index" class="product-list">
                             <el-radio @change="chooseProduct(item,index)"
-                                      :value="item.id" :label="item.labelName">{{item.labelName}}
+                                      :value="item.id" :label="item.name">产品ID:{{item.id}} <span class="product-name">{{item.name}}</span>
                             </el-radio>
-                            <!--<span class="product-item" @change="chooseProduct(item,index)">产品ID:{{item.id}} <span class="product-name">{{item.name}}</span></span>-->
                         </div>
                     </el-radio-group>
                 </div>
@@ -296,12 +295,7 @@
                 // 获取产品列表并回显选中状态
                 request.queryProductList(data).then(res => {
                     if (!res.data) return;
-                    for (const i in res.data.data) {
-                        res.data.data[i].labelName = `产品ID:` + item.id + '&nbsp;&nbsp;' + item.name;
-                        this.$set(res.data.data, i, res.data.data[i]);
-                    }
-                    that.productList = res.data.data;
-                    console.log(that.productList);
+                    that.productList = res.data;
                     that.loading = false;
                 }).catch(err => {
                     console.log(err);
@@ -387,9 +381,6 @@
             font-size: 12px;
             color: #999;
             padding-left: 5px;
-        }
-        /deep/.product-list .el-radio__label {
-            font-size: 0;
         }
         /deep/.el-radio{
             height: 25px;

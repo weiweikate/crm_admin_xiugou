@@ -86,21 +86,18 @@ export const getCityList = '/admin/area/getCityList';
 // 获取省接口
 export const getProvinceList = '/admin/area/getProvinceList';
 
-// 查看详情
-export const findFreightTemplateById = '/admin/freightTemplate/findFreightTemplateById';
-// 修改邮费模板
-export const updateFreightTemplateById = '/admin/freightTemplate/updateFreightTemplateById';
-// 删除运费模板接口
-export const deleteFreightTemplateById = '/admin/freightTemplate/deleteFreightTemplateById';
-
 //* ******************************************************************************************************************
 // 运费模版
 // 查询列表
 export const queryFreightTemplateList = '/product/freightTemplate/queryFreightTemplateList';
 // 添加运费模板接口
 export const addFreightTemplate = '/product/freightTemplate/addFreightTemplate';
+// 查询运费模板接口
+export const findFreightTemplateById = ['/product/freightTemplate/findById', { methods: 'get' }];
 // 根据分区获取省市区
 export const getProvinceListGroupByDistrict = ['/config/sysArea/getProvinceListGroupByDistrict', { methods: 'get' }];
+// 删除运费模板接口
+export const deleteFreightTemplateById = ['/product/freightTemplate/deleteById', { methods: 'get' }];
 
 // 品牌管理
 // 产品品牌列表

@@ -33,7 +33,7 @@
                 nav: ['运营管理', '标签管理'],
                 list: [
                     {
-                        img: 'static/img/package.png',
+                        img: 'static/img/productLabel.png',
                         title: '产品标签类型设置',
                         content: '产品标签分组',
                         page: '/productLabel'

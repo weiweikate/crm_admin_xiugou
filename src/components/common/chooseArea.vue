@@ -424,7 +424,9 @@
                     tempChooseData = that.preChooseData;
                     tempChooseProvinceIds = that.preChooseProvinceIds;
                 }
-                tempChooseProvinceIds.push(tempProvinceId);
+                if (tempChooseProvinceIds.indexOf(tempProvinceId) == -1) {
+                    tempChooseProvinceIds.push(tempProvinceId);
+                }
                 const temp = {
                     provinceId: tempProvinceId,
                     provinceName: that.checkAll[index].provinceCheck[k].name,
@@ -441,10 +443,16 @@
                 that.allChooseData.forEach(function(v, k) {
                     that.deleteData(v.cityIds, tempId);
                     that.deleteData(v.cityNames, name);
+                    if (!v.cityIds.length) {
+                        that.allChooseData.splice(k, 1);
+                    }
                 });
                 that.preChooseData.forEach(function(v, k) {
                     that.deleteData(v.cityIds, tempId);
                     that.deleteData(v.cityNames, name);
+                    if (!v.cityIds.length) {
+                        that.preChooseData.splice(k, 1);
+                    }
                 });
                 that.deleteData(that.allCityIds, tempId);
                 that.deleteData(that.preCityIds, tempId);
@@ -476,26 +484,46 @@
             },
             // 确认取消操作
             closeToask(opr) {
-                const that = this;
-                that.checkNames = [];
-                that.checkIds = [];
-                for (const i in that.preChooseData) {
-                    if (that.preChooseData[i].cityNames.length) {
-                        const tempName = that.preChooseData[i].provinceName + ':' + that.preChooseData[i].cityNames.join(',');
-                        const tempId = that.preChooseData[i].provinceId + ':' + that.preChooseData[i].cityIds.join(',');
-                        if (that.checkNames.indexOf(tempName) == -1) {
-                            that.checkNames.push(tempName);
-                            that.checkIds.push(tempId);
-                        }
+                const freightTemplateInfoDetailList = [];
+                for (const i in this.preChooseData) {
+                    if (this.preChooseData[i].cityNames.length) {
+                        const temp = {
+                            provinceCode: this.preChooseData[i].provinceId,
+                            provinceName: this.preChooseData[i].provinceName,
+                            cityCodes: this.preChooseData[i].cityIds.join(','),
+                            cityNames: this.preChooseData[i].cityNames.join(',')
+                        };
+                        freightTemplateInfoDetailList.push(temp);
                     }
                 }
 
                 if (opr) {
-                    that.$emit('getArea', that.checkNames + 'IDS:' + that.checkIds);
+                    this.$emit('getArea', freightTemplateInfoDetailList);
                 } else {
-                    that.$emit('getArea', false);
+                    this.$emit('getArea', false);
                 }
             }
+            // closeToask(opr) {
+            //     const that = this;
+            //     that.checkNames = [];
+            //     that.checkIds = [];
+            //     for (const i in that.preChooseData) {
+            //         if (that.preChooseData[i].cityNames.length) {
+            //             const tempName = that.preChooseData[i].provinceName + ':' + that.preChooseData[i].cityNames.join(',');
+            //             const tempId = that.preChooseData[i].provinceId + ':' + that.preChooseData[i].cityIds.join(',');
+            //             if (that.checkNames.indexOf(tempName) == -1) {
+            //                 that.checkNames.push(tempName);
+            //                 that.checkIds.push(tempId);
+            //             }
+            //         }
+            //     }
+            //
+            //     if (opr) {
+            //         that.$emit('getArea', that.checkNames + 'IDS:' + that.checkIds);
+            //     } else {
+            //         that.$emit('getArea', false);
+            //     }
+            // }
         }
     };
 </script>

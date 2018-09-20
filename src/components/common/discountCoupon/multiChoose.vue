@@ -552,6 +552,7 @@
                         }
                     }
                 });
+                this.isUpCheck(3);// 三级类目的选中状态
                 this.isUpCheck(2);// 二级类目的选中状态
                 this.transValue();// 向父组件传值
             },
