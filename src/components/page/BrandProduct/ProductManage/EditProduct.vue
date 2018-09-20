@@ -532,6 +532,7 @@
                         this.$message.success(res.msg);
                         this[tagName] = true;
                         this.getAllTags(typeId, tagName, this[tagName]);
+                        this.tagName = '';
                     }).catch(err => {
                         console.log(err);
                     });

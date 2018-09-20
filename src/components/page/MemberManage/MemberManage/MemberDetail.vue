@@ -35,7 +35,7 @@
                 </div>
                 <div class="right">
                     <div>
-                        <img class="img" v-if="dealer.head_img" :src="dealer.head_img" alt="">
+                        <img class="img" v-if="dealer.headImg" :src="dealer.headImg" alt="">
                         <img class="img" v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
                     <!--<div>-->
@@ -78,9 +78,9 @@
                     <div class="item-row">
                         <div class="item">上级代理：{{dealer.upUserName}}</div>
                         <div class="item">会员类型：
-                            <span v-if="dealer.dtype==1">网信经销商</span>
-                            <span v-if="dealer.dtype==2">供货经销商</span>
-                            <span v-if="dealer.dtype==3">网红经销商</span>
+                            <span v-if="dealer.userType==1">网信经销商</span>
+                            <span v-if="dealer.userType==2">供货经销商</span>
+                            <span v-if="dealer.userType==3">网红经销商</span>
                         </div>
                     </div>
                     <div class="item-row">

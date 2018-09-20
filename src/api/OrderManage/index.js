@@ -58,17 +58,18 @@ export const queryWaitReceivingOrderPageList = '/admin/order/queryWaitReceivingO
 // 待处理订单
 export const queryPendingOrderPageList = '/admin/order/queryPendingOrderPageList';
 
-//售后操作
-//同意换货
+// 售后操作
+// 同意换货
 export const agreeExchange = '/admin/returnProduct/agreeExchange';
-//拒绝退款
+// 拒绝退款
 export const refusalRefund = '/admin/returnProduct/refusalRefund';
-//换货变退货
+// 换货变退货
 export const exchangeChangeReturn = '/admin/returnProduct/exchangeChangeReturn';
-//确认退款
+// 确认退款
 export const confirmRefund = '/admin/returnProduct/confirmRefund';
-//退货订单详情
+// 退货订单详情
 export const findReturnProductInfo = '/admin/returnProduct/findReturnProductInfo';
-//退货订单详情
+// 退货订单详情
 export const sendEcReturnProduct = '/admin/returnProduct/sendEcReturnProduct';
-
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+export const findLogisticsDetail = ['/logistics/findLogisticsDetail', { methods: 'get' }]; // 物流测试

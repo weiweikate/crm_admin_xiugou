@@ -148,7 +148,6 @@
                 const data = {};
                 data.id = that.id;
                 data.address = that.dealer.address;
-                data.address = that.dealer.address;
                 data.headImg = that.img;
                 data.idcard = that.dealer.idcard;
                 data.nickname = that.dealer.nickname;

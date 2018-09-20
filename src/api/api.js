@@ -26,8 +26,6 @@ export const sendUpdatePwdCode = '/admin/phoneCode/sendMessage';
 export const loginUpdateCheckCode = '/admin/adminLogin/loginUpdateCheckCode';
 // 修改密码
 export const loginUpdatePassword = '/admin/adminLogin/loginUpdatePassword';
-// 修改密码2
-export const updateAdminUserPassword = '/admin/adminUser/updateAdminUserPassword';
 //
 // 授权管理
 // 获取渠道列表
@@ -107,8 +105,6 @@ export const addPrivilege = '/admin/privilege/addPrivilege';
 export const queryTopMenuList = '/admin/privilege/queryTopMenuList';
 // 新增功能模块
 export const addFunctionModule = '/admin/privilege/addFunctionModule';
-// 修改头像
-export const updateAdminUserFace = 'admin/adminUser/updateAdminUserFace';
 
 // 品牌产品管理
 // 获取一二级类目列表
@@ -256,6 +252,7 @@ export const loginByPwd = '/adminLogin/pswLogin'; // 管理员账号密码登录
 export const addManger = '/adminUser/addAdminUser'; // 添加管理员
 export const updateAdminUser = '/adminUser/updateAdminUser'; // 编辑管理员
 export const getMangerList = '/adminUser/queryAdminUserPageList'; // 获取管理员列表
+export const updateAdminUserPassword = '/adminUser/updateAdminUserPassword'; // 修改管理员密码
 export const addOrModify = '/config/sysconfig/addOrModify'; // 新增修改系统配置
 export const getRoleList = ['/privilege/queryPrivilegeList', { methods: 'get' }]; // 获取管理员权限列表
 export const queryDepartmentList = ['/department/queryDepartmentList', { methods: 'get' }]; // 获取岗位列表

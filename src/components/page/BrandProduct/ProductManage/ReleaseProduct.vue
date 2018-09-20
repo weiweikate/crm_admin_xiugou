@@ -267,6 +267,18 @@
             this.proItemArr = [];
             this.videoUrl = '';
             this.selectedTagArr = [];
+            this.productParam = [];
+            this.purchaseLimit = false;
+            this.purchasevalue = '';
+            this.isSetBuTime = false;
+            this.setBuyTime = [];
+            this.limit = {
+                notSupportCoupon: false, // 不支持优惠券
+                notSupportScore: false, // 不支持积分抵扣
+                notSupportRetMoney: false, // 不支持退款
+                notSupportRetChange: false, // 不支持换货
+                notSupportRetGoods: false // 不支持退货
+            },
             // 获取一级类目
             this.getFirstItem();
             // 获取品牌列表
@@ -482,6 +494,7 @@
                         this.$message.success(res.msg);
                         this[tagName] = true;
                         this.getAllTags(typeId, tagName, this[tagName]);
+                        this.tagName = '';
                     }).catch(err => {
                         console.log(err);
                     });
