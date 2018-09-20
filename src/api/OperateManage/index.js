@@ -211,3 +211,9 @@ export const findHelpQuestionById = ['/help/helpQuestion/findHelpQuestionById', 
 export const updateHelpQuestion = '/help/helpQuestion/updateHelpQuestion';
 // 删除问题
 export const deleteHelpQuestion = ['/help/helpQuestion/deleteHelpQuestion', { methods: 'get' }];
+
+// 标签管理
+// 添加标签
+export const addSysTagLibrary = '/config/sysTagLibrary/addSysTagLibrary';
+// 查询标签列表
+export const querySysTagLibraryList = ['/config/sysTagLibrary/querySysTagLibraryList', { methods: 'get' }];

@@ -213,7 +213,6 @@
             this.shopId =
                 this.$route.query.promotionShopId ||
                 sessionStorage.getItem('promotionShopId');
-            console.log(this.shopId);
             this.getStoreStarById();
         },
 

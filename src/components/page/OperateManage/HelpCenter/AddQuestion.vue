@@ -6,7 +6,7 @@
           <el-form-item label="问题标题">
               <el-input class="input-sty" v-model="form.questionTitle" placeholder="请输入问题标题"></el-input>
           </el-form-item>
-          <el-form-item label="通知详情">
+          <el-form-item label="问题详情">
             <div style="display: inline-block;width:80%">
                 <quill-editor v-model="form.content" ref="myQuillEditor" :options="editorOption" @change="onEditorChange($event)"></quill-editor>
                 <el-upload :action="qnLocation" :data="uploadData" :on-success='upScuccess' ref="upload" style="display:none">

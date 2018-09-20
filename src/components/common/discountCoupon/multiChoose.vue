@@ -499,8 +499,6 @@
                 that.thirdIndex = index;
                 that.thirdCategoryId = item.id;
                 const data = {
-                    page: 1,
-                    pageSize: 10000,
                     firstCategoryId: that.firstCategoryId,
                     secCategoryId: that.secondCategoryId,
                     thirdCategoryId: that.thirdCategoryId,

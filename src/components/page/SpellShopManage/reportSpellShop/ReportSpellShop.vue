@@ -89,7 +89,8 @@ export default {
         // 举报店铺
         reportShop(row) {
             sessionStorage.setItem('shopInfoId', row.storeId);
-            this.$router.push({ name: 'shopInfo', query: { shopInfoId: row.storeId }});
+            sessionStorage.setItem('status', 1);
+            this.$router.push({ name: 'shopInfo', query: { shopInfoId: row.storeId, status: 1 }});
         }
     }
 };

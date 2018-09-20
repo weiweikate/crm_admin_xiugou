@@ -32,7 +32,7 @@
                     </div>
                     <div class="detail-title">回复：</div>
                     <div>
-                        <el-input type="textarea" readonly="detail.status==2" v-model="detail.replyContent"></el-input>
+                        <el-input type="textarea" :readonly="detail.status==2" v-model="detail.replyContent"></el-input>
                     </div>
                     <div class="detail-item">
                         处理人：{{username}}

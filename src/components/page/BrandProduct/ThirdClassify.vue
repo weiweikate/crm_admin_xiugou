@@ -14,6 +14,7 @@
                             <img :src="scope.row.img" alt="">
                         </template>
                     </el-table-column>
+                    <el-table-column prop="sort" label="排序" align="center"></el-table-column>
                     <el-table-column prop="porductNum" label="产品数" align="center"></el-table-column>
                     <el-table-column prop="status" label="状态" align="center">
                         <template slot-scope="scope">
@@ -100,7 +101,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="name" label="APP排序" :label-width="formLabelWidth">
-                    <el-input v-model="addForm.sort" auto-complete="off"></el-input>
+                    <el-input v-model="form.sort" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -199,6 +200,7 @@ export default {
             this.addMask = true;
             this.addForm.name = '';
             this.addForm.img = '';
+            this.addForm.sort = '';
             this.addForm.status = '1';
             this.itype = 'add';
         },

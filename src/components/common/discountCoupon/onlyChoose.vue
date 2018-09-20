@@ -54,9 +54,9 @@
                     <el-radio-group v-model="productName">
                         <div v-for="(item,index) in productList" :key="index" class="product-list">
                             <el-radio @change="chooseProduct(item,index)"
-                                      :value="item.id" :label="item.name">
+                                      :value="item.id" :label="item.labelName">{{item.labelName}}
                             </el-radio>
-                            <span class="product-item">产品ID:{{item.id}} <span class="product-name">{{item.name}}</span></span>
+                            <!--<span class="product-item" @change="chooseProduct(item,index)">产品ID:{{item.id}} <span class="product-name">{{item.name}}</span></span>-->
                         </div>
                     </el-radio-group>
                 </div>
@@ -287,8 +287,6 @@
                 }
                 that.thirdCategoryId = item.id;
                 const data = {
-                    page: 1,
-                    pageSize: 10000,
                     firstCategoryId: that.firstCategoryId,
                     secCategoryId: that.secondCategoryId,
                     thirdCategoryId: that.thirdCategoryId,
@@ -296,8 +294,14 @@
                 };
                 that.loading = false;
                 // 获取产品列表并回显选中状态
-                request.queryProductPageList(data).then(res => {
-                    that.productList = res.data;
+                request.queryProductList(data).then(res => {
+                    if (!res.data) return;
+                    for (const i in res.data.data) {
+                        res.data.data[i].labelName = `产品ID:` + item.id + '&nbsp;&nbsp;' + item.name;
+                        this.$set(res.data.data, i, res.data.data[i]);
+                    }
+                    that.productList = res.data.data;
+                    console.log(that.productList);
                     that.loading = false;
                 }).catch(err => {
                     console.log(err);

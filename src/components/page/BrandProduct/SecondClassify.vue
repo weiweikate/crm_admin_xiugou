@@ -13,6 +13,7 @@
                             <img :src="scope.row.img" alt="">
                         </template>
                     </el-table-column>
+                    <el-table-column prop="sort" label="排序" align="center"></el-table-column>
                     <el-table-column prop="status" label="状态" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.status == 1">启用</template>
@@ -194,6 +195,7 @@ export default {
             this.addMask = true;
             this.addForm.name = '';
             this.addForm.img = '';
+            this.addForm.sort = '';
             this.addForm.status = '1';
             this.itype = 'add';
         },

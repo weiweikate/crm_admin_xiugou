@@ -624,6 +624,36 @@ export default new Router({
                     meta: { title: '货币比例设置', url: '/admin/sysConfig/updateSysConfigByCurrency' }
                 },
                 {
+                    name: 'labelManage',
+                    path: '/labelManage',
+                    component: resolve => require(['../components/page/OperateManage/LabelManage/LabelManage.vue'], resolve),
+                    meta: { title: '标签管理', url: '/labelManage' }
+                },
+                {
+                    name: 'productLabel',
+                    path: '/productLabel',
+                    component: resolve => require(['../components/page/OperateManage/LabelManage/ProductLabel/ProductLabel.vue'], resolve),
+                    meta: { title: '产品品类', url: '/productLabel' }
+                },
+                {
+                    name: 'productLabelClassify',
+                    path: '/productLabelClassify',
+                    component: resolve => require(['../components/page/OperateManage/LabelManage/ProductLabelClassify/ProductLabelClassify.vue'], resolve),
+                    meta: { title: '产品标签类型设置', url: '/productLabelClassify' }
+                },
+                {
+                    name: 'productSecondClassify',
+                    path: '/productSecondClassify',
+                    component: resolve => require(['../components/page/OperateManage/LabelManage/ProductSecondClassify/ProductSecondClassify.vue'], resolve),
+                    meta: { title: '产品二级类目', url: '/productSecondClassify' }
+                },
+                {
+                    name: 'productLabelManage',
+                    path: '/productLabelManage',
+                    component: resolve => require(['../components/page/OperateManage/LabelManage/ProductSecondClassify/ProductLabelManage.vue'], resolve),
+                    meta: { title: '产品标签管理', url: '/productLabelManage' }
+                },
+                {
                     name: 'baseParamsSet',
                     path: '/baseParamsSet',
                     component: resolve => require(['../components/page/BasePramConfig/BaseParamsSet.vue'], resolve),
