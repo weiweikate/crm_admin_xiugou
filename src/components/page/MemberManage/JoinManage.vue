@@ -18,7 +18,7 @@
             <template>
                 <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
                     <el-table-column prop="id" label="邀请记录ID" align="center"></el-table-column>
-                    <el-table-column prop="levelId" label="邀请层级" align="center"></el-table-column>
+                    <el-table-column prop="levelName" label="邀请层级" align="center"></el-table-column>
                     <el-table-column prop="invalidTime" label="邀请时间" align="center">
                         <template slot-scope="scope">{{scope.row.invalidTime|formatDate}}</template>
                     </el-table-column>

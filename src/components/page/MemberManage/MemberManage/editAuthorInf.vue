@@ -5,16 +5,16 @@
             <div class="mask-content">
                 <el-form>
                     <el-form-item label="授权码:" class="special">
-                        {{dealer.code}}
+                        {{info.code}}
                     </el-form-item>
                     <el-form-item label="授权层级" class="special">
-                        <el-select v-model="dealer.level" placeholder="全部层级">
+                        <el-select v-model="info.levelId" placeholder="全部层级">
                             <el-option :label="item.name" :value="item.id" v-for="(item,index) in levelList"
                                        :key="index"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="上级代理:" class="special">
-                        <el-input v-model="dealer.upUserid" @blur="sureUpdate" size="medium"></el-input>
+                        <el-input v-model="info.upUserid" @blur="sureUpdate" size="medium"></el-input>
                         <span class="tip">请输入上级代理</span>
                     </el-form-item>
                 </el-form>
@@ -64,14 +64,14 @@
                 levelList: [], // 用户层级列表
                 num: '',
                 oldId: '',
-                btnLoading: false
+                btnLoading: false,
+                info: {}
             };
         },
         created() {
             this.getLevelList();
-            this.dealer.level = this.dealer.levelId;
             this.oldId = this.dealer.id;
-            this.dealer.dtype = this.dealer.dtype.toString();
+            this.info = this.dealer;
         },
         methods: {
             // 获取用户层级列表
@@ -80,10 +80,11 @@
                 request.getUserLevelList(data).then(res => {
                     this.levelList = res.data;
                     for (const i in res.data) {
-                        if (this.dealer.levelId === res.data[i].id) {
+                        if (this.info.levelId === res.data[i].id) {
                             this.num = i;
                         }
                     }
+                    this.$set(this.info, 'levelId', this.info.levelId)
                 }).catch(err => {
                     console.log(err);
                 });
@@ -97,8 +98,8 @@
                 this.closeToask();
                 const data = {};
                 data.id = this.id;
-                data.levelId = this.dealer.level;
-                data.upUserid = this.dealer.upUserid;
+                data.levelId = this.info.levelId;
+                    data.upUserid = this.info.upUserid;
                 data.updateType = 2;
                 this.btnLoading = true;
                 request.updateDealerById(data).then(res => {
@@ -112,14 +113,14 @@
                 });
             },
             sureUpdate() {
-                if (this.oldId != this.dealer.id) {
+                if (this.oldId != this.info.id) {
                     this.isUpdateUperMask = true;
                 }
             },
             closeUpdateUperMask(status) {
                 this.isUpdateUperMask = false;
                 if (!status) {
-                    this.dealer.id = this.oldId;
+                    this.info.id = this.oldId;
                 }
             }
         }

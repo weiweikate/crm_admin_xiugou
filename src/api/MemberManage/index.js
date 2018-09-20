@@ -16,6 +16,9 @@ export const findSupplierById = ['/product/productSupplier/findProductSupplier',
 export const queryList = ['/user/invite/queryList', { methods: 'post' }]; // 获取邀请列表
 export const queryLevelGroupUserCount = ['/user/queryLevelGroupUserCount', { methods: 'post' }]; // 统计各会员层级人数
 export const addInvite = ['/user/invite/addInvite', { methods: 'post' }]; // 添加会员邀请
+export const queryUserCertification = ['/user/userCertification/query', { methods: 'get' }]; // 实名认证审核列表
+export const getuserCertificationById = ['/user/userCertification/getById', { methods: 'get' }]; // 实名认证审核详情
+export const rejectCertificationById = ['/user/userCertification/reject', { methods: 'post' }]; // 实名认证驳回
 
 // 会员层级
 // 查询层级list

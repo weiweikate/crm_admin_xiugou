@@ -49,6 +49,11 @@
                         title: '系统首页'
                     },
                     {
+                        icon: 'icon-shouye',
+                        index: 'logistics',
+                        title: '物流测试'
+                    },
+                    {
                         icon: 'icon-shouquanfuwu',
                         index: '1',
                         title: '授权管理',

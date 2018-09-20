@@ -64,7 +64,7 @@
                                           @click="editItem(scope.$index,scope.row)">编辑
                                </el-button>
                            </template>
-                            <el-button type="danger" v-if="scope.row.status==1" size="small"
+                            <el-button type="danger" :disabled="!(scope.row.porductNum == 0)" v-if="scope.row.status==1" size="small"
                                        @click="updateStatusItem(scope.$index,scope.row.id,1)">停用
                             </el-button>
                             <el-button type="danger" v-if="scope.row.status==2" size="small"

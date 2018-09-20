@@ -174,6 +174,7 @@ export default {
             const that = this;
             const data = that.form;
             data.page = val;
+            data.pageSize = this.page.pageSize;
             data.levelId = that.exportForm.levelId;
             const addrss = that.address;
             if (addrss && addrss[0]) {
@@ -194,7 +195,7 @@ export default {
                 that.tableLoading = false;
                 that.tableData = [];
                 that.tableData = res.data.data;
-                that.page.totalPage = res.data.totalPage;
+                that.page.totalPage = res.data.totalNum;
             }).catch(err => {
                 that.tableLoading = false;
                 console.log(err);

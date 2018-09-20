@@ -102,7 +102,7 @@ export default {
         };
     },
     activated() {
-        this.form = {face:''};
+        this.form = { face: '' };
         this.checkedUser = [[], [], [], [], [], [], [], [], [], [], []];
         this.checkAllUser = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
         this.uploadImg = api.uploadImg;
@@ -112,30 +112,37 @@ export default {
     methods: {
         // 提交表单
         submitForm(formName) {
-            let data = {};
-            const role = [];
-            const reg = /^1(3|4|5|6|7|8)\d{9}$/;
-            if (!reg.test(Number(this.form.telephone))) {
-                this.$message.warning('请输入正确的手机号！');
-                return;
-            }
-            this.checkedUser.forEach((v, k) => {
-                v.forEach((val) => {
-                    role.push(val);
-                });
-            });
-            data = this.form;
-            data.role = role.join(',');
-            this.btnLoading = true;
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    request.addManger(data).then(res => {
-                        this.btnLoading = false;
-                        this.$message.success(res.msg);
-                        this.$router.push('/manageList');
-                    }).catch(err => {
-                        console.log(err);
-                        this.btnLoading = false;
+                    let data = {};
+                    const role = [];
+                    const reg = /^1(3|4|5|6|7|8)\d{9}$/;
+                    if (!reg.test(Number(this.form.telephone))) {
+                        this.$message.warning('请输入正确的手机号！');
+                        return;
+                    }
+                    this.checkedUser.forEach((v, k) => {
+                        v.forEach((val) => {
+                            role.push(val);
+                        });
+                    });
+                    data = this.form;
+                    data.role = role.join(',');
+                    this.btnLoading = true;
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            request.addManger(data).then(res => {
+                                this.btnLoading = false;
+                                this.$message.success(res.msg);
+                                this.$router.push('/manageList');
+                            }).catch(err => {
+                                console.log(err);
+                                this.btnLoading = false;
+                            });
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
                     });
                 } else {
                     console.log('error submit!!');
@@ -151,7 +158,7 @@ export default {
         // 上传图片
         uploadAvatar(res) {
             this.form.face = res.data;
-            this.$set(this.form,'face',res.data);
+            this.$set(this.form, 'face', res.data);
         },
 
         // 全选用户管理
@@ -202,7 +209,6 @@ export default {
         // 获取岗位列表
         getJobList(val) {
             this.jobList = [];
-            this.form.jobId = '';
             request.queryJobList({ id: val }).then(res => {
                 if (res.data.length !== 0) {
                     res.data.forEach((v, k) => {

@@ -7,7 +7,7 @@
                     <el-form :model="form">
                         <div class="title-item">邀请层级</div>
                         <el-form-item>
-                            <div class="level-area" v-for="(item,index) in levelList" @click="checkLevel(index,item.id)"
+                            <div class="level-area" v-for="(item,index) in levelList" @click="checkLevel(index,item.level)"
                                  :class="num==index?'checked':''">
                                 <div class="upper">
                                     <icon class="icon" ico="icon-zhucedengluyonghuming"></icon>
@@ -24,66 +24,6 @@
                                 <el-radio label="3">网红经销商</el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <!--<div class="title-item">授权渠道</div>-->
-                        <!--<el-form-item>-->
-                            <!--&lt;!&ndash;<el-tabs v-model="activeName" type="card" @tab-click="handleClick">-->
-                                <!--<el-tab-pane :label="item.name" :name="index" v-for="(item,index) in tabList">{{item.name}}</el-tab-pane>-->
-                                <!--&lt;!&ndash;<el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>&ndash;&gt;-->
-                            <!--</el-tabs>&ndash;&gt;-->
-                            <!--<div>-->
-                                <!--<div class="tab-area">-->
-                                    <!--<div class="tab-item" v-for="(item,index) in tabList" @click='changeTab(index,item.id)'-->
-                                         <!--:class="tabNum==index?'tab-checked':''">{{item.name}}-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                                <!--<div class="select-area" v-for="(item,index) in tabList" v-if="tabNum==index">-->
-                                    <!--<el-checkbox :indeterminate="item.isIndeterminate" v-model="item.checkAll"-->
-                                                 <!--@change="handleCheckAllChange(item)">全选-->
-                                    <!--</el-checkbox>-->
-                                    <!--<el-checkbox-group v-model="item.checkedList"-->
-                                                       <!--@change="handleCheckedListChange(item)">-->
-                                        <!--<el-checkbox v-for="(childItem,ChildIndex) in item.statusONList"-->
-                                                     <!--@change="changeChecked(childItem)" v-model="childItem.checked"-->
-                                                     <!--:label="childItem" :key="ChildIndex">-->
-                                            <!--{{childItem.name}}-->
-                                        <!--</el-checkbox>-->
-                                    <!--</el-checkbox-group>-->
-                                <!--</div>-->
-                            <!--</div>-->
-
-                            <!--<div class="select-area" style="margin-top: 10px">-->
-                                <!--<div style="margin: 0 10px;">已选择渠道</div>-->
-                                <!--<div class="tag-area">-->
-                                    <!--<el-tag-->
-                                            <!--:key="item.name"-->
-                                            <!--v-for="item in checkedList"-->
-                                            <!--:disable-transitions="false"-->
-                                    <!--&gt;-->
-                                        <!--{{item.name}}-->
-                                    <!--</el-tag>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</el-form-item>-->
-                        <!--<div class="title-item">授权品牌</div>-->
-                        <!--<el-form-item>-->
-                            <!--<v-choosearea @productcIds="productcIds" @brandsId="brandsId" v-model="form.productcIds"-->
-                                          <!--:isLevel="true"></v-choosearea>-->
-                            <!--<div class="clearfix"></div>-->
-                        <!--</el-form-item>-->
-                        <!--<div class="title-item">授权时间</div>-->
-                        <!--<el-form-item class="time-area">-->
-                            <!--<el-date-picker-->
-                                    <!--v-model="form.date"-->
-                                    <!--type="datetimerange"-->
-                                    <!--format="yyyy-MM-dd"-->
-                                    <!--start-placeholder="请选择授权开始时间"-->
-                                    <!--end-placeholder="请选择授权结束时间"-->
-                            <!--&gt;-->
-                            <!--</el-date-picker>-->
-                        <!--</el-form-item>-->
-                        <!--<div class="clearfix"></div>-->
                         <div class="title-item">邀请有效期</div>
                         <el-form-item class="valid-area">
                             <el-radio-group @change="changeStyle" v-model="form.invalidType">
@@ -222,122 +162,10 @@
                 this.num = index;
                 this.form.levelId = id;
             },
-            // 获取授权渠道列表
-            // getStatusONList() {
-            //     let that = this;
-            //     let data = {};
-            //     that.$axios
-            //         .post(api.getStatusONList, data)
-            //         .then(res => {
-            //             if (res.data.code == 200) {
-            //                 for (let i in res.data.data) {
-            //                     res.data.data[i].checkAll = false;
-            //                     res.data.data[i].isIndeterminate = false;
-            //                     res.data.data[i].statusONList = [];
-            //                     res.data.data[i].checkedList = [];
-            //                 }
-            //                 that.tabList = res.data.data;
-            //                 console.log(that.tabList)
-            //                 let tabId = res.data.data[0].id;
-            //                 // that.getStatusONListById(0, tabId)
-            //             } else {
-            //                 that.$message.warning(res.data.msg);
-            //             }
-            //         })
-            //         .catch(err => {
-            //             console.log(err)
-            //         })
-            // },
-            // getStatusONListById(index, id) {
-            //     let that = this;
-            //     let data = {
-            //         fatherid: id
-            //     };
-            //     that.$axios
-            //         .post(api.getStatusONList, data)
-            //         .then(res => {
-            //             if (res.data.code == 200) {
-            //                 for (let i in res.data.data) {
-            //                     res.data.data.checked = false;
-            //                     let tempList = {
-            //                         parentId: id,
-            //                         statusONList: res.data.data
-            //                     };
-            //                     for (let i in that.statusONList) {
-            //                         if (that.statusONList[i] && that.statusONList[i].indexOf(id) == -1) {
-            //                             that.tabList[index].statusONList.push(tempList)
-            //                         }
-            //                     }
-            //                 }
-            //             } else {
-            //                 that.$message.warning(res.data.msg);
-            //             }
-            //         })
-            //         .catch(err => {
-            //             console.log(err)
-            //         })
-            // },
-            //  取消弹窗
             // 取消
             cancle() {
                 this.$router.push('/joinManage');
             },
-            // 渠道选项卡
-            // changeTab(index, id) {
-            //     this.tabNum = index;
-            //     // this.getStatusONListById(id)
-            // },
-            // 全选
-            // handleCheckAllChange(item) {
-            //     let that = this;
-            //     item.checkAll = !item.checkAll;
-            //     item.checkedList = item.checkAll ? item.statusONList : [];
-            //     if (item.checkAll) {
-            //         for (let i in item.statusONList) {
-            //             let id = item.statusONList[i].id;
-            //             if (that.form.channels.indexOf(id) == -1) {
-            //                 that.form.channels.push(id)
-            //             }
-            //         }
-            //     } else {
-            //         for (let i in item.statusONList) {
-            //             let id = item.statusONList[i].id;
-            //             for (let j in that.form.channels) {
-            //                 if (id == that.form.channels[j].id) {
-            //                     that.form.channels = that.form.channels.splice(j, 1)
-            //                 }
-            //             }
-            //         }
-            //     }
-            //     item.isIndeterminate = false;
-            // },
-            // 列表
-            // handleCheckedListChange(item) {
-            //     let checkedCount = 0;
-            //     for (let i in item.statusONList) {
-            //         if (item.statusONList[i].checked) {
-            //             checkedCount++;
-            //         }
-            //     }
-            //     item.checkAll = checkedCount === item.statusONList.length;
-            //     item.isIndeterminate = checkedCount > 0 && checkedCount < item.statusONList.length;
-            // },
-            // changeChecked(childItem) {
-            //     let that = this;
-            //     childItem.checked = !childItem.checked;
-            //     if (childItem.checked) {
-            //         let id = childItem.id;
-            //         if (that.form.channels.indexOf(id) == -1) {
-            //             that.form.channels.push(id)
-            //         }
-            //     } else {
-            //         for (let i in that.form.channels) {
-            //             if (id == that.form.channels[i].id) {
-            //                 that.form.channels = that.form.channels.splice(i, 1)
-            //             }
-            //         }
-            //     }
-            // },
             // 提交表单
             submitForm() {
                 const that = this;
@@ -345,7 +173,8 @@
                 data.levelId = that.form.levelId;
                 data.inviteType = that.form.inviteType;
                 data.invalidType = that.form.invalidType;
-                if (that.form.invalidType == 1) {
+                data.adminId = localStorage.getItem('ms_userID');
+                if (that.form.invalidType === '1') {
                     data.clickTimes = that.form.clickTimes;
                 } else {
                     data.invalidTime = that.form.invalidTime ? moment(that.form.invalidTime).format('YYYY-MM-DD HH:mm:ss') : '';
@@ -358,30 +187,23 @@
                     that.$message.warning('请选择经销商类型!');
                     return;
                 }
-                if (that.form.invalidType == 1 && !data.clickTimes) {
+                if (that.form.invalidType === '1' && !data.clickTimes) {
                     that.$message.warning('请输入链接打开次数!');
                     return;
                 }
-                if (!data.invalidType) {
-                    that.$message.warning('请设置邀请有效期!');
-                    return;
-                }
-                if (that.form.invalidType == 2 && !data.invalidTime) {
+                if (that.form.invalidType === '2' && !data.invalidTime) {
                     that.$message.warning('请设置失效时间!');
                     return;
                 }
                 that.btnLoading = true;
                 request.addInvite(data).then(res => {
+                    that.$message.success(res.msg);
                     that.btnLoading = false;
-                    this.$router.replace('/joinManage');
+                    that.$router.replace('/joinManage');
                 }).catch(err => {
                     that.btnLoading = false;
                     console.log(err);
                 });
-                // } else {
-                //     console.log("error submit!!");
-                //     that.btnLoading = false;
-                //     return false;
             }
         }
     };

@@ -45,7 +45,7 @@
                         <img v-if="img" :src="img" alt="">
                         <img v-else src="../../../../assets/images/logo.png" alt="">
                         <el-upload
-                                action="/admin/ossClient/aliyunOSSUploadImage"
+                                :action="uploadImg"
                                 :show-file-list="false"
                                 :on-success="handleAvatarSuccess"
                                 :before-upload="beforeAvatarUpload">
@@ -67,6 +67,7 @@
     import icon from '@/components/common/ico';
     import region from '@/components/common/Region';
     import request from '@/http/http';
+    import * as api from '@/api/api'
     export default {
         components: {
             icon, region
@@ -81,6 +82,7 @@
         },
         data() {
             return {
+                uploadImg: '',
                 address: '',
                 form: {},
                 phone: true,
@@ -89,6 +91,7 @@
             };
         },
         created() {
+            this.uploadImg = api.uploadImg;
             const reginArr = [];
             if (this.dealer.provinceId) {
                 reginArr.push(this.dealer.provinceId, this.dealer.cityId, this.dealer.areaId);
@@ -107,8 +110,8 @@
             },
             // 上传图片
             handleAvatarSuccess(res, file) {
-                this.img = res.data.imageUrl;
-                this.dealer.head_img = res.data.imageUrl;
+                this.img = res.data;
+                this.dealer.head_img = res.data;
             },
             beforeAvatarUpload(file) {
                 const isJPG = (file.type === 'image/jpeg' || file.type === 'image/png');
@@ -144,7 +147,6 @@
                 const that = this;
                 const data = {};
                 data.id = that.id;
-                data.address = that.dealer.address;
                 data.address = that.dealer.address;
                 data.headImg = that.img;
                 data.idcard = that.dealer.idcard;

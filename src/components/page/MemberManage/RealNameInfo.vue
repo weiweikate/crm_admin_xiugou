@@ -19,7 +19,6 @@
 </template>
 <script>
 import breadcrumb from '@/components/common/Breadcrumb';
-import * as api from '@/api/api.js';
 import request from '@/http/http';
 import { getUserId } from '@/JS/commom.js';
 
@@ -55,19 +54,6 @@ export default {
             }).catch(err => {
                 console.log(err);
             });
-            // that.$axios
-            //     .post(api.findDealerRealnameInfo, data)
-            //     .then(res => {
-            //         if (res.data.code == 200) {
-            //             that.detail = res.data.data;
-            //             that.img.push(res.data.data.frontPhoto, res.data.data.backPhoto);
-            //         } else {
-            //             that.$message.warning(res.data.msg);
-            //         }
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     });
         }
     }
 };

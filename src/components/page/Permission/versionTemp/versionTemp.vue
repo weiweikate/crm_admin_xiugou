@@ -11,7 +11,7 @@
             </el-table-column>
             <el-table-column prop="coerce" label="是否强制更新" align="center">
                 <template slot-scope="scope">
-                    {{scope.row.coerce == 1?'是':'不是'}}
+                    {{scope.row.forceUpdate == 1?'是':'不是'}}
                 </template>
             </el-table-column>
             <el-table-column prop="description" label="备注" align="center"></el-table-column>
@@ -58,7 +58,8 @@ export default {
         getList() {
             const data = {
                 type: this.status,
-                page: this.page.currentPage
+                page: this.page.currentPage,
+                pageSize: this.page.pageSize
             };
             this.tableLoading = true;
             request.queryVersionRecordPageList(data).then(res => {

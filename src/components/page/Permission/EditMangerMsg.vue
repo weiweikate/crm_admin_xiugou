@@ -40,12 +40,12 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item prop="password">
-                        <el-input class="edit-pwd-inp" size="large" placeholder="请重新设置您的密码" v-model="form.password">
+                        <el-input class="edit-pwd-inp" type="password" size="large" placeholder="请重新设置您的密码" v-model="form.password">
                             <icon slot="prefix" class="inp-ico " ico="icon-3denglumima"></icon>
                         </el-input>
                     </el-form-item>
                     <el-form-item prop="repeatPwd">
-                        <el-input class="edit-pwd-inp" size="large" placeholder="请再次输入您的密码" v-model="form.repeatPwd">
+                        <el-input class="edit-pwd-inp" type="password" size="large" placeholder="请再次输入您的密码" v-model="form.repeatPwd">
                             <icon slot="prefix" class="inp-ico " ico="icon-3denglumima"></icon>
                         </el-input>
                     </el-form-item>
@@ -65,7 +65,6 @@ import breadcrumb from '@/components/common/Breadcrumb';
 import icon from '@/components/common/ico';
 import * as api from '@/api/api.js';
 import request from '@/http/http';
-import * as pApi from '../../../privilegeList/index.js';
 export default {
     components: {
         breadcrumb,
@@ -99,7 +98,7 @@ export default {
         };
     },
     activated() {
-        this.uploadImg = api.addImg;
+        this.uploadImg = api.uploadImg;
         this.id = localStorage.getItem('ms_userID');
         request.findAdminUserbyId({ id: this.id }).then(res => {
             this.name = res.data.name;
@@ -134,19 +133,12 @@ export default {
                     data.phone = this.form.phone;
                     data.password = this.form.password;
                     data.code = this.form.code;
-                    data.url = pApi.updateAdminUserPassword;
-                    this.$axios.post(api.updateAdminUserPassword, data)
-                        .then(res => {
-                            if (res.data.code == 200) {
-                                this.$message.success(res.data.msg);
-                            } else {
-                                this.$message.warning(res.data.msg);
-                            }
-                        })
-                        .catch(err => {
-                            console.log(res.data);
-                        });
-                    this.isShowEditPwd = false;
+                    request.updateAdminUserPassword(data).then(res => {
+                        this.isShowEditPwd = false;
+                        this.$message.success(res.msg);
+                    }).catch(err => {
+                        console.log(err);
+                    });
                 } else {
                     console.log('error submit!!');
                     return false;
@@ -156,27 +148,13 @@ export default {
 
         // 上传图片
         uploadAvatar(res) {
-            const imageUrl = res.data.imageUrl;
-            if (res.code == 200) {
-                const data = {};
-                data.id = this.id;
-                data.url = pApi.updateAdminUserFace;
-                data.face = res.data.imageUrl;
-                this.$axios.post(api.updateAdminUserFace, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            this.$message.success(res.data.data);
-                            this.face = imageUrl;
-                        } else {
-                            this.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            } else {
-                this.$message.warning(res.msg);
-            }
+            const imageUrl = res.data;
+            request.updateAdminUser({ id: this.id, face: imageUrl, type: 2 }).then(res => {
+                this.$message.success(res.msg);
+                this.face = imageUrl;
+            }).catch(err => {
+                console.log(err);
+            });
         },
         //  获取验证码
         getCode() {
