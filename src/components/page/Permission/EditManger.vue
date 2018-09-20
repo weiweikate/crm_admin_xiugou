@@ -226,7 +226,6 @@ export default {
         // 获取岗位列表
         getJobList(val) {
             this.jobList = [];
-            this.form.jobId = '';
             request.queryJobList({ id: val }).then(res => {
                 if (res.data.length !== 0) {
                     res.data.forEach((v, k) => {

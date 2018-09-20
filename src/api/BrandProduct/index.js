@@ -156,4 +156,6 @@ export const queryProductSpecStockList = ['/product/productSpecStock/queryProduc
 export const addProductSpecStock = ['/product/productSpecStock/addProductSpecStock', { methods: 'post' }]; // 添加产品库存
 export const updateProductSpecStock = ['/product/productSpecStock/updateProductSpecStock', { methods: 'post' }]; // 修改产品库存
 export const findProductDetailsById = ['/product/product/findProductDetailsById', { methods: 'get' }]; // 查看产品详情
+export const querySysTagLibraryList = ['/config/sysTagLibrary/querySysTagLibraryList', { methods: 'get' }]; // 查询标签列表
+export const addSysTagLibrary = ['/config/sysTagLibrary/addSysTagLibrary', { methods: 'post' }]; // 添加新的标签
 

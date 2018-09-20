@@ -2,11 +2,11 @@
     <div class="sensitive-library">
         <v-breadcrumb :nav="['运营管理','敏感词库']"></v-breadcrumb>
         <el-card :body-style="{ padding: '30px' }">
-            <el-button v-if='p.addBadWord' type="primary" @click="dialogVisible = true" style="margin-bottom:20px">添加敏感词</el-button>
+            <el-button type="primary" @click="dialogVisible = true" style="margin-bottom:20px">添加敏感词</el-button>
             <el-table v-loading="tableLoading" :data="tableData" border>
                 <el-table-column type="index" :index="handleIndex" align="center" label="排序"></el-table-column>
                 <el-table-column prop="name" align="center" label="敏感词"></el-table-column>
-                <el-table-column v-if='p.deleteBadWord' align="center" label="操作">
+                <el-table-column align="center" label="操作">
                     <template slot-scope="scope">
                         <el-button @click="delItem(scope.row)" type="danger">删除</el-button>
                     </template>
@@ -55,10 +55,6 @@ export default {
     data() {
         return {
         // 权限控制
-            p: {
-                deleteBadWord: false,
-                addBadWord: false
-            },
             tableLoading: false,
             tableData: [],
             delId: '', // 删除id
@@ -73,20 +69,14 @@ export default {
 
     activated() {
         this.getList(1);
-        this.pControl();
     },
 
     methods: {
-    // 权限控制
-        pControl() {
-            for (const k in this.p) {
-                this.p[k] = utils.pc(pApi[k]);
-            }
-        },
         //  添加敏感词
         addSen() {
             request.addBadWord({ name: this.senWord }).then(res => {
                 this.$message.success(res.msg);
+                this.senWord = '';
                 this.getList(this.page.currentPage);
                 this.dialogVisible = false;
             }).catch(err => {
@@ -96,7 +86,7 @@ export default {
         //  获取数据
         getList(val) {
             this.tableLoading = true;
-            request.queryBadWord({ page: val, pageSize: 10 }).then(res => {
+            request.queryBadWord({ page: val, pageSize: 20 }).then(res => {
                 this.tableLoading = false;
                 this.page.totalPage = res.data.totalNum;
                 this.tableData = res.data.data;

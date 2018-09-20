@@ -117,6 +117,13 @@
                            style="display:none">
                     <el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">点击上传</el-button>
                 </el-upload>
+                <div class="tag-btn-group">
+                    <el-button-group v-loading="tagLoading">
+                        <el-button :type="figureTag?'primary':''" @click="getAllTags(1,'figureTag', figureTag)">人物标签</el-button>
+                        <el-button :type="goodsTag?'primary':''" @click="getAllTags(2,'goodsTag', goodsTag)">商品标签</el-button>
+                        <el-button :type="sceneTag?'primary':''" @click="getAllTags(3,'sceneTag', sceneTag)">场景标签</el-button>
+                    </el-button-group>
+                </div>
                 <div class="selected-tag">
                     <span v-if="selectedTagArr.length == 0" class="tag-tip">请选择标签</span>
                     <el-tag class="tag" type="info" closable v-for="(v,k) in selectedTagArr" :key="k"
@@ -242,7 +249,11 @@
                 tagName: '',
                 proItemArr: [],
                 btnLoading: false,
-                bodyLoading: false
+                bodyLoading: false,
+                figureTag: false, // 人物标签
+                goodsTag: false, // 商品标签
+                sceneTag: false, // 场景标签
+                tagLoading: false // 标签loading
             };
         },
 
@@ -258,6 +269,7 @@
             this.proItemArr = [];
             this.videoUrl = '';
             this.selectedTagArr = [];
+            this.tagArr = [];
             this.productParam = [];
             this.getInfo();
             utils.cleanFormData(this.form);
@@ -282,7 +294,9 @@
                 // 获取运费模板
                 await this.getFreightTemplate();
                 request.findProductById({ id: this.productId }).then(res => {
-                    // this.form = res.data
+                    res.data.productTagDTOList.forEach(v => {
+                        this.selectedTagArr.push({ label: v.name, value: v.tagId });
+                    });
                     this.form.name = res.data.name;
                     this.form.firstCategoryId = Number(res.data.firstCategoryId);
                     this.proItemArr.push(this.form.firstCategoryId);
@@ -316,7 +330,6 @@
                         this.productParam.push({ param: v.param, id: v.paramId, value: v.paramValue });
                     });
                     this.bodyLoading = false;
-                    console.log((this.form.restrictions) & 16 !== 0);
                 }).catch(err => {
                     this.bodyLoading = false;
                     console.log(err);
@@ -329,7 +342,7 @@
                     return false;
                 } else if (this.selectedTagArr.length == 0) {
                     this.$message.warning('请添加产品标签');
-                    // return false;
+                    return false;
                 }
                 if (this.productParam.length == 0) {
                     this.$message.warning('请输入产品参数');
@@ -339,10 +352,10 @@
             },
             // 提交表单
             submitForm() {
-                // const isCanSubmit = this.beforeSubmit();
-                // if (!isCanSubmit) {
-                //     return;
-                // }
+                const isCanSubmit = this.beforeSubmit();
+                if (!isCanSubmit) {
+                    return;
+                }
                 this.form.restrictions = 0;
                 if (this.limit.notSupportCoupon) {
                     this.form.restrictions += 1;
@@ -370,7 +383,10 @@
                 data.buyLimit = this.purchaseLimit ? this.purchasevalue : 0;
                 data.beginTime = this.setBuyTime[0] === undefined ? '' : utils.formatTime(this.setBuyTime[0], 1);
                 data.endTime = this.setBuyTime[1] === undefined ? '' : utils.formatTime(this.setBuyTime[1], 1);
-                data.productTagDTOList = [{ tagId: 1 }];
+                data.productTagDTOList = [];
+                this.selectedTagArr.forEach(v => {
+                    data.productTagDTOList.push({ tagId: v.value });
+                });
                 data.id = this.productId;
                 this.btnLoading = true;
                 request.updateProduct(data).then(res => {
@@ -493,18 +509,32 @@
                     }
                 });
                 if (!tmp) {
-                    const data = {};
-                    data.name = this.tagName;
-                    data.type = 2;
-                    this.$axios.post(api.addTagLibrary, data)
-                        .then(res => {
-                            this.$message.success('添加成功!');
-                            this.tagName = '';
-                            this.getAllTags();
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+                    let typeId = 1;
+                    let tagName = 'figureTag';
+                    if (this.figureTag) {
+                        typeId = 1;
+                        tagName = 'figureTag';
+                    } else if (this.goodsTag) {
+                        typeId = 2;
+                        tagName = 'goodsTag';
+                    } else if (this.sceneTag) {
+                        typeId = 3;
+                        tagName = 'sceneTag';
+                    } else {
+                        return;
+                    }
+                    const data = {
+                        name: this.tagName,
+                        status: 1,
+                        typeId: typeId
+                    };
+                    request.addSysTagLibrary(data).then(res => {
+                        this.$message.success(res.msg);
+                        this[tagName] = true;
+                        this.getAllTags(typeId, tagName, this[tagName]);
+                    }).catch(err => {
+                        console.log(err);
+                    });
                 } else {
                     this.$message.warning('标签已经添加，请不要重复添加!');
                 }
@@ -548,7 +578,7 @@
                     });
                     data.fatherId = val[1];
                     data.level = 3;
-                    data.pstatus = 2;
+                    data.status = 1;
                     await request.queryProductCategoryList(data).then(res => {
                         this.itemList[tmpIndex].children[index].children = [];
                         res.data.data.forEach((v, k) => {
@@ -565,7 +595,7 @@
                     });
                     data.fatherId = val[0];
                     data.level = 2;
-                    data.pstatus = 2;
+                    data.status = 2;
                     await request.queryProductCategoryList(data).then(res => {
                         this.itemList[index].children = [];
                         res.data.data.forEach((v, k) => {
@@ -617,25 +647,31 @@
                 });
             },
             // 获取所有标签
-            getAllTags() {
-                this.tagArr = [];
-                this.$axios
-                    .post(api.queryTagLibraryList, { type: 2 })
-                    .then(res => {
-                        res.data.data.forEach((v, k) => {
-                            this.tagArr.push({ label: v.name, value: v.id });
-                        });
-                        this.tagArr.forEach((v, k) => {
-                            this.selectedTagArr.forEach((v1, k1) => {
-                                if (v.value == v1.value) {
-                                    v.selected = true;
-                                }
-                            });
-                        });
-                    })
-                    .catch(err => {
-                        console.log(err);
+            getAllTags(val, name, status) {
+                this.figureTag = false;
+                this.goodsTag = false;
+                this.sceneTag = false;
+                this[name] = status;
+                this.tagLoading = true;
+                request.querySysTagLibraryList({ typeId: val }).then(res => {
+                    this.tagLoading = false;
+                    this.tagArr = [];
+                    this[name] = !this[name];
+                    res.data.forEach(v => {
+                        this.tagArr.push({ label: v.name, value: v.id });
                     });
+                    this.tagArr.forEach((v, k) => {
+                        this.selectedTagArr.forEach((v1, k1) => {
+                            if (v.value == v1.value) {
+                                v.selected = true;
+                                console.log(v);
+                            }
+                        });
+                    });
+                }).catch(err => {
+                    this.tagLoading = false;
+                    console.log(err);
+                });
             },
             // 获取产品参数
             async getProductParam(secId) {
@@ -666,6 +702,9 @@
             padding: 0 25px;
             box-sizing: border-box;
             margin-bottom: 20px;
+        }
+        .tag-btn-group{
+            margin-top: 15px;
         }
         .img-wrap {
             display: inline-block;

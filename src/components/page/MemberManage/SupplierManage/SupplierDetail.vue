@@ -46,7 +46,10 @@
                                               class="color-blue">{{p.porductNum}}</span></span>
                         </div>
                     </div>
-
+                </div>
+                <div class="item-row">
+                    供应商结算帐期：
+                    每月15日
                 </div>
             </div>
             <div style="margin:50px">

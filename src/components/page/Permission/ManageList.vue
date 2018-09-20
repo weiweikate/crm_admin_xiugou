@@ -132,6 +132,7 @@ export default {
             const that = this;
             const data = {};
             data.page = val;
+            data.pageSize = this.page.pageSize;
             data.name = this.form.name;
             data.phone = this.form.phone;
             data.url = pApi.manageList;
