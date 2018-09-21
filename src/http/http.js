@@ -39,7 +39,7 @@ try {
             return axios[methods](`/admin${url}`, data)
                 .then(res => {
                     // 错误信息拦截
-                    if (res.code === 10004 || res.code === 70004) {
+                    if (res.code === 10009 || res.code === 70004) {
                         sessionStorage.clear();
                         localStorage.clear();
                         Message.warning({

@@ -12,7 +12,7 @@
                     <el-form-item prop="type" label="问题类型" label-width="120">
                         <el-select v-model="form.type" placeholder="请选择">
                             <el-option label="请选择" value=""></el-option>
-                            <el-option v-for="(v,k) in typeList" :key="k" :label="v.detailId" :value="v.value"></el-option>
+                            <el-option v-for="(v,k) in typeList" :key="k" :label="v.value" :value="v.detailId"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item prop="date" label="时间" label-width="120">
@@ -58,7 +58,9 @@
                     </el-table-column>
                     <el-table-column prop="levelName" label="层级" align="center"></el-table-column>
                     <el-table-column prop="phone" label="联系电话" align="center"></el-table-column>
-                    <el-table-column prop="address" label="所在区域" align="center"></el-table-column>
+                    <el-table-column label="所在区域" align="center">
+                        <template slot-scope="scope">{{scope.row.province}}{{scope.row.city}}{{scope.row.area}}</template>
+                    </el-table-column>
                     <el-table-column label="反馈时间" align="center">
                         <template slot-scope="scope">
                             {{scope.row.createTime|formatDate}}
@@ -165,9 +167,7 @@
                 that.tableLoading = true;
                 request.queryFeedbackList(data).then(res => {
                     that.tableLoading = false;
-                    res.data.data.forEach(function(v, k) {
-                        that.tableData.push(v);
-                    });
+                    that.tableData=res.data.data;
                     that.page.totalPage = res.data.totalNum;
                 }).catch(error => {
                     that.tableLoading = false;

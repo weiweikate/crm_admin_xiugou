@@ -19,7 +19,7 @@
                     <div class="detail-item">
                         反馈问题类型：
                         <el-select placeholder="请选择" v-model="detail.typeKey">
-                            <el-option v-for="(v,k) in typeList" :key="k" :label="v.detailId" :value="v.value"></el-option>
+                            <el-option v-for="(v,k) in typeList" :key="k" :label="v.value" :value="v.detailId"></el-option>
                         </el-select>
                     </div>
                     <div class="detail-title">问题描述：</div>
@@ -121,7 +121,7 @@
                 request.findFeedbackById(data).then(res => {
                     that.detail = res.data;
                     that.detail.checked = true;
-                    that.detail.typeKey = that.detail.typeKey.toString();
+                    that.detail.typeKey = res.data.typeKey;
                     that.list = res.data.historyList;
                     that.loading = false;
                 }).catch(error => {
