@@ -86,7 +86,6 @@ export default {
                     that.cityArr.push({ label: v.name, value: v.code });
                     that.cLoading = false;
                 });
-                console.log(1)
                 if (val == true) {
                     this.getArea(true);
                     return;
@@ -119,9 +118,11 @@ export default {
                 } else {
                     this.area = this.regionMsg[2];
                 }
-                res.data.forEach((v, k) => {
-                    that.areaArr.push({ label: v.name, value: v.code });
-                });
+                if (res.data) {
+                    res.data.forEach((v, k) => {
+                        that.areaArr.push({ label: v.name, value: v.code });
+                    });
+                }
                 this.region = [];
                 this.region.push(this.province);
                 this.region.push(this.city);

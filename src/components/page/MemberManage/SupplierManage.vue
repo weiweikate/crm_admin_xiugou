@@ -153,7 +153,6 @@
         methods: {
             // 获取列表
             getList(val) {
-                console.log(this.address);
                 const that = this;
                 const data = that.form;
                 data.page = val;
@@ -236,7 +235,6 @@
             resetForm(formName) {
                 this.address = [];
                 this.$refs[formName].resetFields();
-                this.$refs['exportForm'].resetFields();
                 this.getList(this.page.currentPage);
             },
 
