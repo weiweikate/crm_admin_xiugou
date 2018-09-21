@@ -16,7 +16,7 @@
                 <el-tab-pane label="进行中" name="start">
                     <v-tab-content v-if="activeName == 'start'" :name='activeName'></v-tab-content>
                 </el-tab-pane>
-                <el-tab-pane label="已经结束" name="ended">
+                <el-tab-pane label="已结束" name="ended">
                     <v-tab-content v-if="activeName == 'ended'" :name='activeName'></v-tab-content>
                 </el-tab-pane>
             </el-tabs>

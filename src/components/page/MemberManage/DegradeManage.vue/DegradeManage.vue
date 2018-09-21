@@ -98,9 +98,12 @@
                 data.id = this.id;
                 let flag1 = true; let flag2 = true;
                 if (index === 0) {
+                    if (!data.demotionWeekNologinExp) data.demotionWeekNologinExp = 0;
                     flag1 = this.isEmpty(data.demotionWeekNologinExp, false);
                     this.setIsAjax(flag1);
                 } else if (index === 1) {
+                    if (!data.demotionWeekSalesNum) data.demotionWeekSalesNum = 0;
+                    if (!data.demotionWeekSalesNumExp) data.demotionWeekSalesNumExp = 0;
                     flag1 = this.isEmpty(data.demotionWeekSalesNum, true);
                     flag2 = this.isEmpty(data.demotionWeekSalesNumExp, false);
                     this.setIsAjax(flag1 && flag2);
