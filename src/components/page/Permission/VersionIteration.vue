@@ -10,7 +10,7 @@
                     <v-version-temp :name="activeName" @showDeleteToast="showDeleteToast" ref="Android" @addVersion="addVersion"></v-version-temp>
                 </el-tab-pane>
             </el-tabs>
-            <el-dialog :title="title" :visible.sync="isShowAddQues" width="30%" @close='resetForm'>
+            <el-dialog :title="title" :visible.sync="isShowAddQues" width="500px" @close='resetForm'>
                 <el-form ref="form" :model="form" label-width="80px">
                     <el-form-item label="版本号">
                         <el-input v-model="form.version"></el-input>
@@ -78,7 +78,7 @@
         },
         computed: {
             upUrl() {
-                return cApi.addFile;
+                return cApi.uploadImg;
             }
         },
         activated() {
@@ -91,7 +91,7 @@
             },
             uploadSuccess(res) {
                 // 上传文件
-                this.form.dowloadUrl = res.data;
+                this.form.url = res.data;
                 this.uploadLoading = false;
             },
             showDeleteToast(row) {
@@ -120,7 +120,7 @@
             },
             onSubmit() {
                 // 提交表单
-                if (this.form.version === '' || this.form.forceUpdate === '' || this.form.description === '') {
+                if (!this.form.version || !this.form.forceUpdate || !this.form.description || (this.form.type == 1 && !this.form.url)) {
                     this.$message.warning('请填写完整信息');
                     return;
                 }
