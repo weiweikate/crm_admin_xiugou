@@ -56,9 +56,9 @@ export default {
             this.bodyLoading = true;
             request.queryConfig(data).then(res => {
                 this.orderCancleTime = res.data[0].value;
-                this.toBeConfirmTime = res.data[1].value;
-                this.returnDownTime = res.data[2].value;
-                this.payOvertime = res.data[3].value;
+                this.toBeConfirmTime = res.data[2].value;
+                this.returnDownTime = res.data[3].value;
+                this.payOvertime = res.data[1].value;
                 this.bodyLoading = false;
             }).catch(err => {
                 this.bodyLoading = false;

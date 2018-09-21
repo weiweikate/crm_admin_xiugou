@@ -260,7 +260,7 @@ export const queryJobList = ['/role/queryJobList', { methods: 'get' }]; // 查�
 export const queryVersionRecordPageList = '/config/sysAppVersion/queryList';// 获取版本列表信息
 export const addVersionRecord = '/config/sysAppVersion/add';// 新增版本信息
 export const updateVersionRecord = '/config/sysAppVersion/update';// 编辑版本信息
-export const deleteVersionRecord = '/config/sysAppVersion/deleteById';// 删除版本信息
+export const deleteVersionRecord = ['/config/sysAppVersion/deleteById', { methods: 'get' }];// 删除版本信息
 export const getRegion = ['/config/sysArea/queryAreaList', { methods: 'get' }]; // 查询省市区
 export const getUserLevelList = ['/user/getLevelList', { methods: 'get' }]; // 查询会员层级
 // 获取数据字典列表
