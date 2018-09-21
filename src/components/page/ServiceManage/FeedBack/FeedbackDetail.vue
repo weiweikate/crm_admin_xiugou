@@ -14,7 +14,7 @@
                         用户层级：{{detail.levelName}}
                     </div>
                     <div class="detail-item">
-                        所在区域：{{detail.address}}
+                        所在区域：{{detail.province}}{{detail.city}}{{detail.area}}
                     </div>
                     <div class="detail-item">
                         反馈问题类型：
