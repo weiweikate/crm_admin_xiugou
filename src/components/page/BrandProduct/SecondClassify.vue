@@ -52,7 +52,7 @@
                 <el-form-item label="类目图标" :label-width="formLabelWidth" class="icon-area">
                     <el-input readonly v-model="addForm.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
-                               action="/admin/common/upload/oss"
+                               :action="uploadImg"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
@@ -84,7 +84,7 @@
                 <el-form-item label="类目图标" :label-width="formLabelWidth" class="icon-area">
                     <el-input readonly v-model="form.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
-                               action="/admin/common/upload/oss"
+                               :action="uploadImg"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
@@ -119,6 +119,7 @@ import deleteToast from '@/components/common/DeleteToast';
 import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
+import * as api from '@/api/api.js';
 
 export default {
     components: {
@@ -155,7 +156,8 @@ export default {
             itype: '',
             delId: 66,
             delUrl: 'http://api',
-            delUri: ''
+            delUri: '',
+            uploadImg: ''
         };
     },
     created() {
@@ -163,6 +165,7 @@ export default {
         this.height = winHeight;
     },
     activated() {
+        this.uploadImg = api.uploadImg;
         this.name =
             this.$route.query.name || JSON.parse(sessionStorage.getItem('secondClassify')).name;
         this.id =

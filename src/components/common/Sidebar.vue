@@ -300,10 +300,10 @@
                             //     index: "baseParamsSet",
                             //     title: "交易基础参数设置"
                             // },
-                            // {
-                            //     index: "topicManage",
-                            //     title: "专题管理"
-                            // },
+                            {
+                                index: 'topicManage',
+                                title: '专题管理'
+                            },
                             {
                                 index: 'sensitiveLibrary',
                                 title: '敏感词库'

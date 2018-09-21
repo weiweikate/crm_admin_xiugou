@@ -162,8 +162,7 @@ export const updateConfigByGroupstore = '/admin/config/updateConfigByGroupstore'
 export const findConfig = '/admin/config/findConfig';
 // 拼店店铺举报列表
 export const queryStoreReportPageList = ['/admin/store/storeTipOff/query', { methods: 'get' }];
-// 查询专题列表
-export const topicList = '/admin/topic/list';
+
 // 新建/编辑模版
 export const topicSave = '/admin/topic/save';
 // 根据id获取专题详情
@@ -217,3 +216,7 @@ export const deleteHelpQuestion = ['/help/helpQuestion/deleteHelpQuestion', { me
 export const addSysTagLibrary = '/config/sysTagLibrary/addSysTagLibrary';
 // 查询标签列表
 export const querySysTagLibraryList = ['/config/sysTagLibrary/querySysTagLibraryList', { methods: 'get' }];
+
+// 专题
+// 查询专题列表
+export const topicList = '/topic/queryPageList';

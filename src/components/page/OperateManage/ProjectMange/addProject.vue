@@ -16,67 +16,70 @@
             </div>
             <component v-if='isShow' :is='comp' :name='name' :tplData='tplInfo'></component>
         </el-card>
-        
+
     </div>
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import * as api from '@/api/OperateManage/topicManage.js'
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import request from '@/http/http.js';
 import tpl1 from './projectList/tpl01';
 import tpl2 from './projectList/tpl02';
 import tpl3 from './projectList/tpl03';
 import tpl4 from './projectList/tpl04';
 export default {
-  components: {vBreadcrumb,tpl1,tpl2,tpl3,tpl4},
+    components: { vBreadcrumb, tpl1, tpl2, tpl3, tpl4 },
 
-  data () {
-    return {
-        pageLoading:false,
-        isShow:false, // 组件显示隐藏
-        title:'',
-        tplId:'', // 专题模板id
-        comp:'tpl1',
-        name:'',    //专题名称
-        tpl:'1',     //专题模板
-        // 专题模板列表
-        tplList:[
-            {label:'模版1',value:'1'},
-            {label:'模版2',value:'2'},
-            {label:'模版3',value:'3'},
-            {label:'模版4',value:'4'},
-        ], 
-        tplInfo:{}, // 专题信息
-    };
-  },
+    data() {
+        return {
+            pageLoading: false,
+            isShow: false, // 组件显示隐藏
+            title: '',
+            tplId: '', // 专题模板id
+            comp: 'tpl1',
+            name: '', // 专题名称
+            tpl: '1', // 专题模板
+            // 专题模板列表
+            tplList: [
+                { label: '模版1', value: '1' },
+                { label: '模版2', value: '2' },
+                { label: '模版3', value: '3' },
+                { label: '模版4', value: '4' }
+            ],
+            tplInfo: {} // 专题信息
+        };
+    },
 
-  activated(){
-      this.name = '';
-      this.tplId = this.$route.query.topicId || sessionStorage.getItem('topicId');
-      if(this.tplId == 'add'){
+    activated() {
+        this.name = '';
+        this.tplId = this.$route.query.topicId || sessionStorage.getItem('topicId');
+        if (this.tplId == 'add') {
             this.title = '添加专题';
             this.tplInfo = 'add';
             this.isShow = true;
-      }else{
-            this.title = '编辑专题'
+        } else {
+            this.title = '编辑专题';
             this.getTplInfo();
-      }
-  },
+        }
+    },
 
-  deactivated(){
-      this.tplInfo = {};
-      this.isShow = false;
-  },
+    deactivated() {
+        this.tplInfo = {};
+        this.isShow = false;
+    },
 
-  methods: {
+    methods: {
         // 切换模板列表
-        toggleList(val,status){
-            this.comp = `tpl${val}`
+        toggleList(val, status) {
+            this.comp = `tpl${val}`;
         },
         // 获取模板数据
-        getTplInfo(){
+        getTplInfo() {
             this.pageLoading = true;
-            this.$axios.post(api.getTopic,{id:this.tplId}).then(res=>{
+            const data = {
+                id: this.tplId
+            };
+            request.getTopic(data).then(res => {
                 this.tplInfo = res.data.data;
                 this.tpl = res.data.data.templateId.toString();
                 this.tplId = res.data.data.id;
@@ -84,12 +87,12 @@ export default {
                 this.toggleList(this.tpl);
                 this.isShow = true;
                 this.pageLoading = false;
-            }).catch(err=>{
+            }).catch(err => {
                 this.pageLoading = false;
-            })
-        },
-  }
-}
+            });
+        }
+    }
+};
 
 </script>
 <style lang='less' scoped>
@@ -111,7 +114,7 @@ export default {
             left: 20px;
             width: 66px;
             height: 66px;
-        }   
+        }
         .my-inp{
             position: absolute;
             top: 55px;
