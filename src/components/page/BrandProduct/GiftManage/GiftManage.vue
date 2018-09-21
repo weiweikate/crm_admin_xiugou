@@ -4,16 +4,16 @@
         <el-card :body-style="{ padding: '30px 45px',minHeight:'80vh' }">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部礼包产品" name="allGift">
-                    <v-tab-content v-if="activeName == 'allGift'" :name='activeName'></v-tab-content>
+                    <v-tab-content ref = 'allGift'></v-tab-content>
                 </el-tab-pane>
                 <el-tab-pane label="上架产品" name="upGift">
-                    <v-tab-content v-if="activeName == 'upGift'" :name='activeName'></v-tab-content>
+                    <v-tab-content ref = 'upGift'></v-tab-content>
                 </el-tab-pane>
                 <el-tab-pane label="下架产品" name="downGift">
-                    <v-tab-content v-if="activeName == 'downGift'" :name='activeName'></v-tab-content>
+                    <v-tab-content ref = 'downGift'></v-tab-content>
                 </el-tab-pane>
                 <el-tab-pane label="审核产品" name="auditGift">
-                    <v-tab-content v-if="activeName == 'auditGift'" :name='activeName'></v-tab-content>
+                    <v-tab-content ref = 'auditGift'></v-tab-content>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
@@ -22,8 +22,8 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import vTabContent from "./giftList/_tabContent";
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import vTabContent from './giftList/_tabContent';
 
     export default {
         components: {
@@ -33,13 +33,21 @@
 
         data() {
             return {
-                nav: ["品牌产品管理", "产品礼包设置"],
-                activeName: "allGift",
+                nav: ['品牌产品管理', '产品礼包设置'],
+                activeName: 'allGift'
             };
         },
         methods: {
             handleClick(tab) {
-                this.activeName = tab.name;
+                let status = '';
+                switch (tab.name) {
+                    case 'allGift': status = 1; break;
+                    case 'upGift': status = 2; break;
+                    case 'downGift': status = 3; break;
+                    case 'auditGift': status = 4; break;
+                }
+                this.$refs[tab.name].giftStatus = status;
+                this.$refs[tab.name].getList(this.$refs[tab.name].page.currentPage);
             }
         }
     };

@@ -86,6 +86,7 @@ export default {
                     that.cityArr.push({ label: v.name, value: v.code });
                     that.cLoading = false;
                 });
+                console.log(1)
                 if (val == true) {
                     this.getArea(true);
                     return;

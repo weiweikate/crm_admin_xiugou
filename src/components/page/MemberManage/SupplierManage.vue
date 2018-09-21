@@ -153,6 +153,7 @@
         methods: {
             // 获取列表
             getList(val) {
+                console.log(this.address);
                 const that = this;
                 const data = that.form;
                 data.page = val;
