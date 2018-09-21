@@ -8,42 +8,34 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue"
-    import * as api from '@/api/OperateManage/topicManage.js'
-    import * as pApi from '@/privilegeList/OperateManage/topicManage.js';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import request from '@/http/http.js';
 
     export default {
-        components: {vBreadcrumb},
+        components: { vBreadcrumb },
         data() {
             return {
-                id:'',
-                topicTemplateId:''//模版id
-            }
+                id: '',
+                topicTemplateId: ''// 模版id
+            };
         },
-        activated(){
-            this.id=this.$route.query.topicId||sessionStorage.getItem('topicId');
+        activated() {
+            this.id = this.$route.query.topicId || sessionStorage.getItem('topicId');
             this.getDetail();
         },
         methods: {
-            getDetail(){
-                let data={
-                    id:this.id,
+            getDetail() {
+                const data = {
+                    id: this.id
                 };
-                this.$axios
-                    .post(api.getTopic, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            this.topicTemplateId=res.data.data.topicTemplateId;
-                        } else {
-                            this.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                request.getTopic(data).then(res => {
+                    this.topicTemplateId = res.data.data.topicTemplateId;
+                }).catch(err => {
+                    console.log(err);
+                });
             }
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>

@@ -2,7 +2,7 @@
     <div class="topic-list">
         <v-breadcrumb :nav="['运营管理','专题管理']"></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
-            <el-button v-if='p.operateTpl' @click="addTopic" type="primary" style="margin-bottom:20px">添加专题</el-button>
+            <el-button @click="addTopic" type="primary" style="margin-bottom:20px">添加专题</el-button>
             <el-button @click="topicTemplate" type="success" style="margin-bottom:20px">专题模板</el-button>
             <el-table border v-loading="tableLoading" :data="tableData">
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
@@ -14,7 +14,7 @@
                 <el-table-column prop="topicTemplateId" label="活动模板" align="center"></el-table-column>
                 <el-table-column prop="productCount" label="产品数" align="center"></el-table-column>
                 <el-table-column prop="createAdmin" label="创建者" align="center"></el-table-column>
-                <el-table-column v-if='p.operateTpl' label="操作" align="center">
+                <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button @click='editItem(scope.row)' type="primary">编辑</el-button>
                         <!--<el-button @click='preview(scope.row.id)' type="success">预览</el-button>-->
@@ -28,8 +28,8 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="page.currentPage"
+                    :page-size="page.pageSize"
                     layout="total, prev, pager, next, jumper"
-                    :page-size="20"
                     :total="page.totalPage">
                 </el-pagination>
             </div>
@@ -39,28 +39,27 @@
 </template>
 
 <script>
-    import vBreadcrumb from "../../../common/Breadcrumb.vue"
-    import deletetoast from "../../../common/DeleteToast"
-    import utils from "@/utils/index.js";
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import deletetoast from '@/components/common/DeleteToast';
+    import utils from '@/utils/index.js';
     import moment from 'moment';
-    import * as api from '@/api/OperateManage/topicManage.js'
-    import * as pApi from '@/privilegeList/OperateManage/topicManage.js';
     import { myMixinTable } from '@/JS/commom';
+    import request from '@/http/http.js';
     export default {
         components: {
             vBreadcrumb,
             deletetoast
         },
-        mixins:[myMixinTable],
+        mixins: [myMixinTable],
 
         data() {
             return {
-                p:{
-                    operateTpl:false
+                p: {
+                    operateTpl: false
                 },
                 isAddBanner: false,
-                formLabelWidth: "130px",
-                tableLoading:false,
+                formLabelWidth: '130px',
+                tableLoading: false,
                 tableData: [], // { id: 1,img:'src/assets/images/avatar.jpg' }
                 page: {
                     currentPage: 1,
@@ -68,37 +67,27 @@
                 },
                 delUrl: '', // 删除接口地址
                 delId: '', // id
-                isShowDel: false,
+                isShowDel: false
             };
         },
 
         activated() {
             this.getList();
-            this.pControl();
         },
 
         methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-            },
             // 获取数据
             getList() {
-                let data={
-                    page:this.page.currentPage,
+                const data = {
+                    page: this.page.currentPage,
+                    pageSize: this.page.pageSize
                 };
                 this.tableLoading = true;
-                this.$axios.post(api.topicList, data).then((res) => {
-                    if (res.data.code == 200) {
-                        this.tableData = [];
-                        this.tableData = res.data.data.data;
-                        this.page.totalPage = res.data.data.resultCount;
-                    } else {
-                        this.$message.warning(res.data.msg);
-                    }
-                    this.tableLoading = false;
+                request.topicList(data).then(res => {
+                    if (!res.data) return;
+                    this.tableData = [];
+                    this.tableData = res.data.data;
+                    this.page.totalPage = res.data.totalNum;
                 }).catch(err => {
                     console.log(err);
                     this.tableLoading = false;
@@ -106,32 +95,31 @@
             },
             // 删除专题
             del(val) {
-                this.delUrl = api.deleteTopic;
-                this.delId = val;
-                this.isShowDel = true
+                this.delUrl = 'deleteTopic';
+                this.isShowDel = true;
             },
             deleteToast(msg) {
                 this.isShowDel = msg;
-                this.getList()
+                this.getList();
             },
-            //编辑
-            editItem(row){
-                sessionStorage.setItem('topicId',row.id);
-                this.$router.push({name:'addProject',query:{topicId:row.id}})
+            // 编辑
+            editItem(row) {
+                sessionStorage.setItem('topicId', row.id);
+                this.$router.push({ name: 'addProject', query: { topicId: row.id }});
             },
-            //预览
-            preview(id){
-                sessionStorage.setItem('topicId',id);
-                this.$router.push({path:'/topicPreview',query:{topicId:id}})
+            // 预览
+            preview(id) {
+                sessionStorage.setItem('topicId', id);
+                this.$router.push({ path: '/topicPreview', query: { topicId: id }});
             },
-            //添加
-            addTopic(){
-                sessionStorage.setItem('topicId','add');
-                this.$router.push({name:'addProject',query:{topicId:'add'}})
+            // 添加
+            addTopic() {
+                sessionStorage.setItem('topicId', 'add');
+                this.$router.push({ name: 'addProject', query: { topicId: 'add' }});
             },
-            //专题模板
-            topicTemplate(){
-                this.$router.push('/topicTemplate')
+            // 专题模板
+            topicTemplate() {
+                this.$router.push('/topicTemplate');
             }
         }
     };

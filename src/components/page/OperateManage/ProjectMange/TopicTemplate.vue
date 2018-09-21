@@ -13,32 +13,33 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue"
-    import * as api from '@/api/OperateManage/topicManage.js'
-    import * as pApi from '@/privilegeList/OperateManage/topicManage.js';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import request from '@/http/http.js';
 
     export default {
-        components: {vBreadcrumb},
+        components: { vBreadcrumb },
         data() {
             return {
-               list:[]
-            }
+                list: []
+            };
         },
 
-        activated(){
+        activated() {
             this.getTplList();
         },
 
         methods: {
             // 获取模板列表
-            getTplList(){
-                this.$axios.post(api.tplList,{}).then(res=>{
-                    if(!res.data.data) return false;
+            getTplList() {
+                request.tplList({}).then(res => {
+                    if (!res.data) return false;
                     this.list = res.data.data;
-                })
+                }).catch(err => {
+                    console.log(err);
+                });
             }
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>

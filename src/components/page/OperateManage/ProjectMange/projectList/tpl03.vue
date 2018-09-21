@@ -99,169 +99,172 @@
 </template>
 
 <script>
-import * as cApi from '@/api/api.js';
-import * as api from '@/api/OperateManage/topicManage.js';
+import * as api from '@/api/api.js';
+import request from '@/http/http.js';
+
 export default {
-  components: {},
+    components: {},
 
-  props:['name','tplData'],
+    props: ['name', 'tplData'],
 
-  watch:{
-      name(newVal,oldVal){
-        this.pName = newVal;
-      }
-  },
-
-  data () {
-    return {
-        // 专题id
-        id:'',
-        // 专题名称
-        pName:'',
-        // 上传图片
-        uploadImg:'',
-        // banner
-        bannerForm:{
-            img:'',
-            tip:''
-        },
-        // 产品类型
-        prodTypeList:[
-            {label:'产品',value:1},
-            {label:'礼包',value:2},
-            {label:'套餐',value:3},
-            {label:'其他',value:4},
-            {label:'专题',value:5},
-        ], // 1.产品 2.礼包 3.套餐 4.其他 5.专题
-        totalNum:0, // 字数统计
-        nav:[
-            {
-                name:'',
-                product:[{prodCode:'',type:1},{prodCode:'',type:1},{prodCode:'',type:1}],
-                banner:[{img:'',product:[{prodCode:'',type:1},{prodCode:'',type:1},{prodCode:'',type:1}]}]
-            },
-        ],
-    };
-  },
-
-  created(){
-      this.uploadImg =  cApi.addImg;
-      this.pName = this.name;
-      this.id = '';
-      this.nav = [
-            {
-                name:'',
-                product:[{prodCode:'',type:1},{prodCode:'',type:1},{prodCode:'',type:1}],
-                banner:[{img:'',product:[{prodCode:'',type:1},{prodCode:'',type:1},{prodCode:'',type:1}]}]
-            },
-        ];
-      if(this.tplData != 'add'){
-        this.bannerForm.img = this.tplData.bigBanner;
-        this.bannerForm.tip = this.tplData.desc;
-        this.nav = this.tplData.content;
-        this.id = this.tplData.id;
-      }
-  },
-
-  methods: {
-    // 确认保存
-    submitForm(){
-        // 判空
-        if(this.pName == ''){
-            this.$message.warning('请输入专题名称');
-            return;
-        }else if(this.bannerForm.img == ''){
-            this.$message.warning('请上传banner图');
-            return;
+    watch: {
+        name(newVal, oldVal) {
+            this.pName = newVal;
         }
-        // 判空
-        try {
-            this.nav.forEach((v,k) => {
-                if(v.name == ''){
-                    throw '请输入导航名称';
+    },
+
+    data() {
+        return {
+        // 专题id
+            id: '',
+            // 专题名称
+            pName: '',
+            // 上传图片
+            uploadImg: '',
+            // banner
+            bannerForm: {
+                img: '',
+                tip: ''
+            },
+            // 产品类型
+            prodTypeList: [
+                { label: '产品', value: 1 },
+                { label: '礼包', value: 2 },
+                { label: '套餐', value: 3 },
+                { label: '其他', value: 4 },
+                { label: '专题', value: 5 }
+            ], // 1.产品 2.礼包 3.套餐 4.其他 5.专题
+            totalNum: 0, // 字数统计
+            nav: [
+                {
+                    name: '',
+                    product: [{ prodCode: '', type: 1 }, { prodCode: '', type: 1 }, { prodCode: '', type: 1 }],
+                    banner: [{ img: '', product: [{ prodCode: '', type: 1 }, { prodCode: '', type: 1 }, { prodCode: '', type: 1 }] }]
                 }
-                v.product.forEach((v1,k1)=>{
-                    if(v1.prodCode == ''){
-                        throw '请输入产品id';
+            ]
+        };
+    },
+
+    created() {
+        this.uploadImg = api.uploadImg;
+        this.pName = this.name;
+        this.id = '';
+        this.nav = [
+            {
+                name: '',
+                product: [{ prodCode: '', type: 1 }, { prodCode: '', type: 1 }, { prodCode: '', type: 1 }],
+                banner: [{ img: '', product: [{ prodCode: '', type: 1 }, { prodCode: '', type: 1 }, { prodCode: '', type: 1 }] }]
+            }
+        ];
+        if (this.tplData != 'add') {
+            this.bannerForm.img = this.tplData.bigBanner;
+            this.bannerForm.tip = this.tplData.desc;
+            this.nav = this.tplData.content;
+            this.id = this.tplData.id;
+        }
+    },
+
+    methods: {
+    // 确认保存
+        submitForm() {
+        // 判空
+            if (this.pName == '') {
+                this.$message.warning('请输入专题名称');
+                return;
+            } else if (this.bannerForm.img == '') {
+                this.$message.warning('请上传banner图');
+                return;
+            }
+            // 判空
+            try {
+                this.nav.forEach((v, k) => {
+                    if (v.name == '') {
+                        throw '请输入导航名称';
                     }
-                })
-                v.banner.forEach((v2,k2)=>{
-                    if(v2.img == ''){
-                        throw '请上传banner图';
-                    }
-                    v2.product.forEach((v3,k3)=>{
-                        if(v3.prodCode == ''){
+                    v.product.forEach((v1, k1) => {
+                        if (v1.prodCode == '') {
                             throw '请输入产品id';
                         }
-                    })
-                })
-            });
-        } catch (error) {
-            this.$message.warning(error);
-            return;
-        }
-        let data = {};
-        if(this.id != ''){
-           data.id = this.id.toString(); 
-        }
-        data.templateId = 3;
-        data.name = this.pName;
-        data.bigBanner = this.bannerForm.img;
-        data.desc = this.bannerForm.tip;
-        data.content = this.nav;
-        this.$axios.post(api.topicSave,{topicStr:JSON.stringify(data)}).then(res=>{
-            this.$message.success(res.data.msg);
-            this.$router.push('topicManage');
-        })
-    },
-    // 删除产品
-    delPro(bIndex,sIndex){
-      this.nav[bIndex].product.splice(sIndex,1)
-    },
-    // 删除banner下的产品
-    delProduct(bIndex,mIndex,sIndex){
-      this.nav[bIndex].banner[mIndex].product.splice(sIndex,1)
-    },
-    //   添加导航
-    addNav(){
-        this.nav.push(
-            {
-                name:'',
-                product:[{id:'',type:1},{id:'',type:1},{id:'',type:1}],
-                banner:[]
+                    });
+                    v.banner.forEach((v2, k2) => {
+                        if (v2.img == '') {
+                            throw '请上传banner图';
+                        }
+                        v2.product.forEach((v3, k3) => {
+                            if (v3.prodCode == '') {
+                                throw '请输入产品id';
+                            }
+                        });
+                    });
+                });
+            } catch (error) {
+                this.$message.warning(error);
+                return;
             }
-        );
-    },
-    //   添加区间banner
-    addBanner(index){
-        this.nav[index].banner == undefined?this.nav[index].banner = [{img:'',product:[{id:'',type:1},{id:'',type:1},{id:'',type:1}]}]:this.nav[index].banner.push({img:'',product:[{id:'',type:1},{id:'',type:1},{id:'',type:1}]})
-        this.$set(this.nav,index,this.nav[index]);
-    },
-    //   添加banner的产品
-    addBannerProduct(bIndex,sIndex){
-        this.nav[bIndex].banner[sIndex].product.push({id:'',type:1});
-        this.$set(this.nav,bIndex,this.nav[bIndex]);
-    },
-    //  上传banner
-    uploadBanner(res,bIndex,sIndex){
-        this.nav[bIndex].banner[sIndex].img = res.data.imageUrl;
-        this.$set(this.nav,bIndex,this.nav[bIndex]);
-    },
-    //   添加产品
-    addProduct(index){
-        this.nav[index].product.push({id:'',type:1});
-        this.$set(this.nav,index,this.nav[index]);
-    },
-    //   获取输入字数
-    getFontNum(){
-        this.totalNum = this.bannerForm.tip.length;
-    },
-    //  上传头部banner成功回调
-    handleAvatarSuccess(res){
-        this.bannerForm.img = res.data.imageUrl;
+            const data = {};
+            if (this.id != '') {
+                data.id = this.id.toString();
+            }
+            data.templateId = 3;
+            data.name = this.pName;
+            data.bigBanner = this.bannerForm.img;
+            data.desc = this.bannerForm.tip;
+            data.content = this.nav;
+            request.topicSave({ topicStr: JSON.stringify(data) }).then(res => {
+                this.$message.success(res.data.msg);
+                this.$router.push('topicManage');
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        // 删除产品
+        delPro(bIndex, sIndex) {
+            this.nav[bIndex].product.splice(sIndex, 1);
+        },
+        // 删除banner下的产品
+        delProduct(bIndex, mIndex, sIndex) {
+            this.nav[bIndex].banner[mIndex].product.splice(sIndex, 1);
+        },
+        //   添加导航
+        addNav() {
+            this.nav.push(
+                {
+                    name: '',
+                    product: [{ id: '', type: 1 }, { id: '', type: 1 }, { id: '', type: 1 }],
+                    banner: []
+                }
+            );
+        },
+        //   添加区间banner
+        addBanner(index) {
+            this.nav[index].banner == undefined ? this.nav[index].banner = [{ img: '', product: [{ id: '', type: 1 }, { id: '', type: 1 }, { id: '', type: 1 }] }] : this.nav[index].banner.push({ img: '', product: [{ id: '', type: 1 }, { id: '', type: 1 }, { id: '', type: 1 }] });
+            this.$set(this.nav, index, this.nav[index]);
+        },
+        //   添加banner的产品
+        addBannerProduct(bIndex, sIndex) {
+            this.nav[bIndex].banner[sIndex].product.push({ id: '', type: 1 });
+            this.$set(this.nav, bIndex, this.nav[bIndex]);
+        },
+        //  上传banner
+        uploadBanner(res, bIndex, sIndex) {
+            this.nav[bIndex].banner[sIndex].img = res.data;
+            this.$set(this.nav, bIndex, this.nav[bIndex]);
+        },
+        //   添加产品
+        addProduct(index) {
+            this.nav[index].product.push({ id: '', type: 1 });
+            this.$set(this.nav, index, this.nav[index]);
+        },
+        //   获取输入字数
+        getFontNum() {
+            this.totalNum = this.bannerForm.tip.length;
+        },
+        //  上传头部banner成功回调
+        handleAvatarSuccess(res) {
+            this.bannerForm.img = res.data;
+        }
     }
-  }
-}
+};
 
 </script>
 <style lang='less'>

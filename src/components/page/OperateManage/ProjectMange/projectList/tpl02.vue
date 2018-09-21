@@ -92,143 +92,145 @@
 </template>
 
 <script>
-import * as cApi from '@/api/api.js';
-import * as api from '@/api/OperateManage/topicManage.js';
+import * as api from '@/api/api.js';
+import request from '@/http/http.js';
 export default {
-  components: {},
+    components: {},
 
-  props:['name','tplData'],
+    props: ['name', 'tplData'],
 
-  watch:{
-      name(newVal,oldVal){
-        this.pName = newVal;
-      }
-  },
-
-  data () {
-    return {
-      // 专题id
-      id:'',
-      // 专题名称
-      pName:'',
-      // 上传图片
-      uploadImg:'',
-      // banner
-      bannerForm:{
-          img:'',
-          tip:''
-      },
-      // 产品类型
-      prodTypeList:[
-          {label:'产品',value:1},
-          {label:'礼包',value:2},
-          {label:'套餐',value:3},
-          {label:'其他',value:4},
-          {label:'专题',value:5},
-      ], // 1.产品 2.礼包 3.套餐 4.其他 5.专题
-      totalNum:0, // 字数统计
-      list:{
-        product:[{prodCode:'',type:1}],
-        banner:[{img:'',product:[{prodCode:'',type:1},{prodCode:'',type:1}]}]
-      }
-    };
-  },
-
-  created(){
-    this.uploadImg =  cApi.addImg;
-    this.pName = this.name;
-    this.id = '';
-    this.list = {
-      product:[{prodCode:'',type:1}],
-      banner:[{img:'',product:[{prodCode:'',type:1},{prodCode:'',type:1}]}]
-    }
-    if(this.tplData != 'add'){
-      this.bannerForm.img = this.tplData.bigBanner;
-      this.bannerForm.tip = this.tplData.desc;
-      this.list = this.tplData.content;
-      this.id = this.tplData.id;
-    }
-  },
-
-  methods: {
-    // 删除产品
-    delPro(index){
-      this.list.product.splice(index,1)
+    watch: {
+        name(newVal, oldVal) {
+            this.pName = newVal;
+        }
     },
-    // 删除banner产品
-    delProduct(bIndex,sIndex){
-      this.list.banner[bIndex].product.splice(sIndex,1)
-    },
-    // 提交表单
-    submitForm(){
-      // 判空
-      if(this.pName == ''){
-          this.$message.warning('请输入专题名称');
-          return;
-      }else if(this.bannerForm.img == ''){
-          this.$message.warning('请上传banner图');
-          return;
-      }
-      try {
-        this.list.product.forEach((v,k)=>{
-          if(v.prodCode == ''){
-            throw '请输入产品ID';
-          }
-        })
-        this.list.banner.forEach((v,k)=>{
-          if(v.img == ''){
-            throw '请上传banner图';
-          }
-          v.product.forEach((v1,k1)=>{
-            if(v1.prodCode == ''){
-              throw '请输入产品ID';
+
+    data() {
+        return {
+            // 专题id
+            id: '',
+            // 专题名称
+            pName: '',
+            // 上传图片
+            uploadImg: '',
+            // banner
+            bannerForm: {
+                img: '',
+                tip: ''
+            },
+            // 产品类型
+            prodTypeList: [
+                { label: '产品', value: 1 },
+                { label: '礼包', value: 2 },
+                { label: '套餐', value: 3 },
+                { label: '其他', value: 4 },
+                { label: '专题', value: 5 }
+            ], // 1.产品 2.礼包 3.套餐 4.其他 5.专题
+            totalNum: 0, // 字数统计
+            list: {
+                product: [{ prodCode: '', type: 1 }],
+                banner: [{ img: '', product: [{ prodCode: '', type: 1 }, { prodCode: '', type: 1 }] }]
             }
-          })
-        })
-      } catch (error) {
-        this.$message.warning(error);
-          return;
-      }
-      let data = {};
-      if(this.id != ''){
-        data.id = this.id.toString(); 
-      }
-      data.templateId = 2;
-      data.name = this.pName;
-      data.bigBanner = this.bannerForm.img;
-      data.desc = this.bannerForm.tip;
-      data.content = this.list;
-      this.$axios.post(api.topicSave,{topicStr:JSON.stringify(data)}).then(res=>{
-          this.$message.success(res.data.msg);
-          this.$router.push('topicManage');
-      })
+        };
     },
-    // 添加banner
-    addBanner(){
-      this.list.banner.push({img:'',product:[{id:'',type:1},{id:'',type:1}]});
+
+    created() {
+        this.uploadImg = api.uploadImg;
+        this.pName = this.name;
+        this.id = '';
+        this.list = {
+            product: [{ prodCode: '', type: 1 }],
+            banner: [{ img: '', product: [{ prodCode: '', type: 1 }, { prodCode: '', type: 1 }] }]
+        };
+        if (this.tplData != 'add') {
+            this.bannerForm.img = this.tplData.bigBanner;
+            this.bannerForm.tip = this.tplData.desc;
+            this.list = this.tplData.content;
+            this.id = this.tplData.id;
+        }
     },
-    // 添加banner图产品
-    addBannerProduct(index){
-      this.list.banner[index].product.push({id:'',type:1});
-    },
-    // 上传banner图
-    uploadBanner(res,index){
-      this.list.banner[index].img = res.data.imageUrl
-    },
-    // 添加产品
-    addProduct(){
-      this.list.product.push({id:'',type:1});
-    },
-    // 获取输入字数
-    getFontNum(){
-        this.totalNum = this.bannerForm.tip.length;
-    },
-    // 上传头部banner成功回调
-    handleAvatarSuccess(res){
-        this.bannerForm.img = res.data.imageUrl;
+
+    methods: {
+    // 删除产品
+        delPro(index) {
+            this.list.product.splice(index, 1);
+        },
+        // 删除banner产品
+        delProduct(bIndex, sIndex) {
+            this.list.banner[bIndex].product.splice(sIndex, 1);
+        },
+        // 提交表单
+        submitForm() {
+            // 判空
+            if (this.pName == '') {
+                this.$message.warning('请输入专题名称');
+                return;
+            } else if (this.bannerForm.img == '') {
+                this.$message.warning('请上传banner图');
+                return;
+            }
+            try {
+                this.list.product.forEach((v, k) => {
+                    if (v.prodCode == '') {
+                        throw '请输入产品ID';
+                    }
+                });
+                this.list.banner.forEach((v, k) => {
+                    if (v.img == '') {
+                        throw '请上传banner图';
+                    }
+                    v.product.forEach((v1, k1) => {
+                        if (v1.prodCode == '') {
+                            throw '请输入产品ID';
+                        }
+                    });
+                });
+            } catch (error) {
+                this.$message.warning(error);
+                return;
+            }
+            const data = {};
+            if (this.id != '') {
+                data.id = this.id.toString();
+            }
+            data.templateId = 2;
+            data.name = this.pName;
+            data.bigBanner = this.bannerForm.img;
+            data.desc = this.bannerForm.tip;
+            data.content = this.list;
+            request.topicSave({ topicStr: JSON.stringify(data) }).then(res => {
+                this.$message.success(res.data.msg);
+                this.$router.push('topicManage');
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        // 添加banner
+        addBanner() {
+            this.list.banner.push({ img: '', product: [{ id: '', type: 1 }, { id: '', type: 1 }] });
+        },
+        // 添加banner图产品
+        addBannerProduct(index) {
+            this.list.banner[index].product.push({ id: '', type: 1 });
+        },
+        // 上传banner图
+        uploadBanner(res, index) {
+            this.list.banner[index].img = res.data;
+        },
+        // 添加产品
+        addProduct() {
+            this.list.product.push({ id: '', type: 1 });
+        },
+        // 获取输入字数
+        getFontNum() {
+            this.totalNum = this.bannerForm.tip.length;
+        },
+        // 上传头部banner成功回调
+        handleAvatarSuccess(res) {
+            this.bannerForm.img = res.data;
+        }
     }
-  }
-}
+};
 
 </script>
 <style lang='less'>
