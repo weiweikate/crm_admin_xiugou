@@ -180,6 +180,7 @@ export default {
             this.firstIndex = -1;
             this.secondIndex = -1;
             this.thirdIndex = -1;
+            this.btnLoading = false;
             if (status) {
                 this.getFirst(false);
                 this.title = '添加热门分类';
@@ -212,6 +213,7 @@ export default {
                 this.getList(this.page.currentPage);
             }).catch(error => {
                 console.log(error);
+                this.btnLoading = false;
             });
         },
         // 删除
