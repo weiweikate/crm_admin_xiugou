@@ -298,25 +298,34 @@
                 } else if (index == 2) {
                     // flag1=this.isEmpty(data.upgradeDirectNum,true);
                     data.upgradeTotleSalesAdd = 1;
+                    if (!data.upgradeBonusNumPerExp) data.upgradeBonusNumPerExp = 0;
                     flag2 = this.isEmpty(data.upgradeBonusNumPerExp, false);
                     this.setIsAjax(flag2);
                 } else if (index == 3) {
                     // flag1=this.isEmpty(data.upgradeIndirectNum,true);
+                    if (!data.upgradeTotleSalesAddPerExp) data.upgradeTotleSalesAddPerExp = 0;
                     flag2 = this.isEmpty(data.upgradeTotleSalesAddPerExp, false);
                     this.setIsAjax(flag2);
                 } else if (index == 4) {
+                    if (!data.upgradeWeekSalesNum) data.upgradeWeekSalesNum = 0;
+                    if (!data.upgradeWeekSalesNumExp) data.upgradeWeekSalesNumExp = 0;
                     flag1 = this.isEmpty(data.upgradeWeekSalesNum, false);
                     flag2 = this.isEmpty(data.upgradeWeekSalesNumExp, false);
                     this.setIsAjax(flag1 && flag2);
                 } else if (index == 5) {
+                    if (!data.upgradeWeekSalesFreq) data.upgradeWeekSalesFreq = 0;
+                    if (!data.upgradeWeekSalesFreqExp) data.upgradeWeekSalesFreqExp = 0;
                     flag1 = this.isEmpty(data.upgradeWeekSalesFreq, true);
                     flag2 = this.isEmpty(data.upgradeWeekSalesFreqExp, false);
                     this.setIsAjax(flag1 && flag2);
                 } else if (index == 6) {
+                    if (!data.upgradeOrderPrice) data.upgradeOrderPrice = 0;
+                    if (!data.upgradeOrderPriceExp) data.upgradeOrderPriceExp = 0;
                     flag1 = this.isEmpty(data.upgradeOrderPrice, false);
                     flag2 = this.isEmpty(data.upgradeOrderPriceExp, false);
                     this.setIsAjax(flag1 && flag2);
                 } else if (index == 7) {
+                    if (!data.upgradeUserAddOneExp) data.upgradeUserAddOneExp = 0;
                     // flag1=this.isEmpty(data.upgradeWeekSalesNum,false);
                     flag2 = this.isEmpty(data.upgradeUserAddOneExp, false);
                     this.setIsAjax(flag2);

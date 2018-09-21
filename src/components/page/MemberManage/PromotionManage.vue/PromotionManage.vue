@@ -34,10 +34,10 @@
                     <el-button type="success" @click="showMask(8)">设置连续交易额频次条件</el-button>
                     <el-button type="success" @click="showMask(9)">设置一次性交易条件</el-button>
                 </div>
-                <div>
-                    <p class="title">充值</p>
-                    <el-button type="success" @click="showMask(10)">代币充值</el-button>
-                </div>
+                <!--<div>-->
+                    <!--<p class="title">充值</p>-->
+                    <!--<el-button type="success" @click="showMask(10)">代币充值</el-button>-->
+                <!--</div>-->
             </div>
         </el-card>
         <!--弹窗-->
@@ -306,30 +306,40 @@
                     flag1 = this.isEmpty(data.upgradeDirectPerExp, false);
                     this.setIsAjax(flag1);
                 } else if (index === 3) {
+                    if (!data.upgradeIndirectPerExp) data.upgradeIndirectPerExp = 0;
                     flag1 = this.isEmpty(data.upgradeIndirectPerExp, false);
                     this.setIsAjax(flag1);
                 } else if (index === 4) {
                     flag1 = this.isEmpty(data.upgradePerSalesOneExp, false);
                     this.setIsAjax(flag1);
                 } else if (index === 5) {
+                    if (!data.upgradeDirectSalesOneExp) data.upgradeDirectSalesOneExp = 0;
                     flag1 = this.isEmpty(data.upgradeDirectSalesOneExp, false);
                     this.setIsAjax(flag1);
                 } else if (index === 6) {
+                    if (!data.upgradeIndirectSalesOneExp) data.upgradeIndirectSalesOneExp = 0;
                     flag1 = this.isEmpty(data.upgradeIndirectSalesOneExp, false);
                     this.setIsAjax(flag1);
                 } else if (index === 7) {
+                    if (!data.upgradeWeekSalesNum) data.upgradeWeekSalesNum = 0;
+                    if (!data.upgradeWeekSalesNumExp) data.upgradeWeekSalesNumExp = 0;
                     flag1 = this.isEmpty(data.upgradeWeekSalesNum, false);
                     flag2 = this.isEmpty(data.upgradeWeekSalesNumExp, false);
                     this.setIsAjax(flag1 && flag2);
                 } else if (index === 8) {
+                    if (!data.upgradeWeekSalesFreq) data.upgradeWeekSalesFreq = 0;
+                    if (!data.upgradeWeekSalesFreqExp) data.upgradeWeekSalesFreqExp = 0;
                     flag1 = this.isEmpty(data.upgradeWeekSalesFreq, true);
                     flag2 = this.isEmpty(data.upgradeWeekSalesFreqExp, false);
                     this.setIsAjax(flag1 && flag2);
                 } else if (index === 9) {
+                    if (!data.upgradeBuyNum) data.upgradeBuyNum = 0;
+                    if (!data.upgradeBuyNumExp) data.upgradeBuyNumExp = 0;
                     flag1 = this.isEmpty(data.upgradeBuyNum, false);
                     flag2 = this.isEmpty(data.upgradeBuyNumExp, false);
                     this.setIsAjax(flag1 && flag2);
                 } else if (index === 10) {
+                    if (!data.upgradeTokenCoinBuyOneExp) data.upgradeTokenCoinBuyOneExp = 0;
                     flag1 = this.isEmpty(data.upgradeTokenCoinBuyOneExp, false);
                     this.setIsAjax(flag1);
                 }

@@ -154,16 +154,22 @@
                 data.type = type;
                 let flag1 = true; let flag2 = true;
                 if (index == 0) {
+                    if (!data.demotionWeekNoSaleExp) data.demotionWeekNoSaleExp = 0;
                     flag1 = this.isEmpty(data.demotionWeekNoSaleExp, false);
                     this.setIsAjax(flag1);
                 } else if (index == 1) {
+                    if (!data.demotionWeekUserReduceOneExp) data.demotionWeekUserReduceOneExp = 0;
                     flag1 = this.isEmpty(data.demotionWeekUserReduceOneExp, false);
                     this.setIsAjax(flag1);
                 } else if (index == 2) {
+                    if (!data.demotionWeekSalesFreq) data.demotionWeekSalesFreq = 0;
+                    if (!data.demotionWeekSalesFreqExp) data.demotionWeekSalesFreqExp = 0;
                     flag1 = this.isEmpty(data.demotionWeekSalesFreq, true);
                     flag2 = this.isEmpty(data.demotionWeekSalesFreqExp, false);
                     this.setIsAjax(flag1 && flag2);
                 } else if (index == 3) {
+                    if (!data.demotionTotleSales) data.demotionTotleSales = 0;
+                    if (!data.demotionTotleSalesExp) data.demotionTotleSalesExp = 0;
                     flag1 = this.isEmpty(data.demotionTotleSales, true);
                     flag2 = this.isEmpty(data.demotionTotleSalesExp, false);
                     this.setIsAjax(flag1 && flag2);
@@ -175,7 +181,7 @@
                         this.showMemberNoEnough = false;
                         this.showdemotionWeekUserReduceOneExp = false;
                         this.showDemotionTotleSales = false;
-                        this.getStoreStarById()
+                        this.getStoreStarById();
                     }).catch((err) => {
                         console.log(err);
                     });
