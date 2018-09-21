@@ -1,5 +1,5 @@
 <template>
-    <div class="tpl-005">
+    <div class="tpl-003">
         <div class="banner">
             <el-form :model="bannerForm" label-width="130px">
                 <el-form-item prop="img" label="添加banner" >
@@ -32,8 +32,22 @@
         </div>
         <div v-for='(v,k) in nav' :key="k" class="nav">
             <el-form>
+                <el-form-item label="选择导航属性" label-width="130px" v-if="k==0">
+                    <el-select class="my-inp" v-model="navItem" placeholder="请选择导航属性">
+                        <el-option v-for="(v1,k1) in navList" :key="k1" :label="v1.label" :value="v1.value"></el-option>
+                    </el-select>
+                </el-form-item>
+
                 <el-form-item :label="`导航${k+1}`" label-width="130px">
-                    <el-input v-model="v.name" class="inp" placeholder="请输入"></el-input>
+                    <el-input v-if="navItem==2" v-model="v.name" class="inp" placeholder="请输入"></el-input>
+                    <el-date-picker
+                        v-else
+                        v-model="v.time"
+                        format="yyyy-MM-dd"
+                        type="datetime"
+                        class="inp"
+                        placeholder="选择日期时间">
+                    </el-date-picker>
                 </el-form-item>
                 <el-form-item v-for="(v1,k1) in v.product" :key="k1" label="添加产品" label-width="130px">
                   <div class="del-row">
@@ -128,12 +142,15 @@ export default {
             },
             // 产品类型
             prodTypeList: [
-                { label: '产品', value: 1 },
-                { label: '礼包', value: 2 },
-                { label: '套餐', value: 3 },
-                { label: '其他', value: 4 },
-                { label: '专题', value: 5 }
+                { label: '秒杀', value: 1 }
             ], // 1.产品 2.礼包 3.套餐 4.其他 5.专题
+            // 导航属性
+            navItem: 2,
+            navList: [{
+                label: '时间', value: 1
+            }, {
+                label: '文字', value: 2
+            }],
             totalNum: 0, // 字数统计
             nav: [
                 {
@@ -268,7 +285,7 @@ export default {
 
 </script>
 <style lang='less'>
-.tpl-005{
+.tpl-003{
     .my-inp{width: 215px;}
     .banner{width: 585px;height: 280px;background-color: #f7f7f7;padding: 20px 0;box-sizing: border-box;}
     .icon-uploader{float: right;margin-right: 103px;width: 100px;}
@@ -297,6 +314,9 @@ export default {
     .submit-btn{margin-top: 20px}
     .del-row{position: relative;
       .del-btn{position: absolute;top:-10px;right: 145px;width: 25px;height: 25px;border-radius: 50%;background-color: #c6c6c6;text-align: center;line-height: 25px;color: #fff;z-index: 99;cursor: pointer;}
+    }
+    .my-inp{
+        width: 300px;
     }
 }
 </style>

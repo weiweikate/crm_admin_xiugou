@@ -27,8 +27,10 @@ import tpl1 from './projectList/tpl01';
 import tpl2 from './projectList/tpl02';
 import tpl3 from './projectList/tpl03';
 import tpl4 from './projectList/tpl04';
+import tpl5 from './projectList/tpl05';
+import tpl6 from './projectList/tpl06';
 export default {
-    components: { vBreadcrumb, tpl1, tpl2, tpl3, tpl4 },
+    components: { vBreadcrumb, tpl1, tpl2, tpl3, tpl4, tpl5, tpl6 },
 
     data() {
         return {
@@ -44,7 +46,9 @@ export default {
                 { label: '模版1', value: '1' },
                 { label: '模版2', value: '2' },
                 { label: '模版3', value: '3' },
-                { label: '模版4', value: '4' }
+                { label: '模版4', value: '4' },
+                { label: '秒杀模版', value: '5' },
+                { label: '降价拍模版', value: '6' }
             ],
             tplInfo: {} // 专题信息
         };

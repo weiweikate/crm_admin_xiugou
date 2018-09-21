@@ -31,26 +31,26 @@
                 <p class="necessary-title">必要条件:</p>
                 <div class="dialog-nec-item">
                     <el-checkbox v-model="checked[0]"><span class="dialog-nec-title">人员数</span></el-checkbox>
-                    <el-input class="dialog-nec-inp" v-model="form.upgradeCondUserNum" placeholder="请输入数值"></el-input>
+                    <el-input class="dialog-nec-inp" :disabled="!checked[0]" v-model="form.upgradeCondUserNum" placeholder="请输入数值"></el-input>
                 </div>
                 <div class="dialog-nec-item">
                     <el-checkbox v-model="checked[1]"><span class="dialog-nec-title">交易总额达到</span></el-checkbox>
-                    <el-input class="dialog-nec-inp" v-model="form.upgradeCondTotleSales"
+                    <el-input class="dialog-nec-inp" :disabled="!checked[1]" v-model="form.upgradeCondTotleSales"
                               placeholder="请输入数值"></el-input>
                 </div>
                 <div class="dialog-nec-item">
                     <el-checkbox v-model="checked[2]"><span class="dialog-nec-title">利润贡献值</span></el-checkbox>
-                    <el-input class="dialog-nec-inp" v-model="form.upgradeCondProfitCtrb"
+                    <el-input class="dialog-nec-inp" :disabled="!checked[2]" v-model="form.upgradeCondProfitCtrb"
                               placeholder="请输入数值"></el-input>
                 </div>
                 <div class="dialog-nec-item">
                     <el-checkbox v-model="checked[3]"><span class="dialog-nec-title">平均活跃度达到</span></el-checkbox>
-                    <el-input class="dialog-nec-inp" v-model="form.upgradeCondAvgActivity"
+                    <el-input class="dialog-nec-inp" :disabled="!checked[3]" v-model="form.upgradeCondAvgActivity"
                               placeholder="请输入数值"></el-input>
                 </div>
                 <div class="dialog-nec-item">
                     <el-checkbox v-model="checked[4]"><span class="dialog-nec-title">完成分红次数</span></el-checkbox>
-                    <el-input class="dialog-nec-inp" v-model="form.upgradeCondBonusNum" placeholder="请输入数值"></el-input>
+                    <el-input class="dialog-nec-inp" :disabled="!checked[4]" v-model="form.upgradeCondBonusNum" placeholder="请输入数值"></el-input>
                 </div>
             </div>
             <span slot="footer">
@@ -386,7 +386,7 @@
                 this.form.upgradeCondTotleSales = this.checked[1] ? this.form.upgradeCondTotleSales : '';
                 this.form.upgradeCondProfitCtrb = this.checked[2] ? this.form.upgradeCondProfitCtrb : '';
                 this.form.upgradeCondAvgActivity = this.checked[3] ? this.form.upgradeCondAvgActivity : '';
-                this.form.upgradeCondBonusNum = this.checked[3] ? this.form.upgradeCondBonusNum : '';
+                this.form.upgradeCondBonusNum = this.checked[4] ? this.form.upgradeCondBonusNum : '';
             },
             // 值非空判断
             isEmpty(value, isInt) {

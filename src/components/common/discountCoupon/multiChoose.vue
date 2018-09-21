@@ -157,7 +157,6 @@
         },
         watch: {
             getProducts(params) {
-                console.log(params);
                 this.resetValue();
                 if (params.firstCategoryIds) {
                     if (params.firstCategoryIds.indexOf(',') == -1) {
