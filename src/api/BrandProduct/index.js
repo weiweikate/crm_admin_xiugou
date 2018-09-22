@@ -155,4 +155,9 @@ export const updateProductSpecStock = ['/product/productSpecStock/updateProductS
 export const findProductDetailsById = ['/product/product/findProductDetailsById', { methods: 'get' }]; // 查看产品详情
 export const querySysTagLibraryList = ['/config/sysTagLibrary/querySysTagLibraryList', { methods: 'get' }]; // 查询标签列表
 export const addSysTagLibrary = ['/config/sysTagLibrary/addSysTagLibrary', { methods: 'post' }]; // 添加新的标签
+export const queryActivityPackagePageList = ['/operator/activityPackage/queryActivityPackagePageList', { methods: 'post' }]; // 分页查询礼包列表
+export const addActivityPackage = ['/operator/activityPackage/addActivityPackage', { methods: 'post' }]; // 添加礼包
+export const findActivityPackageById = ['/operator/activityPackage/findActivityPackageById', { methods: 'get' }]; // 查询礼包信息
+export const updateActivityPackageStatusById = ['/operator/activityPackage/updateActivityPackageStatusById', { methods: 'post' }]; // 修改礼包状态
+export const batchUpdataActivityPackageStatus = ['/operator/activityPackage/batchUpdataActivityPackageStatus', { methods: 'post' }]; // 批量修改礼包状态
 

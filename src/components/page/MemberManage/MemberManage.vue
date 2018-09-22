@@ -97,6 +97,7 @@
                         background
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
+                        :page-size="page.pageSize"
                         :current-page="page.currentPage"
                         layout="total, prev, pager, next, jumper"
                         :total="page.totalPage">

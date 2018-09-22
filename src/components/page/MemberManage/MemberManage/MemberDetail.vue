@@ -62,7 +62,7 @@
                                    style="margin-left: 0">实名信息
                         </el-button>
                     </div>
-                    <div v-if='storeId'>
+                    <div>
                         <el-button type="primary" @click="shopInfo"
                                    style="margin-left: 0">店铺信息
                         </el-button>
@@ -102,8 +102,8 @@
                         <h3>拼店信息</h3>
                     </div>
                     <div class="item-row">
-                        <div class="item">参与店铺：{{otherStore}}</div>
-                        <div class="item">开设店铺：{{myStore}}</div>
+                        <div class="item" v-if="dealer.roleType == 1">参与店铺：{{dealer.storeName}}</div>
+                        <div class="item" v-if="dealer.roleType == 0">开设店铺：{{dealer.storeName}}</div>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -113,16 +113,10 @@
                     <div class="title">
                         <h3>晋升记录</h3>
                     </div>
-                    <div class="item-row">
+                    <div class="item-row" v-for="(v,k) in record" :key="k">
                         <div class="item">
-                            <span>实习省代--省级代理</span>
-                            <span style="margin-left: 20px">2018-05-12 12:32:31</span>
-                        </div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item">
-                            <span>实习省代--省级代理</span>
-                            <span style="margin-left: 20px">2018-05-12 12:32:31</span>
+                            <span>{{v.oldLevelName}} -- {{v.levelName}}</span>
+                            <span style="margin-left: 20px">{{v.createTime | formatDateAll}}</span>
                         </div>
                     </div>
                 </div>
@@ -133,7 +127,7 @@
                     <div class="title">
                         <h3>其他信息</h3>
                     </div>
-                    <div class="item-row">
+                    <div class="item-row" >
                         <div class="item">
                             <span>消费金额{{money}}元</span>
                         </div>
@@ -182,7 +176,9 @@
                 // 开设的店铺
                 myStore: '',
                 // 消费金额
-                money: 0
+                money: 0,
+                // 晋升记录
+                record: []
             };
         },
         activated() {
@@ -213,6 +209,7 @@
                 this.loading = true;
                 request.findDealerById(data).then(res => {
                     this.dealer = res.data;
+                    this.record = res.data.levelChangeList;
                 }).catch(err => {
                     console.log(err);
                 });
@@ -238,7 +235,8 @@
             // 跳转到店铺详情
             shopInfo() {
                 sessionStorage.setItem('shopInfoId', this.storeId);
-                this.$router.push({ name: 'shopInfo', query: { 'shopInfoId': this.storeId }});
+                sessionStorage.setItem('status', 1);
+                this.$router.push({ name: 'shopInfo', query: { 'shopInfoId': this.storeId, status: 1 }});
             },
             // 实名认证页面
             realName() {

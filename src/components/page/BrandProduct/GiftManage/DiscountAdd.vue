@@ -37,160 +37,158 @@
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import draggable from "vuedraggable";
-import * as api from "@/api/BrandProduct/GiftMange/index.js";
-import * as pApi from "@/privilegeList/BrandProduct/GiftMange/index.js";
-import utils from "@/utils/index.js";
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import draggable from 'vuedraggable';
+import * as api from '@/api/BrandProduct/GiftMange/index.js';
 export default {
-  components: { draggable, vBreadcrumb },
+    components: { draggable, vBreadcrumb },
 
-  data() {
-    return {
-      cardLoading:false,
-      // 活动ID
-      disCountId: "",
-      // 优惠券列表弹窗
-      showDisCountList: false,
-      // 已选择优惠券
-      discountArr: [],
-      // 已选中的选项卡
-      activeTab: 1,
-      // 优惠码列表
-      discountList: [],
-      // 临时储存已选中优惠码
-      tmpDiscountList: []
-    };
-  },
+    data() {
+        return {
+            cardLoading: false,
+            // 活动ID
+            disCountId: '',
+            // 优惠券列表弹窗
+            showDisCountList: false,
+            // 已选择优惠券
+            discountArr: [],
+            // 已选中的选项卡
+            activeTab: 1,
+            // 优惠码列表
+            discountList: [],
+            // 临时储存已选中优惠码
+            tmpDiscountList: []
+        };
+    },
 
-  activated() {
-    this.disCountId = this.$route.query.discountAddId || sessionStorage.getItem("discountAddId");
-    this.discountArr = [];
-    this.discountList = [];
-    this.getGiftDisList();
-    this.getDisList();
-  },
+    activated() {
+        this.disCountId = this.$route.query.discountAddId || sessionStorage.getItem('discountAddId');
+        this.discountArr = [];
+        this.discountList = [];
+        this.getGiftDisList();
+        this.getDisList();
+    },
 
-  methods: {
+    methods: {
     // 获取礼包优惠券
-    getGiftDisList(){
-      this.cardLoading = true;
-        this.$axios.post(api.queryCouponListByGiftBagId,{id:this.disCountId}).then(res=>{
-          this.discountArr = [];
-          res.data.data.forEach((v,k)=>{
-            let tmp = {};
-            tmp.label = v.couponName;
-            tmp.value = v.couponId;
-            this.discountArr.push(tmp);
-          })
-          this.cardLoading = false;
-        })
-    },
-    // 提交表单
-    submitForm(){
-      // if(this.discountArr.length == 0){
-      //   this.$message.warning('请选择优惠券');
-      //   return;
-      // }
-      let ids = [];
-      this.discountArr.forEach((v,k)=>{
-        ids.push(v.value)
-      })
-      this.$axios.post(api.couponControl,{id:this.disCountId,couponStr:ids.join(',')}).then(res=>{
-        this.$message.success(res.data.msg);
-        this.$router.push('giftManage');
-      })
-    },
-    // 返回
-    goBack(){
-      this.$router.push('giftManage');
-    },
-    // 获取优惠券列表
-    getDisList(){
-      this.$axios.post(api.queryCouponList,{}).then(res=>{
-        // 循环遍历将优惠券放入列表
-        res.data.data.forEach((v,k)=>{
-          if(v.name == 'MJ'){
-            this.discountList[0] = [];
-            v.list.forEach((v,k)=>{
-              let tmp = {};
-              tmp.label = v.name;
-              tmp.value = v.id;
-              tmp.checked = false;
-              this.discountList[0].push(tmp)
-            })
-          }else if(v.name == 'ZK'){
-            this.discountList[1] = [];
-            v.list.forEach((v,k)=>{
-              let tmp = {};
-              tmp.label = v.name;
-              tmp.value = v.id;
-              tmp.checked = false;
-              this.discountList[1].push(tmp)
-            })
-          }else if(v.name == 'DK'){
-            this.discountList[2] = [];
-            v.list.forEach((v,k)=>{
-              let tmp = {};
-              tmp.label = v.name;
-              tmp.value = v.id;
-              tmp.checked = false;
-              this.discountList[2].push(tmp)
-            })
-          }else if(v.name == 'DJ'){
-            this.discountList[3] = [];
-            v.list.forEach((v,k)=>{
-              let tmp = {};
-              tmp.label = v.name;
-              tmp.value = v.id;
-              tmp.checked = false;
-              this.discountList[3].push(tmp)
-            })
-          }
-        })
-      })
-    },
-    // 拖拽
-    getdata(evt) {},
-    // 拖拽结束
-    datadragEnd(evt) {},
-    // 选择选择选项卡
-    tabChange(index) {
-      this.activeTab = index;
-    },
-    // 选择优惠券
-    checkedDiscount(actIndex, row,index) {
-      row.checked = !row.checked;
-      this.$set(this.discountList[actIndex-1],index,row)
-      this.$set(this.discountList,actIndex-1,this.discountList[actIndex-1])
-      if (row.checked) {
-        this.tmpDiscountList.push(row);
-      } else {
-        this.tmpDiscountList.forEach((v, k) => {
-          if (v.value == row.value) {
-            this.tmpDiscountList.splice(k, 1);
-          }
-        });
-      }
-    },
-    // 将选中的优惠券放在列表中
-    getDiscountList() {
-      this.discountArr.push(...this.tmpDiscountList);
-      // 重置优惠券列表以及临时储存区
-      this.tmpDiscountList = [];
-      this.discountList.forEach((v,k)=>{
-          v.forEach((v1,k1)=>{
-              v1.checked = false;
-          })
-      })
-      this.showDisCountList = false;
-    },
-    // 删除已选中的优惠券
-    delCheckedDiscount(index,row){
-      this.discountArr.splice(index,1);
-      this.$message.success('删除成功');
+        getGiftDisList() {
+            this.cardLoading = true;
+            this.$axios.post(api.queryCouponListByGiftBagId, { id: this.disCountId }).then(res => {
+                this.discountArr = [];
+                res.data.data.forEach((v, k) => {
+                    const tmp = {};
+                    tmp.label = v.couponName;
+                    tmp.value = v.couponId;
+                    this.discountArr.push(tmp);
+                });
+                this.cardLoading = false;
+            });
+        },
+        // 提交表单
+        submitForm() {
+            // if(this.discountArr.length == 0){
+            //   this.$message.warning('请选择优惠券');
+            //   return;
+            // }
+            const ids = [];
+            this.discountArr.forEach((v, k) => {
+                ids.push(v.value);
+            });
+            this.$axios.post(api.couponControl, { id: this.disCountId, couponStr: ids.join(',') }).then(res => {
+                this.$message.success(res.data.msg);
+                this.$router.push('giftManage');
+            });
+        },
+        // 返回
+        goBack() {
+            this.$router.push('giftManage');
+        },
+        // 获取优惠券列表
+        getDisList() {
+            this.$axios.post(api.queryCouponList, {}).then(res => {
+                // 循环遍历将优惠券放入列表
+                res.data.data.forEach((v, k) => {
+                    if (v.name == 'MJ') {
+                        this.discountList[0] = [];
+                        v.list.forEach((v, k) => {
+                            const tmp = {};
+                            tmp.label = v.name;
+                            tmp.value = v.id;
+                            tmp.checked = false;
+                            this.discountList[0].push(tmp);
+                        });
+                    } else if (v.name == 'ZK') {
+                        this.discountList[1] = [];
+                        v.list.forEach((v, k) => {
+                            const tmp = {};
+                            tmp.label = v.name;
+                            tmp.value = v.id;
+                            tmp.checked = false;
+                            this.discountList[1].push(tmp);
+                        });
+                    } else if (v.name == 'DK') {
+                        this.discountList[2] = [];
+                        v.list.forEach((v, k) => {
+                            const tmp = {};
+                            tmp.label = v.name;
+                            tmp.value = v.id;
+                            tmp.checked = false;
+                            this.discountList[2].push(tmp);
+                        });
+                    } else if (v.name == 'DJ') {
+                        this.discountList[3] = [];
+                        v.list.forEach((v, k) => {
+                            const tmp = {};
+                            tmp.label = v.name;
+                            tmp.value = v.id;
+                            tmp.checked = false;
+                            this.discountList[3].push(tmp);
+                        });
+                    }
+                });
+            });
+        },
+        // 拖拽
+        getdata(evt) {},
+        // 拖拽结束
+        datadragEnd(evt) {},
+        // 选择选择选项卡
+        tabChange(index) {
+            this.activeTab = index;
+        },
+        // 选择优惠券
+        checkedDiscount(actIndex, row, index) {
+            row.checked = !row.checked;
+            this.$set(this.discountList[actIndex - 1], index, row);
+            this.$set(this.discountList, actIndex - 1, this.discountList[actIndex - 1]);
+            if (row.checked) {
+                this.tmpDiscountList.push(row);
+            } else {
+                this.tmpDiscountList.forEach((v, k) => {
+                    if (v.value == row.value) {
+                        this.tmpDiscountList.splice(k, 1);
+                    }
+                });
+            }
+        },
+        // 将选中的优惠券放在列表中
+        getDiscountList() {
+            this.discountArr.push(...this.tmpDiscountList);
+            // 重置优惠券列表以及临时储存区
+            this.tmpDiscountList = [];
+            this.discountList.forEach((v, k) => {
+                v.forEach((v1, k1) => {
+                    v1.checked = false;
+                });
+            });
+            this.showDisCountList = false;
+        },
+        // 删除已选中的优惠券
+        delCheckedDiscount(index, row) {
+            this.discountArr.splice(index, 1);
+            this.$message.success('删除成功');
+        }
     }
-  }
 };
 </script>
 <style lang='less'>

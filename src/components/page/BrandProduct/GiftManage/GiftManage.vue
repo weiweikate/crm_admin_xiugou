@@ -37,14 +37,17 @@
                 activeName: 'allGift'
             };
         },
+        activated() {
+            this.$refs['allGift'].giftStatus = '';
+        },
         methods: {
             handleClick(tab) {
                 let status = '';
                 switch (tab.name) {
-                    case 'allGift': status = 1; break;
-                    case 'upGift': status = 2; break;
-                    case 'downGift': status = 3; break;
-                    case 'auditGift': status = 4; break;
+                    case 'allGift': status = ''; break;
+                    case 'upGift': status = '5'; break;
+                    case 'downGift': status = '6'; break;
+                    case 'auditGift': status = '2'; break;
                 }
                 this.$refs[tab.name].giftStatus = status;
                 this.$refs[tab.name].getList(this.$refs[tab.name].page.currentPage);

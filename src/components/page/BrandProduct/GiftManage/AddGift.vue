@@ -1,5 +1,5 @@
 <template>
-    <div class="add-gift">
+    <div class="release-product">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 45px',color:'#666' }">
             <div class="pro-title">基本信息</div>
@@ -7,122 +7,195 @@
                 <el-form-item label="礼包名称">
                     <el-input style="width:300px" :maxlength="16" v-model="form.name" placeholder="请输入产品名称"></el-input>
                 </el-form-item>
-                <el-form-item label="产品图片">
+                <el-form-item label="礼包类型">
+                    <el-select v-model="form.type" placeholder="下拉搜索供应商">
+                        <el-option label="普通礼包" value="1"></el-option>
+                        <el-option label="升级礼包" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="礼包图片">
+                    <el-upload class="img-uploader" :action="uploadImg"
+                               :show-file-list="false" :on-success="res=>successUpload(res,1)" v-if="videoUrl === ''">
+                        <i class="el-icon-plus avatar-uploader-icon">添加视频</i>
+                    </el-upload>
+                    <div class="img-wrap" v-else>
+                        <div class="delImg" @click="videoUrl = ''">
+                            <icon ico='icon-shanchu'></icon>
+                        </div>
+                        <video :src="videoUrl" controls="controls"></video>
+                    </div>
                     <draggable style="display:inline-block" v-model="imgArr" :move="getdata" @update="datadragEnd">
                         <transition-group>
                             <div class="img-wrap" v-for="(v,k) in imgArr" :key="k">
                                 <div class="delImg" @click="deleteImg(v)">
                                     <icon ico='icon-shanchu'></icon>
                                 </div>
-                                <img class="uImg" :src="v">
+                                <img class="uImg" :src="v.originalImg">
                             </div>
                         </transition-group>
                     </draggable>
-                    <el-upload class="img-uploader" :action="uploadImg" :show-file-list="false"
-                               :on-success="successUpload" :disabled="isUseUpload" multiple>
-                        <i class="el-icon-plus avatar-uploader-icon"></i>
+                    <el-upload class="img-uploader" :before-upload="beforeUploadArr" :action="uploadImg"
+                               :show-file-list="false" :on-success="successUpload" :disabled="isUseUpload" multiple>
+                        <i class="el-icon-plus avatar-uploader-icon">添加图片</i>
                     </el-upload>
                     <div class="upload-tip">建议尺寸：800*800,拖拽图片可以改变顺序，第一张为默认头图</div>
                 </el-form-item>
                 <el-form-item label="产品分类">
-                    <el-cascader filterable  @change='getProItemId' @active-item-change='handleItemChange' v-model="proItemArr" :options="itemList" :props="itemProps"></el-cascader>
+                    <el-cascader @change='getProItemId' v-model="proItemArr" :options="itemList"
+                                 @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
                     <span style="margin-left:30px">产品品牌</span>
-                    <el-select @change="getSupplyList" v-model="form.brandId" placeholder="请选择">
-                        <el-option v-for="(v,k) in brandArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                    <el-select filterable @change="getSupplyList" v-model="form.brandId" placeholder="请选择">
+                        <el-option v-for="(v,k) in brandArr" :key="k" :label="v.name" :value="v.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="供应商">
-                    <el-select v-model="form.supplier" placeholder="下拉搜索供应商">
-                        <el-option v-for="(v,k) in supplierList" :key="k" :label="v.label"
-                                   :value="v.value"></el-option>
+                    <el-select @change="getBrandList" v-model="form.supplierId" placeholder="下拉搜索供应商">
+                        <el-option v-for="(v,k) in supplierArr" :key="k" :label="v.name" :value="v.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="发货方">
-                    <el-select v-model="form.originAddress" placeholder="选择发货方">
+                    <el-select v-model="form.sendMode" placeholder="选择发货方">
                         <el-option v-for="(v,k) in shipperArr" :key="k" :label="v.label" :value="v.value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="产品重量">
-                    <el-input class="pro-weight" v-model="form.weight"></el-input>kg
+                    <el-input style="width:300px" :maxlength="16" v-model="form.weight" placeholder="请输入产品重量"></el-input>
                 </el-form-item>
                 <el-form-item label="产品参数">
                     <div class="product-param">
                         <span v-if='productParam.length == 0'>暂无数据</span>
-                        <span v-else v-for="(v,k) in productParam" :key="k">{{v.param}}：<el-input class="inp-param" v-model="v.value"></el-input></span>
+                        <span v-else v-for="(v,k) in productParam" :key="k">{{v.param}}：<el-input class="inp-param"
+                                                                                                  v-model="v.value"></el-input></span>
                     </div>
                 </el-form-item>
                 <div class="pro-title">运费其他</div>
                 <el-form-item label="选择运费模板">
-                    <el-select v-model="form.freightTpl" placeholder="请选择模板">
-                        <el-option v-for="(v,k) in freightTemplateArr" :key="k" :label="v.label"
-                                   :value="v.value"></el-option>
+                    <el-select v-model="form.freightTemplateId" placeholder="请选择模板">
+                        <el-option v-for="(v,k) in freightTemplateArr" :key="k" :label="v.name"
+                                   :value="v.id"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="交易默认时间">
+                <el-form-item label="售后周期">
                     <transition name="fade">
-                        <el-select v-if="!showSaleTime" v-model="form.saleTime">
-                            <el-option
-                                v-for="(item,index) in times"
-                                :key="index"
-                                :label="item.label"
-                                :value="item.id"
-                            >
-                                {{item.label}}
-                            </el-option>
+                        <el-select v-if="!showSaleTime" v-model="form.aferServiceDays" placeholder="请选择售后周期">
+                            <el-option v-for="(v,k) in aferServiceDays" :key="k" :label="v.label"
+                                       :value="v.value"></el-option>
                         </el-select>
-                        <el-input style='width:215px' v-if="showSaleTime" v-model="form.saleTime"></el-input>
+                        <el-input v-if='showSaleTime' v-model="form.aferServiceDays" style="width:215px"
+                                  placeholder="请输入售后周期"></el-input>
                     </transition>
                     <el-button @click="defSaleTime">自定义</el-button>
                 </el-form-item>
-                <div class="pro-title">产品详情</div>
+                <el-form-item label="交易默认周期">
+                    <el-select v-model="form.dealDays" filterable allow-create default-first-option placeholder="交易默认周期">
+                        <el-option label="7天" value="7"></el-option>
+                        <el-option label="10天" value="10"></el-option>
+                        <el-option label="15天" value="15"></el-option>
+                        <el-option label="20天" value="20"></el-option>
+                        <el-option label="25天" value="25"></el-option>
+                        <el-option label="30天" value="30"></el-option>
+                    </el-select>
+                </el-form-item>
+                <div class="pro-title">使用限制</div>
                 <el-form-item>
-                    <quill-editor v-model="form.editorContent" ref="myQuillEditor" :options="editorOption"
-                                  @change="onEditorChange($event)"></quill-editor>
-                    <el-upload :action="qnLocation" :data="uploadData"
-                               :on-success='upScuccess' ref="upload" style="display:none">
-                        <el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">点击上传
-                        </el-button>
-                    </el-upload>
+                    <el-checkbox label="不支持优惠卷" v-model="limit.notSupportCoupon"></el-checkbox>
+                    <el-checkbox label="不支持积分抵扣" v-model="limit.notSupportScore"></el-checkbox>
                 </el-form-item>
+                <el-form-item>
+                    <el-checkbox label="不支持退款" v-model="limit.notSupportRetMoney"></el-checkbox>
+                    <el-checkbox label="不支持换货" v-model="limit.notSupportRetChange"></el-checkbox>
+                    <el-checkbox label="不支持退货" v-model="limit.notSupportRetGoods"></el-checkbox>
+                </el-form-item>
+                <hr style="border: 0;height: 1px;background-color: #eee;"/>
+                <el-form-item label="">
+                    <el-checkbox label="是否限购" v-model="purchaseLimit"></el-checkbox>
+                    <br>
+                    <p v-if="purchaseLimit" style="margin: 10px 0 0 70px">限购数量：
+                        <el-input v-model="purchasevalue" class="my-inp"></el-input>
+                        件/人
+                    </p>
+                </el-form-item>
+                <el-form-item>
+                    <el-checkbox label="是否设置购买时间" v-model="isSetBuTime"></el-checkbox>
+                    <br>
+                    <p v-if="isSetBuTime" style="margin: 10px 0 0 70px">可购买时间：
+                        <el-date-picker
+                            v-model="setBuyTime"
+                            format="yyyy-MM-dd"
+                            type="daterange"
+                            range-separator="至"
+                            start-placeholder="年 / 月 / 日"
+                            end-placeholder="年 / 月 / 日">
+                        </el-date-picker>
+                    </p>
+                </el-form-item>
+                <div class="pro-title">库存设置</div>
+                <el-form-item label="">
+                    <el-radio v-model="form.stockType" label="1">礼包商品共用库存</el-radio>
+                    <el-radio v-model="form.stockType" label="2">固定发放数量</el-radio>
+                </el-form-item>
+                <div class="pro-title">赠品</div>
+                <el-form-item>
+                    <el-checkbox label="是否设置购买时间" v-model="gifts.isSetBuyTime"></el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                    <el-checkbox label="经验值" v-model="gifts.isSetExp"></el-checkbox>
+                </el-form-item>
+                <el-form-item v-if="gifts.isSetExp" label="设置赠送经验值" style="margin-left: 85px">
+                    <el-input style="width:300px" :maxlength="16" v-model="form.experience" placeholder="请输入经验值"></el-input> 点
+                </el-form-item>
+                <div class="pro-title">产品详情</div>
+                <quill-editor v-model="form.content" ref="myQuillEditor" :options="editorOption"
+                              @change="onEditorChange($event)"></quill-editor>
+                <el-upload :action="uploadImg" :data="uploadData" :on-success='upScuccess' ref="upload"
+                           style="display:none">
+                    <el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">点击上传</el-button>
+                </el-upload>
                 <div class="pro-title">礼包可购买角色设置</div>
-                <el-form-item label="请选择角色层级" class="role-choose">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">
-                        全部用户
-                    </el-checkbox>
-                    <div style="margin: 15px 0;"></div>
-                    <el-checkbox-group v-model="checkedUsers" @change="handleCheckedUsersChange">
-                        <el-checkbox v-for="(item,index) in users" :label="item.id" :key="index">{{item.name}}
-                        </el-checkbox>
+                <el-form-item>
+                    <el-checkbox-group v-model="chectedUser">
+                        <el-checkbox v-for="(v,k) in userLevel" :label="v.id" :key="k">{{v.name}}</el-checkbox>
                     </el-checkbox-group>
-                    <div class="tips">选择层级之后，根据用户的等级，购买受到限制</div>
                 </el-form-item>
+                <div class="tag-btn-group">
+                    <el-button-group v-loading="tagLoading">
+                        <el-button :type="figureTag?'primary':''" @click="getAllTags(1,'figureTag', figureTag)">人物标签</el-button>
+                        <el-button :type="goodsTag?'primary':''" @click="getAllTags(2,'goodsTag', goodsTag)">商品标签</el-button>
+                        <el-button :type="sceneTag?'primary':''" @click="getAllTags(3,'sceneTag', sceneTag)">场景标签</el-button>
+                    </el-button-group>
+                </div>
                 <div class="selected-tag">
                     <span v-if="selectedTagArr.length == 0" class="tag-tip">请选择标签</span>
-                    <el-tag class="tag" type="info" closable v-for="(v,k) in selectedTagArr" :key="k" @close="handleClose(k,v)" >{{v.label}}</el-tag>
+                    <el-tag class="tag" type="info" closable v-for="(v,k) in selectedTagArr" :key="k"
+                            @close="handleClose(k,v)">{{v.label}}
+                    </el-tag>
                 </div>
                 <div class="add-tag">
-                    <el-input style="width:215px;margin-right:20px" v-model="tagName" placeholder="请输入标签/至多可添加20个"></el-input>
+                    <el-input style="width:215px;margin-right:20px" v-model="tagName"
+                              placeholder="请输入标签/至多可添加20个"></el-input>
                     <el-button type="primary" @click="addTag">添加标签</el-button>
                 </div>
                 <div class="tag-list">
                     <span v-if="tagArr.length == 0" class="tag-tip">请添加标签</span>
-                    <el-button style="margin-bottom:10px" v-for="(v,k) in tagArr" :key="k" @click="insertTag(v)" :disabled="v.selected" :class="{'selected-btn':v.selected}">{{v.label}}</el-button>
+                    <el-button style="margin-bottom:10px" v-for="(v,k) in tagArr" :key="k" @click="insertTag(v)"
+                               :disabled="v.selected" :class="{'selected-btn':v.selected}">{{v.label}}
+                    </el-button>
                 </div>
-                <el-button @click="submitForm" type="primary">确认发布</el-button>
-                <el-button @click="goBack">取消</el-button>
+                <el-button type="primary" :loading="btnLoading" @click="submitForm">确认发布</el-button>
+                <el-button>取消</el-button>
             </el-form>
         </el-card>
     </div>
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import draggable from "vuedraggable";
-    import Quill from "quill";
-    import icon from "@/components/common/ico";
-    import * as api from "@/api/BrandProduct/GiftMange/index.js";
-    import * as pApi from "@/privilegeList/BrandProduct/ProductMange/index.js";
-    import utils from "@/utils/index.js";
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import draggable from 'vuedraggable';
+    import Quill from 'quill';
+    import icon from '@/components/common/ico';
+    import * as api from '@/api/api.js';
+    import utils from '@/utils/index.js';
+    import request from '@/http/http';
 
     export default {
         components: {
@@ -133,226 +206,287 @@
 
         data() {
             return {
-                nav: ["品牌产品管理", "礼包管理", "发布礼包"],
-                isUseUpload: false, // 上传礼包图片
+                nav: ['品牌产品管理', '礼包管理', '新建礼包'],
+                isUseUpload: false,
                 showSaleTime: false,
-                uploadImg: "",
-                // 礼包原图图片
+                uploadImg: '',
                 imgArr: [],
-                // 礼包缩略图图片
-                imgSmallArr: [],
-                // 供应商列表
-                supplierList:[],
-                // 分类列表值
-                proItemArr: [],
-                brandArr:[],    // 品牌列表
-                freightTemplateArr:[],  // 运费模板列表
-                // 发货地列表
-                shipperArr:[{label:'平台发货',value:'1'},{label:'供应商发货',value:'2'}],
-                // 售后周期
-                times: [{label: '7天', id: "7"},
-                    {label: '10天', id: "10"},
-                    {label: '15天', id: "15"},
-                    {label: '20天', id: "20"},
-                    {label: '25天', id: "25"},
-                    {label: '30天', id: "30"},
+                itemList: [],
+                brandArr: [],
+                freightTemplateArr: [],
+                supplierArr: [],
+                shipperArr: [{ label: '平台发货', value: '1' }, { label: '供应商发货', value: '2' }],
+                aferServiceDays: [
+                    { label: '无售后服务', value: '0' },
+                    { label: '到货后7天', value: '7' },
+                    { label: '到货后15天', value: '15' },
+                    { label: '到货后30天', value: '30' },
+                    { label: '到货后6个月', value: '180' },
+                    { label: '到货后1年', value: '365' },
+                    { label: '到货后2年', value: '730' },
+                    { label: '到货后3年', value: '1095' }
                 ],
-                checkAll: false,    // 用户层级全选
-                checkedUsers: [],   // 用户层级选中的用户
-                users: [],  // 用户层级
-                itemList:[],    // 一级类目列表
-                isIndeterminate: false,
-                // 产品参数
-                productParam:[],
-                form: {
-                    name: "",   // 礼包名称
-                    firstCategoryId: "",    // 一级分类id
-                    secCategoryId:"",   // 二级分类id
-                    brandId: "",    // 品牌id
-                    supplier: "",   // 供应商
-                    originAddress: "",     //发货方
-                    weight: "", // 重量
-                    freightTpl: "", // 运费模板
-                    saleTime: "",   // 交易默认时间
-                    editorContent: "",  // 富文本编辑器
-                    pushWay:'', // 用户层级字符串
-                    tagStr:'',  // 已选中标签字符串
-                    imgStr:'',  // 产品图片字符串
-                    imgSmallStr:''
-                },
-                // 级联选择器配置选项
                 itemProps: {
-                    value: "value",
-                    children: "children",
+                    value: 'value',
+                    children: 'children'
                 },
+                proCategoryArr: [],
+                form: {
+                    name: '',
+                    type: '1',
+                    firstCategoryId: '',
+                    secCategoryId: '',
+                    thirdCategoryId: '',
+                    brandId: '',
+                    dealDays: '',
+                    supplierId: '',
+                    experience: '',
+                    stockType: '1',
+                    sendMode: '',
+                    weight: '',
+                    freightTemplateId: '',
+                    aferServiceDays: '',
+                    content: '',
+                    imgFileList: [],
+                    restrictions: 0,
+                    paramValueList: []
+                },
+                // 用户层级列表
+                userLevel: [],
+                chectedUser: [],
+                // 赠品
+                gifts: {
+                    isSetBuyTime: false,
+                    isSetExp: false
+                },
+                // 使用限制
+                limit: {
+                    notSupportCoupon: false, // 不支持优惠券
+                    notSupportScore: false, // 不支持积分抵扣
+                    notSupportRetMoney: false, // 不支持退款
+                    notSupportRetChange: false, // 不支持换货
+                    notSupportRetGoods: false // 不支持退货
+                },
+                videoUrl: '', // 视频
+                // 是否限购
+                purchaseLimit: false,
+                purchasevalue: '',
+                // 是否设置购买时间
+                isSetBuTime: false,
+                setBuyTime: [],
+                productParam: [], // 产品参数
                 editorOption: {
-                    placeholder: "请输入内容",
+                    placeholder: '请输入内容',
                     modules: {
                         // 配置富文本
                         toolbar: [
-                            ["bold", "italic", "underline", "strike"],
-                            ["blockquote", "code-block"],
-                            [{header: 1}, {header: 2}],
-                            [{direction: "rtl"}],
-                            [{size: ["small", false, "large", "huge"]}],
-                            [{header: [1, 2, 3, 4, 5, 6, false]}],
-                            [{color: []}, {background: []}],
-                            [{font: []}],
-                            [{align: []}],
-                            ["clean"],
-                            ["link", "image"]
+                            ['bold', 'italic', 'underline', 'strike'],
+                            ['blockquote', 'code-block'],
+                            [{ header: 1 }, { header: 2 }],
+                            [{ direction: 'rtl' }],
+                            [{ size: ['small', false, 'large', 'huge'] }],
+                            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                            [{ color: [] }, { background: [] }],
+                            [{ font: [] }],
+                            [{ align: [] }],
+                            ['clean'],
+                            ['link', 'image']
                         ]
                     }
                 },
                 uploadData: {},
-                uploadType: "", // 上传的文件类型（图片、视频）,
-                tagArr: [],// 所有标签
+                uploadType: '', // 上传的文件类型（图片、视频）,
                 selectedTagArr: [],
-                tagName: ''
+                tagArr: [],
+                tagName: '',
+                proItemArr: [],
+                btnLoading: false,
+                figureTag: false, // 人物标签
+                goodsTag: false, // 商品标签
+                sceneTag: false, // 场景标签
+                tagLoading: false // 标签loading
             };
         },
 
         computed: {
             qnLocation() {
-                return location.protocol === "http:" ? api.addImg : api.addImg;
+                return api.uploadImg;
             }
         },
 
         activated() {
-            this.uploadImg = api.addImg;
-            // 清空数据
+            this.getUserLevel();
+            this.uploadImg = api.uploadImg;
             this.imgArr = [];
-            this.imgSmallArr = [];
+            this.proItemArr = [];
+            this.videoUrl = '';
             this.selectedTagArr = [];
-            this.checkedUsers = [];
-            this.isIndeterminate = false;
-            utils.cleanFormData(this.form);
-
-            // 获取所有标签
-            this.getAllTags();
-            // 获取一级类目列表
+            this.productParam = [];
+            this.chectedUser = [];
+            this.purchaseLimit = false;
+            this.purchasevalue = '';
+            this.isSetBuTime = false;
+            this.gifts.isSetBuTime = false;
+            this.gifts.isSetExp = false;
+            this.setBuyTime = [];
+            this.limit = {
+                notSupportCoupon: false, // 不支持优惠券
+                notSupportScore: false, // 不支持积分抵扣
+                notSupportRetMoney: false, // 不支持退款
+                notSupportRetChange: false, // 不支持换货
+                notSupportRetGoods: false // 不支持退货
+            },
+            // 获取一级类目
             this.getFirstItem();
-            //加载用户层级
-            this.getLevelList();
-            // 获取运费模板列表
+            // 获取品牌列表
+            this.getBrandList();
+            // 获取运费模板
             this.getFreightTemplate();
+            utils.cleanFormData(this.form);
+            this.form.stockType = '1';
         },
 
         mounted() {
             // 为图片ICON绑定事件 getModule 为编辑器的内部属性
             this.$refs.myQuillEditor.quill
-                .getModule("toolbar")
-                .addHandler("image", this.imgHandler);
+                .getModule('toolbar')
+                .addHandler('image', this.imgHandler);
         },
 
         methods: {
-            // 提交表单
-            submitForm(){
-                // 处理产品图片,标签,产品参数
-                let tagTmp = [];
-                this.selectedTagArr.forEach((v,k)=>{
-                    tagTmp.push(v.value);
-                })
-                this.form.tagStr = tagTmp.join(',')
-                this.form.imgStr = this.imgArr.join(',')
-                this.form.imgSmallStr = this.imgSmallArr.join(',');
-                // 判空
-                for (const key in this.form) {
-                    if (this.form[key] == '' && (this.form[key] != 'original_img' ||this.form[key] != 'small_img') ) {
-                        console.log(this.form)
-                        this.$message.warning('礼包参数不能为空，请输入完整参数');
-                        return;
-                    }
+            // 提交表单前进行判断
+            beforeSubmit() {
+                if (this.imgArr.length == 0) {
+                    this.$message.warning('请添加产品图片');
+                    return false;
+                } else if (this.selectedTagArr.length == 0) {
+                    this.$message.warning('请添加产品标签');
+                    return false;
                 }
-                if(this.productParam.length == 0){
+                if (this.productParam.length == 0) {
                     this.$message.warning('请输入产品参数');
                     return false;
                 }
-                // 表单提交
-                let data = {};
-                if(this.form.name.length<4){
-                    this.$message.warning('礼包名称不能少于四位');
+                if (this.chectedUser.length == 0) {
+                    this.$message.warning('请选择用户层级');
+                    return false;
+                }
+                return true;
+            },
+            // 提交表单
+            submitForm() {
+                const isCanSubmit = this.beforeSubmit();
+                if (!isCanSubmit) {
                     return;
                 }
-                data.giftName = this.form.name; // 礼包名称
-                data.classifyId = this.form.firstCategoryId; // 一级类目id
-                data.secCategoryId = this.form.secCategoryId; // 二级类目id
-                data.brandId = this.form.brandId; // 品牌id
-                data.supplierId = this.form.supplier; // 供应商
-                data.shipperId = this.form.originAddress; // 发货方
-                data.weight = this.form.weight; // 重量
-                data.freightId = this.form.freightTpl; // 运费模版
-                data.afterSaleDays = this.form.saleTime; // 交易默认时间
-                data.details = this.form.editorContent; // 礼包介绍
-                data.roleStr = this.form.pushWay; // 用户层级
-                data.tagStr = this.form.tagStr; // 标签
-                data.originalImgStr = this.form.imgStr; // 原图
-                data.smallImgStr = this.form.imgSmallStr; // 缩略图
-                // 产品参数
-                let paramTmp = [];
-                this.productParam.forEach((v,k)=>{
-                    paramTmp.push({paramId: v.id, value: v.value})
-                })
-                data.specStr = JSON.stringify(paramTmp);
-                this.$axios.post(api.addGiftBag,data).then(res=>{
-                    this.$message.success(res.data.msg);
-                    this.$router.push('giftManage');
-                })
+                this.form.restrictions = Number(this.form.restrictions);
+                if (this.limit.notSupportCoupon) {
+                    this.form.restrictions += 1;
+                }
+                if (this.limit.notSupportScore) {
+                    this.form.restrictions += 2;
+                }
+                if (this.limit.notSupportRetMoney) {
+                    this.form.restrictions += 4;
+                }
+                if (this.limit.notSupportRetChange) {
+                    this.form.restrictions += 8;
+                }
+                if (this.limit.notSupportRetGoods) {
+                    this.form.restrictions += 16;
+                }
+                this.productParam.forEach(v => {
+                    this.form.paramValueList.push({ paramId: v.id, paramValue: v.value });
+                });
+                this.form.imgUrl = this.imgArr[0].originalImg;
+                this.form.imgFileList = this.imgArr;
+                this.form.experience = this.gifts.isSetExp ? this.form.experience : '';
+                const data = this.form;
+                data.paramValueList = this.form.paramValueList;
+                data.videoUrl = this.videoUrl;
+                data.buyLimit = this.purchaseLimit ? this.purchasevalue : -1;
+                data.beginTime = this.setBuyTime[0] === undefined ? '' : utils.formatTime(this.setBuyTime[0], 1);
+                data.endTime = this.setBuyTime[1] === undefined ? '' : utils.formatTime(this.setBuyTime[1], 1);
+                data.packageTagList = [];
+                this.selectedTagArr.forEach(v => {
+                    data.packageTagList.push({ tagId: v.value });
+                });
+                data.userLevelList = [];
+                this.chectedUser.forEach(v => {
+                    data.userLevelList.push({ userLevelId: v });
+                });
+                this.btnLoading = true;
+                console.log(data);
+                request.addActivityPackage(data).then(res => {
+                    console.log(res);
+                    this.btnLoading = false;
+                    this.$message.success(res.msg);
+                    this.$router.push('/giftManage');
+                }).catch(err => {
+                    this.btnLoading = false;
+                    console.log(err);
+                });
+            },
+            beforeUploadArr() {
+                this.$message.warning('上传中...');
             },
             //  图片上传/拖拽
             getdata(evt) {
                 //   console.log(evt.draggedContext.element.url);
             },
             datadragEnd(evt) {
-                //   console.log(this.imgArr);
+                this.imgArr.forEach((v, k) => {
+                    v.sort = k + 1;
+                });
             },
-            // 上传图片成功回调
-            successUpload(res) {
-                this.$message.warning("上传中...");
-                if (res.code == 200) {
-                    if (this.imgArr.length >= 5) {
-                        this.isUseUpload = true;
-                        this.$message.warning("最多只能上传五张图片");
-                        return;
-                    }
-                    this.imgArr.push(res.data.imageUrl);
-                    this.imgSmallArr.push(res.data.imageThumbUrl);
-                    this.$message.success("上传成功");
-                } else {
-                    this.$message.warning(res.data.msg);
+            successUpload(res, status) {
+                if (status === 1) {
+                    this.videoUrl = res.data;
+                    return;
                 }
+                if (this.imgArr.length >= 5) {
+                    this.isUseUpload = true;
+                    this.$message.warning('最多只能上传五张图片');
+                    return;
+                }
+                this.imgArr.push({ originalImg: res.data, smallImg: res.data, status: 1, sort: this.imgArr.length + 1 });
+                this.$message.success('上传成功');
             },
             // 删除图片
             deleteImg(img) {
-                let index = this.imgArr.indexOf(img);
+                let index = -1;
+                this.imgArr.forEach((v, k) => {
+                    if (v.originUrl == img.originUrl) {
+                        index = k;
+                    }
+                });
                 if (index == -1) {
                     return;
                 }
                 this.imgArr.splice(index, 1);
-                this.imgSmallArr.splice(index, 1);
                 if (this.imgArr.length < 5) {
                     this.isUseUpload = false;
                 }
             },
             // 自定义售后周期
             defSaleTime() {
-                this.form.saleTime = "";
+                this.form.aferServiceDays = '';
                 this.showSaleTime = !this.showSaleTime;
             },
             // 富文本编辑器
-            onEditorChange({editor, html, text}) {
-                this.form.editorContent = html;
+            onEditorChange({ editor, html, text }) {
+                this.form.content = html;
             },
             // 图片上传成功回调 插入到编辑器中
             upScuccess(e, file, fileList) {
                 this.fullscreenLoading = false;
-                let vm = this;
-                let url = "";
-                if (this.uploadType === "image") {
+                const vm = this;
+                let url = '';
+                if (this.uploadType === 'image') {
                     // 获得文件上传后的URL地址
-                    url = e.data.imageUrl;
-                    this.form.original_img = e.data.imageUrl;
-                    this.form.small_img = e.data.imageThumbUrl;
+                    url = e.data;
+                    this.form.original_img = e.data;
+                    // this.form.small_img = e.data.imageThumbUrl;
                 }
                 if (url != null && url.length > 0) {
                     // 将文件上传后的URL地址插入到编辑器文本中
@@ -360,262 +494,242 @@
                     // this.$refs.myTextEditor.quillEditor.getSelection();
                     // 获取光标位置对象，里面有两个属性，一个是index 还有 一个length，这里要用range.index，即当前光标之前的内容长度，然后再利用 insertEmbed(length, 'image', imageUrl)，插入图片即可。
                     vm.addRange = vm.$refs.myQuillEditor.quill.getSelection();
-                    value = value.indexOf("http") !== -1 ? value : "http:" + value;
+                    value = value.indexOf('http') !== -1 ? value : 'http:' + value;
                     vm.$refs.myQuillEditor.quill.insertEmbed(
                         vm.addRange !== null ? vm.addRange.index : 0,
                         vm.uploadType,
                         value,
                         Quill.sources.USER
                     ); // 调用编辑器的 insertEmbed 方法，插入URL
-                    this.$message.success("插入成功");
+                    this.$message.success('插入成功');
                 } else {
                     this.$message.error(`${vm.uploadType}插入失败`);
                 }
-                this.$refs["upload"].clearFiles(); // 插入成功后清除input的内容
+                this.$refs['upload'].clearFiles(); // 插入成功后清除input的内容
             },
             // 点击图片ICON触发事件
             imgHandler(state) {
                 this.addRange = this.$refs.myQuillEditor.quill.getSelection();
                 if (state) {
-                    let fileInput = document.getElementById("imgInput");
+                    const fileInput = document.getElementById('imgInput');
                     fileInput.click(); // 加一个触发事件
                 }
-                this.uploadType = "image";
+                this.uploadType = 'image';
             },
             // 关闭标签
-            handleClose(index,value) {
-                this.selectedTagArr.splice(index,1);
-                this.tagArr.forEach((v,k)=>{
-                    if(value.label == v.label){
+            handleClose(index, value) {
+                this.selectedTagArr.splice(index, 1);
+                this.tagArr.forEach((v, k) => {
+                    if (value.label == v.label) {
                         this.tagArr[k].selected = false;
                     }
-                })
+                });
             },
             // 加入新的标签
-            addTag(){
-                if(this.tagName == ''){
+            addTag() {
+                if (this.tagName == '') {
                     this.$message.warning('请输入正确的标签');
                     return;
                 }
                 let tmp = false;
-                this.tagArr.forEach((v,k)=>{
-                    if(this.tagName == v.label){
+                this.tagArr.forEach((v, k) => {
+                    if (this.tagName == v.label) {
                         tmp = true;
                     }
-                })
-                if(!tmp){
-                    let data = {};
-                    data.name = this.tagName;
-                    data.url = pApi.addProduct;
-                    data.type = 2;
-                    this.$axios.post(api.addTagLibrary,data)
-                        .then(res=>{
-                            this.$message.success('添加成功!');
-                            this.tagName = '';
-                            this.getAllTags();
-                        })
-                        .catch(err=>{
-                            console.log(err)
-                        })
-
-                }else{
+                });
+                if (!tmp) {
+                    let typeId = 1;
+                    let tagName = 'figureTag';
+                    if (this.figureTag) {
+                        typeId = 1;
+                        tagName = 'figureTag';
+                    } else if (this.goodsTag) {
+                        typeId = 2;
+                        tagName = 'goodsTag';
+                    } else if (this.sceneTag) {
+                        typeId = 3;
+                        tagName = 'sceneTag';
+                    } else {
+                        return;
+                    }
+                    const data = {
+                        name: this.tagName,
+                        status: 1,
+                        typeId: typeId
+                    };
+                    request.addSysTagLibrary(data).then(res => {
+                        this.$message.success(res.msg);
+                        this[tagName] = true;
+                        this.getAllTags(typeId, tagName, this[tagName]);
+                        this.tagName = '';
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                } else {
                     this.$message.warning('标签已经添加，请不要重复添加!');
                 }
             },
             // 添加标签
-            insertTag(v){
-                if(this.selectedTagArr.length >19){
+            insertTag(v) {
+                if (this.selectedTagArr.length > 19) {
                     this.$message.warning('最多添加20个标签');
                     return;
                 }
                 v.selected = true;
-                this.selectedTagArr.push({label:v.label,value:v.value});
+                this.selectedTagArr.push({ label: v.label, value: v.value });
             },
-            // 获取所有标签
-            getAllTags(){
-                this.tagArr = [];
-                this.$axios
-                    .post(api.queryTagLibraryList, {type:2})
-                    .then(res => {
-                        res.data.data.forEach((v,k)=>{
-                            this.tagArr.push({label:v.name,value:v.id})
-                        })
-                        this.tagArr.forEach((v,k) => {
-                        this.selectedTagArr.forEach((v1,k1)=>{
-                            if(v.value == v1.value){
-                            v.selected = true;
-                            }
-                        })
-                        });
-                    })
-                    .catch(err => {
-                    console.log(err);
-                    });
-            },
-            //获取用户层级列表
-            getLevelList() {
-                let that = this;
-                let data = {};
-                that.$axios
-                    .post(api.getDealerLevelList, data)
-                    .then(res => {
-                        that.users = res.data.data;
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
-            },
-            //推送人群选择
-            handleCheckAllChange(val) {
-                this.checkedUsers = [];
-                this.isIndeterminate = false;
-                if(val){
-                    this.users.forEach((v,k)=>{
-                        this.checkedUsers.push(v.id)
-                    })
-                    this.form.pushWay = this.checkedUsers.join(',')
-                }else{
-                    this.checkedUsers = [];
-                    this.form.pushWay = '';
-                }
-            },
-            handleCheckedUsersChange(value) {
-                let checkedCount = value.length;
-                this.form.pushWay = value.join(',');
-                this.checkAll = checkedCount === this.users.length;
-                this.isIndeterminate = checkedCount > 0 && checkedCount < this.users.length;
-            },
-             // 获取一级类目
+            // 获取一级类目
             getFirstItem() {
                 this.itemList = [];
-                this.$axios
-                .post(api.getCategoryList, { fatherid: 0,pageSize:1000000})
-                .then(res => {
-                    res.data.data.data.forEach((v,k)=>{
-                        this.itemList.push({label:v.name,value:v.id,children:[]});
-                        // this.handleItemChange(v.id)
-                    })
-                })
-                .catch(err => {
+                request.queryProductCategoryList({ fatherId: 0, level: 1, pageSize: 100000 }).then(res => {
+                    res.data.data.forEach((v, k) => {
+                        this.itemList.push({ label: v.name, value: v.id, children: [] });
+                    });
+                }).catch(err => {
                     console.log(err);
                 });
             },
-            // 获取二级类目
-            handleItemChange(val){
+            // 获取二三级类目
+            handleItemChange(val) {
                 let index = 0;
-                this.itemList.forEach((v,k)=>{
-                    if(v.value == val[0]){
-                        index = k;
-                    }
-                })
-                let data ={};
-                data.fatherid = val[0];
-                data.pageSize = 1000000;
-                this.itemList[index].children = [];
-                this.$axios
-                .post(api.getCategoryList, data)
-                .then(res => {
-                    res.data.data.data.forEach((v,k)=>{
-                        this.itemList[index].children.push({label:v.name,value:v.id});
-                    })
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+                const data = {};
+                data.pageSize = 100000;
+                if (val[1]) {
+                    let tmpIndex = 0;
+                    this.itemList.forEach((v, k) => {
+                        if (v.value == val[0]) {
+                            tmpIndex = k;
+                            v.children.forEach((value, key) => {
+                                if (value.value == val[1]) {
+                                    index = key;
+                                }
+                            });
+                        }
+                    });
+                    data.fatherId = val[1];
+                    data.level = 3;
+                    data.status = 1;
+                    request.queryProductCategoryList(data).then(res => {
+                        this.itemList[tmpIndex].children[index].children = [];
+                        res.data.data.forEach((v, k) => {
+                            this.itemList[tmpIndex].children[index].children.push({ label: v.name, value: v.id });
+                        });
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                } else {
+                    this.itemList.forEach((v, k) => {
+                        if (v.value == val[0]) {
+                            index = k;
+                        }
+                    });
+                    data.fatherId = val[0];
+                    data.level = 2;
+                    data.status = 1;
+                    request.queryProductCategoryList(data).then(res => {
+                        this.itemList[index].children = [];
+                        res.data.data.forEach((v, k) => {
+                            this.itemList[index].children.push({ label: v.name, value: v.id, children: [] });
+                        });
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                }
             },
-            // 获取品牌列表
-            getProItemId(val){
-                this.form.brandId = ''
-                let id = this.form.secCategoryId = val[1];
+            // 获取一二三级类目id
+            getProItemId(val) {
                 this.form.firstCategoryId = val[0];
                 this.form.secCategoryId = val[1];
-                this.getProductParam(val[1])
-                this.brandArr = [];
-                this.$axios
-                .post(api.queryCategoryBrandCid, {cId:id,pageSize:1000000})
-                .then(res => {
-                    res.data.data.forEach((v,k)=>{
-                        this.brandArr.push({label:v.name,value:v.id})
-                    })
-                })
-                .catch(err => {
+                this.form.thirdCategoryId = val[2];
+                this.getProductParam(val[2]);
+            },
+            // 获取品牌列表
+            getBrandList(val) {
+                if (val) {
+                    request.findBySupplierId({ id: val }).then(res => {
+                        this.brandArr = res.data;
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                } else {
+                    request.findProductBrandListNoStop({}).then(res => {
+                        this.brandArr = res.data;
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                }
+            },
+            // 获取供应商列表
+            getSupplyList(val) {
+                request.findByBrandId({ id: val }).then(res => {
+                    this.supplierArr = res.data;
+                }).catch(err => {
                     console.log(err);
                 });
             },
-            // 获取供应商列表
-            getSupplyList(){
-                this.form.supplier = '';
-                let data = {};
-                this.supplierList = [];
-                data.firstCategoryId = this.form.firstCategoryId;
-                data.secCategoryId = this.form.secCategoryId;
-                data.brandId = this.form.brandId;
-                data.pageSize = 1000000
-                this.$axios
-                    .post(api.querySupplierBrandPageList, data)
-                    .then(res => {
-                        res.data.data.forEach((v,k)=>{
-                            this.supplierList.push({label:v.name,value:v.supplier_id})
-                        })
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            },
             // 获取运费模板列表
-            getFreightTemplate(){
+            getFreightTemplate() {
                 this.freightTemplateArr = [];
-                this.$axios
-                    .post(api.getFreightTemplateList, {})
-                    .then(res => {
-                        res.data.data.forEach((v,k)=>{
-                            this.freightTemplateArr.push({label:v.name,value:v.id})
-                        })
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                request.queryFreightTemplateList({}).then(res => {
+                    this.freightTemplateArr = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
             },
-            // 返回礼包列表
-            goBack(){
-                this.$router.push('giftManage');
+            // 获取所有标签
+            getAllTags(val, name, status) {
+                this.figureTag = false;
+                this.goodsTag = false;
+                this.sceneTag = false;
+                this[name] = status;
+                this.tagLoading = true;
+                request.querySysTagLibraryList({ typeId: val }).then(res => {
+                    this.tagLoading = false;
+                    this.tagArr = [];
+                    this[name] = !this[name];
+                    res.data.forEach(v => {
+                        this.tagArr.push({ label: v.name, value: v.id });
+                    });
+                    this.tagArr.forEach((v, k) => {
+                        this.selectedTagArr.forEach((v1, k1) => {
+                            if (v.value == v1.value) {
+                                v.selected = true;
+                            }
+                        });
+                    });
+                }).catch(err => {
+                    this.tagLoading = false;
+                    console.log(err);
+                });
             },
             // 获取产品参数
-            getProductParam(secId){
-                this.$axios.post(api.infoParmByCategoryIdList,{categoryId:secId}).then(res=>{
+            getProductParam(secId) {
+                request.queryProductCategoryParamList({ id: secId }).then(res => {
                     this.productParam = [];
-                    res.data.data.forEach((v,k)=>{
-                    v.value = '';
-                    this.productParam.push(v);
-                    })
-                })
+                    res.data.forEach((v, k) => {
+                        v.value = '';
+                        this.productParam.push(v);
+                    });
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            // 获取用户层级列表
+            getUserLevel() {
+                request.getLevelList({}).then(res => {
+                    this.userLevel = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
             }
         }
     };
 </script>
 <style lang='less'>
-    .add-gift {
+    .release-product {
         color: #666;
-        .address-item {
-            .el-form-item__label {
-                line-height: 20px
-            }
-        }
-        .quill-editor {
-            margin-left: -100px;
-        }
-        .role-choose {
-            .el-form-item__label {
-                width: 120px !important;
-            }
-        }
-        .el-checkbox-group{
-            margin-left: 20px;
-        }
-        .tips{
-            margin-left: 20px;
-            font-size: 12px;
-            color: #ff6868;
+        .my-inp {
+            width: 210px;
         }
         .pro-title {
             width: 100%;
@@ -625,6 +739,9 @@
             padding: 0 25px;
             box-sizing: border-box;
             margin-bottom: 20px;
+        }
+        .tag-btn-group{
+            margin-top: 15px;
         }
         .img-wrap {
             display: inline-block;
@@ -673,7 +790,6 @@
         }
         .product-param {
             width: 95%;
-            // height: 58px;
             border: 1px solid #e8edf0;
             line-height: 58px;
             padding: 0 15px;
@@ -716,62 +832,6 @@
                 background-color: #409EFF;
                 border-color: #409EFF;
                 color: #fff;
-            }
-        }
-        .gift-info-wrap{
-            width: 100%;
-            border: 1px solid  #eee;
-            padding: 10px;
-            box-sizing: border-box;
-            .gift-info-item{
-                width: 100%;
-                .gift-info-title{
-                    position: relative;
-                    width: 100%;
-                    height: 60px;
-                    line-height: 40px;
-                    padding: 10px 30px;
-                    box-sizing: border-box;
-                    background-color: #f7f7f7;
-                    .delete-btn{
-                        position: absolute;
-                        top: 16px;
-                        right: 30px;
-                        width: 24px;
-                        height: 24px;
-                        border-radius: 50%;
-                        border: 2px solid #a5a5a5;
-                        cursor: pointer;
-                        text-align: center;
-                        line-height: 24px;
-                        color: #a5a5a5;
-                        font-size: 18px;
-                        font-weight: 700;
-                    }
-                }
-                .gift-info-content{
-                    position: relative;
-                    overflow: hidden;
-                    width: 100%;
-                    height: 40px;
-                    line-height:40px;
-                    padding-left: 60px;
-                    margin: 20px 0;
-                    box-sizing: border-box;
-                    .el-input--small .el-input__inner{
-                        line-height: 30px;
-                    }
-                    .el-input-group__append, .el-input-group__prepend{
-                        padding: 0 5px;
-                    }
-                }
-            }
-            .gift-info-footer{
-                display: inline-block;
-                color: #22aeff;
-                font-size: 14px;
-                margin-left: 30px;
-                cursor: pointer;
             }
         }
     }

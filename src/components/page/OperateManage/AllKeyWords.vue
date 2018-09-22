@@ -32,6 +32,7 @@
                 <el-pagination
                     background
                     @size-change="handleSizeChange"
+                    :page-size="page.pageSize"
                     @current-change="handleCurrentChange"
                     :current-page="page.currentPage"
                     layout="total, prev, pager, next, jumper"
