@@ -47,7 +47,8 @@
                 <div class="title">产品
                     <el-input
                         placeholder="请输入产品名称或者ID进行查找"
-                        suffix-icon="el-icon-search">
+                        suffix-icon="el-icon-search"
+                        @change="getProductList">
                     </el-input>
                 </div>
                 <div v-if="productList.length>0" class="data-area">
@@ -282,13 +283,15 @@
             // item选中项 index选中索引值
             getProductList(item, status) {
                 const that = this;
-                if (status) {
-                    that.productList = [];
-                    that.productTag = [];
-                    that.products = [];
-                    that.thirdClassifyTag = item;
+                if (item.id) {
+                    if (status) {
+                        that.productList = [];
+                        that.productTag = [];
+                        that.products = [];
+                        that.thirdClassifyTag = item;
+                    }
+                    that.thirdCategoryId = item.id;
                 }
-                that.thirdCategoryId = item.id;
                 const data = {
                     firstCategoryId: that.firstCategoryId,
                     secCategoryId: that.secondCategoryId,

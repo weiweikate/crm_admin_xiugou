@@ -97,13 +97,12 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import vChooseproduct from "@/components/common/marketTools/ChooseProduct.vue";
-    import icon from "@/components/common/ico";
-    import * as api from "@/api/OperateManage/MarketToolsManage/index.js";
-    import * as pApi from "@/privilegeList/OperateManage/MarketToolsManage/index.js";
-    import utils from "@/utils/index.js";
-    import moment from 'moment'
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import vChooseproduct from '@/components/common/marketTools/ChooseProduct.vue';
+    import icon from '@/components/common/ico';
+    import utils from '@/utils/index.js';
+    import moment from 'moment';
+    import request from '@/http/http.js';
 
     export default {
         components: {
@@ -113,7 +112,7 @@
         },
 
         data() {
-            let isInt = (rule, value, callback) => {//正整数
+            const isInt = (rule, value, callback) => { // 正整数
                 if (!value) {
                     return callback(new Error('参数不能为空!'));
                 } else {
@@ -124,8 +123,8 @@
                     }
                 }
             };
-            let nonnegativeInteger = (rule, value, callback) => {//非负整数
-                if (value==='') {
+            const nonnegativeInteger = (rule, value, callback) => { // 非负整数
+                if (value === '') {
                     return callback(new Error('参数不能为空!'));
                 } else {
                     if (!/^\d+$/.test(value)) {
@@ -135,7 +134,7 @@
                     }
                 }
             };
-            let isDouble = (rule, value, callback) => {//两位小数
+            const isDouble = (rule, value, callback) => { // 两位小数
                 if (!value) {
                     return callback(new Error('参数不能为空!'));
                 } else {
@@ -146,10 +145,10 @@
                     }
                 }
             };
-            let isMax = (rule, value, callback) => {//发放数量
+            const isMax = (rule, value, callback) => { // 发放数量
                 if (!value) {
                     return callback(new Error('参数不能为空!'));
-                }else{
+                } else {
                     if (value > this.productDetail.stock) {
                         callback(new Error('发放数量不能大于商品库存!'));
                     } else {
@@ -158,51 +157,51 @@
                 }
             };
             return {
-                nav: ["运营管理", "营销工具管理", "降价拍", "新建降价拍"],
+                nav: ['运营管理', '营销工具管理', '降价拍', '新建降价拍'],
                 rules: {
                     orderCloseTime: [
-                        {validator: isInt, trigger: 'blur'}
+                        { validator: isInt, trigger: 'blur' }
                     ],
                     intervalTime: [
-                        {validator: isInt, trigger: 'blur'}
+                        { validator: isInt, trigger: 'blur' }
                     ],
                     floorPriceTime: [
-                        {validator: isInt, trigger: 'blur'}
+                        { validator: isInt, trigger: 'blur' }
                     ],
                     startPrice: [
-                        {validator: isDouble, trigger: 'blur'}
+                        { validator: isDouble, trigger: 'blur' }
                     ],
                     floorPrice: [
-                        {validator: isDouble, trigger: 'blur'}
+                        { validator: isDouble, trigger: 'blur' }
                     ],
                     downPrice: [
-                        {validator: isDouble, trigger: 'blur'}
+                        { validator: isDouble, trigger: 'blur' }
                     ],
                     totalNumber: [
-                        {validator: isMax, trigger: 'blur'}
+                        { validator: isMax, trigger: 'blur' }
                     ],
                     limitNumber: [
-                        {validator: nonnegativeInteger, trigger: 'blur'}
-                    ],
+                        { validator: nonnegativeInteger, trigger: 'blur' }
+                    ]
                 },
                 form: {
-                    floorPrice: '',//最低价格
-                    beginTime: '',//开始时间
-                    intervalTime: '',//降价幅度 分钟数
-                    downPrice: '',//降价幅度 金额
-                    floorPriceTime: '',//降到底价还允许购买的时间
-                    endTime: '',//结束时间
-                    startPrice: '',//起拍价格
-                    orderCloseTime: '',//自动关闭订单时间
-                    totalNumber: '',//发放总数量
-                    limitNumber: '0',//限购数量,默认为0
+                    floorPrice: '', // 最低价格
+                    beginTime: '', // 开始时间
+                    intervalTime: '', // 降价幅度 分钟数
+                    downPrice: '', // 降价幅度 金额
+                    floorPriceTime: '', // 降到底价还允许购买的时间
+                    endTime: '', // 结束时间
+                    startPrice: '', // 起拍价格
+                    orderCloseTime: '', // 自动关闭订单时间
+                    totalNumber: '', // 发放总数量
+                    limitNumber: '0'// 限购数量,默认为0
                 },
-                showMask: false,//选择商品弹窗
-                productDetail: {},//选择的商品的商品信息
-                showDuration: false,//显示持续时间
-                durationTime: '',//持续分钟数
-                duration:'',//持续时间
-                btnLoading: false//按钮提交
+                showMask: false, // 选择商品弹窗
+                productDetail: {}, // 选择的商品的商品信息
+                showDuration: false, // 显示持续时间
+                durationTime: '', // 持续分钟数
+                duration: '', // 持续时间
+                btnLoading: false// 按钮提交
             };
         },
 
@@ -210,73 +209,73 @@
             this.productDetail = {};
             this.duration = '';
             this.form = {};
-            this.form.limitNumber = 0
+            this.form.limitNumber = 0;
         },
 
         methods: {
-            //选择商品
+            // 选择商品
             chooseProduct() {
-                this.showMask = true
+                this.showMask = true;
             },
-            //获取商品信息
+            // 获取商品信息
             productInf(value) {
                 this.showMask = false;
                 if (value != false) {
-                    this.productDetail = value
+                    this.productDetail = value;
                 }
             },
-            //最低价
-            floorPrice(){
-                if(Number(this.form.floorPrice)>Number(this.form.startPrice)){
+            // 最低价
+            floorPrice() {
+                if (Number(this.form.floorPrice) > Number(this.form.startPrice)) {
                     this.$message.warning('最低价格应不大于起拍价格！');
-                    this.form.floorPrice='';
-                    return false
-                }else{
-                    return true
+                    this.form.floorPrice = '';
+                    return false;
+                } else {
+                    return true;
                 }
             },
-            //计算可持续时间
+            // 计算可持续时间
             calDurationTime(status) {
-                let originPrice = this.form.startPrice;
-                let floorPrice = this.form.floorPrice;
-                let intervalTime = this.form.intervalTime;
-                let downPrice = this.form.downPrice;
+                const originPrice = this.form.startPrice;
+                const floorPrice = this.form.floorPrice;
+                const intervalTime = this.form.intervalTime;
+                const downPrice = this.form.downPrice;
                 if (!originPrice) {
                     this.$message.warning('请输入起拍价！');
-                    return
+                    return;
                 }
                 if (!floorPrice) {
                     this.$message.warning('请输入最低价格！');
-                    return
-                }else{
-                    if(!this.floorPrice()) return;
+                    return;
+                } else {
+                    if (!this.floorPrice()) return;
                 }
                 if (!intervalTime || !downPrice) {
                     this.$message.warning('请输入降价幅度！');
-                    return
+                    return;
                 }
-                //为防止精度丢失，小数转整数再进行计算
-                let time = Math.floor((originPrice*100 - floorPrice*100)/ (downPrice*100)) * intervalTime;
-                this.durationTime = time;//保存持续分钟数
-                let day = Math.floor(time / 60 / 24);//天数
-                let hour = Math.floor((time - day * 60 * 24) / 60);//小时
-                let minutes = time - day * 60 * 24 - hour * 60;//分钟
+                // 为防止精度丢失，小数转整数再进行计算
+                const time = Math.floor((originPrice * 100 - floorPrice * 100) / (downPrice * 100)) * intervalTime;
+                this.durationTime = time;// 保存持续分钟数
+                const day = Math.floor(time / 60 / 24);// 天数
+                const hour = Math.floor((time - day * 60 * 24) / 60);// 小时
+                const minutes = time - day * 60 * 24 - hour * 60;// 分钟
                 this.showDuration = status;
                 this.duration = day + '天' + ' ' + this.addZero(hour) + ':' + this.addZero(minutes) + ':00';
-                this.calEndTime(this.form.beginTime, this.durationTime, this.form.floorPriceTime)
+                this.calEndTime(this.form.beginTime, this.durationTime, this.form.floorPriceTime);
             },
 
-            //不足10补零
+            // 不足10补零
             addZero(num) {
                 return num = num < 10 ? '0' + num : num;
             },
-            //计算开始时间、底价持续时间结束时间
+            // 计算开始时间、底价持续时间结束时间
             calEndTimeByStartDurationTime() {
-                let status=this.showDuration;
+                const status = this.showDuration;
                 this.calDurationTime(status);
-                this.calEndTime(this.form.beginTime, this.durationTime, this.form.floorPriceTime)
+                this.calEndTime(this.form.beginTime, this.durationTime, this.form.floorPriceTime);
             },
-            //计算结束时间
+            // 计算结束时间
             calEndTime(start, allTime, floorPriceTime) {
                 if (this.form.startPrice && this.form.floorPrice && this.form.intervalTime && this.form.downPrice && this.form.beginTime && this.form.floorPriceTime) {
                     this.form.endTime = moment(new Date(start).getTime() + (Number(allTime) + Number(floorPriceTime)) * 60 * 1000).format('YYYY-MM-DD HH:mm:ss');
@@ -291,12 +290,12 @@
                             this.$message.warning('请选择商品！');
                             return;
                         }
-                        if(!this.form.beginTime){
+                        if (!this.form.beginTime) {
                             this.$message.warning('请选择开始时间！');
                             return;
                         }
                         // 表单提交
-                        let data = {};
+                        const data = {};
                         data.beginTime = moment(this.form.beginTime).format('YYYY-MM-DD HH:mm:ss'); // 活动开始时间
                         data.downPrice = this.form.downPrice; // 每次降价金额
                         data.endTime = this.form.endTime; // 活动结束时间
@@ -304,33 +303,32 @@
                         data.floorPriceTime = this.form.floorPriceTime; // 底价持续时间
                         data.intervalTime = this.form.intervalTime; // 降价间隔时间
                         data.orderCloseTime = this.form.orderCloseTime; // 自动关闭订单时间
-                        data.productCode = this.productDetail.productCode; // 产品编号
-                        data.productId = this.productDetail.productId; // 产品ID
-                        data.productImg = this.productDetail.specImg; // 产品主图url
-                        data.productName = this.productDetail.productName; // 产品名称
-                        data.productPrice = this.productDetail.originalPrice; // 产品原价
+                        // data.productCode = this.productDetail.productCode; // 产品编号
+                        // data.productId = this.productDetail.productId; // 产品ID
+                        // data.productImg = this.productDetail.specImg; // 产品主图url
+                        // data.productName = this.productDetail.productName; // 产品名称
+                        // data.productPrice = this.productDetail.originalPrice; // 产品原价
                         data.productPriceId = this.productDetail.id; // 产品规格价格编号
-                        data.productSpec = this.productDetail.spec; // 产品规格
+                        // data.productSpec = this.productDetail.spec; // 产品规格
                         data.startPrice = this.form.startPrice; // 起拍价
-                        data.totalNumber = this.form.totalNumber; //发放总数量
-                        data.limitNumber = this.form.limitNumber; //限购数量
-                        data.url = pApi.operatorAddDepreciate;
+                        data.totalNumber = this.form.totalNumber; // 发放总数量
+                        data.limitNumber = this.form.limitNumber; // 限购数量
                         this.btnLoading = true;
-                        this.$axios.post(api.operatorAddDepreciate, data).then(res => {
-                            this.$message.success(res.data.msg);
+                        request.operatorAddDepreciate(data).then(res => {
+                            this.$message.success(res.msg);
                             this.$router.push('/depreciate');
-                            this.btnLoading = false
+                            this.btnLoading = false;
                         }).catch(err => {
-                            this.btnLoading = false
-                        })
+                            this.btnLoading = false;
+                        });
                     } else {
                         console.log('error submit!!');
-                        this.btnLoading=false;
+                        this.btnLoading = false;
                         return false;
                     }
                 });
             },
-            //取消
+            // 取消
             cancel() {
                 this.$router.push('/depreciate');
             }

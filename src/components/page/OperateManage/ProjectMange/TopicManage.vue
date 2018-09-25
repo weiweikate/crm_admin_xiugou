@@ -11,9 +11,9 @@
                 <el-table-column label="发布时间" align="center">
                     <template slot-scope="scope">{{scope.row.createTime|formatDate}}</template>
                 </el-table-column>
-                <el-table-column prop="topicTemplateId" label="活动模板" align="center"></el-table-column>
-                <el-table-column prop="productCount" label="产品数" align="center"></el-table-column>
-                <el-table-column prop="createAdmin" label="创建者" align="center"></el-table-column>
+                <el-table-column prop="templateId" label="活动模板" align="center"></el-table-column>
+                <el-table-column prop="num" label="产品数" align="center"></el-table-column>
+                <el-table-column prop="adminName" label="创建者" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button @click='editItem(scope.row)' type="primary">编辑</el-button>
@@ -88,6 +88,7 @@
                     this.tableData = [];
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
+                    this.tableLoading = false;
                 }).catch(err => {
                     console.log(err);
                     this.tableLoading = false;

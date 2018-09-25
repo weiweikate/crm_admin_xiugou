@@ -22,8 +22,8 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import vTabContent from "./depreciateList/_tabContent";
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import vTabContent from './depreciateList/_tabContent';
 
     export default {
         components: {
@@ -33,8 +33,8 @@
 
         data() {
             return {
-                nav: ["运营管理", "营销工具管理","降价拍"],
-                activeName: "allDepreciate",
+                nav: ['运营管理', '营销工具管理', '降价拍'],
+                activeName: 'allDepreciate'
             };
         },
         methods: {

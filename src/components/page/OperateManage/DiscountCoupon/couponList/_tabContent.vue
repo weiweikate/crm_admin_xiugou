@@ -213,6 +213,7 @@ export default {
         // 添加券库存
         addInventory(row) {
             this.addMask = true;
+            this.num = '';
             this.left = row.totalNumber - row.hasUsed;
             this.id = row.id;
             if (row.type === 4) {

@@ -48,8 +48,7 @@
                     <el-input
                         placeholder="请输入产品名称或者ID进行查找"
                         suffix-icon="el-icon-search" v-model="param"
-                    @change="getProductList"
-                    >
+                        @change="getProductList">
                     </el-input>
                 </div>
                 <div v-if="productList.length>0" class="data-area">

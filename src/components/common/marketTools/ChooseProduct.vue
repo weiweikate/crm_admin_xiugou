@@ -49,43 +49,42 @@
 </template>
 
 <script>
-    import * as api from "@/api/OperateManage/MarketToolsManage/index.js";
-    import * as pApi from "@/privilegeList/OperateManage/MarketToolsManage/index.js";
-    import utils from "@/utils/index.js";
+    import utils from '@/utils/index.js';
+    import request from '@/http/http.js';
 
     export default {
         components: {},
-        props: ['productId', 'activityType','searchProductId','searchProductName'],
+        props: ['productId', 'activityType', 'searchProductId', 'searchProductName'],
         data() {
             return {
-                keyWords: "", // 关键字搜索
-                keyWordsID: '',    // 关键字id
-                stock: '',//关键字库存
-                flagStatus: '',//关键字是否有活动互斥，0无 大于0有
-                status: '',//关键字状态
-                productNum: "",    // 产品数量
-                tableData: [],    // 规格表格
+                keyWords: '', // 关键字搜索
+                keyWordsID: '', // 关键字id
+                stock: '', // 关键字库存
+                flagStatus: '', // 关键字是否有活动互斥，0无 大于0有
+                status: '', // 关键字状态
+                productNum: '', // 产品数量
+                tableData: [], // 规格表格
                 // 选择商品列表
                 checkList: [],
                 // 已选择商品
                 selectedPro: [],
-                chooseId: '',//选中规格id
-                productDetail: '',//选中商品信息
-                showResult: false,//是否显示搜索结果
-                noResult: false,//无数据
-                resultTip: '',//无数据提示信息
-                name:'',//产品名称
-                prodCode:'',//产品编码
+                chooseId: '', // 选中规格id
+                productDetail: '', // 选中商品信息
+                showResult: false, // 是否显示搜索结果
+                noResult: false, // 无数据
+                resultTip: '', // 无数据提示信息
+                name: '', // 产品名称
+                prodCode: ''// 产品编码
             };
         },
         created() {
             this.tableData = [];
             this.keyWords = '';
             this.chooseId = this.productId;
-            if(this.searchProductId){
-                this.keyWordsID=this.searchProductId;
-                this.keyWords=this.searchProductName;
-                this.getSpecList()
+            if (this.searchProductId) {
+                this.keyWordsID = this.searchProductId;
+                this.keyWords = this.searchProductName;
+                this.getSpecList();
             }
         },
         methods: {
@@ -94,11 +93,11 @@
                 if (status) {
                     if (!this.chooseId) {
                         this.$message.warning('请选择商品!');
-                        return
+                        return;
                     }
-                    this.$emit('getProductInf', this.productDetail)
+                    this.$emit('getProductInf', this.productDetail);
                 } else {
-                    this.$emit('getProductInf', false)
+                    this.$emit('getProductInf', false);
                 }
             },
             getSpecList() {
@@ -107,22 +106,22 @@
                     return;
                 }
                 this.showResult = true;
-                if (this.productNum == 0 || this.flagStatus ==0 || this.status == 5) {//无库存,已参加同类活动,下架
+                if (this.productNum == 0 || this.flagStatus == 0 || this.status == 5) { // 无库存,已参加同类活动,下架
                     this.noResult = true;
                     if (this.flagStatus == 0) {
-                        this.resultTip = '已参与同类活动'
+                        this.resultTip = '已参与同类活动';
                     } else if (this.status == 5) {
-                        this.resultTip = '已下架'
-                    }else if (this.productNum == 0) {
-                        this.resultTip = '该商品无库存'
+                        this.resultTip = '已下架';
+                    } else if (this.productNum == 0) {
+                        this.resultTip = '该商品无库存';
                     }
                 } else {
                     this.noResult = false;
-                    this.$axios.post(api.queryProductSpecById, {productId: this.keyWordsID}).then(res => {
+                    request.queryProductSpecById({ productId: this.keyWordsID }).then(res => {
                         this.tableData = [];
                         this.tableData = res.data.data;
                         this.showResult = true;
-                    })
+                    });
                 }
             },
             // 模糊查询
@@ -131,14 +130,15 @@
                     return;
                 }
                 this.keyWordsID = '';
-                //activityType:1秒杀 2降价拍 3优惠套餐
-                this.$axios.post(api.queryProductByNameOrCode, {
+                // activityType:1秒杀 2降价拍 3优惠套餐
+                const data = {
                     condition: queryString,
                     activityType: this.activityType
-                }).then(res => {
-                    let tmpArr = [];
+                };
+                request.queryProductByNameOrCode(data).then(res => {
+                    const tmpArr = [];
                     res.data.data.forEach((v, k) => {
-                        let o = {};
+                        const o = {};
                         o.value = `${v.name} 产品ID：${v.prodCode}`;
                         o.id = v.id;
                         o.productNum = v.productNum;
@@ -148,8 +148,8 @@
                         o.prodCode = v.prodCode;
                         tmpArr.push(o);
                     });
-                    cb(tmpArr)
-                })
+                    cb(tmpArr);
+                });
             },
             // 模糊查询id
             handleSelect(item) {
@@ -163,11 +163,11 @@
             // 选择商品操作
             selectPro(row) {
                 this.chooseId = row.id;
-                if(!row.specImg){
-                   row.specImg=row.imgUrl;
+                if (!row.specImg) {
+                    row.specImg = row.imgUrl;
                 }
                 this.productDetail = row;
-                this.productDetail.searchProductId=this.keyWordsID;
+                this.productDetail.searchProductId = this.keyWordsID;
             }
         }
     };

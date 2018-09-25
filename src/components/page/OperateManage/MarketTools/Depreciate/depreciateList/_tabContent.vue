@@ -1,6 +1,6 @@
 <template>
     <div class="tab-content">
-        <el-button @click="addDepreciate" v-if="p.operatorAddDepreciate" class="add-product" type="primary">新建降价拍
+        <el-button @click="addDepreciate" class="add-product" type="primary">新建降价拍
         </el-button>
         <div class="search-pane">
             <el-form :model="form" ref='form' inline label-width="100px">
@@ -53,26 +53,34 @@
                     >
                     </el-date-picker>
                 </el-form-item>
+                <el-form-item prop="topicStatus" label="是否绑定专题">
+                    <el-select v-model="form.topicStatus" placeholder="全部">
+                        <el-option value="">全部</el-option>
+                        <el-option label="是" value="1">是</el-option>
+                        <el-option label="否" value="0">否</el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label=" ">
-                    <el-button type="primary" @click="submitForm(1)">搜索</el-button>
+                    <el-button type="primary" @click="getList(1)">搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
         </div>
-        <v-remark :contents='contents'></v-remark>
-        <el-table v-loading="tableLoading" border :data="tableData">
+        <!--<v-remark :contents='contents'></v-remark>-->
+        <el-table v-loading="tableLoading" border :data="tableData" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" align="center"></el-table-column>
             <el-table-column prop="activityCode" align="center" label="编号" min-width="100"></el-table-column>
             <el-table-column label="降价拍商品" min-width="300">
                 <template slot-scope="scope">
                     <div class="product-img">
-                        <img :src="scope.row.productImg">
+                        <img :src="scope.row.specImg">
                     </div>
                     <p class="product-inf">{{scope.row.productName}}</p>
                     <p class="product-inf" style="margin-top: 25px">原价：￥{{scope.row.productPrice}}</p>
                     <p class="product-inf">产品ID：{{scope.row.productCode}}</p>
                 </template>
             </el-table-column>
-            <el-table-column prop="productSpec" label="规格" align="center" min-width="100"></el-table-column>
+            <el-table-column prop="spec" label="规格" align="center" min-width="100"></el-table-column>
             <el-table-column label="起拍价(元)" align="center" min-width="60">
                 <template slot-scope="scope">
                     ￥{{scope.row.startPrice}}
@@ -92,8 +100,8 @@
                     ￥{{scope.row.payTotal?scope.row.payTotal:'0'}}
                 </template>
             </el-table-column>
-            <el-table-column prop="payOrderCount" label="付款订单数" align="center" min-width="60"></el-table-column>
-            <el-table-column prop="freezeNumber" label="冻结库存" align="center" min-width="60"></el-table-column>
+            <el-table-column prop="payOrderCount" label="成交订单数" align="center" min-width="60"></el-table-column>
+            <el-table-column prop="freezeNumber" label="减少数量" align="center" min-width="60"></el-table-column>
             <el-table-column prop="payUserTotal" label="付款人数" align="center" min-width="60">
                 <template slot-scope="scope">{{scope.row.payUserTotal?scope.row.payUserTotal:'0'}}</template>
             </el-table-column>
@@ -122,26 +130,32 @@
                     <template v-else-if='scope.row.status == 6'>下架隐藏</template>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" align="center" min-width="100" v-if="showOpr">
+            <el-table-column label="是否绑定专题" align="center" min-width="120">
                 <template slot-scope="scope">
-                    <el-button style="margin-bottom:10px" type="primary" v-if="p.operatorfindById"
+                    <template v-if="scope.row.topicStatus==1">是</template>
+                    <template v-else>否</template>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" min-width="100">
+                <template slot-scope="scope">
+                    <el-button style="margin-bottom:10px" type="primary"
                                @click="toDetail(scope.row)">查看
                     </el-button>
                     <el-button style="margin-bottom:10px" type="danger" @click="endOrDelete(1,scope.row)"
-                               v-if="(scope.row.status == 1||scope.row.status == 2)&&p.operatorUpdateDepreciatelist_2">
+                               v-if="scope.row.status == 1||scope.row.status == 2">
                         结束
                     </el-button>
                     <el-button style="margin-bottom:10px" type="warning" @click="deInventory(scope.row)"
-                               v-if="scope.row.status == 2&&p.operatorUpdateDepreciatelist_3">减少库存
+                               v-if="scope.row.status == 2">减少数量
                     </el-button>
                     <el-button style="margin-bottom:10px" type="danger" @click="endOrDelete(0,scope.row)"
-                               v-if="scope.row.status != 1&&scope.row.status != 2&&p.operatorUpdateDepreciatelist_1">
+                               v-if="scope.row.status != 1&&scope.row.status != 2">
                         删除
                     </el-button>
-                    <el-button style="margin-bottom:10px" type="warning" @click="endOrDelete(2,scope.row)"
-                               v-if="(scope.row.status == 3||scope.row.status == 4||scope.row.status == 5)&&p.operatorUpdateDepreciatelist_4">
-                        下架
-                    </el-button>
+                    <!--<el-button style="margin-bottom:10px" type="warning" @click="endOrDelete(2,scope.row)"-->
+                               <!--v-if="scope.row.status == 3||scope.row.status == 4||scope.row.status == 5">-->
+                        <!--下架-->
+                    <!--</el-button>-->
                 </template>
             </el-table-column>
 
@@ -156,6 +170,17 @@
                 layout="total, prev, pager, next, jumper"
                 :total="page.totalPage">
             </el-pagination>
+        </div>
+        <div class="operate-table">
+            <el-popover placement="top" width="160" v-model="isShowPop">
+                <p>确定删除吗？</p>
+                <div style="text-align: right; margin: 0">
+                    <el-button @click="batchOperate(0)" type="primary" size="mini">确定</el-button>
+                    <el-button size="mini" type="text" @click="isShowPop = false">取消</el-button>
+                </div>
+                <el-button slot="reference" @click="isShowPop = true">删除</el-button>
+            </el-popover>
+            <el-button @click="batchOperate(6)">结束</el-button>
         </div>
         <!--结束或删除弹窗-->
         <div class="pwd-mask" v-if="showMask">
@@ -176,8 +201,8 @@
                 </div>
             </div>
         </div>
-        <!--减少库存弹窗-->
-        <el-dialog title="减少库存" :visible.sync="inventoryMask">
+        <!--减少数量弹窗-->
+        <el-dialog title="减少数量" :visible.sync="inventoryMask">
             <div style="text-align: center;line-height: 50px">现有库存{{inventory}}</div>
             <el-form>
                 <el-form-item prop="name" label="减少">
@@ -195,16 +220,16 @@
 </template>
 
 <script>
-    import * as api from "@/api/OperateManage/MarketToolsManage/index.js";
-    import * as pApi from "@/privilegeList/OperateManage/MarketToolsManage/index.js";
-    import utils from "@/utils/index.js";
-    import icon from "@/components/common/ico";
-    import moment from 'moment'
-    import vRemark from '@/components/common/marketTools/remark.vue'
+    import utils from '@/utils/index.js';
+    import icon from '@/components/common/ico';
+    import moment from 'moment';
+    import { myMixinTable } from '@/JS/commom';
+    import vRemark from '@/components/common/marketTools/remark.vue';
+    import request from '@/http/http.js';
 
     export default {
-        props: ["name"],
-
+        props: ['name'],
+        mixins: [myMixinTable],
         components: {
             icon, vRemark
         },
@@ -212,24 +237,14 @@
         data() {
             return {
                 contents: ['订单实付款金额=总订单付款金额-退款金额', '成交订单数=总订单数-退款/退货订单数', '付款人数=总付款人数-退款/退货人数', '删除活动归还库存时间=手动关闭时间+订单关闭时间+5分钟'],
-                // 权限控制
-                p: {
-                    operatorAddDepreciate: false,//添加
-                    operatorUpdateDepreciatelist_1: false,//删除
-                    operatorUpdateDepreciatelist_2: false,//结束
-                    operatorUpdateDepreciatelist_3: false,//减少库存
-                    operatorUpdateDepreciatelist_4: false,//下架
-                    operatorfindById: false,//详情
-                },
-                showOpr: true,//操作总权限
 
-                endStyleArr: [//结束方式
-                    {label: '全部', value: ''},
-                    {label: '库存售完', value: '3'},
-                    {label: '时间结束', value: '4'},
-                    {label: '手动结束', value: '5'},
+                endStyleArr: [// 结束方式
+                    { label: '全部', value: '' },
+                    { label: '库存售完', value: '3' },
+                    { label: '时间结束', value: '4' },
+                    { label: '手动结束', value: '5' }
                 ],
-                createUserList: [],//发布人列表
+                createUserList: [], // 发布人列表
                 form: {
                     releaseDate: '',
                     startDate: '',
@@ -237,9 +252,10 @@
                     userId: '',
                     productCode: '',
                     productName: '',
-                    tstatus: ''
+                    tstatus: '',
+                    topicStatus: ''
                 },
-                //表格数据
+                // 表格数据
                 tableData: [],
                 tableLoading: false,
                 page: {
@@ -247,27 +263,29 @@
                     totalPage: 0,
                     pageSize: 20
                 },
-                showMask: false,//是否显示弹窗
-                btnLoading: false,//弹窗操作按钮样式
-                showInf: [{//弹窗文案
+                showMask: false, // 是否显示弹窗
+                btnLoading: false, // 弹窗操作按钮样式
+                showInf: [{// 弹窗文案
                     title: '删除确认',
                     tip: '确定要删除此活动？',
-                    result: '一旦删除，不能撤回',
+                    result: '一旦删除，不能撤回'
                 }, {
                     title: '结束确认',
                     tip: '确定要结束此活动？',
-                    result: '一旦结束，不能再开启',
+                    result: '一旦结束，不能再开启'
                 }, {
                     title: '下架确认',
                     tip: '确定要下架此活动？',
-                    result: '一旦下架，不能再开启',
+                    result: '一旦下架，不能再开启'
                 }],
-                index: '',//删除0结束1
-                id: '',//操作id
-                inventoryMask: false,//减少库存弹窗
-                inventory: '',//现有库存数量
-                number: '',//减少数量
-                notEnough: false,//库存不足提示信息
+                index: '', // 删除0结束1
+                id: '', // 操作id
+                inventoryMask: false, // 减少数量弹窗
+                inventory: '', // 现有库存数量
+                number: '', // 减少数量
+                notEnough: false, // 库存不足提示信息
+                isShowPop: false,
+                multipleSelection: [] // 复选框
             };
         },
 
@@ -291,45 +309,32 @@
             }
         },
         created() {
-            this.submitForm(1);
-            this.pControl();
-            this.getCreateUserList();//加载发布人列表
+            this.getList(1);
+            this.getCreateUserList();// 加载发布人列表
         },
         activated() {
-            this.submitForm(1);
-            this.pControl();
-            this.getCreateUserList();//加载发布人列表
+            this.getList(1);
+            this.getCreateUserList();// 加载发布人列表
         },
 
         methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-
-                if (!this.p.operatorUpdateDepreciatelist_1 && !this.p.operatorUpdateDepreciatelist_2 && !this.p.operatorUpdateDepreciatelist_3 && !this.p.operatorUpdateDepreciatelist_4 && !this.p.operatorfindById) {
-                    this.showOpr = false
-                }
-            },
-            //获取发布人列表
+            // 获取发布人列表
             getCreateUserList() {
-                this.$axios
-                    .post(api.operatorqueyByStatus, {})
-                    .then(res => {
-                        this.createUserList = [];
-                        this.createUserList = res.data.data;
-                    })
-                    .catch(err => {
-                    });
+                request.operatorqueyByStatus({}).then(res => {
+                    this.createUserList = [];
+                    this.createUserList = res.data.data;
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             //   提交表单
-            submitForm(val) {
-                let data = {};
+            getList(val) {
+                const data = {};
                 data.productName = this.form.productName;
                 data.activityCode = this.form.activityCode;
                 data.userId = this.form.userId;
                 data.productCode = this.form.productCode;
+                data.topicStatus = this.form.topicStatus;
                 data.startTime = this.form.startDate ? moment(this.form.startDate[0]).format('YYYY-MM-DD HH:mm:ss') : '';
                 data.startEndTime = this.form.startDate ? moment(this.form.startDate[1]).format('YYYY-MM-DD HH:mm:ss') : '';
                 data.releaseTimebegins = this.form.releaseDate ? moment(this.form.releaseDate[0]).format('YYYY-MM-DD') : '';
@@ -338,21 +343,19 @@
                 data.pageSize = this.page.pageSize;
                 if (this.depStaName == 3) {
                     data.bstatus = 1;
-                    data.pstatus = 2
+                    data.pstatus = 2;
                 } else {
                     data.status = this.depStaName;
                 }
                 data.tstatus = this.form.tstatus;
                 this.page.currentPage = val;
                 this.tableLoading = true;
-                this.$axios
-                    .post(api.operatorDepreciatelist, data)
-                    .then(res => {
-                        this.tableData = [];
-                        this.tableData = res.data.data.data;
-                        this.page.totalPage = res.data.data.resultCount;
-                        this.tableLoading = false;
-                    })
+                request.operatorDepreciatelist(data).then(res => {
+                    this.tableData = [];
+                    this.tableData = res.data.data;
+                    this.page.totalPage = res.data.totalNum;
+                    this.tableLoading = false;
+                })
                     .catch(err => {
                         this.tableLoading = false;
                     });
@@ -362,20 +365,13 @@
                 this.$refs[formName].resetFields();
                 this.form.startDate = '';
                 this.form.releaseDate = '';
-                this.submitForm(1)
-            },
-            //分页
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
-            },
-            handleCurrentChange(val) {
-                this.submitForm(val);
+                this.getList(1);
             },
             // 新建降价拍
             addDepreciate() {
-                this.$router.push({name: "addDepreciate"});
+                this.$router.push({ name: 'addDepreciate' });
             },
-            //结束或删除操作
+            // 结束或删除操作
             endOrDelete(num, row) {
                 this.index = num;
                 this.showMask = true;
@@ -384,76 +380,104 @@
             // 结束或删除操作确认取消
             closeMask(status) {
                 if (status) {
-                    let data = {};
+                    const data = {};
+                    let url = '';
                     if (this.index == 0) {
-                        data.status = this.index;
-                        data.url = pApi.operatorUpdateDepreciatelist_1
+                        // data.status = this.index;
+                        url = 'deleteActivityDepreciate';
                     } else if (this.index == 1) {
-                        data.status = 5;
-                        data.url = pApi.operatorUpdateDepreciatelist_2
+                        url = 'modifyActivityDepreciate';
+                        // data.status = 5;
                     } else {
-                        data.status = 6;
-                        data.url = pApi.operatorUpdateDepreciatelist_4
+                        url = 'reduceStockById';
+                        // data.status = 6;
                     }
-                    this.changeStatus(data)
+                    this.changeStatus(data, url);
                 } else {
-                    this.showMask = false
+                    this.showMask = false;
                 }
             },
-            //结束、删除、减少库存
-            changeStatus(data) {
-                data.id = this.id;
+            // 结束、删除、减少数量
+            changeStatus(data, url) {
+                data.list = this.id;
                 this.btnLoading = true;
-                this.$axios
-                    .post(api.operatorUpdateDepreciatelist, data)
-                    .then(res => {
-                        this.submitForm(this.page.currentPage);
-                        this.showMask = false;
-                        this.inventoryMask = false;
-                        this.btnLoading = false
-                    })
+                request[url](data).then(res => {
+                    this.getList(this.page.currentPage);
+                    this.showMask = false;
+                    this.inventoryMask = false;
+                    this.btnLoading = false;
+                })
                     .catch(err => {
                         this.btnLoading = false;
                     });
             },
-            //查看详情
+            // 查看详情
             toDetail(row) {
                 sessionStorage.setItem('id', row.id);
-                this.$router.push({path: '/depreciateInfo', query: {id: row.id}})
+                this.$router.push({ path: '/depreciateInfo', query: { id: row.id }});
             },
-            // 减少库存
+            // 减少数量
             deInventory(row) {
                 this.inventoryMask = true;
                 this.notEnough = false;
                 this.number = '';
                 this.id = row.id;
-                this.inventory = row.totalNumber - row.freezeNumber
+                this.inventory = row.totalNumber - row.freezeNumber;
             },
-            //计算库存是否不足
+            // 计算库存是否不足
             calInventory() {
                 if (this.inventory < this.number) {
                     this.notEnough = true;
-                    return false
+                    return false;
                 }
-                let reg = /^[1-9]*[1-9][0-9]*$/;
+                const reg = /^[1-9]*[1-9][0-9]*$/;
                 if (!reg.test(this.number)) {
                     this.$message.warning('请输入正整数!');
                     this.number == '';
-                    return false
+                    return false;
                 }
-                return true
+                return true;
             },
             sure() {
                 if (this.calInventory()) {
-                    let data = {
+                    const data = {
                         id: this.id,
-                        freezeNumber: this.number,
-                        url: pApi.operatorUpdateDepreciatelist_3
+                        freezeNumber: this.number
                     };
-                    this.changeStatus(data)
+                    const url = 'reduceStockById';
+                    this.changeStatus(data, url);
                 }
+            },
+            // 全选
+            handleSelectionChange(val) {
+                const that = this;
+                this.multipleSelection = [];
+                val.forEach((v, k) => {
+                    that.multipleSelection.push(v.id);
+                });
+            },
+            // 批量操作
+            batchOperate(status) {
+                if (this.multipleSelection.length == 0) {
+                    this.$message.warning('请选择礼包!');
+                    return;
+                }
+                let url = '';
+                // status 0:删除 6：结束
+                if (status == 0) {
+                    url = 'deleteActivityDepreciate';
+                } else {
+                    url = 'modifyActivityDepreciate';
+                }
+                request[url]({ list: this.multipleSelection, status }).then(res => {
+                    this.isShowPop = false;
+                    this.$message.success(res.msg);
+                    this.getList(this.page.currentPage);
+                }).catch(err => {
+                    console.log(err);
+                });
             }
-        },
+        }
     };
 </script>
 <style lang='less' scoped>

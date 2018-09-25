@@ -29,16 +29,6 @@ export const getSecondList = '/admin/productCategory/queryProductCategoryFatheri
 // 模板列表
 export const getAllDiscountCouponTemplate = '/admin/discountCouponTemplate/getAllDiscountCouponTemplate';
 
-/** ************降价拍*****************/
-// 降价拍商品列表
-export const operatorDepreciatelist = '/admin/operActivityDepreciate/operatorDepreciatelist';
-// 新建降价拍
-export const operatorAddDepreciate = '/admin/operActivityDepreciate/operatorAddDepreciate';
-// 结束/删除/减少库存
-export const operatorUpdateDepreciatelist = '/admin/operActivityDepreciate/operatorUpdateDepreciatelist';
-// 查询降价拍商品详情
-export const operatorfindById = '/admin/operActivityDepreciate/operatorfindById';
-
 /** ************秒杀*****************/
 // 新建秒杀
 export const addOperatorSeckill = '/admin/operActivitySeckill/saveSeckillProduct';
@@ -220,3 +210,18 @@ export const querySysTagLibraryList = ['/config/sysTagLibrary/querySysTagLibrary
 // 专题
 // 查询专题列表
 export const topicList = '/topic/queryPageList';
+// 添加或修改专题
+export const addOrModifyTopic = '/topic/addOrModify';
+/** ************降价拍*****************/
+// 降价拍商品列表
+export const operatorDepreciatelist = '/operator/activityDepreciate/findActivityDepreciate';
+// 新建降价拍
+export const operatorAddDepreciate = '/operator/activityDepreciate/addActivityDepreciate';
+// 删除
+export const deleteActivityDepreciate = ['/operator/activityDepreciate/deleteyActivityDepreciate', { methods: 'get' }];
+// 结束
+export const modifyActivityDepreciate = ['/operator/activityDepreciate/modifyActivityDepreciate', { methods: 'get' }];
+// 减少库存
+export const reduceStockById = '/operator/activityDepreciate/reduceStockById';
+// 查询降价拍商品详情
+export const operatorfindById = ['/operator/activityDepreciate/findActivityDepreciate', { methods: 'get' }];

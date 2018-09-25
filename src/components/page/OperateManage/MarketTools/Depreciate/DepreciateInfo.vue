@@ -14,7 +14,7 @@
                     <span>{{form.productName}}</span>
                 </el-form-item>
                 <el-form-item label="商品规格">
-                    <span>{{form.productSpec}}</span>
+                    <span>{{form.spec}}</span>
                 </el-form-item>
                 <el-form-item label="商品原价">
                     <span class="color-red">{{form.productPrice}}</span>
@@ -72,61 +72,56 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import icon from "@/components/common/ico";
-    import * as api from "@/api/OperateManage/MarketToolsManage/index.js";
-    import * as pApi from "@/privilegeList/OperateManage/MarketToolsManage/index.js";
-    import utils from "@/utils/index.js";
-    import moment from 'moment'
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import icon from '@/components/common/ico';
+    import utils from '@/utils/index.js';
+    import moment from 'moment';
+    import request from '@/http/http.js';
 
     export default {
         components: {
             vBreadcrumb,
-            icon,
+            icon
         },
 
         data() {
             return {
-                nav: ["运营管理", "营销工具管理", "降价拍", "降价拍详情"],
+                nav: ['运营管理', '营销工具管理', '降价拍', '降价拍详情'],
                 form: {
-                    originPrice:'',//商品原价
-                    minPrice:'',//最低价格
-                    startTime:'',//开始时间
-                    minute:'',//降价幅度 分钟数
-                    price:'',//降价幅度 金额
-                    addTime:''//降到底价还允许购买的时间
+                    originPrice: '', // 商品原价
+                    minPrice: '', // 最低价格
+                    startTime: '', // 开始时间
+                    minute: '', // 降价幅度 分钟数
+                    price: '', // 降价幅度 金额
+                    addTime: ''// 降到底价还允许购买的时间
 
                 },
-                productDetail: {},//选择的商品的商品信息
-                endTime:'',//结束时间
-                durationTime:''//持续分钟数
+                productDetail: {}, // 选择的商品的商品信息
+                endTime: '', // 结束时间
+                durationTime: ''// 持续分钟数
             };
         },
 
         activated() {
-            this.id=this.$route.query.id||sessionStorage.getItem('id');
+            this.id = this.$route.query.id || sessionStorage.getItem('id');
             this.getDetail();
         },
 
         methods: {
-            //返回列表
-            backToList(){
-                this.$router.push('/depreciate')
+            // 返回列表
+            backToList() {
+                this.$router.push('/depreciate');
             },
-            //详情
-            getDetail(){
-                let data={
-                    id:this.id,
-                    url:pApi.operatorfindById
+            // 详情
+            getDetail() {
+                const data = {
+                    id: this.id
                 };
-                this.$axios
-                    .post(api.operatorfindById, data)
-                    .then(res => {
-                       this.form=res.data.data
-                    })
-                    .catch(err => {
-                        this.btnLoading = false;
-                    });
+                request.operatorfindById(data).then(res => {
+                    this.form = res.data;
+                }).catch(err => {
+                    this.btnLoading = false;
+                });
             }
         }
     };
