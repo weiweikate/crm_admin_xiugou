@@ -312,11 +312,10 @@
                             //     index: "baseParamsSet",
                             //     title: "交易基础参数设置"
                             // },
-
-                            // {
-                            //     index: "advertisingManage",
-                            //     title: "广告位管理"
-                            // },
+                            {
+                                index: 'advertisingManage',
+                                title: '广告位管理'
+                            },
                             // {
                             //     index: "featured",
                             //     title: "推荐位管理"
@@ -324,15 +323,15 @@
                             {
                                 index: 'allKeyWords',
                                 title: '搜索关键词'
-                            }
+                            },
                             // {
                             //     index: "deliveryAddress",
                             //     title: "提货地址设置"
                             // },
-                            // {
-                            //     index: "marketToolsManage",
-                            //     title: "营销工具管理"
-                            // },
+                            {
+                                index: 'marketToolsManage',
+                                title: '营销工具管理'
+                            }
                         ]
                     },
                     {

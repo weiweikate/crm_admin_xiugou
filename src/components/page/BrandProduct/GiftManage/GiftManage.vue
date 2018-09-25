@@ -39,6 +39,7 @@
         },
         activated() {
             this.$refs['allGift'].giftStatus = '';
+            this.$refs['allGift'].getList(this.$refs['allGift'].page.currentPage);
         },
         methods: {
             handleClick(tab) {

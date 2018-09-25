@@ -160,4 +160,7 @@ export const addActivityPackage = ['/operator/activityPackage/addActivityPackage
 export const findActivityPackageById = ['/operator/activityPackage/findActivityPackageById', { methods: 'get' }]; // 查询礼包信息
 export const updateActivityPackageStatusById = ['/operator/activityPackage/updateActivityPackageStatusById', { methods: 'post' }]; // 修改礼包状态
 export const batchUpdataActivityPackageStatus = ['/operator/activityPackage/batchUpdataActivityPackageStatus', { methods: 'post' }]; // 批量修改礼包状态
+export const queryProductList = ['/product/product/queryProductList', { methods: 'post' }]; // 礼包产品模糊搜索
+export const findActivityPackageProductAndSpecById = ['/operator/activityPackageProduct/findActivityPackageProductAndSpecById', { methods: 'get' }]; // 礼包产品规格查询
+export const addActivityPackageProduct = ['/operator/activityPackageProduct/addActivityPackageProduct', { methods: 'post' }]; // 添加礼包产品规格
 
