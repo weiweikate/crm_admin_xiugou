@@ -327,11 +327,11 @@
                             {
                                 index: 'discountCoupon',
                                 title: '优惠券设置'
+                            },
+                            {
+                                index: 'marketToolsManage',
+                                title: '营销工具管理'
                             }
-                            // {
-                            //     index: "marketToolsManage",
-                            //     title: "营销工具管理"
-                            // },
                         ]
                     },
                     {

@@ -152,7 +152,7 @@
             },
             // 获取数据
             getList() {
-                
+
             },
             // 上传图片
             handleAvatarSuccess(res) {
