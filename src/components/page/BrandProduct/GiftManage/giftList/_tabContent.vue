@@ -93,7 +93,7 @@
               <template slot-scope="scope">
                   <div v-if="scope.row.status != 5 && scope.row.status != 0" class="mange-sty" @click="editProduct(scope.row)">编辑</div>
                   <div v-if="scope.row.status != 5 && scope.row.status != 0" class="mange-sty" @click="productMange(scope.row)">产品管理</div>
-                  <div v-if="scope.row.status != 5 && scope.row.status != 0" class="mange-sty" @click="inventoryManage(scope.row)">价格库存</div>
+                  <div v-if="scope.row.status != 5 && scope.row.status != 0" class="mange-sty" @click="priceOfInventory(scope.row)">价格库存</div>
                   <div v-if="scope.row.status != 0" class="mange-sty" @click="expMange(scope.row)">添加库存</div>
                   <div class="mange-sty" @click="productInfo(scope.row)">查看详情</div>
               </template>

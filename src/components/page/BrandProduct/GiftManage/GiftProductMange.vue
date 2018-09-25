@@ -1,7 +1,7 @@
 <template>
     <div class="gift-product-mange">
         <v-breadcrumb :nav="['品牌产品管理','礼包管理']"></v-breadcrumb>
-        <el-card :body-style="{ padding: '50px' }">
+        <el-card v-loading="bodyLoading" :body-style="{ padding: '50px' }">
             <el-autocomplete style='width:600px' v-model="keyWords" :fetch-suggestions="querySearchAsync" placeholder="请输入产品名称模糊搜索" @select="handleSelect"></el-autocomplete>
             <el-button type="primary" >搜索</el-button>
             <el-table :data="tableData" border style="margin-top:10px">
@@ -29,7 +29,7 @@
                 </table>
             </div>
             <div style="margin-top:20px">
-                <el-button type="primary" @click="submitForm">提交</el-button>
+                <el-button :loading="btnLoading" type="primary" @click="submitForm">提交</el-button>
                 <el-button>取消</el-button>
             </div>
         </el-card>
@@ -52,7 +52,9 @@ export default {
             // 选择商品列表
             checkList: [],
             // 已选择商品
-            selectedPro: []
+            selectedPro: [],
+            bodyLoading: false,
+            btnLoading: false
         };
     },
 
@@ -69,15 +71,30 @@ export default {
     methods: {
     //   获取礼包产品信息
         getGiftProInfo() {
+            this.bodyLoading = true;
             request.findActivityPackageProductAndSpecById({ packageId: this.giftId }).then(res => {
-                console.log(res);
+                res.data.forEach(v => {
+                    this.bodyLoading = false;
+                    const itemArr = v.specValues.split(',');
+                    let specWrapArr = [];
+                    let specIdArr = v.productPriceId.split(',');
+                    let itemObj = {};
+                    itemArr.forEach((item,index) => {
+                        itemObj.packageId = v.packageId;
+                        itemObj.productId = v.productId;
+                        itemObj.productCode = v.productCode;
+                        itemObj.productName = v.productName;
+                        itemObj.productNumber = 1;
+                        itemObj.productPriceId = specIdArr[index];
+                        itemObj.specValues = item;
+                        specWrapArr.push(itemObj);
+                    });
+                    this.selectedPro.push(specWrapArr);
+                });
             }).catch(err => {
+                this.bodyLoading = false;
                 console.log(err);
             });
-            // this.$axios.post(api.queryGiftBagProductById, { id: this.giftId }).then(res => {
-            //     this.selectedPro = [];
-            //     this.selectedPro = res.data.data;
-            // });
         },
         //  提交表单
         submitForm() {
@@ -88,17 +105,15 @@ export default {
             const data = {
                 productAndSpecStr: JSON.stringify(this.selectedPro)
             };
+            this.btnloading = true;
             request.addActivityPackageProduct(data).then(res => {
-                console.log(res);
+                this.btnloading = false;
+                this.$message.success(res.msg);
+                this.$router.push('giftManage');
             }).catch(err => {
+                this.btnloading = false;
                 console.log(err);
             });
-            // data.id = this.giftId;
-            // data.jsonStr = JSON.stringify(this.selectedPro);
-            // this.$axios.post(api.addGiftBagProduct, data).then(res => {
-            //     this.$message.success(res.data.msg);
-            //     this.$router.push('giftManage');
-            // });
         },
         // 模糊查询
         querySearchAsync(queryString, cb) {

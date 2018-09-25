@@ -29,104 +29,104 @@
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import * as api from "@/api/BrandProduct/GiftMange/index.js";
-import * as pApi from "@/privilegeList/BrandProduct/GiftMange/index.js";
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import * as api from '@/api/BrandProduct/GiftMange/index.js';
+import * as pApi from '@/privilegeList/BrandProduct/GiftMange/index.js';
 export default {
-  components: { vBreadcrumb },
+    components: { vBreadcrumb },
 
-  data() {
-    return {
-      giftId: "", // 礼包id
-      giftName: "", // 礼包名称
-      spanRow:'16',   // 合并行数
-      // 表头信息
-      tableTit: [],
-      // 表格信息
-      tableData: []
-    };
-  },
+    data() {
+        return {
+            giftId: '', // 礼包id
+            giftName: '', // 礼包名称
+            spanRow: '16', // 合并行数
+            // 表头信息
+            tableTit: [],
+            // 表格信息
+            tableData: []
+        };
+    },
 
-  activated() {
-    this.giftId = this.$route.query.priceOfInventoryId || sessionStorage.getItem("priceOfInventoryId");
-    this.tableTit = [];
-    this.tableData = [];
-    // 获取参考价
-    this.getReferencePrice();
-  },
+    activated() {
+        this.giftId = this.$route.query.priceOfInventoryId || sessionStorage.getItem('priceOfInventoryId');
+        this.tableTit = [];
+        this.tableData = [];
+        // 获取参考价
+        this.getReferencePrice();
+    },
 
-  methods: {
+    methods: {
     // 价格数据回显
-    getPrice(){
-      this.$axios.post(api.queryPriceEcho,{id:this.giftId}).then(res=>{
-        this.tableTit[1].price = res.data.data.originalPrice;
-        this.tableTit[2].price = res.data.data.v1;
-        this.tableTit[3].price = res.data.data.v2;
-        this.tableTit[4].price = res.data.data.v3;
-        this.tableTit[5].price = res.data.data.v4;
-        this.tableTit[6].price = res.data.data.groupPrice;
-        this.tableTit[7].price = res.data.data.minPayment;
-        this.tableTit[8].price = res.data.data.settlementPrice;
-      })
-    },
-    // 提交表单
-    submitForm(){
-      let flag = true;
-      if(this.tableTit[1].price>=this.tableTit[2].price && this.tableTit[2].price >= this.tableTit[3].price &&this.tableTit[3].price >= this.tableTit[4].price &&this.tableTit[4].price >=this.tableTit[5].price &&this.tableTit[5].price>=this.tableTit[6].price &&this.tableTit[6].price>=this.tableTit[7].price && this.tableTit[7].price>=this.tableTit[8].price){
-        flag = true;
-      }else{
-        flag = false;
-      }
-      if(!flag){
-        this.$message.warning('请输入正确的值');
-        return;
-      }
-      let data = {};
-      data.id = this.giftId;
-      data.originalPrice = this.tableTit[1].price;
-      data.firstLevelPrice = this.tableTit[2].price;
-      data.secondLevelPrice = this.tableTit[3].price;
-      data.threeLevelPrice = this.tableTit[4].price;
-      data.fourLevelPrice = this.tableTit[5].price;
-      data.groupPrice = this.tableTit[6].price;
-      data.minPayment = this.tableTit[7].price;
-      data.settlementPrice = this.tableTit[8].price;
-      this.$axios.post(api.priceControl,data).then(res=>{
-        this.$message.success(res.data.msg);
-        this.$router.push('giftManage');
-      })
-    },
-    // 获取参考价
-    getReferencePrice(){
-      this.$axios.post(api.queryReferencePrice,{id:this.giftId}).then(res=>{
-        this.giftName = res.data.data.giftBagName;
-        this.tableTit = res.data.data.title;
-        this.tableData = res.data.data.name
-        this.spanRow = this.tableData.length;
-        this.getPrice();
-      })
-    },
-    //  合并单元格
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex > 0) {
-        if (rowIndex === 0) {
-          return {
-            rowspan: this.spanRow,
-            colspan: 1
-          };
-        } else {
-          return {
-            rowspan: 0,
-            colspan: 0
-          };
+        getPrice() {
+            this.$axios.post(api.queryPriceEcho, { id: this.giftId }).then(res => {
+                this.tableTit[1].price = res.data.data.originalPrice;
+                this.tableTit[2].price = res.data.data.v1;
+                this.tableTit[3].price = res.data.data.v2;
+                this.tableTit[4].price = res.data.data.v3;
+                this.tableTit[5].price = res.data.data.v4;
+                this.tableTit[6].price = res.data.data.groupPrice;
+                this.tableTit[7].price = res.data.data.minPayment;
+                this.tableTit[8].price = res.data.data.settlementPrice;
+            });
+        },
+        // 提交表单
+        submitForm() {
+            let flag = true;
+            if (this.tableTit[1].price >= this.tableTit[2].price && this.tableTit[2].price >= this.tableTit[3].price && this.tableTit[3].price >= this.tableTit[4].price && this.tableTit[4].price >= this.tableTit[5].price && this.tableTit[5].price >= this.tableTit[6].price && this.tableTit[6].price >= this.tableTit[7].price && this.tableTit[7].price >= this.tableTit[8].price) {
+                flag = true;
+            } else {
+                flag = false;
+            }
+            if (!flag) {
+                this.$message.warning('请输入正确的值');
+                return;
+            }
+            const data = {};
+            data.id = this.giftId;
+            data.originalPrice = this.tableTit[1].price;
+            data.firstLevelPrice = this.tableTit[2].price;
+            data.secondLevelPrice = this.tableTit[3].price;
+            data.threeLevelPrice = this.tableTit[4].price;
+            data.fourLevelPrice = this.tableTit[5].price;
+            data.groupPrice = this.tableTit[6].price;
+            data.minPayment = this.tableTit[7].price;
+            data.settlementPrice = this.tableTit[8].price;
+            this.$axios.post(api.priceControl, data).then(res => {
+                this.$message.success(res.data.msg);
+                this.$router.push('giftManage');
+            });
+        },
+        // 获取参考价
+        getReferencePrice() {
+            this.$axios.post(api.queryReferencePrice, { id: this.giftId }).then(res => {
+                this.giftName = res.data.data.giftBagName;
+                this.tableTit = res.data.data.title;
+                this.tableData = res.data.data.name;
+                this.spanRow = this.tableData.length;
+                this.getPrice();
+            });
+        },
+        //  合并单元格
+        objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+            if (columnIndex > 0) {
+                if (rowIndex === 0) {
+                    return {
+                        rowspan: this.spanRow,
+                        colspan: 1
+                    };
+                } else {
+                    return {
+                        rowspan: 0,
+                        colspan: 0
+                    };
+                }
+            }
+        },
+        // 返回礼包列表
+        goBack() {
+            this.$router.push('giftManage');
         }
-      }
-    },
-    // 返回礼包列表
-    goBack(){
-      this.$router.push('giftManage');
     }
-  }
 };
 </script>
 <style lang='less' scoped>
