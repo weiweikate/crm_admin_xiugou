@@ -47,7 +47,9 @@
                 <div class="title">产品
                     <el-input
                         placeholder="请输入产品名称或者ID进行查找"
-                        suffix-icon="el-icon-search" v-model="param">
+                        suffix-icon="el-icon-search" v-model="param"
+                    @change="getProductList"
+                    >
                     </el-input>
                 </div>
                 <div v-if="productList.length>0" class="data-area">
@@ -219,9 +221,18 @@
             this.resetValue();
             this.getFirst();
         },
+        activated() {
+            this.resetValue();
+            this.getFirst();
+        },
         methods: {
             // 数据重置
             resetValue() {
+                this.first = [];
+                this.second = [];
+                this.third = [];
+                this.productList = [];
+                this.isIndeterminate = false;
                 this.firstCategoryIds = [];
                 this.secondCategoryIds = [];
                 this.thirdCategoryIds = [];
@@ -475,28 +486,30 @@
             // item选中项 index选中索引值
             getProductList(item, index) {
                 const that = this;
-                if (that.thirdChecked[index]) { // 改变对应三级类目的选中值
-                    that.thirdCategoryName = item.name;
-                    that.addTags(3, item);// 增加三级类目标签值
-                    that.changePreValues(item, 'add', 3);
-                    that.productList.forEach(function(v, k) {
-                        that.deleteTags(4, v, 'false');// 删除三级类目标签值
-                    });
-                } else {
-                    that.deleteTags(3, item, 'false');// 移除三级类目标签值
-                    that.changePreValues(item, 'delete', 3);
+                if (index) {
+                    if (that.thirdChecked[index]) { // 改变对应三级类目的选中值
+                        that.thirdCategoryName = item.name;
+                        that.addTags(3, item);// 增加三级类目标签值
+                        that.changePreValues(item, 'add', 3);
+                        that.productList.forEach(function(v, k) {
+                            that.deleteTags(4, v, 'false');// 删除三级类目标签值
+                        });
+                    } else {
+                        that.deleteTags(3, item, 'false');// 移除三级类目标签值
+                        that.changePreValues(item, 'delete', 3);
+                    }
+                    that.isUpCheck(1);// 一级类目的选中状态
+                    that.isUpCheck(2);// 二级类目的选中状态
+                    if (that.thirdCategoryId == item.id) {
+                        that.changeNextValues(3, index);// 改变产品的选中状态
+                        return;
+                    }
+                    that.productList = [];
+                    that.productChecked = [];
+                    that.products = [];
+                    that.thirdIndex = index;
+                    that.thirdCategoryId = item.id;
                 }
-                that.isUpCheck(1);// 一级类目的选中状态
-                that.isUpCheck(2);// 二级类目的选中状态
-                if (that.thirdCategoryId == item.id) {
-                    that.changeNextValues(3, index);// 改变产品的选中状态
-                    return;
-                }
-                that.productList = [];
-                that.productChecked = [];
-                that.products = [];
-                that.thirdIndex = index;
-                that.thirdCategoryId = item.id;
                 const data = {
                     firstCategoryId: that.firstCategoryId,
                     secCategoryId: that.secondCategoryId,

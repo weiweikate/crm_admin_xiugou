@@ -260,11 +260,11 @@
                     {
                         icon: 'icon-huiyuanzhanghaoguanli',
                         index: '11',
-                        title: '交易基础参数设置',
+                        title: '基础参数设置',
                         subs: [
                             {
                                 index: 'baseParamsSet',
-                                title: '交易参数设置'
+                                title: '交易基础参数设置'
                             },
                             {
                                 index: 'groupBaseParamsSet',
@@ -281,25 +281,13 @@
                         title: '运营管理',
                         subs: [
                             {
-                                index: 'helpCenter',
-                                title: '帮助中心管理'
+                                index: 'discountCoupon',
+                                title: '优惠券设置'
                             },
                             {
-                                index: 'labelManage',
-                                title: '标签管理'
+                                index: 'noticeInformManage',
+                                title: '公告/通知管理'
                             },
-                            // {
-                            //     index: "noticeInformManage",
-                            //     title: "公告通知管理"
-                            // },
-                            // {
-                            //     index: "currencyRatio",
-                            //     title: "货币比例设置"
-                            // },
-                            // {
-                            //     index: "baseParamsSet",
-                            //     title: "交易基础参数设置"
-                            // },
                             {
                                 index: 'topicManage',
                                 title: '专题管理'
@@ -308,6 +296,23 @@
                                 index: 'sensitiveLibrary',
                                 title: '敏感词库'
                             },
+                            {
+                                index: 'helpCenter',
+                                title: '帮助中心管理'
+                            },
+                            {
+                                index: 'labelManage',
+                                title: '标签管理'
+                            },
+                            // {
+                            //     index: "currencyRatio",
+                            //     title: "货币比例设置"
+                            // },
+                            // {
+                            //     index: "baseParamsSet",
+                            //     title: "交易基础参数设置"
+                            // },
+
                             // {
                             //     index: "advertisingManage",
                             //     title: "广告位管理"
@@ -319,15 +324,11 @@
                             {
                                 index: 'allKeyWords',
                                 title: '搜索关键词'
-                            },
+                            }
                             // {
                             //     index: "deliveryAddress",
                             //     title: "提货地址设置"
                             // },
-                            {
-                                index: 'discountCoupon',
-                                title: '优惠券设置'
-                            }
                             // {
                             //     index: "marketToolsManage",
                             //     title: "营销工具管理"

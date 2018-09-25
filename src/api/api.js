@@ -132,8 +132,6 @@ export const findBrandById = '/admin/brand/findBrandById';
 export const queryCategoryBrandCid = '/admin/categoryBrand/queryCategoryBrandCid';
 
 // 上传图片、文件、音乐
-// 上传图片
-export const addImg = '/admin/ossClient/aliyunOSSUploadImage';
 // 上传文件
 export const addFile = '/admin/ossClient/aliyunOSSUpload';
 // 上传音乐
@@ -244,6 +242,7 @@ export const queryTagLibraryList = 'aa';
 export const makeSureOrder = '/order/order/makeSureOrder';
 //* ***************************************************************************************************************************************************************************
 export const uploadImg = '/admin/common/upload/oss'; // 上传图片
+export const addImg = '/common/upload/oss'; // 上传图片
 export const queryConfig = ['/config/sysconfig/queryConfig', { methods: 'get' }]; // 查询系统配置
 export const addOrModifyList = '/config/sysconfig/addOrModifyList'; // 批量新增系统配置
 export const findAdminUserbyId = ['/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息

@@ -47,7 +47,7 @@
                     </div>
                 </el-form-item>
                 <el-form-item label="到期提醒">
-                    <el-checkbox v-model="remindFlag">到期前 <el-input v-model="remindDays" class="sml-inp"></el-input> 天提醒一次</el-checkbox>
+                    <el-checkbox v-model="remindFlag">到期前 <el-input :disabled="!remindFlag" v-model="remindDays" class="sml-inp"></el-input> 天提醒一次</el-checkbox>
                 </el-form-item>
                 <el-form-item label="可用品类">
                     <!--<div @click="chooseBrand"><span class="choose-brand">请选择品类</span></div>-->
@@ -167,7 +167,7 @@
                     type: 90
                 }],
                 tempArr: [], // 优惠券模版
-                remindFlag: '', // 是否到期提醒
+                remindFlag: false, // 是否到期提醒
                 remindDays: '', // 到期前几天提示
                 data: {
                     totalNumber: '', // 发放数量
@@ -196,6 +196,7 @@
             this.totalNumber = false;
             this.productList = [];
             this.day = '';
+            this.remindFlag = false;
             this.waitDays = '';
             this.effectiveDays = '';
             this.isDay = false;
