@@ -308,10 +308,10 @@
                                 index: 'sensitiveLibrary',
                                 title: '敏感词库'
                             },
-                            // {
-                            //     index: "advertisingManage",
-                            //     title: "广告位管理"
-                            // },
+                            {
+                                index: 'advertisingManage',
+                                title: '广告位管理'
+                            },
                             // {
                             //     index: "featured",
                             //     title: "推荐位管理"

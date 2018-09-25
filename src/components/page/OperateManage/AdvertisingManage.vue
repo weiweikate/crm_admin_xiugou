@@ -3,89 +3,81 @@
         <v-breadcrumb :nav="['运营管理','广告位管理']"></v-breadcrumb>
         <div class="advertising">
             <div class="row">
-                <div class="item blue" @click="toPage(1, 1)">
-                    APP首页banner广告位
+                <p class="adv-title">首页广告位管理</p>
+                <div class="item blue" @click="toPage(1,1)">
+                    APP首页banner广告位管理
                 </div>
-                <div class="item yellow" @click="toPage(1, 2)">
-                    拼店首页banner推荐位
+                <div class="item blue" @click="toPage(2,2)">
+                    APP首页推荐位管理
                 </div>
-                <div class="item red" @click="toPage(1, 3)">
-                    登录首页头图展示图
+                <div class="item blue" @click="toPage(1,3)">
+                    APP首页明星店铺推荐位管理
                 </div>
-                <div class="item yellow" @click="toPage(1, 4)">
-                   发现模块banner推荐图
-               </div>
-                <!-- <div class="item yellow" @click="toPage(2)">
-                    APP首页产品推荐广告位
+                <div class="item blue" @click="toPage(1,4)">
+                    APP首页今日榜单广告位管理
                 </div>
-                <div class="item red" @click="toPage(3)">
-                    APP首页专题广告位
-                </div> -->
+                <div class="item blue" @click="toPage(1,5)">
+                    APP首页精品推荐广告位管理
+                </div>
+                <div class="item blue" @click="toPage(2,6)">
+                    APP首页超值热卖广告位管理
+                </div>
+                <div class="item blue" @click="toPage(2,7)">
+                    APP首页专题广告位管理
+                </div>
+                <div class="item blue" @click="toPage(2,8)">
+                    APP首页为你推荐广告位管理
+                </div>
             </div>
             <div class="row">
-                <div class="item red" @click="toPage(1,5)">
-                    首页长条广告位管理
-                </div>
-                <div class="item blue" @click="toPage(5)">
-                    搜索热门搜索关键词
+                <p class="adv-title">拼店广告位管理</p>
+                <div class="item red" @click="toPage(1,9)">
+                    拼店首页banner推荐位
                 </div>
             </div>
-           <!-- <div class="row">
-               <div class="item yellow" @click="toPage(1, 4)">
-                   发现模块banner推荐图
-               </div>
-           </div> -->
+            <div class="row">
+                <p class="adv-title">其他广告位管理</p>
+                <div class="item yellow" @click="toPage(3,10)">
+                    类目搜索Banner广告位设置
+                </div>
+                <div class="item yellow" @click="toPage(1,11)">
+                    秀场banner推荐图
+                </div>
+                <div class="item yellow" @click="toPage(4,12)">
+                    登录首页头图展示位
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 
 <script>
-    import vBreadcrumb from '../../common/Breadcrumb.vue';
-    import icon from '../../common/ico.vue';
-    import * as api from '../../../api/api.js';
-    import * as pApi from '../../../privilegeList/index.js';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import icon from '@/components/common/ico.vue';
+
     export default {
         components: {
             icon, vBreadcrumb
         },
         data: function() {
-            return {
-
-            };
+            return {};
         },
         activated() {
 
         },
         methods: {
-            toPage(id, index) {
-                sessionStorage.setItem('pageType', index);
-                switch (id) {
-                    case 1:
-                        sessionStorage.setItem('appBannerAdvId',index);
-                        this.$router.push(
-                            {
-                                path: '/appBannerAdv',
-                                query: {
-                                    appBannerAdvId: index
-                                }
-                            }
-                        );
-                        break;
-                    case 2:
-                        this.$router.push('/featured');
-                        break;
-                    case 3:
-                        this.$router.push('/topicManage');
-                        break;
-                    case 4:
-                        this.$router.push();
-                        break;
-                    case 5:
-                        this.$router.push('/keyWords');
-                        break;
-                    default:
-                }
+            toPage(status, page) {
+                /**
+                 * status:
+                 * 1: 全部显示
+                 * 2：无投放时间
+                 * 3：无排序
+                 * 4：只有banner图和备注说明
+                 */
+                sessionStorage.setItem('appBannerAdvStatus', status);
+                sessionStorage.setItem('appBannerAdvPageType', page);
+                this.$router.push({ path: '/appBannerAdv', query: { appBannerAdvStatus: status, appBannerAdvPageType: page }});
             }
 
         }
@@ -93,11 +85,14 @@
 </script>
 
 
-<style  lang="less" scoped>
-    .advertising{
+<style lang="less" scoped>
+    .advertising {
         padding: 40px;
         background: #fff;
-        .item{
+        .adv-title{
+            margin:0 0 15px 15px;
+        }
+        .item {
             display: inline-block;
             width: 350px;
             height: 150px;
@@ -110,13 +105,13 @@
             margin: 0 15px 20px 0;
             cursor: pointer;
         }
-        .blue{
+        .blue {
             background: #33b4ff;
         }
-        .red{
+        .red {
             background: #ff6868;
         }
-        .yellow{
+        .yellow {
             background: #f39c11;
         }
     }
