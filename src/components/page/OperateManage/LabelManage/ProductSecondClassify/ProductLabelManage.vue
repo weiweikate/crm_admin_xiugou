@@ -4,29 +4,34 @@
         <div class="table-block">
             <div style="margin-bottom: 20px">
                 标签类型
-                <el-select>
+                <el-select v-model="type" placeholder="全部">
                     <el-option value="">全部</el-option>
+                    <el-option v-for="(v,k) in labelType" :key="k" :label="v.label" :value='v.id'>{{v.label}}</el-option>
                 </el-select>
-                <div style="float: right">
-                    <el-button type="primary" size="small" @click="importLabel">导入</el-button>
-                </div>
+            </div>
+            <div style="margin-bottom: 10px">
+                <el-button type="primary" size="small" @click="importLabel">导入</el-button>
             </div>
             <template>
-                <el-table :data="tableData" border style="width: 100%">
+                <el-table :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange">
+                    <el-table-column
+                        type="selection"
+                        width="55" align="center">
+                    </el-table-column>
                     <el-table-column type="index" label="编号" align="center"></el-table-column>
-                    <el-table-column prop="param" label="类型" align="center"></el-table-column>
+                    <el-table-column prop="type" label="类型" align="center"></el-table-column>
                     <el-table-column label="标签" align="center">
-                        <template slot-scopr="scope">
-                            <el-tag class="tag" type="info" closable v-for="(v,k) in scope.row.labels" :key="k"
-                                    @close="deleteLabel(k,v)">{{v.label}}
+                        <template slot-scope="scope">
+                            <el-tag class="tag" type="info" :closable="scope.row.deleteStatus==1" v-for="(v,k) in scope.row.labels" :key="k"
+                                    @close="deleteLabel(k,v)">{{v.name}}
                             </el-tag>
                         </template>
                     </el-table-column>
                     <el-table-column  label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" @click="delItem(scope.row.id)">添加</el-button>
-                            <el-button type="danger" size="small" @click="delItem(scope.row.id)">清空</el-button>
-                            <el-button type="success" size="small" @click="delItem(scope.row.id)">删除</el-button>
+                            <el-button type="primary" size="small" :disabled="scope.row.deleteStatus" @click="addItem(scope.row.id)">添加</el-button>
+                            <el-button type="success" size="small" :disabled="scope.row.deleteStatus" @click="clearItem(scope.row)">清空</el-button>
+                            <el-button :type="!scope.row.deleteStatus?'danger':'warning'" size="small" @click="delItem(scope.row)"><span v-if="!scope.row.deleteStatus">删除</span><span v-else>确定</span></el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -67,12 +72,9 @@ export default {
     data() {
         return {
 
-            tableData: [],
-            // 类目类型
-            type: '',
+            tableData: [{ type: 1, labels: [{ name: 1, id: 1 }, { name: 2, id: 2 }], deleteStatus: false }],
             height: '',
             addMask: false,
-            editMask: false,
             isShowDelToast: false,
             formLabelWidth: '100px',
             form: {
@@ -80,19 +82,16 @@ export default {
             },
             id: '',
             itemId: '',
-            name: '',
-            superiorName: '',
-            className: '',
-            itype: '',
-            delId: 66,
-            delUrl: 'http://api',
-            delUri: ''
+            multipleSelection: [],
+            // 标签类型
+            type: '',
+            labelType: [{ label: 1, id: 1 }, { label: 2, id: 2 }]
         };
     },
     created() {
     },
     activated() {
-        this.getList(this.page.currentPage);
+        // this.getList(this.page.currentPage);
     },
     methods: {
         // 获取列表
@@ -105,7 +104,7 @@ export default {
             });
         },
         // 添加
-        addClassify() {
+        addItem() {
             this.addMask = true;
             this.form.param = '';
         },
@@ -129,13 +128,24 @@ export default {
                 console.log(error);
             });
         },
+        // 取消
+        cancel() {
+            this.addMask = false;
+        },
         // 导入
         importLabel() {
 
         },
         // 删除标签
-        deleteLabel() {
+        delItem(row) {
+            row.deleteStatus = !row.deleteStatus;
+        },
+        // 清空
+        clearItem(row) {
 
+        },
+        handleSelectionChange(val) {
+            this.multipleSelection = val;
         }
     }
 };
@@ -186,6 +196,9 @@ export default {
         }
         .el-dialog__footer {
             margin-right: 30px;
+        }
+        .tag{
+            margin-right: 5px;
         }
 
     }

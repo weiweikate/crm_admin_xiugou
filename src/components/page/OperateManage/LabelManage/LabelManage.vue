@@ -75,7 +75,7 @@
                 float: left;
             }
             .content-area{
-                margin:20px 10px 0;
+                margin:0 10px;
             }
             .clearfix{
                 clear: both;

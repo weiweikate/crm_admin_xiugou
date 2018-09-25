@@ -455,19 +455,19 @@ export default new Router({
                 {
                     name: 'noticeInformManage',
                     path: '/noticeInformManage',
-                    component: resolve => require(['../components/page/ServiceManage/NoticeInformManage.vue'], resolve),
+                    component: resolve => require(['../components/page/OperateManage/NoticeInformManage/NoticeInformManage.vue'], resolve),
                     meta: { title: '公告通知管理', url: '/admin/notice/queryNoticeList' }
                 },
                 {
                     name: 'addNoticeInform',
                     path: '/addNoticeInform',
-                    component: resolve => require(['../components/page/ServiceManage/NoticeInformManage/AddNoticeInform.vue'], resolve),
+                    component: resolve => require(['../components/page/OperateManage/NoticeInformManage/AddNoticeInform.vue'], resolve),
                     meta: { title: '发布通知/公告', url: '/admin/notice/addNotice' }
                 },
                 {
                     name: 'noticeInformDetail',
                     path: '/noticeInformDetail',
-                    component: resolve => require(['../components/page/ServiceManage/NoticeInformManage/NoticeInformDetail.vue'], resolve),
+                    component: resolve => require(['../components/page/OperateManage/NoticeInformManage/NoticeInformDetail.vue'], resolve),
                     meta: { title: '通知/公告详情', url: '/admin/notice/findNoticeDetailById' }
                 },
                 {

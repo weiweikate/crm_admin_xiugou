@@ -40,35 +40,44 @@
             </div>
             <el-form ref="exportForm" :inline="true" :model="form" class="search-area">
                 <el-form-item>
-                    <el-button v-if="p.addNotice" @click="addInf" type="primary">发布公告/通知</el-button>
+                    <el-button @click="addInf" type="primary">发布公告/通知</el-button>
                 </el-form-item>
             </el-form>
             <template>
-                <el-table :data="tableData" :height="height" border style="width: 100%">
+                <el-table :data="tableData" border style="width: 100%">
                     <el-table-column prop="id" label="ID" width="60" align="center"></el-table-column>
-                    <el-table-column prop="n_type" label="类型" width="80" align="center">
+                    <el-table-column prop="nType" label="类型" width="80" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.n_type==1">公告</template>
-                            <template v-if="scope.row.n_type==2">通知</template>
+                            <template v-if="scope.row.nType==1">公告</template>
+                            <template v-if="scope.row.nType==2">通知</template>
                         </template>
                     </el-table-column>
                     <el-table-column prop="title" label="标题" align="center"></el-table-column>
                     <el-table-column prop="push_way" label="推送用户" align="center"></el-table-column>
                     <el-table-column label="推送区域" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.push_country==1">全国</template>
-                            <template v-if="scope.row.push_country==2">国外</template>
-                            <template v-if="scope.row.push_country==3">
+                            <template v-if="scope.row.pushCountry==1">全国</template>
+                            <template v-if="scope.row.pushCountry==2">国外</template>
+                            <template v-if="scope.row.pushCountry==3">
                                 {{scope.row.address}}
                             </template>
                         </template>
                     </el-table-column>
-                    <el-table-column label="推送时间" align="center">
+                    <el-table-column v-if="form.nType ==2" label="剩余失效时间" align="center">
                         <template slot-scope="scope">
-                            <template>{{scope.row.order_time|formatDate}}</template>
+                            <template>{{scope.row.orderTime|formatDate}}</template>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="name" label="发布者" width="80" align="center"></el-table-column>
+                    <el-table-column label="推送时间" align="center">
+                        <template slot-scope="scope">
+                            <template>{{scope.row.orderTime|formatDate}}</template>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="发布者/发布时间" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.name}}<br>{{scope.row.createTime|formatDate}}
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="status" label="状态" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.status==1">待推送</template>
@@ -76,18 +85,18 @@
                             <template v-if="scope.row.status==3">取消推送</template>
                         </template>
                     </el-table-column>
-                    <el-table-column v-if="isShowOperate" label="操作" align="center">
+                    <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" v-if="p.getNoticeDetailById" size="small" @click="detailItem(scope.$index,scope.row)">查看详情
+                            <el-button type="primary" size="small" @click="detailItem(scope.$index,scope.row)">查看详情
                             </el-button>
                             <el-button type="warning" size="small" @click="upStatusItem(scope.row.id,2)"
-                                       v-if="scope.row.status==2&&p.updateNoticeStatus_1">再次推送
+                                       v-if="scope.row.status==2">再次推送
                             </el-button>
                             <el-button type="success" size="small" @click="upStatusItem(scope.row.id,3)"
-                                       v-if="scope.row.status==1&&p.updateNoticeStatus_2">取消推送
+                                       v-if="scope.row.status==1">取消推送
                             </el-button>
                             <el-button type="danger" size="small" @click="upStatusItem(scope.row.id,4)"
-                                       v-if="scope.row.status==3&&p.updateNoticeStatus_3" style="width: 80px"> 删除
+                                       v-if="scope.row.status==3" style="width: 80px"> 删除
                             </el-button>
                         </template>
                     </el-table-column>
@@ -99,6 +108,7 @@
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="page.currentPage"
+                        :page-size="page.pageSize"
                         layout="total, prev, pager, next, jumper"
                         :total="page.totalPage">
                 </el-pagination>
@@ -127,12 +137,11 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
-import * as api from '@/api/api';
 import moment from 'moment';
-import { getList } from '@/api/api';
 import utils from '@/utils/index.js';
-import * as pApi from '@/privilegeList/index.js';
 import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http.js';
+
 export default {
     components: {
         vBreadcrumb, icon
@@ -140,15 +149,6 @@ export default {
     mixins: [myMixinTable],
     data() {
         return {
-            // 权限控制
-            p: {
-                addNotice: false,
-                updateNoticeStatus_1: false,
-                updateNoticeStatus_2: false,
-                updateNoticeStatus_3: false,
-                getNoticeDetailById: false
-            },
-            isShowOperate: true,
 
             checked: [true, false],
             tableData: [],
@@ -176,45 +176,24 @@ export default {
         };
     },
     created() {
-        const winHeight = window.screen.availHeight - 520;
-        this.height = winHeight;
-        this.pControl();
     },
     activated() {
-        this.getTable();
-        this.pControl();
+        this.getTableData();
     },
     methods: {
-        // 权限控制
-        pControl() {
-            for (const k in this.p) {
-                this.p[k] = utils.pc(pApi[k]);
-            }
-            if (!this.p.updateNoticeStatus_1 && !this.p.updateNoticeStatus_2 && !this.p.updateNoticeStatus_3 && !this.p.getNoticeDetailById) {
-                this.isShowOperate = false;
-            }
-        },
-        getTable() {
+        getTableData() {
             const that = this;
-            const param = {};
-            that.$axios
-                .post(api.getDealerLevelList, param)
-                .then(resData => {
-                    if (resData.data.code == 200) {
-                        for (const i in resData.data.data) {
-                            const name = resData.data.data[i].name;
-                            const id = resData.data.data[i].id;
-                            that.levels.push(name);
-                            that.levelIds.push(id);
-                        }
-                        this.getList(this.page.currentPage);
-                    } else {
-                        that.$message.warning(res.data.msg);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            request.getUserLevelList({}).then(res => {
+                for (const i in res.data) {
+                    const name = res.data[i].name;
+                    const id = res.data[i].id;
+                    that.levels.push(name);
+                    that.levelIds.push(id);
+                }
+                this.getList(this.page.currentPage);
+            }).catch(err => {
+                console.log(err);
+            });
         },
         change(num) {
             const that = this;
@@ -241,39 +220,30 @@ export default {
                 beginTime: that.form.date ? moment(that.form.date[0]).format('YYYY-MM-DD') : '',
                 endTime: that.form.date ? moment(that.form.date[1]).format('YYYY-MM-DD') : ''
             };
-            data.url = pApi.getNoticeList;
             that.tableLoading = true;
-            that.$axios
-                .post(api.getNoticeList, data)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        that.tableLoading = false;
-                        for (const i in res.data.data.data) {
-                            const arr = res.data.data.data[i].push_way.split(',');
-                            const temp = [];
-                            for (const j in that.levelIds) {
-                                for (const k in arr) {
-                                    if (arr[k] == that.levelIds[j]) {
-                                        const name = that.levels[j];
-                                        if (temp.indexOf(name) == -1) {
-                                            temp.push(that.levels[j]);
-                                        }
-                                    }
+            request.getNoticeList(data).then(res => {
+                that.tableLoading = false;
+                for (const i in res.data) {
+                    const arr = res.data[i].pushWay.split(',');
+                    const temp = [];
+                    for (const j in that.levelIds) {
+                        for (const k in arr) {
+                            if (arr[k] == that.levelIds[j]) {
+                                const name = that.levels[j];
+                                if (temp.indexOf(name) == -1) {
+                                    temp.push(that.levels[j]);
                                 }
                             }
-                            res.data.data.data[i].push_way = temp.join(',');
                         }
-                        that.tableData = res.data.data.data;
-                        that.page.totalPage = res.data.data.resultCount;
-                    } else {
-                        that.$message.warning(res.data.msg);
-                        that.tableLoading = false;
                     }
-                })
-                .catch(err => {
-                    that.tableLoading = false;
-                    console.log(err);
-                });
+                    res.data[i].pushWay = temp.join(',');
+                }
+                that.tableData = res.data;
+                that.page.totalPage = res.totalNum;
+            }).catch(err => {
+                that.tableLoading = false;
+                console.log(err);
+            });
         },
         // 详情
         detailItem(index, row) {
@@ -302,35 +272,17 @@ export default {
                 id: that.id,
                 status: that.status
             };
-            if (that.status == 2) {
-                data.url = pApi.updateNoticeStatus_1;
-            }
-            if (that.status == 3) {
-                data.url = pApi.updateNoticeStatus_2;
-            }
-            if (that.status == 4) {
-                data.url = pApi.updateNoticeStatus_3;
-            }
             that.btnLoading = true;
-            that.$axios
-                .post(api.updateNoticeStatus, data)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        that.tipsMask = false;
-                        that.$message.success(res.data.msg);
-                        that.getList(that.page.currentPage);
-                        that.btnLoading = false;
-                    } else {
-                        that.tipsMask = false;
-                        that.$message.warning(res.data.msg);
-                        that.btnLoading = false;
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                    that.btnLoading = false;
-                    that.tipsMask = false;
-                });
+            request.updateNoticeStatus(data).then(res => {
+                that.tipsMask = false;
+                that.$message.success(res.msg);
+                that.getList(that.page.currentPage);
+                that.btnLoading = false;
+            }).catch(err => {
+                console.log(err);
+                that.btnLoading = false;
+                that.tipsMask = false;
+            });
         },
         // 发布通知/公告
         addInf() {

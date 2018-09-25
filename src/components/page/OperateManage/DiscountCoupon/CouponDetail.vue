@@ -83,7 +83,7 @@
                 detail: {},
                 // 用户层级
                 allUser: false,
-                users: ''
+                users: []
             };
         },
         activated() {
@@ -120,8 +120,8 @@
                                 this.users.push(name);
                             }
                         }
-                        this.users = this.users.join(',');
                     }
+                    this.users = this.users.join(',');
                     if (count == res.data.length) this.allUser = true;
                 }).catch(error => {
                     console.log(error);
@@ -201,6 +201,9 @@
                 margin-bottom: 20px;
                 .detail{
                     margin-top: 5px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
             }
             .classify-item{

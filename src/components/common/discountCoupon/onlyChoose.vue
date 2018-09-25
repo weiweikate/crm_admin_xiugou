@@ -183,8 +183,12 @@
             }
         },
         created() {
-            this.getFirst();
             this.resetValue();
+            this.getFirst();
+        },
+        activated() {
+            this.resetValue();
+            this.getFirst();
         },
         methods: {
             resetValue() {

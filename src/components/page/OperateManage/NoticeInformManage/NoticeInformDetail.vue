@@ -75,14 +75,14 @@
 
 </template>
 <script>
-    import icon from "../../../common/ico";
-    import vBreadcrumb from '../../../common/Breadcrumb.vue';
+    import icon from '@/components/common/ico';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import Quill from 'quill';
-    import * as api from '../../../../api/api';
+    import * as api from '@/api/api';
     import moment from 'moment';
-    import region from '../../../common/Region';
-    import * as pApi from '../../../../privilegeList/index.js';
-    import xss from 'xss'
+    import region from '@/components/common/Region';
+    import request from '@/http/http.js';
+    import xss from 'xss';
     export default {
         components: {
             vBreadcrumb, icon, region
@@ -90,20 +90,20 @@
         data() {
             return {
                 checked: [true, false],
-                title: '',//   标题
+                title: '', //   标题
                 form: {
-                    nType: '1',//   1:公告   2：通知
-                    content: '',//   内容
-                    pushType: '1',//   1：即时推送  2：定时推送
-                    pushWay: '',//   推送人群
-                    pushCountry: '',//   1：全国 2：国外 3：定省
-                    provinceId: '',//   省
-                    cityId: '',//   市
-                    areaId: '',//   区
-                    createAdmin: '',//   发布人
+                    nType: '1', //   1:公告   2：通知
+                    content: '', //   内容
+                    pushType: '1', //   1：即时推送  2：定时推送
+                    pushWay: '', //   推送人群
+                    pushCountry: '', //   1：全国 2：国外 3：定省
+                    provinceId: '', //   省
+                    cityId: '', //   市
+                    areaId: '', //   区
+                    createAdmin: '', //   发布人
                     original_img: '',
                     small_img: '',
-                    name:''
+                    name: ''
                 },
                 imageUrl: '',
                 date: '',
@@ -118,17 +118,17 @@
                     modules: {
                         // 配置富文本
                         toolbar: [
-                            ["bold", "italic", "underline", "strike"],
-                            ["blockquote", "code-block"],
-                            [{header: 1}, {header: 2}],
-                            [{direction: "rtl"}],
-                            [{size: ["small", false, "large", "huge"]}],
-                            [{header: [1, 2, 3, 4, 5, 6, false]}],
-                            [{color: []}, {background: []}],
-                            [{font: []}],
-                            [{align: []}],
-                            ["clean"],
-                            ["link", "image"]
+                            ['bold', 'italic', 'underline', 'strike'],
+                            ['blockquote', 'code-block'],
+                            [{ header: 1 }, { header: 2 }],
+                            [{ direction: 'rtl' }],
+                            [{ size: ['small', false, 'large', 'huge'] }],
+                            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                            [{ color: [] }, { background: [] }],
+                            [{ font: [] }],
+                            [{ align: [] }],
+                            ['clean'],
+                            ['link', 'image']
                         ]
                     }
                 },
@@ -140,8 +140,8 @@
         mounted() {
             // 为图片ICON绑定事件 getModule 为编辑器的内部属性
             this.$refs.myQuillEditor.quill
-                .getModule("toolbar")
-                .addHandler("image", this.imgHandler);
+                .getModule('toolbar')
+                .addHandler('image', this.imgHandler);
         },
         created() {
             this.$refs = {
@@ -149,92 +149,77 @@
                 imgInput: HTMLInputElement
             };
         },
-        activated(){
+        activated() {
             this.id =
                 this.$route.query.id ||
-                JSON.parse(sessionStorage.getItem("noticeInformDetail").id);
+                JSON.parse(sessionStorage.getItem('noticeInformDetail').id);
             this.getDetail();
         },
         methods: {
             // 获取省市区
             getRegion(msg) {
                 this.address = msg;
-                console.log(msg)
+                console.log(msg);
             },
-            //获取详情
+            // 获取详情
             getDetail() {
-                let that = this;
-                let data = {
-                    id: that.id,
-                    url:pApi.getNoticeDetailById
+                const that = this;
+                const data = {
+                    id: that.id
                 };
                 that.loading = true;
-                that.$axios
-                    .post(api.getNoticeDetailById, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.form = res.data.data;
-                            that.title = res.data.data.title;
-                            that.form.name = res.data.data.name;
-                            that.form.content=xss(that.form.content);
-                            let reginArr=[];
-                            reginArr.push(res.data.data.province_id,res.data.data.city_id,res.data.data.area_id);
-                            that.address=reginArr;
-                            if (res.data.data.n_type == 1) {
-                                that.checked = [true, false]
-                            } else {
-                                that.checked = [false, true]
+                request.getNoticeDetailById(data).then(res => {
+                    that.form = res.data.data;
+                    that.title = res.data.data.title;
+                    that.form.name = res.data.data.name;
+                    that.form.content = xss(that.form.content);
+                    const reginArr = [];
+                    reginArr.push(res.data.data.province_id, res.data.data.city_id, res.data.data.area_id);
+                    that.address = reginArr;
+                    if (res.data.data.n_type == 1) {
+                        that.checked = [true, false];
+                    } else {
+                        that.checked = [false, true];
+                    }
+                    request.getUserLevelList({}).then(resData => {
+                        let count = 0;
+                        const arr = res.data.data.push_way.split(',');
+                        for (const i in resData.data.data) {
+                            const name = resData.data.data[i].name;
+                            if (that.users.indexOf(name) == -1) {
+                                that.users.push(name);
                             }
-                            let param = {};
-                            that.$axios
-                                .post(api.getDealerLevelList, param)
-                                .then(resData => {
-                                    let count = 0;
-                                    let arr=res.data.data.push_way.split(',');
-                                    if (resData.data.code == 200) {
-                                        for (let i in resData.data.data) {
-                                            let name=resData.data.data[i].name;
-                                            if(that.users.indexOf(name)==-1){
-                                                that.users.push(name);
-                                            }
-                                            for(let j in arr){
-                                                if(arr[j]==resData.data.data[i].id){
-                                                    count++;
-                                                    if(that.checkedUsers.indexOf(name)==-1){
-                                                        that.checkedUsers.push(name)
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        if (count == resData.data.data.length) {
-                                            that.checkAll = true;
-                                            that.isIndeterminate = false;
-                                        }
-                                    } else {
-                                        that.$message.warning(res.data.msg);
+                            for (const j in arr) {
+                                if (arr[j] == resData.data.data[i].id) {
+                                    count++;
+                                    if (that.checkedUsers.indexOf(name) == -1) {
+                                        that.checkedUsers.push(name);
                                     }
-                                })
-                                .catch(err => {
-                                    console.log(err);
-                                });
-                            that.form.pushType = res.data.data.push_type.toString();
-                            that.form.pushCountry = res.data.data.push_country.toString();
-                            that.date = res.data.data.order_time ? moment(res.data.data.order_time).format('YYYY-MM-DD HH:mm:ss') : '';
-                            that.loading = false;
-                        } else {
-                            that.loading = false;
-                            that.$message.warning(res.data.msg);
+                                }
+                            }
+                        }
+                        if (count == resData.data.data.length) {
+                            that.checkAll = true;
+                            that.isIndeterminate = false;
                         }
                     })
+                        .catch(err => {
+                            console.log(err);
+                        });
+
+                    that.form.pushType = res.data.data.push_type.toString();
+                    that.form.pushCountry = res.data.data.push_country.toString();
+                    that.date = res.data.data.order_time ? moment(res.data.data.order_time).format('YYYY-MM-DD HH:mm:ss') : '';
+                    that.loading = false;
+                })
                     .catch(err => {
-                        that.loading = false
-                    })
+                        that.loading = false;
+                    });
             },
             // 点击图片ICON触发事件
             imgHandler() {
-                return false
-            },
-
+                return false;
+            }
 
         }
     };
