@@ -47,11 +47,11 @@
                 <el-table-column label="授权层级" align="center">
                     <template slot-scope="scope">{{scope.row.levelName}}</template>
                 </el-table-column>
-                <el-table-column prop="day_count" label="本日登录" align="center"></el-table-column>
-                <el-table-column prop="month_count" label="本月登录" align="center"></el-table-column>
+                <!--<el-table-column prop="day_count" label="本日登录" align="center"></el-table-column>-->
+                <!--<el-table-column prop="month_count" label="本月登录" align="center"></el-table-column>-->
                 <el-table-column label="最近登录时间" align="center">
                     <template slot-scope="scope">
-                        <template>{{scope.row.last_logintime|formatDate}}</template>
+                        <template>{{scope.row.lastLoginTime|formatDate}}</template>
                     </template>
                 </el-table-column>
                 <el-table-column prop="code" label="授权码" align="center"></el-table-column>
@@ -63,12 +63,16 @@
                         <template v-else-if='scope.row.userType == 3'>网红经销商</template>
                     </template>
                 </el-table-column>
-                <el-table-column prop="addrPreFix" label="区域/省市区" align="center"></el-table-column>
+                <el-table-column label="区域/省市区" align="center">
+                    <template slot-scope="scope">
+                        {{(scope.row.province + scope.row.city + scope.row.area) || ''}}
+                    </template>
+                </el-table-column>
                 <!--<el-table-column prop="style" label="渠道" width="100"></el-table-column>-->
                 <el-table-column label="下级" align="center">
                     <template slot-scope="scope">
                         <span style="cursor: pointer;color:#ff6868"
-                              @click="toLower(scope.row.id)">{{scope.row.sub_level_num}}</span>
+                              @click="toLower(scope.row.id)">{{scope.row.junior}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="状态" align="center">

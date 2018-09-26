@@ -25,10 +25,9 @@
 
 </template>
 <script>
-    import icon from "../../../common/ico";
-    import vBreadcrumb from '../../../common/Breadcrumb.vue';
-    import * as api from '../../../../api/api';
-    import * as pApi from '../../../../privilegeList/index.js';
+    import icon from '@/components/common/ico';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import * as api from '@/api/api';
 
     export default {
         components: {
@@ -36,36 +35,36 @@
         },
         data() {
             return {
-                codeImg:'',
-                id:''
+                codeImg: '',
+                id: ''
             };
         },
         activated() {
             this.id =
                 this.$route.query.inviteLink ||
-                JSON.parse(sessionStorage.getItem("inviteLink"));
-            this.getCode()
+                JSON.parse(sessionStorage.getItem('inviteLink'));
+            this.getCode();
         },
         methods: {
-            //获取二维码
-            getCode(){
-                let that=this;
-                let data={
-                  id:this.id,
+            // 获取二维码
+            getCode() {
+                const that = this;
+                const data = {
+                    id: this.id
                 };
                 that.$axios
                     .post(api.createWxQrcode, data)
                     .then(res => {
                         if (res.data.code == 200) {
-                           that.codeImg=res.data.data
+                            that.codeImg = res.data.data;
                         } else {
                             that.$message.warning(res.data.msg);
                         }
                     })
                     .catch(err => {
                         that.loading = false;
-                    })
-            },
+                    });
+            }
 
         }
     };

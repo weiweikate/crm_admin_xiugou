@@ -20,7 +20,7 @@
                     <el-table-column type="index" label="编号" width="60" align="center"></el-table-column>
                     <el-table-column prop="wordName" label="关键词" align="center"></el-table-column>
                     <el-table-column prop="clickRate" label="搜索频次" align="center"></el-table-column>
-                    <el-table-column v-if="isShowOperate" label="操作" align="center">
+                    <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button type="primary" size="small">查看区域表
                             </el-button>

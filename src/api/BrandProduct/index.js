@@ -165,4 +165,5 @@ export const batchUpdataActivityPackageStatus = ['/operator/activityPackage/batc
 export const queryProductList = ['/product/product/queryProductList', { methods: 'post' }]; // 礼包产品模糊搜索
 export const findActivityPackageProductAndSpecById = ['/operator/activityPackageProduct/findActivityPackageProductAndSpecById', { methods: 'get' }]; // 礼包产品规格查询
 export const addActivityPackageProduct = ['/operator/activityPackageProduct/addActivityPackageProduct', { methods: 'post' }]; // 添加礼包产品规格
+export const findActivityPackageProductAndSpecByIdAn = ['/operator/activityPackageSpecPrice/findActivityPackageProductAndSpecById', { methods: 'get' }]; // 查询礼包下产品的价格区间
 

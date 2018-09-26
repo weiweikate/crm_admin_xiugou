@@ -11,9 +11,9 @@
                                  :class="num==index?'checked':''">
                                 <div class="upper">
                                     <icon class="icon" ico="icon-zhucedengluyonghuming"></icon>
-                                    <div>{{item.level}}</div>
+                                    <div>{{item.level || 0}}</div>
                                 </div>
-                                <div class="downer">已有人数：{{item.count}}</div>
+                                <div class="downer">已有人数：{{item.count == null?0 : item.count}}</div>
                             </div>
                         </el-form-item>
                         <div class="title-item">邀请经销商类型</div>
@@ -47,7 +47,7 @@
                     </el-form>
                 </div>
                 <div class="submit-btn">
-                    <el-button type="primary" v-loading="btnLoading" @click="submitForm('form')">确认保存</el-button>
+                    <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">确认保存</el-button>
                     <el-button @click="cancle">取消</el-button>
                 </div>
             </div>
@@ -75,45 +75,8 @@
                     inviteType: '1',
                     invalidType: '1'
                 },
-                // checkAll: false,
-                checkedList: [], // 选择的渠道
-                statusONList: [], // 渠道二级
-                tabList: [{
-                    name: '线上',
-                    id: 1,
-                    isIndeterminate: false,
-                    checkAll: false,
-                    checkedList: [],
-                    statusONList: [{
-                        name: '京东',
-                        id: 3,
-                        checked: false
-                    }, {
-                        name: '天猫',
-                        id: 4,
-                        checked: false
-                    }]
-                }, {
-                    name: '线下',
-                    id: 2,
-                    isIndeterminate: false,
-                    checkAll: false,
-                    checkedList: [],
-                    statusONList: [{
-                        name: '超市',
-                        id: 5,
-                        checked: false
-                    }, {
-                        name: '便利店',
-                        id: 6,
-                        checked: false
-                    }]
-                }], // 渠道一级
-                // isIndeterminate: false,
-                isUpdateUperMask: false,
                 levelList: [], // 邀请层级
                 num: -1, // 选择的层级
-                tabNum: 0, // 渠道选项卡
                 tabId: '',
                 btnLoading: false,
                 dateDisabled: true,
@@ -129,16 +92,13 @@
             that.form = {};
             that.num = -1;
             that.getLevelList();// 加载邀请层级列表
-            // that.getStatusONList();//加载授权渠道列表
         },
         methods: {
             productcIds(productcIds) {
                 this.form.categorys = productcIds.join(',');
-                console.log(this.form.categorys);
             },
             brandsId(brandsId) {
                 this.form.brands = brandsId.join(',');
-                console.log(this.form.brands);
             },
             // 推送方式
             changeStyle() {

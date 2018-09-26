@@ -1,15 +1,22 @@
 <template>
     <div class="price-of-inventory">
         <v-breadcrumb :nav="['品牌产品管理','礼包管理','价格库存管理']"></v-breadcrumb>
-        <el-card :body-style="{ padding: '30px' }">
+        <el-card v-loading="bodyLoading" :body-style="{ padding: '30px' }">
             <p>礼包名称：<el-input disabled class="my-inp" v-model="giftName"></el-input></p>
-            <div class="manage-title">售价设置</div>
-            <el-table :data="tableData" border :span-method="objectSpanMethod">
-                <el-table-column v-for="(v,k) in tableTit" :key="k" :prop="v.prop" :label="v.name" align="center">
-                  {{tableData[k]}}
+            <div class="manage-title">发放库存设置</div>
+            <el-table :data="tableData" border>
+                <el-table-column type="index" label="产品序号" align="center"></el-table-column>
+                <el-table-column prop="productName" label="产品名称" align="center"></el-table-column>
+                <el-table-column prop="specValues" label="规格" align="center"></el-table-column>
+                <el-table-column prop="stock" label="现有库存" align="center"></el-table-column>
+                <el-table-column prop="index" label="发放数量" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.num"></el-input>
+                    </template>
                 </el-table-column>
             </el-table>
             <!-- 设置礼包价格 -->
+            <div class="manage-title">售价设置</div>
             <div class="set-price">
                 <div class="set-price-tit" style="min-width:100px">礼包价</div>
                 <div class="price-item" v-for="(v,k) in tableTit" v-if='k>0' :key="k" >
@@ -24,14 +31,14 @@
                 <el-button @click="goBack">取消</el-button>
             </div>
         </el-card>
-        
+
     </div>
 </template>
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import * as api from '@/api/BrandProduct/GiftMange/index.js';
-import * as pApi from '@/privilegeList/BrandProduct/GiftMange/index.js';
+import request from '@/http/http';
 export default {
     components: { vBreadcrumb },
 
@@ -41,32 +48,60 @@ export default {
             giftName: '', // 礼包名称
             spanRow: '16', // 合并行数
             // 表头信息
-            tableTit: [],
+            tableTit: ['原价', 'v0价', 'v1价', 'v2价', 'v3价', 'v4价', 'v5价', 'v6价', '拼店价', '最低支付价', '结算价'],
             // 表格信息
-            tableData: []
+            tableData: [],
+            bodyLoading: false,
+            // 合并上部表格单元格信息
+            topTableRow: []
         };
     },
 
     activated() {
         this.giftId = this.$route.query.priceOfInventoryId || sessionStorage.getItem('priceOfInventoryId');
-        this.tableTit = [];
         this.tableData = [];
         // 获取参考价
-        this.getReferencePrice();
+        this.getPrice();
+        // 获取价格区间
+        this.getPriceAnd();
     },
 
     methods: {
-    // 价格数据回显
+        // 价格数据回显
         getPrice() {
-            this.$axios.post(api.queryPriceEcho, { id: this.giftId }).then(res => {
-                this.tableTit[1].price = res.data.data.originalPrice;
-                this.tableTit[2].price = res.data.data.v1;
-                this.tableTit[3].price = res.data.data.v2;
-                this.tableTit[4].price = res.data.data.v3;
-                this.tableTit[5].price = res.data.data.v4;
-                this.tableTit[6].price = res.data.data.groupPrice;
-                this.tableTit[7].price = res.data.data.minPayment;
-                this.tableTit[8].price = res.data.data.settlementPrice;
+            this.bodyLoading = true;
+            request.findActivityPackageProductAndSpecById({ packageId: this.giftId }).then(res => {
+                this.bodyLoading = false;
+                res.data.forEach((v, k) => {
+                    const specIdArr = v.productPriceId.split(',');
+                    const specValArr = v.specValues.split(',');
+                    const stockArr = v.stock.split(',');
+                    this.topTableRow.push(specIdArr.length);
+                    specIdArr.forEach((item, index) => {
+                        const obj = {
+                            'packageId': v.packageId,
+                            'productId': v.productId,
+                            'productCode': v.productCode,
+                            'productName': v.productName,
+                            'productNumber': 1,
+                            'productPriceId': item,
+                            'specValues': specValArr[index],
+                            'stock': stockArr[index]
+                        };
+                        this.tableData.push(obj);
+                    });
+                });
+            }).catch(err => {
+                this.bodyLoading = false;
+                console.log(err);
+            });
+        },
+        // 价格区间
+        getPriceAnd() {
+            request.findActivityPackageProductAndSpecByIdAn({packageId: this.giftId}).then(res => {
+                console.log(res);
+            }).catch(err => {
+                console.log(err);
             });
         },
         // 提交表单
@@ -96,31 +131,37 @@ export default {
                 this.$router.push('giftManage');
             });
         },
-        // 获取参考价
-        getReferencePrice() {
-            this.$axios.post(api.queryReferencePrice, { id: this.giftId }).then(res => {
-                this.giftName = res.data.data.giftBagName;
-                this.tableTit = res.data.data.title;
-                this.tableData = res.data.data.name;
-                this.spanRow = this.tableData.length;
-                this.getPrice();
-            });
-        },
         //  合并单元格
         objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-            if (columnIndex > 0) {
-                if (rowIndex === 0) {
-                    return {
-                        rowspan: this.spanRow,
-                        colspan: 1
-                    };
-                } else {
-                    return {
-                        rowspan: 0,
-                        colspan: 0
-                    };
-                }
+            let tot = 0;
+            if (columnIndex === 0) {
+                this.topTableRow.forEach(v => {
+                    if (rowIndex === tot) {
+                        return {
+                            rowspan: v,
+                            colspan: 1
+                        };
+                    }
+                    tot += v - 1;
+                });
+                return {
+                    rowspan: 0,
+                    colspan: 0
+                };
             }
+            // if (columnIndex > 0) {
+            //     if (rowIndex === 0) {
+            //         return {
+            //             rowspan: this.spanRow,
+            //             colspan: 1
+            //         };
+            //     } else {
+            //         return {
+            //             rowspan: 0,
+            //             colspan: 0
+            //         };
+            //     }
+            // }
         },
         // 返回礼包列表
         goBack() {

@@ -67,32 +67,30 @@
     import vBreadcrumb from '../../../common/Breadcrumb.vue';
     import icon from '../../../common/ico.vue';
     import * as api from '../../../../api/api';
-    import * as pApi from '../../../../privilegeList/index.js';
     export default {
         components: {
-            icon, vBreadcrumb,
+            icon, vBreadcrumb
         },
-        data: function () {
+        data: function() {
             return {
                 detail: {},
                 id: '',
                 loading: false,
                 list: ''
-            }
+            };
         },
         activated() {
             this.id =
                 this.$route.query.id ||
-                JSON.parse(sessionStorage.getItem("inviteDetail").id);
-            this.getDetail()
+                JSON.parse(sessionStorage.getItem('inviteDetail').id);
+            this.getDetail();
         },
         methods: {
-            //获取详情
+            // 获取详情
             getDetail() {
-                let that = this;
-                let data = {
-                    id: that.id,
-                    url:pApi.findInviteInfo
+                const that = this;
+                const data = {
+                    id: that.id
                 };
                 that.$axios
                     .post(api.findInviteInfo, data)
@@ -101,7 +99,7 @@
                             that.loading = false;
                             that.detail = res.data.data.invite;
                             that.list = res.data.data.list;
-                            console.log(that.list)
+                            console.log(that.list);
                         } else {
                             that.$message.warning(res.data.msg);
                             that.loading = false;
@@ -109,20 +107,20 @@
                     })
                     .catch(err => {
                         that.loading = false;
-                        console.log(err)
-                    })
+                        console.log(err);
+                    });
             },
-            //返回列表
+            // 返回列表
             backToList() {
-                this.$router.push('/joinManage')
+                this.$router.push('/joinManage');
             },
-            //跳到用户详情页面
+            // 跳到用户详情页面
             toUserDetail(item) {
                 localStorage.setItem('memberDetail', item.id);
-                this.$router.push({path: '/memberDetail', query: {id: item.id}})
+                this.$router.push({ path: '/memberDetail', query: { id: item.id }});
             }
         }
-    }
+    };
 </script>
 <style scoped>
     .container {
