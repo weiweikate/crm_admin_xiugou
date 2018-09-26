@@ -180,7 +180,15 @@
                 </div>
                 <el-button slot="reference" @click="isShowPop = true">删除</el-button>
             </el-popover>
-            <el-button @click="batchOperate(6)">结束</el-button>
+            <el-popover placement="top" width="160" v-model="isShowEndPop">
+                <p>确定结束吗？</p>
+                <div style="text-align: right; margin: 0">
+                    <el-button @click="batchOperate(1)" type="primary" size="mini">确定</el-button>
+                    <el-button size="mini" type="text" @click="isShowEndPop = false">取消</el-button>
+                </div>
+                <el-button slot="reference" @click="isShowEndPop = true">结束</el-button>
+            </el-popover>
+            <!--<el-button @click="batchOperate(1)">结束</el-button>-->
         </div>
         <!--结束或删除弹窗-->
         <div class="pwd-mask" v-if="showMask">
@@ -285,6 +293,7 @@
                 number: '', // 减少数量
                 notEnough: false, // 库存不足提示信息
                 isShowPop: false,
+                isShowEndPop: false,
                 multipleSelection: [] // 复选框
             };
         },
@@ -402,6 +411,7 @@
                 data.list = this.id;
                 this.btnLoading = true;
                 request[url](data).then(res => {
+                    this.$message.success(res.msg);
                     this.getList(this.page.currentPage);
                     this.showMask = false;
                     this.inventoryMask = false;
@@ -459,18 +469,19 @@
             // 批量操作
             batchOperate(status) {
                 if (this.multipleSelection.length == 0) {
-                    this.$message.warning('请选择礼包!');
+                    this.$message.warning('请选择活动!');
                     return;
                 }
                 let url = '';
-                // status 0:删除 6：结束
+                // status 0:删除 1：结束
                 if (status == 0) {
                     url = 'deleteActivityDepreciate';
                 } else {
                     url = 'modifyActivityDepreciate';
                 }
-                request[url]({ list: this.multipleSelection, status }).then(res => {
+                request[url]({ list: this.multipleSelection.join(',') }).then(res => {
                     this.isShowPop = false;
+                    this.isShowEndPop = false;
                     this.$message.success(res.msg);
                     this.getList(this.page.currentPage);
                 }).catch(err => {

@@ -26,7 +26,7 @@
                         <template slot-scope="scope">
                             <el-button type="primary" size="small" @click="toDetailParam(scope.row)">产品详细参数</el-button>
                             <el-button type="warning" size="small" @click="editItem(scope.row)">编辑</el-button>
-                            <el-button type="danger" size="small" @click="delItem(scope.row.id)">删除</el-button>
+                            <!--<el-button type="danger" size="small" @click="delItem(scope.row.id)">删除</el-button>-->
                         </template>
                     </el-table-column>
                 </el-table>

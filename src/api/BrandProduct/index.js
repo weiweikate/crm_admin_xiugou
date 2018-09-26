@@ -106,6 +106,8 @@ export const getProductBrandList = '/product/productBrand/queryProductBrandList'
 export const findProductBrand = ['/product/productBrand/findProductBrand', { methods: 'get' }];
 // 新增产品品牌
 export const addProductBrand = '/product/productBrand/addProductBrand';
+// 新增产品品牌
+export const modifyProductBrand = '/product/productBrand/modifyProductBrand';
 // 删除产品品牌
 export const deleteProductBrand = ['/product/productBrand/deleteProductBrand', { methods: 'get' }];
 

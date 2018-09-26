@@ -118,7 +118,7 @@
                     if (valid) {
                         const data = this[form];
                         data.id = that.id;
-                        request.updateProductBrand(data).then(res => {
+                        request.modifyProductBrand(data).then(res => {
                             that.$router.push('/brandManage');
                             that.btnLoading = false;
                         }).catch(error => {
