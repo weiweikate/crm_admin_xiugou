@@ -1,6 +1,6 @@
 <template>
     <div class="tab-content">
-        <el-table v-loading="tableLoading" border :data="tableData">
+        <el-table v-loading="tableLoading" :height="height" border :data="tableData">
             <el-table-column type="index" label="编号" align="center" width="50"></el-table-column>
             <el-table-column prop="name" label="券名称" align="center"></el-table-column>
             <el-table-column label="券类型" align="center">
@@ -110,7 +110,7 @@ export default {
 
     data() {
         return {
-
+            height: '',
             status: '',
             tableData: [],
             tableLoading: false,
@@ -122,7 +122,10 @@ export default {
             id: ''// 优惠券id
         };
     },
-
+    created() {
+        const winHeight = window.screen.availHeight - 520;
+        this.height = winHeight;
+    },
     activated() {
         this.getList(1);
     },

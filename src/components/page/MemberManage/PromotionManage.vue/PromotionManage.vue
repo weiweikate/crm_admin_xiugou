@@ -345,7 +345,7 @@
                 }
                 if (this.isAjax) {
                     request[url](data).then(res => {
-                        // this.$message.success(res.data.msg);
+                        this.$message.success(res.msg);
                         this.mask = false;
                         this.getDetail();
                     }).catch(err => {
@@ -404,7 +404,7 @@
                     return false;
                 } else {
                     if (isInt) {
-                        const reg = /^[1-9]*[1-9][0-9]*$/;
+                        const reg = /^(0|[1-9]\d*)$/;
                         return this.setReg(reg, value);
                     } else {
                         const reg = /^[0-9]+([.]{1}[0-9]{1,2})?$/;
@@ -413,6 +413,7 @@
                 }
             },
             setReg(reg, value) {
+                return;
                 if (!reg.test(value)) {
                     this.$message.warning('请输入合法数据!');
                     return false;

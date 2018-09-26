@@ -23,7 +23,7 @@
             </el-form>
         </el-card>
         <el-card :body-style="{ padding: '20px 40px',}" style="margin-top:20px">
-            <el-table :data="tableData" border>
+            <el-table :data="tableData" border :height="height">
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="店铺名称" align="center"></el-table-column>
                 <el-table-column prop="id" label="店铺ID" align="center"></el-table-column>
@@ -79,8 +79,13 @@ export default {
                 name: '',
                 date: ''
             },
-            tableData: []
+            tableData: [],
+            height: ''
         };
+    },
+    created() {
+        const winHeight = window.screen.availHeight - 540;
+        this.height = winHeight;
     },
     activated() {
         this.getList(this.page.currentPage);

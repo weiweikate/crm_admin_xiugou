@@ -399,7 +399,7 @@
                     return false;
                 } else {
                     if (isInt) {
-                        const reg = /^[1-9]*[1-9][0-9]*$/;
+                        const reg = /^(0|[1-9]\d*)$/;
                         return this.setReg(reg, value);
                     } else {
                         const reg = /^[0-9]+([.]{1}[0-9]{1,2})?$/;

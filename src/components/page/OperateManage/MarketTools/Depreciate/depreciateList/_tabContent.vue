@@ -67,7 +67,7 @@
             </el-form>
         </div>
         <!--<v-remark :contents='contents'></v-remark>-->
-        <el-table v-loading="tableLoading" border :data="tableData" @selection-change="handleSelectionChange">
+        <el-table v-loading="tableLoading" :height="height" border :data="tableData" @selection-change="handleSelectionChange">
             <el-table-column type="selection" align="center"></el-table-column>
             <el-table-column prop="activityCode" align="center" label="编号" min-width="100"></el-table-column>
             <el-table-column label="降价拍商品" min-width="300">
@@ -294,7 +294,8 @@
                 notEnough: false, // 库存不足提示信息
                 isShowPop: false,
                 isShowEndPop: false,
-                multipleSelection: [] // 复选框
+                multipleSelection: [], // 复选框
+                height: ''
             };
         },
 
@@ -320,6 +321,8 @@
         created() {
             this.getList(1);
             this.getCreateUserList();// 加载发布人列表
+            const winHeight = window.screen.availHeight - 520;
+            this.height = winHeight;
         },
         activated() {
             this.getList(1);

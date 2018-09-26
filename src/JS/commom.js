@@ -14,7 +14,7 @@ const myMixinTable = {
                 currentPage: 1,
                 totalPage: 0,
                 pageSize: 20
-            }
+            },
         };
     },
     methods: {
@@ -48,7 +48,7 @@ const queryDictonary = {
                 code: dKey
             };
             await request.queryDictionaryDetailsType(data).then(res => {
-                console.log(res)
+                console.log(res);
                 this.tmpAxiosData = res.data;
             }).catch(err => {
                 this.dicNum++;

@@ -25,7 +25,8 @@
                 </el-form-item>
                 <el-form-item>
                     <div class="limit">
-                        <div class="money">¥{{detail.value}}</div>
+                        <div class="money" v-if="detail.type!=3">¥{{detail.value}}</div>
+                        <div class="money" v-else>{{detail.value/10}}折</div>
                         <div class="detail">
                             <p>{{detail.type==1?'满减券':detail.type==2?'抵价券':detail.type==3?'折扣券':'抵扣券'}}</p>
                             <p v-if="detail.type==1||detail.type==3">订单满{{detail.useConditions}}元可用</p>
