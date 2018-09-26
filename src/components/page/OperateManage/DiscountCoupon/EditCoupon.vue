@@ -479,7 +479,7 @@
                 }
                 that.btnLoading = true;
                 request.addOrModifyCoupon(data).then(res => {
-                    that.$message.warning(res.msg);
+                    that.$message.success(res.msg);
                     that.$router.push('/discountCoupon');
                     that.btnLoading = false;
                 }).catch(error => {

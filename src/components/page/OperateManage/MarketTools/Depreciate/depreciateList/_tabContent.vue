@@ -23,7 +23,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item prop="tstatus" label="结束方式">
-                    <el-select v-model="form.tstatus" placeholder="全部">
+                    <el-select v-model="form.dstatus" placeholder="全部">
                         <el-option
                             v-for="item in endStyleArr"
                             :key="item.value"
@@ -351,12 +351,12 @@
                 data.page = val;
                 data.pageSize = this.page.pageSize;
                 if (this.depStaName == 3) {
-                    data.bstatus = 1;
-                    data.pstatus = 2;
+                    data.bstatus = 2;
+                    data.pstatus = 1;
                 } else {
-                    data.status = this.depStaName;
+                    data.tstatus = this.depStaName;
                 }
-                data.tstatus = this.form.tstatus;
+                data.dstatus = this.form.dstatus;
                 this.page.currentPage = val;
                 this.tableLoading = true;
                 request.operatorDepreciatelist(data).then(res => {

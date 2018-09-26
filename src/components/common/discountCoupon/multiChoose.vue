@@ -249,6 +249,7 @@
                 this.productTagIds = [];
                 this.checkedList = [];
                 this.checkAll = false;
+                this.param = '';
             },
             // 获取一级类目
             getFirst() {

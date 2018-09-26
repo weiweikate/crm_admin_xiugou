@@ -48,6 +48,7 @@
                     <el-input
                         placeholder="请输入产品名称或者ID进行查找"
                         suffix-icon="el-icon-search"
+                        v-model="param"
                         @change="getProductList">
                     </el-input>
                 </div>
@@ -143,7 +144,7 @@
                     };
                 } else {
                     this.firstCategoryId = '';
-                    this.firstCategoryNames = '';
+                    this.firstCategoryName = '';
                 }
                 if (params.secondCategoryIds) {
                     this.secondCategoryId = params.secondCategoryIds;
@@ -177,10 +178,10 @@
                     this.productId = '';
                 }
                 this.getFirst();
-                if (this.isOnly) {
-                    this.getSecond(this.firstClassifyTag, false);
-                    this.getProductList(this.secondClassifyTag, false);
-                }
+                // if (this.isOnly) {
+                //     this.getSecond(this.firstClassifyTag, false);
+                //     this.getProductList(this.secondClassifyTag, false);
+                // }
             }
         },
         created() {
@@ -197,6 +198,11 @@
                 this.secondClassifyTag = {};
                 this.thirdClassifyTag = {};
                 this.productTag = {};
+                this.param = '';
+                this.first = [];
+                this.second = [];
+                this.third = [];
+                this.productList = [];
             },
             getFirst() {
                 const that = this;

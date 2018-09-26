@@ -5,7 +5,7 @@
             <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加二级类目</el-button>
             <template>
                 <el-table :data="tableData" :height="height" border style="width: 100%">
-                    <el-table-column prop="id" label="ID" align="center"></el-table-column>
+                    <el-table-column type="index" label="ID" align="center"></el-table-column>
                     <el-table-column prop="name" label="二级分类" align="center"></el-table-column>
                     <el-table-column prop="superiorName" label="一级分类" align="center"></el-table-column>
                     <el-table-column label="图标" align="center">
