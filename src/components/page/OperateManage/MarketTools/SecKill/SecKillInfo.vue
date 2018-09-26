@@ -57,52 +57,47 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import icon from "@/components/common/ico";
-    import * as api from "@/api/OperateManage/MarketToolsManage/index.js";
-    import * as pApi from "@/privilegeList/OperateManage/MarketToolsManage/index.js";
-    import utils from "@/utils/index.js";
-    import moment from 'moment'
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import icon from '@/components/common/ico';
+    import utils from '@/utils/index.js';
+    import moment from 'moment';
+    import request from '@/http/http.js';
 
     export default {
         components: {
             vBreadcrumb,
-            icon,
+            icon
         },
 
         data() {
             return {
-                nav: ["运营管理", "营销工具管理", "秒杀", "秒杀详情"],
+                nav: ['运营管理', '营销工具管理', '秒杀', '秒杀详情'],
                 form: {
                 },
-                productDetail: {},//选择的商品的商品信息
+                productDetail: {}// 选择的商品的商品信息
             };
         },
 
         activated() {
-            this.id=this.$route.query.id||sessionStorage.getItem('id');
+            this.id = this.$route.query.id || sessionStorage.getItem('id');
             this.getDetail();
         },
 
         methods: {
-            //返回列表
-            backToList(){
-                this.$router.push('/secKill')
+            // 返回列表
+            backToList() {
+                this.$router.push('/secKill');
             },
-            //详情
-            getDetail(){
-                let data={
-                    activityCode:this.id,
-                    url:pApi.findActivitySeckillByActivityCode
+            // 详情
+            getDetail() {
+                const data = {
+                    activityCode: this.id
                 };
-                this.$axios
-                    .post(api.findActivitySeckillByActivityCode, data)
-                    .then(res => {
-                       this.form=res.data.data
-                    })
-                    .catch(err => {
-                        this.btnLoading = false;
-                    });
+                request.findActivitySeckillByActivityCode(data).then(res => {
+                    this.form = res.data.data;
+                }).catch(err => {
+                    this.btnLoading = false;
+                });
             }
         }
     };

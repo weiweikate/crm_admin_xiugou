@@ -1,6 +1,6 @@
 <template>
     <div class="tab-content">
-        <el-button @click="addSecKill" v-if="p.addOperatorSeckill" class="add-product" type="primary">新建秒杀</el-button>
+        <el-button @click="addSecKill" class="add-product" type="primary">新建秒杀</el-button>
         <div class="search-pane">
             <el-form :model="form" ref='form' inline label-width="100px">
                 <el-form-item prop="productName" label="产品名称">
@@ -51,14 +51,22 @@
                     >
                     </el-date-picker>
                 </el-form-item>
+                <el-form-item prop="topicStatus" label="是否绑定专题">
+                    <el-select v-model="form.topicStatus" placeholder="全部">
+                        <el-option value="">全部</el-option>
+                        <el-option label="是" value="1">是</el-option>
+                        <el-option label="否" value="0">否</el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label=" ">
-                    <el-button type="primary" @click="submitForm(1)">搜索</el-button>
+                    <el-button type="primary" @click="getList(1)">搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
         </div>
         <v-remark :contents='contents'></v-remark>
-        <el-table v-loading="tableLoading" border :data="tableData">
+        <el-table v-loading="tableLoading" :height="height" border :data="tableData" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" align="center"></el-table-column>
             <el-table-column prop="activityCode" align="center" label="编号" min-width="100"></el-table-column>
             <el-table-column label="秒杀商品" min-width="300">
                 <template slot-scope="scope">
@@ -114,18 +122,18 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="操作" align="center" min-width="100" v-if="showOpr">
+            <el-table-column label="操作" align="center" min-width="100">
                 <template slot-scope="scope">
-                    <el-button style="margin-bottom:10px" type="primary" @click="toDetail(scope.row)" v-if="p.findActivitySeckillByActivityCode">查看</el-button>
+                    <el-button style="margin-bottom:10px" type="primary" @click="toDetail(scope.row)">查看</el-button>
                     <el-button style="margin-bottom:10px" type="warning" @click="endOrDelete(1,scope.row)"
-                               v-if="(scope.row.status == 1||scope.row.status == 2)&&p.updateActiviySeckillStatus_2">结束
+                               v-if="scope.row.status == 1||scope.row.status == 2">结束
                     </el-button>
                     <el-button style="margin-bottom:10px" type="danger" @click="endOrDelete(0,scope.row)"
-                               v-if="scope.row.status != 1&&scope.row.status != 2&&p.updateActiviySeckillStatus_1">删除
+                               v-if="scope.row.status != 1&&scope.row.status != 2">删除
                     </el-button>
-                    <el-button style="margin-bottom:10px" type="warning" @click="endOrDelete(2,scope.row)"
-                               v-if="(scope.row.status == 3||scope.row.status == 4||scope.row.status == 5)&&p.updateActiviySeckillStatus_3">下架
-                    </el-button>
+                    <!--<el-button style="margin-bottom:10px" type="warning" @click="endOrDelete(2,scope.row)"-->
+                               <!--v-if="scope.row.status == 3||scope.row.status == 4||scope.row.status == 5">下架-->
+                    <!--</el-button>-->
                 </template>
             </el-table-column>
 
@@ -140,6 +148,25 @@
                 layout="total, prev, pager, next, jumper"
                 :total="page.totalPage">
             </el-pagination>
+        </div>
+        <div class="operate-table">
+            <el-popover placement="top" width="160" v-model="isShowPop">
+                <p>确定删除吗？</p>
+                <div style="text-align: right; margin: 0">
+                    <el-button @click="batchOperate(0)" type="primary" size="mini">确定</el-button>
+                    <el-button size="mini" type="text" @click="isShowPop = false">取消</el-button>
+                </div>
+                <el-button slot="reference" @click="isShowPop = true">删除</el-button>
+            </el-popover>
+            <el-popover placement="top" width="160" v-model="isShowEndPop">
+                <p>确定结束吗？</p>
+                <div style="text-align: right; margin: 0">
+                    <el-button @click="batchOperate(1)" type="primary" size="mini">确定</el-button>
+                    <el-button size="mini" type="text" @click="isShowEndPop = false">取消</el-button>
+                </div>
+                <el-button slot="reference" @click="isShowEndPop = true">结束</el-button>
+            </el-popover>
+            <!--<el-button @click="batchOperate(1)">结束</el-button>-->
         </div>
         <!--结束或删除弹窗-->
         <div class="pwd-mask" v-if="showMask">
@@ -164,41 +191,31 @@
 </template>
 
 <script>
-    import * as api from "@/api/OperateManage/MarketToolsManage/index.js";
-    import * as pApi from "@/privilegeList/OperateManage/MarketToolsManage/index.js";
-    import utils from "@/utils/index.js";
-    import icon from "@/components/common/ico";
-    import moment from 'moment'
-    import vRemark from '@/components/common/marketTools/remark.vue'
+    import utils from '@/utils/index.js';
+    import icon from '@/components/common/ico';
+    import moment from 'moment';
+    import vRemark from '@/components/common/marketTools/remark.vue';
+    import { myMixinTable } from '@/JS/commom';
+    import request from '@/http/http.js';
 
     export default {
-        props: ["name"],
+        props: ['name'],
 
         components: {
-            icon,vRemark
+            icon, vRemark
         },
 
         data() {
             return {
-                contents:['销量=成交订单总数-退款/退货订单数','删除活动归还库存时间=手动关闭时间+订单关闭时间+5分钟'],
+                contents: ['销量=成交订单总数-退款/退货订单数', '删除活动归还库存时间=手动关闭时间+订单关闭时间+5分钟'],
 
-                // 权限控制
-                p: {
-                    addOperatorSeckill:false,
-                    updateActiviySeckillStatus_1:false,//删除
-                    updateActiviySeckillStatus_2:false,//结束
-                    updateActiviySeckillStatus_3:false,//下架
-                    findActivitySeckillByActivityCode:false
-                },
-                showOpr:true,//操作总权限
-
-                endStyleArr: [//结束方式
-                    {label: '全部', value: ''},
-                    {label: '库存售完', value: '3'},
-                    {label: '时间结束', value: '4'},
-                    {label: '手动结束', value: '5'},
+                endStyleArr: [// 结束方式
+                    { label: '全部', value: '' },
+                    { label: '库存售完', value: '3' },
+                    { label: '时间结束', value: '4' },
+                    { label: '手动结束', value: '5' }
                 ],
-                createUserList: [],//发布人列表
+                createUserList: [], // 发布人列表
                 form: {
                     releaseDate: '',
                     startDate: '',
@@ -206,33 +223,38 @@
                     createUser: '',
                     productCode: '',
                     productName: '',
-                    status: ''
+                    status: '',
+                    topicStatus: ''
                 },
-                //表格数据
+                // 表格数据
                 tableData: [],
+                height: '',
                 tableLoading: false,
                 page: {
                     currentPage: 1,
                     totalPage: 0,
-                    pageSize:20
+                    pageSize: 20
                 },
-                showMask: false,//是否显示弹窗
-                btnLoading: false,//弹窗操作按钮样式
-                showInf: [{//弹窗文案
+                showMask: false, // 是否显示弹窗
+                btnLoading: false, // 弹窗操作按钮样式
+                showInf: [{// 弹窗文案
                     title: '删除确认',
                     tip: '确定要删除此活动？',
-                    result: '一旦删除，不能撤回',
+                    result: '一旦删除，不能撤回'
                 }, {
                     title: '结束确认',
                     tip: '确定要结束此活动？',
-                    result: '一旦结束，不能再开启',
+                    result: '一旦结束，不能再开启'
                 }, {
                     title: '下架确认',
                     tip: '确定要下架此活动？',
-                    result: '一旦下架，不能再开启',
+                    result: '一旦下架，不能再开启'
                 }],
-                index: '',//删除0结束1
-                id: '',//操作id
+                index: '', // 删除0结束1
+                id: '', // 操作id
+                isShowPop: false,
+                isShowEndPop: false,
+                multipleSelection: [] // 复选框
             };
         },
 
@@ -256,40 +278,29 @@
             }
         },
         created() {
-            this.submitForm(1);
-            this.pControl();
-            this.getCreateUserList();//加载发布人列表
+            const winHeight = window.screen.availHeight - 520;
+            this.height = winHeight;
+            this.getList(1);
+            this.getCreateUserList();// 加载发布人列表
         },
         activated() {
-            this.submitForm(1);
-            this.pControl();
-            this.getCreateUserList();//加载发布人列表
+            this.getList(1);
+            this.getCreateUserList();// 加载发布人列表
         },
 
         methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-                if(!this.p.updateActiviySeckillStatus_1&&!this.p.updateActiviySeckillStatus_2&& !this.p.updateActiviySeckillStatus_2 &&!this.p.findActivitySeckillByActivityCode){
-                    this.showOpr=false
-                }
-            },
-            //获取发布人列表
+            // 获取发布人列表
             getCreateUserList() {
-                this.$axios
-                    .post(api.operatorqueyByStatus, {})
-                    .then(res => {
-                        this.createUserList = [];
-                        this.createUserList = res.data.data;
-                    })
-                    .catch(err => {
-                    });
+                request.queryAdminUserList({}).then(res => {
+                    this.createUserList = [];
+                    this.createUserList = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             //   提交表单
-            submitForm(val) {
-                let data = {};
+            getList(val) {
+                const data = {};
                 data.productName = this.form.productName;
                 data.activityCode = this.form.activityCode;
                 data.createUser = this.form.createUser;
@@ -302,44 +313,34 @@
                 data.pageSize = this.page.pageSize;
                 if (this.secStaName == 3) {
                     data.noStartStatus = 1;
-                    data.startStatus = 2
+                    data.startStatus = 2;
                 } else {
                     data.unEndStatus = this.secStaName;
                 }
                 data.status = this.form.status;
                 this.page.currentPage = val;
                 this.tableLoading = true;
-                this.$axios
-                    .post(api.queryOperatorSeckillList, data)
-                    .then(res => {
-                        this.tableData = [];
-                        this.tableData = res.data.data.data;
-                        this.page.totalPage = res.data.data.resultCount;
-                        this.tableLoading = false;
-                    })
-                    .catch(err => {
-                        this.tableLoading = false;
-                    });
+                request.queryOperatorSeckillList(data).then(res => {
+                    this.tableData = [];
+                    this.tableData = res.data.data.data;
+                    this.page.totalPage = res.data.data.resultCount;
+                    this.tableLoading = false;
+                }).catch(err => {
+                    this.tableLoading = false;
+                });
             },
             //   重置表单
             resetForm(formName) {
                 this.$refs[formName].resetFields();
-                this.form.startDate='';
-                this.form.releaseDate='';
-                this.submitForm(1)
-            },
-            //分页
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
-            },
-            handleCurrentChange(val) {
-                this.submitForm(val);
+                this.form.startDate = '';
+                this.form.releaseDate = '';
+                this.getList(1);
             },
             // 新建秒杀
             addSecKill() {
-                this.$router.push({name: "addSecKill"});
+                this.$router.push({ name: 'addSecKill' });
             },
-            //结束或删除操作
+            // 结束或删除操作
             endOrDelete(num, row) {
                 this.index = num;
                 this.showMask = true;
@@ -348,43 +349,67 @@
             // 结束或删除操作确认取消
             closeMask(status) {
                 if (status) {
-                    let data = {};
+                    const data = {};
                     if (this.index == 0) {
                         data.status = this.index;
-                        data.url = pApi.updateActiviySeckillStatus_1;
-                    } else if(this.index==1){
+                    } else if (this.index == 1) {
                         data.status = 5;
-                        data.url = pApi.updateActiviySeckillStatus_2;
-                    }else{
+                    } else {
                         data.status = 6;
-                        data.url = pApi.updateActiviySeckillStatus_3;
                     }
-                    this.changeStatus(data)
+                    this.changeStatus(data);
                 } else {
-                    this.showMask = false
+                    this.showMask = false;
                 }
             },
-            //结束、删除
+            // 结束、删除
             changeStatus(data) {
                 data.activityCode = this.id;
                 this.btnLoading = true;
-                this.$axios
-                    .post(api.updateActiviySeckillStatus, data)
-                    .then(res => {
-                        this.submitForm(this.page.currentPage);
-                        this.showMask = false;
-                        this.btnLoading = false
-                    })
-                    .catch(err => {
-                        this.btnLoading = false;
-                    });
+                request.updateActiviySeckillStatus(data).then(res => {
+                    this.getList(this.page.currentPage);
+                    this.showMask = false;
+                    this.btnLoading = false;
+                }).catch(err => {
+                    this.btnLoading = false;
+                });
             },
-            //查看详情
+            // 查看详情
             toDetail(row) {
-                sessionStorage.setItem('id',row.activityCode);
-                this.$router.push({path: '/SecKillInfo', query: {id: row.activityCode}})
+                sessionStorage.setItem('id', row.activityCode);
+                this.$router.push({ path: '/SecKillInfo', query: { id: row.activityCode }});
             },
-        },
+            // 全选
+            handleSelectionChange(val) {
+                const that = this;
+                this.multipleSelection = [];
+                val.forEach((v, k) => {
+                    that.multipleSelection.push(v.id);
+                });
+            },
+            // 批量操作
+            batchOperate(status) {
+                if (this.multipleSelection.length == 0) {
+                    this.$message.warning('请选择活动!');
+                    return;
+                }
+                let url = '';
+                // status 0:删除 1：结束
+                if (status == 0) {
+                    url = 'deleteActivityDepreciate';
+                } else {
+                    url = 'modifyActivityDepreciate';
+                }
+                request[url]({ list: this.multipleSelection.join(',') }).then(res => {
+                    this.isShowPop = false;
+                    this.isShowEndPop = false;
+                    this.$message.success(res.msg);
+                    this.getList(this.page.currentPage);
+                }).catch(err => {
+                    console.log(err);
+                });
+            }
+        }
     };
 </script>
 <style lang='less' scoped>

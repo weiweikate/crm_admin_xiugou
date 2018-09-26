@@ -22,8 +22,8 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import vTabContent from "./secKillList/_tabContent";
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import vTabContent from './secKillList/_tabContent';
 
     export default {
         components: {
@@ -33,8 +33,8 @@
 
         data() {
             return {
-                nav: ["运营管理", "营销工具管理","秒杀"],
-                activeName: "allSecKill",
+                nav: ['运营管理', '营销工具管理', '秒杀'],
+                activeName: 'allSecKill'
             };
         },
         methods: {

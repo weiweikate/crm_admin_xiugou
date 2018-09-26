@@ -15,7 +15,7 @@
             </el-card>
         </transition>
         <div class="table-block">
-                <el-button v-if="p.addHotWord" @click="addHotWord" type="primary" style="margin-bottom: 20px">添加搜索关键词</el-button>
+                <el-button @click="addHotWord" type="primary" style="margin-bottom: 20px">添加搜索关键词</el-button>
             <template>
                 <el-table :data="tableData" :height="height" border style="width: 100%">
                     <el-table-column type="index" label="编号" width="60" align="center"></el-table-column>
@@ -24,17 +24,15 @@
                     <el-table-column prop="rank" label="排序" align="center"></el-table-column>
                     <el-table-column v-if="isShowOperate" label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="success" v-if="p.updateHotWordsStatusById&&scope.row.status==0" size="small"
+                            <el-button type="success" v-if="scope.row.status==0" size="small"
                                        @click="upStatusItem(scope.row,1)">开启
                             </el-button>
-                            <el-button type="success" v-if="p.updateHotWordsStatusById&&scope.row.status==1" size="small"
+                            <el-button type="success" v-if="scope.row.status==1" size="small"
                                        @click="upStatusItem(scope.row,2)">关闭
                             </el-button>
-                            <el-button type="primary" size="small" @click="editItem(scope.row)"
-                                       v-if="p.updateHotWordsById">编辑
+                            <el-button type="primary" size="small" @click="editItem(scope.row)">编辑
                             </el-button>
-                            <el-button type="danger" size="small" @click="upStatusItem(scope.row,3)"
-                                       v-if="p.deleteHotWordsById" style="width: 80px"> 删除
+                            <el-button type="danger" size="small" @click="upStatusItem(scope.row,3)" style="width: 80px"> 删除
                             </el-button>
                         </template>
                     </el-table-column>
@@ -101,223 +99,173 @@
 </template>
 
 <script>
-import vBreadcrumb from '../../../common/Breadcrumb.vue';
-import icon from '../../../common/ico.vue';
-import * as api from '../../../../api/OperateManage/AdvertisingManage';
-import utils from '../../../../utils/index.js'
-import * as pApi from '../../../../privilegeList/OperateManage/AdvertisingManage';
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import icon from '@/components/common/ico.vue';
+import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http.js';
 
 export default {
     components: {
         vBreadcrumb, icon
     },
-    mixins:[myMixinTable],
+    mixins: [myMixinTable],
     data() {
         return {
-            // 权限控制
-            p: {
-                addHotWord: false,
-                updateHotWordsStatusById: false,
-                updateHotWordsById: false,
-                deleteHotWordsById: false,
-            },
-            isShowOperate: true,
 
             editForm: {
-                wordName: "",
-                rank: "",
+                wordName: '',
+                rank: ''
             },
             addForm: {
-                wordName: "",
-                rank: "",
+                wordName: '',
+                rank: ''
             },
             addMask: false,
             editMask: false,
-            id: "",
-            itemId: "",
+            id: '',
+            itemId: '',
             tableData: [],
             height: '',
             tipsMask: false,
             info: '',
             form: {
-                wordName: '',
+                wordName: ''
             },
             isShowDelToast: false,
-            btnLoading: false,
-        }
+            btnLoading: false
+        };
     },
     created() {
-        let winHeight = window.screen.availHeight - 520;
+        const winHeight = window.screen.availHeight - 520;
         this.height = winHeight;
-        this.pControl();
     },
     activated() {
         this.getList();
-        this.pControl();
     },
     methods: {
-        // 权限控制
-        pControl() {
-            for (const k in this.p) {
-                this.p[k] = utils.pc(pApi[k]);
-            }
-            if (!this.p.updateHotWordsStatusById && !this.p.updateHotWordsById && !this.p.deleteHotWordsById) {
-                this.isShowOperate = false;
-            }
-        },
-        //获取列表
+        // 获取列表
         getList(val) {
-            let that = this;
-            let data = {
+            const that = this;
+            const data = {
                 page: val,
-                wordName: that.form.wordName,
+                wordName: that.form.wordName
             };
-            data.url = pApi.getHotWordsByPage;
             that.tableLoading = true;
-            that.$axios
-                .post(api.getHotWordsByPage, data)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        that.tableLoading = false;
-                        that.tableData = res.data.data.data;
-                        that.page.totalPage = res.data.data.resultCount;
-                    } else {
-                        that.$message.warning(res.data.msg);
-                        that.tableLoading = false;
-                    }
-                })
-                .catch(err => {
-                    that.tableLoading = false;
-                    console.log(err)
-                })
+            request.getHotWordsByPage(data).then(res => {
+                that.tableLoading = false;
+                that.tableData = res.data.data.data;
+                that.page.totalPage = res.data.data.totalNum;
+            }).catch(err => {
+                that.tableLoading = false;
+                console.log(err);
+            });
         },
         // 添加热搜关键词
         addHotWord() {
             this.addMask = true;
-            this.addForm.wordName='';
-            this.addForm.rank='';
-            this.itype = "add";
+            this.addForm.wordName = '';
+            this.addForm.rank = '';
+            this.itype = 'add';
         },
-        //编辑
+        // 编辑
         editItem(row) {
             this.editMask = true;
             this.editForm = row;
             this.itemId = row.id;
-            this.itype = "edit";
+            this.itype = 'edit';
         },
-        //添加修改确定
+        // 添加修改确定
         addOrEdit(formName) {
-            let url = "";
-            let data = {};
+            let url = '';
+            const data = {};
             data.wordName = this[formName].wordName;
             data.rank = this[formName].rank;
-            if(!data.wordName){
+            if (!data.wordName) {
                 this.$message.warning('请输入关键词!');
-                return
+                return;
             }
-            if(!data.rank){
+            if (!data.rank) {
                 this.$message.warning('请输入排序数值!');
-                return
+                return;
             }
-            if (this.itype == "add") {
-                url = api.addHotWord;
-                data.url = pApi.addHotWord;
+            if (this.itype == 'add') {
+                url = 'addHotWord';
             } else {
-                url = api.updateHotWordsById;
+                url = 'updateHotWordsById';
                 data.id = this.itemId;
-                data.url = pApi.updateHotWordsById;
             }
             this.btnLoading = true;
-            this.$axios
-                .post(url, data)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        this.$message.success(res.data.msg);
-                        this.btnLoading = false;
-                        this.addMask = false;
-                        this.editMask = false;
-                        this.getList(this.page.currentPage);
-                    } else {
-                        this.btnLoading = false;
-                        this.$message.warning(res.data.msg);
-                        this.getList(this.page.currentPage);
-                    }
-                })
+            request[url](data).then(res => {
+                this.$message.success(res.msg);
+                this.btnLoading = false;
+                this.addMask = false;
+                this.editMask = false;
+                this.getList(this.page.currentPage);
+            })
                 .catch(err => {
                     console.log(err);
                 });
         },
-        //开启关闭/删除
+        // 开启关闭/删除
         upStatusItem(row, status) {
-            let that = this;
+            const that = this;
             that.tipsMask = true;
             if (status == 1) {
-                that.info = '确定开启？'
+                that.info = '确定开启？';
             }
             if (status == 2) {
-                that.info = '确定关闭？'
+                that.info = '确定关闭？';
             }
             if (status == 3) {
-                that.info = '确定删除"'+row.wordName+'"关键词？'
+                that.info = '确定删除"' + row.wordName + '"关键词？';
             }
             that.status = status;
             that.id = row.id;
         },
         oprSure() {
-            let that=this;
-            let data = {
+            const that = this;
+            const data = {
                 id: that.id
             };
-            let url='';
-            if(that.status==1||that.status==2){
-                data.url=pApi.updateHotWordsStatusById;
-                url=api.updateHotWordsStatusById;
-                if(that.status==1){
-                    data.status= 1
-                }else{
-                    data.status= 0
+            let url = '';
+            if (that.status == 1 || that.status == 2) {
+                url = 'updateHotWordsStatusById';
+                if (that.status == 1) {
+                    data.status = 1;
+                } else {
+                    data.status = 0;
                 }
             }
-            if(that.status==3){
-                data.url=pApi.deleteHotWordsById;
-                url=api.deleteHotWordsById
+            if (that.status == 3) {
+                url = 'deleteHotWordsById';
             }
-            that.btnLoading=true;
-            that.$axios
-                .post(url, data)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        that.tipsMask=false;
-                        that.$message.success(res.data.msg);
-                        that.getList(that.page.currentPage);
-                        that.btnLoading=false;
-                    } else {
-                        that.tipsMask=false;
-                        that.$message.warning(res.data.msg);
-                        that.btnLoading=false;
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                    that.btnLoading=false;
-                    that.tipsMask = false;
-                })
+            that.btnLoading = true;
+            request[url](data).then(res => {
+                that.tipsMask = false;
+                that.$message.success(res.msg);
+                that.getList(that.page.currentPage);
+                that.btnLoading = false;
+            }).catch(err => {
+                console.log(err);
+                that.btnLoading = false;
+                that.tipsMask = false;
+            });
         },
-        //重置表单
+        // 重置表单
         resetForm(formName) {
             this.$refs[formName].resetFields();
             this.form.wordName = '';
-            this.getList(this.page.currentPage)
+            this.getList(this.page.currentPage);
         },
-        //取消
+        // 取消
         cancel() {
             this.addMask = false;
             this.editMask = false;
             this.getList(this.page.currentPage);
         }
     }
-}
+};
 </script>
 
 <style lang="less">

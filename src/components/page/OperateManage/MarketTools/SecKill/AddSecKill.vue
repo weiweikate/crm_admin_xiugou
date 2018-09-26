@@ -71,13 +71,12 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import vChooseproduct from "@/components/common/marketTools/ChooseProduct.vue";
-    import icon from "@/components/common/ico";
-    import * as api from "@/api/OperateManage/MarketToolsManage/index.js";
-    import * as pApi from "@/privilegeList/OperateManage/MarketToolsManage/index.js";
-    import utils from "@/utils/index.js";
-    import moment from 'moment'
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import vChooseproduct from '@/components/common/marketTools/ChooseProduct.vue';
+    import icon from '@/components/common/ico';
+    import utils from '@/utils/index.js';
+    import moment from 'moment';
+    import request from '@/http/http.js';
 
     export default {
         components: {
@@ -87,7 +86,7 @@
         },
 
         data() {
-            let isInt = (rule, value, callback) => {//正整数
+            const isInt = (rule, value, callback) => { // 正整数
                 if (!value) {
                     return callback(new Error('参数不能为空!'));
                 } else {
@@ -98,8 +97,8 @@
                     }
                 }
             };
-            let nonnegativeInteger = (rule, value, callback) => {//非负整数
-                if (value==='') {
+            const nonnegativeInteger = (rule, value, callback) => { // 非负整数
+                if (value === '') {
                     return callback(new Error('参数不能为空!'));
                 } else {
                     if (!/^\d+$/.test(value)) {
@@ -109,7 +108,7 @@
                     }
                 }
             };
-            let isDouble = (rule, value, callback) => {//两位小数
+            const isDouble = (rule, value, callback) => { // 两位小数
                 if (!value) {
                     return callback(new Error('参数不能为空!'));
                 } else {
@@ -120,10 +119,10 @@
                     }
                 }
             };
-            let isMax = (rule, value, callback) => {//发放数量
+            const isMax = (rule, value, callback) => { // 发放数量
                 if (!value) {
                     return callback(new Error('参数不能为空!'));
-                }else{
+                } else {
                     if (value > this.productDetail.stock) {
                         callback(new Error('发放数量不能大于商品库存!'));
                     } else {
@@ -132,51 +131,51 @@
                 }
             };
             return {
-                nav: ["运营管理", "营销工具管理", "秒杀", "新建秒杀"],
+                nav: ['运营管理', '营销工具管理', '秒杀', '新建秒杀'],
                 rules: {
                     orderCloseTime: [
-                        {validator: isInt, trigger: 'blur'}
+                        { validator: isInt, trigger: 'blur' }
                     ],
                     seckillPrice: [
-                        {validator: isDouble, trigger: 'blur'}
+                        { validator: isDouble, trigger: 'blur' }
                     ],
                     totalNumber: [
-                        {validator: isMax, trigger: 'blur'}
+                        { validator: isMax, trigger: 'blur' }
                     ],
                     limitNumber: [
-                        {validator: nonnegativeInteger, trigger: 'blur'}
-                    ],
+                        { validator: nonnegativeInteger, trigger: 'blur' }
+                    ]
                 },
                 form: {
-                    activityTime: '',//活动时间
+                    activityTime: '', // 活动时间
                     // endTime: '',//结束时间
-                    seckillPrice: '',//秒杀价格
-                    orderCloseTime: '',//自动关闭订单时间
-                    totalNumber: '',//发放总数量
-                    limitNumber: '0',//限购数量,默认为0
+                    seckillPrice: '', // 秒杀价格
+                    orderCloseTime: '', // 自动关闭订单时间
+                    totalNumber: '', // 发放总数量
+                    limitNumber: '0'// 限购数量,默认为0
                 },
-                showMask: false,//选择商品弹窗
-                productDetail: {},//选择的商品的商品信息
-                btnLoading: false//按钮提交
+                showMask: false, // 选择商品弹窗
+                productDetail: {}, // 选择的商品的商品信息
+                btnLoading: false// 按钮提交
             };
         },
 
         activated() {
             this.productDetail = {};
-            this.form={};
-            this.form.limitNumber = 0
+            this.form = {};
+            this.form.limitNumber = 0;
         },
 
         methods: {
-            //选择商品
+            // 选择商品
             chooseProduct() {
-                this.showMask = true
+                this.showMask = true;
             },
-            //获取商品信息
+            // 获取商品信息
             productInf(value) {
                 this.showMask = false;
                 if (value != false) {
-                    this.productDetail = value
+                    this.productDetail = value;
                 }
             },
 
@@ -189,42 +188,41 @@
                             this.$message.warning('请选择商品！');
                             return;
                         }
-                        if(!this.form.activityTime){
+                        if (!this.form.activityTime) {
                             this.$message.warning('请选择活动时间！');
                             return;
                         }
                         // 表单提交
-                        let data = {};
+                        const data = {};
                         data.beginTime = moment(this.form.activityTime[0]).format('YYYY-MM-DD HH:mm:ss'); // 活动开始时间
                         data.endTime = moment(this.form.activityTime[1]).format('YYYY-MM-DD HH:mm:ss'); // 活动开始时间
                         data.orderCloseTime = this.form.orderCloseTime; // 自动关闭订单时间
-                        data.productCode = this.productDetail.productCode; // 产品编号
-                        data.productId = this.productDetail.productId; // 产品ID
-                        data.productImg = this.productDetail.specImg; // 产品主图url
-                        data.productName = this.productDetail.productName; // 产品名称
-                        data.productPrice = this.productDetail.originalPrice; // 产品原价
+                        // data.productCode = this.productDetail.productCode; // 产品编号
+                        // data.productId = this.productDetail.productId; // 产品ID
+                        // data.productImg = this.productDetail.specImg; // 产品主图url
+                        // data.productName = this.productDetail.productName; // 产品名称
+                        // data.productPrice = this.productDetail.originalPrice; // 产品原价
                         data.productPriceId = this.productDetail.id; // 产品规格价格编号
-                        data.productSpec = this.productDetail.spec; // 产品规格
+                        // data.productSpec = this.productDetail.spec; // 产品规格
                         data.seckillPrice = this.form.seckillPrice; // 秒杀价格
-                        data.totalNumber = this.form.totalNumber; //发放总数量
-                        data.limitNumber = this.form.limitNumber; //限购数量
-                        data.url = pApi.addOperatorSeckill;
+                        data.totalNumber = this.form.totalNumber; // 发放总数量
+                        data.limitNumber = this.form.limitNumber; // 限购数量
                         this.btnLoading = true;
-                        this.$axios.post(api.addOperatorSeckill, data).then(res => {
-                            this.$message.success(res.data.msg);
+                        request.addOperatorSeckill(data).then(res => {
+                            this.$message.success(res.msg);
                             this.$router.push('/secKill');
-                            this.btnLoading=false
+                            this.btnLoading = false;
                         }).catch(err => {
-                            this.btnLoading=false
-                        })
+                            this.btnLoading = false;
+                        });
                     } else {
                         console.log('error submit!!');
-                        this.btnLoading=false;
+                        this.btnLoading = false;
                         return false;
                     }
                 });
             },
-            //取消
+            // 取消
             cancel() {
                 this.$router.push('/secKill');
             }

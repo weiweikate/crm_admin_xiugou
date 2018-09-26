@@ -214,11 +214,11 @@ export const topicList = '/topic/queryPageList';
 export const addOrModifyTopic = '/topic/addOrModify';
 /** ************降价拍*****************/
 // 降价拍商品列表
-export const operatorDepreciatelist = '/operator/activityDepreciate/findActivityDepreciate';
+export const operatorDepreciatelist = '/operator/activityDepreciate/queryActivityDepreciateList';
 // 新建降价拍
 export const operatorAddDepreciate = '/operator/activityDepreciate/addActivityDepreciate';
 // 删除
-export const deleteActivityDepreciate = ['/operator/activityDepreciate/deleteyActivityDepreciate', { methods: 'get' }];
+export const deleteActivityDepreciate = ['/operator/activityDepreciate/deleteActivityDepreciate', { methods: 'get' }];
 // 结束
 export const modifyActivityDepreciate = ['/operator/activityDepreciate/modifyActivityDepreciate', { methods: 'get' }];
 // 减少库存
