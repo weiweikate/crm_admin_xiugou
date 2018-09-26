@@ -79,7 +79,7 @@ export default {
                     let specWrapArr = [];
                     let specIdArr = v.productPriceId.split(',');
                     let itemObj = {};
-                    itemArr.forEach((item,index) => {
+                    itemArr.forEach((item, index) => {
                         itemObj.packageId = v.packageId;
                         itemObj.productId = v.productId;
                         itemObj.productCode = v.productCode;
