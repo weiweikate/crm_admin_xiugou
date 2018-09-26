@@ -15,10 +15,6 @@
                         </el-form-item>
                     </el-form>
                 </div>
-                <!--<div class="submit-btn">-->
-                    <!--<el-button type="primary" @click="submitForm('form')">确认保存</el-button>-->
-                    <!--<el-button @click="closeToask">取消</el-button>-->
-                <!--</div>-->
             </div>
         </div>
     </div>
@@ -27,7 +23,6 @@
 <script>
     import icon from '@/components/common/ico';
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import * as api from '@/api/api';
 
     export default {
         components: {
@@ -36,34 +31,19 @@
         data() {
             return {
                 codeImg: '',
-                id: ''
+                msg: {}
             };
         },
         activated() {
-            this.id =
-                this.$route.query.inviteLink ||
+            this.msg =
+                JSON.parse(this.$route.query.inviteLink) ||
                 JSON.parse(sessionStorage.getItem('inviteLink'));
             this.getCode();
         },
         methods: {
             // 获取二维码
             getCode() {
-                const that = this;
-                const data = {
-                    id: this.id
-                };
-                that.$axios
-                    .post(api.createWxQrcode, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.codeImg = res.data.data;
-                        } else {
-                            that.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        that.loading = false;
-                    });
+                this.codeImg = this.msg.wxQrcode;
             }
 
         }

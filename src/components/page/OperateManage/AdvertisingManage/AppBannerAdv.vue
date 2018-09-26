@@ -6,15 +6,19 @@
             </el-button>
             <el-table border :data="tableData">
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
+                <el-table-column prop="" label="一级分类" align="center" v-if="pageType == 10"></el-table-column>
+                <el-table-column prop="" label="产品" align="center" v-if="pageType == 8"></el-table-column>
+                <el-table-column prop="" label="说明" align="center" v-if="pageType == 8"></el-table-column>
                 <el-table-column label="图片" align="center">
                     <template slot-scope="scope">
                         <img class="img" :src="scope.row.img_url">
                     </template>
                 </el-table-column>
-                <el-table-column v-if="pageType!=5" prop="link_type" label="链接" align="center"></el-table-column>
-                <el-table-column v-else prop="id" label="ID" align="center"></el-table-column>
-                <el-table-column prop="remark" label="备注" align="center"></el-table-column>
-                <el-table-column v-if="pageType!=5" prop="show_begintime" label="投放时间" align="center">
+                <el-table-column label="店长/店铺名称" align="center" min-width="100" v-if="pageType == 3"></el-table-column>
+                <el-table-column prop="link_type" label="链接" align="center" v-if="pageType == 2"></el-table-column>
+                <el-table-column prop="id" label="ID" align="center" v-if="pageType != 2 && pageType != 8 && pageType != 12"></el-table-column>
+                <el-table-column prop="remark" label="备注" align="center" v-if=""></el-table-column>
+                <el-table-column prop="show_begintime" label="投放时间" align="center" v-if="pageType != 2 && pageType != 6 && pageType != 7 && pageType != 8 && pageType != 12">
                     <template slot-scope="scope">
                         {{scope.row.show_begintime|formatDate}}~{{scope.row.show_endtime|formatDate}}
                     </template>

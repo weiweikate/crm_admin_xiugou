@@ -1,33 +1,27 @@
 <template>
     <div>
         <v-breadcrumb :nav="['经销商会员管理','经销商加盟管理','邀请详情']"></v-breadcrumb>
-        <div class="container" v-loading="loading">
+        <div class="container" >
             <div class="basic-inf-area line">
                 <div class="item-row">
-                    邀请层级：{{detail.levelName}}
+                    邀请层级：{{msg.levelName}}
                 </div>
-                <div class="item-row">
-                    类型：
-                    <span v-if="detail.invite_type==1">网信经销商</span>
-                    <span v-if="detail.invite_type==2">供货经销商</span>
-                    <span v-if="detail.invite_type==3">网红经销商</span>
-                </div>
-                <div class="item-row" v-if="detail.invalid_type==1">
+                <div class="item-row" v-if="msg.invalidType==1">
                     邀请链接打开次数：
-                    {{detail.click_times}}
+                    {{msg.clickTimes}}
                 </div>
                 <div class="item-row" v-else>
                     邀请失效期：
-                    {{detail.invalid_time|formatDate}}
+                    {{msg.invalidTime|formatDate}}
                 </div>
 
                 <div class="item-row">
                     邀请管理员：
-                    {{detail.adminName}}
+                    {{msg.adminName}}
                 </div>
                 <div class="item-row">
                     邀请时间：
-                    {{detail.create_time|formatDate}}
+                    {{msg.createTime|formatDate}}
                 </div>
 
             </div>
@@ -64,9 +58,8 @@
 </template>
 
 <script>
-    import vBreadcrumb from '../../../common/Breadcrumb.vue';
-    import icon from '../../../common/ico.vue';
-    import * as api from '../../../../api/api';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import icon from '@/components/common/ico.vue';
     export default {
         components: {
             icon, vBreadcrumb
@@ -74,41 +67,41 @@
         data: function() {
             return {
                 detail: {},
-                id: '',
-                loading: false,
+                msg: {},
                 list: ''
             };
         },
         activated() {
-            this.id =
-                this.$route.query.id ||
-                JSON.parse(sessionStorage.getItem('inviteDetail').id);
+            this.msg =
+                JSON.parse(this.$route.query.inviteDetail) ||
+                JSON.parse(sessionStorage.getItem('inviteDetail'));
             this.getDetail();
         },
         methods: {
             // 获取详情
             getDetail() {
-                const that = this;
-                const data = {
-                    id: that.id
-                };
-                that.$axios
-                    .post(api.findInviteInfo, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.loading = false;
-                            that.detail = res.data.data.invite;
-                            that.list = res.data.data.list;
-                            console.log(that.list);
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.loading = false;
-                        }
-                    })
-                    .catch(err => {
-                        that.loading = false;
-                        console.log(err);
-                    });
+                console.log(this.msg);
+                // const that = this;
+                // const data = {
+                //     id: that.id
+                // };
+                // that.$axios
+                //     .post(api.findInviteInfo, data)
+                //     .then(res => {
+                //         if (res.data.code == 200) {
+                //             that.loading = false;
+                //             that.detail = res.data.data.invite;
+                //             that.list = res.data.data.list;
+                //             console.log(that.list);
+                //         } else {
+                //             that.$message.warning(res.data.msg);
+                //             that.loading = false;
+                //         }
+                //     })
+                //     .catch(err => {
+                //         that.loading = false;
+                //         console.log(err);
+                //     });
             },
             // 返回列表
             backToList() {

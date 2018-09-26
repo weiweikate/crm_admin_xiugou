@@ -25,8 +25,8 @@
                     <el-table-column prop="adminName" label="发起者" align="center"></el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="warning" size="small" @click="detailItem(scope.$index,scope.row)">详情</el-button>
-                            <el-button type="danger" size="small" @click="watchItem(scope.$index,scope.row.id)">查看邀请</el-button>
+                            <el-button type="warning" size="small" @click="detailItem(scope.row)">详情</el-button>
+                            <el-button type="danger" size="small" @click="watchItem(scope.row)">查看邀请</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -90,14 +90,16 @@ export default {
             });
         },
         // 详情
-        detailItem(index, row) {
-            sessionStorage.setItem('inviteDetail', JSON.stringify({ id: row.id }));
-            this.$router.push({ path: '/inviteDetail', query: { id: row.id }});
+        detailItem(row) {
+            let msg = JSON.stringify(row)
+            sessionStorage.setItem('inviteDetail', msg);
+            this.$router.push({ path: '/inviteDetail', query: { inviteDetail: msg }});
         },
         // 查看邀请
-        watchItem(index, id) {
-            sessionStorage.setItem('inviteLink', id);
-            this.$router.push({ path: '/inviteLink', query: { inviteLink: id }});
+        watchItem(row) {
+            let msg = JSON.stringify(row)
+            sessionStorage.setItem('inviteLink', msg);
+            this.$router.push({ path: '/inviteLink', query: { inviteLink: msg }});
         },
         // 发起邀请
         sendInvite() {
