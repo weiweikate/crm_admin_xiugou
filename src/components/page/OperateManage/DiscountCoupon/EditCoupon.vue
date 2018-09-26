@@ -392,17 +392,19 @@
                     }
                 }
                 if (this.form.type == 4) {
-                    if (!that.productList.firstCategoryIds || !that.productList.secondCategoryIds || !that.productList.products) {
+                    if (that.productList.firstCategoryIds.length === 0 && that.productList.secondCategoryIds.length === 0 && that.productList.thirdCategoryIds.length === 0 && that.productList.products.length === 0) {
                         this.$message.warning('请选择可用品类!');
                         return;
                     }
                     if (that.productList.firstCategoryIds instanceof Array) {
                         data.firstCategoryIds = that.productList.firstCategoryIds.join(',');
                         data.secondCategoryIds = that.productList.secondCategoryIds.join(',');
+                        data.thirdCategoryIds = that.productList.thirdCategoryIds.join(',');
                         data.productIds = that.productList.products.join(',');
                     } else {
                         data.firstCategoryIds = that.productList.firstCategoryIds;
                         data.secondCategoryIds = that.productList.secondCategoryIds;
+                        data.thirdCategoryIds = that.productList.thirdCategoryIds;
                         data.productIds = that.productList.products;
                     }
                     data.categoryType = 5;
@@ -416,7 +418,7 @@
                     //     this.$message.warning('请选择可用品类!');
                     //     return;
                     // } else {
-                    if (firstCategoryIds.length == 0 && secondCategoryIds.length == 0 && productIds.length == 0) {
+                    if (firstCategoryIds.length == 0 && secondCategoryIds.length == 0 && thirdCategoryIds.length === 0 && productIds.length == 0) {
                         this.$message.warning('请选择可用品类!');
                         return;
                     }
@@ -424,11 +426,11 @@
                     if (that.productList.checkAll) {
                         data.categoryType = 1;// 全品类
                     } else {
-                        if (firstCategoryIds.length == 0 && secondCategoryIds.length == 0 && productIds.length == 1) {
+                        if (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0 && productIds.length === 1) {
                             data.categoryType = 5;// 单商品
-                        } else if (firstCategoryIds.length == 0 && secondCategoryIds.length == 0 && productIds.length > 1) {
+                        } else if (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0 && productIds.length > 1) {
                             data.categoryType = 4;// 多商品
-                        } else if (((firstCategoryIds.length == 1 && secondCategoryIds.length == 0) || (firstCategoryIds.length == 0 && secondCategoryIds.length == 1)) && productIds.length == 0) {
+                        } else if (((firstCategoryIds.length === 1 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0) || (firstCategoryIds.length === 0 && secondCategoryIds.length === 1 && thirdCategoryIds.length === 0) || (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 1)) && productIds.length === 0) {
                             data.categoryType = 3;// 单品类
                         } else {
                             data.categoryType = 2;// 多品类
@@ -477,7 +479,7 @@
                 }
                 that.btnLoading = true;
                 request.addOrModifyCoupon(data).then(res => {
-                    // that.$message.warning(res.data.msg);
+                    that.$message.warning(res.msg);
                     that.$router.push('/discountCoupon');
                     that.btnLoading = false;
                 }).catch(error => {

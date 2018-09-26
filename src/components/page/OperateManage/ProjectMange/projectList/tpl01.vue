@@ -30,16 +30,16 @@
                 </el-form-item>
             </el-form>
         </div>
-        <div v-for='(v,k) in topicNavbarList' :key="k" class="nav">
+        <div v-for='(v,k) in nav' :key="k" class="nav">
             <el-form>
                 <el-form-item :label="`导航${k+1}`" label-width="130px">
-                    <el-input v-model="v.navName" class="inp" placeholder="请输入"></el-input>
+                    <el-input v-model="v.name" class="inp" placeholder="请输入"></el-input>
                 </el-form-item>
-                <el-form-item v-for="(v1,k1) in v.topicNavbarProductList" :key="k1" label='添加产品' label-width="130px">
+                <el-form-item v-for="(v1,k1) in v.product" :key="k1" label='添加产品' label-width="130px">
                     <div class="del-row">
                         <span v-if='k1>0' @click="delNavProduct(k,k1)" class="del-btn">x</span>
                         <el-input v-model="v1.prodCode" class="inp" placeholder="请输入产品ID"></el-input>
-                        <el-select v-model="v1.productType" class="prod-type">
+                        <el-select v-model="v1.type" class="prod-type">
                             <el-option v-for="(pv,pk) in prodTypeList" :label="pv.label" :value="pv.value" :key="pk"></el-option>
                         </el-select>
                     </div>
@@ -48,10 +48,10 @@
                     <el-button @click="addProduct(k)" type="primary">添加产品</el-button>
                 </el-form-item>
             </el-form>
-            <div class="addBanner" v-for="(v2,k2) in v.topicNavbarProductList" :key="k2">
+            <div class="addBanner" v-for="(v2,k2) in v.banner" :key="k2">
                 <el-form label-width="130px">
                     <el-form-item label="添加banner" >
-                        <el-input class="my-inp" v-model="v2.bannerImg" disabled placeholder="请上传图片"></el-input>
+                        <el-input class="my-inp" v-model="v2.img" disabled placeholder="请上传图片"></el-input>
                         <el-upload class="icon-uploader"
                                 :action="uploadImg"
                                 :show-file-list="false"
@@ -62,15 +62,15 @@
                     </el-form-item>
                     <el-form-item label=" " >
                         <div class="upload-img-show">
-                            <i v-if='!v2.bannerImg' class="el-icon-picture-outline"></i>
-                            <img v-else-if="v2.bannerImg" :src="v2.bannerImg" alt="">
+                            <i v-if='!v2.img' class="el-icon-picture-outline"></i>
+                            <img v-else-if="v2.img" :src="v2.img" alt="">
                         </div>
                     </el-form-item>
-                    <el-form-item v-for="(v3,k3) in v2.topicNavbarProductList" :key="k3" label="添加产品" label-width="130px">
+                    <el-form-item v-for="(v3,k3) in v2.product" :key="k3" label="添加产品" label-width="130px">
                         <div class="del-row">
                             <span v-if='k3>0' @click="delProduct(k,k2,k3)" class="del-btn">x</span>
                             <el-input v-model="v3.prodCode" class="inp" placeholder="请输入产品ID"></el-input>
-                            <el-select v-model="v3.productType" class="prod-type">
+                            <el-select v-model="v3.type" class="prod-type">
                                 <el-option v-for="(pv,pk) in prodTypeList" :label="pv.label" :value="pv.value" :key="pk"></el-option>
                             </el-select>
                         </div>
@@ -137,9 +137,9 @@
                 totalNum: 0, // 字数统计
                 nav: [
                     {
-                        navName: '',
-                        // topicNavbarProductList: [{ prodCode: '', productType: 1 }],
-                        topicNavbarProductList: [{ bannerImg: '', topicNavbarProductList: [{ prodCode: '', productType: 1 }] }]
+                        name: '',
+                        product: [{ prodCode: '', type: 1 }],
+                        banner: [{ img: '', product: [{ prodCode: '', type: 1 }] }]
                     }
                 ]
             };
@@ -151,9 +151,9 @@
             this.id = '';
             this.nav = [
                 {
-                    navName: '',
-                    // product: [{ prodCode: '', type: 1 }],
-                    topicNavbarProductList: [{ bannerImg: '', topicNavbarProductList: [{ prodCode: '', type: 1 }] }]
+                    name: '',
+                    product: [{ prodCode: '', type: 1 }],
+                    banner: [{ img: '', product: [{ prodCode: '', type: 1 }] }]
                 }
             ];
             if (this.tplData != 'add') {
@@ -166,8 +166,8 @@
                 this.nav = [
                     {
                         name: '',
-                        // topicNavbarProductList: [{ prodCode: '', productType: 1 }],
-                        topicNavbarProductList: [{ bannerImg: '', topicNavbarProductList: [{ prodCode: '', productType: 1 }] }]
+                        product: [{ prodCode: '', type: 1 }],
+                        banner: [{ img: '', product: [{ prodCode: '', type: 1 }] }]
                     }
                 ];
             }
@@ -187,16 +187,23 @@
                 // 判空
                 try {
                     this.nav.forEach((v, k) => {
-                        if (v.navName == '') {
+                        if (v.name == '') {
                             throw '请输入导航名称';
                         }
-                        v.topicNavbarProductList.forEach((v1, k1) => {
+                        v.product.forEach((v1, k1) => {
                             if (v1.prodCode == '') {
                                 throw '请输入产品id';
                             }
-                            if (v2.bannerImg == '') {
+                        });
+                        v.banner.forEach((v2, k2) => {
+                            if (v2.img == '') {
                                 throw '请上传banner图';
                             }
+                            v2.product.forEach((v3, k3) => {
+                                if (v3.prodCode == '') {
+                                    throw '请输入产品id';
+                                }
+                            });
                         });
                     });
                 } catch (error) {
@@ -210,32 +217,10 @@
                 }
                 data.templateId = 1;
                 data.name = this.pName;
-                data.imgUrl = this.bannerForm.img;
-                data.remark = this.bannerForm.tip;
-                data.topicNavbarList = this.nav;
-                console.log(data);
-                const tem = {
-                    'topicNavbarList': [
-                        {
-                            'id': 0,
-                            'navName': 'string',
-                            'sort': 0,
-                            'topicId': 0,
-                            'topicNavbarProductList': [
-                                {
-                                    'bannerImg': 'string',
-                                    'id': 0,
-                                    'navbarId': 0,
-                                    'prodCode': 'string',
-                                    'productType': 0,
-                                    'sort': 0
-                                }
-                            ]
-                        }
-                    ]
-                };
-                return;
-                request.addOrModifyTopic(data).then(res => {
+                data.bigBanner = this.bannerForm.img;
+                data.desc = this.bannerForm.tip;
+                data.content = this.nav;
+                request.topicSave({ topicStr: JSON.stringify(data) }).then(res => {
                     this.$message.success(res.data.msg);
                     this.$router.push('topicManage');
                 }).catch(err => {
@@ -244,31 +229,31 @@
             },
             //   删除导航下产品
             delNavProduct(bIndex, sIndex) {
-                this.nav[bIndex].topicNavbarProductList.splice(sIndex, 1);
+                this.nav[bIndex].product.splice(sIndex, 1);
             },
             // 删除banner下的产品
             delProduct(bIndex, mIndex, sIndex) {
-                this.nav[bIndex].banner[mIndex].topicNavbarProductList.splice(sIndex, 1);
+                this.nav[bIndex].banner[mIndex].product.splice(sIndex, 1);
             },
             //   添加导航
             addNav() {
                 this.nav.push(
                     {
                         name: '',
-                        topicNavbarProductList: [{ prodCode: '', productType: 1 }, { prodCode: '', productType: 1 }],
+                        product: [{ prodCode: '', type: 1 }, { prodCode: '', type: 1 }],
                         banner: []
                     }
                 );
             },
             //   添加区间banner
             addBanner(index) {
-                this.nav[index].banner == undefined ? this.nav[index].banner = [{ img: '', topicNavbarProductList: [] }] : this.nav[index].banner.push({ img: '', topicNavbarProductList: [] });
+                this.nav[index].banner == undefined ? this.nav[index].banner = [{ img: '', product: [] }] : this.nav[index].banner.push({ img: '', product: [] });
                 // this.nav[index].banner.push({img:'',product:[{prodCode:'',type:1}]});
                 this.$set(this.nav, index, this.nav[index]);
             },
             //   添加banner的产品
             addBannerProduct(bIndex, sIndex) {
-                this.nav[bIndex].banner[sIndex].topicNavbarProductList.push({ prodCode: '', productType: 1 });
+                this.nav[bIndex].banner[sIndex].product.push({ prodCode: '', type: 1 });
                 this.$set(this.nav, bIndex, this.nav[bIndex]);
             },
             //  上传banner
@@ -278,7 +263,7 @@
             },
             //   添加产品
             addProduct(index) {
-                this.nav[index].topicNavbarProductList == null ? this.nav[index].topicNavbarProductList = [{ prodCode: '', productType: 1 }] : this.nav[index].topicNavbarProductList.push({ prodCode: '', productType: 1 });
+                this.nav[index].product == null ? this.nav[index].product = [{ prodCode: '', type: 1 }] : this.nav[index].product.push({ prodCode: '', type: 1 });
                 this.$set(this.nav, index, this.nav[index]);
             },
             //   获取输入字数

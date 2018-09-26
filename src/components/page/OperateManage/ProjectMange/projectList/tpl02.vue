@@ -198,6 +198,8 @@ export default {
             data.bigBanner = this.bannerForm.img;
             data.desc = this.bannerForm.tip;
             data.content = this.list;
+            console.log(data)
+            return
             request.topicSave({ topicStr: JSON.stringify(data) }).then(res => {
                 this.$message.success(res.data.msg);
                 this.$router.push('topicManage');

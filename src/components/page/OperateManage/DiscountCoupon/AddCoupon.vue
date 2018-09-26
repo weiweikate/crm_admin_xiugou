@@ -307,7 +307,7 @@
                     }
                 }
                 if (this.form.type == 4) {
-                    if (!that.productList.firstCategoryIds || !that.productList.secondCategoryIds || !that.thirdCategoryIds || !that.productList.products) {
+                    if (that.productList.firstCategoryIds.length === 0 && that.productList.secondCategoryIds.length === 0 && that.productList.thirdCategoryIds.length === 0 && that.productList.products.length === 0) {
                         this.$message.warning('请选择可用品类!');
                         return;
                     }
@@ -383,7 +383,7 @@
 
                 that.btnLoading = true;
                 request.addOrModifyCoupon(data).then(res => {
-                    // that.$message.success(res.data.msg);
+                    that.$message.success(res.msg);
                     that.$router.push('/discountCoupon');
                     that.btnLoading = false;
                 }).catch(error => {

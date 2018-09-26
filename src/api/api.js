@@ -262,6 +262,7 @@ export const updateVersionRecord = '/config/sysAppVersion/update';// 编辑版�
 export const deleteVersionRecord = ['/config/sysAppVersion/deleteById', { methods: 'get' }];// 删除版本信息
 export const getRegion = ['/config/sysArea/queryAreaList', { methods: 'get' }]; // 查询省市区
 export const getUserLevelList = ['/user/getLevelList', { methods: 'get' }]; // 查询会员层级
+export const queryAdminUserList = '/adminUser/queryAdminUserList'; // 查询会员层级
 // 获取数据字典列表
 export const queryDictionaryDetailsType = ['/config/dictionary/queryDictionaryTypeList', { methods: 'get' }];
 // 问题反馈

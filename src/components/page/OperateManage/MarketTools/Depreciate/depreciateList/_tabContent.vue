@@ -320,9 +320,9 @@
         methods: {
             // 获取发布人列表
             getCreateUserList() {
-                request.operatorqueyByStatus({}).then(res => {
+                request.queryAdminUserList({}).then(res => {
                     this.createUserList = [];
-                    this.createUserList = res.data.data;
+                    this.createUserList = res.data;
                 }).catch(err => {
                     console.log(err);
                 });
