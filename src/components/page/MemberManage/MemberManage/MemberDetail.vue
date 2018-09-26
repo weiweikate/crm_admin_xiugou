@@ -210,6 +210,7 @@
                 request.findDealerById(data).then(res => {
                     this.dealer = res.data;
                     this.record = res.data.levelChangeList;
+                    this.storeId = res.data.storeId;
                 }).catch(err => {
                     console.log(err);
                 });
