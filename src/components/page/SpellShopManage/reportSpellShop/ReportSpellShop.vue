@@ -16,7 +16,7 @@
                 </el-table-column>
                 <el-table-column prop="createTime" label="举报时间" align="center">
                     <template slot-scope="scope" v-if='scope.row.createTime'>
-                        {{scope.row.createTime | formatDate}}
+                        {{scope.row.createTime | formatDateAll}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="content" label="举报内容" align="center"></el-table-column>

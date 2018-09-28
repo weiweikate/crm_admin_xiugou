@@ -7,7 +7,7 @@
                 <el-table-column prop="content" label="内容" align="center"></el-table-column>
                 <el-table-column label="发布时间" align="center">
                     <template slot-scope="scope" v-if='scope.row.createTime'>
-                        <template>{{scope.row.createTime|formatDate}}</template>
+                        <template>{{scope.row.createTime|formatDateAll}}</template>
                     </template>
                 </el-table-column>
                 <!--<el-table-column prop="userName" label="发布人" align="center"></el-table-column>-->

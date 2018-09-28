@@ -58,7 +58,7 @@
                 </el-table-column>
                 <el-table-column label="创建时间" align="center">
                     <template slot-scope="scope">
-                        <template>{{scope.row.createTime|formatDate}}</template>
+                        <template>{{scope.row.createTime|formatDateAll}}</template>
                     </template>
                 </el-table-column>
                 <el-table-column prop="totalTradeVolume" label="交易总额" align="center"></el-table-column>

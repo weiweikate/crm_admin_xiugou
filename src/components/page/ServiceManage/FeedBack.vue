@@ -63,7 +63,7 @@
                     </el-table-column>
                     <el-table-column label="反馈时间" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.createTime|formatDate}}
+                            {{scope.row.createTime|formatDateAll}}
                         </template>
                     </el-table-column>
                     <el-table-column prop="problemName" label="问题类型" width="100" align="center">

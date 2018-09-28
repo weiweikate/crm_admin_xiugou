@@ -9,7 +9,7 @@
                 <el-table-column prop="name" label="专题名称" align="center"></el-table-column>
                 <el-table-column prop="id" label="专题ID" align="center"></el-table-column>
                 <el-table-column label="发布时间" align="center">
-                    <template slot-scope="scope">{{scope.row.createTime|formatDate}}</template>
+                    <template slot-scope="scope">{{scope.row.createTime|formatDateAll}}</template>
                 </el-table-column>
                 <el-table-column prop="templateId" label="活动模板" align="center"></el-table-column>
                 <el-table-column prop="num" label="产品数" align="center"></el-table-column>

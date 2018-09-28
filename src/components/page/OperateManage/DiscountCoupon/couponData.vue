@@ -53,23 +53,23 @@
                     </el-table-column>
                     <el-table-column label="领取时间" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.createTime|formatDate}}
+                            {{scope.row.createTime|formatDateAll}}
                         </template>
                     </el-table-column>
                     <el-table-column label="可用时间" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.startTime|formatDate}}
+                            {{scope.row.startTime|formatDateAll}}
                         </template>
                     </el-table-column>
                     <el-table-column label="结束时间" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.expireTime|formatDate}}
+                            {{scope.row.expireTime|formatDateAll}}
                         </template>
                     </el-table-column>
                     <el-table-column prop="nickName" label="领取人" align="center"></el-table-column>
                     <el-table-column label="使用时间" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.updateTime|formatDate}}
+                            {{scope.row.updateTime|formatDateAll}}
                         </template>
                     </el-table-column>
                     <el-table-column prop="" label="状态" align="center">

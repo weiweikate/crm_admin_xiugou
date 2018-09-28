@@ -107,17 +107,17 @@
             </el-table-column>
             <el-table-column prop="saleNum" label="关闭时间" align="center" min-width="120">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.closeTime">{{scope.row.closeTime | formatDate}}</template>
+                    <template v-if="scope.row.closeTime">{{scope.row.closeTime | formatDateAll}}</template>
                 </template>
             </el-table-column>
             <el-table-column label="起拍/结束时间" align="center" min-width="120">
                 <template slot-scope="scope">
-                    {{scope.row.beginTime|formatDate}}<br/>{{scope.row.endTime|formatDate}}
+                    {{scope.row.beginTime|formatDateAll}}<br/>{{scope.row.endTime|formatDateAll}}
                 </template>
             </el-table-column>
             <el-table-column label="发布时间/发布人" align="center" min-width="120">
                 <template slot-scope="scope">
-                    {{scope.row.createTime | formatDate}}<br/>{{scope.row.createName}}
+                    {{scope.row.createTime | formatDateAll}}<br/>{{scope.row.createName}}
                 </template>
             </el-table-column>
             <el-table-column prop="" label="状态" align="center">

@@ -34,7 +34,7 @@
                 </el-table-column>
                 <el-table-column label="创建时间" align="center">
                     <template slot-scope="scope" v-if='scope.row.createTime'>
-                        <template>{{scope.row.createTime|formatDate}}</template>
+                        <template>{{scope.row.createTime|formatDateAll}}</template>
                     </template>
                 </el-table-column>
                 <!--<el-table-column prop="id" label="是否开启推荐" align="center"></el-table-column>-->

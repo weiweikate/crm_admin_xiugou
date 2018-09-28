@@ -26,7 +26,7 @@
                 <el-table-column prop="remark" label="备注" align="center"></el-table-column>
                 <el-table-column prop="showBegintime" label="投放时间" align="center" key="10" v-if="pageType != 2 && pageType != 6 && pageType != 7 && pageType != 8 && pageType != 12">
                     <template slot-scope="scope">
-                        {{scope.row.showBegintime|formatDate}}~{{scope.row.showEndtime|formatDate}}
+                        {{scope.row.showBegintime|formatDateAll}}~{{scope.row.showEndtime|formatDateAll}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="rank" label="排序" v-if="pageType!=12" align="center" key="11"></el-table-column>
