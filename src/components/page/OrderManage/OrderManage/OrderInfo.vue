@@ -31,10 +31,10 @@
                 <span v-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
                 <span v-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
                 <br/>
-                <el-button v-if="orderStatus == 2 && p.orderSendOut" @click='orderSendOut' class="cloud-delivery-btn"
+                <el-button v-if="orderStatus == 2" @click='orderSendOut' class="cloud-delivery-btn"
                            type="danger">云仓发货
                 </el-button>
-                <el-button v-if="orderStatus == 4 && p.pickUpGoods" @click='changeStatus(orderMsg.url)'
+                <el-button v-if="orderStatus == 4" @click='changeStatus(orderMsg.url)'
                            class="cloud-delivery-btn" type="danger">已提货
                 </el-button>
                 <p class="preferential-info" @click='isShowPreferential = true'>优惠详情</p>
@@ -215,189 +215,170 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import * as api from "@/api/OrderManage/OrderManage/index.js";
-    import * as pApi from "@/privilegeList/OrderManage/OrderManage/index.js";
-    import utils from "@/utils/index.js";
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import utils from '@/utils/index.js';
+    import request from '@/http/http.js';
 
     export default {
-        components: {vBreadcrumb},
+        components: { vBreadcrumb },
 
         data() {
             return {
-                // 权限控制
-                p: {
-                    pickUpGoods: false,
-                    orderSendOut: false
-                },
-                nav: ["订单管理", "订单详情"],
-                detailUrl: "",
-                orderId: "",
+                nav: ['订单管理', '订单详情'],
+                detailUrl: '',
+                orderId: '',
                 boolFirst: false,
                 boolsec: false,
                 boolThr: false,
                 boolFor: false,
-                isShowPop:false, // 订单标记颜色是否显示
-                isShowPreferential: false, //优惠活动
+                isShowPop: false, // 订单标记颜色是否显示
+                isShowPreferential: false, // 优惠活动
                 isShowWarehouse: false, // 更换提货仓
-                orderStatus: "", //总订单状态: 1:待支付 2:待发货 3:待确认 4:待自提 5:确认收货 6:退款（关闭） 7:正常已完成 8:已关闭 9:用户删除 10:超时关闭
-                pickedUp: "", // 是否自提状态（1.正常 2.自提完成）
+                orderStatus: '', // 总订单状态: 1:待支付 2:待发货 3:待确认 4:待自提 5:确认收货 6:退款（关闭） 7:正常已完成 8:已关闭 9:用户删除 10:超时关闭
+                pickedUp: '', // 是否自提状态（1.正常 2.自提完成）
                 markArr: [
-                    {label: "red", value: "1"},
-                    {label: "skyblue", value: "2"},
-                    {label: "lightgreen", value: "3"},
-                    {label: "orange", value: "4"},
-                    {label: "purple", value: "5"}
+                    { label: 'red', value: '1' },
+                    { label: 'skyblue', value: '2' },
+                    { label: 'lightgreen', value: '3' },
+                    { label: 'orange', value: '4' },
+                    { label: 'purple', value: '5' }
                 ],
                 tableData: [],
                 warehouseArr: [],
-                orderFreeTime: "",
-                orderFinishTime: "",
-                orderFreePayTime: "",
+                orderFreeTime: '',
+                orderFinishTime: '',
+                orderFreePayTime: '',
                 // 订单信息
                 orderMsg: {
-                    starIndex:'', // 标记颜色序号
-                    url: "", // 按钮状态(批量)
-                    sinUrl: "", //按钮状态(单个)
-                    status: "", //订单状态
-                    star: "", //星级
-                    adminRemark: ``, //备注
-                    nickName: "", //昵称
-                    phone: "", //联系方式
-                    receiver: "", //收货人
-                    recevicePhone: "", //收货人电话
-                    receiveAddress: "", //收货地址
-                    buyerRemark: ``, //卖家备注
-                    storehouseName: "", //提货点
-                    orderNum: "", //订单号
-                    createTime: "", //订单创建时间
-                    payTime: "", //第三方/平台支付时间
-                    deliveryTime: "", // 确认时间
-                    tradeNo: "", //第三方支付交易号
-                    sendTime: "",//发货时间
-                    cancleTime: "",//取消时间
-                    expressName:"", // 物流公司名称
-                    expressNo:"", // 物流单号
-                    freeTimer:'', // 待支付倒计时
-                    confirmTimer:'', // 待确认倒计时
+                    starIndex: '', // 标记颜色序号
+                    url: '', // 按钮状态(批量)
+                    sinUrl: '', // 按钮状态(单个)
+                    status: '', // 订单状态
+                    star: '', // 星级
+                    adminRemark: ``, // 备注
+                    nickName: '', // 昵称
+                    phone: '', // 联系方式
+                    receiver: '', // 收货人
+                    recevicePhone: '', // 收货人电话
+                    receiveAddress: '', // 收货地址
+                    buyerRemark: ``, // 卖家备注
+                    storehouseName: '', // 提货点
+                    orderNum: '', // 订单号
+                    createTime: '', // 订单创建时间
+                    payTime: '', // 第三方/平台支付时间
+                    deliveryTime: '', // 确认时间
+                    tradeNo: '', // 第三方支付交易号
+                    sendTime: '', // 发货时间
+                    cancleTime: '', // 取消时间
+                    expressName: '', // 物流公司名称
+                    expressNo: '', // 物流单号
+                    freeTimer: '', // 待支付倒计时
+                    confirmTimer: '' // 待确认倒计时
                 },
                 // 标记颜色
                 markArr: [
-                    { label: "red", value: "1" },
-                    { label: "skyblue", value: "2" },
-                    { label: "lightgreen", value: "3" },
-                    { label: "orange", value: "4" },
-                    { label: "purple", value: "5" }
-                ],
+                    { label: 'red', value: '1' },
+                    { label: 'skyblue', value: '2' },
+                    { label: 'lightgreen', value: '3' },
+                    { label: 'orange', value: '4' },
+                    { label: 'purple', value: '5' }
+                ]
             };
         },
 
         activated() {
             // 获取订单信息
             this.orderId =
-                this.$route.query.orderInfoId || sessionStorage.getItem("orderInfoId");
-            this.pControl();
+                this.$route.query.orderInfoId || sessionStorage.getItem('orderInfoId');
             this.getInfo();
             // 获取提货仓列表
             this.getStoreList();
         },
 
-        deactivated(){
+        deactivated() {
             clearInterval(this.freeTimer);
             clearInterval(this.confirmTimer);
         },
 
         methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-            },
             //  获取信息
             getInfo() {
-                this.$axios
-                    .post(api.getOrderDetail, {
-                        orderId: this.orderId,
-                        url: pApi.getOrderDetail
-                    })
-                    .then(res => {
-                        this.orderMsg.status = res.data.data.status;
-                        // pickedUp: 1：发货 2：自提
-                        // if(res.data.data.pickedUp == 1 && res.data.data.status==7){
-                        //   this.orderStatus = 7;
-                        // }else if(res.data.data.pickedUp == 2 && res.data.data.status==7){
-                        //   this.orderStatus = 9;
-                        // }else{
-                        //   this.orderStatus = res.data.data.status;
-                        // }
-                        this.orderStatus = res.data.data.status;
-                        this.getProgressStu(this.orderStatus.toString());
-                        this.orderMsg.starIndex = res.data.data.star || 1;
-                        this.orderMsg.star =
-                            res.data.data.star == null
-                                ? ""
-                                : this.markArr[res.data.data.star - 1].label;
-                        this.orderMsg.adminRemark = res.data.data.adminRemark;
-                        this.orderMsg.nickName = res.data.data.nickname;
-                        this.orderMsg.phone = res.data.data.phone;
-                        this.orderMsg.receiver = res.data.data.receiver;
-                        this.orderMsg.recevicePhone = res.data.data.recevicePhone;
-                        this.orderMsg.receiveAddress = `${
-                            res.data.data.province == undefined ? "" : res.data.data.province
-                            }${res.data.data.city}${res.data.data.area}`;
-                        this.orderMsg.buyerRemark = res.data.data.buyerRemark;
-                        res.data.data.storehouseProvince = res.data.data.storehouseProvince == null ? '' : res.data.data.storehouseProvince;
-                        res.data.data.storehouseCity = res.data.data.storehouseCity == null ? '' : res.data.data.storehouseCity;
-                        res.data.data.storehouseArea = res.data.data.storehouseArea == null ? '' : res.data.data.storehouseArea;
-                        res.data.data.storehouseAddress = res.data.data.storehouseAddress == null ? '' : res.data.data.storehouseAddress;
-                        this.orderMsg.storehouseName = `${
-                            res.data.data.storehouseProvince == null
-                                ? ""
-                                : res.data.data.storehouseProvince
-                            }${res.data.data.storehouseCity}${res.data.data.storehouseArea}${
-                            res.data.data.storehouseAddress
-                            }`;
-                        this.orderMsg.orderNum = res.data.data.orderNum;
-                        this.orderMsg.createTime = res.data.data.createTime;  // 创建时间
-                        this.orderMsg.payTime = res.data.data.payTime;  // 第三方支付时间
-                        this.orderMsg.deliveryTime = res.data.data.deliveryTime;  // 确认时间
-                        this.orderMsg.sendTime = res.data.data.sendTime; // 发货时间
-                        // this.order.cancleTime = res.data.data.sendTime; // 取消时间
-                        this.orderMsg.tradeNo = res.data.data.tradeNo;
-                        // this.orderFreePayTime = res.data.data.createTime; // 倒计时
-                        this.orderMsg.expressName = res.data.data.expressName; // 物流公司名称
-                        this.orderMsg.expressNo = res.data.data.expressNo; // 物流单号
-                        this.tableData = [];
-                        this.pickedUp = res.data.data.pickedUp;
-                        res.data.data.list.forEach((v, k) => {
-                            v.totalPrice = res.data.data.totalPrice;
-                            v.freightPrice = res.data.data.freightPrice;
-                            v.tokenCoin =
-                                res.data.data.tokenCoin == null ? "0" : res.data.data.tokenCoin;
-                            v.balance =
-                                res.data.data.balance == null ? "0" : res.data.data.balance;
-                            v.userScore =
-                                res.data.data.userScore == null ? "0" : res.data.data.userScore;
-                            v.type = res.data.data.payType;
-                            v.amounts =
-                                res.data.data.amounts == null ? "0" : res.data.data.amounts;
-                            v.couponPrice =
-                                res.data.data.couponPrice == null ? "0" : res.data.data.couponPrice;
-                            this.tableData.push(v);
-                        });
-                        // 待支付剩余时间
-                        if(res.data.data.overtimeClosedTime){
-                            this.orderFreeTimeDown(res.data.data.overtimeClosedTime);
-                        }
-                        // 待完成剩余时间
-                        if(res.data.data.autoConfirmTime){
-                            this.orderFinishTimeDown(res.data.data.autoConfirmTime)
-                        }
-                    })
-                    .catch(err => {
-                        console.log(res);
+                request.orderDetail({ id: this.orderId }).then(res => {
+                    this.orderMsg.status = res.data.data.status;
+                    // pickedUp: 1：发货 2：自提
+                    // if(res.data.data.pickedUp == 1 && res.data.data.status==7){
+                    //   this.orderStatus = 7;
+                    // }else if(res.data.data.pickedUp == 2 && res.data.data.status==7){
+                    //   this.orderStatus = 9;
+                    // }else{
+                    //   this.orderStatus = res.data.data.status;
+                    // }
+                    this.orderStatus = res.data.data.status;
+                    this.getProgressStu(this.orderStatus.toString());
+                    this.orderMsg.starIndex = res.data.data.star || 1;
+                    this.orderMsg.star =
+                        res.data.data.star == null
+                            ? ''
+                            : this.markArr[res.data.data.star - 1].label;
+                    this.orderMsg.adminRemark = res.data.data.adminRemark;
+                    this.orderMsg.nickName = res.data.data.nickname;
+                    this.orderMsg.phone = res.data.data.phone;
+                    this.orderMsg.receiver = res.data.data.receiver;
+                    this.orderMsg.recevicePhone = res.data.data.recevicePhone;
+                    this.orderMsg.receiveAddress = `${
+                        res.data.data.province == undefined ? '' : res.data.data.province
+                    }${res.data.data.city}${res.data.data.area}`;
+                    this.orderMsg.buyerRemark = res.data.data.buyerRemark;
+                    res.data.data.storehouseProvince = res.data.data.storehouseProvince == null ? '' : res.data.data.storehouseProvince;
+                    res.data.data.storehouseCity = res.data.data.storehouseCity == null ? '' : res.data.data.storehouseCity;
+                    res.data.data.storehouseArea = res.data.data.storehouseArea == null ? '' : res.data.data.storehouseArea;
+                    res.data.data.storehouseAddress = res.data.data.storehouseAddress == null ? '' : res.data.data.storehouseAddress;
+                    this.orderMsg.storehouseName = `${
+                        res.data.data.storehouseProvince == null
+                            ? ''
+                            : res.data.data.storehouseProvince
+                    }${res.data.data.storehouseCity}${res.data.data.storehouseArea}${
+                        res.data.data.storehouseAddress
+                    }`;
+                    this.orderMsg.orderNum = res.data.data.orderNum;
+                    this.orderMsg.createTime = res.data.data.createTime; // 创建时间
+                    this.orderMsg.payTime = res.data.data.payTime; // 第三方支付时间
+                    this.orderMsg.deliveryTime = res.data.data.deliveryTime; // 确认时间
+                    this.orderMsg.sendTime = res.data.data.sendTime; // 发货时间
+                    // this.order.cancleTime = res.data.data.sendTime; // 取消时间
+                    this.orderMsg.tradeNo = res.data.data.tradeNo;
+                    // this.orderFreePayTime = res.data.data.createTime; // 倒计时
+                    this.orderMsg.expressName = res.data.data.expressName; // 物流公司名称
+                    this.orderMsg.expressNo = res.data.data.expressNo; // 物流单号
+                    this.tableData = [];
+                    this.pickedUp = res.data.data.pickedUp;
+                    res.data.data.list.forEach((v, k) => {
+                        v.totalPrice = res.data.data.totalPrice;
+                        v.freightPrice = res.data.data.freightPrice;
+                        v.tokenCoin =
+                            res.data.data.tokenCoin == null ? '0' : res.data.data.tokenCoin;
+                        v.balance =
+                            res.data.data.balance == null ? '0' : res.data.data.balance;
+                        v.userScore =
+                            res.data.data.userScore == null ? '0' : res.data.data.userScore;
+                        v.type = res.data.data.payType;
+                        v.amounts =
+                            res.data.data.amounts == null ? '0' : res.data.data.amounts;
+                        v.couponPrice =
+                            res.data.data.couponPrice == null ? '0' : res.data.data.couponPrice;
+                        this.tableData.push(v);
                     });
+                    // 待支付剩余时间
+                    if (res.data.data.overtimeClosedTime) {
+                        this.orderFreeTimeDown(res.data.data.overtimeClosedTime);
+                    }
+                    // 待完成剩余时间
+                    if (res.data.data.autoConfirmTime) {
+                        this.orderFinishTimeDown(res.data.data.autoConfirmTime);
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             //  重置表单
             resetForm(formName) {
@@ -406,63 +387,62 @@
             // 判断进度条状态
             getProgressStu(n) {
                 switch (n) {
-                    case "1":
+                    case '1':
                         this.boolFirst = true;
                         this.boolsec = false;
                         this.boolThr = false;
                         this.boolFor = false;
                         break;
-                    case "2":
+                    case '2':
                         this.boolFirst = true;
                         this.boolsec = true;
                         this.boolThr = false;
                         this.boolFor = false;
                         break;
-                    case "3":
+                    case '3':
                         this.boolFirst = true;
                         this.boolsec = true;
                         this.boolThr = true;
                         this.boolFor = false;
                         break;
-                    case "4":
+                    case '4':
                         this.boolFirst = true;
                         this.boolsec = true;
                         this.boolThr = true;
                         this.boolFor = false;
-                        this.orderMsg.url = api.pickUpGoods;
-                        this.orderMsg.sinUrl = api.pickUpOrderProduct;
+                        this.orderMsg.url = 'pickUpGoods';
                         break;
-                    case "5":
+                    case '5':
                         this.boolFirst = true;
                         this.boolsec = true;
                         this.boolThr = true;
                         this.boolFor = true;
                         break;
-                    case "6":
+                    case '6':
                         this.boolFirst = true;
                         this.boolsec = true;
                         this.boolThr = true;
                         this.boolFor = true;
                         break;
-                    case "7":
+                    case '7':
                         this.boolFirst = true;
                         this.boolsec = true;
                         this.boolThr = true;
                         this.boolFor = true;
                         break;
-                    case "9":
+                    case '9':
                         this.boolFirst = true;
                         this.boolsec = true;
                         this.boolThr = true;
                         this.boolFor = true;
                         break;
-                    case "9":
+                    case '9':
                         this.boolFirst = true;
                         this.boolsec = true;
                         this.boolThr = true;
                         this.boolFor = true;
                         break;
-                    case "9":
+                    case '9':
                         this.boolFirst = true;
                         this.boolsec = true;
                         this.boolThr = true;
@@ -471,7 +451,7 @@
                 }
             },
             // 合并单元格
-            spanMethod({row, column, rowIndex, columnIndex}) {
+            spanMethod({ row, column, rowIndex, columnIndex }) {
                 if (columnIndex == 5 || columnIndex == 6) {
                     if (rowIndex == 0) {
                         return {
@@ -486,85 +466,79 @@
             // 获取订单
             // 订单剩余时间倒计时
             orderFreeTimeDown(createTime) {
-                let date = createTime;
-                let that = this;
-                this.freeTimer = setInterval(function () {
-                    let nowDate = new Date().getTime();
-                    let time = date - nowDate;
+                const date = createTime;
+                const that = this;
+                this.freeTimer = setInterval(function() {
+                    const nowDate = new Date().getTime();
+                    const time = date - nowDate;
                     if (time <= 0) {
-                        that.orderFreeTime = "00:00:00";
+                        that.orderFreeTime = '00:00:00';
                         clearInterval(this.freeTimer);
                         return;
                     }
                     let hour = Math.floor((time / 1000 / 60 / 60) % 60);
                     let minute = Math.floor((time / 1000 / 60) % 60);
                     let second = Math.floor((time / 1000) % 60);
-                    hour = hour > 9 ? hour : "0" + hour;
-                    minute = minute > 9 ? minute : "0" + minute;
-                    second = second > 9 ? second : "0" + second;
+                    hour = hour > 9 ? hour : '0' + hour;
+                    minute = minute > 9 ? minute : '0' + minute;
+                    second = second > 9 ? second : '0' + second;
                     that.orderFreeTime = `${hour}:${minute}:${second}`;
                 }, 1000);
             },
             // 订单待完成时间倒计时
             orderFinishTimeDown(createTime) {
-                let date = createTime;
-                let that = this;
-                this.confirmTimer = setInterval(function () {
-                    let nowDate = new Date().getTime();
-                    let time = date - nowDate;
+                const date = createTime;
+                const that = this;
+                this.confirmTimer = setInterval(function() {
+                    const nowDate = new Date().getTime();
+                    const time = date - nowDate;
                     if (time <= 0) {
                         clearInterval(this.confirmTimer);
-                        that.orderFinishTime = "00:00:00";
+                        that.orderFinishTime = '00:00:00';
                         return;
                     }
                     let hour = Math.floor((time / 1000 / 60 / 60) % 60);
                     let minute = Math.floor((time / 1000 / 60) % 60);
                     let second = Math.floor((time / 1000) % 60);
-                    hour = hour > 9 ? hour : "0" + hour;
-                    minute = minute > 9 ? minute : "0" + minute;
-                    second = second > 9 ? second : "0" + second;
+                    hour = hour > 9 ? hour : '0' + hour;
+                    minute = minute > 9 ? minute : '0' + minute;
+                    second = second > 9 ? second : '0' + second;
                     that.orderFinishTime = `${hour}:${minute}:${second}`;
                 }, 1000);
             },
             // 更改订单状态(批量)
             changeStatus(url) {
-                this.$axios
-                    .post(url, {orderId: this.orderId, url: pApi.pickUpGoods})
-                    .then(res => {
-                        this.$message.success(res.data.data);
-                        this.getInfo();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                request[url]({ orderId: this.orderId }).then(res => {
+                    this.$message.success(res.msg);
+                    this.getInfo();
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 跳到售后详情
             toAfterSale(id) {
-                sessionStorage.setItem("afterSaleOprId", id);
+                sessionStorage.setItem('afterSaleOprId', id);
                 this.$router.push({
-                    path: "/afterSaleOpr",
-                    query: {afterSaleOprId: id}
+                    path: '/afterSaleOpr',
+                    query: { afterSaleOprId: id }
                 });
             },
             // 查看物流信息
             showLogisticsMsg() {
-                sessionStorage.setItem('findExpressId',this.orderId);
-                this.$router.push({name:'logistics',query:{findExpressId:this.orderId}});
+                sessionStorage.setItem('findExpressId', this.orderId);
+                this.$router.push({ name: 'logistics', query: { findExpressId: this.orderId }});
             },
             // 获取提货仓列表
             getStoreList() {
                 this.warehouseArr = [];
-                this.$axios
-                    .post(api.queryStoreHouseList, {url: pApi.getOrderDetail})
-                    .then(res => {
-                        res.data.data.forEach((v, k) => {
-                            v.active = false;
-                            this.warehouseArr.push(v);
-                        });
-                    })
-                    .catch(err => {
-                        console.log(err);
+                request.queryStoreHouseList({ url: pApi.getOrderDetail }).then(res => {
+                    res.data.data.forEach((v, k) => {
+                        v.active = false;
+                        this.warehouseArr.push(v);
                     });
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 更换提货仓
             changeWarehouse(row) {
@@ -572,52 +546,43 @@
                     v.active = false;
                 });
                 row.active = true;
-                this.$axios
-                    .post(api.changeStoreHouse, {
-                        orderId: this.orderId,
-                        storeHouseId: row.id,
-                        url: pApi.getOrderDetail
-                    })
-                    .then(res => {
-                        this.$message.success(res.data.data);
-                        this.orderMsg.storehouseName =
-                            row.province == undefined
-                                ? ""
-                                : row.province + row.city + row.area + row.address;
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                const data = {
+                    orderId: this.orderId,
+                    storeHouseId: row.id
+                };
+                request.changeStoreHouse(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.orderMsg.storehouseName =
+                        row.province == undefined
+                            ? ''
+                            : row.province + row.city + row.area + row.address;
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 云仓发货
             orderSendOut() {
-                this.$axios
-                    .post(api.orderSendOut, {orderId: this.orderId, url: pApi.orderSendOut})
-                    .then(res => {
-                        this.$message.success(res.data.data);
-                        this.getInfo();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                request.orderSendOut({ orderId: this.orderId }).then(res => {
+                    this.$message.success(res.msg);
+                    this.getInfo();
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 备注
-            changeColor(status,v) {
-                let data = {};
+            changeColor(status, v) {
+                const data = {};
                 data.orderId = this.orderId;
-                data.star = status == 1?v.value:this.orderMsg.starIndex;
+                data.star = status == 1 ? v.value : this.orderMsg.starIndex;
                 data.remarks = this.orderMsg.adminRemark;
-                data.url = pApi.orderSign;
-                this.$axios.post(api.orderSign, data)
-                    .then(res => {
-                        this.$message.success(res.data.data);
-                        this.orderMsg.star = this.markArr[Number(data.star) - 1].label;
-                        this.isShowPop = false; 
-                    })
-                    .catch(err => {
-                        console.log(res);
-                    });
-            },
+                request.orderSign(data).then(res => {
+                    this.$message.success(res.mag);
+                    this.orderMsg.star = this.markArr[Number(data.star) - 1].label;
+                    this.isShowPop = false;
+                }).catch(err => {
+                    console.log(err);
+                });
+            }
         }
     };
 </script>

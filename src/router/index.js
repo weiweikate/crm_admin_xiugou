@@ -881,18 +881,18 @@ export default new Router({
                     component: resolve => require(['../components/page/OperateManage/MarketTools/PrizePoll/BlockStockActivity.vue'], resolve),
                     meta: { title: '冻结库存活动', url: '/blockStockActivity' }
                 },
-                {
-                    name: 'labelManage',
-                    path: '/labelManage',
-                    component: resolve => require(['../components/page/OperateManage/LabelManage/LabelManage.vue'], resolve),
-                    meta: { title: '标签管理', url: '/labelManage' }
-                },
-                {
-                    name: 'productLabel',
-                    path: '/productLabel',
-                    component: resolve => require(['../components/page/OperateManage/LabelManage/ProductLabel/ProductLabel.vue'], resolve),
-                    meta: { title: '产品标签', url: '/productLabel' }
-                },
+                // {
+                //     name: 'labelManage',
+                //     path: '/labelManage',
+                //     component: resolve => require(['../components/page/OperateManage/LabelManage/LabelManage.vue'], resolve),
+                //     meta: { title: '标签管理', url: '/labelManage' }
+                // },
+                // {
+                //     name: 'productLabel',
+                //     path: '/productLabel',
+                //     component: resolve => require(['../components/page/OperateManage/LabelManage/ProductLabel/ProductLabel.vue'], resolve),
+                //     meta: { title: '产品标签', url: '/productLabel' }
+                // },
                 // 订单管理
                 {
                     name: 'orderList',

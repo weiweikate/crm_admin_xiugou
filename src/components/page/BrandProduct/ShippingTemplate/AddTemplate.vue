@@ -5,7 +5,7 @@
             <div class="shipping-box">
                 <el-form :model="form" ref="form" :rules="rules">
                     <el-form-item prop="name" label="模板名称">
-                        <el-input class="lar-inp" placeholder="请输入模板名称(模板名称最少必须由1个字组成，最多不能超过25个字)"
+                        <el-input class="lar-inp" placeholder="请输入模板名称(模板名称最少必须由1个字组成，最多不能超过16个字)"
                                   v-model="form.name"></el-input>
                     </el-form-item>
                     <el-form-item prop="country" class="address-item" label="产品发货地">
@@ -155,8 +155,9 @@
                 if (!value) {
                     return callback(new Error('模版名称不能为空'));
                 } else {
-                    if (value.length > 25) {
-                        callback(new Error('模版名称最多不能超过25个字'));
+                    const reg = /^[A-Za-z0-9\u4e00-\u9fa5]{1,16}$/;
+                    if (!reg.test(value)) {
+                        callback(new Error('请输入1-16位由汉字字母数字组成的模板名称'));
                     } else {
                         callback();
                     }

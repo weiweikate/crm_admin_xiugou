@@ -200,6 +200,7 @@
                         });
                     });
                     this.tableData = tmp;
+                    console.log(this.tableData)
                 }).catch(err => {
                     console.log(err);
                 });

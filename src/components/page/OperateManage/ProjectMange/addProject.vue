@@ -83,11 +83,11 @@ export default {
             const data = {
                 id: this.tplId
             };
-            request.getTopic(data).then(res => {
-                this.tplInfo = res.data.data;
-                this.tpl = res.data.data.templateId.toString();
-                this.tplId = res.data.data.id;
-                this.name = res.data.data.name;
+            request.findTopicById(data).then(res => {
+                this.tplInfo = res.data;
+                this.tpl = res.data.templateId.toString();
+                this.tplId = res.data.id;
+                this.name = res.data.name;
                 this.toggleList(this.tpl);
                 this.isShow = true;
                 this.pageLoading = false;

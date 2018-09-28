@@ -31,7 +31,7 @@
         methods: {
             // 获取模板列表
             getTplList() {
-                request.tplList({}).then(res => {
+                request.findTopicTemplate({}).then(res => {
                     if (!res.data) return false;
                     this.list = res.data.data;
                 }).catch(err => {

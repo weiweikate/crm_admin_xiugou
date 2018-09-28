@@ -128,6 +128,8 @@ export const queryListByHotFlag = '/product/productCategory/queryListByHotFlag';
 export const deleteHotFlag = ['/product/productCategory/deleteHotFlag', { methods: 'get' }];
 // 添加热门品类
 export const addHotFlag = '/product/productCategory/addHotFlag';
+// 编辑热门品类
+export const modifyHotFlag = '/product/productCategory/modifyHotFlag';
 
 // 产品详情参数
 // 产品详情参数列表

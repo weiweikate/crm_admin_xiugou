@@ -32,8 +32,8 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="userId" label="发布人">
-                    <el-select v-model="form.userId" placeholder="全部">
+                <el-form-item prop="createUser" label="发布人">
+                    <el-select v-model="form.createUser" placeholder="全部">
                         <el-option value="">全部</el-option>
                         <el-option
                             v-for="item in createUserList"
@@ -76,7 +76,7 @@
                         <img :src="scope.row.specImg">
                     </div>
                     <p class="product-inf">{{scope.row.productName}}</p>
-                    <p class="product-inf" style="margin-top: 25px">原价：￥{{scope.row.productPrice}}</p>
+                    <p class="product-inf" style="margin-top: 25px">原价：￥{{scope.row.originalPrice}}</p>
                     <p class="product-inf">产品ID：{{scope.row.productCode}}</p>
                 </template>
             </el-table-column>
@@ -117,7 +117,7 @@
             </el-table-column>
             <el-table-column label="发布时间/发布人" align="center" min-width="120">
                 <template slot-scope="scope">
-                    {{scope.row.createTime | formatDate}}<br/>{{scope.row.userAccount}}
+                    {{scope.row.createTime | formatDate}}<br/>{{scope.row.createName}}
                 </template>
             </el-table-column>
             <el-table-column prop="" label="状态" align="center">
@@ -257,7 +257,7 @@
                     releaseDate: '',
                     startDate: '',
                     activityCode: '',
-                    userId: '',
+                    createUser: '',
                     productCode: '',
                     productName: '',
                     tstatus: '',
@@ -344,7 +344,7 @@
                 const data = {};
                 data.productName = this.form.productName;
                 data.activityCode = this.form.activityCode;
-                data.userId = this.form.userId;
+                data.createUser = this.form.createUser;
                 data.productCode = this.form.productCode;
                 data.topicStatus = this.form.topicStatus;
                 data.startTime = this.form.startDate ? moment(this.form.startDate[0]).format('YYYY-MM-DD HH:mm:ss') : '';

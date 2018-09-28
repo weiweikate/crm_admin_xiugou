@@ -3,7 +3,7 @@
       <div class="banner">
         <el-form :model="bannerForm" label-width="130px">
           <el-form-item prop="img" label="添加banner" >
-              <el-input class="my-inp" v-model="bannerForm.img" disabled placeholder="请上传图片"></el-input>
+              <el-input class="my-inp" v-model="bannerForm.imgUrl" disabled placeholder="请上传图片"></el-input>
               <el-upload class="icon-uploader"
                           :action="uploadImg"
                           :show-file-list="false"
@@ -14,8 +14,8 @@
           </el-form-item>
           <el-form-item label=" " >
               <div class="upload-img-show">
-                  <i v-if='!bannerForm.img' class="el-icon-picture-outline"></i>
-                  <img v-else-if="bannerForm.img" :src="bannerForm.img" alt="">
+                  <i v-if='!bannerForm.imgUrl' class="el-icon-picture-outline"></i>
+                  <img v-else-if="bannerForm.imgUrl" :src="bannerForm.imgUrl" alt="">
               </div>
           </el-form-item>
         </el-form>
@@ -25,18 +25,18 @@
           <el-form-item prop="tip" label="专题说明" label-width="130px">
             <div class="text-area">
               <span class="total-num">{{totalNum}}/200</span>
-              <el-input :autosize='{ minRows: 8, maxRows: 8 }' maxlength="200" v-model="bannerForm.tip" @input="getFontNum" type="textarea" placeholder="可为空，不填则不显示" style='width:350px'></el-input>
+              <el-input :autosize='{ minRows: 8, maxRows: 8 }' maxlength="200" v-model="bannerForm.remark" @input="getFontNum" type="textarea" placeholder="可为空，不填则不显示" style='width:350px'></el-input>
             </div>
           </el-form-item>
         </el-form>
       </div>
       <div class="add-product-list">
         <el-form label-width="130px">
-          <el-form-item v-for="(v,k) in list.product" :key="k" label="添加产品">
+          <el-form-item v-for="(v,k) in topicNavbarList.topicBannerProducts" :key="k" label="添加产品">
             <div class="del-row">
               <span v-if='k>0' @click="delPro(k)" class="del-btn" style="right:225px">x</span>
               <el-input class="my-inp" v-model="v.prodCode" placeholder="请输入产品ID"></el-input>
-              <el-select v-model="v.type" class="prod-type">
+              <el-select v-model="v.productType" class="prod-type">
                 <el-option v-for="(pv,pk) in prodTypeList" :label="pv.label" :value="pv.value" :key="pk"></el-option>
               </el-select>
             </div>
@@ -46,10 +46,10 @@
           </el-form-item>
         </el-form>
       </div>
-      <div v-for="(v,k) in list.banner" :key="k" class="add-banner">
+      <div v-for="(v,k) in topicNavbarList.topicNavbarBannerList" :key="k" class="add-banner">
         <el-form label-width="130px">
           <el-form-item label="添加banner">
-            <el-input class="my-inp" v-model="v.img" disabled placeholder="请上传图片"></el-input>
+            <el-input class="my-inp" v-model="v.bannerImg" disabled placeholder="请上传图片"></el-input>
             <el-upload class="icon-uploader"
                     :action="uploadImg"
                     :show-file-list="false"
@@ -60,15 +60,15 @@
           </el-form-item>
           <el-form-item label=" " >
             <div class="upload-img-show">
-                <i v-if='!v.img' class="el-icon-picture-outline"></i>
-                <img v-else-if="v.img" :src="v.img" alt="">
+                <i v-if='!v.bannerImg' class="el-icon-picture-outline"></i>
+                <img v-else-if="v.bannerImg" :src="v.bannerImg" alt="">
             </div>
           </el-form-item>
-          <el-form-item v-for="(v1,k1) in v.product" :key="k1" label="添加产品" label-width="130px">
+          <el-form-item v-for="(v1,k1) in v.topicBannerProductList" :key="k1" label="添加产品" label-width="130px">
             <div class="del-row">
               <span v-if='k1>0' @click="delProduct(k,k1)" class="del-btn">x</span>
               <el-input v-model="v1.prodCode" class="inp" placeholder="请输入产品ID"></el-input>
-              <el-select v-model="v1.type" class="prod-type">
+              <el-select v-model="v1.productType" class="prod-type">
                 <el-option v-for="(pv,pk) in prodTypeList" :label="pv.label" :value="pv.value" :key="pk"></el-option>
               </el-select>
             </div>
@@ -115,21 +115,23 @@ export default {
             uploadImg: '',
             // banner
             bannerForm: {
-                img: '',
-                tip: ''
+                imgUrl: '',
+                remark: ''
             },
             // 产品类型
             prodTypeList: [
-                { label: '产品', value: 1 },
-                { label: '礼包', value: 2 },
-                { label: '套餐', value: 3 },
-                { label: '其他', value: 4 },
+                { label: '产品', value: 99 },
+                { label: '礼包', value: 3 },
+                // { label: '套餐', value: 3 },
+                // { label: '其他', value: 4 },
                 { label: '专题', value: 5 }
-            ], // 1.产品 2.礼包 3.套餐 4.其他 5.专题
+            ],
             totalNum: 0, // 字数统计
-            list: {
-                product: [{ idprodCode: '', type: 1 }, { prodCode: '', type: 1 }, { prodCode: '', type: 1 }],
-                banner: [{ img: '', product: [{ prodCode: '', type: 1 }, { prodCode: '', type: 1 }, { prodCode: '', type: 1 }] }]
+            topicNavbarList: {
+                navName: '',
+                type: '', // 导航属性 1文字 2时间
+                topicBannerProducts: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }],
+                topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] }]
             }
         };
     },
@@ -138,14 +140,16 @@ export default {
         this.uploadImg = api.uploadImg;
         this.pName = this.name;
         this.id = '';
-        this.list = {
-            product: [{ idprodCode: '', type: 1 }, { prodCode: '', type: 1 }, { prodCode: '', type: 1 }],
-            banner: [{ img: '', product: [{ prodCode: '', type: 1 }, { prodCode: '', type: 1 }, { prodCode: '', type: 1 }] }]
+        this.topicNavbarList = {
+            navName: '',
+            type: '',
+            topicBannerProducts: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }],
+            topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] }]
         };
         if (this.tplData != 'add') {
-            this.bannerForm.img = this.tplData.bigBanner;
-            this.bannerForm.tip = this.tplData.desc;
-            this.list = this.tplData.content;
+            this.bannerForm.imgUrl = this.tplData.imgUrl;
+            this.bannerForm.remark = this.tplData.remark;
+            this.topicNavbarList = this.tplData.topicNavbarList[0];
             this.id = this.tplData.id;
         }
     },
@@ -153,11 +157,11 @@ export default {
     methods: {
     // 删除产品
         delPro(index) {
-            this.list.product.splice(index, 1);
+            this.topicNavbarList.topicBannerProducts.splice(index, 1);
         },
         // 删除banner产品
         delProduct(bIndex, sIndex) {
-            this.list.banner[bIndex].product.splice(sIndex, 1);
+            this.topicNavbarList.topicNavbarBannerList[bIndex].topicBannerProductList.splice(sIndex, 1);
         },
         // 提交表单
         submitForm() {
@@ -165,21 +169,21 @@ export default {
             if (this.pName == '') {
                 this.$message.warning('请输入专题名称');
                 return;
-            } else if (this.bannerForm.img == '') {
+            } else if (this.bannerForm.imgUrl == '') {
                 this.$message.warning('请上传banner图');
                 return;
             }
             try {
-                this.list.product.forEach((v, k) => {
+                this.topicNavbarList.topicBannerProducts.forEach((v, k) => {
                     if (v.prodCode == '') {
                         throw '请输入产品ID';
                     }
                 });
-                this.list.banner.forEach((v, k) => {
-                    if (v.img == '') {
+                this.topicNavbarList.topicNavbarBannerList.forEach((v, k) => {
+                    if (v.bannerImg == '') {
                         throw '请上传banner图';
                     }
-                    v.product.forEach((v1, k1) => {
+                    v.topicBannerProductList.forEach((v1, k1) => {
                         if (v1.prodCode == '') {
                             throw '请输入产品ID';
                         }
@@ -195,11 +199,13 @@ export default {
             }
             data.templateId = 4;
             data.name = this.pName;
-            data.bigBanner = this.bannerForm.img;
-            data.desc = this.bannerForm.tip;
-            data.content = this.list;
-            request.topicSave({ topicStr: JSON.stringify(data) }).then(res => {
-                this.$message.success(res.data.msg);
+            data.imgUrl = this.bannerForm.imgUrl;
+            data.remark = this.bannerForm.remark;
+            const temp = [];
+            temp.push(this.topicNavbarList);
+            data.topicNavbarList = temp;
+            request.addOrModifyTopic(data).then(res => {
+                this.$message.success(res.msg);
                 this.$router.push('topicManage');
             }).catch(err => {
                 console.log(err);
@@ -207,27 +213,27 @@ export default {
         },
         // 添加banner
         addBanner() {
-            this.list.banner.push({ img: '', product: [{ id: '', type: 1 }, { id: '', type: 1 }, { id: '', type: 1 }] });
+            this.topicNavbarList.topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] });
         },
         // 添加banner图产品
         addBannerProduct(index) {
-            this.list.banner[index].product.push({ id: '', type: 1 });
+            this.topicNavbarList.topicNavbarBannerList[index].topicBannerProductList.push({ prodCode: '', productType: 99 });
         },
         // 上传banner图
         uploadBanner(res, index) {
-            this.list.banner[index].img = res.data;
+            this.topicNavbarList.topicNavbarBannerList[index].bannerImg = res.data;
         },
         // 添加产品
         addProduct() {
-            this.list.product.push({ id: '', type: 1 });
+            this.topicNavbarList.topicBannerProducts.push({ prodCode: '', productType: 99 });
         },
         // 获取输入字数
         getFontNum() {
-            this.totalNum = this.bannerForm.tip.length;
+            this.totalNum = this.bannerForm.remark.length;
         },
         // 上传头部banner成功回调
         handleAvatarSuccess(res) {
-            this.bannerForm.img = res.data;
+            this.bannerForm.imgUrl = res.data;
         }
     }
 };

@@ -2,8 +2,8 @@
     <div class="coupon-data">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '30px 45px',minHeight:'80vh' }">
-                <el-button v-if="p.addInventory" @click="addInventory" class="add-product" type="primary">增加券库存</el-button>
-                <div class="search-pane">
+                <!--<el-button @click="addInventory" class="add-product" type="primary">增加券库存</el-button>-->
+                <div class="search-pane">、
                     <el-form :model="form" ref='form' inline label-width="100px">
                         <el-form-item prop="getDate" label="领取时间" label-width="120">
                             <el-date-picker
@@ -38,14 +38,19 @@
                             <el-button type="primary" @click="getList(1)">搜索</el-button>
                             <el-button @click="resetForm('form')">重置</el-button>
                         </el-form-item>
-                        <el-form-item label=" ">
-                            <el-button type="primary" @click="addInventory">添加券库存</el-button>
-                        </el-form-item>
+                        <!--<el-form-item label=" ">-->
+                            <!--<el-button type="primary" @click="addInventory">添加券库存</el-button>-->
+                        <!--</el-form-item>-->
                     </el-form>
                 </div>
                 <el-table v-loading="tableLoading" border :data="tableData" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" align="center" width="50"></el-table-column>
                     <el-table-column prop="code" label="优惠券编码"></el-table-column>
+                    <el-table-column label="面额" align="center">
+                        <template slot-scope="scope">
+                            ￥{{scope.row.value}}
+                        </template>
+                    </el-table-column>
                     <el-table-column label="领取时间" align="center">
                         <template slot-scope="scope">
                             {{scope.row.createTime|formatDate}}
@@ -58,10 +63,10 @@
                     </el-table-column>
                     <el-table-column label="结束时间" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.outTime|ormatDate}}
+                            {{scope.row.expireTime|formatDate}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="nickname" label="领取人" align="center"></el-table-column>
+                    <el-table-column prop="nickName" label="领取人" align="center"></el-table-column>
                     <el-table-column label="使用时间" align="center">
                         <template slot-scope="scope">
                             {{scope.row.updateTime|formatDate}}
@@ -77,7 +82,7 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                                <el-button v-if="scope.row.updateTime" @click="inventoryManage(scope.row)" type="primary">
+                                <el-button v-if="scope.row.updateTime" @click="productInfo(scope.row)" type="primary">
                                     订单详情
                                 </el-button>
                         </template>
@@ -89,6 +94,7 @@
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="page.currentPage"
+                        :page-size="page.pageSize"
                         layout="total, prev, pager, next, jumper"
                         :total="page.totalPage">
                     </el-pagination>
@@ -100,7 +106,7 @@
                             <el-button @click="batchOperate" type="primary" size="mini">确定</el-button>
                             <el-button size="mini" type="text" @click="isShowPop = false">取消</el-button>
                         </div>
-                        <el-button slot="reference" v-if="p.loseBatchDiscountCouponDealer" @click="isShowPop = true">删除</el-button>
+                        <el-button slot="reference" @click="isShowPop = true">删除</el-button>
                     </el-popover>
                     <el-button type="primary">导出全部</el-button>
                 </div>
@@ -123,7 +129,6 @@
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import * as pApi from '@/privilegeList/OperateManage/DiscountCoupon/index.js';
     import utils from '@/utils/index.js';
     import moment from 'moment';
     import { myMixinTable } from '@/JS/commom';
@@ -139,10 +144,6 @@
             return {
                 nav: ['运营管理', '优惠券设置', '优惠券管理', '券数据'],
                 // 权限控制
-                p: {
-                    addInventory: false,
-                    loseBatchDiscountCouponDealer: false
-                },
 
                 form: {
                     getDate: '',
@@ -167,37 +168,30 @@
 
         activated() {
             this.params = this.$route.query || JSON.parse(sessionStorage.getItem('couponData'));
-            this.pControl();
             this.repertoryNumber = '';
             this.getList(1);
         },
 
         methods: {
 
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-            },
             //   提交表单
             getList(val) {
                 const data = {
                     page: val,
+                    pageSize: this.page.pageSize,
                     status: this.form.status,
-                    discountCouponId: this.params.id,
-                    beginTime: this.form.getDate ? moment(this.form.getDate[0]).format('YYYY-MM-DD') : '',
-                    endTime: this.form.getDate ? moment(this.form.getDate[1]).format('YYYY-MM-DD') : '',
-                    beginStartTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
-                    endStartTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : ''
+                    couponConfigId: this.params.id,
+                    receiveStartTime: this.form.getDate ? moment(this.form.getDate[0]).format('YYYY-MM-DD') : '',
+                    receiveEndTime: this.form.getDate ? moment(this.form.getDate[1]).format('YYYY-MM-DD') : '',
+                    availableStartTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
+                    availableEndTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : ''
                 };
-                data.url = pApi.discountCouponDealerPageList;
                 this.page.currentPage = val;
                 this.tableLoading = true;
-                request.discountCouponDealerPageList(data).then(res => {
+                request.queryUserCouponList(data).then(res => {
                     this.tableData = [];
-                    this.tableData = res.data.data.data;
-                    this.page.totalPage = res.data.data.resultCount;
+                    this.tableData = res.data.data;
+                    this.page.totalPage = res.data.totalNum;
                     this.tableLoading = false;
                 }).catch(error => {
                     console.log(error);
@@ -206,7 +200,10 @@
             },
             //   重置表单
             resetForm(formName) {
+                this.form.date = '';
+                this.form.getDate = '';
                 this.$refs[formName].resetFields();
+                this.getList(1);
             },
             // 全选
             handleSelectionChange(val) {
@@ -252,10 +249,11 @@
             // 批量操作
             batchOperate() {
                 const data = {};
-                data.ids = this.multipleSelection.join(',');
-                data.url = pApi.loseBatchDiscountCouponDealer;
-                request.loseBatchDiscountCouponDealer(data).then(res => {
-                    this.$message.success(res.data.data);
+                // data.ids = this.multipleSelection.join(',');
+                // data.ids = JSON.stringify(this.multipleSelection);
+                data.ids = this.multipleSelection;
+                request.bathVaildCoupon(data).then(res => {
+                    this.$message.success(res.msg);
                     this.isShowPop = false;
                     this.getList(this.page.currentPage);
                 }).catch(error => {

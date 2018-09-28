@@ -134,6 +134,17 @@
                     }
                 }
             };
+            const limitNum = (rule, value, callback) => { // 正整数
+                if (value) {
+                    if (!/^[1-9]*[1-9][0-9]*$/.test(value)) {
+                        callback(new Error('请输入正整数'));
+                    } else {
+                        callback();
+                    }
+                } else {
+                    callback();
+                }
+            };
             const isDouble = (rule, value, callback) => { // 两位小数
                 if (!value) {
                     return callback(new Error('参数不能为空!'));
@@ -181,7 +192,7 @@
                         { validator: isMax, trigger: 'blur' }
                     ],
                     limitNumber: [
-                        { validator: nonnegativeInteger, trigger: 'blur' }
+                        { validator: limitNum, trigger: 'blur' }
                     ]
                 },
                 form: {
@@ -194,7 +205,7 @@
                     startPrice: '', // 起拍价格
                     orderCloseTime: '', // 自动关闭订单时间
                     totalNumber: '', // 发放总数量
-                    limitNumber: '0'// 限购数量,默认为0
+                    limitNumber: ''// 限购数量,默认为0
                 },
                 showMask: false, // 选择商品弹窗
                 productDetail: {}, // 选择的商品的商品信息
@@ -209,7 +220,7 @@
             this.productDetail = {};
             this.duration = '';
             this.form = {};
-            this.form.limitNumber = 0;
+            this.form.limitNumber = '';
         },
 
         methods: {
@@ -285,6 +296,7 @@
             submitForm() {
                 this.$refs.form.validate((valid) => {
                     if (valid) {
+                        console.log(111);
                         // 判空
                         if (!this.productDetail.id) {
                             this.$message.warning('请选择商品！');
@@ -295,24 +307,16 @@
                             return;
                         }
                         // 表单提交
-                        const data = {};
+                        const data = this.form;
+                        if (!data.limitNumber) data.limitNumber = -1;
                         data.beginTime = moment(this.form.beginTime).format('YYYY-MM-DD HH:mm:ss'); // 活动开始时间
-                        data.downPrice = this.form.downPrice; // 每次降价金额
-                        data.endTime = this.form.endTime; // 活动结束时间
-                        data.floorPrice = this.form.floorPrice; // 最低价
-                        data.floorPriceTime = this.form.floorPriceTime; // 底价持续时间
-                        data.intervalTime = this.form.intervalTime; // 降价间隔时间
-                        data.orderCloseTime = this.form.orderCloseTime; // 自动关闭订单时间
                         // data.productCode = this.productDetail.productCode; // 产品编号
-                        // data.productId = this.productDetail.productId; // 产品ID
+                        data.productId = this.productDetail.productId; // 产品ID
                         // data.productImg = this.productDetail.specImg; // 产品主图url
                         // data.productName = this.productDetail.productName; // 产品名称
                         // data.productPrice = this.productDetail.originalPrice; // 产品原价
                         data.productPriceId = this.productDetail.id; // 产品规格价格编号
                         // data.productSpec = this.productDetail.spec; // 产品规格
-                        data.startPrice = this.form.startPrice; // 起拍价
-                        data.totalNumber = this.form.totalNumber; // 发放总数量
-                        data.limitNumber = this.form.limitNumber; // 限购数量
                         this.btnLoading = true;
                         request.operatorAddDepreciate(data).then(res => {
                             this.$message.success(res.msg);

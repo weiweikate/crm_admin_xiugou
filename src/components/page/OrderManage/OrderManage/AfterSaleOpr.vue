@@ -149,9 +149,9 @@
                                         <span>买家已寄出</span><span>物流公司：{{returnProduct.express_name}}</span><span>物流单号：{{returnProduct.express_no}}</span><span
                                         class="blue" @click="watchLogistics">查看物流</span></div>
                                     <div style="margin-top: 30px">
-                                        <el-button type="danger" v-if="p.confirmRefund" @click="refundClick(1)">同意退款
+                                        <el-button type="danger" @click="refundClick(1)">同意退款
                                         </el-button>
-                                        <el-button type="primary" v-if="p.refusalRefund" @click="refundClick(2)">拒绝退款
+                                        <el-button type="primary" @click="refundClick(2)">拒绝退款
                                         </el-button>
                                         <!--<el-button type="warning" @click="reGoodsClick(3)">产品报损</el-button>-->
                                     </div>
@@ -253,9 +253,9 @@
                                 <div class="tips">提示：如果未发货，请点击同意退款给买家</div>
                                 <div class="tips" style="margin-left: 40px">如果实际已发货，请主动与买家联系</div>
                                 <div style="margin-top: 30px" v-if="status==1">
-                                    <el-button type="danger" v-if="p.confirmRefund" @click="refundClick(1)">同意退款
+                                    <el-button type="danger" @click="refundClick(1)">同意退款
                                     </el-button>
-                                    <el-button type="primary" v-if="p.refusalRefund" @click="refundClick(2)">拒绝退款
+                                    <el-button type="primary" @click="refundClick(2)">拒绝退款
                                     </el-button>
                                 </div>
                             </div>
@@ -334,7 +334,7 @@
                 <div class="mask-content">
                     <span class="del-tip">{{info}}</span>
                     <div class="del-btn-group">
-                        <el-button :loading="btnLoading" v-if="p.exchangeChangeReturn" @click="oprSure(true)"
+                        <el-button :loading="btnLoading" @click="oprSure(true)"
                                    class="del-btn" type="danger">
                             {{btnInf}}
                         </el-button>
@@ -361,7 +361,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" v-if="p.agreeExchange" @click="submit('form')">确认提交</el-button>
+                <el-button type="primary" @click="submit('form')">确认提交</el-button>
                 <el-button @click="badDebtMask=false">取 消</el-button>
             </div>
         </el-dialog>
@@ -416,7 +416,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" v-if="p.confirmRefund" @click="refundSubmit(1,'form')">确认退款金额</el-button>
+                <el-button type="primary" @click="refundSubmit(1,'form')">确认退款金额</el-button>
             </div>
         </el-dialog>
         <!--拒绝退款弹窗-->
@@ -444,7 +444,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" v-if="p.refusalRefund" @click="refundSubmit(2,'form')">确认提交</el-button>
+                <el-button type="primary" @click="refundSubmit(2,'form')">确认提交</el-button>
                 <el-button @click="rejectMask=false">取 消</el-button>
             </div>
         </el-dialog>
@@ -456,11 +456,10 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import vLogistics from '@/components/common/logistics.vue';
-    import icon from '../../../common/ico.vue';
-    import * as api from '@/api/OrderManage/OrderManage/index.js';
-    import * as pApi from '@/privilegeList/OrderManage/OrderManage/index.js';
+    import icon from '@/components/common/ico.vue';
     import utils from '@/utils/index.js';
     import { queryDictonary } from '@/JS/commom';
+    import request from '@/http/http.js';
 
     export default {
         components: { vBreadcrumb, icon, vLogistics },
@@ -468,12 +467,6 @@
 
         data() {
             return {
-                p: {
-                    exchangeChangeReturn: false,
-                    agreeExchange: false,
-                    confirmRefund: false,
-                    refusalRefund: false
-                },
                 nav: ['订单管理', '申请操作'],
                 orderId: '', // 订单id
                 productId: '',
@@ -521,61 +514,45 @@
             this.productId = this.$route.query.afterSaleOprId || sessionStorage.getItem('afterSaleOprId');
             this.getDictionaryData();
             this.getInfo();
-            this.pControl();
         },
         methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-            },
             // 获取详情
             getInfo() {
-                this.$axios
-                    .post(api.findReturnProductInfo, {
-                        orderProductId: this.productId
-                    })
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            this.returnProduct = res.data.data.returnProduct;
-                            this.imgList = res.data.data.imgList;
-                            if (res.data.data.returnAmountsRecord) {
-                                this.returnAmountsRecord = res.data.data.returnAmountsRecord;
-                                this.orderId = res.data.data.returnAmountsRecord.orderId;
-                            }
-                            this.opr = this.returnProduct.type;
-                            this.status = this.returnProduct.status;
-                            this.id = this.returnProduct.id;
-                            let tmpType = '';
-                            if ((res.data.data.returnProduct.pay_type & 1) != 0) {
-                                tmpType += `平台支付`;
-                            }
-                            if ((res.data.data.returnProduct.pay_type & 2) != 0) {
-                                tmpType += `+微信小程序支付`;
-                            }
-                            if ((res.data.data.returnProduct.pay_type & 4) != 0) {
-                                tmpType += `+APP支付`;
-                            }
-                            if ((res.data.data.returnProduct.pay_type & 8) != 0) {
-                                tmpType += `+支付宝支付`;
-                            }
-                            if ((res.data.data.returnProduct.pay_type & 16) != 0) {
-                                tmpType += `+银联支付`;
-                            }
-                            this.payTime = tmpType;
-                            this.getProgressStu(this.status, this.returnProduct.express_no, this.returnProduct.ec_express_no, this.opr);
-                            if (this.returnProduct.out_time) {
-                                this.getDistanceTime(this.returnProduct.out_time);
-                            }
-                            this.value.push(this.returnProduct.return_token_coin, this.returnProduct.return_balance, this.returnProduct.return_user_score, this.returnProduct.return_amounts);
-                        } else {
-                            this.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                request.findReturnProductInfo({ orderProductId: this.productId }).then(res => {
+                    this.returnProduct = res.data.data.returnProduct;
+                    this.imgList = res.data.data.imgList;
+                    if (res.data.data.returnAmountsRecord) {
+                        this.returnAmountsRecord = res.data.data.returnAmountsRecord;
+                        this.orderId = res.data.data.returnAmountsRecord.orderId;
+                    }
+                    this.opr = this.returnProduct.type;
+                    this.status = this.returnProduct.status;
+                    this.id = this.returnProduct.id;
+                    let tmpType = '';
+                    if ((res.data.data.returnProduct.pay_type & 1) != 0) {
+                        tmpType += `平台支付`;
+                    }
+                    if ((res.data.data.returnProduct.pay_type & 2) != 0) {
+                        tmpType += `+微信小程序支付`;
+                    }
+                    if ((res.data.data.returnProduct.pay_type & 4) != 0) {
+                        tmpType += `+APP支付`;
+                    }
+                    if ((res.data.data.returnProduct.pay_type & 8) != 0) {
+                        tmpType += `+支付宝支付`;
+                    }
+                    if ((res.data.data.returnProduct.pay_type & 16) != 0) {
+                        tmpType += `+银联支付`;
+                    }
+                    this.payTime = tmpType;
+                    this.getProgressStu(this.status, this.returnProduct.express_no, this.returnProduct.ec_express_no, this.opr);
+                    if (this.returnProduct.out_time) {
+                        this.getDistanceTime(this.returnProduct.out_time);
+                    }
+                    this.value.push(this.returnProduct.return_token_coin, this.returnProduct.return_balance, this.returnProduct.return_user_score, this.returnProduct.return_amounts);
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             changeMoney(num, pre) {
                 if (pre > this.value[num]) {
@@ -637,21 +614,15 @@
             // 变更退货
             oprSure() {
                 this.tipsMask = false;
-                this.$axios
-                    .post(api.exchangeChangeReturn, {
-                        retuntProductId: this.id,
-                        url: pApi.exchangeChangeReturn
-                    })
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            this.getInfo();
-                        } else {
-                            this.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(res);
-                    });
+                request.exchangeChangeReturn({ retuntProductId: this.id }).then(res => {
+                    if (res.data.code == 200) {
+                        this.getInfo();
+                    } else {
+                        this.$message.warning(res.data.msg);
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 是否同意退款按钮
             refundClick(num) {
@@ -674,25 +645,17 @@
                 const data = {
                     retuntProductId: this.id,
                     scrapReason: this[form].scrapReason,
-                    hadScrap: this.form.badReason ? 1 : 2,
-                    url: pApi.agreeExchange
+                    hadScrap: this.form.badReason ? 1 : 2
                 };
                 if (this.form.badReason) {
                     data.hadScrap = 1;
                 }
-                this.$axios
-                    .post(api.agreeExchange, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            this.$message.success(res.data.msg);
-                            this.getInfo();
-                        } else {
-                            this.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(res);
-                    });
+                request.agreeExchange(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.getInfo();
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 是否同意退款提交
             refundSubmit(num, form) {
@@ -702,31 +665,22 @@
                 data.retuntProductId = this.id;
                 let url;
                 if (num == 1) {
-                    url = api.confirmRefund;
-                    data.url = pApi.confirmRefund;
+                    url = 'confirmRefund';
                 } else {
                     if (!data.reason) {
                         this.$message.warning('请选择拒绝原因!');
                         return;
                     }
-                    url = api.refusalRefund;
-                    data.url = pApi.refusalRefund;
+                    url = 'refusalRefund';
                 }
-                this.$axios
-                    .post(url, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.$message.success(res.data.msg);
-                            that.agreeMask = false;
-                            that.rejectMask = false;
-                            that.getInfo();
-                        } else {
-                            that.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(res);
-                    });
+                request[url](data).then(res => {
+                    that.$message.success(res.data.msg);
+                    that.agreeMask = false;
+                    that.rejectMask = false;
+                    that.getInfo();
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 选择拒绝原因
             chooseReason() {
@@ -785,15 +739,17 @@
             },
             // 云仓发货
             orderSendOut() {
-                this.$axios
-                    .post(api.sendEcReturnProduct, { retuntProductId: this.id, ecExpressName: '中通快递', ecExpressNo: '221286279559' })
-                    .then(res => {
-                        this.$message.success(res.data.msg);
-                        this.getInfo();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                const data = {
+                    retuntProductId: this.id,
+                    ecExpressName: '中通快递',
+                    ecExpressNo: '221286279559'
+                };
+                request.sendEcReturnProduct(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.getInfo();
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 产品报损数据字典
             async getDictionaryData() {

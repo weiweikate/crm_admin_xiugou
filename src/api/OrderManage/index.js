@@ -13,7 +13,7 @@ export const queryClosedGiftBagOrderPageList = '/admin/gbGiftBagOrder/queryClose
 // 获取礼包订单详情列表
 export const getGiftBagOrderDetail = '/admin/gbGiftBagOrder/getGiftBagOrderDetail';
 // 云仓发货
-export const orderSendOut = '/admin/order/orderSendOut';
+// export const orderSendOut = '/admin/order/orderSendOut';
 // 星星标记和备注
 export const orderSign = '/admin/order/orderSign';
 
@@ -73,3 +73,11 @@ export const findReturnProductInfo = '/admin/returnProduct/findReturnProductInfo
 export const sendEcReturnProduct = '/admin/returnProduct/sendEcReturnProduct';
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 export const findLogisticsDetail = ['/logistics/findLogisticsDetail', { methods: 'get' }]; // 物流测试
+
+// 订单管理
+// 订单列表
+export const queryOrderPageList = '/order/queryPage';
+// 订单详情
+export const orderDetail = '/order/lookDetail';
+// 订单发货
+export const orderSendOut = '/order/sendOut';

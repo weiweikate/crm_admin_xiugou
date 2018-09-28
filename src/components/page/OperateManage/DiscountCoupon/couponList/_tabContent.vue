@@ -89,7 +89,7 @@
                 <div class="item"><span>券值：</span>{{value}}</div>
                 <div class="item"><span>追加数量：</span><el-input v-model="num"></el-input></div>
                 <div style="text-align: center;margin-top: 30px">
-                    <el-button type="primary" @click="addRepertory">确定</el-button>
+                    <el-button type="primary" btnLoading="false" @click="addRepertory">确定</el-button>
                     <el-button @click="addMask=false">取消</el-button>
                 </div>
 
@@ -119,7 +119,8 @@ export default {
             left: '', // 剩余数量
             value: '', // 券值
             num: '', // 库存
-            id: ''// 优惠券id
+            id: '', // 优惠券id
+            btnLoading: false
         };
     },
     created() {
@@ -234,12 +235,15 @@ export default {
                 this.$message.warning('请输入库存!');
                 return;
             }
+            this.btnLoading = true;
             request.addCouponStock(data).then(res => {
+                this.$message.success(res.msg);
                 this.addMask = false;
                 this.getList(1);
+                this.btnLoading = false;
             }).catch(error => {
                 console.log(error);
-                this.tableLoading = false;
+                this.btnLoading = false;
             });
         },
         // 失效
@@ -248,6 +252,7 @@ export default {
                 id: row.id
             };
             request.deleteCouponById(data).then(res => {
+                this.$message.success(res.msg);
                 this.getList(1);
             }).catch(error => {
                 console.log(error);

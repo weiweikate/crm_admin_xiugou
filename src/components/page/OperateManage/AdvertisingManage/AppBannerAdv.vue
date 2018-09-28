@@ -2,31 +2,37 @@
     <div class="app-banner-adv">
         <v-breadcrumb :nav="nav"></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
-            <el-button @click="mask = true"  type="primary" style="margin-bottom:20px">添加banner图片
+            <el-button @click="addItem"  type="primary" style="margin-bottom:20px">添加banner图片
             </el-button>
             <el-table border :data="tableData">
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
-                <el-table-column prop="" label="一级分类" align="center" v-if="pageType == 10"></el-table-column>
-                <el-table-column prop="" label="产品" align="center" v-if="pageType == 8"></el-table-column>
-                <el-table-column prop="" label="说明" align="center" v-if="pageType == 8"></el-table-column>
-                <el-table-column label="图片" align="center">
+                <el-table-column prop="" label="一级分类" align="center" v-if="pageType == 10" key="1"></el-table-column>
+                <el-table-column prop="" label="产品" align="center" v-if="pageType == 8" key="2"></el-table-column>
+                <el-table-column prop="title" label="标题" align="center" v-if="pageType == 8" key="3"></el-table-column>
+                <el-table-column prop="" label="状态" align="center" v-if="pageType == 8" key="4"></el-table-column>
+                <el-table-column v-if="pageType!=8" label="图片" align="center" min-width="220" key="5">
                     <template slot-scope="scope">
-                        <img class="img" :src="scope.row.img_url">
+                        <img class="img" :src="scope.row.imgUrl">
                     </template>
                 </el-table-column>
-                <el-table-column label="店长/店铺名称" align="center" min-width="100" v-if="pageType == 3"></el-table-column>
-                <el-table-column prop="link_type" label="链接" align="center" v-if="pageType == 2"></el-table-column>
-                <el-table-column prop="id" label="ID" align="center" v-if="pageType != 2 && pageType != 8 && pageType != 12"></el-table-column>
-                <el-table-column prop="remark" label="备注" align="center" v-if=""></el-table-column>
-                <el-table-column prop="show_begintime" label="投放时间" align="center" v-if="pageType != 2 && pageType != 6 && pageType != 7 && pageType != 8 && pageType != 12">
+                <el-table-column label="店长/店铺名称" align="center" v-if="pageType == 3" key="6">
                     <template slot-scope="scope">
-                        {{scope.row.show_begintime|formatDate}}~{{scope.row.show_endtime|formatDate}}
+                        {{scope.row.binour}}<br>{{scope.row.storeName}}
                     </template>
                 </el-table-column>
-                <el-table-column prop="sort_rank" label="排序" align="center" width="80"></el-table-column>
+                <el-table-column prop="linkTypeCode" label="链接" align="center" v-if="pageType == 2" key="7"></el-table-column>
+                <el-table-column prop="id" label="ID" align="center" v-if="pageType != 2 && pageType != 8 && pageType != 12" key="8"></el-table-column>
+                <el-table-column label="上传人/上传时间" align="center" v-if="pageType == 12" key="9"></el-table-column>
+                <el-table-column prop="remark" label="备注" align="center"></el-table-column>
+                <el-table-column prop="showBegintime" label="投放时间" align="center" key="10" v-if="pageType != 2 && pageType != 6 && pageType != 7 && pageType != 8 && pageType != 12">
+                    <template slot-scope="scope">
+                        {{scope.row.showBegintime|formatDate}}~{{scope.row.showEndtime|formatDate}}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="rank" label="排序" v-if="pageType!=12" align="center" key="11"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button @click='editBanImg(scope.row.id)' type="primary">编辑</el-button>
+                        <el-button @click='editItem(scope.row)' type="primary">编辑</el-button>
                         <el-button type="warning" @click="del(scope.row.id)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -37,15 +43,16 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="page.currentPage"
+                    :page-size="page.pageSize"
                     layout="total, prev, pager, next, jumper"
                     :total="page.totalPage">
                 </el-pagination>
             </div>
         </el-card>
         <!--添加/编辑弹窗-->
-        <el-dialog title="添加banner图片" :visible.sync="mask" :before-close="closeDia">
+        <el-dialog :title="title" :visible.sync="mask" :before-close="closeDia">
             <el-form v-model="form" label-width="100px">
-                <el-form-item label="选择banner图" class="icon-area">
+                <el-form-item label="选择banner图" class="icon-area" v-if="pageType!=8">
                     <el-input readonly v-model="form.imgUrl" placeholder="上传图片" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
                                :action="uploadImg"
@@ -53,37 +60,47 @@
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
                 </el-form-item>
-                <div class="inf-area">
+                <div class="inf-area" v-if="pageType!=8">
                     <img :src="form.imgUrl" alt="" class="banner-img">
                     <div class="tips">建议图片尺寸350px*350px</div>
                 </div>
-                <el-form-item label="请选择类型">
+                <el-form-item v-if="pageType!=3&&pageType!=12" label="请选择类型">
                     <el-select v-model="form.linkType" placeholder="请选择类型">
-                        <el-option v-for="(v,k) in linkTypeList" :key="k" :label="v.dValue" :value="v.dKey"></el-option>
+                        <el-option v-for="(v,k) in linkTypeList" :key="k" :label="v.type" :value="v.id">{{v.type}}</el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="请输入ID">
-                    <el-input v-model="form.linkTypeValue" placeholder="请输入ID" @blur=""
+                <el-form-item v-if="pageType!=3&&pageType!=12" label="请输入ID">
+                    <el-input v-model="form.linkTypeCode" placeholder="请输入ID" @blur="getProductName"
+                              auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item v-if="pageType==3&&pageType!=12" label="请输入店铺ID">
+                    <el-input v-model="form.linkTypeCode" placeholder="请输入ID" @blur="getProductName"
                               auto-complete="off"></el-input>
                 </el-form-item>
                 <div class="inf-area">{{productName}}</div>
-                <el-form-item label="备注说明">
+                <el-form-item label="备注说明" v-if="pageType!=8">
                     <el-input v-model="form.remark" placeholder="请输入备注说明" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="排序">
-                    <el-input v-model="form.sortRank" placeholder="请输入排序" auto-complete="off"></el-input>
+                <el-form-item label="标题" v-if="pageType==8">
+                    <el-input v-model="form.title" placeholder="请输入说明" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item v-if="pageType!=5" prop="date" label="投放时间">
-                    <el-date-picker @blur="" class="input-style" v-model="form.date" type="datetimerange" range-separator="至"
+                <el-form-item label="备注" v-if="pageType==8">
+                    <el-input v-model="form.remark" placeholder="请输入备注" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="排序" v-if="pageType!=12">
+                    <el-input v-model="form.rank" placeholder="请输入排序" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item v-if="pageType!=2&&pageType!=6&&pageType!=7&&pageType!=8&&pageType!=12" prop="date" label="投放时间">
+                    <el-date-picker @blur="changeTime" class="input-style" v-model="form.date" type="datetimerange" range-separator="至"
                                     start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" :loading="btnLoading" @click="dealAdv('form')">确 认</el-button>
-                <el-button @click="closeDia">取 消</el-button>
+                <el-button @click="mask=false">取 消</el-button>
             </div>
         </el-dialog>
-        <deletetoast :id="delId" :url="delUrl" :uri="delUri" :status="3" @msg="deleteToast" v-if="isShowDel"></deletetoast>
+        <deletetoast :id="delId" :url="delUrl" :status="3" @msg="deleteToast" v-if="isShowDel"></deletetoast>
     </div>
 </template>
 
@@ -91,7 +108,9 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import deletetoast from '@/components/common/DeleteToast';
     import * as api from '@/api/api.js';
+    import moment from 'moment';
     import { myMixinTable, queryDictonary } from '@/JS/commom';
+    import request from '@/http/http.js';
 
     export default {
         components: {
@@ -110,34 +129,82 @@
                 btnLoading: false,
                 uploadImg: '',
                 productName: '',
+                page: {
+                    currentPage: 1,
+                    totalPage: 0
+                },
                 form: {
                     imgUrl: '',
                     linkType: '',
-                    linkTypeValue: '',
+                    linkTypeCode: '',
                     remark: '',
-                    sortRank: '',
-                    date: []
+                    rank: '',
+                    date: [],
+                    showBegintime: '',
+                    showEndtime: ''
                 },
-                linkTypeList: [], // 链接类型
+                id: '',
+                linkTypeList: [{
+                    type: '链接产品',
+                    id: 1
+                }, {
+                    type: '链接专题',
+                    id: 2
+                }, {
+                    type: '降价拍',
+                    id: 3
+                }, {
+                    type: '秒杀',
+                    id: 4
+                }, {
+                    type: '礼包',
+                    id: 5
+                }], // 链接类型
                 isShowDel: false,
                 pageType: '', // 页面进来的名字
                 status: '', // 弹出框的数据格式
-                nav: ['运营管理', '广告位管理'] // 导航名称
+                nav: ['运营管理', '广告位管理'], // 导航名称
+                title: '添加banner图片' // 弹窗名称
             };
         },
-
         activated() {
             this.status = this.$route.query.appBannerAdvStatus || this.sessionStorage.getItem('appBannerAdvStatus');
             this.pageType = this.$route.query.appBannerAdvPageType || this.sessionStorage.getItem('appBannerAdvPageType');
             this.setConfig(this.status, this.pageType);
-            // this.getList();
+            this.tableData = [];
+            this.getList(this.page.currentPage);
         },
 
         methods: {
+            changeTime() {
+                this.$mount();
+            },
             // 设置导航名字，以及样式
             setConfig(status, pageType) {
                 let navName = '';
                 this.uploadImg = api.uploadImg;
+                pageType = typeof navName === 'string' ? Number(pageType) : pageType;
+                this.title = pageType === 8 ? '添加' : '添加banner图片';
+                if (pageType === 7) {
+                    this.linkTypeList = [{ type: '链接专题', id: 2 }];
+                } else {
+                    this.linkTypeList = [{
+                        type: '链接产品',
+                        id: 1
+                    }, {
+                        type: '链接专题',
+                        id: 2
+                    }, {
+                        type: '降价拍',
+                        id: 3
+                    }, {
+                        type: '秒杀',
+                        id: 4
+                    }, {
+                        type: '礼包',
+                        id: 5
+                    }];
+                }
                 switch (pageType) {
                     case 1: navName = 'APP首页banner广告位管理'; break;
                     case 2: navName = 'APP首页推荐位管理'; break;
@@ -155,28 +222,105 @@
                 this.nav[2] = navName;
             },
             // 获取数据
-            getList() {
-
+            getList(val) {
+                const data = {
+                    page: val,
+                    pageSize: this.page.pageSize,
+                    type: this.pageType
+                };
+                this.page.currentPage = val;
+                this.tableLoading = true;
+                this.tableData = [];
+                request.queryAdvertisementPageList(data).then(res => {
+                    this.tableData = res.data.data;
+                    this.page.totalPage = res.data.totalNum;
+                    this.tableLoading = false;
+                }).catch(error => {
+                    console.log(error);
+                    this.tableLoading = false;
+                });
             },
             // 上传图片
             handleAvatarSuccess(res) {
                 this.form.imgUrl = res.data;
             },
+            // 根据类型和code查询产品名称
+            getProductName() {
+                const data = {
+                    code: this.form.linkTypeCode,
+                    type: this.form.linkType
+                };
+                request.getInfoByCode(data).then(res => {
+                    this.productName = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            // 添加
+            addItem() {
+                this.mask = true;
+                this.closeDia();
+            },
+            // 编辑
+            editItem(row) {
+                this.id = row.id;
+                this.mask = true;
+                this.form = row;
+                this.form.date = [];
+                this.form.date[0] = row.showBegintime;
+                this.form.date[1] = row.showEndtime;
+                this.title = this.pageType === 8 ? '编辑' : '编辑banner图片';
+            },
             // 添加编辑
             dealAdv() {
-                console.log(this.form);
+                const data = this.form;
+                let url = 'addAdvertisement';
+                if (this.id) {
+                    data.id = this.id;
+                    url = 'updateAdvertisement';
+                }
+                data.type = this.pageType;
+                if (this.form.date.length) {
+                    data.showBegintime = this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss') : '';
+                    data.showEndtime = this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD  HH:mm:ss') : '';
+                }
+                request[url](data).then(res => {
+                    this.$message.success(res.msg);
+                    this.getList(1);
+                    this.closeDia();
+                    this.mask = false;
+                    this.btnLoading = false;
+                }).catch(error => {
+                    console.log(error);
+                    this.btnLoading = false;
+                    this.getList(1);
+                    this.mask = false;
+                    this.closeDia();
+                });
             },
             // 关闭弹窗
             closeDia() {
                 this.form = {
                     imgUrl: '',
                     linkType: '',
-                    linkTypeValue: '',
+                    linkTypeCode: '',
                     remark: '',
-                    sortRank: '',
-                    date: []
+                    rank: '',
+                    date: [],
+                    showBegintime: '',
+                    showEndtime: ''
                 };
-                this.mask = false;
+                this.id = '';
+            },
+            // 删除
+            del(val) {
+                this.delUrl = 'deleteAdvertisement';
+                this.delId = val;
+                this.isShowDel = true;
+            },
+            deleteToast(msg) {
+                this.isShowDel = msg;
+                this.getList(1);
             }
         }
     };
@@ -233,7 +377,7 @@
         .tip {
             color: #ff4e4e;
             font-size: 12px;
-            sortRank: absolute;
+            rank: absolute;
             left: 0;
             top: 80%;
         }

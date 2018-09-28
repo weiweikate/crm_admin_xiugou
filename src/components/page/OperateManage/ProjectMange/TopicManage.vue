@@ -72,14 +72,14 @@
         },
 
         activated() {
-            this.getList();
+            this.getList(this.page.currentPage);
         },
 
         methods: {
             // 获取数据
-            getList() {
+            getList(val) {
                 const data = {
-                    page: this.page.currentPage,
+                    page: val,
                     pageSize: this.page.pageSize
                 };
                 this.tableLoading = true;
@@ -96,12 +96,13 @@
             },
             // 删除专题
             del(val) {
-                this.delUrl = 'deleteTopic';
+                this.delUrl = 'deleteTopicById';
+                this.delId = val;
                 this.isShowDel = true;
             },
             deleteToast(msg) {
                 this.isShowDel = msg;
-                this.getList();
+                this.getList(1);
             },
             // 编辑
             editItem(row) {

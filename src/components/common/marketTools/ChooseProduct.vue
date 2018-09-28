@@ -9,7 +9,7 @@
                 <div v-if="!showResult" class="nodata">
                     <table style="text-align: center">
                         <tr>
-                            <td>请输入产品名称模糊搜索~</td>
+                            <td>请输入商品名称/ID模糊搜索~</td>
                         </tr>
                     </table>
                 </div>
@@ -117,9 +117,10 @@
                     }
                 } else {
                     this.noResult = false;
-                    request.queryProductSpecById({ productId: this.keyWordsID }).then(res => {
+                    request.queryProductSpecByproductId({ productId: this.keyWordsID }).then(res => {
+                        if (!res.data) return;
                         this.tableData = [];
-                        this.tableData = res.data.data;
+                        this.tableData = res.data;
                         this.showResult = true;
                     });
                 }
@@ -135,9 +136,10 @@
                     condition: queryString,
                     activityType: this.activityType
                 };
-                request.queryProductByNameOrCode(data).then(res => {
+                request.queryProductByTypeOrCode(data).then(res => {
                     const tmpArr = [];
-                    res.data.data.forEach((v, k) => {
+                    if (!res.data) return;
+                    res.data.forEach((v, k) => {
                         const o = {};
                         o.value = `${v.name} 产品ID：${v.prodCode}`;
                         o.id = v.id;

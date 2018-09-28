@@ -64,8 +64,10 @@
                 code: true,
                 codeTime: 5,
                 form1: {
-                    phone: '',
-                    password: 'a123456'
+                    phone: '18458866522',
+                    password: 'dnl2018'
+                    // phone: '',
+                    // password: 'a123456'
                 },
                 form2: {
                     phone: '',

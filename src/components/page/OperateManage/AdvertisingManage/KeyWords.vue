@@ -1,10 +1,10 @@
 <template>
     <div class="keywords">
         <v-breadcrumb :nav="['运营管理','广告位管理','搜索热门搜索关键词']"></v-breadcrumb>
-        <transition wordName="move" appear>
+        <transition name="move" appear>
             <el-card style="margin:10px 0 20px">
                 <el-form ref="form" :inline="true" :model="form">
-                    <el-form-item prop="wordName" label="关键词" label-width="120">
+                    <el-form-item prop="name" label="关键词" label-width="120">
                         <el-input style="width:200px" placeholder="请输入关键词搜索" v-model="form.wordName"></el-input>
                     </el-form-item>
                     <el-form-item>
@@ -18,13 +18,13 @@
                 <el-button @click="addHotWord" type="primary" style="margin-bottom: 20px">添加搜索关键词</el-button>
             <template>
                 <el-table :data="tableData" :height="height" border style="width: 100%">
-                    <el-table-column type="index" label="编号" width="60" align="center"></el-table-column>
+                    <el-table-column type="index" label="编号" align="center"></el-table-column>
                     <el-table-column prop="wordName" label="关键词" align="center"></el-table-column>
-                    <el-table-column prop="clickRate" label="活动点击数" align="center"></el-table-column>
+                    <el-table-column prop="hits" label="获得点击数" align="center"></el-table-column>
                     <el-table-column prop="rank" label="排序" align="center"></el-table-column>
-                    <el-table-column v-if="isShowOperate" label="操作" align="center">
+                    <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="success" v-if="scope.row.status==0" size="small"
+                            <el-button type="success" v-if="scope.row.status==2" size="small"
                                        @click="upStatusItem(scope.row,1)">开启
                             </el-button>
                             <el-button type="success" v-if="scope.row.status==1" size="small"
@@ -44,6 +44,7 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="page.currentPage"
+                    :page-size="page.pageSize"
                     layout="total, prev, pager, next, jumper"
                     :total="page.totalPage">
                 </el-pagination>
@@ -125,6 +126,10 @@ export default {
             editMask: false,
             id: '',
             itemId: '',
+            page: {
+                currentPage: 1,
+                totalPage: 0
+            },
             tableData: [],
             height: '',
             tipsMask: false,
@@ -141,7 +146,7 @@ export default {
         this.height = winHeight;
     },
     activated() {
-        this.getList();
+        this.getList(this.page.currentPage);
     },
     methods: {
         // 获取列表
@@ -149,13 +154,14 @@ export default {
             const that = this;
             const data = {
                 page: val,
-                wordName: that.form.wordName
+                name: that.form.wordName,
+                pageSize: that.page.pageSize
             };
             that.tableLoading = true;
             request.getHotWordsByPage(data).then(res => {
                 that.tableLoading = false;
-                that.tableData = res.data.data.data;
-                that.page.totalPage = res.data.data.totalNum;
+                that.tableData = res.data.data;
+                that.page.totalPage = res.data.totalNum;
             }).catch(err => {
                 that.tableLoading = false;
                 console.log(err);
@@ -178,9 +184,7 @@ export default {
         // 添加修改确定
         addOrEdit(formName) {
             let url = '';
-            const data = {};
-            data.wordName = this[formName].wordName;
-            data.rank = this[formName].rank;
+            const data = this[formName];
             if (!data.wordName) {
                 this.$message.warning('请输入关键词!');
                 return;
@@ -202,10 +206,9 @@ export default {
                 this.addMask = false;
                 this.editMask = false;
                 this.getList(this.page.currentPage);
-            })
-                .catch(err => {
-                    console.log(err);
-                });
+            }).catch(err => {
+                console.log(err);
+            });
         },
         // 开启关闭/删除
         upStatusItem(row, status) {
@@ -218,7 +221,7 @@ export default {
                 that.info = '确定关闭？';
             }
             if (status == 3) {
-                that.info = '确定删除"' + row.wordName + '"关键词？';
+                that.info = '确定删除"' + row.name + '"关键词？';
             }
             that.status = status;
             that.id = row.id;
@@ -228,20 +231,9 @@ export default {
             const data = {
                 id: that.id
             };
-            let url = '';
-            if (that.status == 1 || that.status == 2) {
-                url = 'updateHotWordsStatusById';
-                if (that.status == 1) {
-                    data.status = 1;
-                } else {
-                    data.status = 0;
-                }
-            }
-            if (that.status == 3) {
-                url = 'deleteHotWordsById';
-            }
+            data.type = that.status == 3 ? 0 : that.status;
             that.btnLoading = true;
-            request[url](data).then(res => {
+            request.updateHotWordsStatusById(data).then(res => {
                 that.tipsMask = false;
                 that.$message.success(res.msg);
                 that.getList(that.page.currentPage);

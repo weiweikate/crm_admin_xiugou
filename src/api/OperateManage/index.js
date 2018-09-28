@@ -98,18 +98,7 @@ export const addTagLibrary = '/admin/tagLibrary/addTagLibrary';
 export const infoParmByCategoryIdList = '/admin/infoParm/infoParmByCategoryIdList';
 // 优惠劵列表
 export const getDiscountCouponPage = '/admin/discountCoupon/getDiscountCouponPage';
-// 热词分页列表
-export const getHotWordsByPage = '/admin/hotWord/getHotWordsByPage';
-// 根据id查询热词
-export const getHotWordsById = '/admin/hotWord/getHotWordsById';
-// 新增热词
-export const addHotWord = '/admin/hotWord/addHotWord';
-// 删除热词
-export const deleteHotWordsById = '/admin/hotWord/deleteHotWordsById';
-// 修改热词状态
-export const updateHotWordsStatusById = '/admin/hotWord/updateHotWordsStatusById';
-// 修改热词信息
-export const updateHotWordsById = '/admin/hotWord/updateHotWordsById';
+
 // 分页列表
 export const queryReturnAddressList = '/admin/returnAddress/queryReturnAddressList';
 // 添加寄回地址
@@ -174,6 +163,10 @@ export const queryCouponList = '/coupon/queryCouponList';
 export const addOrModifyCoupon = '/coupon/addOrModifyCoupon';
 // 添加库存
 export const addCouponStock = '/coupon/addStock';
+// 查询券数据列表
+export const queryUserCouponList = '/user/coupon/queryUserCouponList';
+// 券数据批量删除
+export const bathVaildCoupon = '/user/coupon/bathVaildCoupon';
 // 失效优惠券
 export const deleteCouponById = ['/coupon/deleteById', { methods: 'get' }];
 // 通过id查询优惠券信息
@@ -212,6 +205,12 @@ export const querySysTagLibraryList = ['/config/sysTagLibrary/querySysTagLibrary
 export const topicList = '/topic/queryPageList';
 // 添加或修改专题
 export const addOrModifyTopic = '/topic/addOrModify';
+// 删除专题
+export const deleteTopicById = ['/topic/deleteById', { methods: 'get' }];
+// 查询专题
+export const findTopicById = ['/topic/findById', { methods: 'get' }];
+// 查询专题
+export const findTopicTemplate = ['/topic/template/queryAll', { methods: 'get' }];
 /** ************降价拍*****************/
 // 降价拍商品列表
 export const operatorDepreciatelist = '/operator/activityDepreciate/queryActivityDepreciateList';
@@ -225,3 +224,32 @@ export const modifyActivityDepreciate = ['/operator/activityDepreciate/modifyAct
 export const reduceStockById = '/operator/activityDepreciate/reduceStockById';
 // 查询降价拍商品详情
 export const operatorfindById = ['/operator/activityDepreciate/findActivityDepreciate', { methods: 'get' }];
+// 根据活动类型和查询关键字查询产品信息
+export const queryProductByTypeOrCode = '/product/product/queryProductByNameOrCode';
+// 根据产品id查询产品规格
+export const queryProductSpecByproductId = ['/product/productSpecPrice/queryProductSpecByproductId', { methods: 'get' }];
+/** ************关键词*****************/
+// 关键词分页列表
+export const getWordsByPage = '/config/searchWord/queryByPage';
+/** ************热搜关键词*****************/
+// 热词分页列表
+export const getHotWordsByPage = '/config/sysHotWord/queryHotWord';
+// 新增热词
+export const addHotWord = '/config/sysHotWord/addHotWord';
+// 修改热词状态
+export const updateHotWordsStatusById = '/config/sysHotWord/operHotWord';
+// 修改热词信息
+export const updateHotWordsById = '/config/sysHotWord/updateHotWordsById';
+/** ************广告位*****************/
+// 新增广告
+export const addAdvertisement = '/config/advertisement/addAdvertisement';
+// 查询广告列表
+export const queryAdvertisementPageList = '/config/advertisement/queryAdvertisementPageList';
+// 编辑广告
+export const updateAdvertisement = '/config/advertisement/updateAdvertisement';
+// 删除广告
+export const deleteAdvertisement = ['/config/advertisement/deleteAdvertisement', { methods: 'get' }];
+// 根据ID查询广告信息
+export const findAdvertisementById = ['/config/advertisement/findAdvertisementById', { methods: 'get' }];
+// 根据类型和code查询名称
+export const getInfoByCode = ['/config/advertisement/getInfo', { methods: 'get' }];

@@ -143,7 +143,9 @@ export default {
             secondName: '', // 选中的二级类目名称
             thirdName: '', // 选中的三级类目名称
             btnLoading: false,
-            firstId: ''
+            firstId: '',
+            url: '',
+            fatherId: ''
         };
     },
     created() {
@@ -184,13 +186,16 @@ export default {
             if (status) {
                 this.getFirst(false);
                 this.title = '添加热门分类';
+                this.url = 'addHotFlag';
             } else {
                 this.getFirst(true);
                 this.title = '编辑热门分类';
+                this.url = 'modifyHotFlag';
                 this.form.hotSort = row.hotSort;
                 this.firstName = row.className;
                 this.secondName = row.superiorName;
                 this.thirdName = row.name;
+                this.fatherId = row.id;
             }
             this.mask = true;
         },
@@ -205,8 +210,11 @@ export default {
                 this.$message.warning('请输入分类排序!');
                 return;
             }
+            if (this.url === 'modifyHotFlag') {
+                data.fatherId = this.fatherId;
+            }
             this.btnLoading = true;
-            request.addHotFlag(data).then(res => {
+            request[this.url](data).then(res => {
                 this.$message.success(res.msg);
                 this.btnLoading = false;
                 this.mask = false;

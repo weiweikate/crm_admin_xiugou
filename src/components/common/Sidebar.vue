@@ -128,10 +128,10 @@
                         index: '3',
                         title: '订单管理',
                         subs: [
-                            // {
-                            //     index: "orderList",
-                            //     title: "订单管理"
-                            // },
+                            {
+                                index: 'orderList',
+                                title: '订单管理'
+                            }
                             // {
                             //     index: "giftOrderList",
                             //     title: "礼包订单"
@@ -321,8 +321,12 @@
                             //     title: "推荐位管理"
                             // },
                             {
+                                index: 'keyWords',
+                                title: '热门搜索关键词'
+                            },
+                            {
                                 index: 'allKeyWords',
-                                title: '搜索关键词'
+                                title: '搜索关键词看板'
                             },
                             // {
                             //     index: "deliveryAddress",
