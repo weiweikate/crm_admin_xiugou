@@ -7,11 +7,20 @@
             <el-table border v-loading="tableLoading" :data="tableData">
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="name" label="专题名称" align="center"></el-table-column>
-                <el-table-column prop="id" label="专题ID" align="center"></el-table-column>
+                <el-table-column prop="code" label="专题ID" align="center"></el-table-column>
                 <el-table-column label="发布时间" align="center">
                     <template slot-scope="scope">{{scope.row.createTime|formatDateAll}}</template>
                 </el-table-column>
-                <el-table-column prop="templateId" label="活动模板" align="center"></el-table-column>
+                <el-table-column label="活动模板" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.templateId==1">专题1</template>
+                        <template v-if="scope.row.templateId==2">专题2</template>
+                        <template v-if="scope.row.templateId==3">专题3</template>
+                        <template v-if="scope.row.templateId==4">专题4</template>
+                        <template v-if="scope.row.templateId==5">秒杀专题</template>
+                        <template v-if="scope.row.templateId==6">降价拍专题</template>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="num" label="产品数" align="center"></el-table-column>
                 <el-table-column prop="adminName" label="创建者" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">

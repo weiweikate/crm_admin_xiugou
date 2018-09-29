@@ -1,6 +1,6 @@
 <template>
     <div class="second-classify">
-        <v-breadcrumb :nav="['品牌产品管理','产品品牌分类管理',name]"></v-breadcrumb>
+        <v-breadcrumb :nav="['品牌产品管理','产品品类分类管理',name]"></v-breadcrumb>
         <div class="table-block">
             <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加二级类目</el-button>
             <template>

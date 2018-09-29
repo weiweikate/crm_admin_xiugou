@@ -47,7 +47,7 @@ export default {
 
     data() {
         return {
-            nav: ['拼店店铺管理', '店铺管理', '分红详情'],
+            nav: ['拼店管理', '店铺管理', '分红详情'],
             tableData: [],
             page: {
                 currentPage: 1,

@@ -94,7 +94,7 @@
                     activityCode: this.id
                 };
                 request.findActivitySeckillByActivityCode(data).then(res => {
-                    this.form = res.data.data;
+                    this.form = res.data;
                 }).catch(err => {
                     this.btnLoading = false;
                 });

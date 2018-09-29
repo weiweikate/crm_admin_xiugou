@@ -26,7 +26,7 @@
                 <el-table-column prop="remark" label="备注" align="center"></el-table-column>
                 <el-table-column prop="showBegintime" label="投放时间" align="center" key="10" v-if="pageType != 2 && pageType != 6 && pageType != 7 && pageType != 8 && pageType != 12">
                     <template slot-scope="scope">
-                        {{scope.row.showBegintime|formatDateAll}}~{{scope.row.showEndtime|formatDateAll}}
+                        {{scope.row.showBegintime|formatDateAll}}~<br>{{scope.row.showEndtime|formatDateAll}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="rank" label="排序" v-if="pageType!=12" align="center" key="11"></el-table-column>
@@ -140,8 +140,7 @@
                     remark: '',
                     rank: '',
                     date: [],
-                    showBegintime: '',
-                    showEndtime: ''
+                    title: ''
                 },
                 id: '',
                 linkTypeList: [{
@@ -265,10 +264,17 @@
             editItem(row) {
                 this.id = row.id;
                 this.mask = true;
-                this.form = row;
+                this.form.imgUrl = row.imgUrl;
+                this.form.linkType = row.linkType;
+                this.form.linkTypeCode = row.linkTypeCode;
+                this.form.remark = row.remark;
+                this.form.rank = row.rank;
+                this.form.title = row.title;
                 this.form.date = [];
-                this.form.date[0] = row.showBegintime;
-                this.form.date[1] = row.showEndtime;
+                if (row.showBegintime) {
+                    this.form.date[0] = row.showBegintime;
+                    this.form.date[1] = row.showEndtime;
+                }
                 this.title = this.pageType === 8 ? '编辑' : '编辑banner图片';
             },
             // 添加编辑
@@ -307,8 +313,7 @@
                     remark: '',
                     rank: '',
                     date: [],
-                    showBegintime: '',
-                    showEndtime: ''
+                    title: ''
                 };
                 this.id = '';
             },

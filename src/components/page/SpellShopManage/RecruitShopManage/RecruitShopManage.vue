@@ -74,7 +74,7 @@ export default {
     data() {
         return {
 
-            nav: ['拼店店铺管理', '招募店铺管理'],
+            nav: ['拼店管理', '招募店铺管理'],
             form: {
                 name: '',
                 date: ''

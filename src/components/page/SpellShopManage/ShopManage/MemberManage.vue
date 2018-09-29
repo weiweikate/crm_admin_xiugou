@@ -37,7 +37,7 @@ export default {
 
     data() {
         return {
-            nav: ['拼店店铺管理', '店铺管理', '店铺详情', '成员贡献值'],
+            nav: ['拼店管理', '店铺管理', '店铺详情', '成员贡献值'],
             tableData: [],
             shopId: ''
         };

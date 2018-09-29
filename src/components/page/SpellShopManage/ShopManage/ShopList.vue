@@ -110,7 +110,7 @@ export default {
     data() {
         return {
 
-            nav: ['拼店店铺管理', '店铺管理'],
+            nav: ['拼店管理', '店铺管理'],
             shopLevelArr: [],
             tableData: [],
             form: {}

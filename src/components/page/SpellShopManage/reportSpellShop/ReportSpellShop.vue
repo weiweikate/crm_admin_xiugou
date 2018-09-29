@@ -1,6 +1,6 @@
 <template>
     <div class="report-spell-shop">
-        <v-breadcrumb :nav="['运营管理','拼店店铺举报']"></v-breadcrumb>
+        <v-breadcrumb :nav="['拼店管理','店铺举报']"></v-breadcrumb>
         <el-card :body-style="{ padding: '30px' }">
             <el-table :data="tableData" border>
                 <el-table-column type="index" :index='handleIndex' label="序号" align="center"></el-table-column>

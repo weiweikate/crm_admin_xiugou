@@ -83,7 +83,7 @@
 
         data() {
             return {
-                nav: ['拼店店铺管理', '店铺等级设置', '店铺降级设置'],
+                nav: ['拼店管理', '店铺等级设置', '店铺降级设置'],
                 showWeekTradNo: false,
                 showMemberNoEnough: false,
                 showdemotionWeekUserReduceOneExp: false,

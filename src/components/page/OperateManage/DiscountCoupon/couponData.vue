@@ -167,7 +167,7 @@
         },
 
         activated() {
-            this.params = this.$route.query || JSON.parse(sessionStorage.getItem('couponData'));
+            this.params.id = this.$route.query.id || JSON.parse(sessionStorage.getItem('couponData')).id;
             this.repertoryNumber = '';
             this.getList(1);
         },
@@ -189,6 +189,7 @@
                 this.page.currentPage = val;
                 this.tableLoading = true;
                 request.queryUserCouponList(data).then(res => {
+                    if (!res.data) return;
                     this.tableData = [];
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;

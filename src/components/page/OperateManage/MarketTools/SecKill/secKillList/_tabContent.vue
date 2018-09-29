@@ -321,9 +321,10 @@
                 this.page.currentPage = val;
                 this.tableLoading = true;
                 request.queryOperatorSeckillList(data).then(res => {
+                    if (!res.data) return;
                     this.tableData = [];
-                    this.tableData = res.data.data.data;
-                    this.page.totalPage = res.data.data.resultCount;
+                    this.tableData = res.data.data;
+                    this.page.totalPage = res.data.totalNum;
                     this.tableLoading = false;
                 }).catch(err => {
                     this.tableLoading = false;

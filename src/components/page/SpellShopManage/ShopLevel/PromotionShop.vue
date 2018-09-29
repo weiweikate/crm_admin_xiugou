@@ -169,7 +169,7 @@
 
         data() {
             return {
-                nav: ['拼店店铺管理', '店铺等级设置', '店铺晋升设置'],
+                nav: ['拼店管理', '店铺等级设置', '店铺晋升设置'],
                 showupgradeExp: false,
                 showNecessaryConf: false,
                 showShareBonus: false,

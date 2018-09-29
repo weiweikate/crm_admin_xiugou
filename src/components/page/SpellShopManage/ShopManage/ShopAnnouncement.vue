@@ -45,7 +45,7 @@
         data() {
             return {
 
-                nav: ['拼店店铺管理', '店铺公告管理'],
+                nav: ['拼店管理', '店铺公告管理'],
                 isShowEdit: false,
                 isShowDelToast: false,
                 tableData: [],

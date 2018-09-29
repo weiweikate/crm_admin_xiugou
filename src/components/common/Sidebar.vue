@@ -53,23 +53,220 @@
                         index: 'logistics',
                         title: '物流测试'
                     },
+                    // {
+                    //     icon: 'icon-shouquanfuwu',
+                    //     index: '1',
+                    //     title: '授权管理',
+                    //     subs: [
+                    //         // {
+                    //         //     index: "channelItemManage",
+                    //         //     title: "渠道类目管理"
+                    //         // }
+                    //         // {
+                    //         //   index: "certificateUse",
+                    //         //   title: "授权证书模板"
+                    //         // },
+                    //         // {
+                    //         //   index: "contractReview",
+                    //         //   title: "续约审核"
+                    //         // }
+                    //     ]
+                    // },
                     {
-                        icon: 'icon-shouquanfuwu',
-                        index: '1',
-                        title: '授权管理',
+                        icon: 'icon-huiyuanzhanghaoguanli',
+                        index: '7',
+                        title: '会员管理',
+                        subs: [
+                            {
+                                index: 'levelManage',
+                                title: '会员层级管理'
+                            },
+                            {
+                                index: 'joinManage',
+                                title: '会员邀请管理'
+                            },
+                            {
+                                index: 'memberManage',
+                                title: '会员管理'
+                            },
+                            // {
+                            //     index: "accountRecharge",
+                            //     title: "账户充值"
+                            // },
+                            {
+                                index: 'realNameAuthentication',
+                                title: '实名认证记录'
+                            },
+                            {
+                                index: 'supplierManage',
+                                title: '供应商管理'
+                            }
+                            // {
+                            //     index: "activityParams",
+                            //     title: "活跃度参数设置"
+                            // }
+                        ]
+                    },
+                    {
+                        icon: 'icon-fenlei',
+                        index: '5',
+                        title: '品牌产品管理',
+                        subs: [
+                            {
+                                index: 'brandProductClassify',
+                                title: '产品品类分类管理'
+                            },
+                            {
+                                index: 'brandManage',
+                                title: '品牌管理'
+                            },
+                            {
+                                index: 'productList',
+                                title: '产品管理'
+                            },
+                            {
+                                index: 'shippingTemplate',
+                                title: '运费模板'
+                            },
+                            {
+                                index: 'giftManage',
+                                title: '产品礼包管理'
+                            }
+                        ]
+                    },
+                    {
+                        icon: 'icon-dianpu',
+                        index: '6',
+                        title: '拼店管理',
+                        subs: [
+                            {
+                                index: 'shopLevelSet',
+                                title: '店铺等级设置'
+                            },
+                            {
+                                index: 'shopList',
+                                title: '店铺管理'
+                            },
+                            {
+                                index: 'recruitShopManage',
+                                title: '招募店铺管理'
+                            },
+                            {
+                                index: 'reportSpellShop',
+                                title: '拼店店铺举报'
+                            }
+                        ]
+                    },
+                    {
+                        icon: 'icon-dingdan',
+                        index: '3',
+                        title: '订单管理',
+                        subs: [
+                            {
+                                index: 'orderList',
+                                title: '订单管理'
+                            }
+                            // {
+                            //     index: "giftOrderList",
+                            //     title: "礼包订单"
+                            // }
+                        ]
+                    },
+                    {
+                        icon: 'icon-suyuan',
+                        index: '4',
+                        title: '溯源管理',
                         subs: [
                             // {
-                            //     index: "channelItemManage",
-                            //     title: "渠道类目管理"
-                            // }
-                            // {
-                            //   index: "certificateUse",
-                            //   title: "授权证书模板"
+                            //     index: "rootsCodeMange",
+                            //     title: "溯源防伪码管理"
                             // },
                             // {
-                            //   index: "contractReview",
-                            //   title: "续约审核"
+                            //     index: "rootsCodeParams",
+                            //     title: "防伪码参数设置"
+                            // },
+                            // {
+                            //     index: "rootsCodeQuery",
+                            //     title: "防伪码查询"
+                            // },
+                            // {
+                            //     index: "rootsCodeTpl",
+                            //     title: "防伪码模板"
                             // }
+                        ]
+                    },
+                    {
+                        icon: 'icon-huiyuanzhanghaoguanli',
+                        index: '8',
+                        title: '服务管理',
+                        subs: [
+                            {
+                                index: 'feedBack',
+                                title: '问题反馈'
+                            }
+                        ]
+                    },
+                    {
+                        icon: 'icon-yunying',
+                        index: '9',
+                        title: '运营管理',
+                        subs: [
+                            {
+                                index: 'discountCoupon',
+                                title: '优惠券设置'
+                            },
+                            {
+                                index: 'noticeInformManage',
+                                title: '公告/通知管理'
+                            },
+                            {
+                                index: 'topicManage',
+                                title: '专题管理'
+                            },
+                            {
+                                index: 'sensitiveLibrary',
+                                title: '敏感词库'
+                            },
+                            {
+                                index: 'advertisingManage',
+                                title: '广告位管理'
+                            },
+                            {
+                                index: 'keyWords',
+                                title: '热门搜索关键词'
+                            },
+                            {
+                                index: 'allKeyWords',
+                                title: '搜索关键词看板'
+                            },
+                            {
+                                index: 'helpCenter',
+                                title: '帮助中心管理'
+                            },
+                            {
+                                index: 'labelManage',
+                                title: '标签管理'
+                            },
+                            // {
+                            //     index: "currencyRatio",
+                            //     title: "货币比例设置"
+                            // },
+                            // {
+                            //     index: "baseParamsSet",
+                            //     title: "交易基础参数设置"
+                            // },
+                            // {
+                            //     index: "featured",
+                            //     title: "推荐位管理"
+                            // },
+                            // {
+                            //     index: "deliveryAddress",
+                            //     title: "提货地址设置"
+                            // },
+                            {
+                                index: 'marketToolsManage',
+                                title: '营销工具管理'
+                            }
                         ]
                     },
                     {
@@ -123,140 +320,7 @@
                             // }
                         ]
                     },
-                    {
-                        icon: 'icon-dingdan',
-                        index: '3',
-                        title: '订单管理',
-                        subs: [
-                            {
-                                index: 'orderList',
-                                title: '订单管理'
-                            }
-                            // {
-                            //     index: "giftOrderList",
-                            //     title: "礼包订单"
-                            // }
-                        ]
-                    },
-                    {
-                        icon: 'icon-suyuan',
-                        index: '4',
-                        title: '溯源管理',
-                        subs: [
-                            // {
-                            //     index: "rootsCodeMange",
-                            //     title: "溯源防伪码管理"
-                            // },
-                            // {
-                            //     index: "rootsCodeQuery",
-                            //     title: "防伪码查询"
-                            // },
-                            // {
-                            //     index: "rootsCodeTpl",
-                            //     title: "防伪码模板"
-                            // },
-                            // {
-                            //     index: "rootsCodeParams",
-                            //     title: "防伪码参数设置"
-                            // }
-                        ]
-                    },
-                    {
-                        icon: 'icon-fenlei',
-                        index: '5',
-                        title: '品牌产品管理',
-                        subs: [
-                            {
-                                index: 'brandProductClassify',
-                                title: '产品分类管理'
-                            },
-                            {
-                                index: 'brandManage',
-                                title: '品牌管理'
-                            },
-                            {
-                                index: 'productList',
-                                title: '产品管理'
-                            },
-                            {
-                                index: 'shippingTemplate',
-                                title: '运费模板'
-                            },
-                            {
-                                index: 'giftManage',
-                                title: '产品礼包管理'
-                            }
-                        ]
-                    },
-                    {
-                        icon: 'icon-dianpu',
-                        index: '6',
-                        title: '拼店店铺管理',
-                        subs: [
-                            {
-                                index: 'shopLevelSet',
-                                title: '店铺等级设置'
-                            },
-                            {
-                                index: 'shopList',
-                                title: '店铺管理'
-                            },
-                            {
-                                index: 'recruitShopManage',
-                                title: '招募店铺管理'
-                            },
-                            {
-                                index: 'reportSpellShop',
-                                title: '拼店店铺举报'
-                            }
-                        ]
-                    },
-                    {
-                        icon: 'icon-huiyuanzhanghaoguanli',
-                        index: '7',
-                        title: '会员管理',
-                        subs: [
-                            {
-                                index: 'levelManage',
-                                title: '会员层级管理'
-                            },
-                            {
-                                index: 'joinManage',
-                                title: '会员邀请管理'
-                            },
-                            {
-                                index: 'memberManage',
-                                title: '会员管理'
-                            },
-                            // {
-                            //     index: "accountRecharge",
-                            //     title: "账户充值"
-                            // },
-                            {
-                                index: 'realNameAuthentication',
-                                title: '实名制认证审核'
-                            },
-                            {
-                                index: 'supplierManage',
-                                title: '供应商管理'
-                            }
-                            // {
-                            //     index: "activityParams",
-                            //     title: "活跃度参数设置"
-                            // }
-                        ]
-                    },
-                    {
-                        icon: 'icon-huiyuanzhanghaoguanli',
-                        index: '8',
-                        title: '服务管理',
-                        subs: [
-                            {
-                                index: 'feedBack',
-                                title: '问题反馈'
-                            }
-                        ]
-                    },
+
                     {
                         icon: 'icon-huiyuanzhanghaoguanli',
                         index: '11',
@@ -275,69 +339,7 @@
                                 title: '寄回地址管理'
                             }]
                     },
-                    {
-                        icon: 'icon-yunying',
-                        index: '9',
-                        title: '运营管理',
-                        subs: [
-                            {
-                                index: 'discountCoupon',
-                                title: '优惠券设置'
-                            },
-                            {
-                                index: 'noticeInformManage',
-                                title: '公告/通知管理'
-                            },
-                            {
-                                index: 'topicManage',
-                                title: '专题管理'
-                            },
-                            {
-                                index: 'sensitiveLibrary',
-                                title: '敏感词库'
-                            },
-                            {
-                                index: 'helpCenter',
-                                title: '帮助中心管理'
-                            },
-                            {
-                                index: 'labelManage',
-                                title: '标签管理'
-                            },
-                            // {
-                            //     index: "currencyRatio",
-                            //     title: "货币比例设置"
-                            // },
-                            // {
-                            //     index: "baseParamsSet",
-                            //     title: "交易基础参数设置"
-                            // },
-                            {
-                                index: 'advertisingManage',
-                                title: '广告位管理'
-                            },
-                            // {
-                            //     index: "featured",
-                            //     title: "推荐位管理"
-                            // },
-                            {
-                                index: 'keyWords',
-                                title: '热门搜索关键词'
-                            },
-                            {
-                                index: 'allKeyWords',
-                                title: '搜索关键词看板'
-                            },
-                            // {
-                            //     index: "deliveryAddress",
-                            //     title: "提货地址设置"
-                            // },
-                            {
-                                index: 'marketToolsManage',
-                                title: '营销工具管理'
-                            }
-                        ]
-                    },
+
                     {
                         icon: 'icon-shezhi',
                         index: '10',

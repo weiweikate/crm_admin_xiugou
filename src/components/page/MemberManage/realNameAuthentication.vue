@@ -1,6 +1,6 @@
 <template>
     <div class="real-name-auth">
-        <v-breadcrumb :nav="['经销商会员管理','会员管理','实名认证审核']"></v-breadcrumb>
+        <v-breadcrumb :nav="['经销商会员管理','会员管理','实名认证记录']"></v-breadcrumb>
         <el-card style="margin:10px 0 20px">
             <el-form ref="form" :inline="true" :model="form">
                 <!-- <el-form-item prop="code" label="授权码" label-width="120">

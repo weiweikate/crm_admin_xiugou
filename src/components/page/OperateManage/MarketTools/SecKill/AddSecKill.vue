@@ -198,7 +198,7 @@
                         data.endTime = moment(this.form.activityTime[1]).format('YYYY-MM-DD HH:mm:ss'); // 活动开始时间
                         data.orderCloseTime = this.form.orderCloseTime; // 自动关闭订单时间
                         // data.productCode = this.productDetail.productCode; // 产品编号
-                        // data.productId = this.productDetail.productId; // 产品ID
+                        data.productId = this.productDetail.productId; // 产品ID
                         // data.productImg = this.productDetail.specImg; // 产品主图url
                         // data.productName = this.productDetail.productName; // 产品名称
                         // data.productPrice = this.productDetail.originalPrice; // 产品原价

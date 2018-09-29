@@ -54,44 +54,44 @@
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 export default {
-  components: {vBreadcrumb},
+    components: { vBreadcrumb },
 
-  data () {
-    return {
-        nav: ["拼店店铺管理", "店铺详情","拼店账户","交易明细"],
-        form:{
-            name:'',
-            first:'',
-            second:'',
-            beginTime:'',
-            endTime:''
-        },
-        tableData:[{id:'1'}],
-        page: {
-            currentPage: 1,
-            totalPage: 0
-        }
-    };
-  },
+    data() {
+        return {
+            nav: ['拼店管理', '店铺详情', '拼店账户', '交易明细'],
+            form: {
+                name: '',
+                first: '',
+                second: '',
+                beginTime: '',
+                endTime: ''
+            },
+            tableData: [{ id: '1' }],
+            page: {
+                currentPage: 1,
+                totalPage: 0
+            }
+        };
+    },
 
-  methods: {
+    methods: {
     // 提交表单
-    submitForm(){
+        submitForm() {
 
-    },
-    //分页
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      this.page.currentPage = val;
-      this.submitForm(val);
-    },
-  }
-}
+        },
+        // 分页
+        handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+        },
+        handleCurrentChange(val) {
+            console.log(`当前页: ${val}`);
+            this.page.currentPage = val;
+            this.submitForm(val);
+        }
+    }
+};
 
 </script>
 <style lang='less' scoped>

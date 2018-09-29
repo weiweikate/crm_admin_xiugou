@@ -1,6 +1,6 @@
 <template>
     <div class="brand-product">
-        <v-breadcrumb :nav="['品牌产品管理','产品品牌分类管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['品牌产品管理','产品品类分类管理']"></v-breadcrumb>
         <div class="table-block">
             <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加一级类目</el-button>
             <el-button type="success" style="margin-bottom: 20px" @click="hotClassifyManage">热门分类管理</el-button>

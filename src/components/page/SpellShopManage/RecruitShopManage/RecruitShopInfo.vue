@@ -82,7 +82,7 @@ export default {
 
     data() {
         return {
-            nav: ['拼店店铺管理', '招募店铺管理', '店铺详情'],
+            nav: ['拼店管理', '招募店铺管理', '店铺详情'],
             shopId: '',
             avatar: '',
             detail: {}

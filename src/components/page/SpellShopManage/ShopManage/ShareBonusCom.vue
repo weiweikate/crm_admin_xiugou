@@ -16,7 +16,7 @@ export default {
 
     data() {
         return {
-            nav: ['拼店店铺管理', '店铺管理', '分红详情', '分红组成'],
+            nav: ['拼店管理', '店铺管理', '分红详情', '分红组成'],
             option: {
                 title: {
                     text: ''
