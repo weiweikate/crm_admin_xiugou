@@ -51,6 +51,30 @@
             vBreadcrumb, icon
         },
         data() {
+            var checkName = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请输入品牌名称'));
+                } else {
+                    const reg = /^[A-Za-z0-9\u4e00-\u9fa5]{2,16}$/;
+                    if (!reg.test(value)) {
+                        callback(new Error('请输入2-16位由汉字字母数字组成的品牌名称'));
+                    } else {
+                        callback();
+                    }
+                }
+            };
+            var checkArea = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请输入品牌区域'));
+                } else {
+                    const reg = /^[A-Za-z\u4e00-\u9fa5]{2,16}$/;
+                    if (!reg.test(value)) {
+                        callback(new Error('请输入2-16位由汉字字母组成的品牌区域'));
+                    } else {
+                        callback();
+                    }
+                }
+            };
             return {
                 form: {
                     name: '',
@@ -64,18 +88,18 @@
                 checkAll: false,
                 rules: {
                     name: [
-                        { required: true, message: '请输入品牌名称', trigger: 'blur' }
+                        { required: true, trigger: 'blur', validator: checkName }
                     ],
                     area: [
-                        { required: true, message: '请输入品牌区域', trigger: 'blur' }
-                    ],
+                        { required: true, trigger: 'blur', validator: checkArea }
+                    ]
                     // imgUrl: [
                     //     { required: true, message: '请上传品牌LOGO', trigger: 'blur' }
                     // ]
                 },
                 id: '',
                 addBrand: '',
-                uploadImg: '',
+                uploadImg: ''
             };
         },
         activated() {
@@ -113,12 +137,17 @@
             // 提交表单
             submitForm(form) {
                 const that = this;
-                that.btnLoading = true;
                 that.$refs[form].validate(valid => {
                     if (valid) {
                         const data = this[form];
+                        if (!data.imgUrl) {
+                            this.$message.warning('请添加品牌logo');
+                            return;
+                        }
                         data.id = that.id;
+                        that.btnLoading = true;
                         request.modifyProductBrand(data).then(res => {
+                            this.$message.success(res.msg);
                             that.$router.push('/brandManage');
                             that.btnLoading = false;
                         }).catch(error => {

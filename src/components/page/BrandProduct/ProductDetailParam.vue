@@ -123,7 +123,7 @@ export default {
             }
             this.btnLoading = true;
             request.addProductCategoryParam(data).then(res => {
-                // this.$message.success(res.data.msg);
+                this.$message.success(res.msg);
                 this.btnLoading = false;
                 this.addMask = false;
                 this.editMask = false;
