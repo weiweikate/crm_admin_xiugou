@@ -43,9 +43,10 @@
                     <el-date-picker
                         v-else
                         v-model="v.navName"
-                        format="yyyy-MM-dd"
+                        format="yyyy-MM-dd HH:mm"
                         type="datetime"
                         class="inp"
+                        :picker-options="pickerOptions[k]"
                         placeholder="选择日期时间">
                     </el-date-picker>
                 </el-form-item>
@@ -107,7 +108,7 @@
         </div>
         <div class="submit-btn">
             <el-button @click="submitForm" type="primary">确认保存</el-button>
-            <el-button >取消</el-button>
+            <el-button @click="cancel">取消</el-button>
         </div>
     </div>
 </template>
@@ -160,7 +161,8 @@
                         topicBannerProducts: [{ prodCode: '', productType: 2 }],
                         topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 2 }] }]
                     }
-                ]
+                ],
+                pickerOptions: [{}]
             };
         },
 
@@ -220,7 +222,7 @@
                             throw '请输入导航名称';
                         } else {
                             if (this.navItem == 2) {
-                                v.navName = moment(v.navName).format('YYYY-MM-DD');
+                                v.navName = moment(v.navName).format('YYYY-MM-DD HH:mm');
                             }
                         }
                         v.topicBannerProducts.forEach((v1, k1) => {
@@ -278,6 +280,14 @@
                         topicNavbarBannerList: []
                     }
                 );
+                const that = this;
+                if (this.navItem == 2) {
+                    this.pickerOptions.push({
+                        disabledDate(time) {
+                            return time.getTime() < that.topicNavbarList[that.topicNavbarList.length - 2].navName;
+                        }
+                    });
+                }
             },
             //   添加区间banner
             addBanner(index) {
@@ -307,6 +317,10 @@
             //  上传头部banner成功回调
             handleAvatarSuccess(res) {
                 this.bannerForm.imgUrl = res.data;
+            },
+            // 取消
+            cancel() {
+                this.$router.push('/topicManage');
             }
         }
     };

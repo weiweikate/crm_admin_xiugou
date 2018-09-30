@@ -112,7 +112,7 @@
                 if (!value) {
                     return callback(new Error('参数不能为空!'));
                 } else {
-                    if (!/^[0-9]+([.]{1}[0-9]{1,2})?$/.test(value)) {
+                    if (!/^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/.test(value)) {
                         callback(new Error('请输入两位小数'));
                     } else {
                         callback();

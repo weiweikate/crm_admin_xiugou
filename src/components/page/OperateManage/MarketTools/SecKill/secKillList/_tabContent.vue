@@ -64,7 +64,7 @@
                 </el-form-item>
             </el-form>
         </div>
-        <v-remark :contents='contents'></v-remark>
+        <!--<v-remark :contents='contents'></v-remark>-->
         <el-table v-loading="tableLoading" :height="height" border :data="tableData" @selection-change="handleSelectionChange">
             <el-table-column type="selection" align="center"></el-table-column>
             <el-table-column prop="activityCode" align="center" label="编号" min-width="100"></el-table-column>
@@ -73,12 +73,12 @@
                     <div class="product-img">
                         <img :src="scope.row.productImg">
                     </div>
-                    <p class="product-inf">{{scope.row.productName}}</p>
-                    <p class="product-inf" style="margin-top: 25px">原价：￥{{scope.row.productPrice}}</p>
-                    <p class="product-inf">产品ID：{{scope.row.productCode}}</p>
+                    <p class="product-inf">{{scope.row.name}}</p>
+                    <p class="product-inf" style="margin-top: 25px">原价：￥{{scope.row.originalPrice}}</p>
+                    <p class="product-inf">产品ID：{{scope.row.prodCode}}</p>
                 </template>
             </el-table-column>
-            <el-table-column prop="productSpec" label="规格" align="center" min-width="100"></el-table-column>
+            <el-table-column prop="spec" label="规格" align="center" min-width="100"></el-table-column>
             <el-table-column label="秒杀价格" align="center" min-width="60">
                 <template slot-scope="scope">
                     ￥{{scope.row.seckillPrice}}
@@ -105,20 +105,26 @@
                     <template v-else-if='scope.row.status == 6'>下架隐藏</template>
                 </template>
             </el-table-column>
-            <el-table-column label="开始/结束时间" align="center" min-width="120">
+            <el-table-column label="是否绑定专题" align="center" min-width="120">
                 <template slot-scope="scope">
-                    {{scope.row.beginTime|formatDate}}<br/>{{scope.row.endTime|formatDate}}
+                    <template v-if="scope.row.topicStatus==1">是</template>
+                    <template v-else>否</template>
+                </template>
+            </el-table-column>
+            <el-table-column label="开始/结束时间" align="center" min-width="130">
+                <template slot-scope="scope">
+                    {{scope.row.beginTime|formatDateAll}}<br/>{{scope.row.endTime|formatDateAll}}
                 </template>
             </el-table-column>
             <el-table-column label="关闭时间" align="center" min-width="120">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.closeTime">{{scope.row.closeTime | formatDate}}</template>
+                    <template v-if="scope.row.closeTime">{{scope.row.closeTime | formatDateAll}}</template>
                 </template>
             </el-table-column>
 
-            <el-table-column label="发布时间/发布人" align="center" min-width="120">
+            <el-table-column label="发布时间/发布人" align="center" min-width="130">
                 <template slot-scope="scope">
-                    {{scope.row.createTime | formatDate}}<br/>{{scope.row.createName}}
+                    {{scope.row.createTime | formatDateAll}}<br/>{{scope.row.adminName}}
                 </template>
             </el-table-column>
 
@@ -200,7 +206,7 @@
 
     export default {
         props: ['name'],
-
+        mixins: [myMixinTable],
         components: {
             icon, vRemark
         },
@@ -305,6 +311,7 @@
                 data.activityCode = this.form.activityCode;
                 data.createUser = this.form.createUser;
                 data.productCode = this.form.productCode;
+                data.topicStatus = this.form.topicStatus;
                 data.beginStartTime = this.form.startDate ? moment(this.form.startDate[0]).format('YYYY-MM-DD HH:mm:ss') : '';
                 data.beginEndTime = this.form.startDate ? moment(this.form.startDate[1]).format('YYYY-MM-DD HH:mm:ss') : '';
                 data.createStartTime = this.form.releaseDate ? moment(this.form.releaseDate[0]).format('YYYY-MM-DD HH:mm:ss') : '';
@@ -377,8 +384,8 @@
             },
             // 查看详情
             toDetail(row) {
-                sessionStorage.setItem('id', row.activityCode);
-                this.$router.push({ path: '/SecKillInfo', query: { id: row.activityCode }});
+                sessionStorage.setItem('secKillId', row.id);
+                this.$router.push({ path: '/SecKillInfo', query: { secKillId: row.id }});
             },
             // 全选
             handleSelectionChange(val) {

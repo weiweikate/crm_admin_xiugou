@@ -80,12 +80,9 @@
         created() {
             this.tableData = [];
             this.keyWords = '';
+            this.resultTip = '';
+            this.showResult = false;
             this.chooseId = this.productId;
-            if (this.searchProductId) {
-                this.keyWordsID = this.searchProductId;
-                this.keyWords = this.searchProductName;
-                this.getSpecList();
-            }
         },
         methods: {
             //  提交表单

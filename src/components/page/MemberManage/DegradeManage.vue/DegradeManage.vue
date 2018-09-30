@@ -104,7 +104,7 @@
                 } else if (index === 1) {
                     if (!data.demotionWeekSalesNum) data.demotionWeekSalesNum = 0;
                     if (!data.demotionWeekSalesNumExp) data.demotionWeekSalesNumExp = 0;
-                    flag1 = this.isEmpty(data.demotionWeekSalesNum, true);
+                    flag1 = this.isEmpty(data.demotionWeekSalesNum, false);
                     flag2 = this.isEmpty(data.demotionWeekSalesNumExp, false);
                     this.setIsAjax(flag1 && flag2);
                 }
@@ -132,7 +132,7 @@
                         const reg = /^(0|[1-9]\d*)$/;
                         return this.setReg(reg, value);
                     } else {
-                        const reg = /^[0-9]+([.]{1}[0-9]{1,2})?$/;
+                        const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
                         return this.setReg(reg, value);
                     }
                 }

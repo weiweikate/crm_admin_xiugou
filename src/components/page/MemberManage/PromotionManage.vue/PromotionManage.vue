@@ -407,13 +407,12 @@
                         const reg = /^(0|[1-9]\d*)$/;
                         return this.setReg(reg, value);
                     } else {
-                        const reg = /^[0-9]+([.]{1}[0-9]{1,2})?$/;
+                        const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
                         return this.setReg(reg, value);
                     }
                 }
             },
             setReg(reg, value) {
-                return;
                 if (!reg.test(value)) {
                     this.$message.warning('请输入合法数据!');
                     return false;

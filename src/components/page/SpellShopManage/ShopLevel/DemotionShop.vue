@@ -170,7 +170,7 @@
                 } else if (index == 3) {
                     if (!data.demotionTotleSales) data.demotionTotleSales = 0;
                     if (!data.demotionTotleSalesExp) data.demotionTotleSalesExp = 0;
-                    flag1 = this.isEmpty(data.demotionTotleSales, true);
+                    flag1 = this.isEmpty(data.demotionTotleSales, false);
                     flag2 = this.isEmpty(data.demotionTotleSalesExp, false);
                     this.setIsAjax(flag1 && flag2);
                 }
@@ -201,7 +201,7 @@
                         const reg = /^(0|[1-9]\d*)$/;
                         return this.setReg(reg, value);
                     } else {
-                        const reg = /^[0-9]+([.]{1}[0-9]{1,2})?$/;
+                        const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
                         return this.setReg(reg, value);
                     }
                 }

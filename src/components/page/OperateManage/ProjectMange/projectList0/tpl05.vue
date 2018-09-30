@@ -43,10 +43,9 @@
                     <el-date-picker
                         v-else
                         v-model="v.navName"
-                        format="yyyy-MM-dd HH:mm"
+                        format="yyyy-MM-dd"
                         type="datetime"
                         class="inp"
-                        :picker-options="pickerOptions[k]"
                         placeholder="选择日期时间">
                     </el-date-picker>
                 </el-form-item>
@@ -108,7 +107,7 @@
         </div>
         <div class="submit-btn">
             <el-button @click="submitForm" type="primary">确认保存</el-button>
-            <el-button @click="cancel">取消</el-button>
+            <el-button >取消</el-button>
         </div>
     </div>
 </template>
@@ -159,10 +158,9 @@
                         navName: '',
                         type: 1, // 导航属性 1文字 2时间
                         topicBannerProducts: [{ prodCode: '', productType: 1 }],
-                        topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+                        topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 1 }] }]
                     }
-                ],
-                pickerOptions: [{}]
+                ]
             };
         },
 
@@ -175,7 +173,7 @@
                     navName: '',
                     type: this.navItem,
                     topicBannerProducts: [{ prodCode: '', productType: 1 }],
-                    topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+                    topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 1 }] }]
                 }
             ];
             if (this.tplData != 'add') {
@@ -191,7 +189,7 @@
                         navName: '',
                         type: this.navItem,
                         topicBannerProducts: [{ prodCode: '', productType: 1 }],
-                        topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+                        topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 1 }] }]
                     }
                 ];
             }
@@ -222,7 +220,7 @@
                             throw '请输入导航名称';
                         } else {
                             if (this.navItem == 2) {
-                                v.navName = moment(v.navName).format('YYYY-MM-DD HH:mm');
+                                v.navName = moment(v.navName).format('YYYY-MM-DD');
                             }
                         }
                         v.topicBannerProducts.forEach((v1, k1) => {
@@ -279,14 +277,6 @@
                         topicNavbarBannerList: []
                     }
                 );
-                const that = this;
-                if (this.navItem == 2) {
-                    this.pickerOptions.push({
-                        disabledDate(time) {
-                            return time.getTime() < that.topicNavbarList[that.topicNavbarList.length - 2].navName;
-                        }
-                    });
-                }
             },
             //   添加区间banner
             addBanner(index) {
@@ -316,10 +306,6 @@
             //  上传头部banner成功回调
             handleAvatarSuccess(res) {
                 this.bannerForm.imgUrl = res.data;
-            },
-            // 取消
-            cancel() {
-                this.$router.push('/topicManage');
             }
         }
     };

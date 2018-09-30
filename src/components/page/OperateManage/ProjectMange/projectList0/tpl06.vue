@@ -1,5 +1,5 @@
 <template>
-    <div class="tpl-005">
+    <div class="tpl-006">
         <div class="banner">
             <el-form :model="bannerForm" label-width="130px">
                 <el-form-item prop="img" label="添加banner" >
@@ -43,10 +43,9 @@
                     <el-date-picker
                         v-else
                         v-model="v.navName"
-                        format="yyyy-MM-dd HH:mm"
+                        format="yyyy-MM-dd"
                         type="datetime"
                         class="inp"
-                        :picker-options="pickerOptions[k]"
                         placeholder="选择日期时间">
                     </el-date-picker>
                 </el-form-item>
@@ -108,7 +107,7 @@
         </div>
         <div class="submit-btn">
             <el-button @click="submitForm" type="primary">确认保存</el-button>
-            <el-button @click="cancel">取消</el-button>
+            <el-button >取消</el-button>
         </div>
     </div>
 </template>
@@ -151,18 +150,17 @@
                 }],
                 // 产品类型
                 prodTypeList: [
-                    { label: '秒杀', value: 1 }
+                    { label: '降价拍', value: 2 }
                 ],
                 totalNum: 0, // 字数统计
                 topicNavbarList: [
                     {
                         navName: '',
                         type: 1, // 导航属性 1文字 2时间
-                        topicBannerProducts: [{ prodCode: '', productType: 1 }],
-                        topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+                        topicBannerProducts: [{ prodCode: '', productType: 2 }],
+                        topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 2 }] }]
                     }
-                ],
-                pickerOptions: [{}]
+                ]
             };
         },
 
@@ -174,13 +172,13 @@
                 {
                     navName: '',
                     type: this.navItem,
-                    topicBannerProducts: [{ prodCode: '', productType: 1 }],
-                    topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+                    topicBannerProducts: [{ prodCode: '', productType: 2 }],
+                    topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 2 }] }]
                 }
             ];
             if (this.tplData != 'add') {
                 this.bannerForm.imgUrl = this.tplData.imgUrl;
-                this.bannerForm.remark = this.tplData.remark;
+                this.bannerForm.tip = this.tplData.remark;
                 this.topicNavbarList = this.tplData.topicNavbarList;
                 this.navItem = this.tplData.topicNavbarList[0].type;
                 this.id = this.tplData.id;
@@ -190,8 +188,8 @@
                     {
                         navName: '',
                         type: this.navItem,
-                        topicBannerProducts: [{ prodCode: '', productType: 1 }],
-                        topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+                        topicBannerProducts: [{ prodCode: '', productType: 2 }],
+                        topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 2 }] }]
                     }
                 ];
             }
@@ -222,7 +220,7 @@
                             throw '请输入导航名称';
                         } else {
                             if (this.navItem == 2) {
-                                v.navName = moment(v.navName).format('YYYY-MM-DD HH:mm');
+                                v.navName = moment(v.navName).format('YYYY-MM-DD');
                             }
                         }
                         v.topicBannerProducts.forEach((v1, k1) => {
@@ -245,11 +243,12 @@
                     this.$message.warning(error);
                     return;
                 }
+
                 const data = {};
                 if (this.id != '') {
                     data.id = this.id.toString();
                 }
-                data.templateId = 5;
+                data.templateId = 6;
                 data.name = this.pName;
                 data.imgUrl = this.bannerForm.imgUrl;
                 data.remark = this.bannerForm.remark;
@@ -275,18 +274,10 @@
                     {
                         navName: '',
                         type: this.navItem,
-                        topicBannerProducts: [{ prodCode: '', productType: 1 }, { prodCode: '', productType: 1 }],
+                        topicBannerProducts: [{ prodCode: '', productType: 2 }, { prodCode: '', productType: 2 }],
                         topicNavbarBannerList: []
                     }
                 );
-                const that = this;
-                if (this.navItem == 2) {
-                    this.pickerOptions.push({
-                        disabledDate(time) {
-                            return time.getTime() < that.topicNavbarList[that.topicNavbarList.length - 2].navName;
-                        }
-                    });
-                }
             },
             //   添加区间banner
             addBanner(index) {
@@ -296,7 +287,7 @@
             },
             //   添加banner的产品
             addBannerProduct(bIndex, sIndex) {
-                this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList.push({ prodCode: '', productType: 1 });
+                this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList.push({ prodCode: '', productType: 2 });
                 this.$set(this.topicNavbarList, bIndex, this.topicNavbarList[bIndex]);
             },
             //  上传banner
@@ -306,7 +297,7 @@
             },
             //   添加产品
             addProduct(index) {
-                this.topicNavbarList[index].topicBannerProducts == null ? this.topicNavbarList[index].topicBannerProducts = [{ prodCode: '', productType: 1 }] : this.topicNavbarList[index].topicBannerProducts.push({ prodCode: '', productType: 1 });
+                this.topicNavbarList[index].topicBannerProducts == null ? this.topicNavbarList[index].topicBannerProducts = [{ prodCode: '', productType: 2 }] : this.topicNavbarList[index].topicBannerProducts.push({ prodCode: '', productType: 2 });
                 this.$set(this.topicNavbarList, index, this.topicNavbarList[index]);
             },
             //   获取输入字数
@@ -316,17 +307,13 @@
             //  上传头部banner成功回调
             handleAvatarSuccess(res) {
                 this.bannerForm.imgUrl = res.data;
-            },
-            // 取消
-            cancel() {
-                this.$router.push('/topicManage');
             }
         }
     };
 
 </script>
 <style lang='less'>
-    .tpl-005{
+    .tpl-006{
         .my-inp{width: 215px;}
         .banner{width: 585px;height: 280px;background-color: #f7f7f7;padding: 20px 0;box-sizing: border-box;}
         .icon-uploader{float: right;margin-right: 103px;width: 100px;}

@@ -93,7 +93,7 @@
         </div>
         <div class="submit-btn">
             <el-button @click="submitForm" type="primary">确认保存</el-button>
-            <el-button @click="cancel">取消</el-button>
+            <el-button >取消</el-button>
         </div>
     </div>
 </template>
@@ -140,7 +140,7 @@ export default {
                     navName: '',
                     type: 1, // 导航属性 1文字 2时间
                     topicBannerProducts: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }],
-                    topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+                    topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] }]
                 }
             ]
         };
@@ -155,7 +155,7 @@ export default {
                 navName: '',
                 type: 1,
                 topicBannerProducts: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }],
-                topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+                topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] }]
             }
         ];
         if (this.tplData != 'add') {
@@ -240,7 +240,7 @@ export default {
         },
         //   添加区间banner
         addBanner(index) {
-            this.topicNavbarList[index].topicNavbarBannerList == undefined ? this.topicNavbarList[index].topicNavbarBannerList = [{ bannerImg: '', topicBannerProductList: [] }] : this.topicNavbarList[index].topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [] });
+            this.topicNavbarList[index].topicNavbarBannerList == undefined ? this.topicNavbarList[index].topicNavbarBannerList = [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] }] : this.topicNavbarList[index].topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] });
             this.$set(this.topicNavbarList, index, this.topicNavbarList[index]);
         },
         //   添加banner的产品
@@ -265,10 +265,6 @@ export default {
         //  上传头部banner成功回调
         handleAvatarSuccess(res) {
             this.bannerForm.imgUrl = res.data;
-        },
-        // 取消
-        cancel() {
-            this.$router.push('/topicManage');
         }
     }
 };

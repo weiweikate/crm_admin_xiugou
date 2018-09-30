@@ -220,8 +220,8 @@ export default {
             this.num = '';
             this.left = row.totalNumber - row.hasUsed;
             this.id = row.id;
-            if (row.type === 4) {
-                this.value = row.value + '折';
+            if (row.type === 3) {
+                this.value = row.value / 10 + '折';
             } else {
                 this.value = row.value + '元';
             }

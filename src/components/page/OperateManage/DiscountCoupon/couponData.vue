@@ -217,10 +217,10 @@
 
             // 查看详情
             productInfo(row) {
-                sessionStorage.setItem('productInfo', row.id);
+                sessionStorage.setItem('orderInfoId', row.id);
                 this.$router.push({
-                    name: 'productInfo',
-                    query: { productInfoId: row.id }
+                    name: 'orderInfo',
+                    query: { orderInfoId: row.id }
                 });
             },
             // 添加券库存

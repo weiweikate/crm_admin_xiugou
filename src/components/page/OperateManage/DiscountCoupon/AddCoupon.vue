@@ -80,7 +80,7 @@
                 </el-form-item>
 
                 <el-form-item label="优惠券说明">
-                    <el-input type="textarea" v-model="form.remark" placeholder="请输入说明"></el-input>
+                    <el-input type="textarea" v-model="form.remarks" placeholder="请输入说明"></el-input>
                 </el-form-item>
 
                 <el-button type="primary" :loading="btnLoading" @click="submitForm">提交</el-button>
@@ -204,6 +204,7 @@
             this.remindFlag = '';
             this.checkedUsers = [];
             this.getProducts = {};
+            this.remindDays='';
         },
 
         methods: {

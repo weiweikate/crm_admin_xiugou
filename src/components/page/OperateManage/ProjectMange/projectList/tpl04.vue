@@ -86,7 +86,7 @@
       </div>
       <div class="submit-btn">
         <el-button @click="submitForm" type="primary">确认保存</el-button>
-        <el-button >取消</el-button>
+        <el-button @click="cancel">取消</el-button>
       </div>
     </div>
 </template>
@@ -131,7 +131,7 @@ export default {
                 navName: '',
                 type: '', // 导航属性 1文字 2时间
                 topicBannerProducts: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }],
-                topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] }]
+                topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
             }
         };
     },
@@ -144,7 +144,7 @@ export default {
             navName: '',
             type: '',
             topicBannerProducts: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }],
-            topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] }]
+            topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
         };
         if (this.tplData != 'add') {
             this.bannerForm.imgUrl = this.tplData.imgUrl;
@@ -213,7 +213,7 @@ export default {
         },
         // 添加banner
         addBanner() {
-            this.topicNavbarList.topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] });
+            this.topicNavbarList.topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [] });
         },
         // 添加banner图产品
         addBannerProduct(index) {
@@ -234,6 +234,10 @@ export default {
         // 上传头部banner成功回调
         handleAvatarSuccess(res) {
             this.bannerForm.imgUrl = res.data;
+        },
+        // 取消
+        cancel() {
+            this.$router.push('/topicManage');
         }
     }
 };

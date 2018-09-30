@@ -1,5 +1,5 @@
 <template>
-    <div class="tpl-002">
+    <div class="tpl-004">
       <div class="banner">
         <el-form :model="bannerForm" label-width="130px">
           <el-form-item prop="img" label="添加banner" >
@@ -25,7 +25,7 @@
           <el-form-item prop="tip" label="专题说明" label-width="130px">
             <div class="text-area">
               <span class="total-num">{{totalNum}}/200</span>
-              <el-input maxlength="200" v-model="bannerForm.remark" @input="getFontNum" type="textarea" :rows="8" placeholder="可为空，不填则不显示" style='width:350px'></el-input>
+              <el-input :autosize='{ minRows: 8, maxRows: 8 }' maxlength="200" v-model="bannerForm.remark" @input="getFontNum" type="textarea" placeholder="可为空，不填则不显示" style='width:350px'></el-input>
             </div>
           </el-form-item>
         </el-form>
@@ -86,7 +86,7 @@
       </div>
       <div class="submit-btn">
         <el-button @click="submitForm" type="primary">确认保存</el-button>
-        <el-button @click="cancel">取消</el-button>
+        <el-button >取消</el-button>
       </div>
     </div>
 </template>
@@ -129,9 +129,9 @@ export default {
             totalNum: 0, // 字数统计
             topicNavbarList: {
                 navName: '',
-                topicBannerProducts: [{ prodCode: '', productType: 99 }],
-                type: '',
-                topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+                type: '', // 导航属性 1文字 2时间
+                topicBannerProducts: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }],
+                topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] }]
             }
         };
     },
@@ -142,23 +142,15 @@ export default {
         this.id = '';
         this.topicNavbarList = {
             navName: '',
-            topicBannerProducts: [{ prodCode: '', productType: 99 }],
             type: '',
-            topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+            topicBannerProducts: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }],
+            topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] }]
         };
         if (this.tplData != 'add') {
             this.bannerForm.imgUrl = this.tplData.imgUrl;
             this.bannerForm.remark = this.tplData.remark;
             this.topicNavbarList = this.tplData.topicNavbarList[0];
             this.id = this.tplData.id;
-        }
-        if (this.tplData.content == 'edit') {
-            this.topicNavbarList = {
-                navName: '',
-                type: '',
-                topicBannerProducts: [{ prodCode: '', productType: 99 }],
-                topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
-            };
         }
     },
 
@@ -205,7 +197,7 @@ export default {
             if (this.id != '') {
                 data.id = this.id.toString();
             }
-            data.templateId = 2;
+            data.templateId = 4;
             data.name = this.pName;
             data.imgUrl = this.bannerForm.imgUrl;
             data.remark = this.bannerForm.remark;
@@ -221,7 +213,7 @@ export default {
         },
         // 添加banner
         addBanner() {
-            this.topicNavbarList.topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [] });
+            this.topicNavbarList.topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] });
         },
         // 添加banner图产品
         addBannerProduct(index) {
@@ -235,28 +227,24 @@ export default {
         addProduct() {
             this.topicNavbarList.topicBannerProducts.push({ prodCode: '', productType: 99 });
         },
-        //   获取输入字数
+        // 获取输入字数
         getFontNum() {
             this.totalNum = this.bannerForm.remark.length;
         },
-        //  上传头部banner成功回调
+        // 上传头部banner成功回调
         handleAvatarSuccess(res) {
             this.bannerForm.imgUrl = res.data;
-        },
-        // 取消
-        cancel() {
-            this.$router.push('/topicManage');
         }
     }
 };
 
 </script>
-<style lang='less'>
-.tpl-002{
+<style lang='less' scoped>
+.tpl-004{
   .my-inp{width: 215px;}
   .banner{width: 585px;height: 280px;background-color: #f7f7f7;padding: 20px 0;box-sizing: border-box;}
   .icon-uploader{float: right;margin-right: 103px;width: 100px;}
-  .el-upload--text {width: 100px;height: 35px;border: none;}
+  /deep/.el-upload--text {width: 100px;height: 35px;border: none;}
   .upload-img-show{width: 350px;height: 160px;border: 1px solid #dfdfdf;border-radius: 5px;background-color: #fff;text-align: center;line-height: 160px;font-size: 54px;color: #eee;overflow: hidden;
       img{width: 100%;height: 100%;}
   }

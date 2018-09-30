@@ -57,6 +57,7 @@ export default {
     activated() {
         this.name = '';
         this.tplId = this.$route.query.topicId || sessionStorage.getItem('topicId');
+        this.tpl = '1';
         if (this.tplId == 'add') {
             this.title = '添加专题';
             this.tplInfo = 'add';
@@ -70,6 +71,7 @@ export default {
     deactivated() {
         this.tplInfo = {};
         this.isShow = false;
+        this.tpl = '1';
     },
 
     methods: {

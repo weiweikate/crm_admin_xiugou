@@ -29,16 +29,6 @@ export const getSecondList = '/admin/productCategory/queryProductCategoryFatheri
 // 模板列表
 export const getAllDiscountCouponTemplate = '/admin/discountCouponTemplate/getAllDiscountCouponTemplate';
 
-/** ************秒杀*****************/
-// 新建秒杀
-export const addOperatorSeckill = '/admin/operActivitySeckill/saveSeckillProduct';
-// 秒杀活动查询
-export const queryOperatorSeckillList = '/admin/operActivitySeckill/queryOperatorSeckillList';
-// 结束/删除秒杀
-export const updateActiviySeckillStatus = '/admin/operActivitySeckill/updateActiviySeckillStatus';
-// 查看活动详情
-export const findActivitySeckillByActivityCode = '/admin/operActivitySeckill/findActivitySeckillByActivityCode';
-
 /** ************优惠套餐*****************/
 // 套餐列表
 export const queryOperActivityPackagePageList = '/admin/operActivityPackage/queryOperActivityPackagePageList';
@@ -253,3 +243,13 @@ export const deleteAdvertisement = ['/config/advertisement/deleteAdvertisement',
 export const findAdvertisementById = ['/config/advertisement/findAdvertisementById', { methods: 'get' }];
 // 根据类型和code查询名称
 export const getInfoByCode = ['/config/advertisement/getInfo', { methods: 'get' }];
+
+/** ************秒杀*****************/
+// 新建秒杀
+export const addOperatorSeckill = '/operator/seckill/add';
+// 秒杀活动查询
+export const queryOperatorSeckillList = '/operator/seckill/queryPageList';
+// 结束/删除秒杀
+// export const updateActiviySeckillStatus = '/admin/operActivitySeckill/updateActiviySeckillStatus';
+// 查看活动详情
+export const findActivitySeckillByActivityCode = ['/operator/seckill/findById', { methods: 'get' }];

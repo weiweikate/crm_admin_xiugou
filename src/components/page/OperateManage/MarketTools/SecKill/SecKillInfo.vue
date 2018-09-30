@@ -11,13 +11,13 @@
                     <el-button type="primary" disabled="">+添加商品</el-button>
                 </el-form-item>
                 <el-form-item label="商品名称">
-                    <span>{{form.productName}}</span>
+                    <span>{{form.name}}</span>
                 </el-form-item>
                 <el-form-item label="商品规格">
-                    <span>{{form.productSpec}}</span>
+                    <span>{{form.spec}}</span>
                 </el-form-item>
                 <el-form-item label="商品原价">
-                    <span class="color-red">{{form.productPrice}}</span>
+                    <span class="color-red">¥{{form.originalPrice}}</span>
                 </el-form-item>
                 <el-form-item label="商品库存">
                     <span>--</span>
@@ -48,7 +48,7 @@
                     <el-input class="small" disabled v-model="form.totalNumber"></el-input>
                 </el-form-item>
                 <el-form-item label="每人限购">
-                    <span>{{form.limitNumber}}件(每场)</span><span class="tip">(同一用户只能购买一次)</span>
+                    <span>{{form.limitNumber==-1?'不限':form.limitNumber}}件(每场)</span><span class="tip">(同一用户只能购买一次)</span>
                 </el-form-item>
                 <el-button @click="backToList" type="primary">返回列表</el-button>
             </el-form>
@@ -79,7 +79,7 @@
         },
 
         activated() {
-            this.id = this.$route.query.id || sessionStorage.getItem('id');
+            this.id = this.$route.query.secKillId || sessionStorage.getItem('secKillId');
             this.getDetail();
         },
 
@@ -91,7 +91,7 @@
             // 详情
             getDetail() {
                 const data = {
-                    activityCode: this.id
+                    id: this.id
                 };
                 request.findActivitySeckillByActivityCode(data).then(res => {
                     this.form = res.data;

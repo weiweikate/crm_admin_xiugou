@@ -86,7 +86,7 @@
       </div>
       <div class="submit-btn">
         <el-button @click="submitForm" type="primary">确认保存</el-button>
-        <el-button @click="cancel">取消</el-button>
+        <el-button >取消</el-button>
       </div>
     </div>
 </template>
@@ -131,7 +131,7 @@ export default {
                 navName: '',
                 topicBannerProducts: [{ prodCode: '', productType: 99 }],
                 type: '',
-                topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+                topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] }]
             }
         };
     },
@@ -144,7 +144,7 @@ export default {
             navName: '',
             topicBannerProducts: [{ prodCode: '', productType: 99 }],
             type: '',
-            topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+            topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] }]
         };
         if (this.tplData != 'add') {
             this.bannerForm.imgUrl = this.tplData.imgUrl;
@@ -157,7 +157,7 @@ export default {
                 navName: '',
                 type: '',
                 topicBannerProducts: [{ prodCode: '', productType: 99 }],
-                topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+                topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }] }]
             };
         }
     },
@@ -221,7 +221,7 @@ export default {
         },
         // 添加banner
         addBanner() {
-            this.topicNavbarList.topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [] });
+            this.topicNavbarList.topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }] });
         },
         // 添加banner图产品
         addBannerProduct(index) {
@@ -242,10 +242,6 @@ export default {
         //  上传头部banner成功回调
         handleAvatarSuccess(res) {
             this.bannerForm.imgUrl = res.data;
-        },
-        // 取消
-        cancel() {
-            this.$router.push('/topicManage');
         }
     }
 };

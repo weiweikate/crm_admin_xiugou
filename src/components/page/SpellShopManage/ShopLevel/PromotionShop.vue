@@ -31,26 +31,26 @@
                 <p class="necessary-title">必要条件:</p>
                 <div class="dialog-nec-item">
                     <el-checkbox v-model="checked[0]"><span class="dialog-nec-title">人员数</span></el-checkbox>
-                    <el-input class="dialog-nec-inp" :disabled="!checked[0]" v-model="form.upgradeCondUserNum" placeholder="请输入数值"></el-input>
+                    <el-input class="dialog-nec-inp" :disabled="!checked[0]" v-model="form.upgradeCondUserNum" placeholder="请输入数值"></el-input>人
                 </div>
                 <div class="dialog-nec-item">
                     <el-checkbox v-model="checked[1]"><span class="dialog-nec-title">交易总额达到</span></el-checkbox>
                     <el-input class="dialog-nec-inp" :disabled="!checked[1]" v-model="form.upgradeCondTotleSales"
-                              placeholder="请输入数值"></el-input>
+                              placeholder="请输入数值"></el-input>元
                 </div>
                 <div class="dialog-nec-item">
                     <el-checkbox v-model="checked[2]"><span class="dialog-nec-title">利润贡献值</span></el-checkbox>
                     <el-input class="dialog-nec-inp" :disabled="!checked[2]" v-model="form.upgradeCondProfitCtrb"
-                              placeholder="请输入数值"></el-input>
+                              placeholder="请输入数值"></el-input>元
                 </div>
                 <div class="dialog-nec-item">
                     <el-checkbox v-model="checked[3]"><span class="dialog-nec-title">平均活跃度达到</span></el-checkbox>
                     <el-input class="dialog-nec-inp" :disabled="!checked[3]" v-model="form.upgradeCondAvgActivity"
-                              placeholder="请输入数值"></el-input>
+                              placeholder="请输入数值"></el-input>%
                 </div>
                 <div class="dialog-nec-item">
                     <el-checkbox v-model="checked[4]"><span class="dialog-nec-title">完成分红次数</span></el-checkbox>
-                    <el-input class="dialog-nec-inp" :disabled="!checked[4]" v-model="form.upgradeCondBonusNum" placeholder="请输入数值"></el-input>
+                    <el-input class="dialog-nec-inp" :disabled="!checked[4]" v-model="form.upgradeCondBonusNum" placeholder="请输入数值"></el-input>次
                 </div>
             </div>
             <span slot="footer">
@@ -402,7 +402,7 @@
                         const reg = /^(0|[1-9]\d*)$/;
                         return this.setReg(reg, value);
                     } else {
-                        const reg = /^[0-9]+([.]{1}[0-9]{1,2})?$/;
+                        const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
                         return this.setReg(reg, value);
                     }
                 }

@@ -99,6 +99,11 @@ export default {
                     }
                 ]
             };
+            const reg = /^(0|[1-9]\d*)$/;
+            if (!reg.test(this.orderCancleTime) || !reg.test(this.payOvertime) || !reg.test(this.toBeConfirmTime) || !reg.test(this.returnDownTime)) {
+                this.$message.warning('请输入合法数据!');
+                return;
+            }
             this.btnLoading = true;
             request.addOrModifyList(data).then(res => {
                 this.$message.success(res.msg);
