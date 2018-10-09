@@ -143,10 +143,10 @@ export default new Router({
                     meta: { title: '礼包产品管理', url: '/admin/giftBag/findProductInfo' }
                 },
                 {
-                    name: 'expMange',
-                    path: '/expMange',
-                    component: resolve => require(['../components/page/BrandProduct/GiftManage/ExpMange.vue'], resolve),
-                    meta: { title: '经验值管理', url: '/admin/giftBag/setExperience' }
+                    name: 'addStock',
+                    path: '/addStock',
+                    component: resolve => require(['../components/page/BrandProduct/GiftManage/addStock.vue'], resolve),
+                    meta: { title: '添加库存', url: '/admin/giftBag/addStock' }
                 },
                 {
                     name: 'giftInfo',
@@ -920,7 +920,7 @@ export default new Router({
                 },
                 {
                     name: 'logistics',
-                    path: '/logistics',
+                    path: '/expMange',
                     component: resolve => require(['../components/page/OrderManage/OrderManage/Logistics.vue'], resolve),
                     meta: { title: '物流详情', url: '/dashboard' }
                 },

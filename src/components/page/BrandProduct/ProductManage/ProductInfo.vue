@@ -14,6 +14,9 @@
             <el-form-item label="产品详情：">
               <div v-html='productDetail'></div>
             </el-form-item>
+            <el-form-item>
+              <el-button @click="goBack" type="primary">返回列表</el-button>
+            </el-form-item>
           </el-form>
       </el-card>
 
@@ -60,6 +63,10 @@ export default {
             }).catch(err => {
                 console.log(err);
             });
+        },
+        // 返回产品列表
+        goBack(){
+            this.$router.replace('productList')
         }
     }
 };

@@ -168,4 +168,5 @@ export const queryProductList = ['/product/product/queryProductList', { methods:
 export const findActivityPackageProductAndSpecById = ['/operator/activityPackageProduct/findActivityPackageProductAndSpecById', { methods: 'get' }]; // 礼包产品规格查询
 export const addActivityPackageProduct = ['/operator/activityPackageProduct/addActivityPackageProduct', { methods: 'post' }]; // 添加礼包产品规格
 export const findActivityPackageProductAndSpecByIdAn = ['/operator/activityPackageSpecPrice/findActivityPackageProductAndSpecById', { methods: 'get' }]; // 查询礼包下产品的价格区间
+export const updataActivityPackagePriceAndStock = ['/operator/activityPackage/updataActivityPackagePriceAndStock', { methods: 'post' }]; // 修改礼包价格库存
 

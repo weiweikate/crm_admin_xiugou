@@ -18,7 +18,7 @@
                         <div class="des-wrap" v-for="(v,k) in value.speArr" @mouseover="showDeleteBtn(v)"
                              @mouseout="deleteItem = ''" :key="k">
                             <div class="delete-btn" v-if='v == deleteItem' @click="deleteSpe(index,k)">×</div>
-                            <el-input v-model="value.speArr[k]" class="des-inp"></el-input>
+                            <el-input v-model="value.speArr[k]" :maxlength="18" class="des-inp"></el-input>
                         </div>
                         <span class="add-spe" @click="addSpe(index)">添加规格</span>
                     </div>

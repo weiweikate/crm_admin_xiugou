@@ -241,6 +241,7 @@
 
             // 获取省市区
             getRegion(msg) {
+                console.log(msg);
                 this.address = msg;
             }
         }
