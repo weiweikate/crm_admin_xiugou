@@ -157,6 +157,8 @@ export const addCouponStock = '/coupon/addStock';
 export const queryUserCouponList = '/user/coupon/queryUserCouponList';
 // 券数据批量删除
 export const bathVaildCoupon = '/user/coupon/bathVaildCoupon';
+// 导出
+export const downloadCouponList = ['/user/coupon/downloadCouponList', { methods: 'get' }];
 // 失效优惠券
 export const deleteCouponById = ['/coupon/deleteById', { methods: 'get' }];
 // 通过id查询优惠券信息

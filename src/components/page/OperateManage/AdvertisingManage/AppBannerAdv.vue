@@ -2,17 +2,31 @@
     <div class="app-banner-adv">
         <v-breadcrumb :nav="nav"></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
-            <el-button @click="addItem"  type="primary" style="margin-bottom:20px">添加banner图片
+            <el-button @click="addItem"  type="primary" style="margin-bottom:20px" v-if="pageType!=10">添加banner图片
             </el-button>
             <el-table border :data="tableData">
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
-                <el-table-column prop="" label="一级分类" align="center" v-if="pageType == 10" key="1"></el-table-column>
-                <el-table-column prop="" label="产品" align="center" v-if="pageType == 8" key="2"></el-table-column>
-                <el-table-column prop="title" label="标题" align="center" v-if="pageType == 8" key="3"></el-table-column>
-                <el-table-column prop="" label="状态" align="center" v-if="pageType == 8" key="4"></el-table-column>
+                <el-table-column prop="firstStageName" label="一级分类" align="center" v-if="pageType == 10" key="1"></el-table-column>
+                <el-table-column prop="" label="产品" v-if="pageType == 8" key="2" min-width="120">
+                    <template slot-scope="scope">
+                        <div class="product-img">
+                            <img :src="scope.row.imgUrl">
+                        </div>
+                        <p class="product-name">{{scope.row.describe}}</p>
+                        <p class="product-id">产品ID：{{scope.row.linkTypeCode}}</p>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="title" label="标题" align="center" v-if="pageType == 8" key="3">
+                </el-table-column>
+                <el-table-column prop="" label="状态" align="center" v-if="pageType == 8" key="4">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.status==1">有效</template>
+                        <template v-if="scope.row.status==0">无效</template>
+                    </template>
+                </el-table-column>
                 <el-table-column v-if="pageType!=8" label="图片" align="center" min-width="220" key="5">
                     <template slot-scope="scope">
-                        <img class="img" :src="scope.row.imgUrl">
+                            <img :src="scope.row.imgUrl">
                     </template>
                 </el-table-column>
                 <el-table-column label="店长/店铺名称" align="center" v-if="pageType == 3" key="6">
@@ -29,11 +43,12 @@
                         {{scope.row.showBegintime|formatDateAll}}~<br>{{scope.row.showEndtime|formatDateAll}}
                     </template>
                 </el-table-column>
-                <el-table-column prop="rank" label="排序" v-if="pageType!=12" align="center" key="11"></el-table-column>
+                <el-table-column prop="rank" label="排序" v-if="pageType!=10&&pageType!=12" align="center" key="11"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button @click='editItem(scope.row)' type="primary">编辑</el-button>
-                        <el-button type="warning" @click="del(scope.row.id)">删除</el-button>
+                        <el-button type="warning" @click="del(scope.row.id)" v-if="pageType!=10&&pageType!=12">删除</el-button>
+                        <el-button type="warning" @click="clearData(scope.row.id)" v-if="pageType==10&&scope.row.id">清空</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -56,7 +71,8 @@
                     <el-input readonly v-model="form.imgUrl" placeholder="上传图片" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
                                :action="uploadImg"
-                               :on-success="handleAvatarSuccess">
+                               :on-success="handleAvatarSuccess"
+                               :before-upload="beforeAvatarUpload">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
                 </el-form-item>
@@ -65,7 +81,7 @@
                     <div class="tips">建议图片尺寸350px*350px</div>
                 </div>
                 <el-form-item v-if="pageType!=3&&pageType!=12" label="请选择类型">
-                    <el-select v-model="form.linkType" placeholder="请选择类型">
+                    <el-select v-model="form.linkType" placeholder="请选择类型" @change="getProductName">
                         <el-option v-for="(v,k) in linkTypeList" :key="k" :label="v.type" :value="v.id">{{v.type}}</el-option>
                     </el-select>
                 </el-form-item>
@@ -73,7 +89,7 @@
                     <el-input v-model="form.linkTypeCode" placeholder="请输入ID" @blur="getProductName"
                               auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item v-if="pageType==3&&pageType!=12" label="请输入店铺ID">
+                <el-form-item v-if="pageType==3" label="请输入店铺ID">
                     <el-input v-model="form.linkTypeCode" placeholder="请输入ID" @blur="getProductName"
                               auto-complete="off"></el-input>
                 </el-form-item>
@@ -87,7 +103,7 @@
                 <el-form-item label="备注" v-if="pageType==8">
                     <el-input v-model="form.remark" placeholder="请输入备注" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="排序" v-if="pageType!=12">
+                <el-form-item label="排序" v-if="pageType!=10&&pageType!=12">
                     <el-input v-model="form.rank" placeholder="请输入排序" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item v-if="pageType!=2&&pageType!=6&&pageType!=7&&pageType!=8&&pageType!=12" prop="date" label="投放时间">
@@ -100,7 +116,21 @@
                 <el-button @click="mask=false">取 消</el-button>
             </div>
         </el-dialog>
+        <!--删除-->
         <deletetoast :id="delId" :url="delUrl" :status="3" @msg="deleteToast" v-if="isShowDel"></deletetoast>
+        <!--清空-->
+        <div class="clear-mask" v-if="isShowClear">
+            <div class="box">
+                <div class="mask-title"><icon class="ico" ico='icon-jinggao'/>  温馨提示</div>
+                <div class="mask-content">
+                    <span class="del-tip">确定要清空该广告位吗？</span>
+                    <div class="del-btn-group">
+                        <el-button :loading="btnLoading" @click="clearToask(true)" class="del-btn" type="danger">确定</el-button>
+                        <el-button @click="clearToask(false)">取消</el-button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -163,7 +193,9 @@
                 pageType: '', // 页面进来的名字
                 status: '', // 弹出框的数据格式
                 nav: ['运营管理', '广告位管理'], // 导航名称
-                title: '添加banner图片' // 弹窗名称
+                title: '添加banner图片', // 弹窗名称
+                isShowClear: false// 清空确认弹窗
+
             };
         },
         activated() {
@@ -243,14 +275,31 @@
             handleAvatarSuccess(res) {
                 this.form.imgUrl = res.data;
             },
+            // 图片格式
+            beforeAvatarUpload(file) {
+                const isJPG = (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png');
+
+                if (!isJPG) {
+                    this.$message.error('上传图片只能是 jpg,jpeg,png 格式!');
+                }
+                return isJPG;
+            },
             // 根据类型和code查询产品名称
             getProductName() {
                 const data = {
                     code: this.form.linkTypeCode,
                     type: this.form.linkType
                 };
+                if (this.pageType === 3) {
+                    if (!data.code) return;
+                } else {
+                    if (!data.code || !data.type) return;
+                }
                 request.getInfoByCode(data).then(res => {
                     this.productName = res.data;
+                    if (!res.data) {
+                        this.$message.warning('无效ID');
+                    }
                 }).catch(err => {
                     console.log(err);
                 });
@@ -270,12 +319,14 @@
                 this.form.remark = row.remark;
                 this.form.rank = row.rank;
                 this.form.title = row.title;
+                this.form.firstStageId = row.firstStageId;
                 this.form.date = [];
                 if (row.showBegintime) {
                     this.form.date[0] = row.showBegintime;
                     this.form.date[1] = row.showEndtime;
                 }
                 this.title = this.pageType === 8 ? '编辑' : '编辑banner图片';
+                this.getProductName();
             },
             // 添加编辑
             dealAdv() {
@@ -288,7 +339,13 @@
                 data.type = this.pageType;
                 if (this.form.date.length) {
                     data.showBegintime = this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss') : '';
-                    data.showEndtime = this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD  HH:mm:ss') : '';
+                    data.showEndtime = this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss') : '';
+                }
+                if (this.pageType != 12) {
+                    if (!this.productName) {
+                        this.$message.warning('请输入有效ID');
+                        return;
+                    }
                 }
                 request[url](data).then(res => {
                     this.$message.success(res.msg);
@@ -316,6 +373,7 @@
                     title: ''
                 };
                 this.id = '';
+                this.productName = '';
             },
             // 删除
             del(val) {
@@ -326,6 +384,30 @@
             deleteToast(msg) {
                 this.isShowDel = msg;
                 this.getList(1);
+            },
+            clearData(id) {
+                this.isShowClear = true;
+                this.delId = id;
+                this.delUrl = 'deleteAdvertisement';
+            },
+            clearToask(status) {
+                if (status === true) {
+                    const that = this;
+                    that.btnLoading = true;
+                    const url = this.delUrl;
+                    const data = { id: that.delId };
+                    request[url](data).then(res => {
+                        that.btnLoading = false;
+                        this.$message.success(res.msg);
+                        this.getList(1);
+                        this.isShowClear = false;
+                    }).catch(err => {
+                        that.tableLoading = false;
+                        this.isShowClear = false;
+                    });
+                } else {
+                    this.isShowClear = false;
+                }
             }
         }
     };
@@ -446,6 +528,96 @@
             margin: -10px 0 10px 100px;
             .tips {
                 color: #ff6868;
+            }
+        }
+        .product-img {
+            display: inline-block;
+            float: left;
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+            img {
+                width: 60px;
+                height: 60px;
+                margin: 10px;
+            }
+        }
+        .product-name {
+            float: left;
+            width: 65%;
+            height: auto;
+            margin: 5px 0 0 20px;
+        }
+        .product-id {
+            float: left;
+            width: 65%;
+            height: auto;
+            margin: 20px 0 0 20px;
+        }
+        .clear-mask {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 99;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            .box {
+                position: relative;
+                width: 530px;
+                height: 305px;
+                background-color: #fff;
+                border-radius: 10px;
+                overflow: hidden;
+                .mask-title {
+                    width: 100%;
+                    height: 56px;
+                    border-bottom: 1px solid #ccc;
+                    padding-left: 45px;
+                    box-sizing: border-box;
+                    text-align: center;
+                    line-height: 56px;
+                    color: #ff6868;
+                    font-weight: 700;
+                    .ico {
+                        position: absolute;
+                        top: 16px;
+                        left: 228px;
+                        color: red;
+                        font-size: 20px;
+                    }
+                }
+                .mask-content {
+                    position: relative;
+                    width: 100%;
+                    height: 248px;
+                    overflow: hidden;
+                    padding: 30px 45px 0 45px;
+                    box-sizing: border-box;
+                    .del-tip {
+                        position: absolute;
+                        top: 30%;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        font-size: 22px;
+                    }
+                    .del-btn-group {
+                        width: 180px;
+                        display: flex;
+                        justify-content: space-between;
+                        position: absolute;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        bottom: 15%;
+                        .del-btn {
+                            background-color: #ff6868;
+                        }
+                    }
+                }
             }
         }
     }

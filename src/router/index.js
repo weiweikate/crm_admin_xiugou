@@ -253,6 +253,12 @@ export default new Router({
                     meta: { title: '会员层级管理', url: '/admin/dealerLevel/getList' }
                 },
                 {
+                    name: 'LevelInfo',
+                    path: '/LevelInfo',
+                    component: resolve => require(['../components/page/MemberManage/LevelManage/LevelInfo.vue'], resolve),
+                    meta: { title: '层级信息', url: '/admin/dealerLevel/getList' }
+                },
+                {
                     name: 'joinManage',
                     path: '/joinManage',
                     component: resolve => require(['../components/page/MemberManage/JoinManage.vue'], resolve),

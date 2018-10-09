@@ -38,7 +38,9 @@
                             <!--<el-button type="primary" size="small" @click="priceLevel(scope.$index,scope.row)">价格阶层</el-button>-->
                             <el-button type="success" size="small" @click="editItem(scope.$index,scope.row)">编辑
                             </el-button>
-                            <el-button type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除
+                            <!--<el-button type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除-->
+                            <!--</el-button>-->
+                            <el-button type="danger" size="small" @click="toLevelInfo(scope.$index,scope.row.id)">层级信息
                             </el-button>
                         </template>
                     </el-table-column>
@@ -327,6 +329,11 @@
             },
             beforeIconUpload(file) {
                 this.form.icon = file.name;
+            },
+            // 层级信息页面
+            toLevelInfo(index, id) {
+                sessionStorage.setItem('memberId', id);
+                this.$router.push({ path: '/levelInfo', query: { memberId: id }});
             }
         }
     };

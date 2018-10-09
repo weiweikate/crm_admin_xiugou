@@ -7,7 +7,8 @@
               <el-upload class="icon-uploader"
                           :action="uploadImg"
                           :show-file-list="false"
-                          :on-success="handleAvatarSuccess">
+                          :on-success="handleAvatarSuccess"
+                          :before-upload="beforeAvatarUpload">
                   <el-button style="width:100px;height:32px" size="small" type="primary">上传</el-button>
               </el-upload>
               <span style="color:#fe8080"><br/>建议图片750px*350px</span>
@@ -53,7 +54,8 @@
             <el-upload class="icon-uploader"
                     :action="uploadImg"
                     :show-file-list="false"
-                    :on-success="res=>uploadBanner(res,k)">
+                    :on-success="res=>uploadBanner(res,k)"
+                    :before-upload="beforeAvatarUpload">
                 <el-button style="width:100px;height:32px" size="small" type="primary">上传</el-button>
             </el-upload>
             <span style="color:#fe8080"><br/>建议图片750px*350px</span>
@@ -242,6 +244,15 @@ export default {
         //  上传头部banner成功回调
         handleAvatarSuccess(res) {
             this.bannerForm.imgUrl = res.data;
+        },
+        // 图片格式
+        beforeAvatarUpload(file) {
+            const isJPG = (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png');
+
+            if (!isJPG) {
+                this.$message.error('上传图片只能是 jpg,jpeg,png 格式!');
+            }
+            return isJPG;
         },
         // 取消
         cancel() {

@@ -13,7 +13,8 @@
                     <el-input v-model="form.bonusCount" placeholder="请输入分红次数"></el-input>
                 </el-form-item>
                 <el-form-item prop="storeStar" label="店铺等级">
-                    <el-select v-model="form.storeStar" placeholder="请选择店铺等级">
+                    <el-select v-model="form.storeStarId" placeholder="请选择店铺等级">
+                        <el-option value="">全部</el-option>
                         <el-option
                             v-for="item in shopLevelArr"
                             :key="item.id"
@@ -109,12 +110,10 @@ export default {
 
     data() {
         return {
-
             nav: ['拼店管理', '店铺管理'],
             shopLevelArr: [],
             tableData: [],
             form: {}
-
         };
     },
     activated() {
@@ -124,12 +123,15 @@ export default {
     methods: {
         // 获取店铺等级
         getAllStoreStar() {
-            request.getAllStoreStar({}).then(res => {
-                this.shopLevelArr = [];
-                this.shopLevelArr = res.data;
-            }).catch(error => {
-                console.log(error);
-            });
+            request
+                .getAllStoreStar({})
+                .then(res => {
+                    this.shopLevelArr = [];
+                    this.shopLevelArr = res.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         },
         // 获取数据
         getList(val) {
@@ -137,28 +139,38 @@ export default {
                 name: this.form.name,
                 bonusCount: this.form.bonusCount,
                 storeNumber: this.form.storeNumber,
-                storeStar: this.form.storeStar,
+                storeStarId: this.form.storeStarId,
                 maxMoney: this.form.maxTradeMoney,
                 minMoney: this.form.minTradeMoney,
-                startTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
-                endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : '',
+                startTime: this.form.date
+                    ? moment(this.form.date[0]).format('YYYY-MM-DD')
+                    : '',
+                endTime: this.form.date
+                    ? moment(this.form.date[1]).format('YYYY-MM-DD')
+                    : '',
                 page: val,
                 size: this.page.pageSize
             };
-            request.getStoreList(data).then(res => {
-                this.tableData = [];
-                if (!res.data) return;
-                this.tableData = res.data.data;
-                this.page.totalPage = res.data.totalNum;
-            }).catch(error => {
-                console.log(error);
-            });
+            request
+                .getStoreList(data)
+                .then(res => {
+                    this.tableData = [];
+                    if (!res.data) return;
+                    this.tableData = res.data.data;
+                    this.page.totalPage = res.data.totalNum;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         },
         // 查看店铺详情
         showInfo(row) {
             sessionStorage.setItem('shopInfoId', row.id);
             sessionStorage.setItem('status', 1);
-            this.$router.push({ name: 'shopInfo', query: { 'shopInfoId': row.id,status:1 }});
+            this.$router.push({
+                name: 'shopInfo',
+                query: { shopInfoId: row.id, status: 1 }
+            });
         },
         // 重置表单
         resetForm(formName) {
@@ -169,19 +181,22 @@ export default {
         // 跳到成员列表
         toUserList(row) {
             sessionStorage.setItem('recruitShopId', row.id);
-            this.$router.push({ name: 'shopMemberManage', query: { 'recruitShopId': row.id}});
+            this.$router.push({
+                name: 'shopMemberManage',
+                query: { recruitShopId: row.id }
+            });
         }
     }
 };
 </script>
 <style lang='less' scoped>
-    .shop-list {
-        .block {
-            margin: 10px 0;
-        }
-        .color-blue {
-            color: #33b4ff;
-            cursor: pointer;
-        }
+.shop-list {
+    .block {
+        margin: 10px 0;
     }
+    .color-blue {
+        color: #33b4ff;
+        cursor: pointer;
+    }
+}
 </style>
