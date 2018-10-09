@@ -125,10 +125,8 @@
                     return;
                 }
                 this.btnLoading = true;
-                let data = {
-                    ...row
-                };
-                request.updateProductPrice(data).then(res => {
+
+                request.updateProductPrice(row).then(res => {
                     this.$message.success(res.msg);
                     this.btnLoading = false;
                     row.btnStyle = 'success';
