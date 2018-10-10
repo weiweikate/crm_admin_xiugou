@@ -7,7 +7,7 @@ const path = require('path');
 // const baseURL = 'http://172.16.10.41';
 // const baseURL = 'http://172.16.10.56';
 // const baseURL = 'http://172.16.10.19';
-const baseURL = 'http://172.16.10.12';
+const baseURL = 'http://172.16.10.29';
 // const baseURL = 'http://testadmin.sharegoodsmall.com';
 
 // 测试地址不需要端口号

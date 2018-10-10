@@ -787,7 +787,7 @@ export default {
             data.size = this.page.pageSize;
             this.tabLoading = true;
             request[this.url](data).then(res => {
-                console.log(res)
+                console.log(res);
                 this.tabLoading = false;
                 for (const i in res.data.data) {
                     // res.data.data[i].isShowPop = false;
