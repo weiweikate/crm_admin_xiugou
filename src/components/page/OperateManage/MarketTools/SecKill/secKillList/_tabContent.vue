@@ -137,9 +137,6 @@
                     <el-button style="margin-bottom:10px" type="danger" @click="endOrDelete(0,scope.row)"
                                v-if="scope.row.status != 1&&scope.row.status != 2">删除
                     </el-button>
-                    <!--<el-button style="margin-bottom:10px" type="warning" @click="endOrDelete(2,scope.row)"-->
-                               <!--v-if="scope.row.status == 3||scope.row.status == 4||scope.row.status == 5">下架-->
-                    <!--</el-button>-->
                 </template>
             </el-table-column>
 
@@ -167,7 +164,7 @@
             <el-popover placement="top" width="160" v-model="isShowEndPop">
                 <p>确定结束吗？</p>
                 <div style="text-align: right; margin: 0">
-                    <el-button @click="batchOperate(1)" type="primary" size="mini">确定</el-button>
+                    <el-button @click="batchOperate(5)" type="primary" size="mini">确定</el-button>
                     <el-button size="mini" type="text" @click="isShowEndPop = false">取消</el-button>
                 </div>
                 <el-button slot="reference" @click="isShowEndPop = true">结束</el-button>
@@ -352,18 +349,16 @@
             endOrDelete(num, row) {
                 this.index = num;
                 this.showMask = true;
-                this.id = row.activityCode;
+                this.id = row.id;
             },
             // 结束或删除操作确认取消
             closeMask(status) {
                 if (status) {
                     const data = {};
-                    if (this.index == 0) {
+                    if (this.index === 0) {
                         data.status = this.index;
-                    } else if (this.index == 1) {
+                    } else if (this.index === 1) {
                         data.status = 5;
-                    } else {
-                        data.status = 6;
                     }
                     this.changeStatus(data);
                 } else {
@@ -372,7 +367,7 @@
             },
             // 结束、删除
             changeStatus(data) {
-                data.activityCode = this.id;
+                data.id = this.id;
                 this.btnLoading = true;
                 request.updateActiviySeckillStatus(data).then(res => {
                     this.getList(this.page.currentPage);
@@ -401,14 +396,12 @@
                     this.$message.warning('请选择活动!');
                     return;
                 }
-                let url = '';
-                // status 0:删除 1：结束
-                if (status == 0) {
-                    url = 'deleteActivityDepreciate';
-                } else {
-                    url = 'modifyActivityDepreciate';
-                }
-                request[url]({ list: this.multipleSelection.join(',') }).then(res => {
+                // status 0:删除 5：结束
+                const data = {
+                    status: status,
+                    ids: this.multipleSelection
+                };
+                request.bathUpdateActiviySeckillStatus(data).then(res => {
                     this.isShowPop = false;
                     this.isShowEndPop = false;
                     this.$message.success(res.msg);

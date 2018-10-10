@@ -19,24 +19,24 @@
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>店铺ID：{{detail.id}}</span>
+                            <span>店铺ID：{{detail.storeNumber}}</span>
                         </p>
                     </div>
                     <div class="shop-right">
                         <p class="shop-msg">
-                            <span>店铺等级：{{detail.storeStarName}}</span>
+                            <span>店铺等级：{{detail.starName}}</span>
                         </p>
                     </div>
                 </div>
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>保证金：￥{{detail.deposit}}</span>
+                            <span>保证金：￥{{detail.deposit||0}}</span>
                         </p>
                     </div>
                     <div class="shop-right">
                         <p class="shop-msg">
-                            <span>店铺经验：{{detail.experience}}</span>
+                            <span>店铺经验：{{detail.experience||0}}</span>
                         </p>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="shop-right">
                         <p class="shop-msg">
-                            <span>店铺成员数：{{detail.hadUser}}/{{detail.maxUser}}</span>
+                            <span>店铺成员数：{{detail.storeUserNum||0}}/{{detail.maxUser}}</span>
                         </p>
                     </div>
                 </div>

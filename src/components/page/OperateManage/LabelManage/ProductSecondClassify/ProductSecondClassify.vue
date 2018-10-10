@@ -5,8 +5,8 @@
             <template>
                 <el-table :data="tableData" border style="width: 100%">
                     <el-table-column type="index" label="ID" align="center"></el-table-column>
-                    <el-table-column prop="param" label="二级分类" align="center"></el-table-column>
-                    <el-table-column prop="num" label="一级分类" align="center"></el-table-column>
+                    <el-table-column prop="name" label="二级分类" align="center"></el-table-column>
+                    <el-table-column prop="superiorName" label="一级分类" align="center"></el-table-column>
                     <el-table-column label="图标" align="center">
                         <template slot-scope="scope">
                             <img :src="scope.row.img" alt="">
@@ -14,12 +14,22 @@
                     </el-table-column>
                     <el-table-column  label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="danger" size="small" @click="delItem(scope.row.id)">标签设置</el-button>
+                            <el-button type="danger" size="small" @click="setLabel(scope.row.id)">标签设置</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </template>
-
+            <div class="block">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </div>
         </div>
 
     </div>
@@ -70,63 +80,30 @@ export default {
     created() {
     },
     activated() {
+        this.id =
+            this.$route.query.productLabelId || sessionStorage.getItem('productLabelId');
         this.getList(this.page.currentPage);
     },
     methods: {
         // 获取列表
         getList(val) {
-            request.querySysTagLibraryList({}).then(res => {
+            const data = {
+                page: val,
+                fatherId: this.id,
+                pageSize: this.page.pageSize,
+                level: 2
+            };
+            request.queryProductCategoryList(data).then(res => {
                 this.tableData = [];
-                this.tableData = res.data;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
             }).catch(error => {
                 console.log(error);
             });
         },
-        // 添加
-        addClassify() {
-            this.addMask = true;
-            this.form.param = '';
-        },
-        // 添加确定
-        addOrEdit(formName) {
-            const data = {};
-            data.param = this[formName].param;
-            data.categoryId = this.id;
-            if (!data.param) {
-                this.$message.warning('请输入类型名称!');
-                return;
-            }
-            this.btnLoading = true;
-            request.addProductCategoryParam(data).then(res => {
-                // this.$message.success(res.data.msg);
-                this.btnLoading = false;
-                this.addMask = false;
-                this.editMask = false;
-                this.getList(this.page.currentPage);
-            }).catch(error => {
-                console.log(error);
-            });
-        },
-        // 删除
-        delItem(id) {
-            this.delId = id;
-            this.delUrl = 'deleteProductCategoryParam';
-            this.isShowDelToast = true;
-        },
-        // 删除弹窗
-        deleteToast(msg) {
-            this.isShowDelToast = msg;
-            this.getList(this.page.currentPage);
-        },
-        // 取消
-        cancel() {
-            this.addMask = false;
-            this.editMask = false;
-            this.getList(this.page.currentPage);
-        },
-        //二级类目
-        toSecondClassify(id){
-            this.$router.push('/secondClassify');
+        // 标签设置
+        setLabel(id) {
+            this.$router.push({ path: '/productLabelManage' });
         }
     }
 };

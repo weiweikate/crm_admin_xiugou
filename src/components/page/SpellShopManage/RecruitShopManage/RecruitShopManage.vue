@@ -30,7 +30,7 @@
                 <el-table-column prop="storeUserName" label="店长" align="center"></el-table-column>
                 <el-table-column prop="storeUserNum" label="招募成员" align="center">
                     <template slot-scope="scope">
-                        <template><span @click="toUserList(scope.row)" class="color-blue">{{scope.row.hadUser}}</span></template>                    </template>
+                        <template><span @click="toUserList(scope.row)" class="color-blue">{{scope.row.storeUserNum}}</span></template>                    </template>
                 </el-table-column>
                 <el-table-column label="创建时间" align="center">
                     <template slot-scope="scope" v-if='scope.row.createTime'>
@@ -112,11 +112,8 @@ export default {
         },
         // 查看店铺详情
         showInfo(row) {
-            sessionStorage.setItem('shopInfoId', row.id);
-            sessionStorage.setItem('status', 2);
-            this.$router.push({ name: 'shopInfo', query: { 'shopInfoId': row.id, status: 2 }});
-            // sessionStorage.setItem('recruitShopId', row.id);
-            // this.$router.push({name: 'recruitShopInfo', query: {'recruitShopId': row.id}});
+            sessionStorage.setItem('recruitShopId', row.id);
+            this.$router.push({ name: 'recruitShopInfo', query: { 'recruitShopId': row.id}});
         },
         // 重置表单
         resetForm(formName) {

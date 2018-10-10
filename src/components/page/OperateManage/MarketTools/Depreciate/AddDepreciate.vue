@@ -249,15 +249,15 @@
                 }
             },
             // 最低价
-            // floorPrice() {
-            //     if (Number(this.form.floorPrice) > Number(this.form.startPrice)) {
-            //         this.$message.warning('最低价格应不大于起拍价格！');
-            //         this.form.floorPrice = '';
-            //         return false;
-            //     } else {
-            //         return true;
-            //     }
-            // },
+            floorPrice() {
+                if (Number(this.form.floorPrice) > Number(this.form.startPrice)) {
+                    this.$message.warning('最低价格应不大于起拍价格！');
+                    this.form.floorPrice = '';
+                    return false;
+                } else {
+                    return true;
+                }
+            },
             // 计算可持续时间
             calDurationTime(status) {
                 const originPrice = this.form.startPrice;
@@ -309,7 +309,6 @@
             submitForm() {
                 this.$refs.form.validate((valid) => {
                     if (valid) {
-                        console.log(111);
                         // 判空
                         if (!this.productDetail.id) {
                             this.$message.warning('请选择商品！');

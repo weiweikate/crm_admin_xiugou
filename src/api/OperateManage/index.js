@@ -186,19 +186,13 @@ export const updateHelpQuestion = '/help/helpQuestion/updateHelpQuestion';
 // 删除问题
 export const deleteHelpQuestion = ['/help/helpQuestion/deleteHelpQuestion', { methods: 'get' }];
 
-// 标签管理
-// 添加标签
-export const addSysTagLibrary = '/config/sysTagLibrary/addSysTagLibrary';
-// 查询标签列表
-export const querySysTagLibraryList = ['/config/sysTagLibrary/querySysTagLibraryList', { methods: 'get' }];
-
 // 专题
 // 查询专题列表
 export const topicList = '/topic/queryPageList';
 // 添加或修改专题
 export const addOrModifyTopic = '/topic/addOrModify';
 // 删除专题
-export const deleteTopicById = ['/topic/deleteById', { methods: 'get' }];
+export const deleteTopicByCode = ['/topic/deleteByCode', { methods: 'get' }];
 // 查询专题
 export const findTopicById = ['/topic/findById', { methods: 'get' }];
 // 查询专题
@@ -251,7 +245,15 @@ export const getInfoByCode = ['/config/advertisement/getInfo', { methods: 'get' 
 export const addOperatorSeckill = '/operator/seckill/add';
 // 秒杀活动查询
 export const queryOperatorSeckillList = '/operator/seckill/queryPageList';
+// 批量结束/删除秒杀
+export const bathUpdateActiviySeckillStatus = '/operator/seckill/bathUpdateStatusByIds';
 // 结束/删除秒杀
-// export const updateActiviySeckillStatus = '/admin/operActivitySeckill/updateActiviySeckillStatus';
+export const updateActiviySeckillStatus = '/operator/seckill/updateStatusById';
 // 查看活动详情
 export const findActivitySeckillByActivityCode = ['/operator/seckill/findById', { methods: 'get' }];
+
+/** ************标签管理*****************/
+// 添加标签
+export const addSysTagLibrary = '/config/sysTagLibrary/addSysTagLibrary';
+// 查询标签列表
+export const querySysTagLibraryList = ['/config/sysTagLibrary/querySysTagLibraryList', { methods: 'get' }];

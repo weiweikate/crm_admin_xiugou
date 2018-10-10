@@ -177,7 +177,6 @@ export default {
     methods: {
         // 获取列表
         getList(val) {
-            const that = this;
             const data = {
                 page: val,
                 fatherId: this.id,

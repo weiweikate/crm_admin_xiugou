@@ -11,7 +11,7 @@
                     <el-button type="primary" disabled="">+添加商品</el-button>
                 </el-form-item>
                 <el-form-item label="商品名称">
-                    <span>{{form.name}}</span>
+                    <span>{{form.productName}}</span>
                 </el-form-item>
                 <el-form-item label="商品规格">
                     <span>{{form.spec}}</span>

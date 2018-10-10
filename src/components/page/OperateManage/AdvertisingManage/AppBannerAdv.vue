@@ -35,7 +35,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="linkTypeCode" label="链接" align="center" v-if="pageType == 2" key="7"></el-table-column>
-                <el-table-column prop="id" label="ID" align="center" v-if="pageType != 2 && pageType != 8 && pageType != 12" key="8"></el-table-column>
+                <el-table-column prop="linkTypeCode" label="ID" align="center" v-if="pageType != 2 && pageType != 8 && pageType != 12" key="8"></el-table-column>
                 <el-table-column label="上传人/上传时间" align="center" v-if="pageType == 12" key="9"></el-table-column>
                 <el-table-column prop="remark" label="备注" align="center"></el-table-column>
                 <el-table-column prop="showBegintime" label="投放时间" align="center" key="10" v-if="pageType != 2 && pageType != 6 && pageType != 7 && pageType != 8 && pageType != 12">
@@ -290,7 +290,8 @@
                     code: this.form.linkTypeCode,
                     type: this.form.linkType
                 };
-                if (this.pageType === 3) {
+                if (this.pageType == 3) {
+                    data.type = 8;
                     if (!data.code) return;
                 } else {
                     if (!data.code || !data.type) return;
@@ -306,8 +307,8 @@
             },
             // 添加
             addItem() {
-                this.mask = true;
                 this.closeDia();
+                this.mask = true;
             },
             // 编辑
             editItem(row) {
@@ -347,17 +348,16 @@
                         return;
                     }
                 }
+                this.btnLoading = true;
                 request[url](data).then(res => {
                     this.$message.success(res.msg);
                     this.getList(1);
                     this.closeDia();
-                    this.mask = false;
                     this.btnLoading = false;
                 }).catch(error => {
                     console.log(error);
                     this.btnLoading = false;
                     this.getList(1);
-                    this.mask = false;
                     this.closeDia();
                 });
             },
@@ -374,6 +374,7 @@
                 };
                 this.id = '';
                 this.productName = '';
+                this.mask = false;
             },
             // 删除
             del(val) {

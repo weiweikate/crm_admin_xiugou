@@ -233,6 +233,9 @@
                     that.second = [];
                     that.third = [];
                     that.productList = [];
+                    that.secondCategoryName = '';
+                    that.thirdCategoryName = '';
+                    that.productName = '';
                     that.secondClassifyTag = [];
                     that.thirdClassifyTag = [];
                     that.productTag = [];
@@ -262,6 +265,8 @@
                 if (status) {
                     that.secondCategoryName = item.name;
                     that.secondClassifyTag = item;
+                    that.thirdCategoryName = '';
+                    that.productName = '';
                     that.third = [];
                     that.productList = [];
                     that.thirdClassifyTag = [];
@@ -294,6 +299,7 @@
                         that.productList = [];
                         that.productTag = [];
                         that.products = [];
+                        that.productName = '';
                         that.thirdClassifyTag = item;
                     }
                     that.thirdCategoryId = item.id;

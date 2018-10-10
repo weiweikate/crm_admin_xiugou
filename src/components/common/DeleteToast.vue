@@ -23,7 +23,8 @@ export default {
         url: {
             require: true
         },
-        status: {}
+        status: {},
+        isTopic: {}
     },
     components: {
         icon
@@ -40,7 +41,13 @@ export default {
                 const that = this;
                 that.btnLoading = true;
                 const url = that.url;
-                const data = { id: that.id, status: that.status };
+                const data = {};
+                if (that.isTopic) {
+                    data.code = that.id;
+                } else {
+                    data.id = that.id;
+                }
+                data.status = that.status;
                 request[url](data).then(res => {
                     that.btnLoading = false;
                     if (res.code === 10000) {

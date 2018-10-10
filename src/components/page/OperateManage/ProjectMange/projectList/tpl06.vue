@@ -205,6 +205,7 @@
                 const item = this.navItem;
                 this.topicNavbarList.forEach(function(v, k) {
                     v.type = item;
+                    v.navName = '';
                 });
             },
             // 确认保存
