@@ -50,7 +50,7 @@ export default {
         }
     },
     methods: {
-    //   获取省份列表
+        //   获取省份列表
         getProvinceList() {
             this.pLoading = true;
             const data = {
@@ -58,7 +58,7 @@ export default {
             };
             request.getRegion(data).then(res => {
                 this.provinceArr = [];
-                this.provinceArr.push({ label: '全部', value: '' });
+                this.provinceArr.push({ label: '全部', value: '0' });
                 res.data.forEach((v, k) => {
                     this.provinceArr.push({ label: v.name, value: v.code });
                     this.pLoading = false;

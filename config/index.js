@@ -1,11 +1,8 @@
 'use strict';
 
 const path = require('path');
-
-// const baseURL = 'http://172.16.10.29';
 // const baseURL = 'http://172.16.10.42';
 // const baseURL = 'http://172.16.10.88';
-// let baseURL = "http://172.16.10.69";
 // const baseURL = 'http://172.16.10.100';
 // const baseURL = 'http://172.16.10.41';
 // const baseURL = 'http://172.16.10.56';
@@ -13,16 +10,13 @@ const path = require('path');
 const baseURL = 'http://172.16.10.19';
 // const baseURL = 'http://172.16.10.12';
 
+// const baseURL = 'http://172.16.10.19';
 // const baseURL = 'http://testadmin.sharegoodsmall.com';
 // const baseURL = 'http://devadmin.sharegoodsmall.com';
 
 // 测试地址不需要端口号
 const url_1 = baseURL + ':8190';
-const url_2 = baseURL + ':8180';
-const url_4 = baseURL + ':8103';
 // const url_1 = baseURL;
-// const url_2 = baseURL;
-// const url_4 = baseURL;
 
 module.exports = {
     dev: {
@@ -37,20 +31,6 @@ module.exports = {
                     '^/admin': url_1 + '/admin'
                 }
             },
-            '/common': {
-                target: url_2,
-                changeOrigin: true,
-                pathRewrite: {
-                    '^/common': url_2 + '/common'
-                }
-            },
-            '/order': {
-                target: url_4,
-                changeOrigin: true,
-                pathRewrite: {
-                    '^/order': url_4 + '/order'
-                }
-            }
         },
         // Various Dev Server settings
 

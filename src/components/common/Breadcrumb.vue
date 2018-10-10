@@ -3,6 +3,7 @@
         <el-breadcrumb separator="/">
             <el-breadcrumb-item class="bread-item" v-for="(item,index) in nav" :key="index"><icon class="ico" v-if="index == 0" ico="icon-dingwei1" />{{item}}</el-breadcrumb-item>
         </el-breadcrumb>
+        <span style="color: red">2018-10-9更新</span>
         <div class="now-date">
           {{time}}
         </div>

@@ -231,10 +231,10 @@ export default {
         },
         // 价格库存管理
         priceOfInventory(row) {
-            sessionStorage.setItem('priceOfInventoryId', row.id);
+            sessionStorage.setItem('priceOfInventoryId', JSON.stringify({id:row.id,stockType:row.stockType}));
             this.$router.push({
                 name: 'priceOfInventory',
-                query: { priceOfInventoryId: row.id }
+                query: { priceOfInventoryId: row.id,stockType: row.stockType }
             });
         },
         // 优惠券管理
@@ -245,12 +245,12 @@ export default {
                 query: { discountAddId: row.id }
             });
         },
-        // 经验值管理
+        // 添加库存管理
         expMange(row) {
-            sessionStorage.setItem('expMangeId', row.id);
+            sessionStorage.setItem('addStockId', JSON.stringify({id:row.id, name: row.name}));
             this.$router.push({
-                name: 'expMange',
-                query: { expMangeId: row.id }
+                name: 'addStock',
+                query: { addStockId: row.id, name: row.name }
             });
         },
         // 查看详情

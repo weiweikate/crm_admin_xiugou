@@ -3,7 +3,7 @@
         <el-button @click="releaseProduct" class="add-product" type="primary">添加产品</el-button>
         <div class="search-pane">
             <el-form :model="form" ref='form' inline label-width="100px">
-                <el-form-item prop="name" label="产品名称">
+                <el-form-item prop="productName" label="产品名称">
                     <el-input v-model.trim="form.productName" placeholder="请输入产品名称"></el-input>
                 </el-form-item>
                 <el-form-item prop="prodCode" label="产品ID号">
@@ -16,7 +16,7 @@
                     <el-cascader @change='getProItemId' v-model="defItem" :options="itemList"
                                  @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
                 </el-form-item>
-                <el-form-item prop="saleMin" label="总销量">
+                <el-form-item prop="salesMin" label="总销量">
                     <el-input style="width:95px" v-model.trim="form.salesMin"></el-input>
                     -
                     <el-input style="width:95px" v-model.trim="form.salesMax"></el-input>
@@ -49,7 +49,7 @@
             </el-table-column>
             <el-table-column label="产品类目" align="center" min-width="120">
                 <template slot-scope="scope">
-                    {{scope.row.firstCategoryName}}<br/>{{scope.row.secCategoryName}}
+                    {{scope.row.firstCategoryName}}<br/>{{scope.row.secCategoryName}}<br/>{{scope.row.thirdCategoryName}}
                 </template>
             </el-table-column>
             <el-table-column label="产品售价" align="center" min-width="50">
@@ -129,7 +129,7 @@
             <el-popover placement="top" width="160" v-model="isShowPop">
                 <p>确定删除吗？</p>
                 <div style="text-align: right; margin: 0">
-                    <el-button @click="batchOperate('6')" type="primary" size="mini">确定</el-button>
+                    <el-button @click="batchOperate('0')" type="primary" size="mini">确定</el-button>
                     <el-button size="mini" type="text" @click="isShowPop = false">取消</el-button>
                 </div>
                 <el-button slot="reference" @click="isShowPop = true">删除</el-button>
@@ -229,6 +229,7 @@ export default {
             let data = {};
             data = this.form;
             data.page = val;
+            data.pageSize = this.page.pageSize;
             data.statusParam = this.status;
             if (this.flag) {
                 if (this.flag == 0) {
@@ -428,16 +429,6 @@ export default {
             }).catch(err => {
                 console.log(err);
             });
-            // this.$axios
-            //     .post(api.updateBatchProductStatus, data)
-            //     .then(res => {
-            //         this.$message.success(res.data.data);
-            //         this.isShowPop = false;
-            //         this.getList(this.page.currentPage);
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     });
         }
     },
     filters: {

@@ -143,10 +143,10 @@ export default new Router({
                     meta: { title: '礼包产品管理', url: '/admin/giftBag/findProductInfo' }
                 },
                 {
-                    name: 'expMange',
-                    path: '/expMange',
-                    component: resolve => require(['../components/page/BrandProduct/GiftManage/ExpMange.vue'], resolve),
-                    meta: { title: '经验值管理', url: '/admin/giftBag/setExperience' }
+                    name: 'addStock',
+                    path: '/addStock',
+                    component: resolve => require(['../components/page/BrandProduct/GiftManage/addStock.vue'], resolve),
+                    meta: { title: '添加库存', url: '/admin/giftBag/addStock' }
                 },
                 {
                     name: 'giftInfo',
@@ -624,12 +624,6 @@ export default new Router({
                     meta: { title: '问题详情', url: '/admin/helpQuestion/deleteHelpQuestion' }
                 },
                 {
-                    name: 'currencyRatio',
-                    path: '/currencyRatio',
-                    component: resolve => require(['../components/page/OperateManage/CurrencyRatio.vue'], resolve),
-                    meta: { title: '货币比例设置', url: '/admin/sysConfig/updateSysConfigByCurrency' }
-                },
-                {
                     name: 'labelManage',
                     path: '/labelManage',
                     component: resolve => require(['../components/page/OperateManage/LabelManage/LabelManage.vue'], resolve),
@@ -664,6 +658,30 @@ export default new Router({
                     path: '/baseParamsSet',
                     component: resolve => require(['../components/page/BasePramConfig/BaseParamsSet.vue'], resolve),
                     meta: { title: '交易基础参数设置', url: '/admin/sysConfig/updateSysConfigByTransaction' }
+                },
+                {
+                    name: 'withdrawalCharge',
+                    path: '/withdrawalCharge',
+                    component: resolve => require(['../components/page/BasePramConfig/WithdrawalCharge.vue'], resolve),
+                    meta: { title: '提现手续费设置', url: '/admin/withdrawConfig/queryWithdrawConfig' }
+                },
+                {
+                    name: 'currencyRatio',
+                    path: '/currencyRatio',
+                    component: resolve => require(['../components/page/BasePramConfig/CurrencyRatio.vue'], resolve),
+                    meta: { title: '货币比例设置', url: '/admin/sysConfig/updateSysConfigByCurrency' }
+                },
+                {
+                    name: 'userAssociatedParam',
+                    path: '/userAssociatedParam',
+                    component: resolve => require(['../components/page/BasePramConfig/UserAssociatedParam.vue'], resolve),
+                    meta: { title: '用户关联参数设置', url: '/admin/sysConfig/UserAssociatedParam' }
+                },
+                {
+                    name: 'stockMsg',
+                    path: '/stockMsg',
+                    component: resolve => require(['../components/page/BasePramConfig/StockMsg.vue'], resolve),
+                    meta: { title: '库存消息提醒设置', url: '/admin/sysConfig/StockMsg' }
                 },
                 {
                     name: 'groupBaseParamsSet',
@@ -926,7 +944,7 @@ export default new Router({
                 },
                 {
                     name: 'logistics',
-                    path: '/logistics',
+                    path: '/expMange',
                     component: resolve => require(['../components/page/OrderManage/OrderManage/Logistics.vue'], resolve),
                     meta: { title: '物流详情', url: '/dashboard' }
                 },
@@ -1014,12 +1032,6 @@ export default new Router({
                     path: '/soFar',
                     component: resolve => require(['../components/page/SettlementMange/SoFar.vue'], resolve),
                     meta: { title: '收益金比例设置', url: '/admin/config/updateConfigBalanceInProfitRatio' }
-                },
-                {
-                    name: 'withdrawalCharge',
-                    path: '/withdrawalCharge',
-                    component: resolve => require(['../components/page/SettlementMange/WithdrawalCharge.vue'], resolve),
-                    meta: { title: '提现手续费设置', url: '/admin/withdrawConfig/queryWithdrawConfig' }
                 },
                 {
                     name: 'profitDistrMange',

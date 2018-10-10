@@ -163,9 +163,10 @@ export const queryActivityPackagePageList = ['/operator/activityPackage/queryAct
 export const addActivityPackage = ['/operator/activityPackage/addActivityPackage', { methods: 'post' }]; // 添加礼包
 export const findActivityPackageById = ['/operator/activityPackage/findActivityPackageById', { methods: 'get' }]; // 查询礼包信息
 export const updateActivityPackageStatusById = ['/operator/activityPackage/updateActivityPackageStatusById', { methods: 'post' }]; // 修改礼包状态
-export const batchUpdataActivityPackageStatus = ['/operator/activityPackage/batchUpdataActivityPackageStatus', { methods: 'post' }]; // 批量修改礼包状态
+export const batchUpdataActivityPackageStatus = ['/operator/activityPackage/batchUpdateActivityPackageStatus', { methods: 'post' }]; // 批量修改礼包状态
 export const queryProductList = ['/product/product/queryProductList', { methods: 'post' }]; // 礼包产品模糊搜索
 export const findActivityPackageProductAndSpecById = ['/operator/activityPackageProduct/findActivityPackageProductAndSpecById', { methods: 'get' }]; // 礼包产品规格查询
 export const addActivityPackageProduct = ['/operator/activityPackageProduct/addActivityPackageProduct', { methods: 'post' }]; // 添加礼包产品规格
-export const findActivityPackageProductAndSpecByIdAn = ['/operator/activityPackageSpecPrice/findActivityPackageProductAndSpecById', { methods: 'get' }]; // 查询礼包下产品的价格区间
-
+export const findActivityPackageProductAndSpecByIdAn = ['/operator/activityPackageSpecPrice/queryActivityPackageSpecPriceInterval', { methods: 'get' }]; // 查询礼包下产品的价格区间
+export const updataActivityPackagePriceAndStock = ['/operator/activityPackage/updateActivityPackagePriceAndStock', { methods: 'post' }]; // 修改礼包价格库存
+export const updateActivityPackageSpecPriceStock = ['/operator/activityPackageSpecPrice/updateActivityPackageSpecPriceStock', { methods: 'post' }]; // 添加礼包库存

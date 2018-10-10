@@ -160,6 +160,9 @@
                 const addrss = that.address;
                 if (addrss && addrss[0]) {
                     data.provinceCode = addrss[0];
+                    if(addrss[0] == 0){
+                        data.provinceCode = '';
+                    }
                     if (addrss[1]) {
                         data.cityCode = addrss[1];
                     }

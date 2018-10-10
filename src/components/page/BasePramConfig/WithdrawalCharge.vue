@@ -1,11 +1,11 @@
 <template>
     <div class="withdrawal-charge">
-        <v-breadcrumb :nav="['结算管理','提现手续费设置']"></v-breadcrumb>
+        <v-breadcrumb :nav="['基础参数设置','提现手续费设置']"></v-breadcrumb>
         <el-card :body-style="{ padding: '30px' }" v-loading="pageLoading">
-            <div class="charge-title">提现手续费</div>
+            <div class="charge-title">提现手续费设置</div>
             <p class="with-charge-p">
-                <span>提现手续费</span>
-                <el-input v-model="charge" style="width:150px" placeholder="请输入数值"></el-input> %
+                <span>提现手续费比例</span>
+                <el-input-number :min="0" :controls="false" v-model="charge" style="width:150px" placeholder="请输入数值"></el-input-number> %
             </p>
             <div class="charge-title">提现频率设置</div>
             <p v-for="(value,key) in levelList" :key="key" class="with-charge-p">
@@ -18,21 +18,19 @@
             </p>
             <p class="with-charge-p">
                 <span>设置提现金额　</span>
-                <el-input v-model="minBalance" style="width:150px" placeholder="请输入数值"></el-input>　元
+                <el-input-number :min="0" :controls="false" v-model="minBalance" style="width:150px" placeholder="请输入数值"></el-input-number>　元
             </p>
             <p class="with-charge-p">
                 <el-button :loading="btnLoading" @click="submitForm" type="primary">确认保存</el-button>
-                <el-button>取消</el-button>
+                <el-button @click="cancle">取消</el-button>
             </p>
         </el-card>
     </div>
 </template>
 
 <script>
-import * as api from '@/api/SettlementMange/index.js';
-import * as capi from '@/api/api.js';
-import vBreadcrumb from '../../common/Breadcrumb.vue';
-import * as pApi from '@/privilegeList/SettlementMange/index.js';
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import request from '@/http/http';
 export default {
     components: { vBreadcrumb },
 
@@ -55,7 +53,8 @@ export default {
     },
 
     activated() {
-        this.getUserLevel();
+        this.getList();
+        // this.getUserLevel();
     },
 
     methods: {
@@ -65,39 +64,68 @@ export default {
          * @date 2018-9-7
         */
         getUserLevel() {
-            this.$axios.post(capi.getDealerLevelList, {}).then(res => {
-                res.data.data.forEach(v => {
-                    this.levelList.push({ name: v.name, times: '', num: '' });
-                });
-                this.getList();
+
+        },
+        /**
+         * @Description: 数据回显
+         * @param:
+         * @return:
+         * @author wuchengji
+         * @date 2018/10/10
+        */
+        getList() {
+            this.pageLoading = true;
+            const data = {
+                codes: 'service_charge,min_balance'
+            };
+            request.queryConfig(data).then(res => {
+                this.pageLoading = false;
+                this.charge = res.data[0].value;
+                this.minBalance = res.data[1].value;
+                this.bodyLoading = false;
             }).catch(err => {
+                this.pageLoading = false;
                 console.log(err);
             });
         },
-        //  获取数据
-        getList() {
-            this.pageLoading = true;
-            this.$axios.post(api.queryWithdrawConfig, {}).then(res => {
-                this.charge = res.data.data.config.serviceCharge;
-                this.minBalance = res.data.data.config.minBalance;
-                this.pageLoading = false;
+        /**
+         * @Description: 提交表单
+         * @param:
+         * @return:
+         * @author wuchengji
+         * @date 2018/10/10
+        */
+        submitForm() {
+            const data = {
+                configVOS: [
+                    {
+                        code: 'service_charge',
+                        name: '手续费',
+                        value: this.charge,
+                        value_type: 1,
+                        status: 1
+                    },
+                    {
+                        code: 'min_balance',
+                        name: '最低提现金额',
+                        value: this.minBalance,
+                        value_type: 1,
+                        status: 1
+                    }
+                ]
+            };
+            this.btnLoading = true;
+            request.addOrModifyList(data).then(res => {
+                this.$message.success(res.msg);
+                this.btnLoading = false;
             }).catch(err => {
-                this.pageLoading = false;
+                console.log(err);
+                this.btnLoading = false;
             });
         },
-        // 提交表单
-        submitForm() {
-            const data = {};
-            this.btnLoading = true;
-            data.serviceCharge = this.charge;
-            data.minBalance = this.minBalance;
-            data.url = pApi.updateWithdrawConfig;
-            this.$axios.post(api.updateWithdrawConfig, data).then(res => {
-                this.$message.success(res.data.msg);
-                this.btnLoading = false;
-            }).catch(err => {
-                this.btnLoading = false;
-            });
+        // 取消
+        cancle() {
+            this.getList();
         }
     }
 };

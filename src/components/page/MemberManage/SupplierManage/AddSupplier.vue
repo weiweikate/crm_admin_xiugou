@@ -23,7 +23,7 @@
                             <el-input v-model="form.mobile" @blur="checkPhone"></el-input>
                         </div>
                     </el-form-item>
-                    <el-form-item prop="country" class="address-item" label="供应商地址">
+                    <el-form-item prop="address" class="address-item" label="供应商地址">
                         <el-select v-model="form.country" class="small-inp" @change="supplierArea">
                             <el-option label="中国" value="1">中国</el-option>
                             <el-option label="海外" value="2">海外</el-option>
@@ -44,7 +44,7 @@
                             :data="brandList">
                         </el-transfer>
                     </el-form-item>
-                    <el-form-item label="供应商账号">
+                    <el-form-item prop="bankName" label="供应商账号">
                         <el-input placeholder="请输入银行名称" v-model="form.bankName"></el-input>
                         <el-input placeholder="请输入开户支行" v-model="form.bankOpening"></el-input>
                     </el-form-item>
@@ -59,7 +59,7 @@
                     </el-form-item>
                     <div class="submit-btn">
                         <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">确认保存</el-button>
-                        <el-button @click="cancel">取消</el-button>
+                        <el-button @click="cancel('form')">取消</el-button>
                     </div>
                 </el-form>
             </div>
@@ -97,7 +97,7 @@
                 btnLoading: false,
                 isUp: false, // 添加false，修改true
                 id: '',
-                address: '',
+                address: [],
                 areaDisabled: true,
                 phone: true,
                 // 二级类目ids
@@ -187,6 +187,7 @@
                 data.telephone = that.first + that.second;
                 request.addProductSupplier(data).then(res => {
                     this.$message.success(res.msg);
+                    this.resetForm('form');
                     this.$router.push('/supplierManage');
                     that.btnLoading = false;
                 }).catch(err => {
@@ -205,8 +206,19 @@
                     console.log(err);
                 });
             },
+            // 清空表单
+            resetForm(formName){
+                this.$refs[formName].resetFields();
+                this.first = '';
+                this.second = '';
+                this.form.mobile= '';
+                this.form.bankOpening = '';
+                this.address = [];
+                this.brandIds = [];
+            },
             // 取消
-            cancel() {
+            cancel(formName) {
+                this.resetForm(formName);
                 this.$router.push('/supplierManage');
             }
         }
