@@ -2,7 +2,6 @@
     <div class="coupon-data">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '30px 45px',minHeight:'80vh' }">
-                <!--<el-button @click="addInventory" class="add-product" type="primary">增加券库存</el-button>-->
                 <div class="search-pane">、
                     <el-form :model="form" ref='form' inline label-width="100px">
                         <el-form-item prop="getDate" label="领取时间" label-width="120">
@@ -108,21 +107,11 @@
                         </div>
                         <el-button slot="reference" @click="isShowPop = true">删除</el-button>
                     </el-popover>
-                    <el-button type="primary">导出全部</el-button>
+                    <a :href="downloadCouponList" target="_blank">
+                        <el-button type="primary">导出全部</el-button>
+                    </a>
                 </div>
         </el-card>
-        <div class="mask" v-if="addMask">
-            <div class="content">
-                <div class="item"><span>剩余库存：</span>{{left}}份</div>
-                <div class="item"><span>券值：</span>{{value}}</div>
-                <div class="item"><span>追加数量：</span><el-input v-model="repertoryNumber"></el-input></div>
-                <div style="text-align: center;margin-top: 30px">
-                    <el-button type="primary" @click="addRepertory">确定</el-button>
-                    <el-button @click="addMask=false">取消</el-button>
-                </div>
-
-            </div>
-        </div>
     </div>
 </template>
 
@@ -133,6 +122,7 @@
     import moment from 'moment';
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http.js';
+    import * as api from '@/api/api.js';
 
     export default {
 
@@ -162,7 +152,8 @@
                 left: '', // 剩余数量
                 value: '', // 券值
                 repertoryNumber: '', // 库存
-                params: {}// 传参
+                params: {}, // 传参
+                downloadCouponList: '' // 导出接口地址
             };
         },
 
@@ -170,6 +161,13 @@
             this.params.id = this.$route.query.id || JSON.parse(sessionStorage.getItem('couponData')).id;
             this.repertoryNumber = '';
             this.getList(1);
+            const status = this.form.status;
+            const couponConfigId = this.params.id;
+            const receiveStartTime = this.form.getDate ? moment(this.form.getDate[0]).format('YYYY-MM-DD') : '';
+            const receiveEndTime = this.form.getDate ? moment(this.form.getDate[1]).format('YYYY-MM-DD') : '';
+            const availableStartTime = this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '';
+            const availableEndTime = this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : '';
+            this.downloadCouponList = api.downloadCouponList + '?status=' + status + '&couponConfigId=' + couponConfigId + '&receiveStartTime=' + receiveStartTime + '&receiveEndTime=' + receiveEndTime + '&availableStartTime=' + availableStartTime + '&availableEndTime=' + availableEndTime;
         },
 
         methods: {
@@ -223,35 +221,9 @@
                     query: { orderInfoId: row.id }
                 });
             },
-            // 添加券库存
-            addInventory() {
-                this.addMask = true;
-                this.left = this.params.left;
-                this.value = this.params.status;
-            },
-            addRepertory() {
-                const data = {
-                    id: this.params.id,
-                    repertoryNumber: this.repertoryNumber
-                };
-                if (!this.repertoryNumber) {
-                    this.$message.warning('请输入库存!');
-                    return;
-                }
-                request.addRepertory(data).then(res => {
-                    this.addMask = false;
-                    this.getList(1);
-                }).catch(error => {
-                    console.log(error);
-                    this.tableLoading = false;
-                });
-            },
-
             // 批量操作
             batchOperate() {
                 const data = {};
-                // data.ids = this.multipleSelection.join(',');
-                // data.ids = JSON.stringify(this.multipleSelection);
                 data.ids = this.multipleSelection;
                 request.bathVaildCoupon(data).then(res => {
                     this.$message.success(res.msg);
@@ -316,36 +288,6 @@
             width: 75%;
             height: auto;
             margin: 20px 0 0 20px;
-        }
-        .mask{
-            width: 100%;
-            height:100%;
-            background: rgba(0,0,0,.3);
-            position: fixed;
-            top:0;
-            left: 0;
-            z-index: 2;
-            .content{
-                margin: 300px auto;
-                background: #fff;
-                padding:30px;
-                width: 400px;
-                border-radius: 10px;
-                .item{
-                    line-height: 40px;
-                    span{
-                        width: 80px;
-                        display: inline-block;
-                        margin-left: 50px;
-                    }
-                    .el-input{
-                        width: 210px;
-                    }
-                }
-                .el-button:first-child{
-                    margin-right: 30px;
-                }
-            }
         }
     }
 </style>

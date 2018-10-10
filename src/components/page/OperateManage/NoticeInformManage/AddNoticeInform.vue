@@ -93,6 +93,7 @@
     import moment from 'moment';
     import utils from '@/utils/index';
     import request from '@/http/http.js';
+    import * as api from '@/api/api.js';
     export default {
         components: {
             vBreadcrumb, icon, region
@@ -108,7 +109,7 @@
                     pushType: '', //   1：即时推送  2：定时推送
                     pushWay: '', //   推送人群
                     pushCountry: '', //   1：全国 2：国外 3：定省
-                    createAdmin: '', //   发布人
+                    createAdmin: '' //   发布人
                 },
                 count: 0, // 详情长度
                 date: '',

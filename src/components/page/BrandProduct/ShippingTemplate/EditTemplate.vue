@@ -53,13 +53,13 @@
                         </div>
                         <el-form-item class="express-area">
                             默认运费
-                            <el-input class="small-inp" v-model="startUnit"></el-input>
+                            <el-input class="small-inp" v-model="startUnit" @blur="checkUnit(startUnit,1)"></el-input>
                             {{unit}}内
-                            <el-input class="small-inp" v-model="startPrice"></el-input>
+                            <el-input class="small-inp" v-model="startPrice" @blur="checkUnit(startPrice,2)"></el-input>
                             元，每增加
-                            <el-input class="small-inp" v-model="nextUnit"></el-input>
+                            <el-input class="small-inp" v-model="nextUnit" @blur="checkUnit(nextUnit,3)"></el-input>
                             {{unit}}，增加运费
-                            <el-input class="small-inp" v-model="nextPirce"></el-input>
+                            <el-input class="small-inp" v-model="nextPirce" @blur="checkUnit(nextPirce,4)"></el-input>
                             元
                             <div class="color-red">{{tips}}</div>
                             <el-table :data="tableData" border>
@@ -283,6 +283,27 @@
                 this.form.areaCode = this.address[2];
                 console.log(this.address);
             },
+            // checkUnit
+            checkUnit(val, num) {
+                const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
+                if (val && (!reg.test(val) || val > 999.99)) {
+                    this.$message.warning('请输入合法数据');
+                    switch (num) {
+                        case 1:
+                            this.startUnit = '';
+                            break;
+                        case 2:
+                            this.startPrice = '';
+                            break;
+                        case 3:
+                            this.nextUnit = '';
+                            break;
+                        case 4:
+                            this.nextPirce = '';
+                            break;
+                    }
+                }
+            },
             // 确认保存
             submitForm(formName) {
                 const that = this;
@@ -326,8 +347,16 @@
                                 nextUnit: v.nextUnit,
                                 nextPirce: v.nextPirce
                             };
+                            const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
                             if (v.provinceCode == '' || v.startUnit == '' || v.startPrice == '' || v.nextUnit == '' || v.nextPirce == '') {
                                 flag = false;
+                            } else {
+                                if (reg.test(v.startUnit) && reg.test(v.startPrice) && reg.test(v.nextUnit) && reg.test(v.nextPirce)) {
+                                    return true;
+                                } else {
+                                    that.$message.warning('请输入合法数据');
+                                    return false;
+                                }
                             }
                             list.push(tableTemp);
                         });
@@ -450,10 +479,15 @@
             isRowEmpty() {
                 const that = this;
                 const data = that.tableData[this.rows - 1];
-                if (data.includeAreaName === '' || data.startUnit === '' || data.startPrice === '' || data.nextUnit === '' || data.nextPirce === '' || data.nextUnit <= 0) {
+                const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
+                if (data.includeAreaName == '' || data.startUnit == '' || data.startPrice == '' || data.nextUnit == '' || data.nextPirce == '') {
                     return false;
                 } else {
-                    return true;
+                    if (reg.test(data.startUnit) && reg.test(data.startPrice) && reg.test(data.nextUnit) && reg.test(data.nextPirce)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
             }
         }

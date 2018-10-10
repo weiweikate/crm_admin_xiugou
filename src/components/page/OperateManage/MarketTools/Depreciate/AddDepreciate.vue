@@ -32,7 +32,7 @@
                 <el-form-item prop="floorPrice" label="最低价格">
                     ￥
                     <el-input v-model="form.floorPrice" v-if="form.endTime" @input="calDurationTime(showDuration)"></el-input>
-                    <el-input v-model="form.floorPrice" v-else @input="floorPrice"></el-input>
+                    <el-input v-model="form.floorPrice" v-else></el-input>
                 </el-form-item>
                 <el-form-item label="开始时间" prop="beginTime">
                     <el-date-picker
@@ -167,6 +167,19 @@
                     }
                 }
             };
+            const isMaxPrice = (rule, value, callback) => { // 最低价格
+                if (!value) {
+                    return callback(new Error('参数不能为空!'));
+                } else {
+                    if (!/^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/.test(value)) {
+                        callback(new Error('请输入两位小数'));
+                    } else if (value > this.form.startPrice) {
+                        callback(new Error('最低价格不能高于起拍价格!'));
+                    } else {
+                        callback();
+                    }
+                }
+            };
             return {
                 nav: ['运营管理', '营销工具管理', '降价拍', '新建降价拍'],
                 rules: {
@@ -183,7 +196,7 @@
                         { validator: isDouble, trigger: 'blur' }
                     ],
                     floorPrice: [
-                        { validator: isDouble, trigger: 'blur' }
+                        { validator: isMaxPrice, trigger: 'blur' }
                     ],
                     downPrice: [
                         { validator: isDouble, trigger: 'blur' }
@@ -236,15 +249,15 @@
                 }
             },
             // 最低价
-            floorPrice() {
-                if (Number(this.form.floorPrice) > Number(this.form.startPrice)) {
-                    this.$message.warning('最低价格应不大于起拍价格！');
-                    this.form.floorPrice = '';
-                    return false;
-                } else {
-                    return true;
-                }
-            },
+            // floorPrice() {
+            //     if (Number(this.form.floorPrice) > Number(this.form.startPrice)) {
+            //         this.$message.warning('最低价格应不大于起拍价格！');
+            //         this.form.floorPrice = '';
+            //         return false;
+            //     } else {
+            //         return true;
+            //     }
+            // },
             // 计算可持续时间
             calDurationTime(status) {
                 const originPrice = this.form.startPrice;
