@@ -672,6 +672,18 @@ export default new Router({
                     meta: { title: '货币比例设置', url: '/admin/sysConfig/updateSysConfigByCurrency' }
                 },
                 {
+                    name: 'userAssociatedParam',
+                    path: '/userAssociatedParam',
+                    component: resolve => require(['../components/page/BasePramConfig/UserAssociatedParam.vue'], resolve),
+                    meta: { title: '用户关联参数设置', url: '/admin/sysConfig/UserAssociatedParam' }
+                },
+                {
+                    name: 'stockMsg',
+                    path: '/stockMsg',
+                    component: resolve => require(['../components/page/BasePramConfig/StockMsg.vue'], resolve),
+                    meta: { title: '库存消息提醒设置', url: '/admin/sysConfig/StockMsg' }
+                },
+                {
                     name: 'groupBaseParamsSet',
                     path: '/groupBaseParamsSet',
                     component: resolve => require(['../components/page/BasePramConfig/GroupBaseParamsSet.vue'], resolve),

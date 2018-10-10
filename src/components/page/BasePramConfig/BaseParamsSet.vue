@@ -32,7 +32,7 @@ export default {
 
     data() {
         return {
-            nav: ['运营管理', '交易基础参数设置'],
+            nav: ['基础参数设置', '交易基础参数设置'],
             bodyLoading: false,
             btnLoading: false,
             orderCancleTime: '',
