@@ -88,10 +88,15 @@
             };
         },
         activated() {
-            const that = this;
-            that.form = {};
-            that.num = -1;
-            that.getLevelList();// 加载邀请层级列表
+            this.form = {
+                invalidTime: '',
+                clickTimes: '',
+                levelId: '',
+                inviteType: '1',
+                invalidType: '1'
+            }
+            this.num = -1;
+            this.getLevelList();// 加载邀请层级列表
         },
         methods: {
             productcIds(productcIds) {
@@ -102,7 +107,7 @@
             },
             // 推送方式
             changeStyle() {
-                if (this.form.invalidType == 1) {
+                if (this.form.invalidType == '1') {
                     this.dateDisabled = true;
                 } else {
                     this.dateDisabled = false;
@@ -134,7 +139,7 @@
                 data.inviteType = that.form.inviteType;
                 data.invalidType = that.form.invalidType;
                 data.adminId = localStorage.getItem('ms_userID');
-                if (that.form.invalidType === '1') {
+                if (that.form.invalidType == '1') {
                     data.clickTimes = that.form.clickTimes;
                 } else {
                     data.invalidTime = that.form.invalidTime ? moment(that.form.invalidTime).format('YYYY-MM-DD HH:mm:ss') : '';
@@ -147,11 +152,11 @@
                     that.$message.warning('请选择经销商类型!');
                     return;
                 }
-                if (that.form.invalidType === '1' && !data.clickTimes) {
+                if (that.form.invalidType == '1' && !data.clickTimes) {
                     that.$message.warning('请输入链接打开次数!');
                     return;
                 }
-                if (that.form.invalidType === '2' && !data.invalidTime) {
+                if (that.form.invalidType == '2' && !data.invalidTime) {
                     that.$message.warning('请设置失效时间!');
                     return;
                 }

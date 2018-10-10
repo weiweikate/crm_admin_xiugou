@@ -666,7 +666,6 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import moment from 'moment';
-import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 

@@ -247,10 +247,10 @@ export default {
         },
         // 添加库存管理
         expMange(row) {
-            sessionStorage.setItem('addStockId', row.id);
+            sessionStorage.setItem('addStockId', JSON.stringify({id:row.id, name: row.name}));
             this.$router.push({
                 name: 'addStock',
-                query: { addStockId: row.id }
+                query: { addStockId: row.id, name: row.name }
             });
         },
         // 查看详情

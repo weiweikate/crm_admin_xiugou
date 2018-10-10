@@ -44,14 +44,14 @@
                         <el-input v-model="scope.row.v6"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column label="拼店价" align="center">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.groupPrice"></el-input>
-                    </template>
-                </el-table-column>
                 <el-table-column label="最低支付价" align="center">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.minPayment"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="拼店价" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.groupPrice"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="结算价" align="center">
@@ -120,7 +120,7 @@
                 row.groupPrice = Number(row.groupPrice || 0);
                 row.minPayment = Number(row.minPayment || 0);
                 row.settlementPrice = Number(row.settlementPrice || 0);
-                if (!(row.originalPrice >= row.v0 && row.v0 >= row.v1 && row.v1 >= row.v2 && row.v2 >= row.v3 && row.v3 >= row.v4 && row.v4 >= row.v5 && row.v5 >= row.v6 && row.v6 >= row.groupPrice && row.groupPrice >= row.minPayment && row.minPayment >= row.settlementPrice)) {
+                if (!(row.originalPrice >= row.v0 && row.v0 >= row.v1 && row.v1 >= row.v2 && row.v2 >= row.v3 && row.v3 >= row.v4 && row.v4 >= row.v5 && row.v5 >= row.v6 && row.v6 >= row.minPayment && row.minPayment >= row.groupPrice && row.groupPrice >= row.settlementPrice)) {
                     this.$message.warning('参数填写有误,请输入正确的参数');
                     return;
                 }

@@ -64,7 +64,7 @@ export default {
             spanRow: '16', // 合并行数
             remarkContent: ['当出现相同产品时，填写规格的发放数量之和请勿大于该规格现有库存'], // 备注
             // 表头信息
-            tableTit: [{name:'原价'}, {name:'v0价'}, {name:'v1价'}, {name:'v2价'}, {name:'v3价'}, {name:'v4价'}, {name:'v5价'}, {name:'v6价'}, {name:'拼店价'}, {name:'最低支付价'}, {name:'结算价'}],
+            tableTit: [{name:'原价',price:''}, {name:'v0价',price:''}, {name:'v1价',price:''}, {name:'v2价',price:''}, {name:'v3价',price:''}, {name:'v4价',price:''}, {name:'v5价',price:''}, {name:'v6价',price:''}, {name:'最低支付价',price:''}, {name:'拼店价',price:''}, {name:'结算价',price:''}],
             // 表格信息
             tableData: [],
             bodyLoading: false,
@@ -99,8 +99,10 @@ export default {
                 res.data.forEach((v, k) => {
                     const specIdArr = v.productPriceId.split(',');
                     const specValArr = v.specValues.split(',');
+                    const productPriceIdArr = v.productPriceId.split(',');
                     const  idArr = v.packageSpecPriceId.split(',');
                     const stockArr = v.stock.split(',');
+                    const totalNumber = v.totalNumber.split(',');
                     if(specIdArr.length == 0){
                         this.topTableRow.push({startIndex: tmp, num: 1});
                         tmp += 1;
@@ -118,7 +120,9 @@ export default {
                             'productNumber': 1,
                             'productPriceId': item,
                             'specValues': specValArr[index],
-                            'stock': stockArr[index]
+                            'stock': stockArr[index],
+                            'productPriceIdA': productPriceIdArr[index],
+                            'num': totalNumber[index]
                         };
                         this.tableData.push(obj);
                     });
@@ -155,6 +159,17 @@ export default {
                     }
                     this.priceInterval.push(tmp);
                 })
+                this.tableTit[0].price = res.data.originalPrice;
+                this.tableTit[1].price = res.data.v0;
+                this.tableTit[2].price = res.data.v1;
+                this.tableTit[3].price = res.data.v2;
+                this.tableTit[4].price = res.data.v3;
+                this.tableTit[5].price = res.data.v4;
+                this.tableTit[6].price = res.data.v5;
+                this.tableTit[7].price = res.data.v6;
+                this.tableTit[8].price = res.data.minPayment;
+                this.tableTit[9].price = res.data.groupPrice;
+                this.tableTit[10].price = res.data.settlementPrice;
             }).catch(err => {
                 console.log(err);
             });
@@ -162,17 +177,21 @@ export default {
         // 提交表单
         submitForm() {
             let stockArr = [];
-            for (let i = 1; i < this.tableData.length; i++) {
-                if(this.tableData[i].num === undefined){
-                    this.$message.warning('请输入发放数量!');
-                    return;
-                }else if(this.tableData[i].num < 0){
-                    this.$message.warning('请输入正确的发放数量!');
-                    return;
+            for (let i = 0; i < this.tableData.length; i++) {
+                if(this.stockType == 2){
+                    if(this.tableData[i].num === undefined){
+                        this.$message.warning('请输入发放数量!');
+                        return;
+                    }else if(this.tableData[i].num < 0){
+                        this.$message.warning('请输入正确的发放数量!');
+                        return;
+                    }
                 }
                 let obj = {
                     id: this.tableData[i].id,
-                    totalNumber: this.tableData[i].num
+                    totalNumber: this.tableData[i].num,
+                    surplusNumber: this.tableData[i].num,
+                    productPriceId: this.tableData[i].productPriceId
                 }
                 stockArr.push(obj);
             }
@@ -197,15 +216,15 @@ export default {
                 v4: this.tableTit[5].price,
                 v5: this.tableTit[6].price,
                 v6: this.tableTit[7].price,
-                groupPrice: this.tableTit[8].price,
-                minPayment: this.tableTit[9].price,
+                groupPrice: this.tableTit[9].price,
+                minPayment: this.tableTit[8].price,
                 settlementPrice: this.tableTit[10].price
             };
             this.btnloading = true;
             request.updataActivityPackagePriceAndStock(data).then(res=>{
                 this.btnloading = false;
                 this.$message.success(res.msg);
-                this.tableTit = [{name:'原价'}, {name:'v0价'}, {name:'v1价'}, {name:'v2价'}, {name:'v3价'}, {name:'v4价'}, {name:'v5价'}, {name:'v6价'}, {name:'拼店价'}, {name:'最低支付价'}, {name:'结算价'}];
+                this.tableTit = [{name:'原价',price:''}, {name:'v0价',price:''}, {name:'v1价',price:''}, {name:'v2价',price:''}, {name:'v3价',price:''}, {name:'v4价',price:''}, {name:'v5价',price:''}, {name:'v6价',price:''}, {name:'最低支付价',price:''}, {name:'拼店价',price:''}, {name:'结算价',price:''}];
                 this.$router.push('giftManage');
             }).catch(err=>{
                 this.btnloading = false;
