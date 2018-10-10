@@ -166,10 +166,9 @@ export default {
         // 查看店铺详情
         showInfo(row) {
             sessionStorage.setItem('shopInfoId', row.id);
-            sessionStorage.setItem('status', 1);
             this.$router.push({
                 name: 'shopInfo',
-                query: { shopInfoId: row.id, status: 1 }
+                query: { shopInfoId: row.id}
             });
         },
         // 重置表单

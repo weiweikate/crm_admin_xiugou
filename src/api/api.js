@@ -272,4 +272,6 @@ export const queryFeedbackList = '/userFeedback/queryFeedbackList';
 export const findFeedbackById = ['/userFeedback/findFeedbackDetailById', { methods: 'get' }];
 // 修改反馈详情
 export const updateFeedback = '/userFeedback/updateDetailById';
+// 券数据导出
+export const downloadCouponList = '/admin/user/coupon/downloadCouponList';
 

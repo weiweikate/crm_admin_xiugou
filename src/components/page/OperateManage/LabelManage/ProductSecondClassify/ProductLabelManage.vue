@@ -1,5 +1,5 @@
 <template>
-    <div class="second-classify">
+    <div class="productLabel-manage">
         <v-breadcrumb :nav="['运营管理','标签管理','产品品类','产品二级类目','产品标签管理']"></v-breadcrumb>
         <div class="table-block">
             <div style="margin-bottom: 20px">
@@ -36,7 +36,27 @@
                     </el-table-column>
                 </el-table>
             </template>
-
+            <div class="block">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </div>
+            <div class="operate-table">
+                <el-popover placement="top" width="160" v-model="isShowPop">
+                    <p>确定清空吗？</p>
+                    <div style="text-align: right; margin: 0">
+                        <el-button @click="batchOperate(0)" type="primary" size="mini">确定</el-button>
+                        <el-button size="mini" type="text" @click="isShowPop = false">取消</el-button>
+                    </div>
+                    <el-button slot="reference" @click="isShowPop = true">清空</el-button>
+                </el-popover>
+            </div>
         </div>
         <!--添加弹窗-->
         <el-dialog title="添加标签" :visible.sync="addMask">
@@ -47,6 +67,29 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="addOrEdit('form')">确 认</el-button>
+                <el-button @click="cancel">取 消</el-button>
+            </div>
+        </el-dialog>
+        <!--导入标签-->
+        <el-dialog title="导入标签" :visible.sync="exportMask">
+            <el-form v-model="exportForm">
+                <el-form-item label="标签类型" :label-width="formLabelWidth">
+                    <el-select v-model="exportForm.type">
+                        <el-option v-for="(v,k) in labelType" :key="k" :label="v.label" :value='v.id'>{{v.label}}</el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="导入标签" :label-width="formLabelWidth">
+                    <el-input readonly v-model="exportForm.url" placeholder="导入Excel" auto-complete="off"></el-input>
+                    <el-upload class="icon-uploader"
+                               :action="uploadExcel"
+                               :on-success="handleAvatarSuccess"
+                               :before-upload="beforeAvatarUpload">
+                        <el-button size="small" type="primary">选择</el-button>
+                    </el-upload>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="addOrEdit('exportForm')">确 认</el-button>
                 <el-button @click="cancel">取 消</el-button>
             </div>
         </el-dialog>
@@ -75,28 +118,40 @@ export default {
             tableData: [{ type: 1, labels: [{ name: 1, id: 1 }, { name: 2, id: 2 }], deleteStatus: false }],
             height: '',
             addMask: false,
+            exportMask: false,
             isShowDelToast: false,
             formLabelWidth: '100px',
             form: {
-                param: ''
+                name: ''
             },
             id: '',
             itemId: '',
             multipleSelection: [],
             // 标签类型
             type: '',
-            labelType: [{ label: 1, id: 1 }, { label: 2, id: 2 }]
+            isShowPop: false,
+            labelType: [{ label: 1, id: 1 }, { label: 2, id: 2 }],
+            uploadExcel: '',
+            exportForm: {
+                type: '',
+                url: ''
+            }
         };
     },
     created() {
     },
     activated() {
-        // this.getList(this.page.currentPage);
+        this.getList(this.page.currentPage);
     },
     methods: {
         // 获取列表
         getList(val) {
-            request.querySysTagLibraryList({}).then(res => {
+            const data = {
+                page: val,
+                pageSize: this.page.pageSize,
+                typeId: 1
+            };
+            request.querySysTagLibraryList(data).then(res => {
                 this.tableData = [];
                 this.tableData = res.data;
             }).catch(error => {
@@ -106,20 +161,19 @@ export default {
         // 添加
         addItem() {
             this.addMask = true;
-            this.form.param = '';
+            this.form.name = '';
         },
         // 添加确定
         addOrEdit(formName) {
-            const data = {};
-            data.param = this[formName].param;
+            const data = this[formName];
             data.categoryId = this.id;
-            if (!data.param) {
-                this.$message.warning('请输入类型名称!');
+            if (!data.name) {
+                this.$message.warning('请输入标签名称!');
                 return;
             }
             this.btnLoading = true;
-            request.addProductCategoryParam(data).then(res => {
-                // this.$message.success(res.data.msg);
+            request.addSysTagLibrary(data).then(res => {
+                this.$message.success(res.msg);
                 this.btnLoading = false;
                 this.addMask = false;
                 this.editMask = false;
@@ -131,10 +185,14 @@ export default {
         // 取消
         cancel() {
             this.addMask = false;
+            this.exportMask = false;
+            this.form.name = '';
+            this.exportForm.type = '';
+            this.exportForm.url = '';
         },
         // 导入
         importLabel() {
-
+            this.exportMask = true;
         },
         // 删除标签
         delItem(row) {
@@ -144,15 +202,56 @@ export default {
         clearItem(row) {
 
         },
+        // 全选
         handleSelectionChange(val) {
-            this.multipleSelection = val;
+            const that = this;
+            this.multipleSelection = [];
+            val.forEach((v, k) => {
+                that.multipleSelection.push(v.id);
+            });
+        },
+        // 批量操作
+        batchOperate(status) {
+            if (this.multipleSelection.length == 0) {
+                this.$message.warning('请选择活动!');
+                return;
+            }
+            let url = '';
+            // status 0:删除 1：结束
+            if (status == 0) {
+                url = 'deleteActivityDepreciate';
+            } else {
+                url = 'modifyActivityDepreciate';
+            }
+            request[url]({ list: this.multipleSelection.join(',') }).then(res => {
+                this.isShowPop = false;
+                this.isShowEndPop = false;
+                this.$message.success(res.msg);
+                this.getList(this.page.currentPage);
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        // 上传excel
+        handleAvatarSuccess(res) {
+            this.exportForm.url = res.data;
+        },
+        // 格式
+        beforeAvatarUpload(file) {
+            console.log(file);
+            const fileType = file.name.split('.')[1];
+            const isXls = fileType;
+            if (!isXls) {
+                this.$message.error('请上传xls格式的文件');
+            }
+            return isXls;
         }
     }
 };
 </script>
 
 <style lang="less">
-    .second-classify {
+    .productLabel-manage {
         /*表格样式*/
         .table-block {
             padding: 20px 20px 60px;
@@ -185,7 +284,7 @@ export default {
             display: inline;
         }
         .el-dialog .el-input__inner {
-            width: 360px;
+            width: 200px;
         }
         .el-select .el-input__inner {
             width: 200px;
@@ -199,6 +298,35 @@ export default {
         }
         .tag{
             margin-right: 5px;
+        }
+        .operate-table {
+            margin-top: 10px;
+        }
+        .el-upload--text {
+            width: 100px;
+            height: 40px;
+            border: none;
+        }
+        .el-upload--text .el-icon-upload {
+            line-height: 0;
+            margin: 0;
+            color: #fff;
+            font-size: 14px;
+        }
+        .el-upload-list {
+            display: none;
+        }
+        .icon-uploader {
+            float: right;
+            margin-right: 31px;
+            height: 33px;
+        }
+        .icon-uploader .el-button--small {
+            border-radius: 5px;
+            width: 100px;
+        }
+        .el-input__suffix{
+            top:-5px !important;
         }
 
     }
