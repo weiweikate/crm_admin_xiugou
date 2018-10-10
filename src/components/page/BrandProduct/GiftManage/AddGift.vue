@@ -138,6 +138,13 @@
                 <el-form-item>
                     <el-checkbox label="是否设置购买时间" v-model="gifts.isSetBuyTime"></el-checkbox>
                 </el-form-item>
+                <el-form-item v-if="gifts.isSetBuyTime">
+                    <div v-for="(v,k) in selectedCoupon" style="overflow: hidden; margin-bottom: 10px" :key="k">
+                        <span class="selected-coupon">{{v.name}} </span>
+                        <span class="delete-coupon" @click="deleteSelectedCoupon(k)">删除</span>
+                    </div>
+                    <el-button type="primary" @click="showAddCouList">添加优惠券</el-button>
+                </el-form-item>
                 <el-form-item>
                     <el-checkbox label="经验值" v-model="gifts.isSetExp"></el-checkbox>
                 </el-form-item>
@@ -185,6 +192,34 @@
                 <el-button>取消</el-button>
             </el-form>
         </el-card>
+        <el-dialog title="优惠券列表" :visible.sync="isShowCouponList" width="30%">
+            <el-tabs v-model="couponType" v-loading="couponLoading" @tab-click="handleClick">
+                <el-tab-pane label="满减券" name="1">
+                    <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}} </span>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane label="折扣券" name="3">
+                    <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}} </span>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane label="抵扣券" name="4">
+                    <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}} </span>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane label="抵价券" name="2">
+                    <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}} </span>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
+            <span slot="footer">
+                <el-button type="primary" @click="confirmCoupon">确 定</el-button>
+                <el-button @click="isShowCouponList = false">取 消</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -304,7 +339,13 @@
                 figureTag: false, // 人物标签
                 goodsTag: false, // 商品标签
                 sceneTag: false, // 场景标签
-                tagLoading: false // 标签loading
+                tagLoading: false, // 标签loading
+                isShowCouponList: false, // 优惠券列表弹窗
+                couponLoading: false, // 优惠券列表loding
+                selectedCoupon: [], // 已选中优惠券列表
+                couponList: [], // 优惠券列表
+                tmpCouponList: [], // 暂时存放优惠券列表
+                couponType: '1'
             };
         },
 
@@ -721,6 +762,60 @@
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+            // 显示优惠券列表
+            showAddCouList() {
+                this.isShowCouponList = true;
+                this.handleClick({name: '1'});
+                this.tmpCouponList = [];
+            },
+            // 选择优惠券类型
+            handleClick(tab) {
+                this.couponLoading = true;
+                request.queryCouponByType({ type: tab.name }).then(res => {
+                    this.couponLoading = false;
+                    this.couponList = [];
+                    let tmp = [];
+                    tmp.push(...this.selectedCoupon, ...this.tmpCouponList)
+                    if (res.data.length === 0) return;
+                    res.data.forEach(v => {
+                        let obj = {
+                            name: v.name,
+                            id: v.id,
+                            selected: false
+                        };
+                        for (let i = 0; i < tmp.length; i++) {
+                            if (tmp[i].id == obj.id) {
+                                obj.selected = true;
+                            }
+                        }
+                        this.couponList.push(obj);
+                    });
+                }).catch(err => {
+                    this.couponLoading = false;
+                    console.log(err);
+                });
+            },
+            // 删除选中优惠券
+            deleteSelectedCoupon(index) {
+                this.selectedCoupon.splice(index, 1);
+            },
+            //  选择优惠券
+            selectCoupon(coupon) {
+                coupon.selected = true;
+                let tmp = [];
+                tmp.push(...this.selectedCoupon, ...this.tmpCouponList)
+                for (let i = 0; i < tmp.length; i++) {
+                    if (tmp[i].id == coupon.id) {
+                        return;
+                    }
+                }
+                this.tmpCouponList.push(coupon)
+            },
+            // 确定添加优惠券
+            confirmCoupon() {
+                this.isShowCouponList = false;
+                this.selectedCoupon.push(...this.tmpCouponList);
             }
         }
     };
@@ -816,6 +911,31 @@
         .add-tag {
             width: 100%;
             margin-top: 20px;
+        }
+        .selected-coupon{
+            display: block;
+            float: left;
+            width: 300px;
+            height: 30px;
+            line-height: 30px;
+            border: 1px solid #ccc;
+            padding-left: 10px;
+            border-radius: 10px;
+            margin-right: 10px;
+            cursor: pointer;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+        }
+        .active-selected{
+            background-color: skyblue;
+            color: #fff;
+            border: 1px solid skyblue;
+        }
+        .delete-coupon{
+            cursor: pointer;
+            color: skyblue;
+            float: left;
         }
         .tag-list {
             width: 100%;

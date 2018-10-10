@@ -6,11 +6,13 @@
             <div class="currency-wrap">
                 <p>
                     <span class="currency-small-title">首次关联时间设置：</span>
-                    <el-input-number class="input-sty" :min="0" :controls="false" v-model="num1" style="width:150px" placeholder="请输入数值"></el-input-number><span class="point">天</span>
+                    <el-input-number class="input-sty" :min="0" :controls="false" v-model="num1" style="width:150px" placeholder="请输入数值"></el-input-number><span class="point">天</span><br>
+                    <span class="tip">关联用户注册后第一次绑定的时间周期</span>
                 </p>
-                <p>
+                <p style="margin-top: 20px">
                     <span class="currency-small-title">再次关联时间设置：</span>
-                    <el-input-number class="input-sty" :min="0" :controls="false" v-model="num2" style="width:150px" placeholder="请输入数值"></el-input-number><span class="point">天</span>
+                    <el-input-number class="input-sty" :min="0" :controls="false" v-model="num2" style="width:150px" placeholder="请输入数值"></el-input-number><span class="point">天</span><br>
+                    <span class="tip">用户后续关联下级时间</span>
                 </p>
                 <div class="btn-group">
                     <el-button :loading="btnLoading" type="primary" @click="submitForm">确认提交</el-button>
@@ -133,6 +135,10 @@
             .point {
                 font-size: 14px;
                 padding: 0 15px 0 5px;
+            }
+            .tip{
+                font-size: 14px;
+                color: #aaa;
             }
             .point-mer {
                 margin-right: 10px;
