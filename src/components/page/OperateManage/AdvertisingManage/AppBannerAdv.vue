@@ -278,11 +278,11 @@
             // 图片格式
             beforeAvatarUpload(file) {
                 const isJPG = (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png');
-
-                if (!isJPG) {
-                    this.$message.error('上传图片只能是 jpg,jpeg,png 格式!');
+                const isLt3M = file.size / 1024 / 1024 < 3;
+                if (!isLt3M || !isJPG) {
+                    this.$message.error('请上传3M以内jpg,jpeg,png格式的图片!');
                 }
-                return isJPG;
+                return isJPG && isLt3M;
             },
             // 根据类型和code查询产品名称
             getProductName() {

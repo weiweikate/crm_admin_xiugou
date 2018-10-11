@@ -121,6 +121,14 @@ export default {
                 name: this.questionType,
                 imgUrl: this.imgUrl
             };
+            if (!data.name) {
+                this.$message.warning('请输入问题类型!');
+                return;
+            }
+            if (!data.imgUrl) {
+                this.$message.warning('请添加图片!');
+                return;
+            }
             request
                 .addHelpType(data)
                 .then(res => {

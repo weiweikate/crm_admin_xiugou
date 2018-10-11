@@ -14,7 +14,7 @@ const myMixinTable = {
                 currentPage: 1,
                 totalPage: 0,
                 pageSize: 20
-            },
+            }
         };
     },
     methods: {
@@ -60,4 +60,21 @@ const queryDictonary = {
         }
     }
 };
-export { getUserId, myMixinTable, queryDictonary };
+
+// 上传图片限制
+const beforeAvatarUpload = {
+    data() {
+        return {};
+    },
+    methods: {
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
+            const isLt3M = file.size / 1024 / 1024 < 3;
+            if (!isLt3M || !isJPG) {
+                this.$message.error('请上传3M以内jpg,jpeg,png格式的图片!');
+            }
+            return isJPG && isLt3M;
+        }
+    }
+};
+export { getUserId, myMixinTable, queryDictonary, beforeAvatarUpload };

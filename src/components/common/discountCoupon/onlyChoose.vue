@@ -333,6 +333,10 @@
             deleteTags(num) {
                 if (num === 1) {
                     this.firstCategoryName = '';
+                    this.firstCategoryId = '';
+                    this.secondCategoryId = '';
+                    this.thirdCategoryId = '';
+                    this.productId = '';
                     this.firstClassifyTag = {};
                     this.second = [];
                     this.third = [];
@@ -342,6 +346,9 @@
                     this.deleteTags(4);
                 } else if (num === 2) {
                     this.secondCategoryName = '';
+                    this.secondCategoryId = '';
+                    this.thirdCategoryId = '';
+                    this.productId = '';
                     this.secondClassifyTag = {};
                     this.secondClassifyTag = {};
                     this.productList = [];
@@ -351,10 +358,13 @@
                     this.thirdCategoryName = '';
                     this.thirdClassifyTag = {};
                     this.thirdClassifyTag = {};
+                    this.thirdCategoryId = '';
+                    this.productId = '';
                     this.productList = [];
                     this.deleteTags(4);
                 } else {
                     this.productName = '';
+                    this.productId = '';
                     this.productTag = {};
                 }
             },

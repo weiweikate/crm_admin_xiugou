@@ -63,6 +63,7 @@
                     <el-input readonly v-model="addForm.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
                                :action="uploadImg"
+                               :before-upload="beforeAvatarUpload"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
@@ -98,6 +99,7 @@
                     <el-input readonly v-model="form.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
                                :action="uploadImg"
+                               :before-upload="beforeAvatarUpload"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
@@ -300,6 +302,14 @@ export default {
             } else {
                 this.form.img = res.data;
             }
+        },
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
+            const isLt3M = file.size / 1024 / 1024 < 3;
+            if (!isLt3M || !isJPG) {
+                this.$message.error('请上传3M以内jpg,jpeg,png格式的图片!');
+            }
+            return isJPG && isLt3M;
         },
         // 取消
         cancel() {
