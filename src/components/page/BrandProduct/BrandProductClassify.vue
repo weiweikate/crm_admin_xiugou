@@ -135,7 +135,7 @@ import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
 import deleteToast from '@/components/common/DeleteToast';
 import utils from '@/utils/index.js';
-import { myMixinTable } from '@/JS/commom';
+import { myMixinTable, beforeAvatarUpload } from '@/JS/commom';
 import request from '@/http/http.js';
 import * as api from '@/api/api.js';
 
@@ -146,7 +146,7 @@ export default {
         deleteToast
     },
 
-    mixins: [myMixinTable],
+    mixins: [myMixinTable, beforeAvatarUpload],
 
     data() {
         return {
@@ -302,14 +302,6 @@ export default {
             } else {
                 this.form.img = res.data;
             }
-        },
-        beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
-            const isLt3M = file.size / 1024 / 1024 < 3;
-            if (!isLt3M || !isJPG) {
-                this.$message.error('请上传3M以内jpg,jpeg,png格式的图片!');
-            }
-            return isJPG && isLt3M;
         },
         // 取消
         cancel() {

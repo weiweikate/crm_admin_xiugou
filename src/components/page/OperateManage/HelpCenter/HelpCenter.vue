@@ -61,14 +61,14 @@ import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import deleteToast from '@/components/common/DeleteToast';
 import * as pApi from '@/privilegeList/OperateManage/HelpCenter/index.js';
 import utils from '@/utils/index.js';
-import { myMixinTable } from '@/JS/commom';
+import { myMixinTable, beforeAvatarUpload } from '@/JS/commom';
 import request from '@/http/http.js';
 import * as api from '@/api/api.js';
 
 export default {
     components: { vBreadcrumb, deleteToast },
 
-    mixins: [myMixinTable],
+    mixins: [myMixinTable, beforeAvatarUpload],
 
     data() {
         return {
@@ -164,14 +164,6 @@ export default {
         // 上传图片
         handleAvatarSuccess(res, file) {
             this.imgUrl = res.data;
-        },
-        beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
-            const isLt3M = file.size / 1024 / 1024 < 3;
-            if (!isLt3M || !isJPG) {
-                this.$message.error('请上传3M以内jpg,jpeg,png格式的图片!');
-            }
-            return isJPG && isLt3M;
         }
     }
 };

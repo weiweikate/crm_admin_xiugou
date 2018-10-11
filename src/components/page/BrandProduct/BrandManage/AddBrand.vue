@@ -17,6 +17,7 @@
                                 :show-file-list="false"
                                 :on-preview="handlePreview"
                                 :on-remove="handleRemove"
+                                :before-upload="beforeAvatarUpload"
                                 :on-success="handleAvatarSuccess"
                         >
                             <img v-if="form.imgUrl" :src="form.imgUrl" class="avatar">
@@ -45,11 +46,13 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import request from '@/http/http.js';
     import * as api from '@/api/api.js';
+    import { beforeAvatarUpload } from '@/JS/commom';
 
     export default {
         components: {
             vBreadcrumb, icon
         },
+        mixins: [beforeAvatarUpload],
         data() {
             var checkName = (rule, value, callback) => {
                 if (!value) {
