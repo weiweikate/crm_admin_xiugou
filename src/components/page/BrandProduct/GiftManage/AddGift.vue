@@ -139,10 +139,14 @@
                     <el-checkbox label="是否设置购买时间" v-model="gifts.isSetBuyTime"></el-checkbox>
                 </el-form-item>
                 <el-form-item v-if="gifts.isSetBuyTime">
-                    <div v-for="(v,k) in selectedCoupon" style="overflow: hidden; margin-bottom: 10px" :key="k">
-                        <span class="selected-coupon">{{v.name}} </span>
-                        <span class="delete-coupon" @click="deleteSelectedCoupon(k)">删除</span>
-                    </div>
+                    <draggable v-model="selectedCoupon" >
+                        <transition-group>
+                            <div v-for="(v,k) in selectedCoupon" style="overflow: hidden; margin-bottom: 10px" :key="k">
+                                <span class="selected-coupon">{{v.name}} </span>
+                                <span class="delete-coupon" @click="deleteSelectedCoupon(k)">删除</span>
+                            </div>
+                        </transition-group>
+                    </draggable>
                     <el-button type="primary" @click="showAddCouList">添加优惠券</el-button>
                 </el-form-item>
                 <el-form-item>
