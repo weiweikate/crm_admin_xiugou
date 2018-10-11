@@ -27,8 +27,8 @@
                     </el-form-item>
                     <el-form-item label="是否强制更新">
                         <el-radio-group v-model="form.forceUpdate">
-                            <el-radio :label="1" value=1>是</el-radio>
-                            <el-radio :label="0" value=0>否</el-radio>
+                            <el-radio label="1">是</el-radio>
+                            <el-radio label="0">否</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="备注说明">
