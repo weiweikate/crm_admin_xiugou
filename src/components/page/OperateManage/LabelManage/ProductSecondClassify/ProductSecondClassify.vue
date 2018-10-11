@@ -103,7 +103,8 @@ export default {
         },
         // 标签设置
         setLabel(id) {
-            this.$router.push({ path: '/productLabelManage' });
+            sessionStorage.setItem('secCategoryId', id);
+            this.$router.push({ path: '/productLabelManage', query: { secCategoryId: id }});
         }
     }
 };

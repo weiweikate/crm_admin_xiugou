@@ -6,24 +6,35 @@
             <template>
                 <el-table :data="tableData" border style="width: 100%">
                     <el-table-column type="index" label="编号" align="center"></el-table-column>
-                    <el-table-column prop="param" label="类型" align="center"></el-table-column>
-                    <el-table-column prop="num" label="标签数" align="center">
+                    <el-table-column prop="name" label="类型" align="center"></el-table-column>
+                    <el-table-column prop="tagNum" label="标签数" align="center">
+                        <template slot-scope="scope">{{scope.row.tagNum||0}}</template>
                     </el-table-column>
                     <el-table-column  label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="danger" size="small" @click="delItem(scope.row.id)">删除</el-button>
+                            <el-button type="danger" :disabled="scope.row.tagNum>0" size="small" @click="delItem(scope.row.id)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </template>
-
+            <div class="block">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </div>
         </div>
 
         <!--添加弹窗-->
         <el-dialog :title="title" :visible.sync="addMask">
             <el-form v-model="form">
                 <el-form-item label="类型名称" :label-width="formLabelWidth">
-                    <el-input v-model="form.param" auto-complete="off"></el-input>
+                    <el-input v-model="form.name" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -56,23 +67,15 @@ export default {
         return {
 
             tableData: [],
-            // 类目类型
-            type: '',
             height: '',
             addMask: false,
-            editMask: false,
             isShowDelToast: false,
             formLabelWidth: '100px',
             form: {
-                param: ''
+                name: ''
             },
             title: '添加标签类型',
             id: '',
-            itemId: '',
-            name: '',
-            superiorName: '',
-            className: '',
-            itype: '',
             delId: 66,
             delUrl: 'http://api',
             delUri: ''
@@ -86,9 +89,14 @@ export default {
     methods: {
         // 获取列表
         getList(val) {
-            request.querySysTagLibraryList({}).then(res => {
+            const data = {
+                page: val,
+                pageSize: this.page.pageSize
+            };
+            request.querySysTagTypePageList(data).then(res => {
                 this.tableData = [];
-                this.tableData = res.data;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
             }).catch(error => {
                 console.log(error);
             });
@@ -96,23 +104,20 @@ export default {
         // 添加
         addClassify() {
             this.addMask = true;
-            this.form.param = '';
+            this.form.name = '';
         },
         // 添加确定
         addOrEdit(formName) {
-            const data = {};
-            data.param = this[formName].param;
-            data.categoryId = this.id;
-            if (!data.param) {
+            const data = this[formName];
+            if (!data.name) {
                 this.$message.warning('请输入类型名称!');
                 return;
             }
             this.btnLoading = true;
-            request.addProductCategoryParam(data).then(res => {
-                // this.$message.success(res.data.msg);
+            request.addSysTagType(data).then(res => {
+                this.$message.success(res.msg);
                 this.btnLoading = false;
                 this.addMask = false;
-                this.editMask = false;
                 this.getList(this.page.currentPage);
             }).catch(error => {
                 console.log(error);
@@ -121,7 +126,7 @@ export default {
         // 删除
         delItem(id) {
             this.delId = id;
-            this.delUrl = 'deleteProductCategoryParam';
+            this.delUrl = 'updateSysTagTypeStatusById';
             this.isShowDelToast = true;
         },
         // 删除弹窗
@@ -132,12 +137,7 @@ export default {
         // 取消
         cancel() {
             this.addMask = false;
-            this.editMask = false;
             this.getList(this.page.currentPage);
-        },
-        //二级类目
-        toSecondClassify(id){
-            this.$router.push('/secondClassify');
         }
     }
 };

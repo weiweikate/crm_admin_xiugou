@@ -20,10 +20,7 @@
                     APP首页精品推荐广告位管理
                 </div>
                 <div class="item blue" @click="toPage(2,6)">
-                    APP首页超值热卖广告位管理
-                </div>
-                <div class="item blue" @click="toPage(2,7)">
-                    APP首页专题广告位管理
+                    APP首页超值热卖专题广告位管理
                 </div>
                 <div class="item blue" @click="toPage(2,8)">
                     APP首页为你推荐广告位管理

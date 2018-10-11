@@ -4,9 +4,9 @@
         <div class="table-block">
             <div style="margin-bottom: 20px">
                 标签类型
-                <el-select v-model="type" placeholder="全部">
+                <el-select v-model="type" placeholder="全部" @change="getList(1)">
                     <el-option value="">全部</el-option>
-                    <el-option v-for="(v,k) in labelType" :key="k" :label="v.label" :value='v.id'>{{v.label}}</el-option>
+                    <el-option v-for="(v,k) in labelType" :key="k" :label="v.name" :value='v.typeId'>{{v.name}}</el-option>
                 </el-select>
             </div>
             <div style="margin-bottom: 10px">
@@ -19,7 +19,7 @@
                         width="55" align="center">
                     </el-table-column>
                     <el-table-column type="index" label="编号" align="center"></el-table-column>
-                    <el-table-column prop="type" label="类型" align="center"></el-table-column>
+                    <el-table-column prop="name" label="类型" align="center"></el-table-column>
                     <el-table-column label="标签" align="center">
                         <template slot-scope="scope">
                             <el-tag class="tag" type="info" :closable="scope.row.deleteStatus==1" v-for="(v,k) in scope.row.labels" :key="k"
@@ -29,7 +29,7 @@
                     </el-table-column>
                     <el-table-column  label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" :disabled="scope.row.deleteStatus" @click="addItem(scope.row.id)">添加</el-button>
+                            <el-button type="primary" size="small" :disabled="scope.row.deleteStatus" @click="addItem(scope.row)">添加</el-button>
                             <el-button type="success" size="small" :disabled="scope.row.deleteStatus" @click="clearItem(scope.row)">清空</el-button>
                             <el-button :type="!scope.row.deleteStatus?'danger':'warning'" size="small" @click="delItem(scope.row)"><span v-if="!scope.row.deleteStatus">删除</span><span v-else>确定</span></el-button>
                         </template>
@@ -125,48 +125,72 @@ export default {
                 name: ''
             },
             id: '',
-            itemId: '',
+            status: '',
             multipleSelection: [],
             // 标签类型
             type: '',
             isShowPop: false,
-            labelType: [{ label: 1, id: 1 }, { label: 2, id: 2 }],
+            labelType: [],
             uploadExcel: '',
             exportForm: {
                 type: '',
                 url: ''
-            }
+            },
+            secCategoryId: ''
         };
     },
     created() {
     },
     activated() {
+        this.secCategoryId = this.$route.query.secCategoryId || sessionStorage.getItem('secCategoryId');
+        this.getTypeList();
         this.getList(this.page.currentPage);
     },
     methods: {
+        getTypeList() {
+            const data = {
+                page: 1,
+                pageSize: 10000,
+                typeId: '',
+                secCategoryId: this.secCategoryId
+            };
+            request.querySysTagLibraryList(data).then(res => {
+                this.typeList = [];
+                this.labelType = res.data;
+            }).catch(error => {
+                console.log(error);
+            });
+        },
         // 获取列表
         getList(val) {
             const data = {
                 page: val,
                 pageSize: this.page.pageSize,
-                typeId: 1
+                typeId: this.type,
+                secCategoryId: this.secCategoryId
             };
             request.querySysTagLibraryList(data).then(res => {
                 this.tableData = [];
+                res.data.forEach(function(v, k) {
+                    v.deleteStatus = false;
+                });
                 this.tableData = res.data;
             }).catch(error => {
                 console.log(error);
             });
         },
         // 添加
-        addItem() {
+        addItem(row) {
             this.addMask = true;
             this.form.name = '';
+            this.id = row.typeId;
+            this.status = row.status;
         },
         // 添加确定
         addOrEdit(formName) {
             const data = this[formName];
-            data.categoryId = this.id;
+            data.typeId = this.id;
+            data.status = this.status;
             if (!data.name) {
                 this.$message.warning('请输入标签名称!');
                 return;
@@ -272,6 +296,9 @@ export default {
         .el-dialog {
             width: 530px;
             border-radius: 10px;
+            .el-input__suffix{
+                top:-5px !important;
+            }
         }
         .el-dialog__header {
             border-bottom: 1px solid #eee;
@@ -325,9 +352,7 @@ export default {
             border-radius: 5px;
             width: 100px;
         }
-        .el-input__suffix{
-            top:-5px !important;
-        }
+
 
     }
 </style>
