@@ -39,6 +39,7 @@
                         type="datetimerange"
                         start-placeholder="开始时间"
                         end-placeholder="结束时间"
+                        :picker-options="pickerOptions"
                     >
                     </el-date-picker>
                 </el-form-item>
@@ -156,7 +157,12 @@
                 },
                 showMask: false, // 选择商品弹窗
                 productDetail: {}, // 选择的商品的商品信息
-                btnLoading: false// 按钮提交
+                btnLoading: false, // 按钮提交
+                pickerOptions: {
+                    disabledDate(time) {
+                        return time.getTime() < new Date() - 8.64e7;
+                    }
+                }
             };
         },
 

@@ -255,3 +255,14 @@ export const findActivitySeckillByActivityCode = ['/operator/seckill/findById', 
 /** ************标签管理*****************/
 // 添加标签
 export const addSysTagLibrary = '/config/sysTagLibrary/addSysTagLibrary';
+<<<<<<< HEAD
+=======
+// 查询标签列表
+export const querySysTagLibraryList = '/config/sysTagLibrary/querySysTagLibraryList';
+// 添加标签类型
+export const addSysTagType = '/config/sysTagType/addSysTagLibrary';
+// 查询标签类型列表
+export const querySysTagTypePageList = '/config/sysTagType/querySysTagTypePageList';
+// 修改标签状态
+export const updateSysTagTypeStatusById = ['/config/sysTagType/updateSysTagTypeStatusById', { methods: 'get' }];
+>>>>>>> d3d334648b3640ee36c390701c7883235927ad28

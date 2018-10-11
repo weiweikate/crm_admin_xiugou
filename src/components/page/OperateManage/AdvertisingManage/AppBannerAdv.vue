@@ -85,12 +85,16 @@
                         <el-option v-for="(v,k) in linkTypeList" :key="k" :label="v.type" :value="v.id">{{v.type}}</el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item v-if="pageType!=3&&pageType!=12" label="请输入ID">
+                <el-form-item v-if="pageType!=3&&pageType!=6&&pageType!=12" label="请输入ID">
                     <el-input v-model="form.linkTypeCode" placeholder="请输入ID" @blur="getProductName"
                               auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item v-if="pageType==3" label="请输入店铺ID">
                     <el-input v-model="form.linkTypeCode" placeholder="请输入ID" @blur="getProductName"
+                              auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item v-if="pageType==6" label="请输入ID/地址">
+                    <el-input v-model="form.linkTypeCode" placeholder="请输入ID/地址" @blur="getProductName"
                               auto-complete="off"></el-input>
                 </el-form-item>
                 <div class="inf-area">{{productName}}</div>
@@ -216,8 +220,22 @@
                 this.uploadImg = api.uploadImg;
                 pageType = typeof navName === 'string' ? Number(pageType) : pageType;
                 this.title = pageType === 8 ? '添加' : '添加banner图片';
-                if (pageType === 7) {
-                    this.linkTypeList = [{ type: '链接专题', id: 2 }];
+                if (pageType === 6) {
+                    this.linkTypeList = [{ type: '链接', id: 2 }, { type: '专题', id: 2 }];
+                } else if (pageType === 8) {
+                    this.linkTypeList = [{
+                        type: '链接产品',
+                        id: 1
+                    }, {
+                        type: '降价拍',
+                        id: 3
+                    }, {
+                        type: '秒杀',
+                        id: 4
+                    }, {
+                        type: '礼包',
+                        id: 5
+                    }];
                 } else {
                     this.linkTypeList = [{
                         type: '链接产品',
@@ -242,8 +260,7 @@
                     case 3: navName = 'APP首页明星店铺推荐位管理'; break;
                     case 4: navName = 'APP首页今日榜单广告位管理'; break;
                     case 5: navName = 'APP首页精品推荐广告位管理'; break;
-                    case 6: navName = 'APP首页超值热卖广告位管理'; break;
-                    case 7: navName = 'APP首页专题广告位管理'; break;
+                    case 6: navName = 'APP首页超值热卖专题广告位管理'; break;
                     case 8: navName = 'APP首页为你推荐广告位管理'; break;
                     case 9: navName = '拼店首页banner推荐位'; break;
                     case 10: navName = '类目搜索Banner广告位设置'; break;
