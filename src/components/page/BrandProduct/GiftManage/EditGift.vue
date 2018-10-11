@@ -370,6 +370,7 @@
             this.selectedTagArr = [];
             this.productParam = [];
             this.chectedUser = [];
+            this.selectedCoupon = [];
             this.purchaseLimit = false;
             this.purchasevalue = '';
             this.isSetBuTime = false;
@@ -382,7 +383,7 @@
                 notSupportRetMoney: false, // 不支持退款
                 notSupportRetChange: false, // 不支持换货
                 notSupportRetGoods: false // 不支持退货
-            },
+            }
             // 获取一级类目
             this.getFirstItem();
             // 获取品牌列表
@@ -412,13 +413,14 @@
                     }
                     if (res.data.userLevelList !== null && res.data.userLevelList.length !== 0) {
                         res.data.userLevelList.forEach(v => {
-                            this.chectedUser.push(v.userLevelId)
+                            this.chectedUser.push(v.userLevelId);
                         });
                     }
                     this.form.name = res.data.name;
                     this.form.weight = res.data.weight;
                     this.form.experience = res.data.experience;
-                    this.gifts.isSetExp = res.data.experience != '';
+                    this.gifts.isSetExp = res.data.experience !== '';
+                    this.gifts.isSetBuyTime = res.data.couponList.length !== 0;
                     this.form.dealDays = res.data.dealDays.toString();
                     this.form.type = res.data.type.toString();
                     this.form.firstCategoryId = Number(res.data.firstCategoryId);
@@ -452,6 +454,15 @@
                     if (res.data.paramValueList && res.data.paramValueList.length !== 0) {
                         res.data.paramValueList.forEach((v, k) => {
                             this.productParam.push({ param: v.param, id: v.paramId, value: v.paramValue });
+                        });
+                    }
+                    if (res.data.couponList && res.data.couponList.length !== 0) {
+                        res.data.couponList.forEach(v => {
+                            this.selectedCoupon.push({
+                                name: v.couponName,
+                                id: v.couponId,
+                                selected: true
+                            })
                         });
                     }
                 }).catch(err => {
@@ -519,6 +530,14 @@
                 this.chectedUser.forEach(v => {
                     data.userLevelList.push({ userLevelId: v });
                 });
+                data.couponList = [];
+                if (this.gifts.isSetBuyTime) {
+                    if (this.selectedCoupon.length !== 0) {
+                        this.selectedCoupon.forEach(v => {
+                            data.couponList.push({ couponId: v.id });
+                        });
+                    }
+                }
                 data.id = this.giftId;
                 this.btnLoading = true;
                 request.addActivityPackage(data).then(res => {
@@ -830,7 +849,7 @@
             // 显示优惠券列表
             showAddCouList() {
                 this.isShowCouponList = true;
-                this.handleClick({name: '1'});
+                this.handleClick({ name: '1' });
                 this.tmpCouponList = [];
             },
             // 选择优惠券类型
@@ -839,11 +858,11 @@
                 request.queryCouponByType({ type: tab.name }).then(res => {
                     this.couponLoading = false;
                     this.couponList = [];
-                    let tmp = [];
-                    tmp.push(...this.selectedCoupon, ...this.tmpCouponList)
+                    const tmp = [];
+                    tmp.push(...this.selectedCoupon, ...this.tmpCouponList);
                     if (res.data.length === 0) return;
                     res.data.forEach(v => {
-                        let obj = {
+                        const obj = {
                             name: v.name,
                             id: v.id,
                             selected: false
@@ -867,14 +886,14 @@
             //  选择优惠券
             selectCoupon(coupon) {
                 coupon.selected = true;
-                let tmp = [];
-                tmp.push(...this.selectedCoupon, ...this.tmpCouponList)
+                const tmp = [];
+                tmp.push(...this.selectedCoupon, ...this.tmpCouponList);
                 for (let i = 0; i < tmp.length; i++) {
                     if (tmp[i].id == coupon.id) {
                         return;
                     }
                 }
-                this.tmpCouponList.push(coupon)
+                this.tmpCouponList.push(coupon);
             },
             // 确定添加优惠券
             confirmCoupon() {

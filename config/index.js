@@ -31,7 +31,7 @@ module.exports = {
                 pathRewrite: {
                     '^/admin': url_1 + '/admin'
                 }
-            },
+            }
         },
         // Various Dev Server settings
 
