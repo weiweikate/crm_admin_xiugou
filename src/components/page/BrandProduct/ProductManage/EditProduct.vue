@@ -613,6 +613,7 @@
                 this.form.secCategoryId = val[1];
                 this.form.thirdCategoryId = val[2];
                 this.getProductParam(val[2]);
+                this.getAllTags('1', 'figureTag', this.figureTag);
             },
             // 获取品牌列表
             getBrandList(val) {
@@ -649,16 +650,17 @@
             },
             // 获取所有标签
             getAllTags(val, name, status) {
+                if (this.form.secCategoryId === '') return;
                 this.figureTag = false;
                 this.goodsTag = false;
                 this.sceneTag = false;
                 this[name] = status;
                 this.tagLoading = true;
-                request.querySysTagLibraryList({ typeId: val }).then(res => {
+                request.querySysTagLibraryList({ typeId: val, secCategoryId: this.form.secCategoryId }).then(res => {
                     this.tagLoading = false;
                     this.tagArr = [];
                     this[name] = !this[name];
-                    res.data.forEach(v => {
+                    res.data[0].sysTagLibraryVOList.forEach(v => {
                         this.tagArr.push({ label: v.name, value: v.id });
                     });
                     this.tagArr.forEach((v, k) => {
