@@ -244,6 +244,7 @@ export const makeSureOrder = '/order/order/makeSureOrder';
 export const uploadImg = '/admin/common/upload/oss'; // 上传图片
 export const addImg = '/common/upload/oss'; // 上传图片
 export const queryConfig = ['/config/sysconfig/queryConfig', { methods: 'get' }]; // 查询系统配置
+export const homeData = ['/user/home', { methods: 'get' }]; // 首页数据列表
 export const addOrModifyList = '/config/sysconfig/addOrModifyList'; // 批量新增系统配置
 export const findAdminUserbyId = ['/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息
 export const loginByCode = '/adminLogin/codeLogin'; // 管理员手机号登录
