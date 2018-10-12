@@ -599,6 +599,7 @@
                     }
                     const data = {
                         name: this.tagName,
+                        secCategoryId: this.form.secCategoryId,
                         status: 1,
                         typeId: typeId
                     };
