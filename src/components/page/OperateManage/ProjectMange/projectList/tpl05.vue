@@ -40,7 +40,7 @@
                 </el-form-item>
 
                 <el-form-item :label="`导航${k+1}`" label-width="130px">
-                    <el-input v-if="navItem==1" v-model="v.navName" class="inp" placeholder="请输入"></el-input>
+                    <el-input v-if="navItem==1" minlength="1" maxlength="6" v-model="v.navName" class="inp" placeholder="请输入"></el-input>
                     <el-date-picker
                         v-else
                         v-model="v.navName"
@@ -215,7 +215,14 @@
                 if (this.pName == '') {
                     this.$message.warning('请输入专题名称');
                     return;
-                } else if (this.bannerForm.imgUrl == '') {
+                } else {
+                    const reg = /^[A-Za-z_\u4e00-\u9fa5]{2,50}$/;
+                    if (!reg.test(this.pName)) {
+                        this.$message.warning('请输入2-50位由汉字字母下划线组成的专题名称');
+                        return;
+                    }
+                }
+                if (this.bannerForm.imgUrl == '') {
                     this.$message.warning('请上传banner图');
                     return;
                 }

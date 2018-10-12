@@ -4,13 +4,13 @@
         <div class="table-block">
             <div style="margin-bottom: 20px">
                 标签类型
-                <el-select v-model="type" placeholder="全部" @change="getList(1)">
+                <el-select v-model="type" placeholder="全部" @change="getList">
                     <el-option value="">全部</el-option>
-                    <el-option v-for="(v,k) in labelType" :key="k" :label="v.name" :value='v.typeId'>{{v.name}}</el-option>
+                    <el-option v-for="(v,k) in labelType" :key="k" :label="v.typeName" :value='v.typeId'>{{v.typeName}}</el-option>
                 </el-select>
             </div>
             <div style="margin-bottom: 10px">
-                <el-button type="primary" size="small" @click="importLabel">导入</el-button>
+                <!--<el-button type="primary" size="small" @click="importLabel">导入</el-button>-->
             </div>
             <template>
                 <el-table :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange">
@@ -19,11 +19,11 @@
                         width="55" align="center">
                     </el-table-column>
                     <el-table-column type="index" label="编号" align="center"></el-table-column>
-                    <el-table-column prop="name" label="类型" align="center"></el-table-column>
+                    <el-table-column prop="typeName" label="类型" align="center"></el-table-column>
                     <el-table-column label="标签" align="center">
                         <template slot-scope="scope">
-                            <el-tag class="tag" type="info" :closable="scope.row.deleteStatus==1" v-for="(v,k) in scope.row.labels" :key="k"
-                                    @close="deleteLabel(k,v)">{{v.name}}
+                            <el-tag class="tag" type="info" :closable="scope.row.deleteStatus==1" v-for="(v,k) in scope.row.sysTagLibraryVOList" :key="k"
+                                    @close="deleteLabel(v,scope.$index)">{{v.name}}
                             </el-tag>
                         </template>
                     </el-table-column>
@@ -31,22 +31,11 @@
                         <template slot-scope="scope">
                             <el-button type="primary" size="small" :disabled="scope.row.deleteStatus" @click="addItem(scope.row)">添加</el-button>
                             <el-button type="success" size="small" :disabled="scope.row.deleteStatus" @click="clearItem(scope.row)">清空</el-button>
-                            <el-button :type="!scope.row.deleteStatus?'danger':'warning'" size="small" @click="delItem(scope.row)"><span v-if="!scope.row.deleteStatus">删除</span><span v-else>确定</span></el-button>
+                            <el-button :type="!scope.row.deleteStatus?'danger':'warning'" size="small" @click="delItem(scope.row)"><span v-if="!scope.row.deleteStatus">删除</span><span v-else @click="deleteSure(scope.$index)">确定</span></el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
             <div class="operate-table">
                 <el-popover placement="top" width="160" v-model="isShowPop">
                     <p>确定清空吗？</p>
@@ -66,7 +55,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="addOrEdit('form')">确 认</el-button>
+                <el-button :loading="btnLoading" type="primary" @click="addOrEdit('form')">确 认</el-button>
                 <el-button @click="cancel">取 消</el-button>
             </div>
         </el-dialog>
@@ -83,7 +72,7 @@
                     <el-upload class="icon-uploader"
                                :action="uploadExcel"
                                :on-success="handleAvatarSuccess"
-                               :before-upload="beforeAvatarUpload">
+                               :before-upload="beforeUpload">
                         <el-button size="small" type="primary">选择</el-button>
                     </el-upload>
                 </el-form-item>
@@ -93,29 +82,36 @@
                 <el-button @click="cancel">取 消</el-button>
             </div>
         </el-dialog>
+        <!--清空-->
+        <div class="clear-mask" v-if="clearMask">
+            <div class="box">
+                <div class="mask-title"><icon class="ico" ico='icon-jinggao'/>  清空</div>
+                <div class="mask-content">
+                    <span class="del-tip">是否清空标签</span>
+                    <div class="del-btn-group">
+                        <el-button :loading="btnLoading" @click="clearLabel" class="del-btn" type="danger">确认清空</el-button>
+                        <el-button @click="cancel">取消</el-button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
-import deleteToast from '@/components/common/DeleteToast';
-import utils from '@/utils/index.js';
-import * as pApi from '@/privilegeList/index.js';
-import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 
 export default {
     components: {
         vBreadcrumb,
-        icon,
-        deleteToast
+        icon
     },
-    mixins: [myMixinTable],
     data() {
         return {
 
-            tableData: [{ type: 1, labels: [{ name: 1, id: 1 }, { name: 2, id: 2 }], deleteStatus: false }],
+            tableData: [],
             height: '',
             addMask: false,
             exportMask: false,
@@ -136,7 +132,9 @@ export default {
                 type: '',
                 url: ''
             },
-            secCategoryId: ''
+            secCategoryId: '',
+            clearMask: false,
+            btnLoading: false
         };
     },
     created() {
@@ -144,13 +142,11 @@ export default {
     activated() {
         this.secCategoryId = this.$route.query.secCategoryId || sessionStorage.getItem('secCategoryId');
         this.getTypeList();
-        this.getList(this.page.currentPage);
+        this.getList();
     },
     methods: {
         getTypeList() {
             const data = {
-                page: 1,
-                pageSize: 10000,
                 typeId: '',
                 secCategoryId: this.secCategoryId
             };
@@ -162,17 +158,16 @@ export default {
             });
         },
         // 获取列表
-        getList(val) {
+        getList() {
             const data = {
-                page: val,
-                pageSize: this.page.pageSize,
                 typeId: this.type,
                 secCategoryId: this.secCategoryId
             };
             request.querySysTagLibraryList(data).then(res => {
                 this.tableData = [];
                 res.data.forEach(function(v, k) {
-                    v.deleteStatus = false;
+                    v.deleteStatus = false;// 作为删除状态显示用
+                    v.deleteLabelIds = [];// 为删除操作存储数据
                 });
                 this.tableData = res.data;
             }).catch(error => {
@@ -190,7 +185,8 @@ export default {
         addOrEdit(formName) {
             const data = this[formName];
             data.typeId = this.id;
-            data.status = this.status;
+            data.status = 1;
+            data.secCategoryId = this.secCategoryId;
             if (!data.name) {
                 this.$message.warning('请输入标签名称!');
                 return;
@@ -200,15 +196,16 @@ export default {
                 this.$message.success(res.msg);
                 this.btnLoading = false;
                 this.addMask = false;
-                this.editMask = false;
-                this.getList(this.page.currentPage);
+                this.getList();
             }).catch(error => {
                 console.log(error);
+                this.btnLoading = false;
             });
         },
         // 取消
         cancel() {
             this.addMask = false;
+            this.clearMask = false;
             this.exportMask = false;
             this.form.name = '';
             this.exportForm.type = '';
@@ -222,36 +219,67 @@ export default {
         delItem(row) {
             row.deleteStatus = !row.deleteStatus;
         },
+        // 删除
+        deleteLabel(v, index) {
+            this.tableData[index].sysTagLibraryVOList.splice(this.tableData[index].sysTagLibraryVOList.indexOf(v), 1);
+            this.tableData[index].deleteLabelIds.push(v.id);
+        },
+        deleteSure(index) {
+            const data = {
+                tagIds: this.tableData[index].deleteLabelIds,
+                secCategoryId: this.secCategoryId
+            };
+            request.removeTags(data).then(res => {
+                this.$message.success(res.msg);
+                this.getList();
+            }).catch(error => {
+                console.log(error);
+            });
+        },
         // 清空
         clearItem(row) {
-
+            this.clearMask = true;
+            this.id = row.typeId;
+        },
+        clearLabel() {
+            const data = {
+                typeId: this.id,
+                secCategoryId: this.secCategoryId
+            };
+            this.btnLoading = true;
+            request.removeByTypeId(data).then(res => {
+                this.$message.success(res.msg);
+                this.btnLoading = false;
+                this.clearMask = false;
+                this.getList();
+            }).catch(error => {
+                console.log(error);
+                this.btnLoading = false;
+            });
         },
         // 全选
         handleSelectionChange(val) {
             const that = this;
             this.multipleSelection = [];
             val.forEach((v, k) => {
-                that.multipleSelection.push(v.id);
+                that.multipleSelection.push(v.typeId);
             });
         },
         // 批量操作
-        batchOperate(status) {
+        batchOperate() {
             if (this.multipleSelection.length == 0) {
                 this.$message.warning('请选择活动!');
                 return;
             }
-            let url = '';
-            // status 0:删除 1：结束
-            if (status == 0) {
-                url = 'deleteActivityDepreciate';
-            } else {
-                url = 'modifyActivityDepreciate';
-            }
-            request[url]({ list: this.multipleSelection.join(',') }).then(res => {
+            const data = {
+                secCategoryId: this.secCategoryId,
+                typeIds: this.multipleSelection
+            };
+            request.removeByTypeIds(data).then(res => {
                 this.isShowPop = false;
                 this.isShowEndPop = false;
                 this.$message.success(res.msg);
-                this.getList(this.page.currentPage);
+                this.getList();
             }).catch(err => {
                 console.log(err);
             });
@@ -261,7 +289,7 @@ export default {
             this.exportForm.url = res.data;
         },
         // 格式
-        beforeAvatarUpload(file) {
+        beforeUpload(file) {
             console.log(file);
             const fileType = file.name.split('.')[1];
             const isXls = fileType;
@@ -352,7 +380,71 @@ export default {
             border-radius: 5px;
             width: 100px;
         }
-
+        .clear-mask {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 99;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            .box {
+                position: relative;
+                width: 530px;
+                height: 305px;
+                background-color: #fff;
+                border-radius: 10px;
+                overflow: hidden;
+                .mask-title {
+                    width: 100%;
+                    height: 56px;
+                    border-bottom: 1px solid #ccc;
+                    padding-left: 45px;
+                    box-sizing: border-box;
+                    text-align: center;
+                    line-height: 56px;
+                    color: #ff6868;
+                    font-weight: 700;
+                    .ico {
+                        position: absolute;
+                        top: 16px;
+                        left: 228px;
+                        color: red;
+                        font-size: 20px;
+                    }
+                }
+                .mask-content {
+                    position: relative;
+                    width: 100%;
+                    height: 248px;
+                    overflow: hidden;
+                    padding: 30px 45px 0 45px;
+                    box-sizing: border-box;
+                    .del-tip {
+                        position: absolute;
+                        top: 30%;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        font-size: 22px;
+                    }
+                    .del-btn-group {
+                        width: 180px;
+                        display: flex;
+                        justify-content: space-between;
+                        position: absolute;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        bottom: 15%;
+                        .del-btn {
+                            background-color: #ff6868;
+                        }
+                    }
+                }
+            }
+        }
 
     }
 </style>

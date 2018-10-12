@@ -6,7 +6,7 @@
                 <el-form :model="form" ref="form" :rules="rules">
                     <el-form-item prop="name" label="模板名称">
                         <el-input class="lar-inp" placeholder="请输入模板名称(模板名称最少必须由1个字组成，最多不能超过16个字)"
-                                  v-model="form.name"></el-input>
+                                  v-model="form.name" maxlength="16"></el-input>
                     </el-form-item>
                     <el-form-item prop="country" class="address-item" label="产品发货地">
                         <el-select v-model="form.country" class="small-inp" @change="productArea">
@@ -315,10 +315,10 @@
                                 flag = false;
                             } else {
                                 if (reg.test(v.startUnit) && reg.test(v.startPrice) && reg.test(v.nextUnit) && reg.test(v.nextPirce)) {
-                                    return true;
+                                    flag = true;
                                 } else {
                                     that.$message.warning('请输入合法数据');
-                                    return false;
+                                    flag = false;
                                 }
                             }
                             list.push(tableTemp);
@@ -330,8 +330,6 @@
                             return;
                         }
                         this.btnLoading = true;
-                        // console.log(data);
-                        // return;
                         request.addFreightTemplate(data).then(res => {
                             that.$message.success(res.msg);
                             that.$router.push('/shippingTemplate');
@@ -414,6 +412,7 @@
                     }
                     this.tableData[this.tableIndex].includeAreaName = includeAreaName.slice(0, -1);
                     this.tableData[this.tableIndex].includeArea = includeArea.slice(0, -1);
+                    console.log(this.tableData);
                 }
             },
             // 增加制定省市运费设置

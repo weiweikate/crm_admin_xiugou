@@ -39,8 +39,6 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
 import deleteToast from '@/components/common/DeleteToast';
-import utils from '@/utils/index.js';
-import * as pApi from '@/privilegeList/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 

@@ -255,9 +255,14 @@ export const findActivitySeckillByActivityCode = ['/operator/seckill/findById', 
 /** ************标签管理*****************/
 // 添加标签
 export const addSysTagLibrary = '/config/sysTagLibrary/addSysTagLibrary';
-
 // 查询标签列表
 export const querySysTagLibraryList = '/config/sysTagLibrary/querySysTagLibraryList';
+// 清空标签
+export const removeByTypeId = '/config/sysTagLibrary/removeByTypeId';
+// 批量清空标签
+export const removeByTypeIds = '/config/sysTagLibrary/removeByTypeIds';
+// 删除标签
+export const removeTags = '/config/sysTagLibrary/removeTags';
 // 添加标签类型
 export const addSysTagType = '/config/sysTagType/addSysTagLibrary';
 // 查询标签类型列表

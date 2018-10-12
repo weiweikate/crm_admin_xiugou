@@ -93,9 +93,12 @@
                     <el-input v-model="form.linkTypeCode" placeholder="请输入ID" @blur="getProductName"
                               auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item v-if="pageType==6" label="请输入ID/地址">
+                <el-form-item v-if="pageType==6&&form.linkType!=6" label="请输入ID/地址">
                     <el-input v-model="form.linkTypeCode" placeholder="请输入ID/地址" @blur="getProductName"
                               auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item v-if="pageType==6&&form.linkType==6" label="请输入ID/地址">
+                    <el-input v-model="form.linkTypeCode" placeholder="请输入ID/地址" auto-complete="off"></el-input>
                 </el-form-item>
                 <div class="inf-area">{{productName}}</div>
                 <el-form-item label="备注说明" v-if="pageType!=8">
@@ -221,7 +224,7 @@
                 pageType = typeof navName === 'string' ? Number(pageType) : pageType;
                 this.title = pageType === 8 ? '添加' : '添加banner图片';
                 if (pageType === 6) {
-                    this.linkTypeList = [{ type: '链接', id: 2 }, { type: '专题', id: 2 }];
+                    this.linkTypeList = [{ type: '链接', id: 6 }, { type: '专题', id: 2 }];
                 } else if (pageType === 8) {
                     this.linkTypeList = [{
                         type: '链接产品',
@@ -335,7 +338,9 @@
                     this.form.date[1] = row.showEndtime;
                 }
                 this.title = this.pageType === 8 ? '编辑' : '编辑banner图片';
-                this.getProductName();
+                if (this.pageType != 12 && (this.pageType == 6 && this.form.linkType != 6)) {
+                    this.getProductName();
+                }
             },
             // 添加编辑
             dealAdv() {
@@ -346,11 +351,11 @@
                     url = 'updateAdvertisement';
                 }
                 data.type = this.pageType;
-                if (this.form.date.length) {
+                if (this.form.date && this.form.date.length) {
                     data.showBegintime = this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss') : '';
                     data.showEndtime = this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss') : '';
                 }
-                if (this.pageType != 12) {
+                if (this.pageType != 12 && (this.pageType == 6 && this.form.linkType != 6)) {
                     if (!this.productName) {
                         this.$message.warning('请输入有效ID');
                         return;

@@ -352,10 +352,10 @@
                                 flag = false;
                             } else {
                                 if (reg.test(v.startUnit) && reg.test(v.startPrice) && reg.test(v.nextUnit) && reg.test(v.nextPirce)) {
-                                    return true;
+                                    flag = true;
                                 } else {
                                     that.$message.warning('请输入合法数据');
-                                    return false;
+                                    flag = false;
                                 }
                             }
                             list.push(tableTemp);

@@ -192,7 +192,14 @@
                 if (this.pName == '') {
                     this.$message.warning('请输入专题名称');
                     return;
-                } else if (this.bannerForm.imgUrl == '') {
+                } else {
+                    const reg = /^[A-Za-z_\u4e00-\u9fa5]{2,50}$/;
+                    if (!reg.test(this.pName)) {
+                        this.$message.warning('请输入2-50位由汉字字母下划线组成的专题名称');
+                        return;
+                    }
+                }
+                if (this.bannerForm.imgUrl == '') {
                     this.$message.warning('请上传banner图');
                     return;
                 }
