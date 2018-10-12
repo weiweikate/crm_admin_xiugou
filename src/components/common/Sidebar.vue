@@ -339,6 +339,10 @@
                                 title: '库存消息提醒设置'
                             },
                             {
+                                index: 'withdrawalCharge',
+                                title: '提现设置'
+                            },
+                            {
                                 index: 'userAssociatedParam',
                                 title: '用户关联参数设置'
                             }

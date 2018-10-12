@@ -153,37 +153,8 @@
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.returnProductType">
-                                <template v-if="scope.row.returnProductType==1">
-                                    <el-button v-if="scope.row.status==4" @click='toAfterSale(scope.row.id)'
-                                               type="primary">退款中
-                                    </el-button>
-                                    <el-button v-if="scope.row.status==8" @click='toAfterSale(scope.row.id)'
-                                               type="primary">退款完成
-                                    </el-button>
-                                </template>
-                                <template v-if="scope.row.returnProductType==2">
-                                    <el-button v-if="scope.row.status==5" @click='toAfterSale(scope.row.id)'
-                                               type="primary">退货中
-                                    </el-button>
-                                    <el-button v-if="scope.row.status==8" @click='toAfterSale(scope.row.id)'
-                                               type="primary">退货完成
-                                    </el-button>
-                                </template>
-                                <template v-if="scope.row.returnProductType==3">
-                                    <el-button v-if="scope.row.status==6" @click='toAfterSale(scope.row.id)'
-                                               type="primary">换货中
-                                    </el-button>
-                                    <el-button v-if="scope.row.status==8" @click='toAfterSale(scope.row.id)'
-                                               type="primary">换货完成
-                                    </el-button>
-                                </template>
-                            </template>
-                            <template v-else>
-                                <template v-if="scope.row.status==3||scope.row.status==8">已完成</template>
-                                <el-button v-if='scope.row.status == 4' @click="changeStatus(scope.row.status,3)"
-                                           type="primary">已自提
-                                </el-button>
+                            <template v-if="scope.row.returnType">
+                                <el-button @click='toAfterSale(scope.row.id)'type="primary">{{`${returnTypeArr[Number(scope.row.returnType)-1]}${afterSaleStatusArr[Number(scope.row.returnProductStatus)-1]}`}}</el-button>
                             </template>
                         </template>
                     </el-table-column>
@@ -275,14 +246,10 @@
                     freeTimer: '', // 待支付倒计时
                     confirmTimer: '' // 待确认倒计时
                 },
-                // 标记颜色
-                markArr: [
-                    { label: 'red', value: '1' },
-                    { label: 'skyblue', value: '2' },
-                    { label: 'lightgreen', value: '3' },
-                    { label: 'orange', value: '4' },
-                    { label: 'purple', value: '5' }
-                ]
+                // returnType状态
+                returnTypeArr: ['退款', '退货', '换货'],
+                // 售后状态
+                afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭']
             };
         },
 
@@ -292,7 +259,7 @@
                 this.$route.query.orderInfoId || sessionStorage.getItem('orderInfoId');
             this.getInfo();
             // 获取提货仓列表
-            this.getStoreList();
+            // this.getStoreList();
         },
 
         deactivated() {
@@ -304,77 +271,77 @@
             //  获取信息
             getInfo() {
                 request.orderDetail({ id: this.orderId }).then(res => {
-                    this.orderMsg.status = res.data.data.status;
+                    this.orderMsg.status = res.data.status;
                     // pickedUp: 1：发货 2：自提
-                    // if(res.data.data.pickedUp == 1 && res.data.data.status==7){
+                    // if(res.data.pickedUp == 1 && res.data.status==7){
                     //   this.orderStatus = 7;
-                    // }else if(res.data.data.pickedUp == 2 && res.data.data.status==7){
+                    // }else if(res.data.pickedUp == 2 && res.data.status==7){
                     //   this.orderStatus = 9;
                     // }else{
-                    //   this.orderStatus = res.data.data.status;
+                    //   this.orderStatus = res.data.status;
                     // }
-                    this.orderStatus = res.data.data.status;
+                    this.orderStatus = res.data.status;
                     this.getProgressStu(this.orderStatus.toString());
-                    this.orderMsg.starIndex = res.data.data.star || 1;
+                    this.orderMsg.starIndex = res.data.star || 1;
                     this.orderMsg.star =
-                        res.data.data.star == null
+                        res.data.star == null
                             ? ''
-                            : this.markArr[res.data.data.star - 1].label;
-                    this.orderMsg.adminRemark = res.data.data.adminRemark;
-                    this.orderMsg.nickName = res.data.data.nickname;
-                    this.orderMsg.phone = res.data.data.phone;
-                    this.orderMsg.receiver = res.data.data.receiver;
-                    this.orderMsg.recevicePhone = res.data.data.recevicePhone;
+                            : this.markArr[res.data.star - 1].label;
+                    this.orderMsg.adminRemark = res.data.adminRemark;
+                    this.orderMsg.nickName = res.data.nickname;
+                    this.orderMsg.phone = res.data.phone;
+                    this.orderMsg.receiver = res.data.receiver;
+                    this.orderMsg.recevicePhone = res.data.recevicePhone;
                     this.orderMsg.receiveAddress = `${
-                        res.data.data.province == undefined ? '' : res.data.data.province
-                    }${res.data.data.city}${res.data.data.area}`;
-                    this.orderMsg.buyerRemark = res.data.data.buyerRemark;
-                    res.data.data.storehouseProvince = res.data.data.storehouseProvince == null ? '' : res.data.data.storehouseProvince;
-                    res.data.data.storehouseCity = res.data.data.storehouseCity == null ? '' : res.data.data.storehouseCity;
-                    res.data.data.storehouseArea = res.data.data.storehouseArea == null ? '' : res.data.data.storehouseArea;
-                    res.data.data.storehouseAddress = res.data.data.storehouseAddress == null ? '' : res.data.data.storehouseAddress;
+                        res.data.province == undefined ? '' : res.data.province
+                    }${res.data.city}${res.data.area}`;
+                    this.orderMsg.buyerRemark = res.data.buyerRemark;
+                    res.data.storehouseProvince = res.data.storehouseProvince == null ? '' : res.data.storehouseProvince;
+                    res.data.storehouseCity = res.data.storehouseCity == null ? '' : res.data.storehouseCity;
+                    res.data.storehouseArea = res.data.storehouseArea == null ? '' : res.data.storehouseArea;
+                    res.data.storehouseAddress = res.data.storehouseAddress == null ? '' : res.data.storehouseAddress;
                     this.orderMsg.storehouseName = `${
-                        res.data.data.storehouseProvince == null
+                        res.data.storehouseProvince == null
                             ? ''
-                            : res.data.data.storehouseProvince
-                    }${res.data.data.storehouseCity}${res.data.data.storehouseArea}${
-                        res.data.data.storehouseAddress
+                            : res.data.storehouseProvince
+                    }${res.data.storehouseCity}${res.data.storehouseArea}${
+                        res.data.storehouseAddress
                     }`;
-                    this.orderMsg.orderNum = res.data.data.orderNum;
-                    this.orderMsg.createTime = res.data.data.createTime; // 创建时间
-                    this.orderMsg.payTime = res.data.data.payTime; // 第三方支付时间
-                    this.orderMsg.deliveryTime = res.data.data.deliveryTime; // 确认时间
-                    this.orderMsg.sendTime = res.data.data.sendTime; // 发货时间
-                    // this.order.cancleTime = res.data.data.sendTime; // 取消时间
-                    this.orderMsg.tradeNo = res.data.data.tradeNo;
-                    // this.orderFreePayTime = res.data.data.createTime; // 倒计时
-                    this.orderMsg.expressName = res.data.data.expressName; // 物流公司名称
-                    this.orderMsg.expressNo = res.data.data.expressNo; // 物流单号
+                    this.orderMsg.orderNum = res.data.orderNum;
+                    this.orderMsg.createTime = res.data.createTime; // 创建时间
+                    this.orderMsg.payTime = res.data.payTime; // 第三方支付时间
+                    this.orderMsg.deliveryTime = res.data.deliveryTime; // 确认时间
+                    this.orderMsg.sendTime = res.data.sendTime; // 发货时间
+                    // this.order.cancleTime = res.data.sendTime; // 取消时间
+                    this.orderMsg.tradeNo = res.data.tradeNo;
+                    // this.orderFreePayTime = res.data.createTime; // 倒计时
+                    this.orderMsg.expressName = res.data.expressName; // 物流公司名称
+                    this.orderMsg.expressNo = res.data.expressNo; // 物流单号
                     this.tableData = [];
-                    this.pickedUp = res.data.data.pickedUp;
-                    res.data.data.list.forEach((v, k) => {
-                        v.totalPrice = res.data.data.totalPrice;
-                        v.freightPrice = res.data.data.freightPrice;
+                    this.pickedUp = res.data.pickedUp;
+                    res.data.orderProductList.forEach((v, k) => {
+                        v.totalPrice = res.data.totalPrice;
+                        v.freightPrice = res.data.freightPrice;
                         v.tokenCoin =
-                            res.data.data.tokenCoin == null ? '0' : res.data.data.tokenCoin;
+                            res.data.tokenCoin == null ? '0' : res.data.tokenCoin;
                         v.balance =
-                            res.data.data.balance == null ? '0' : res.data.data.balance;
+                            res.data.balance == null ? '0' : res.data.balance;
                         v.userScore =
-                            res.data.data.userScore == null ? '0' : res.data.data.userScore;
-                        v.type = res.data.data.payType;
+                            res.data.userScore == null ? '0' : res.data.userScore;
+                        v.type = res.data.payType;
                         v.amounts =
-                            res.data.data.amounts == null ? '0' : res.data.data.amounts;
+                            res.data.amounts == null ? '0' : res.data.amounts;
                         v.couponPrice =
-                            res.data.data.couponPrice == null ? '0' : res.data.data.couponPrice;
+                            res.data.couponPrice == null ? '0' : res.data.couponPrice;
                         this.tableData.push(v);
                     });
                     // 待支付剩余时间
-                    if (res.data.data.overtimeClosedTime) {
-                        this.orderFreeTimeDown(res.data.data.overtimeClosedTime);
+                    if (res.data.overtimeClosedTime) {
+                        this.orderFreeTimeDown(res.data.overtimeClosedTime);
                     }
                     // 待完成剩余时间
-                    if (res.data.data.autoConfirmTime) {
-                        this.orderFinishTimeDown(res.data.data.autoConfirmTime);
+                    if (res.data.autoConfirmTime) {
+                        this.orderFinishTimeDown(res.data.autoConfirmTime);
                     }
                 }).catch(err => {
                     console.log(err);
@@ -531,8 +498,8 @@
             // 获取提货仓列表
             getStoreList() {
                 this.warehouseArr = [];
-                request.queryStoreHouseList({ url: pApi.getOrderDetail }).then(res => {
-                    res.data.data.forEach((v, k) => {
+                request.queryStoreHouseList({ }).then(res => {
+                    res.data.forEach((v, k) => {
                         v.active = false;
                         this.warehouseArr.push(v);
                     });

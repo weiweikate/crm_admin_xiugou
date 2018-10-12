@@ -8,8 +8,8 @@ const path = require('path');
 // const baseURL = 'http://172.16.10.56';
 // let baseURL = "http://172.16.10.253";
 
-// const baseURL = 'http://172.16.10.19';
-const baseURL = 'http://172.16.10.12';
+const baseURL = 'http://172.16.10.19';
+// const baseURL = 'http://172.16.10.12';
 // const baseURL = 'http://172.16.10.29';
 // const baseURL = 'http://testadmin.sharegoodsmall.com';
 // const baseURL = 'http://devadmin.sharegoodsmall.com';
