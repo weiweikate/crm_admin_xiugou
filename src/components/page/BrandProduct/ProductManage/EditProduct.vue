@@ -142,7 +142,7 @@
                     </el-button>
                 </div>
                 <el-button type="primary" :loading="btnLoading" @click="submitForm">确认发布</el-button>
-                <el-button>取消</el-button>
+                <el-button @click="goBack">取消</el-button>
             </el-form>
         </el-card>
     </div>
@@ -687,6 +687,10 @@
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+            // 返回
+            goBack() {
+                this.$router.push('/productList');
             }
         }
     };

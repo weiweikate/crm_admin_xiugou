@@ -14,7 +14,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="上级代理:" class="special">
-                        <el-input v-model="info.upUserid" @blur="sureUpdate" size="medium"></el-input>
+                        <el-input-number :precision="1" :controls="false" :step="1" v-model="info.upUserid" @blur="sureUpdate" size="medium"></el-input-number>
                         <span class="tip">请输入上级代理</span>
                     </el-form-item>
                 </el-form>
