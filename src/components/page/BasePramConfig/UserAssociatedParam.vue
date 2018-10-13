@@ -2,7 +2,7 @@
     <div class="currency-ratio">
         <v-breadcrumb :nav="nav"></v-breadcrumb>
         <el-card v-loading="pageLoading" :body-style="{ padding: '20px 40px',minHeight:'60vh' }">
-            <div class="currency-title">货币比例设置</div>
+            <div class="currency-title">用户关联参数设置</div>
             <div class="currency-wrap">
                 <p>
                     <span class="currency-small-title">首次关联时间设置：</span>

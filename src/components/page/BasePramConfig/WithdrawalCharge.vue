@@ -7,7 +7,7 @@
                 <span>提现手续费比例</span>
                 <el-input-number :min="0" :controls="false" v-model="charge" style="width:150px" placeholder="请输入数值"></el-input-number> %
             </p>
-            <div class="charge-title">提现频率设置</div>
+            <!--<div class="charge-title">提现频率设置</div>-->
             <p v-for="(value,key) in levelList" :key="key" class="with-charge-p">
                 <span>{{value.name}}用户</span>
                 <el-select v-model="value.times">
