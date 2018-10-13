@@ -8,7 +8,6 @@
               <el-input-number class="input-sty" :min="0" :controls="false" v-model="num" style="width:150px" placeholder="请输入数值"></el-input-number><span class="point">秀豆可兑换 1张1元现金抵扣券</span>
               <div class="btn-group">
                   <el-button :loading="btnLoading" type="primary" @click="submitForm">确认提交</el-button>
-                  <el-button @click="cancle">取消</el-button>
               </div>
           </div>
       </el-card>

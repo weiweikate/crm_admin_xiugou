@@ -16,7 +16,6 @@
               <el-input v-model="returnDownTime" class="input-sty"></el-input><span class="point">天</span><br />
               <div class="btn-group">
                   <el-button :loading="btnLoading" type="primary" @click="submitForm">确认提交</el-button>
-                  <el-button @click="cancle" >取消</el-button>
               </div>
           </div>
       </el-card>

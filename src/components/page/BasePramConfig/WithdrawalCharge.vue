@@ -22,7 +22,6 @@
             </p>
             <p class="with-charge-p">
                 <el-button :loading="btnLoading" @click="submitForm" type="primary">确认保存</el-button>
-                <el-button @click="cancle">取消</el-button>
             </p>
         </el-card>
     </div>

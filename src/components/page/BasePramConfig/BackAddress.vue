@@ -73,7 +73,6 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="addOrEdit('form')">确 认</el-button>
-                <el-button @click="cancel">取 消</el-button>
             </div>
         </el-dialog>
         <!--删除弹窗-->
