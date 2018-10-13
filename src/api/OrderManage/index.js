@@ -60,7 +60,7 @@ export const queryPendingOrderPageList = '/admin/order/queryPendingOrderPageList
 
 // 售后操作
 // 同意换货
-export const agreeExchange = '/admin/returnProduct/agreeExchange';
+// export const agreeExchange = '/admin/returnProduct/agreeExchange';
 // 拒绝退款
 export const refusalRefund = '/admin/returnProduct/refusalRefund';
 // 换货变退货
@@ -81,3 +81,24 @@ export const queryOrderPageList = '/order/queryPage';
 export const orderDetail = '/order/lookDetail';
 // 订单发货
 export const orderSendOut = '/order/sendOut';
+
+// 售后
+// 同意申请（第一次同意）
+export const agreeApply = '/order/returnProduct/agreeApply';
+// 已收货并同意换货
+export const agreeExchange = '/order/returnProduct/agreeExchange';
+// 商家退款
+export const businessRefund = '/order/returnProduct/businessRefund';
+// 换货变退货
+export const exchangeChangeRefund = '/order/returnProduct/exchangeChangeRefund';
+// 查看详情
+export const lookDetail = '/order/returnProduct/lookDetail';
+// 确认退款
+export const makeSureRefund = '/order/returnProduct/makeSureRefund';
+// 退款
+export const refundAmounts = '/order/returnProduct/refundAmounts';
+// 拒绝售后
+export const refuse = '/order/returnProduct/refuse';
+// 云仓换货发货
+export const sendOut = '/order/returnProduct/sendOut';
+

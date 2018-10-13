@@ -31,7 +31,7 @@
                 <div class="left">
                     <div v-for="(value,index) in v.orderProductList" :key="index" class="bar">
                         <div class="name">
-                            <img :src="value.imgUrl" alt="">
+                            <img :src="value.specImg" alt="">
                             <span class="pro-name">{{value.productName}}</span>
                             <span class="pro-spec">{{value.spec}}</span>
                         </div>
@@ -63,7 +63,7 @@
                         <div class="operate">
                             <template v-if="value.returnType">
                                 <!--退款 退货 换货处理-->
-                                <el-button @click='toAfterSale(value.id)'type="primary">{{`${returnTypeArr[Number(value.returnType)-1]}${afterSaleStatusArr[Number(value.returnProductStatus)-1]}`}}</el-button>
+                                <el-button @click='toAfterSale(value.returnProductId)'type="primary">{{`${returnTypeArr[Number(value.returnType)-1]}${afterSaleStatusArr[Number(value.returnProductStatus)-1]}`}}</el-button>
                             </template>
                             <template v-else>
                                 <template v-if="value.status==6">已完成</template>
@@ -170,10 +170,18 @@
                     console.log(err);
                 });
             },
+            // 跳到售后详情
+            toAfterSale(id) {
+                sessionStorage.setItem('afterSaleOprId', id);
+                this.$router.push({
+                    path: '/afterSaleOpr',
+                    query: { afterSaleOprId: id }
+                });
+            },
             // 推送云仓
             pushCloud(row) {
-                request.orderSendOut({ orderId: row.id }).then(res => {
-                    this.$message.success(res.data.data);
+                request.orderSendOut({ expressName: '申通', 'expressNo': 28123152342345, id: row.id }).then(res => {
+                    this.$message.success(res.msg);
                     this.getList(this.page.currentPage);
                 }).catch(err => {
                     console.log(err);

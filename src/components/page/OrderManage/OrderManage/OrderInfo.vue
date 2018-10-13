@@ -21,21 +21,16 @@
                 <span v-if='orderStatus == 1' class="activite-status">当前订单状态：待支付</span>
                 <span v-if='orderStatus == 2' class="activite-status">当前订单状态：待发货</span>
                 <span v-if='orderStatus == 3' class="activite-status">当前订单状态：待收货</span>
-                <span v-if='orderStatus == 4' class="activite-status">当前订单状态：待自提</span>
-                <span v-if='orderStatus == 5' class="activite-status">当前订单状态：已完成（确认收货）</span>
-                <span v-if='orderStatus == 6' class="activite-status">当前订单状态：已关闭（退款关闭）</span>
-                <span v-if='orderStatus == 7' class="activite-status">当前订单状态：已完成</span>
-                <span v-if='orderStatus == 8' class="activite-status">当前订单状态：已关闭</span>
-                <span v-if='orderStatus == 9' class="activite-status">当前订单状态：用户删除</span>
-                <span v-if='orderStatus == 10' class="activite-status">当前订单状态：超时关闭</span>
+                <span v-if='orderStatus == 4' class="activite-status">当前订单状态：确认收货</span>
+                <span v-if='orderStatus == 5' class="activite-status">当前订单状态：已完成</span>
+                <span v-if='orderStatus == 6' class="activite-status">当前订单状态：已关闭(退货关闭)</span>
+                <span v-if='orderStatus == 7' class="activite-status">当前订单状态：已关闭(用户关闭)</span>
+                <span v-if='orderStatus == 8' class="activite-status">当前订单状态：已关闭(超时关闭)</span>
                 <span v-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
                 <span v-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
                 <br/>
                 <el-button v-if="orderStatus == 2" @click='orderSendOut' class="cloud-delivery-btn"
-                           type="danger">云仓发货
-                </el-button>
-                <el-button v-if="orderStatus == 4" @click='changeStatus(orderMsg.url)'
-                           class="cloud-delivery-btn" type="danger">已提货
+                           type="danger">推送云仓
                 </el-button>
                 <p class="preferential-info" @click='isShowPreferential = true'>优惠详情</p>
                 <span class="mark">标记</span>
@@ -52,28 +47,22 @@
             <div class="user-info">
                 <p class="info-title">买家信息</p>
                 <p class="info-content">
-                    <span class="smal-span">昵称：{{orderMsg.nickName}}</span>
-                    <span class="smal-span">联系方式：{{orderMsg.phone}}</span>
+                    <span class="smal-span">昵称：{{orderMsg.dealerName}}</span>
+                    <span class="smal-span">联系方式：{{orderMsg.dealerPhone}}</span>
                 </p>
-                <p v-if='orderStatus == 3 || orderStatus == 5 || orderStatus == 7' class="info-title">收货地址</p>
-                <p v-if='orderStatus == 3 || orderStatus == 5 || orderStatus == 7' class="info-content">
+                <p class="info-title">收货地址</p>
+                <p class="info-content">
                     <span class="smal-span">收货人：{{orderMsg.receiver}}</span>
                     <span class="smal-span">收货人联系方式：{{orderMsg.recevicePhone}}</span>
                 </p>
-                <p v-if='(orderStatus == 3 || orderStatus == 5 || orderStatus == 7) && pickedUp !=2'
-                   class="info-content">
+                <p class="info-content">
                     <span class="smal-span">收货地址：{{orderMsg.receiveAddress}}</span>
                 </p>
                 <p class="info-content">
                     <span class="smal-span">买家备注：{{orderMsg.buyerRemark}}</span>
                 </p>
-                <p v-if='orderStatus == 4 || orderStatus == 5 || orderStatus == 7' class="info-title">买家自提</p>
-                <p v-if='orderStatus == 4 || orderStatus == 5 || orderStatus == 7' class="info-content">
-                    <span class="smal-span">提货点：{{orderMsg.storehouseName}}</span>
-                    <el-button v-if='orderStatus == 4' type="primary" @click="isShowWarehouse = true">更换提货仓</el-button>
-                </p>
-                <p v-if='orderStatus == 3 || orderStatus == 5 || orderStatus == 7' class="info-title">物流信息</p>
-                <p v-if='orderStatus == 3 || orderStatus == 5 || orderStatus == 7' class="info-content">
+                <p v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5' class="info-title">物流信息</p>
+                <p v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5' class="info-content">
                     <span class="smal-span">物流公司名称：{{orderMsg.expressName}}</span>
                     <span class="smal-span">运单号：{{orderMsg.expressNo}}</span>
                     <span style="color:#33b4ff;cursor:pointer" @click="showLogisticsMsg">查看物流信息</span>
@@ -89,23 +78,23 @@
             <!-- 订单信息 -->
             <div class="order-info">
                 <p class="info-content">
-                    <span v-if='orderStatus != 9' class="content-con">订单号：{{ orderMsg.orderNum }}</span>
-                    <span v-if='orderStatus != 9' class="content-con">创建时间：{{ orderMsg.createTime | formatDate }}</span>
-                    <span v-if='orderStatus != 9' class="content-con">平台支付时间：{{ orderMsg.payTime | formatDate }}</span>
-                    <span v-if='orderStatus != 1 && orderStatus != 2 && orderStatus != 9' class="content-con">第三方支付时间：{{ orderMsg.payTime | formatDate }}</span>
+                    <span class="content-con">订单号：{{ orderMsg.orderNum }}</span>
+                    <span class="content-con">创建时间：{{ orderMsg.createTime | formatDateAll }}</span>
+                    <span class="content-con">平台支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
+                    <span v-if='orderStatus != 1 && orderStatus != 2' class="content-con">第三方支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
                 </p>
                 <p class="info-content">
-                    <span v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5 || orderStatus == 7'
-                          class="content-con">发货时间：{{ orderMsg.sendTime | formatDate }}</span>
-                    <span v-if='orderStatus == 6 || orderStatus == 8 || orderStatus == 10' class="content-con">取消时间：{{ orderMsg.cancleTime }}</span>
-                    <span v-if='orderStatus != 1 && orderStatus != 2 && orderStatus != 9' class="content-con">支付宝（第三方支付）交易号：{{ orderMsg.tradeNo }}</span>
-                    <span v-if='orderStatus == 5 || orderStatus == 7' class="content-con">确认时间：{{orderMsg.deliveryTime | formatDate}}</span>
+                    <span v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5'
+                          class="content-con">发货时间：{{ orderMsg.sendTime | formatDateAll }}</span>
+                    <span v-if='orderStatus == 6 || orderStatus == 7 || orderStatus == 8' class="content-con">取消时间：{{ orderMsg.cancleTime }}</span>
+                    <span v-if='orderStatus != 1 && orderStatus != 2 ' class="content-con">支付宝（第三方支付）交易号：{{ orderMsg.tradeNo }}</span>
+                    <span v-if='orderStatus == 4 || orderStatus == 5' class="content-con">确认时间：{{orderMsg.deliveryTime | formatDateAll}}</span>
                 </p>
                 <el-table border :data="tableData" :span-method="spanMethod">
                     <el-table-column label="产品名称" align="center" width="500px">
                         <template slot-scope="scope">
                             <div class="name">
-                                <img :src="scope.row.imgUrl" alt="">
+                                <img :src="scope.row.specImg" alt="">
                                 <span class="pro-name">{{scope.row.productName}}</span>
                                 <span class="pro-spec">{{scope.row.spec}}</span>
                             </div>
@@ -122,13 +111,12 @@
                     <el-table-column prop="status" label="交易状态" align="center">
                         <template slot-scope="scope">
                             <template v-if='scope.row.status == 1'>待支付</template>
-                            <template v-else-if='scope.row.status == 2'>待收货</template>
-                            <template v-else-if='scope.row.status == 3'>确认收货</template>
-                            <template v-else-if='scope.row.status == 4'>退款中</template>
-                            <template v-else-if='scope.row.status == 5'>退货中</template>
-                            <template v-else-if='scope.row.status == 6'>换货中</template>
-                            <template v-else-if='scope.row.status == 8'>已完成</template>
-                            <template v-else-if='scope.row.status == 9'>已关闭</template>
+                            <template v-else-if='scope.row.status == 2'>待发货</template>
+                            <template v-else-if='scope.row.status == 3'>待收货</template>
+                            <template v-else-if='scope.row.status == 4'>退货中</template>
+                            <template v-else-if='scope.row.status == 5'>确认收货</template>
+                            <template v-else-if='scope.row.status == 6'>已完成</template>
+                            <template v-else-if='scope.row.status == 7'>已关闭</template>
                         </template>
                     </el-table-column>
                     <el-table-column label="实收款" align="center">
@@ -154,7 +142,7 @@
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.returnType">
-                                <el-button @click='toAfterSale(scope.row.id)'type="primary">{{`${returnTypeArr[Number(scope.row.returnType)-1]}${afterSaleStatusArr[Number(scope.row.returnProductStatus)-1]}`}}</el-button>
+                                <el-button @click='toAfterSale(scope.row.returnProductId)'type="primary">{{`${returnTypeArr[Number(scope.row.returnType)-1]}${afterSaleStatusArr[Number(scope.row.returnProductStatus)-1]}`}}</el-button>
                             </template>
                         </template>
                     </el-table-column>
@@ -205,8 +193,8 @@
                 isShowPop: false, // 订单标记颜色是否显示
                 isShowPreferential: false, // 优惠活动
                 isShowWarehouse: false, // 更换提货仓
-                orderStatus: '', // 总订单状态: 1:待支付 2:待发货 3:待确认 4:待自提 5:确认收货 6:退款（关闭） 7:正常已完成 8:已关闭 9:用户删除 10:超时关闭
-                pickedUp: '', // 是否自提状态（1.正常 2.自提完成）
+                orderStatus: '', // 总订单状态: 1:待支付 2:待发货 3:待收货 4:确认收货 5:已完成 6:退货关闭 7:用户关闭 8:超时关闭
+                // pickedUp: '', // 是否自提状态（1.正常 2.自提完成）
                 markArr: [
                     { label: 'red', value: '1' },
                     { label: 'skyblue', value: '2' },
@@ -288,8 +276,8 @@
                             ? ''
                             : this.markArr[res.data.star - 1].label;
                     this.orderMsg.adminRemark = res.data.adminRemark;
-                    this.orderMsg.nickName = res.data.nickname;
-                    this.orderMsg.phone = res.data.phone;
+                    this.orderMsg.dealerName = res.data.dealerName;
+                    this.orderMsg.dealerPhone = res.data.dealerPhone;
                     this.orderMsg.receiver = res.data.receiver;
                     this.orderMsg.recevicePhone = res.data.recevicePhone;
                     this.orderMsg.receiveAddress = `${
@@ -318,7 +306,7 @@
                     this.orderMsg.expressName = res.data.expressName; // 物流公司名称
                     this.orderMsg.expressNo = res.data.expressNo; // 物流单号
                     this.tableData = [];
-                    this.pickedUp = res.data.pickedUp;
+                    // this.pickedUp = res.data.pickedUp;
                     res.data.orderProductList.forEach((v, k) => {
                         v.totalPrice = res.data.totalPrice;
                         v.freightPrice = res.data.freightPrice;
@@ -336,12 +324,12 @@
                         this.tableData.push(v);
                     });
                     // 待支付剩余时间
-                    if (res.data.overtimeClosedTime) {
-                        this.orderFreeTimeDown(res.data.overtimeClosedTime);
+                    if (res.data.shutOffTime) {
+                        this.orderFreeTimeDown(res.data.shutOffTime);
                     }
                     // 待完成剩余时间
-                    if (res.data.autoConfirmTime) {
-                        this.orderFinishTimeDown(res.data.autoConfirmTime);
+                    if (res.data.autoReceiveTime) {
+                        this.orderFinishTimeDown(res.data.autoReceiveTime);
                     }
                 }).catch(err => {
                     console.log(err);
@@ -377,7 +365,6 @@
                         this.boolsec = true;
                         this.boolThr = true;
                         this.boolFor = false;
-                        this.orderMsg.url = 'pickUpGoods';
                         break;
                     case '5':
                         this.boolFirst = true;
@@ -397,19 +384,7 @@
                         this.boolThr = true;
                         this.boolFor = true;
                         break;
-                    case '9':
-                        this.boolFirst = true;
-                        this.boolsec = true;
-                        this.boolThr = true;
-                        this.boolFor = true;
-                        break;
-                    case '9':
-                        this.boolFirst = true;
-                        this.boolsec = true;
-                        this.boolThr = true;
-                        this.boolFor = true;
-                        break;
-                    case '9':
+                    case '8':
                         this.boolFirst = true;
                         this.boolsec = true;
                         this.boolThr = true;

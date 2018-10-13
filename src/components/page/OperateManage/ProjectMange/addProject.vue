@@ -47,8 +47,8 @@ export default {
                 { label: '模版2', value: '2' },
                 { label: '模版3', value: '3' },
                 { label: '模版4', value: '4' },
-                { label: '秒杀模版', value: '5' },
-                { label: '降价拍模版', value: '6' }
+                { label: '降价拍模版', value: '5' },
+                { label: '秒杀模版', value: '6' }
             ],
             tplInfo: {} // 专题信息
         };
