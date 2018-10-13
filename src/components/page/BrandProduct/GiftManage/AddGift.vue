@@ -170,9 +170,7 @@
                 </el-form-item>
                 <div class="tag-btn-group">
                     <el-button-group v-loading="tagLoading">
-                        <el-button :type="figureTag?'primary':''" @click="getAllTags(1,'figureTag', figureTag)">人物标签</el-button>
-                        <el-button :type="goodsTag?'primary':''" @click="getAllTags(2,'goodsTag', goodsTag)">商品标签</el-button>
-                        <el-button :type="sceneTag?'primary':''" @click="getAllTags(3,'sceneTag', sceneTag)">场景标签</el-button>
+                        <el-button v-for="(v, k) in tagTypeArr" :key="k" :type="v.selected?'primary':''" @click="getAllTags(v.id,k, v.selected)">{{v.name}}</el-button>
                     </el-button-group>
                 </div>
                 <div class="selected-tag">
@@ -340,9 +338,7 @@
                 tagName: '',
                 proItemArr: [],
                 btnLoading: false,
-                figureTag: false, // 人物标签
-                goodsTag: false, // 商品标签
-                sceneTag: false, // 场景标签
+                tagTypeArr: [], // 标签类型
                 tagLoading: false, // 标签loading
                 isShowCouponList: false, // 优惠券列表弹窗
                 couponLoading: false, // 优惠券列表loding
@@ -360,6 +356,7 @@
         },
 
         activated() {
+            this.getAllTagType();
             this.getUserLevel();
             this.uploadImg = api.uploadImg;
             this.imgArr = [];
@@ -380,7 +377,7 @@
                 notSupportRetMoney: false, // 不支持退款
                 notSupportRetChange: false, // 不支持换货
                 notSupportRetGoods: false // 不支持退货
-            },
+            };
             // 获取一级类目
             this.getFirstItem();
             // 获取品牌列表
@@ -589,35 +586,28 @@
                 });
                 if (!tmp) {
                     let typeId = 1;
-                    let tagName = 'figureTag';
-                    if (this.figureTag) {
-                        typeId = 1;
-                        tagName = 'figureTag';
-                    } else if (this.goodsTag) {
-                        typeId = 2;
-                        tagName = 'goodsTag';
-                    } else if (this.sceneTag) {
-                        typeId = 3;
-                        tagName = 'sceneTag';
-                    } else {
-                        return;
-                    }
+                    let tagName = '';
+                    this.tagTypeArr.forEach((v, k)=>{
+                        if (v.selected) {
+                            typeId = v.id;
+                            tagName = k;
+                        }
+                    })
                     const data = {
                         name: this.tagName,
-                        secCategoryId: this.form.secCategoryId,
                         status: 1,
                         typeId: typeId
                     };
                     request.addSysTagLibrary(data).then(res => {
                         this.$message.success(res.msg);
-                        this[tagName] = true;
-                        this.getAllTags(typeId, tagName, this[tagName]);
+                        this.selectedTagArr.push({ label: res.data.name, value: res.data.id });
+                        this.tagTypeArr[tagName].selected = true;
                         this.tagName = '';
                     }).catch(err => {
                         console.log(err);
                     });
                 } else {
-                    this.$message.warning('标签已经添加，请不要重复添加!');
+                    this.$message.warning('标签已存在，请不要重复添加!');
                 }
             },
             // 添加标签
@@ -693,7 +683,7 @@
                 this.form.secCategoryId = val[1];
                 this.form.thirdCategoryId = val[2];
                 this.getProductParam(val[2]);
-                this.getAllTags('1', 'figureTag', this.figureTag);
+                this.getAllTags(this.tagTypeArr[0].id, 0, this.tagTypeArr[0].selected);
             },
             // 获取品牌列表
             getBrandList(val) {
@@ -729,17 +719,17 @@
                 });
             },
             // 获取所有标签
-            getAllTags(val, name, status) {
+            getAllTags(val, key, status) {
                 if (this.form.secCategoryId === '') return;
-                this.figureTag = false;
-                this.goodsTag = false;
-                this.sceneTag = false;
-                this[name] = status;
+                this.tagTypeArr.forEach(v => {
+                    v.selected = false;
+                })
+                this.tagTypeArr[key].selected = status;
                 this.tagLoading = true;
                 request.querySysTagLibraryList({ typeId: val, secCategoryId: this.form.secCategoryId }).then(res => {
                     this.tagLoading = false;
                     this.tagArr = [];
-                    this[name] = !this[name];
+                    this.tagTypeArr[key].selected = !this.tagTypeArr[key].selected;
                     res.data[0].sysTagLibraryVOList.forEach(v => {
                         this.tagArr.push({ label: v.name, value: v.id });
                     });
@@ -752,6 +742,22 @@
                     });
                 }).catch(err => {
                     this.tagLoading = false;
+                    console.log(err);
+                });
+            },
+            // 获取所有标签类型
+            getAllTagType() {
+                request.querySysTagTypePageList({ pageSize: 100000 }).then(res => {
+                    this.tagTypeArr = [];
+                    if (res.data.data.length === 0) return;
+                    res.data.data.forEach(v => {
+                        this.tagTypeArr.push({
+                            id: v.id,
+                            name: v.name,
+                            isSelected: false
+                        })
+                    });
+                }).catch(err => {
                     console.log(err);
                 });
             },

@@ -4,7 +4,7 @@
             <el-breadcrumb-item class="bread-item" v-for="(item,index) in nav" :key="index"><icon class="ico" v-if="index == 0" ico="icon-dingwei1" />{{item}}</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="now-date">
-            <span style="color: red">2018-10-12 17:55更新</span>
+            <span style="color: red">2018-10-13 14:15更新</span>
           {{time}}
         </div>
     </div>
