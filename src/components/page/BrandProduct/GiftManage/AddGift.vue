@@ -34,7 +34,7 @@
                             </div>
                         </transition-group>
                     </draggable>
-                    <el-upload class="img-uploader" :before-upload="beforeUploadArr" :action="uploadImg"
+                    <el-upload class="img-uploader" :before-upload="beforeAvatarUpload" :action="uploadImg"
                                :show-file-list="false" :on-success="successUpload" :disabled="isUseUpload" multiple>
                         <i class="el-icon-plus avatar-uploader-icon">添加图片</i>
                     </el-upload>
@@ -235,14 +235,14 @@
     import * as api from '@/api/api.js';
     import utils from '@/utils/index.js';
     import request from '@/http/http';
-
+    import { beforeAvatarUpload } from '@/JS/commom';
     export default {
         components: {
             draggable,
             vBreadcrumb,
             icon
         },
-
+        mixins: [beforeAvatarUpload],
         data() {
             return {
                 nav: ['品牌产品管理', '礼包管理', '新建礼包'],
@@ -404,10 +404,11 @@
                 if (this.imgArr.length == 0) {
                     this.$message.warning('请添加产品图片');
                     return false;
-                } else if (this.selectedTagArr.length == 0) {
-                    this.$message.warning('请添加产品标签');
-                    return false;
                 }
+                // else if (this.selectedTagArr.length == 0) {
+                //     this.$message.warning('请添加产品标签');
+                //     return false;
+                // }
                 if (this.productParam.length == 0) {
                     this.$message.warning('请输入产品参数');
                     return false;
@@ -455,6 +456,10 @@
                 data.packageTagList = [];
                 this.selectedTagArr.forEach(v => {
                     data.packageTagList.push({ tagId: v.value });
+                });
+                data.couponList = [];
+                this.selectedCoupon.forEach(v => {
+                    data.couponList.push({ couponId: v.id });
                 });
                 data.userLevelList = [];
                 this.chectedUser.forEach(v => {
@@ -773,7 +778,7 @@
             // 显示优惠券列表
             showAddCouList() {
                 this.isShowCouponList = true;
-                this.handleClick({name: '1'});
+                this.handleClick({ name: '1' });
                 this.tmpCouponList = [];
             },
             // 选择优惠券类型
@@ -782,11 +787,11 @@
                 request.queryCouponByType({ type: tab.name }).then(res => {
                     this.couponLoading = false;
                     this.couponList = [];
-                    let tmp = [];
-                    tmp.push(...this.selectedCoupon, ...this.tmpCouponList)
+                    const tmp = [];
+                    tmp.push(...this.selectedCoupon, ...this.tmpCouponList);
                     if (res.data.length === 0) return;
                     res.data.forEach(v => {
-                        let obj = {
+                        const obj = {
                             name: v.name,
                             id: v.id,
                             selected: false
@@ -810,14 +815,14 @@
             //  选择优惠券
             selectCoupon(coupon) {
                 coupon.selected = true;
-                let tmp = [];
-                tmp.push(...this.selectedCoupon, ...this.tmpCouponList)
+                const tmp = [];
+                tmp.push(...this.selectedCoupon, ...this.tmpCouponList);
                 for (let i = 0; i < tmp.length; i++) {
                     if (tmp[i].id == coupon.id) {
                         return;
                     }
                 }
-                this.tmpCouponList.push(coupon)
+                this.tmpCouponList.push(coupon);
             },
             // 确定添加优惠券
             confirmCoupon() {

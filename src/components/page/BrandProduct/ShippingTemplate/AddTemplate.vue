@@ -237,6 +237,8 @@
             this.unit = '公斤';
             this.title1 = '首公斤数(kg)';
             this.title2 = '续公斤数(kg)';
+            this.checked = false;
+            console.log(this.freightFreePrice);
         },
         methods: {
 
@@ -275,6 +277,7 @@
                     if (!valid) {
                         return;
                     } else {
+                        console.log(this.form)
                         const data = that.form;
                         if (!that.form.provinceCode || !that.form.cityCode || !that.form.areaCode) {
                             that.$message.warning('请选择省市区！');
@@ -287,6 +290,7 @@
                             }
                             data.freightFreePrice = that.freightFreePrice;
                         }
+                        console.log(this.freightFreePrice);
                         const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
                         let flag = true;
                         const list = [];

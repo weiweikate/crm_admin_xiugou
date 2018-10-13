@@ -65,7 +65,7 @@
             </el-table-column>
             <el-table-column label="发布时间/发布人" align="center" min-width="120">
                 <template slot-scope="scope">
-                    {{scope.row.createTime | formatDate}}<br/>{{`产品编辑:${scope.row.createAdmin}`}}
+                    {{scope.row.createTime |formatDateAll}}<br/>{{`产品编辑:${scope.row.adminName}`}}
                 </template>
             </el-table-column>
             <el-table-column prop="" label="状态" align="center" min-width="50">

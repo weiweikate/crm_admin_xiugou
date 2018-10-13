@@ -28,7 +28,7 @@
                             </div>
                         </transition-group>
                     </draggable>
-                    <el-upload class="img-uploader" :before-upload="beforeUploadArr" :action="uploadImg"
+                    <el-upload class="img-uploader" :before-upload="beforeAvatarUpload" :action="uploadImg"
                                :show-file-list="false" :on-success="successUpload" :disabled="isUseUpload" multiple>
                         <i class="el-icon-plus avatar-uploader-icon">添加图片</i>
                     </el-upload>
@@ -156,14 +156,14 @@
     import * as api from '@/api/api.js';
     import utils from '@/utils/index.js';
     import request from '@/http/http';
-
+    import { beforeAvatarUpload } from '@/JS/commom';
     export default {
         components: {
             draggable,
             vBreadcrumb,
             icon
         },
-
+        mixins: [beforeAvatarUpload],
         data() {
             return {
                 nav: ['品牌产品管理', '产品管理', '发布产品'],
@@ -340,10 +340,11 @@
                 if (this.imgArr.length == 0) {
                     this.$message.warning('请添加产品图片');
                     return false;
-                } else if (this.selectedTagArr.length == 0) {
-                    this.$message.warning('请添加产品标签');
-                    return false;
                 }
+                // else if (this.selectedTagArr.length == 0) {
+                //     this.$message.warning('请添加产品标签');
+                //     return false;
+                // }
                 if (this.productParam.length == 0) {
                     this.$message.warning('请输入产品参数');
                     return false;
