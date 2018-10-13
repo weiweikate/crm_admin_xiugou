@@ -33,7 +33,7 @@
 
         data() {
             return {
-                nav: ['基础参数设置', '用户关联参数设置'],
+                nav: ['基础参数设置', '库存消息提醒设置'],
                 btnLoading: false,
                 pageLoading: false,
                 num1: '',
@@ -103,14 +103,19 @@
                         }
                     ]
                 };
-                this.btnLoading = true;
-                request.addOrModifyList(data).then(res => {
-                    this.$message.success(res.msg);
-                    this.btnLoading = false;
-                }).catch(err => {
-                    console.log(err);
-                    this.btnLoading = false;
-                });
+                let reg = /^\d+$/;
+                if(reg.test(this.num1) && reg.test(this.num2) && reg.test(this.num3)){
+                    this.btnLoading = true;
+                    request.addOrModifyList(data).then(res => {
+                        this.$message.success(res.msg);
+                        this.btnLoading = false;
+                    }).catch(err => {
+                        console.log(err);
+                        this.btnLoading = false;
+                    });
+                }else{
+                    this.$message.warning('请输入正整数!')
+                }
             },
             // 取消
             cancle() {
