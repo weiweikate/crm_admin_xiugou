@@ -191,7 +191,7 @@
                     </el-button>
                 </div>
                 <el-button type="primary" :loading="btnLoading" @click="submitForm">确认发布</el-button>
-                <el-button>取消</el-button>
+                <el-button @click="goBack">取消</el-button>
             </el-form>
         </el-card>
         <el-dialog title="优惠券列表" :visible.sync="isShowCouponList" width="30%">
@@ -909,6 +909,10 @@
             confirmCoupon() {
                 this.isShowCouponList = false;
                 this.selectedCoupon.push(...this.tmpCouponList);
+            },
+            // 返回
+            goBack() {
+                this.$router.push('/giftManage');
             }
         }
     };

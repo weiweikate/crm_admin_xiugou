@@ -22,10 +22,7 @@ export const findExpress = '/admin/express/find';
 // 首页
 // 修改密码短信验证
 export const sendUpdatePwdCode = '/admin/phoneCode/sendMessage';
-// 修改密码验证码校验
-export const loginUpdateCheckCode = '/admin/adminLogin/loginUpdateCheckCode';
 // 修改密码
-export const loginUpdatePassword = '/admin/adminLogin/loginUpdatePassword';
 //
 // 授权管理
 // 获取渠道列表
@@ -244,6 +241,7 @@ export const makeSureOrder = '/order/order/makeSureOrder';
 export const uploadImg = '/admin/common/upload/oss'; // 上传图片
 export const addImg = '/common/upload/oss'; // 上传图片
 export const queryConfig = ['/config/sysconfig/queryConfig', { methods: 'get' }]; // 查询系统配置
+export const getCode = ['/adminUser/sendMessage', { methods: 'get' }]; // 获取短信验证码
 export const homeData = ['/user/home', { methods: 'get' }]; // 首页数据列表
 export const addOrModifyList = '/config/sysconfig/addOrModifyList'; // 批量新增系统配置
 export const findAdminUserbyId = ['/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息
@@ -264,6 +262,8 @@ export const deleteVersionRecord = ['/config/sysAppVersion/deleteById', { method
 export const getRegion = ['/config/sysArea/queryAreaList', { methods: 'get' }]; // 查询省市区
 export const getUserLevelList = ['/user/getLevelList', { methods: 'get' }]; // 查询会员层级
 export const queryAdminUserList = '/adminUser/queryAdminUserList'; // 查询会员层级
+export const loginUpdateCheckCode = '/adminUser/verifySmsCode'; // 首次登录修改密码验证码校验
+export const loginUpdatePassword = '/adminUser/firstLoginUpdate'; // 首次登录修改密码
 // 获取数据字典列表
 export const queryDictionaryDetailsType = ['/config/dictionary/queryDictionaryTypeList', { methods: 'get' }];
 // 问题反馈

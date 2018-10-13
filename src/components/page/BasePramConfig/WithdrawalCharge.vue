@@ -14,7 +14,7 @@
                     <el-option v-for="(v,k) in dateList" :key="k" :label="v.label" :value='v.value'></el-option>
                 </el-select>
                 <span>　可提现　</span>
-                <el-input v-model="value.num" style="width:150px" placeholder="请输入数值"></el-input>　次
+                <el-input-number v-model="value.num" style="width:150px" placeholder="请输入数值"></el-input-number>　次
             </p>
             <p class="with-charge-p">
                 <span>设置提现金额　</span>
@@ -113,6 +113,10 @@ export default {
                     }
                 ]
             };
+            if (this.charge >= 9999999999999999 || this.minBalance >= 9999999999999999) {
+                this.$message.warning('最多输入16位数字');
+                return;
+            }
             this.btnLoading = true;
             request.addOrModifyList(data).then(res => {
                 this.$message.success(res.msg);

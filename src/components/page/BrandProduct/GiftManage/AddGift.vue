@@ -191,7 +191,7 @@
                     </el-button>
                 </div>
                 <el-button type="primary" :loading="btnLoading" @click="submitForm">确认发布</el-button>
-                <el-button>取消</el-button>
+                <el-button @click="goBack">取消</el-button>
             </el-form>
         </el-card>
         <el-dialog title="优惠券列表" :visible.sync="isShowCouponList" width="30%">
@@ -587,12 +587,12 @@
                 if (!tmp) {
                     let typeId = 1;
                     let tagName = '';
-                    this.tagTypeArr.forEach((v, k)=>{
+                    this.tagTypeArr.forEach((v, k) => {
                         if (v.selected) {
                             typeId = v.id;
                             tagName = k;
                         }
-                    })
+                    });
                     const data = {
                         name: this.tagName,
                         status: 1,
@@ -723,7 +723,7 @@
                 if (this.form.secCategoryId === '') return;
                 this.tagTypeArr.forEach(v => {
                     v.selected = false;
-                })
+                });
                 this.tagTypeArr[key].selected = status;
                 this.tagLoading = true;
                 request.querySysTagLibraryList({ typeId: val, secCategoryId: this.form.secCategoryId }).then(res => {
@@ -755,7 +755,7 @@
                             id: v.id,
                             name: v.name,
                             isSelected: false
-                        })
+                        });
                     });
                 }).catch(err => {
                     console.log(err);
@@ -834,6 +834,10 @@
             confirmCoupon() {
                 this.isShowCouponList = false;
                 this.selectedCoupon.push(...this.tmpCouponList);
+            },
+            // 返回
+            goBack() {
+                this.$router.push('/giftManage');
             }
         }
     };

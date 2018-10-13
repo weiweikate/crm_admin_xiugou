@@ -21,64 +21,59 @@
     </div>
 </template>
 <script>
-import icon from "../../common/ico";
-import * as api from '../../../api/api.js';
+import icon from '../../common/ico';
+import request from '@/http/http.js';
 export default {
-  components: {
-    icon
-  },
-  data() {
-    return {
-      form: {
-        password: "",
-        repeatPwd: ""
-      },
-      rules: {
-        password: [
-          {
-            required: true,
-            message: "请输入6到16位数字加英文设置密码",
-            trigger: "blur"
-          }
-        ],
-        repeatPwd: [
-          { required: true, message: "请再次登陆密码", trigger: "blur" }
-        ]
-      }
-    };
-  },
-  methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          if (this.form.password != this.form.repeatPwd) {
-            this.$message.warning("两次密码输入不一致");
-            return;
-          }
-          let data = {};
-          data.phone = localStorage.getItem('ms_phone');
-          data.password = this.form.repeatPwd;
-          this.$axios
-            .post(api.loginUpdatePassword, data)
-            .then(res => {
-                console.log(res.data);
-              if (res.data.code == 200) {
-                  localStorage.setItem("ms_hadFirstLogin", 0);
-                  this.$emit('status',false);
-              } else {
-                this.$message.warning(res.data.msg);
-              }
-            })
-            .catch(err => {
-              console.log(err);
+    components: {
+        icon
+    },
+    data() {
+        return {
+            form: {
+                password: '',
+                repeatPwd: ''
+            },
+            rules: {
+                password: [
+                    {
+                        required: true,
+                        message: '请输入6到16位数字加英文设置密码',
+                        trigger: 'blur'
+                    }
+                ],
+                repeatPwd: [
+                    { required: true, message: '请再次登陆密码', trigger: 'blur' }
+                ]
+            }
+        };
+    },
+    methods: {
+        submitForm(formName) {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    if (this.form.password != this.form.repeatPwd) {
+                        this.$message.warning('两次密码输入不一致');
+                        return;
+                    }
+                    const data = {};
+                    data.phone = localStorage.getItem('ms_phone');
+                    data.password = this.form.repeatPwd;
+                    request.loginUpdatePassword(data).then(res => {
+                        if (res.code === 10000) {
+                            this.$message.success(res.msg);
+                            localStorage.setItem('ms_hadFirstLogin', 0);
+                            this.$emit('status', false);
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
             });
-        } else {
-          console.log("error submit!!");
-          return false;
         }
-      });
     }
-  }
 };
 </script>
 <style lang="less" scoped>
