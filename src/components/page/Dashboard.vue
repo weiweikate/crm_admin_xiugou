@@ -217,7 +217,6 @@
         </el-row>
         <act-account-code @status='isShowCode' v-if="isShowActAccCode"></act-account-code>
         <act-account-pwd @status='isShowPwd' v-if="isShowActAccPwd"></act-account-pwd>
-        <message-tip></message-tip>
     </div>
 </template>
 
@@ -226,7 +225,6 @@ import icon from '../common/ico';
 import breadcrumb from '../common/Breadcrumb';
 import actAccountPwd from './Dashboard/actAccountPwd';
 import actAccountCode from './Dashboard/actAccountCode';
-import messageTip from './Dashboard/messageTip';
 import request from '@/http/http.js';
 
 export default {
@@ -234,8 +232,7 @@ export default {
         icon,
         breadcrumb,
         actAccountPwd,
-        actAccountCode,
-        messageTip
+        actAccountCode
     },
     data() {
         return {

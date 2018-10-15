@@ -20,6 +20,12 @@ export default new Router({
                     component: resolve => require(['../components/page/Dashboard.vue'], resolve),
                     meta: { title: '系统首页', url: '/dashboard' }
                 },
+                {
+                    name: 'message',
+                    path: '/message',
+                    component: resolve => require(['../components/page/Dashboard/message.vue'], resolve),
+                    meta: { title: '全部消息', url: '/message' }
+                },
                 // 授权管理
                 {
                     name: 'channelItemManage',
@@ -299,6 +305,12 @@ export default new Router({
                     path: '/memberTree',
                     component: resolve => require(['../components/page/MemberManage/MemberManage/MemberTree.vue'], resolve),
                     meta: { title: '会员树状图', url: '/admin/dealer/findDealerTreeById' }
+                },
+                {
+                    name: 'showMsg',
+                    path: '/showMsg',
+                    component: resolve => require(['../components/page/MemberManage/MemberManage/showMsg.vue'], resolve),
+                    meta: { title: '店铺信息', url: '/admin/dealer/showMsg' }
                 },
                 {
                     name: 'sendInvite',

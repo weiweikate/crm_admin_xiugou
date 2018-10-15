@@ -57,7 +57,11 @@
                     {{scope.row.maxPrice == undefined?'0':scope.row.maxPrice | formatPrice}}
                 </template>
             </el-table-column>
-            <el-table-column prop="stock" label="库存" align="center" min-width="50"></el-table-column>
+            <el-table-column prop="stock" label="库存" align="center" min-width="50">
+                <template slot-scope="scope">
+                    {{scope.row.stock || 0}}
+                </template>
+            </el-table-column>
             <el-table-column prop="saleNum" label="销量" align="center" min-width="50">
                 <template slot-scope="scope">
                     {{scope.row.saleNum || 0}}
@@ -65,7 +69,7 @@
             </el-table-column>
             <el-table-column label="发布时间/发布人" align="center" min-width="120">
                 <template slot-scope="scope">
-                    {{scope.row.createTime |formatDateAll}}<br/>{{`产品编辑:${scope.row.adminName}`}}
+                    {{scope.row.createTime |formatDateAll}}<br/>{{`产品编辑:${scope.row.adminName || ''}`}}
                 </template>
             </el-table-column>
             <el-table-column prop="" label="状态" align="center" min-width="50">

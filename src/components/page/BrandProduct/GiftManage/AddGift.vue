@@ -595,8 +595,7 @@
                     });
                     const data = {
                         name: this.tagName,
-                        status: 1,
-                        typeId: typeId
+                        status: 1
                     };
                     request.addSysTagLibrary(data).then(res => {
                         this.$message.success(res.msg);

@@ -93,7 +93,6 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
-import request from '@/http/http.js';
 import vOrderlist from './_orderList/_orderList';
 
 export default {
