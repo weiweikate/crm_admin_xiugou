@@ -158,6 +158,7 @@
                 const that = this;
                 const data = that.form;
                 data.page = val;
+                data.pageSize = this.page.pageSize;
                 const addrss = that.address;
                 if (addrss && addrss[0]) {
                     data.provinceCode = addrss[0];

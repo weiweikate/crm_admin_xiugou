@@ -5,7 +5,7 @@
             <div class="pro-title">基本信息</div>
             <el-form :model="form" ref="form" label-width="100px">
                 <el-form-item label="产品名称">
-                    <el-input style="width:300px" :maxlength="16" v-model="form.name" placeholder="请输入产品名称"></el-input>
+                    <el-input style="width:300px" :maxlength="46" v-model="form.name" placeholder="请输入产品名称"></el-input>
                 </el-form-item>
                 <el-form-item label="产品图片">
                     <el-upload class="img-uploader" :action="uploadImg"
@@ -317,7 +317,6 @@
                 if (!isCanSubmit) {
                     return;
                 }
-                console.log(this.selectedTagArr);
                 this.form.restrictions = Number(this.form.restrictions);
                 if (this.limit.notSupportCoupon) {
                     this.form.restrictions += 1;
