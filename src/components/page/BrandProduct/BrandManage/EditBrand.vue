@@ -58,9 +58,8 @@
                 if (!value) {
                     return callback(new Error('请输入品牌名称'));
                 } else {
-                    const reg = /^[A-Za-z0-9\u4e00-\u9fa5]{2,16}$/;
-                    if (!reg.test(value)) {
-                        callback(new Error('请输入2-16位由汉字字母数字组成的品牌名称'));
+                    if (value.length < 2 || value.length > 16) {
+                        callback(new Error('请输入2-16位的品牌名称'));
                     } else {
                         callback();
                     }

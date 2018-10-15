@@ -25,61 +25,135 @@
                 <div>
                     <div class="left">
                         <div class="info-area">
-                            <div class="title red"
-                                 v-if="status==1&&(!returnProduct.ecExpressNo)&&(!returnProduct.expressNo)">
-                                请等待买家退货还剩{{time}}
+                            <div class="title red" v-if="status==1">
+                                商家审核中
                             </div>
-                            <div class="title red"
-                                 v-if="status==1&&returnProduct.expressNo">买家已发货
+                            <div class="title red" v-if="status==2">
+                                请等待买家换货还剩{{time}}
                             </div>
-                            <div class="title red"
-                                 v-if="status==2">已同意换货
+                            <div class="title red" v-if="status==3">
+                                商家拒绝退货要求
                             </div>
-                            <div class="title red" v-if="status==4">换货完毕</div>
+                            <div class="title red" v-if="status==4">
+                                买家已发货
+                            </div>
+                            <div class="title red" v-if="status==5">
+                                已同意换货
+                            </div>
+                            <div class="title red" v-if="status==6">
+                                换货完毕
+                            </div>
+
+                            <div v-if="status==1">
+                                <div class="tips">提示：收到买家换货申请时，请审核换货理由</div>
+                                <div style="margin-top: 30px">
+                                    <el-button type="danger" @click="checkPass(1)">审核通过
+                                    </el-button>
+                                    <el-button type="primary" @click="checkPass(2)">审核驳回
+                                    </el-button>
+                                </div>
+                            </div>
+                            <div v-if="status==2">
+                                <div class="tips">提示：买家将在规定时间内，提交物流信息，不提交视买家自动放弃换货申请</div>
+                            </div>
+                            <div v-if="status==3">
+                                <div class="tips">商家不同意换货申请</div>
+                            </div>
                             <div v-if="status==4">
-                                <div class="tips">交易完成</div>
-                                <div class="tips" style="margin-top: 30px" v-if="returnProduct.expressNo">
-                                    <span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span
-                                    class="blue" @click="watchLogistics">查看物流</span></div>
-                                <div class="tips" style="margin-top: 10px" v-if="returnProduct.ecExpressNo">
-                                    <span>商家已寄出</span><span>物流公司：{{returnProduct.ecExpressName}}</span><span>物流单号：{{returnProduct.ecExpressNo}}</span><span
-                                    class="blue" @click="watchLogistics">查看物流</span></div>
-                            </div>
-                            <div v-else>
-                                <div v-if="!returnProduct.expressNo&&!returnProduct.ecExpressNo">
-                                    <div class="tips">提示：收到买家退货时，请验货后同意退款</div>
-                                    <div class="tips" style="margin-left: 40px">如果买家再超时结束前未退货，退货申请将自动关闭</div>
-                                </div>
-                                <div class="tips" style="margin-top: 10px" v-if="returnProduct.expressNo">
-                                    <span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span
-                                    class="blue" @click="watchLogistics">查看物流</span></div>
-                                <div class="tips" style="margin-top: 10px" v-if="returnProduct.ecExpressNo"><span>卖家已寄出</span><span>物流公司：{{returnProduct.ecExpressName}}</span><span>物流单号：{{returnProduct.ecExpressNo}}</span><span
-                                    class="blue" @click="watchLogistics">查看物流</span></div>
-                                <div style="margin-top: 30px"
-                                     v-if="status==1&&returnProduct.expressNo">
-                                    <el-button type="danger" @click="reGoodsClick(1)">已收货并同意换货</el-button>
-                                    <el-button type="primary" @click="reGoodsClick(2)">变更退货</el-button>
-                                    <!--<el-button type="warning" @click="reGoodsClick(3)">产品报损</el-button>-->
+                                <div class="tips">提示：收到买家换货时，请验货后同意换货</div>
+                                <div class="tips" style="margin-left: 40px">如果买家在超时结束前未换货，换货申请将自动关闭</div>
+                                <div v-if="returnProduct.expressNo">
+                                    <div class="tips" style="margin-top: 10px">
+                                        <span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span
+                                        class="blue" @click="watchLogistics">查看物流</span></div>
+                                    <div style="margin-top: 30px">
+                                        <el-button type="danger" @click="reGoodsClick(1)">已收货并确认换货
+                                        </el-button>
+                                        <el-button type="primary" @click="reGoodsClick(2)">变更退货
+                                        </el-button>
+                                    </div>
                                 </div>
                             </div>
-                            <el-button type="danger" style="margin-top:10px" @click="orderSendOut">云仓发货</el-button>
+                            <div v-if="status==5">
+                                    <div class="tips" style="margin-top: 10px">
+                                        <span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span
+                                        class="blue" @click="watchLogistics">查看物流</span></div>
+                            </div>
+                            <div v-if="status==6">
+                                <div>
+                                    <div class="tips">交易完成</div>
+                                </div>
+                                <div class="tips" style="margin-top: 30px">
+                                    <span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span
+                                    class="blue" @click="watchLogistics">查看物流</span></div>
+                                <div class="tips" style="margin-top: 10px"><span>卖家已寄出</span><span>物流公司：{{returnProduct.ecExpressName}}</span><span>物流单号：{{returnProduct.ecExpressNo}}</span><span
+                                    class="blue" @click="watchLogistics">查看物流</span></div>
+                            </div>
+
+                            <!--<div class="title red"-->
+                                 <!--v-if="status==1&&(!returnProduct.ecExpressNo)&&(!returnProduct.expressNo)">-->
+                                <!--请等待买家退货还剩{{time}}-->
+                            <!--</div>-->
+                            <!--<div class="title red"-->
+                                 <!--v-if="status==1&&returnProduct.expressNo">买家已发货-->
+                            <!--</div>-->
+                            <!--<div class="title red"-->
+                                 <!--v-if="status==2">已同意换货-->
+                            <!--</div>-->
+                            <!--<div class="title red" v-if="status==4">换货完毕</div>-->
+                            <!--<div v-if="status==4">-->
+                                <!--<div class="tips">交易完成</div>-->
+                                <!--<div class="tips" style="margin-top: 30px" v-if="returnProduct.expressNo">-->
+                                    <!--<span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span-->
+                                    <!--class="blue" @click="watchLogistics">查看物流</span></div>-->
+                                <!--<div class="tips" style="margin-top: 10px" v-if="returnProduct.ecExpressNo">-->
+                                    <!--<span>商家已寄出</span><span>物流公司：{{returnProduct.ecExpressName}}</span><span>物流单号：{{returnProduct.ecExpressNo}}</span><span-->
+                                    <!--class="blue" @click="watchLogistics">查看物流</span></div>-->
+                            <!--</div>-->
+                            <!--<div v-else>-->
+                                <!--<div v-if="!returnProduct.expressNo&&!returnProduct.ecExpressNo">-->
+                                    <!--<div class="tips">提示：收到买家退货时，请验货后同意退款</div>-->
+                                    <!--<div class="tips" style="margin-left: 40px">如果买家再超时结束前未退货，退货申请将自动关闭</div>-->
+                                <!--</div>-->
+                                <!--<div class="tips" style="margin-top: 10px" v-if="returnProduct.expressNo">-->
+                                    <!--<span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span-->
+                                    <!--class="blue" @click="watchLogistics">查看物流</span></div>-->
+                                <!--<div class="tips" style="margin-top: 10px" v-if="returnProduct.ecExpressNo"><span>卖家已寄出</span><span>物流公司：{{returnProduct.ecExpressName}}</span><span>物流单号：{{returnProduct.ecExpressNo}}</span><span-->
+                                    <!--class="blue" @click="watchLogistics">查看物流</span></div>-->
+                                <!--<div style="margin-top: 30px"-->
+                                     <!--v-if="status==1&&returnProduct.expressNo">-->
+                                    <!--<el-button type="danger" @click="reGoodsClick(1)">已收货并同意换货</el-button>-->
+                                    <!--<el-button type="primary" @click="reGoodsClick(2)">变更退货</el-button>-->
+                                    <!--&lt;!&ndash;<el-button type="warning" @click="reGoodsClick(3)">产品报损</el-button>&ndash;&gt;-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<el-button type="danger" style="margin-top:10px" @click="orderSendOut">云仓发货</el-button>-->
                         </div>
                         <div class="info-other">
+                            <div class="recode-item" v-if="returnProduct.sendTime">
+                                <span>{{returnProduct.adminName}}</span><span>商家已发货</span><span>{{returnProduct.sendTime|formatDateAll}}</span>
+                            </div>
+                            <div class="recode-item" v-if="returnProduct.sendTime">
+                                <span>云仓发货</span>
+                            </div>
+                            <div class="recode-item" v-if="status==5">
+                                <span>{{returnProduct.buyerName}}</span><span>同意换货</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
+                            </div>
+                            <div class="recode-item" v-if="returnProduct.expressNo">
+                                <span>{{returnProduct.buyerName}}</span><span>提交物流信息</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
+                            </div>
                             <div class="recode-item" v-if="returnProduct.agreeTime">
                                 <span>{{returnProduct.adminName}}</span>
-                                <template v-if="returnAmountsRecord.id">
-                                    <span>同意换货</span>
+                                <template v-if="status!=2&&status!=3">
+                                    <span>审核通过申请</span>
                                 </template>
-                                <template v-else>
-                                    <span>拒绝换货</span>
+                                <template v-if="status==3">
+                                    <span>审核驳回申请</span>
                                 </template>
                                 <span>{{returnProduct.agreeTime|formatDateAll}}</span>
                             </div>
-                            <div class="recode-item" v-if="returnProduct.sendTime">
-                                <span>{{returnProduct.adminName}}</span><span>云仓发货</span><span>{{returnProduct.sendTime|formatDateAll}}</span>
-                            </div>
-                            <div class="recode-item" v-if="returnProduct.applyTime">
-                                <span>{{returnProduct.nickname}}</span><span>发起了换货申请</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
+                            <div class="recode-item">
+                                <span>{{returnProduct.buyerName}}</span><span>发起了换货申请</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
                             </div>
                         </div>
                     </div>
@@ -92,16 +166,15 @@
                                     <div><p class="">{{returnProduct.productName}}</p></div>
                                     <div>{{returnProduct.spec}}</div>
                                 </div>
-                                <div class="item">买家：{{returnProduct.nickname}}</div>
+                                <div class="item">买家：{{returnProduct.buyerName}}</div>
                                 <div class="item">订单编号：{{returnProduct.orderNum}}</div>
                                 <div class="item">成交时间：{{returnProduct.payTime|formatDateAll}}</div>
                                 <div class="item">单价：¥{{returnProduct.price}}*{{returnProduct.num}}(数量)</div>
-                                <!--<div class="item">邮费：¥8.00</div>-->
+                                <div class="item">邮费：¥0.00</div>
                                 <div class="item">商品总价：¥{{returnProduct.price*returnProduct.num}}</div>
-                                <div class="item">原因：{{returnProduct.returnReason}}</div>
-                                <div class="item">要求：换货</div>
-                                <!--<div class="item">更换型号：32G，黑色，全网通 数量*1</div>-->
-                                <div class="item">买家说明：{{returnProduct.remark}}</div>
+                                <div class="item">更换型号：32G，黑色，全网通 数量*1</div>
+                                <div class="item">换货原因：{{returnProduct.returnReason}}</div>
+                                <div class="item">换货说明：{{returnProduct.remark}}</div>
                                 <div class="item">图片：</div>
                                 <div>
                                     <img v-for="item in imgList" :src="item.smallImg" alt="" class="img">
@@ -135,59 +208,95 @@
                 <div>
                     <div class="left">
                         <div class="info-area">
-                            <div class="title red" v-if="status==1&&!returnProduct.expressNo">
+                            <div class="title red" v-if="status==1">
+                                商家审核中
+                            </div>
+                            <div class="title red" v-if="status==2">
                                 请等待买家退货还剩{{time}}
                             </div>
-                            <div class="title red" v-if="status==1&&returnProduct.expressNo">买家已发货</div>
-                            <div class="title red" v-if="status!=1&&returnAmountsRecord.id">退款成功</div>
-                            <div class="title red" v-if="status!=1&&!returnAmountsRecord.id">拒绝退款</div>
+                            <div class="title red" v-if="status==3">
+                                商家拒绝退货要求
+                            </div>
+                            <div class="title red" v-if="status==4">
+                                买家已发货
+                            </div>
+                            <div class="title red" v-if="status==6&&returnProduct.orderReturnAmounts">
+                                退款完毕
+                            </div>
+                            <div class="title red" v-if="status==6&&!returnProduct.orderReturnAmounts">
+                                拒绝退款
+                            </div>
                             <div v-if="status==1">
+                                <div class="tips">提示：收到买家退货申请时，请审核退货理由</div>
+                                <div style="margin-top: 30px">
+                                    <el-button type="danger" @click="checkPass(1)">审核通过
+                                    </el-button>
+                                    <el-button type="primary" @click="checkPass(2)">审核驳回
+                                    </el-button>
+                                </div>
+                            </div>
+                            <div v-if="status==2">
                                 <div class="tips">提示：收到买家退货时，请验货后同意退款</div>
-                                <div class="tips" style="margin-left: 40px">如果买家再超时结束前未退货，退货申请将自动关闭</div>
+                                <div class="tips" style="margin-left: 40px">如果买家在超时结束前未退货，退货申请将自动关闭</div>
+                            </div>
+                            <div v-if="status==3">
+                                <div class="tips">商家不同意退货申请</div>
+                            </div>
+
+                            <div v-if="status==4">
+                                <div class="tips">提示：收到买家退货时，请验货后同意退款</div>
+                                <div class="tips" style="margin-left: 40px">如果买家在超时结束前未退货，退货申请将自动关闭</div>
                                 <div v-if="returnProduct.expressNo">
                                     <div class="tips" style="margin-top: 10px">
                                         <span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span
                                         class="blue" @click="watchLogistics">查看物流</span></div>
                                     <div style="margin-top: 30px">
-                                        <el-button type="danger" @click="refundClick(1)">同意退款
+                                        <el-button type="danger" @click="refundClick(1)">确认退款
                                         </el-button>
                                         <el-button type="primary" @click="refundClick(2)">拒绝退款
                                         </el-button>
-                                        <!--<el-button type="warning" @click="reGoodsClick(3)">产品报损</el-button>-->
                                     </div>
                                 </div>
                             </div>
-                            <div v-if="status!=1&&returnAmountsRecord.id">
+                            <div v-if="status==6&&returnProduct.orderReturnAmounts">
                                 <div class="tips">退款成功时间：{{returnAmountsRecord.refundTime|formatDateAll}}</div>
-                                <div class="tips">退款余额：￥{{returnAmountsRecord.actualBalance}}</div>
-                                <div class="tips">退款代币：{{returnAmountsRecord.actualTokenCoin}}代币</div>
-                                <div class="tips">退还积分：{{returnAmountsRecord.actualUserScore}}积分</div>
-                                <div class="tips">退还金额：￥{{returnAmountsRecord.actualAmounts}}</div>
-                                <div class="tips" style="margin-top: 10px">
-                                    <span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span
-                                    class="blue" @click="watchLogistics">查看物流</span></div>
-                            </div>
-                            <div v-if="status!=1">
-                                <div class="tips" v-if='returnProduct.refusal_reason'>拒绝理由：{{returnProduct.refusal_reason}}</div>
-                                <div class="tips" v-if="returnProduct.scrap_reason">
-                                    报损原因：{{returnProduct.scrap_reason}}
+                                <div class="tips">退款金额：￥{{returnAmountsRecord.actualBalance||0}}</div>
+                                <div class="tips">退款三方账户：¥{{returnAmountsRecord.actualAmounts||0}}</div>
+                                <div class="tips">退还1元现金券：{{returnAmountsRecord.actualTokenCoin||0}}张</div>
+                                <div class="reason-tips">产品报损</div>
+                                <div class="tips">
+                                {{returnProduct.scrapReason}}
                                 </div>
                             </div>
-
+                            <div v-if="status==6&&!returnProduct.orderReturnAmounts">
+                                <div class="reason-tips">拒绝理由</div>
+                                <div class="tips">
+                                    {{returnProduct.refuseReason}}
+                                </div>
+                            </div>
                         </div>
                         <div class="info-other">
+                            <div class="recode-item" v-if="status==6&&returnProduct.orderReturnAmounts">
+                                <span>{{returnProduct.buyerName}}</span><span>商家确认退款</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
+                            </div>
+                            <div class="recode-item" v-if="status==6&&!returnProduct.orderReturnAmounts">
+                                <span>{{returnProduct.buyerName}}</span><span>商家拒绝退款</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
+                            </div>
+                            <div class="recode-item" v-if="returnProduct.expressNo">
+                                <span>{{returnProduct.buyerName}}</span><span>提交物流信息</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
+                            </div>
                             <div class="recode-item" v-if="returnProduct.agreeTime">
                                 <span>{{returnProduct.adminName}}</span>
-                                <template v-if="returnAmountsRecord.id">
-                                    <span>同意退货退款</span>
+                                <template v-if="status!=1&&status!=3">
+                                    <span>审核通过申请</span>
                                 </template>
-                                <template v-else>
-                                    <span>拒绝退货退款</span>
+                                <template v-if="status==3">
+                                    <span>审核驳回申请</span>
                                 </template>
                                 <span>{{returnProduct.agreeTime|formatDateAll}}</span>
                             </div>
-                            <div class="recode-item" v-if="returnProduct.applyTime">
-                                <span>{{returnProduct.nickname}}</span><span>发起了退货退款申请</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
+                            <div class="recode-item">
+                                <span>{{returnProduct.buyerName}}</span><span>发起了退货退款申请</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
                             </div>
                         </div>
                     </div>
@@ -200,21 +309,14 @@
                                     <div><p class="">{{returnProduct.productName}}</p></div>
                                     <div>{{returnProduct.spec}}</div>
                                 </div>
-                                <div class="item">买家：{{returnProduct.nickname}}</div>
+                                <div class="item">买家：{{returnProduct.buyerName}}</div>
                                 <div class="item">订单编号：{{returnProduct.orderNum}}</div>
                                 <div class="item">成交时间：{{returnProduct.payTime|formatDateAll}}</div>
                                 <div class="item">单价：¥{{returnProduct.price}}*{{returnProduct.num}}(数量)</div>
-                                <!--<div class="item">邮费：¥8.00</div>-->
+                                <div class="item">邮费：¥8.00</div>
                                 <div class="item">商品总价：¥{{returnProduct.price*returnProduct.num}}</div>
-                                <div class="item">退款编号：{{returnProduct.refund_no}}</div>
-                                <!--<div class="item">退款金额：¥88.50</div>-->
-                                <div class="item">应退现金：¥{{returnProduct.returnAmounts}}</div>
-                                <div class="item">应退余额：¥{{returnProduct.returnBalance}}</div>
-                                <div class="item">应退代币：{{returnProduct.returnTokenCoin}}代币</div>
-                                <div class="item">应退积分：{{returnProduct.returnUserScore}}积分</div>
-                                <div class="item">原因：{{returnProduct.returnReason}}</div>
-                                <div class="item">要求：换货</div>
-                                <div class="item">买家说明：{{returnProduct.remark}}</div>
+                                <div class="item">退货原因：{{returnProduct.returnReason}}</div>
+                                <div class="item">退货说明：{{returnProduct.remark}}</div>
                                 <div class="item">图片：</div>
                                 <div>
                                     <img v-for="item in imgList" :src="item.smallImg" alt="" class="img">
@@ -246,8 +348,8 @@
                         <div class="info-area">
                             <div class="title red" v-if="status==1">请处理退款申请</div>
                             <template v-else>
-                                <div class="title red" v-if="returnAmountsRecord.id">退款完毕</div>
-                                <div class="title red" v-else>拒绝退款</div>
+                                <div class="title red" v-if="status==6">退款完毕</div>
+                                <div class="title red" v-if="status==3">拒绝退款</div>
                             </template>
                             <div v-if="status==1">
                                 <div class="tips">提示：如果未发货，请点击同意退款给买家</div>
@@ -259,32 +361,32 @@
                                     </el-button>
                                 </div>
                             </div>
-                            <template v-else>
-                                <div v-if="returnAmountsRecord.id">
-                                    <div class="tips">退款成功时间：{{returnAmountsRecord.refundTime|formatDateAll}}</div>
-                                    <div class="tips">退款余额：￥{{returnAmountsRecord.actualBalance}}</div>
-                                    <div class="tips">退款代币：{{returnAmountsRecord.actualTokenCoin}}代币</div>
-                                    <div class="tips">退还积分：{{returnAmountsRecord.actualUserScore}}积分</div>
-                                    <div class="tips">退还金额：￥{{returnAmountsRecord.actualAmounts}}</div>
-                                </div>
-                                <div v-else>
-                                    <div class="tips">拒绝理由：{{returnProduct.refusal_reason}}</div>
-                                </div>
-                            </template>
+                            <div v-if="status==6">
+                                <div class="tips">退款成功时间：{{returnAmountsRecord.refundTime|formatDateAll}}</div>
+                                <div class="tips">退款金额：￥{{returnAmountsRecord.actualBalance||0}}</div>
+                                <div class="tips">退款三方账户：¥{{returnAmountsRecord.actualAmounts||0}}</div>
+                                <div class="tips">退还1元现金券：{{returnAmountsRecord.actualTokenCoin||0}}张</div>
+                                <div class="reason-tips">产品报损</div>
+                                <div class="tips">
+                                    {{returnProduct.scrapReason}}
+                                </div></div>
+                            <div v-if="status==3">
+                                <div class="tips">拒绝理由：{{returnProduct.refusalReason}}</div>
+                            </div>
                         </div>
                         <div class="info-other">
-                            <div class="recode-item" v-if="returnProduct.agreeTime">
+                            <div class="recode-item" v-if="status>1">
                                 <span>{{returnProduct.adminName}}</span>
-                                <template v-if="returnAmountsRecord.id">
+                                <template v-if="status==6">
                                     <span>同意退款</span>
                                 </template>
-                                <template v-else>
+                                <template v-if="status==3">
                                     <span>拒绝退款</span>
                                 </template>
                                 <span>{{returnProduct.agreeTime|formatDateAll}}</span>
                             </div>
-                            <div class="recode-item" v-if="returnProduct.applyTime">
-                                <span>{{returnProduct.nickname}}</span><span>发起了退款申请</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
+                            <div class="recode-item">
+                                <span>{{returnProduct.buyerName}}</span><span>发起了退款申请</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
                             </div>
                         </div>
 
@@ -298,18 +400,14 @@
                                     <div><p class="">{{returnProduct.productName}}</p></div>
                                     <div>{{returnProduct.spec}}</div>
                                 </div>
-                                <div class="item">买家：{{returnProduct.nickname}}</div>
+                                <div class="item">买家：{{returnProduct.buyerName}}</div>
                                 <div class="item">订单编号：{{returnProduct.orderNum}}</div>
                                 <div class="item">成交时间：{{returnProduct.payTime|formatDateAll}}</div>
                                 <div class="item">单价：¥{{returnProduct.price}}*{{returnProduct.num}}(数量)</div>
-                                <!--<div class="item">邮费：¥8.00</div>-->
+                                <div class="item">邮费：¥8.00</div>
                                 <div class="item">商品总价：¥{{returnProduct.price*returnProduct.num}}</div>
-                                <div class="item">退款编号：{{returnProduct.refund_no}}</div>
-                                <!--<div class="item">退款金额：¥88.50</div>-->
-                                <div class="item">应退现金：¥{{returnProduct.returnAmounts}}</div>
-                                <div class="item">应退余额：¥{{returnProduct.returnBalance}}</div>
-                                <div class="item">应退代币：¥{{returnProduct.returnTokenCoin}}</div>
-                                <div class="item">应退积分：¥{{returnProduct.returnUserScore}}</div>
+                                <div class="item">退款编号：{{returnProduct.refundNo}}</div>
+                                <div class="item">退款金额：¥88.50</div>
                                 <div class="item">原因：{{returnProduct.returnReason}}</div>
                                 <div class="item">要求：仅退款</div>
                                 <div class="item">买家说明：{{returnProduct.remark}}</div>
@@ -367,56 +465,36 @@
         </el-dialog>
         <!--同意退款弹窗-->
         <el-dialog title="确认退款金额" class="agreeMask" :visible.sync="agreeMask">
-            <el-form v-model="form" label-width="110px">
-                <el-form-item label="买家支付方式：">{{payTime}}</el-form-item>
-                <div class="row">
-                    <el-form-item label="退还代币">
-                        <el-input v-model="form.tokenCoin" type="number" @blur="changeMoney('0',form.tokenCoin)"
-                                  auto-complete="off" placeholder="请输入退还代币"></el-input>
-                        <span class="mar-left5">枚</span>
-                    </el-form-item>
-                    <el-form-item label="退还余额">
-                        <el-input v-model="form.balance" type="number" @blur="changeMoney('1',form.balance)"
+            <el-form v-model="refundForm" label-width="110px">
+                 <el-form-item label="买家支付方式：">{{payTime}}</el-form-item>
+                 <el-form-item label="退还余额">
+                        <el-input v-model="refundForm.returnBalance" @blur="changeMoney(0,refundForm.returnBalance)"
                                   auto-complete="off" placeholder="请输入退还余额"></el-input>
                         <span class="mar-left5">元</span>
-                    </el-form-item>
-                </div>
-                <div class="row">
-                    <el-form-item label="退还积分">
-                        <el-input v-model="form.userScore" type="number" @blur="changeMoney('2',form.userScore)"
-                                  auto-complete="off" placeholder="请输入退还积分"></el-input>
-                        <span class="mar-left5">分</span>
-                    </el-form-item>
-                    <el-form-item label="退还金额">
-                        <el-input v-model="form.amounts" type="number" @blur="changeMoney('3',form.amounts)"
-                                  auto-complete="off" placeholder="请输入退还金额"></el-input>
+                 </el-form-item>
+                 <el-form-item label="三方账户">
+                        <el-input auto-complete="off" v-model="refundForm.returnAmounts" placeholder="0" @blur="changeMoney(1,refundForm.returnAmounts)"></el-input>
                         <span class="mar-left5">元</span>
-                    </el-form-item>
-                </div>
-                <div class="row">
-                    <el-form-item label="支付手续费">
-                        <el-input readonly auto-complete="off" placeholder="0"></el-input>
-                        <span class="mar-left5">元</span>
-                    </el-form-item>
-                    <el-form-item label="退款手续费">
-                        <el-input readonly auto-complete="off" placeholder="0"></el-input>
-                        <span class="mar-left5">元</span>
-                    </el-form-item>
-                </div>
-                <!--<el-form-item label="退款账户：">支付宝 交易号 6212***********1203</el-form-item>-->
-                <el-form-item label="报损原因">
-                    <el-select v-model="form.badReason" @change="chooseBadReason" placeholder="请选择报损原因">
+                 </el-form-item>
+                 <el-form-item label="退还1元现金券">
+                        <el-input auto-complete="off" v-model="refundForm.returnTokenCoin" placeholder="0" @blur="changeMoney(2,refundForm.returnTokenCoin)"></el-input>
+                        <span class="mar-left5">张</span>
+                 </el-form-item>
+                <el-form-item label="支付交易号">{{refundForm.outTradeNo}}</el-form-item>
+                <el-form-item style="margin-left: -84px">
+                    <el-checkbox v-model="hadScrap">产品报损</el-checkbox>
+                    <el-select v-model="refundForm.badReason" :disabled="!hadScrap" @change="chooseBadReason" placeholder="请选择报损原因">
                         <el-option label="请选择报损原因" value=""></el-option>
-                        <el-option v-for="(v,k) in reasonList" :key="k" :label="v.dValue" :value="v.dValue"></el-option>
+                        <el-option v-for="(v,k) in reasonList" :key="k" :label="v.value" :value="v.value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="报损说明">
-                    <el-input type="textarea" v-model="form.scrapReason" auto-complete="off"
+                    <el-input type="textarea" :disabled="!hadScrap" v-model="refundForm.scrapReason" auto-complete="off"
                               placeholder="请输入说明文字"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="refundSubmit(1,'form')">确认退款金额</el-button>
+                <el-button type="primary" @click="refundSubmit(1,'refundForm')">确认退款金额</el-button>
             </div>
         </el-dialog>
         <!--拒绝退款弹窗-->
@@ -432,16 +510,16 @@
                     <el-input type="textarea" v-model="form.refusalReason" auto-complete="off"
                               placeholder="请输入说明文字"></el-input>
                 </el-form-item>
-                <el-form-item label="报损原因">
-                    <el-select v-model="form.badReason" @change="chooseBadReason" placeholder="请选择报损原因">
-                        <el-option label="请选择报损原因" value=""></el-option>
-                        <el-option v-for="(v,k) in reasonList" :key="k" :label="v.dValue" :value="v.dValue"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="报损说明">
-                    <el-input type="textarea" v-model="form.scrapReason" auto-complete="off"
-                              placeholder="请输入说明文字"></el-input>
-                </el-form-item>
+                <!--<el-form-item label="报损原因">-->
+                    <!--<el-select v-model="form.badReason" @change="chooseBadReason" placeholder="请选择报损原因">-->
+                        <!--<el-option label="请选择报损原因" value=""></el-option>-->
+                        <!--<el-option v-for="(v,k) in reasonList" :key="k" :label="v.dValue" :value="v.dValue"></el-option>-->
+                    <!--</el-select>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="报损说明">-->
+                    <!--<el-input type="textarea" v-model="form.scrapReason" auto-complete="off"-->
+                              <!--placeholder="请输入说明文字"></el-input>-->
+                <!--</el-form-item>-->
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="refundSubmit(2,'form')">确认提交</el-button>
@@ -468,7 +546,7 @@
             return {
                 nav: ['订单管理', '申请操作'],
                 orderId: '', // 订单id
-                productId: '',
+                returnProductId: '',
                 opr: '', // 3换货2退货1仅退款
                 boolFirst: true,
                 boolSec: false,
@@ -496,6 +574,15 @@
                     reason: '',
                     badReason: ''
                 },
+                refundForm: {
+                    returnBalance: '',
+                    returnAmounts: '',
+                    returnTokenCoin: '',
+                    outTradeNo: '',
+                    badReason: '',
+                    scrapReason: ''
+                },
+                hadScrap: false, // 是否选择产品报损
                 // 详情
                 returnProduct: {},
                 // 退款类型
@@ -510,93 +597,136 @@
         },
 
         activated() {
-            this.productId = this.$route.query.afterSaleOprId || sessionStorage.getItem('afterSaleOprId');
+            this.returnProductId = this.$route.query.afterSaleOprId || sessionStorage.getItem('afterSaleOprId');
             this.getDictionaryData();
             this.getInfo();
         },
         methods: {
             // 获取详情
             getInfo() {
-                request.lookDetail({ returnProductId: this.productId }).then(res => {
+                request.lookDetail({ returnProductId: this.returnProductId }).then(res => {
                     this.returnProduct = res.data;
                     this.imgList = res.data.imgList;
-                    if (res.data.returnAmountsRecord) {
-                        this.returnAmountsRecord = res.data.returnAmountsRecord;
-                        this.orderId = res.data.returnAmountsRecord.orderId;
+                    if (res.data.orderReturnAmounts) {
+                        this.returnAmountsRecord = res.data.orderReturnAmounts;
+                        this.orderId = res.data.orderReturnAmounts.orderId;
                     }
                     this.opr = this.returnProduct.type;
                     this.status = this.returnProduct.status;
                     this.id = this.returnProduct.id;
-                    let tmpType = '';
-                    if ((res.data.payType & 1) != 0) {
-                        tmpType += `平台支付`;
-                    }
-                    if ((res.data.payType & 2) != 0) {
-                        tmpType += `+微信小程序支付`;
-                    }
-                    if ((res.data.payType & 4) != 0) {
-                        tmpType += `+APP支付`;
-                    }
-                    if ((res.data.payType & 8) != 0) {
-                        tmpType += `+支付宝支付`;
-                    }
-                    if ((res.data.payType & 16) != 0) {
-                        tmpType += `+银联支付`;
-                    }
-                    this.payTime = tmpType;
-                    this.getProgressStu(this.status, this.returnProduct.expressNo, this.returnProduct.ecExpressNo, this.opr);
+                    // let tmpType = '';
+                    // if ((res.data.payType & 1) != 0) {
+                    //     tmpType += `平台支付`;
+                    // }
+                    // if ((res.data.payType & 2) != 0) {
+                    //     tmpType += `+微信小程序支付`;
+                    // }
+                    // if ((res.data.payType & 4) != 0) {
+                    //     tmpType += `+APP支付`;
+                    // }
+                    // if ((res.data.payType & 8) != 0) {
+                    //     tmpType += `+支付宝支付`;
+                    // }
+                    // if ((res.data.payType & 16) != 0) {
+                    //     tmpType += `+银联支付`;
+                    // }
+                    // this.payTime = tmpType;
+                    // this.getProgressStu(this.status, this.opr);
+                    this.getProgressStu(this.status);
                     if (this.returnProduct.outTime) {
                         this.getDistanceTime(this.returnProduct.outTime);
                     }
-                    this.value.push(this.returnProduct.returnTokenCoin, this.returnProduct.returnBalance, this.returnProduct.returnUserScore, this.returnProduct.returnAmounts);
                 }).catch(err => {
                     console.log(err);
                 });
             },
             changeMoney(num, pre) {
                 if (pre > this.value[num]) {
-                    if (num == 0) {
-                        this.$message.warning('超过最大可退还代币值!');
-                        this.form.tokenCoin = this.value[0];
-                    } else if (num == 1) {
+                    if (num === 0) {
                         this.$message.warning('超过最大可退还余额!');
-                        this.form.balance = this.value[1];
-                    } else if (num == 2) {
-                        this.$message.warning('超过最大可退还积分!');
-                        this.form.userScore = this.value[2];
+                        this.refundForm.returnBalance = this.value[0];
+                    } else if (num === 1) {
+                        this.$message.warning('超过最大可退还三方账户金额!');
+                        this.refundForm.returnAmounts = this.value[1];
                     } else {
-                        this.$message.warning('超过最大可退还金额!');
-                        this.form.amounts = this.value[3];
+                        this.$message.warning('超过最大可退还退还1元现金券!');
+                        this.refundForm.returnTokenCoin = this.value[2];
                     }
                 }
             },
             // 判断进度条状态,s状态  num1买家退货单号  num2卖家单号
-            getProgressStu(s, num1, num2, type) {
-                if (s == 1) {
-                    this.boolFirst = true;
-                    this.boolSec = true;
-                    if (num1) {
-                        this.boolThr = true;
-                    } else {
+            // getProgressStu(status, type) {
+            // if (status == 1) {
+            //     this.boolFirst = true;
+            //     this.boolSec = true;
+            //     if (num1) {
+            //         this.boolThr = true;
+            //     } else {
+            //         this.boolThr = false;
+            //     }
+            //     if (num2) {
+            //         this.boolFor = true;
+            //         this.boolFif = true;
+            //     } else {
+            //         this.boolFor = false;
+            //         this.boolFif = false;
+            //     }
+            // } else {
+            //     this.boolFirst = true;
+            //     this.boolSec = true;
+            //     this.boolThr = true;
+            //     this.boolFor = true;
+            //     if (type == 1) {
+            //         if (s > 3) {
+            //             this.boolFif = true;
+            //         }
+            //     }
+            // }
+            // },
+            getProgressStu(status) {
+                switch (status) {
+                    case 1:
+                        this.boolFirst = true;
+                        this.boolSec = true;
                         this.boolThr = false;
-                    }
-                    if (num2) {
-                        this.boolFor = true;
-                        this.boolFif = true;
-                    } else {
                         this.boolFor = false;
                         this.boolFif = false;
-                    }
-                } else {
-                    this.boolFirst = true;
-                    this.boolSec = true;
-                    this.boolThr = true;
-                    this.boolFor = true;
-                    if (type == 1) {
-                        if (s > 3) {
-                            this.boolFif = true;
-                        }
-                    }
+                        break;
+                    case 2:
+                        this.boolFirst = true;
+                        this.boolSec = true;
+                        this.boolThr = true;
+                        this.boolFor = false;
+                        this.boolFif = false;
+                        break;
+                    case 3:
+                        this.boolFirst = true;
+                        this.boolSec = true;
+                        this.boolThr = true;
+                        this.boolFor = true;
+                        this.boolFif = true;
+                        break;
+                    case 4:
+                        this.boolFirst = true;
+                        this.boolSec = true;
+                        this.boolThr = true;
+                        this.boolFor = false;
+                        this.boolFif = false;
+                        break;
+                    case 5:
+                        this.boolFirst = true;
+                        this.boolSec = true;
+                        this.boolThr = true;
+                        this.boolFor = false;
+                        this.boolFif = false;
+                        break;
+                    case 6:
+                        this.boolFirst = true;
+                        this.boolSec = true;
+                        this.boolThr = true;
+                        this.boolFor = true;
+                        this.boolFif = true;
+                        break;
                 }
             },
             // 退换货,产品报损按钮
@@ -617,25 +747,31 @@
                     if (res.data.code == 200) {
                         this.getInfo();
                     } else {
-                        this.$message.warning(res.data.msg);
+                        this.$message.warning(res.msg);
                     }
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            // 获取退款金额详情
+            getMoney() {
+                const data = {
+                    returnProductId: this.returnProductId
+                };
+                request.makeSureRefund(data).then(res => {
+                    this.refundForm = res.data;
+                    this.value.push(this.refundForm.returnBalance, this.refundForm.returnAmounts, this.refundForm.returnTokenCoin,);
                 }).catch(err => {
                     console.log(err);
                 });
             },
             // 是否同意退款按钮
             refundClick(num) {
-                const that = this;
-                // this.form.badReason = '';
-                // this.form.scrapReason = '';
                 if (num == 1) { // 同意
-                    that.agreeMask = true;
-                    this.form.tokenCoin = this.returnProduct.returnTokenCoin;
-                    this.form.balance = this.returnProduct.returnBalance;
-                    this.form.amounts = this.returnProduct.returnAmounts;
-                    this.form.userScore = this.returnProduct.returnUserScore;
+                    this.agreeMask = true;
+                    this.getMoney();
                 } else { // 拒绝
-                    that.rejectMask = true;
+                    this.rejectMask = true;
                 }
             },
             // 已收货并同意换货提交
@@ -644,7 +780,7 @@
                 const data = {
                     returnProductId: this.id,
                     scrapReason: this[form].scrapReason,
-                    hadScrap: this.form.badReason ? 1 : 2
+                    hadScrap: this.hadScrap ? 1 : 2
                 };
                 if (this.form.badReason) {
                     data.hadScrap = 1;
@@ -658,13 +794,12 @@
             },
             // 是否同意退款提交
             refundSubmit(num, form) {
-                const that = this;
                 const data = this[form];
-                data.hadScrap = this[form].badReason ? 1 : 2;
-                data.returnProductId = this.id;
+                data.hadScrap = this[form].hadScrap ? 1 : 2;
+                data.returnProductId = this.returnProductId;
                 let url;
                 if (num == 1) {
-                    url = 'makeSureRefund';
+                    url = 'refundAmounts';
                 } else {
                     if (!data.reason) {
                         this.$message.warning('请选择拒绝原因!');
@@ -673,10 +808,10 @@
                     url = 'refuse';
                 }
                 request[url](data).then(res => {
-                    that.$message.success(res.data.msg);
-                    that.agreeMask = false;
-                    that.rejectMask = false;
-                    that.getInfo();
+                    this.$message.success(res.msg);
+                    this.agreeMask = false;
+                    this.rejectMask = false;
+                    this.getInfo();
                 }).catch(err => {
                     console.log(err);
                 });
@@ -687,7 +822,7 @@
             },
             // 选择报损原因
             chooseBadReason() {
-                this.form.scrapReason = this.form.badReason;
+                this.refundForm.scrapReason = this.refundForm.badReason;
             },
             // //查看物流
             // watchLogistics() {
@@ -739,7 +874,7 @@
             // 云仓发货
             orderSendOut() {
                 const data = {
-                    returnProductId: this.id,
+                    returnProductId: this.returnProductId,
                     ecExpressName: '中通快递',
                     ecExpressNo: '221286279559'
                 };
@@ -754,6 +889,24 @@
             async getDictionaryData() {
                 await this.queryDictonary('CPBS');
                 this.reasonList = this.tmpAxiosData;
+            },
+            // 审核通过。拒绝
+            checkPass(num) {
+                let url = '';
+                if (num == 1) {
+                    url = 'agreeApply';
+                    const data = {
+                        returnProductId: this.returnProductId
+                    };
+                    request[url](data).then(res => {
+                        this.$message.success(res.msg);
+                        this.getInfo();
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                } else {
+                    this.rejectMask = true;
+                }
             }
         }
     };
@@ -963,7 +1116,7 @@
         }
         .agreeMask {
             .el-dialog {
-                width: 710px;
+                width: 530px;
             }
             .el-dialog .el-input__inner {
                 width: 180px;
@@ -978,9 +1131,6 @@
             .el-dialog__footer {
                 text-align: center;
             }
-            .el-form-item--small.el-form-item {
-                display: inline-block;
-            }
             .mar-left5 {
                 margin-left: 5px;
             }
@@ -988,6 +1138,10 @@
         .tips-area {
             margin: -20px 0 10px 30px;
             color: #ff6868;
+        }
+        .reason-tips{
+            margin-top: 20px;
+            font-size: 20px;
         }
     }
 </style>

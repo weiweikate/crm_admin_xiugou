@@ -160,16 +160,7 @@
             <p>优惠券说明：优惠券仅限于商品购物使用，只有满足消费100元才可以使用。</p>
             <p>发布人：杨小猛</p>
         </el-dialog>
-        <!-- 更换提货仓 -->
-        <el-dialog title="更换提货仓" width="30%" :visible.sync="isShowWarehouse">
-            <div class="warehouse-wrap">
-                <div v-for="(v,k) in warehouseArr" @click="changeWarehouse(v)" :key="k"
-                     :class="{'warehouse-box':true,'warehouse-box-active':v.active}">
-                    <!-- <p class="warehouse-box-tit">{{v.title}}</p> -->
-                    <p class="warehouse-box-con">{{(v.province==undefined?'':v.province) +v.city+v.area+v.address}}</p>
-                </div>
-            </div>
-        </el-dialog>
+
     </div>
 </template>
 
@@ -482,29 +473,9 @@
                     console.log(err);
                 });
             },
-            // 更换提货仓
-            changeWarehouse(row) {
-                this.warehouseArr.forEach((v, k) => {
-                    v.active = false;
-                });
-                row.active = true;
-                const data = {
-                    orderId: this.orderId,
-                    storeHouseId: row.id
-                };
-                request.changeStoreHouse(data).then(res => {
-                    this.$message.success(res.msg);
-                    this.orderMsg.storehouseName =
-                        row.province == undefined
-                            ? ''
-                            : row.province + row.city + row.area + row.address;
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
             // 云仓发货
             orderSendOut() {
-                request.orderSendOut({ orderId: this.orderId }).then(res => {
+                request.orderSendOut({ expressName: '申通', 'expressNo': 28123152342345, id: this.orderId }).then(res => {
                     this.$message.success(res.msg);
                     this.getInfo();
                 }).catch(err => {

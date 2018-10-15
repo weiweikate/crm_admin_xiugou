@@ -348,7 +348,7 @@
                                 nextPirce: v.nextPirce
                             };
                             const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
-                            if (v.provinceCode == '' || v.startUnit == '' || v.startPrice == '' || v.nextUnit == '' || v.nextPirce == '') {
+                            if (!v.freightTemplateInfoDetailList.length || v.startUnit === '' || v.startPrice === '' || v.nextUnit === '' || v.nextPirce === '') {
                                 flag = false;
                             } else {
                                 if (reg.test(v.startUnit) && reg.test(v.startPrice) && reg.test(v.nextUnit) && reg.test(v.nextPirce)) {
@@ -480,7 +480,7 @@
                 const that = this;
                 const data = that.tableData[this.rows - 1];
                 const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
-                if (data.includeAreaName == '' || data.startUnit == '' || data.startPrice == '' || data.nextUnit == '' || data.nextPirce == '') {
+                if (data.includeAreaName === '' || data.startUnit === '' || data.startPrice === '' || data.nextUnit === '' || data.nextPirce === '') {
                     return false;
                 } else {
                     if (reg.test(data.startUnit) && reg.test(data.startPrice) && reg.test(data.nextUnit) && reg.test(data.nextPirce)) {

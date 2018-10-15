@@ -394,7 +394,7 @@
                             data.useConditions = 0;
                         }
                         data.id = this.id;
-                        const reg = /^(0|[1-9]\d){1,5}$/;// 1-5位数字
+                        const reg = /^[0-9]{1,5}$/;// 1-5位数字
                         if (!this.isDay) {
                             data.effectiveDays = this.day;
                             if (!data.effectiveDays) {

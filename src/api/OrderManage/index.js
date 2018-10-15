@@ -15,7 +15,7 @@ export const getGiftBagOrderDetail = '/admin/gbGiftBagOrder/getGiftBagOrderDetai
 // 云仓发货
 // export const orderSendOut = '/admin/order/orderSendOut';
 // 星星标记和备注
-export const orderSign = '/admin/order/orderSign';
+// export const orderSign = '/admin/order/orderSign';
 
 // 待提货
 // 待自提订单
@@ -81,6 +81,7 @@ export const queryOrderPageList = '/order/queryPage';
 export const orderDetail = '/order/lookDetail';
 // 订单发货
 export const orderSendOut = '/order/sendOut';
+export const orderSign = '/order/sign';
 
 // 售后
 // 同意申请（第一次同意）
