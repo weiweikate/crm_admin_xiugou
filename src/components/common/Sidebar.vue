@@ -165,11 +165,11 @@
                             {
                                 index: 'orderList',
                                 title: '订单管理'
+                            },
+                            {
+                                index: 'giftOrderList',
+                                title: '礼包订单'
                             }
-                            // {
-                            //     index: "giftOrderList",
-                            //     title: "礼包订单"
-                            // }
                         ]
                     },
                     {

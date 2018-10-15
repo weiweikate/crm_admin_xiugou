@@ -264,6 +264,9 @@ export const getUserLevelList = ['/user/getLevelList', { methods: 'get' }]; // �
 export const queryAdminUserList = '/adminUser/queryAdminUserList'; // 查询会员层级
 export const loginUpdateCheckCode = '/adminUser/verifySmsCode'; // 首次登录修改密码验证码校验
 export const loginUpdatePassword = '/adminUser/firstLoginUpdate'; // 首次登录修改密码
+export const queryMessagePage = '/notice/queryMessagePage'; // 获取消息列表
+export const queryNewMessageCount = ['/notice/queryNewMessageCount', { methods: 'get' }]; // 获取未读消息数量
+export const readMessages = ['/notice/readMessages', { methods: 'get' }]; // 批量标记已读信息
 // 获取数据字典列表
 export const queryDictionaryDetailsType = ['/config/dictionary/queryDictionaryTypeList', { methods: 'get' }];
 // 问题反馈

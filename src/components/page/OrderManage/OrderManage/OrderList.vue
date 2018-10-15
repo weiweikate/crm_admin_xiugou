@@ -78,7 +78,7 @@
                 <el-tab-pane label="退款中" name="toBeStay">
                     <v-orderlist ref="allOrder"></v-orderlist>
                 </el-tab-pane>
-                <el-tab-pane label="已完成" name="5">0
+                <el-tab-pane label="已完成" name="5">
                     <v-orderlist ref="5"></v-orderlist>
                 </el-tab-pane>
                 <el-tab-pane label="已关闭" name="closed">
@@ -93,7 +93,6 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
-import request from '@/http/http.js';
 import vOrderlist from './_orderList/_orderList';
 
 export default {

@@ -56,9 +56,21 @@
                    {{scope.row.type == 1?'普通礼包':'升级礼包'}}
                </template>
            </el-table-column>
-           <el-table-column prop="prodcutNum" label="产品数" align="center" min-width="50"></el-table-column>
-           <el-table-column prop="stock" label="库存" align="center" min-width="50"></el-table-column>
-          <el-table-column prop="salesNum" label="销量" align="center" min-width="50"></el-table-column>
+           <el-table-column prop="prodcutNum" label="产品数" align="center" min-width="50">
+               <template slot-scope="scope">
+                   {{scope.row.prodcutNum || 0}}
+               </template>
+           </el-table-column>
+           <el-table-column prop="stock" label="库存" align="center" min-width="50">
+               <template slot-scope="scope">
+                   {{scope.row.stock || 0}}
+               </template>
+           </el-table-column>
+          <el-table-column prop="salesNum" label="销量" align="center" min-width="50">
+              <template slot-scope="scope">
+                  {{scope.row.salesNum || 0}}
+              </template>
+          </el-table-column>
           <el-table-column prop="levelList" label="可购买层级" align="center" min-width="100">
             <template slot-scope="scope">
               {{scope.row.level.join(',')}}
@@ -125,7 +137,6 @@
 </template>
 
 <script>
-import * as api from '@/api/BrandProduct/GiftMange/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http';
 
@@ -157,7 +168,7 @@ export default {
     },
     methods: {
         //   提交表单
-        getList(val) {
+        getList: function(val) {
             const data = {};
             data.name = this.form.name;
             data.packageCode = this.form.prodCode;
@@ -231,10 +242,10 @@ export default {
         },
         // 价格库存管理
         priceOfInventory(row) {
-            sessionStorage.setItem('priceOfInventoryId', JSON.stringify({id:row.id,stockType:row.stockType}));
+            sessionStorage.setItem('priceOfInventoryId', JSON.stringify({ id: row.id, stockType: row.stockType }));
             this.$router.push({
                 name: 'priceOfInventory',
-                query: { priceOfInventoryId: row.id,stockType: row.stockType }
+                query: { priceOfInventoryId: row.id, stockType: row.stockType }
             });
         },
         // 优惠券管理
@@ -247,7 +258,7 @@ export default {
         },
         // 添加库存管理
         expMange(row) {
-            sessionStorage.setItem('addStockId', JSON.stringify({id:row.id, name: row.name}));
+            sessionStorage.setItem('addStockId', JSON.stringify({ id: row.id, name: row.name }));
             this.$router.push({
                 name: 'addStock',
                 query: { addStockId: row.id, name: row.name }

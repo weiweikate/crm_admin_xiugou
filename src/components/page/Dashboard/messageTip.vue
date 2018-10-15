@@ -1,21 +1,21 @@
 <template>
-    <div v-show="show" class="message-tip" @click="closeMask">
+    <div class="message-tip" @click="closeMask" v-loading="loading">
         <div class="message-wrap">
             <div class="message-content" @click.stop="" v-for="(v,k) in messageArr" :key="k">
-                <el-tag class="msg-tag">{{v.read}}</el-tag>
-                <div class="msg-title">{{`【${v.type}】`}}</div>
+                <el-tag type="danger" class="msg-tag">未读</el-tag>
+                <div class="msg-title">{{`【${v.title}】`}}</div>
                 <div class="msg">{{v.content}}</div>
                 <div class="arrow-right">
                     >
                 </div>
                 <div class="operate">
-                    <span>{{v.status}}</span>
+                    <span>{{v.buttonName}}</span>
                 </div><br/>
                 <div class="time">
-                    {{v.time}}
+                    {{v.createdTime | formatDateAll}}
                 </div>
             </div>
-            <div class="show-more">
+            <div class="show-more" @click="goPageAllMsg">
                 查看更多
             </div>
         </div>
@@ -23,30 +23,41 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                messageArr: [
-                    {status: '11212121', read: '1', type: '1', content: '有1个商品库存已低于100，请即时补充库存有1个商品库存已低于100，请即时补充库存', time: '123456789'},
-                    {status: '1', read: '1', type: '1', content: '有1个商品库存已低于100，请即时补充库存有1个商品库存已低于100，请即时补充库存', time: '123456789'}
-                ],
-                show: true
-            };
+import request from '@/http/http.js';
+export default {
+    data() {
+        return {
+            messageArr: [],
+            loading: false
+        };
+    },
+    methods: {
+        // 关闭弹出层
+        closeMask() {
+            this.$parent.showMsg = false;
         },
-        activated() {
-
+        // 全部消息
+        getAllMsg() {
+            this.loading = true;
+            request.queryMessagePage({ read: false, page: 1, pageSize: 5 }).then(res => {
+                this.loading = false;
+                this.messageArr = res.data.data;
+            }).catch(err => {
+                this.loading = false;
+                console.log(err);
+            });
         },
-        methods: {
-            // 关闭遮罩层
-            closeMask() {
-                this.show = false;
-            }
+        //  跳转
+        goPageAllMsg() {
+            this.$router.push('message');
         }
-    };
+    }
+};
 </script>
 
 <style lang="less" scoped>
 .message-tip{
+    z-index: 999999;
     position: fixed;
     top: 70px;
     right: 0;
@@ -108,6 +119,7 @@
             text-align: center;
             margin-top: 10px;
             cursor: pointer;
+            color: black;
         }
     }
 }

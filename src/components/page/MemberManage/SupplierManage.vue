@@ -223,7 +223,6 @@
                 }
                 that.btnLoading = true;
                 request.stopProductSupplier(data).then(res => {
-                    console.log(res);
                     that.getList(that.page.currentPage);
                     that.btnLoading = false;
                     that.tipsMask = false;

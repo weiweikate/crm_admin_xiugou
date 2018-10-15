@@ -63,7 +63,7 @@
                         </el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="shopInfo"
+                        <el-button type="primary" @click="shopMsg"
                                    style="margin-left: 0">店铺信息
                         </el-button>
                     </div>
@@ -102,8 +102,8 @@
                         <h3>拼店信息</h3>
                     </div>
                     <div class="item-row">
-                        <div class="item" v-if="dealer.roleType == 1">参与店铺：{{dealer.storeName}}</div>
-                        <div class="item" v-if="dealer.roleType == 0">开设店铺：{{dealer.storeName}}</div>
+                        <div class="item" style="cursor: pointer;color: #20a0ff" @click="shopMsg" v-if="dealer.roleType == 1">参与店铺：{{dealer.storeName}}</div>
+                        <div class="item" style="cursor: pointer;color: #20a0ff" @click="shopMsg" v-if="dealer.roleType == 0">开设店铺：{{dealer.storeName}}</div>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -151,7 +151,6 @@
     import editBasic from './editBasicInf';
     import editAuthor from './editAuthorInf';
     import icon from '@/components/common/ico.vue';
-    import * as api from '@/api/api';
     import request from '@/http/http';
 
     export default {
@@ -239,6 +238,11 @@
                 sessionStorage.setItem('status', 1);
                 this.$router.push({ name: 'shopInfo', query: { 'shopInfoId': this.storeId, status: 1 }});
             },
+            // 跳转到店铺信息
+            shopMsg() {
+                sessionStorage.setItem('showMsg', this.storeId);
+                this.$router.push({ name: 'showMsg', query: { 'showMsg': this.storeId }});
+            },
             // 实名认证页面
             realName() {
                 sessionStorage.setItem('memberId', this.id);
@@ -299,7 +303,7 @@
 
     .item {
         width: 50%;
-        float: left
+        float: left;
     }
 
     .color-blue {
