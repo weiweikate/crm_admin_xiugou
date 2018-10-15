@@ -75,6 +75,9 @@
                                 </div>
                             </div>
                             <div v-if="status==5">
+                                <div class="recode-item">
+                                <el-button @click="orderSendOut">云仓发货</el-button>
+                                </div>
                                     <div class="tips" style="margin-top: 10px">
                                         <span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span
                                         class="blue" @click="watchLogistics">查看物流</span></div>
@@ -130,24 +133,22 @@
                             <!--<el-button type="danger" style="margin-top:10px" @click="orderSendOut">云仓发货</el-button>-->
                         </div>
                         <div class="info-other">
-                            <div class="recode-item" v-if="returnProduct.sendTime">
-                                <span>{{returnProduct.adminName}}</span><span>商家已发货</span><span>{{returnProduct.sendTime|formatDateAll}}</span>
+                            <div class="recode-item" v-if="status==6">
+                                <span>{{returnProduct.adminName}}</span><span>商家已发货</span><span>{{returnProduct.backsendTime|formatDateAll}}</span>
                             </div>
-                            <div class="recode-item" v-if="returnProduct.sendTime">
-                                <span>云仓发货</span>
-                            </div>
+
                             <div class="recode-item" v-if="status==5">
-                                <span>{{returnProduct.buyerName}}</span><span>同意换货</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
+                                <span>{{returnProduct.adminName}}</span><span>同意换货</span><span>{{returnProduct.backsendTime|formatDateAll}}</span>
                             </div>
                             <div class="recode-item" v-if="returnProduct.expressNo">
-                                <span>{{returnProduct.buyerName}}</span><span>提交物流信息</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
+                                <span>{{returnProduct.adminName}}</span><span>提交物流信息</span><span>{{returnProduct.sendTime|formatDateAll}}</span>
                             </div>
-                            <div class="recode-item" v-if="returnProduct.agreeTime">
+                            <div class="recode-item">
                                 <span>{{returnProduct.adminName}}</span>
-                                <template v-if="status!=2&&status!=3">
+                                <template v-if="status!=1&&returnProduct.agreeTime">
                                     <span>审核通过申请</span>
                                 </template>
-                                <template v-if="status==3">
+                                <template v-if="status==3&&!returnProduct.agreeTime">
                                     <span>审核驳回申请</span>
                                 </template>
                                 <span>{{returnProduct.agreeTime|formatDateAll}}</span>
@@ -172,7 +173,7 @@
                                 <div class="item">单价：¥{{returnProduct.price}}*{{returnProduct.num}}(数量)</div>
                                 <div class="item">邮费：¥0.00</div>
                                 <div class="item">商品总价：¥{{returnProduct.price*returnProduct.num}}</div>
-                                <div class="item">更换型号：32G，黑色，全网通 数量*1</div>
+                                <div class="item">更换型号：{{returnProduct.exchangeSpec}} 数量*{{returnProduct.num}}</div>
                                 <div class="item">换货原因：{{returnProduct.returnReason}}</div>
                                 <div class="item">换货说明：{{returnProduct.remark}}</div>
                                 <div class="item">图片：</div>
@@ -214,7 +215,7 @@
                             <div class="title red" v-if="status==2">
                                 请等待买家退货还剩{{time}}
                             </div>
-                            <div class="title red" v-if="status==3">
+                            <div class="title red" v-if="status==3&&!returnProduct.agreeTime">
                                 商家拒绝退货要求
                             </div>
                             <div class="title red" v-if="status==4">
@@ -223,7 +224,7 @@
                             <div class="title red" v-if="status==6&&returnProduct.orderReturnAmounts">
                                 退款完毕
                             </div>
-                            <div class="title red" v-if="status==6&&!returnProduct.orderReturnAmounts">
+                            <div class="title red" v-if="status==3&&returnProduct.agreeTime">
                                 拒绝退款
                             </div>
                             <div v-if="status==1">
@@ -277,20 +278,20 @@
                         </div>
                         <div class="info-other">
                             <div class="recode-item" v-if="status==6&&returnProduct.orderReturnAmounts">
-                                <span>{{returnProduct.buyerName}}</span><span>商家确认退款</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
+                                <span>{{returnProduct.buyerName}}</span><span>商家确认退款</span><span>{{returnAmountsRecord.refundTime|formatDateAll}}</span>
                             </div>
-                            <div class="recode-item" v-if="status==6&&!returnProduct.orderReturnAmounts">
-                                <span>{{returnProduct.buyerName}}</span><span>商家拒绝退款</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
+                            <div class="recode-item" v-if="status==3&&returnProduct.agreeTime">
+                                <span>{{returnProduct.buyerName}}</span><span>商家拒绝退款</span><span>{{returnProduct.refuseTime|formatDateAll}}</span>
                             </div>
                             <div class="recode-item" v-if="returnProduct.expressNo">
-                                <span>{{returnProduct.buyerName}}</span><span>提交物流信息</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
+                                <span>{{returnProduct.buyerName}}</span><span>提交物流信息</span><span>{{returnProduct.sendTime|formatDateAll}}</span>
                             </div>
-                            <div class="recode-item" v-if="returnProduct.agreeTime">
+                            <div class="recode-item">
                                 <span>{{returnProduct.adminName}}</span>
-                                <template v-if="status!=1&&status!=3">
+                                <template v-if="status!=1&&returnProduct.agreeTime">
                                     <span>审核通过申请</span>
                                 </template>
-                                <template v-if="status==3">
+                                <template v-if="status==3&&!returnProduct.agreeTime">
                                     <span>审核驳回申请</span>
                                 </template>
                                 <span>{{returnProduct.agreeTime|formatDateAll}}</span>
@@ -366,7 +367,7 @@
                                 <div class="tips">退款金额：￥{{returnAmountsRecord.actualBalance||0}}</div>
                                 <div class="tips">退款三方账户：¥{{returnAmountsRecord.actualAmounts||0}}</div>
                                 <div class="tips">退还1元现金券：{{returnAmountsRecord.actualTokenCoin||0}}张</div>
-                                <div class="reason-tips">产品报损</div>
+                                <div class="reason-tips" v-if="returnProduct.scrapReason">产品报损</div>
                                 <div class="tips">
                                     {{returnProduct.scrapReason}}
                                 </div></div>
@@ -377,13 +378,14 @@
                         <div class="info-other">
                             <div class="recode-item" v-if="status>1">
                                 <span>{{returnProduct.adminName}}</span>
-                                <template v-if="status==6">
+                                <template v-if="status==6&&returnProduct.agreeTime">
                                     <span>同意退款</span>
+                                    <span>{{returnProduct.agreeTime|formatDateAll}}</span>
                                 </template>
                                 <template v-if="status==3">
                                     <span>拒绝退款</span>
+                                    <span>{{returnProduct.refuseTime|formatDateAll}}</span>
                                 </template>
-                                <span>{{returnProduct.agreeTime|formatDateAll}}</span>
                             </div>
                             <div class="recode-item">
                                 <span>{{returnProduct.buyerName}}</span><span>发起了退款申请</span><span>{{returnProduct.applyTime|formatDateAll}}</span>
@@ -446,20 +448,31 @@
             <div class="tips-area">
                 <div>温馨提示：请确保产品不影响二次销售</div>
             </div>
-            <el-form v-model="form" label-width="100px">
-                <el-form-item label="报损原因">
-                    <el-select v-model="form.badReason" @change="chooseBadReason" placeholder="请选择报损原因">
+            <el-form v-model="refundForm" label-width="100px">
+                <el-form-item style="margin-left: -84px">
+                    <el-checkbox v-model="hadScrap">产品报损</el-checkbox>
+                    <el-select v-model="refundForm.badReason" :disabled="!hadScrap" @change="chooseBadReason" placeholder="请选择报损原因">
                         <el-option label="请选择报损原因" value=""></el-option>
-                        <el-option v-for="(v,k) in reasonList" :key="k" :label="v.dValue" :value="v.dValue"></el-option>
+                        <el-option v-for="(v,k) in reasonList" :key="k" :label="v.value" :value="v.value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="报损说明">
-                    <el-input type="textarea" v-model="form.scrapReason" auto-complete="off"
+                    <el-input type="textarea" :disabled="!hadScrap" v-model="refundForm.scrapReason" auto-complete="off"
                               placeholder="请输入说明文字"></el-input>
                 </el-form-item>
+                <!--<el-form-item label="报损原因">-->
+                    <!--<el-select v-model="form.badReason" @change="chooseBadReason" placeholder="请选择报损原因">-->
+                        <!--<el-option label="请选择报损原因" value=""></el-option>-->
+                        <!--<el-option v-for="(v,k) in reasonList" :key="k" :label="v.value" :value="v.value"></el-option>-->
+                    <!--</el-select>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="报损说明">-->
+                    <!--<el-input type="textarea" v-model="form.scrapReason" auto-complete="off"-->
+                              <!--placeholder="请输入说明文字"></el-input>-->
+                <!--</el-form-item>-->
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="submit('form')">确认提交</el-button>
+                <el-button type="primary" @click="submit('refundForm')">确认提交</el-button>
                 <el-button @click="badDebtMask=false">取 消</el-button>
             </div>
         </el-dialog>
@@ -481,14 +494,14 @@
                         <span class="mar-left5">张</span>
                  </el-form-item>
                 <el-form-item label="支付交易号">{{refundForm.outTradeNo}}</el-form-item>
-                <el-form-item style="margin-left: -84px">
+                <el-form-item style="margin-left: -84px" v-if="opr!=1">
                     <el-checkbox v-model="hadScrap">产品报损</el-checkbox>
                     <el-select v-model="refundForm.badReason" :disabled="!hadScrap" @change="chooseBadReason" placeholder="请选择报损原因">
                         <el-option label="请选择报损原因" value=""></el-option>
                         <el-option v-for="(v,k) in reasonList" :key="k" :label="v.value" :value="v.value"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="报损说明">
+                <el-form-item label="报损说明"  v-if="opr!=1">
                     <el-input type="textarea" :disabled="!hadScrap" v-model="refundForm.scrapReason" auto-complete="off"
                               placeholder="请输入说明文字"></el-input>
                 </el-form-item>
@@ -633,7 +646,7 @@
                     // this.payTime = tmpType;
                     // this.getProgressStu(this.status, this.opr);
                     this.getProgressStu(this.status);
-                    if (this.returnProduct.outTime) {
+                    if (this.status == 2 && this.returnProduct.outTime) {
                         this.getDistanceTime(this.returnProduct.outTime);
                     }
                 }).catch(err => {
@@ -717,7 +730,7 @@
                         this.boolFirst = true;
                         this.boolSec = true;
                         this.boolThr = true;
-                        this.boolFor = false;
+                        this.boolFor = true;
                         this.boolFif = false;
                         break;
                     case 6:
@@ -743,12 +756,9 @@
             // 变更退货
             oprSure() {
                 this.tipsMask = false;
-                request.exchangeChangeRefund({ returnProductId: this.id }).then(res => {
-                    if (res.data.code == 200) {
-                        this.getInfo();
-                    } else {
-                        this.$message.warning(res.msg);
-                    }
+                request.exchangeChangeRefund({ returnProductId: this.returnProductId }).then(res => {
+                    this.$message.warning(res.msg);
+                    this.getInfo();
                 }).catch(err => {
                     console.log(err);
                 });
@@ -778,7 +788,7 @@
             submit(form) {
                 this.badDebtMask = false;
                 const data = {
-                    returnProductId: this.id,
+                    returnProductId: this.returnProductId,
                     scrapReason: this[form].scrapReason,
                     hadScrap: this.hadScrap ? 1 : 2
                 };
@@ -859,7 +869,7 @@
                         that.time = day + '天' + hour + ':' + minute + ':' + second;
                     } else {
                         that.time = '';
-                        that.status = 6;
+                        that.status = 8;
                         clearInterval(timer);
                     }
                 }, 1000);
@@ -874,9 +884,9 @@
             // 云仓发货
             orderSendOut() {
                 const data = {
-                    returnProductId: this.returnProductId,
-                    ecExpressName: '中通快递',
-                    ecExpressNo: '221286279559'
+                    id: this.returnProductId,
+                    expressName: '中通快递',
+                    expressNo: '221286279559'
                 };
                 request.sendOut(data).then(res => {
                     this.$message.success(res.msg);

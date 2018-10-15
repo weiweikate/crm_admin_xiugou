@@ -416,7 +416,6 @@
                     }
                     this.tableData[this.tableIndex].includeAreaName = includeAreaName.slice(0, -1);
                     this.tableData[this.tableIndex].includeArea = includeArea.slice(0, -1);
-                    console.log(this.tableData);
                 }
             },
             // 增加制定省市运费设置

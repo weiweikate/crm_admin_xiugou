@@ -144,6 +144,9 @@
                             <template v-if="scope.row.returnType">
                                 <el-button @click='toAfterSale(scope.row.returnProductId)'type="primary">{{`${returnTypeArr[Number(scope.row.returnType)-1]}${afterSaleStatusArr[Number(scope.row.returnProductStatus)-1]}`}}</el-button>
                             </template>
+                            <template v-else>
+                                <el-button @click='toAfterSale(scope.row.returnProductId)'type="primary">商家退款</el-button>
+                            </template>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -485,9 +488,9 @@
             // 备注
             changeColor(status, v) {
                 const data = {};
-                data.orderId = this.orderId;
-                data.star = status == 1 ? v.value : this.orderMsg.starIndex;
-                data.remarks = this.orderMsg.adminRemark;
+                data.id = this.orderId;
+                data.adminStars = status == 1 ? v.value : this.orderMsg.starIndex;
+                data.adminRemark = this.orderMsg.adminRemark;
                 request.orderSign(data).then(res => {
                     this.$message.success(res.mag);
                     this.orderMsg.star = this.markArr[Number(data.star) - 1].label;

@@ -140,10 +140,10 @@
                     this.pageLoading = false;
                     for (const i in res.data.data) {
                         // res.data.data[i].isShowPop = false;
-                        // res.data.data[i].starColor =
-                        //     this.markArr[res.data.data[i].stars - 1] == undefined
-                        //         ? '#ccc'
-                        //         : this.markArr[res.data.data[i].stars - 1].label;
+                        res.data.data[i].starColor =
+                            this.markArr[res.data.data[i].adminStars - 1] == undefined
+                                ? '#ccc'
+                                : this.markArr[res.data.data[i].adminStars - 1].label;
                         // res.data.data[i].price =
                         //     res.data.data[i].totalPrice == null
                         //         ? '0'
@@ -159,9 +159,9 @@
             // 修改星级
             changeColor(v1, v) {
                 const data = {};
-                data.orderId = v.id;
-                data.star = v1.value;
-                data.remarks = v.adminRemark;
+                data.id = v.id;
+                data.adminStars = v1.value;
+                data.adminRemark = v.adminRemark;
                 request.orderSign(data).then(res => {
                     this.$message.success(res.msg);
                     v.starColor = v1.label;

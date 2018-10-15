@@ -36,12 +36,12 @@
                         <el-option v-for="(v,k) in refundStatusArr" :label="v.type" :value="v.id" :key="k">{{v.type}}</el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="afterSaleStatus" label="售后状态">
-                    <el-select v-model="form.afterSaleStatus" placeholder="请选择">
-                      <el-option label="暂不选择" value=""></el-option>
-                      <el-option v-for="(v,k) in afterSaleStatusArr" :label="v.type" :value="v.id" :key="k">{{v.type}}</el-option>
-                    </el-select>
-                </el-form-item>
+                <!--<el-form-item prop="afterSaleStatus" label="售后状态">-->
+                    <!--<el-select v-model="form.afterSaleStatus" placeholder="请选择">-->
+                      <!--<el-option label="暂不选择" value=""></el-option>-->
+                      <!--<el-option v-for="(v,k) in afterSaleStatusArr" :label="v.type" :value="v.id" :key="k">{{v.type}}</el-option>-->
+                    <!--</el-select>-->
+                <!--</el-form-item>-->
                 <el-form-item prop="closeReason" label="关闭状态">
                     <el-select v-model="form.closeReason" placeholder="请选择">
                         <el-option label="暂不选择" value=""></el-option>
@@ -78,11 +78,11 @@
                 <el-tab-pane label="退款中" name="toBeStay">
                     <v-orderlist ref="allOrder"></v-orderlist>
                 </el-tab-pane>
-                <el-tab-pane label="已完成" name="5">0
+                <el-tab-pane label="已完成" name="5">
                     <v-orderlist ref="5"></v-orderlist>
                 </el-tab-pane>
-                <el-tab-pane label="已关闭" name="closed">
-                    <v-orderlist ref="allOrder"></v-orderlist>
+                <el-tab-pane label="已关闭" name="6">
+                    <v-orderlist ref="6"></v-orderlist>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
@@ -152,6 +152,12 @@ export default {
             }, {
                 type: '退款成功',
                 id: 3
+            }, {
+                type: '退货中',
+                id: 4
+            }, {
+                type: '退货成功',
+                id: 5
             }, {
                 type: '换货中',
                 id: 4
@@ -224,7 +230,7 @@ export default {
                 this.form.threeMonths = 'yes';
             }
             this.getList(1);
-        },
+        }
     }
 };
 </script>
