@@ -78,7 +78,7 @@
                 <el-tab-pane label="退款中" name="toBeStay">
                     <v-orderlist ref="allOrder"></v-orderlist>
                 </el-tab-pane>
-                <el-tab-pane label="已完成" name="5">
+                <el-tab-pane label="已完成" name="5">0
                     <v-orderlist ref="5"></v-orderlist>
                 </el-tab-pane>
                 <el-tab-pane label="已关闭" name="closed">
