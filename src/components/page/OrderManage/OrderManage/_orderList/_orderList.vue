@@ -37,7 +37,7 @@
                         </div>
                         <div class="price">{{value.price}}</div>
                         <div class="num">{{value.num}}</div>
-                        <div class="consignee">{{v.receiver}}</div>
+                        <div class="consignee"><span>{{v.receiver}}<br>{{v.recevicePhone}}</span></div>
                     </div>
                 </div>
                 <div class="center">
@@ -54,7 +54,7 @@
                     </div>
                     <div class="collection"
                          :style="{height:120*v.orderProductList.length+v.orderProductList.length-1+'px',paddingTop:120*v.orderProductList.length/2-30+'px'}">
-                        <span>{{v.totalPrice | handleMoney}}<br>（含运费：{{v.freightPrice | handleMoney}}）</span>
+                        <span>{{v.totalPrice | handleMoney}}<br>（含运费：{{(v.freightPrice||0) | handleMoney}}）</span>
                     </div>
                 </div>
                 <div class="right">
@@ -318,7 +318,10 @@
                             height: 100px;
                             margin-left: 4%;
                             text-align: center;
-                            line-height: 100px;
+                            span{
+                                display: inline-block;
+                                margin-top: 30px;
+                            }
                         }
                     }
                     .bar:last-child {

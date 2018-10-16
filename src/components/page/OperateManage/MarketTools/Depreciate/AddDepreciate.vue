@@ -31,7 +31,7 @@
                 </el-form-item>
                 <el-form-item prop="floorPrice" label="最低价格">
                     ￥
-                    <el-input v-model="form.floorPrice" v-if="form.endTime" @input="calDurationTime(showDuration)"></el-input>
+                    <el-input v-model="form.floorPrice" v-if="form.endTime" @blur="floorPrice" @input="calDurationTime(showDuration)"></el-input>
                     <el-input v-model="form.floorPrice" v-else></el-input>
                 </el-form-item>
                 <el-form-item label="开始时间" prop="beginTime">
@@ -173,8 +173,6 @@
                 } else {
                     if (!/^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/.test(value)) {
                         callback(new Error('请输入两位小数'));
-                    } else if (value > this.form.startPrice) {
-                        callback(new Error('最低价格不能高于起拍价格!'));
                     } else {
                         callback();
                     }

@@ -40,7 +40,7 @@
                             </el-button>
                             <!--<el-button type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除-->
                             <!--</el-button>-->
-                            <el-button type="danger" size="small" @click="toLevelInfo(scope.$index,scope.row.id)">层级信息
+                            <el-button type="danger" size="small" @click="toLevelInfo(scope.$index,scope.row)">层级信息
                             </el-button>
                         </template>
                     </el-table-column>
@@ -331,9 +331,9 @@
                 this.form.icon = file.name;
             },
             // 层级信息页面
-            toLevelInfo(index, id) {
-                sessionStorage.setItem('memberId', id);
-                this.$router.push({ path: '/levelInfo', query: { memberId: id }});
+            toLevelInfo(index, row) {
+                sessionStorage.setItem('memberId', row.id);
+                this.$router.push({ path: '/levelInfo', query: { memberId: row.id }});
             }
         }
     };

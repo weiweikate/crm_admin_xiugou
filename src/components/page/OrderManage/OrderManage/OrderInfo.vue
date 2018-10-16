@@ -18,16 +18,17 @@
                 </div>
             </div>
             <div class="top">
-                <span v-if='orderStatus == 1' class="activite-status">当前订单状态：待支付</span>
-                <span v-if='orderStatus == 2' class="activite-status">当前订单状态：待发货</span>
-                <span v-if='orderStatus == 3' class="activite-status">当前订单状态：待收货</span>
-                <span v-if='orderStatus == 4' class="activite-status">当前订单状态：确认收货</span>
-                <span v-if='orderStatus == 5' class="activite-status">当前订单状态：已完成</span>
-                <span v-if='orderStatus == 6' class="activite-status">当前订单状态：已关闭(退货关闭)</span>
-                <span v-if='orderStatus == 7' class="activite-status">当前订单状态：已关闭(用户关闭)</span>
-                <span v-if='orderStatus == 8' class="activite-status">当前订单状态：已关闭(超时关闭)</span>
-                <span v-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
-                <span v-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
+                <span v-if='orderStatus == 1&&orderMsg.outTradeNo' class="activite-status">当前订单状态：继续支付</span>
+                <span v-else-if='orderStatus == 1&&!orderMsg.outTradeNo' class="activite-status">当前订单状态：待支付</span>
+                <span v-else-if='orderStatus == 2' class="activite-status">当前订单状态：待发货</span>
+                <span v-else-if='orderStatus == 3' class="activite-status">当前订单状态：待收货</span>
+                <span v-else-if='orderStatus == 4' class="activite-status">当前订单状态：确认收货</span>
+                <span v-else-if='orderStatus == 5' class="activite-status">当前订单状态：已完成</span>
+                <span v-else-if='orderStatus == 6' class="activite-status">当前订单状态：已关闭(退货关闭)</span>
+                <span v-else-if='orderStatus == 7' class="activite-status">当前订单状态：已关闭(用户关闭)</span>
+                <span v-else-if='orderStatus == 8' class="activite-status">当前订单状态：已关闭(超时关闭)</span>
+                <span v-else-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
+                <span v-else-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
                 <br/>
                 <el-button v-if="orderStatus == 2" @click='orderSendOut' class="cloud-delivery-btn"
                            type="danger">推送云仓
@@ -80,14 +81,14 @@
                 <p class="info-content">
                     <span class="content-con">订单号：{{ orderMsg.orderNum }}</span>
                     <span class="content-con">创建时间：{{ orderMsg.createTime | formatDateAll }}</span>
-                    <span class="content-con">平台支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
+                    <span class="content-con" v-if="orderMsg.payTime">平台支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
                     <span v-if='orderStatus != 1 && orderStatus != 2' class="content-con">第三方支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
                 </p>
                 <p class="info-content">
                     <span v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5'
                           class="content-con">发货时间：{{ orderMsg.sendTime | formatDateAll }}</span>
                     <span v-if='orderStatus == 6 || orderStatus == 7 || orderStatus == 8' class="content-con">取消时间：{{ orderMsg.cancleTime }}</span>
-                    <span v-if='orderStatus != 1 && orderStatus != 2 ' class="content-con">支付宝（第三方支付）交易号：{{ orderMsg.tradeNo }}</span>
+                    <span v-if='orderStatus != 1 && orderStatus != 2 ' class="content-con">支付宝（第三方支付）交易号：{{ orderMsg.outTradeNo }}</span>
                     <span v-if='orderStatus == 4 || orderStatus == 5' class="content-con">确认时间：{{orderMsg.deliveryTime | formatDateAll}}</span>
                 </p>
                 <el-table border :data="tableData" :span-method="spanMethod">
@@ -102,9 +103,9 @@
                     </el-table-column>
                     <el-table-column prop="price" label="单价" align="center"></el-table-column>
                     <el-table-column prop="num" label="数量" align="center"></el-table-column>
-                    <el-table-column label="收货人" align="center">
+                    <el-table-column label="买家" align="center">
                         <template slot-scope="scope">
-                            <span>收货人：{{scope.row.receiver}}</span><br/>
+                            <span>{{scope.row.receiver}}</span><br/>
                             <span>{{scope.row.recevicePhone}}</span>
                         </template>
                     </el-table-column>
@@ -132,20 +133,20 @@
                             积分抵扣:{{scope.row.userScore}}<br/>
                             优惠券抵扣:{{scope.row.couponPrice | handleMoney}}<br/>
                             <template v-if='(scope.row.type & 1) != 0'>平台支付</template>
-                            <template v-if='(scope.row.type & 2) != 0'>微信小程序 </template>
-                            <template v-if='(scope.row.type & 4) != 0'>APP支付 </template>
-                            <template v-if='(scope.row.type & 8) != 0'>支付宝 </template>
-                            <template v-if='(scope.row.type & 16) != 0'>银联 </template>
+                            <template v-else-if='(scope.row.type & 2) != 0'>微信小程序 </template>
+                            <template v-else-if='(scope.row.type & 4) != 0'>APP支付 </template>
+                            <template v-else-if='(scope.row.type & 8) != 0'>支付宝 </template>
+                            <template v-else-if='(scope.row.type & 16) != 0'>银联 </template>
                             {{scope.row.amounts | handleMoney}}
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.returnType">
-                                <el-button @click='toAfterSale(scope.row.returnProductId)'type="primary">{{`${returnTypeArr[Number(scope.row.returnType)-1]}${afterSaleStatusArr[Number(scope.row.returnProductStatus)-1]}`}}</el-button>
+                                <el-button @click='toAfterSale(scope.row.returnProductId)' type="primary">{{`${returnTypeArr[Number(scope.row.returnType)-1]}${afterSaleStatusArr[Number(scope.row.returnProductStatus)-1]}`}}</el-button>
                             </template>
-                            <template v-else>
-                                <el-button @click='toAfterSale(scope.row.returnProductId)'type="primary">商家退款</el-button>
+                            <template v-else-if="scope.row.isBusinessRefund">
+                                <el-button @click='refundMask(scope.row)' type="primary">商家退款</el-button>
                             </template>
                         </template>
                     </el-table-column>
@@ -163,18 +164,55 @@
             <p>优惠券说明：优惠券仅限于商品购物使用，只有满足消费100元才可以使用。</p>
             <p>发布人：杨小猛</p>
         </el-dialog>
+        <!--同意退款弹窗-->
+        <el-dialog title="确认退款金额" class="agreeMask" :visible.sync="agreeMask">
+            <el-form v-model="refundForm" label-width="110px">
+                <el-form-item label="买家支付方式：">{{payType}}</el-form-item>
+                <el-form-item label="退还余额">
+                    <el-input v-model="refundForm.returnBalance" @blur="changeMoney(0,refundForm.returnBalance)"
+                              auto-complete="off" placeholder="请输入退还余额"></el-input>
+                    <span class="mar-left5">元</span>
+                </el-form-item>
+                <el-form-item label="三方账户">
+                    <el-input auto-complete="off" v-model="refundForm.returnAmounts" placeholder="0" @blur="changeMoney(1,refundForm.returnAmounts)"></el-input>
+                    <span class="mar-left5">元</span>
+                </el-form-item>
+                <el-form-item label="退还1元现金券">
+                    <el-input auto-complete="off" v-model="refundForm.returnTokenCoin" placeholder="0" @blur="changeMoney(2,refundForm.returnTokenCoin)"></el-input>
+                    <span class="mar-left5">张</span>
+                </el-form-item>
+                <el-form-item label="支付交易号">{{refundForm.outTradeNo}}</el-form-item>
+                <el-form-item style="margin-left: -84px">
+                    <el-checkbox v-model="refundForm.hadScrap">产品报损</el-checkbox>
+                    <el-select v-model="refundForm.badReason" :disabled="!refundForm.hadScrap" @change="chooseBadReason" placeholder="请选择报损原因">
+                        <el-option label="请选择报损原因" value=""></el-option>
+                        <el-option v-for="(v,k) in reasonList" :key="k" :label="v.value" :value="v.value"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="报损说明">
+                    <el-input type="textarea" :disabled="!refundForm.hadScrap" v-model="refundForm.scrapReason" auto-complete="off"
+                              placeholder="请输入说明文字"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="refundSubmit('refundForm')">确认退款金额</el-button>
+            </div>
+        </el-dialog>
+
 
     </div>
+
 </template>
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import utils from '@/utils/index.js';
+    import { queryDictonary } from '@/JS/commom';
     import request from '@/http/http.js';
 
     export default {
         components: { vBreadcrumb },
-
+        mixins: [queryDictonary],
         data() {
             return {
                 nav: ['订单管理', '订单详情'],
@@ -201,6 +239,21 @@
                 orderFreeTime: '',
                 orderFinishTime: '',
                 orderFreePayTime: '',
+                agreeMask: false,
+                productId: '',
+                refundForm: {
+                    returnBalance: '',
+                    returnAmounts: '',
+                    returnTokenCoin: '',
+                    outTradeNo: '',
+                    badReason: '',
+                    scrapReason: '',
+                    hadScrap: false // 是否选择产品报损
+                },
+                payType: '',
+                value: [],
+                // 报损原因
+                reasonList: [],
                 // 订单信息
                 orderMsg: {
                     starIndex: '', // 标记颜色序号
@@ -240,8 +293,7 @@
             this.orderId =
                 this.$route.query.orderInfoId || sessionStorage.getItem('orderInfoId');
             this.getInfo();
-            // 获取提货仓列表
-            // this.getStoreList();
+            this.getDictionaryData();
         },
 
         deactivated() {
@@ -254,14 +306,6 @@
             getInfo() {
                 request.orderDetail({ id: this.orderId }).then(res => {
                     this.orderMsg.status = res.data.status;
-                    // pickedUp: 1：发货 2：自提
-                    // if(res.data.pickedUp == 1 && res.data.status==7){
-                    //   this.orderStatus = 7;
-                    // }else if(res.data.pickedUp == 2 && res.data.status==7){
-                    //   this.orderStatus = 9;
-                    // }else{
-                    //   this.orderStatus = res.data.status;
-                    // }
                     this.orderStatus = res.data.status;
                     this.getProgressStu(this.orderStatus.toString());
                     this.orderMsg.starIndex = res.data.star || 1;
@@ -304,6 +348,11 @@
                     res.data.orderProductList.forEach((v, k) => {
                         v.totalPrice = res.data.totalPrice;
                         v.freightPrice = res.data.freightPrice;
+                        v.isBusinessRefund = false;
+                        const present = new Date().getTime();
+                        if ((!v.finishTime && v.status > 1 && v.status < 6) || present < v.finishTime || v.returnProductId && (v.returnProductStatus == 7 || v.returnProductStatus == 8)) {
+                            v.isBusinessRefund = true;
+                        }
                         v.tokenCoin =
                             res.data.tokenCoin == null ? '0' : res.data.tokenCoin;
                         v.balance =
@@ -498,6 +547,96 @@
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+            // 产品报损数据字典
+            async getDictionaryData() {
+                await this.queryDictonary('CPBS');
+                this.reasonList = this.tmpAxiosData;
+            },
+            changeMoney(num, pre) {
+                if (pre > this.value[num]) {
+                    if (num === 0) {
+                        this.$message.warning('超过最大可退还余额!');
+                        this.refundForm.returnBalance = this.value[0];
+                    } else if (num === 1) {
+                        this.$message.warning('超过最大可退还三方账户金额!');
+                        this.refundForm.returnAmounts = this.value[1];
+                    } else {
+                        this.$message.warning('超过最大可退还退还1元现金券!');
+                        this.refundForm.returnTokenCoin = this.value[2];
+                    }
+                }
+            },
+            // 选择报损原因
+            chooseBadReason() {
+                this.refundForm.scrapReason = this.refundForm.badReason;
+            },
+            // 获取退款金额详情
+            getMoney() {
+                const data = {
+                    orderProductId: this.productId
+                };
+                request.businessRefund(data).then(res => {
+                    this.refundForm = res.data;
+                    const tmpType = '';
+                    // if ((res.data.payType & 1) != 0) {
+                    //     tmpType += `三方支付`;
+                    // }
+                    // if ((res.data.payType & 2) != 0) {
+                    //     tmpType += `余额支付`;
+                    // }
+                    // if ((res.data.payType & 4) != 0) {
+                    //     tmpType += `1元券支付`;
+                    // }
+                    this.payType = this.getType(res.data.payType);
+                    this.value.push(this.refundForm.returnBalance, this.refundForm.returnAmounts, this.refundForm.returnTokenCoin);
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            getType(value) {
+                let result = '';
+                switch (value) {
+                    case 1:
+                        result = '三方支付';
+                        break;
+                    case 2:
+                        result = '余额支付';
+                        break;
+                    case 3:
+                        result = '余额支付+三方支付';
+                        break;
+                    case 4:
+                        result = '1元券支付';
+                        break;
+                    case 5:
+                        result = '余额支付+1元券支付';
+                        break;
+                    case 7:
+                        result = '余额支付+三方支付+1元券支付';
+                        break;
+                }
+                return result;
+            },
+            // 商家退款
+            refundMask(row) {
+                this.agreeMask = true;
+                this.productId = row.id;
+                this.getMoney();
+            },
+            // 是否同意退款提交
+            refundSubmit(form) {
+                const data = this[form];
+                data.hadScrap = this[form].hadScrap ? 1 : 2;
+                data.orderProductId = this.productId;
+                request.doBusinessRefund(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.getInfo();
+                    this.agreeMask = false;
+                    this[form].hadScrap = false;
+                }).catch(err => {
+                    console.log(err);
+                });
             }
         }
     };
@@ -689,6 +828,30 @@
                 box-shadow: 0px 0px 2px 1px #33b4ff;
                 background-color: #33b4ff;
                 color: #fff;
+            }
+        }
+        .agreeMask {
+            .el-dialog {
+                width: 530px;
+            }
+            .el-dialog .el-input__inner {
+                width: 180px;
+            }
+            .el-dialog .el-input {
+                width: 180px;
+            }
+            .el-select .el-input__inner {
+                width: 180px;
+            }
+
+            .icon-area .el-input__inner {
+                width: 180px;
+            }
+            .el-dialog__footer {
+                text-align: center;
+            }
+            .mar-left5 {
+                margin-left: 5px;
             }
         }
     }

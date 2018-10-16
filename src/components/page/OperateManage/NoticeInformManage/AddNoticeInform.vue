@@ -61,20 +61,19 @@
                             <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{item.name}}
                             </el-checkbox>
                         </el-checkbox-group>
-                    </el-form-item>
-                    <el-form-item label="推送区域" prop="pushCountry" class="region-area">
-                        <el-radio-group @change="changeArea" v-model="form.pushCountry">
-                            <el-radio :label="3">部分</el-radio>
-                            <el-radio :label="1">全国</el-radio>
-                            <el-radio :label="2">国外</el-radio>
-                        </el-radio-group>
-                        <div class="el-cascader">
-                            <region @regionMsg='getRegion' :isDisabled="areaDisabled" :regionMsg='address'></region>
+                        <div style="margin-left: 112px">
+                            <el-checkbox v-model="notRegist">
+                                未注册用户
+                            </el-checkbox>
+                        </div>
+                        <div style="margin-left: 112px">
+                            <el-checkbox v-model="newRegist">
+                                新注册用户
+                            </el-checkbox>
                         </div>
                     </el-form-item>
-                    <el-form-item>
-                        <span class="label">发布者</span>
-                        {{username}}
+                    <el-form-item label="推送区域" prop="pushCountry" class="region-area">
+                        <el-button type="primary" @click="chooseArea">选择区域</el-button>
                     </el-form-item>
                     <div class="submit-btn">
                         <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">确认保存</el-button>
@@ -83,6 +82,9 @@
                 </el-form>
             </div>
         </div>
+        <!--选择区域-->
+        <choose-area @getArea='chooseAreaToast' :index="tableIndex" :chooseData="chooseData" :preData="preData"
+                     v-if="isShowArea"></choose-area>
     </div>
 
 </template>
@@ -94,9 +96,11 @@
     import utils from '@/utils/index';
     import request from '@/http/http.js';
     import * as api from '@/api/api.js';
+    import chooseArea from '@/components/common/chooseArea';
+
     export default {
         components: {
-            vBreadcrumb, icon, region
+            vBreadcrumb, icon, chooseArea
         },
         data() {
             return {
@@ -108,8 +112,7 @@
                     content: '', //   内容
                     pushType: '', //   1：即时推送  2：定时推送
                     pushWay: '', //   推送人群
-                    pushCountry: '', //   1：全国 2：国外 3：定省
-                    createAdmin: '' //   发布人
+                    pushCountry: '' //   1：全国 2：国外 3：定省
                 },
                 count: 0, // 详情长度
                 date: '',
@@ -119,28 +122,17 @@
                 users: [],
                 isIndeterminate: false,
                 id: '',
-                username: '',
-                userId: '',
-                pLoading: false,
-                cLoading: false,
-                aLoading: false,
-                province: '',
-                city: '',
-                area: '',
-                provinceArr: [],
-                cityArr: [],
-                areaArr: [],
-                region: [],
-                address: '',
                 btnLoading: false,
                 dateDisabled: true,
-                areaDisabled: true,
                 pickerOptions: {
                     disabledDate(time) {
                         return time.getTime() < new Date() - 8.64e7;
                     }
                 },
-                time: ''
+                time: '',
+                notRegist: false, // 未注册用户
+                newRegist: false, // 新注册用户
+                isShowArea: false
             };
         },
         created() {
@@ -158,9 +150,6 @@
             // this.form.pushType='1';
             // this.form.pushCountry='3';
             this.getLevelList();
-            this.username = localStorage.getItem('ms_username');
-            this.userId = localStorage.getItem('ms_userID');
-            this.form.createAdmin = localStorage.getItem('ms_userID');
         },
         methods: {
             // 取消
@@ -179,19 +168,6 @@
                 } else {
                     this.dateDisabled = false;
                 }
-            },
-            // 推送区域
-            changeArea() {
-                if (this.form.pushCountry == 3) {
-                    this.areaDisabled = false;
-                } else {
-                    this.areaDisabled = true;
-                }
-            },
-            // 获取省市区
-            getRegion(msg) {
-                this.address = msg;
-                console.log(msg);
             },
             // 获取用户层级列表
             getLevelList() {
@@ -246,7 +222,6 @@
                 if (num == 1) {
                     that.title = '';
                 }
-                this.form.createAdmin = localStorage.getItem('ms_userID');
             },
             // 提交表单
             submitForm() {
@@ -325,18 +300,37 @@
                     });
             }
         },
-        computed: {
-            qnLocation() {
-                return api.uploadImg;
-            }
+        // 选择区域
+        chooseArea() {
+            this.isShowArea = true;
         },
-        // 页面加载后执行 为编辑器的图片图标和视频图标绑定点击事件
-        mounted() {
-            // 为图片ICON绑定事件 getModule 为编辑器的内部属性
-            this.$refs.myQuillEditor.quill
-                .getModule('toolbar')
-                .addHandler('image', this.imgHandler);
+        // 选择区域
+        chooseAreaToast(getArea) {
+            this.isShowArea = false;
+            this.tableData[this.tableIndex].freightTemplateInfoDetailList = [];
+            if (getArea) {
+                // const index = getArea.indexOf('IDS');
+                // this.tableData[this.tableIndex].includeAreaName = getArea.substring(0, index);// 名称
+                // this.tableData[this.tableIndex].includeArea = getArea.substring(index + 4);// id
+                // console.log(getArea.substring(0, index))
+                // console.log(getArea.substring(index + 4));//zipcode
+                let includeAreaName = ''; let includeArea = '';
+                for (const i in getArea) {
+                    includeAreaName += getArea[i].provinceName + ':' + getArea[i].cityNames + ',';
+                    includeArea += getArea[i].provinceCode + ':' + getArea[i].cityCodes + ',';
+                    const tempItem = {
+                        provinceCode: getArea[i].provinceCode,
+                        cityCodes: getArea[i].cityCodes,
+                        provinceName: getArea[i].provinceName,
+                        cityNames: getArea[i].cityNames
+                    };
+                    this.tableData[this.tableIndex].freightTemplateInfoDetailList.push(tempItem);
+                }
+                this.tableData[this.tableIndex].includeAreaName = includeAreaName.slice(0, -1);
+                this.tableData[this.tableIndex].includeArea = includeArea.slice(0, -1);
+            }
         }
+
     };
 </script>
 <style lang="less">
@@ -450,7 +444,7 @@
             padding: 0 50px 20px 100px
         }
         .el-checkbox-group {
-            margin-left: 112px;
+            margin-left: 135px;
         }
         .el-radio {
             display: block;

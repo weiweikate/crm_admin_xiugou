@@ -484,7 +484,7 @@
             },
             // 确认取消操作
             closeToask(opr) {
-                const freightTemplateInfoDetailList = [];
+                const tempList = [];
                 for (const i in this.preChooseData) {
                     if (this.preChooseData[i].cityNames.length) {
                         const temp = {
@@ -493,12 +493,12 @@
                             cityCodes: this.preChooseData[i].cityIds.join(','),
                             cityNames: this.preChooseData[i].cityNames.join(',')
                         };
-                        freightTemplateInfoDetailList.push(temp);
+                        tempList.push(temp);
                     }
                 }
 
                 if (opr) {
-                    this.$emit('getArea', freightTemplateInfoDetailList);
+                    this.$emit('getArea', tempList);
                 } else {
                     this.$emit('getArea', false);
                 }

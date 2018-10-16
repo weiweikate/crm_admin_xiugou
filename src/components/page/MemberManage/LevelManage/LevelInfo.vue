@@ -72,8 +72,9 @@
         created() {
         },
         activated() {
-            this.form.content = '';
+            this.id = this.$route.query.memberId || sessionStorage.getItem('memberId');
             this.uploadImg = api.uploadImg;
+            this.getDetail();
         },
         computed: {
             qnLocation() {
@@ -88,6 +89,17 @@
                 .addHandler('image', this.imgHandler);
         },
         methods: {
+            // 获取详情
+            getDetail() {
+                const data = {
+                    id: this.id
+                };
+                request.findUserLevelUpgradeDemotionById(data).then((res) => {
+                    this.form = res.data;
+                }).catch((err) => {
+                    console.log(err);
+                });
+            },
             // 取消
             cancel() {
                 this.$router.push('/levelManage');
@@ -95,13 +107,16 @@
             // 提交表单
             submitForm() {
                 const that = this;
-                const params = {};
+                const params = {
+                    id: this.id,
+                    content: this.form.content
+                };
                 if (!params.content) {
                     that.$message.warning('请输入详情!');
                     return;
                 }
                 that.btnLoading = true;
-                request.addNotice(params).then(res => {
+                request.updateUserLevel(params).then(res => {
                     that.$message.success(res.msg);
                     that.$router.push('/levelManage');
                     that.btnLoading = false;
@@ -121,8 +136,7 @@
                 if (this.uploadType === 'image') {
                     // 获得文件上传后的URL地址
                     url = e.data;
-                    this.form.original_img = e.data;
-                    // this.form.small_img = e.data.imageThumbUrl;
+                    this.form.originalImg = e.data;
                 }
                 if (url != null && url.length > 0) {
                     // 将文件上传后的URL地址插入到编辑器文本中

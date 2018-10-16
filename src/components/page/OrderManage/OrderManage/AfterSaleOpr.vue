@@ -479,7 +479,7 @@
         <!--同意退款弹窗-->
         <el-dialog title="确认退款金额" class="agreeMask" :visible.sync="agreeMask">
             <el-form v-model="refundForm" label-width="110px">
-                 <el-form-item label="买家支付方式：">{{payTime}}</el-form-item>
+                 <el-form-item label="买家支付方式：">{{payType}}</el-form-item>
                  <el-form-item label="退还余额">
                         <el-input v-model="refundForm.returnBalance" @blur="changeMoney(0,refundForm.returnBalance)"
                                   auto-complete="off" placeholder="请输入退还余额"></el-input>
@@ -599,7 +599,7 @@
                 // 详情
                 returnProduct: {},
                 // 退款类型
-                payTime: '',
+                payType: '',
                 imgList: [],
                 returnAmountsRecord: {},
                 id: '',
@@ -627,24 +627,17 @@
                     this.opr = this.returnProduct.type;
                     this.status = this.returnProduct.status;
                     this.id = this.returnProduct.id;
-                    // let tmpType = '';
+                    let tmpType = '';
                     // if ((res.data.payType & 1) != 0) {
-                    //     tmpType += `平台支付`;
+                    //     tmpType += `三方支付`;
                     // }
                     // if ((res.data.payType & 2) != 0) {
-                    //     tmpType += `+微信小程序支付`;
+                    //     tmpType += `+余额支付`;
                     // }
                     // if ((res.data.payType & 4) != 0) {
-                    //     tmpType += `+APP支付`;
+                    //     tmpType += `+1元券支付`;
                     // }
-                    // if ((res.data.payType & 8) != 0) {
-                    //     tmpType += `+支付宝支付`;
-                    // }
-                    // if ((res.data.payType & 16) != 0) {
-                    //     tmpType += `+银联支付`;
-                    // }
-                    // this.payTime = tmpType;
-                    // this.getProgressStu(this.status, this.opr);
+                    this.payType = this.getType(res.data.payType);
                     this.getProgressStu(this.status);
                     if (this.status == 2 && this.returnProduct.outTime) {
                         this.getDistanceTime(this.returnProduct.outTime);
@@ -652,6 +645,30 @@
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+            getType(value) {
+                let result = '';
+                switch (value) {
+                    case 1:
+                        result = '三方支付';
+                        break;
+                    case 2:
+                        result = '余额支付';
+                        break;
+                    case 3:
+                        result = '余额支付+三方支付';
+                        break;
+                    case 4:
+                        result = '1元券支付';
+                        break;
+                    case 5:
+                        result = '余额支付+1元券支付';
+                        break;
+                    case 7:
+                        result = '余额支付+三方支付+1元券支付';
+                        break;
+                }
+                return result;
             },
             changeMoney(num, pre) {
                 if (pre > this.value[num]) {
@@ -770,7 +787,7 @@
                 };
                 request.makeSureRefund(data).then(res => {
                     this.refundForm = res.data;
-                    this.value.push(this.refundForm.returnBalance, this.refundForm.returnAmounts, this.refundForm.returnTokenCoin,);
+                    this.value.push(this.refundForm.returnBalance, this.refundForm.returnAmounts, this.refundForm.returnTokenCoin);
                 }).catch(err => {
                     console.log(err);
                 });

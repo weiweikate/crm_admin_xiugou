@@ -71,7 +71,7 @@
             <el-table-column label="秒杀商品" min-width="300">
                 <template slot-scope="scope">
                     <div class="product-img">
-                        <img :src="scope.row.productImg">
+                        <img :src="scope.row.specImg">
                     </div>
                     <p class="product-inf">{{scope.row.name}}</p>
                     <p class="product-inf" style="margin-top: 25px">原价：￥{{scope.row.originalPrice}}</p>

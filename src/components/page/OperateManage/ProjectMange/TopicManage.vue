@@ -17,8 +17,8 @@
                         <template v-if="scope.row.templateId==2">专题2</template>
                         <template v-if="scope.row.templateId==3">专题3</template>
                         <template v-if="scope.row.templateId==4">专题4</template>
-                        <template v-if="scope.row.templateId==5">秒杀专题</template>
-                        <template v-if="scope.row.templateId==6">降价拍专题</template>
+                        <template v-if="scope.row.templateId==6">秒杀专题</template>
+                        <template v-if="scope.row.templateId==5">降价拍专题</template>
                     </template>
                 </el-table-column>
                 <el-table-column prop="num" label="产品数" align="center"></el-table-column>

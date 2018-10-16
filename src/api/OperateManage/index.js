@@ -268,5 +268,5 @@ export const addSysTagType = '/config/sysTagType/addSysTagLibrary';
 // 查询标签类型列表
 export const querySysTagTypePageList = '/config/sysTagType/querySysTagTypePageList';
 // 修改标签状态
-export const updateSysTagTypeStatusById = ['/config/sysTagType/updateSysTagTypeStatusById', { methods: 'get' }];
+export const updateSysTagTypeStatusById = ['/config/sysTagType/deleteById', { methods: 'get' }];
 
