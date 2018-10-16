@@ -3,8 +3,8 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 45px',color:'#666' }">
             <div class="pro-title">编辑优惠券</div>
-            <el-form :model="form" ref="form" label-width="100px">
-                <el-form-item label="券名称">
+            <el-form :model="form" ref="form" :rules="rules" label-width="100px">
+                <el-form-item prop="name" label="券名称">
                     <el-input v-model="form.name" placeholder="请输入优惠券名称"></el-input>
                 </el-form-item>
                 <el-form-item label="券类型">
@@ -84,7 +84,7 @@
                     <el-input type="textarea" v-model="form.remarks" placeholder="请输入说明"></el-input>
                 </el-form-item>
 
-                <el-button type="primary" :loading="btnLoading" @click="submitForm">提交</el-button>
+                <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">提交</el-button>
                 <el-button @click="cancel">取消</el-button>
             </el-form>
         </el-card>
@@ -110,7 +110,24 @@
         },
 
         data() {
+            var checkName = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('模版名称不能为空'));
+                } else {
+                    const reg = /^[A-Za-z0-9\u4e00-\u9fa5]{2,16}$/;
+                    if (!reg.test(value)) {
+                        callback(new Error('请输入2-16位由汉字字母数字组成的名称'));
+                    } else {
+                        callback();
+                    }
+                }
+            };
             return {
+                rules: {
+                    name: [
+                        { validator: checkName, trigger: 'blur' }
+                    ]
+                },
                 nav: ['运营管理', '优惠券设置', '编辑优惠券'],
                 // 用户层级
                 checkAll: false,
@@ -344,147 +361,161 @@
                 }
             },
             // 提交表单
-            submitForm() {
+            submitForm(formName) {
                 const that = this;
                 const data = this.form;
-                if (!data.name) {
-                    this.$message.warning('请输入优惠券名称!');
-                    return;
-                }
-                if (!data.type) {
-                    this.$message.warning('请选择优惠券类型!');
-                    return;
-                }
-                if (!data.value) {
-                    if (data.type != 3) {
-                        this.$message.warning('请输入券值!');
+                that.$refs[formName].validate((valid) => {
+                    if (!valid) {
+                        return;
                     } else {
-                        this.$message.warning('请选中折扣值!');
-                    }
-                    return;
-                }
-                if (!data.couponTemplateId) {
-                    this.$message.warning('请选择券模板!');
-                    return;
-                }
-                if (this.useConditions) {
-                    data.useConditions = this.useConditions;
-                } else {
-                    data.useConditions = 0;
-                }
-                data.id = this.id;
-
-                if (!this.isDay) {
-                    data.effectiveDays = this.day;
-                    if (!data.effectiveDays) {
-                        this.$message.warning('请输入可用周期数据!');
-                        return;
-                    }
-                    data.waitDays = 0;
-                    data.cycleFlag = 0;
-                } else {
-                    data.waitDays = this.waitDays;
-                    data.effectiveDays = this.effectiveDays;
-                    data.cycleFlag = 1;
-                    if (!data.effectiveDays || !data.waitDays) {
-                        this.$message.warning('请输入可用周期数据!');
-                        return;
-                    }
-                }
-                if (this.form.type == 4) {
-                    if (that.productList.firstCategoryIds.length === 0 && that.productList.secondCategoryIds.length === 0 && that.productList.thirdCategoryIds.length === 0 && that.productList.products.length === 0) {
-                        this.$message.warning('请选择可用品类!');
-                        return;
-                    }
-                    if (that.productList.firstCategoryIds instanceof Array) {
-                        data.firstCategoryIds = that.productList.firstCategoryIds.join(',');
-                        data.secondCategoryIds = that.productList.secondCategoryIds.join(',');
-                        data.thirdCategoryIds = that.productList.thirdCategoryIds.join(',');
-                        data.productIds = that.productList.products.join(',');
-                    } else {
-                        data.firstCategoryIds = that.productList.firstCategoryIds;
-                        data.secondCategoryIds = that.productList.secondCategoryIds;
-                        data.thirdCategoryIds = that.productList.thirdCategoryIds;
-                        data.productIds = that.productList.products;
-                    }
-                    data.categoryType = 5;
-                } else {
-                    let firstCategoryIds = []; let secondCategoryIds = []; let thirdCategoryIds = []; let productIds = [];
-                    firstCategoryIds = that.productList.firstCategoryIds;
-                    secondCategoryIds = that.productList.secondCategoryIds;
-                    thirdCategoryIds = that.productList.thirdCategoryIds;
-                    productIds = that.productList.products;
-                    // if (that.productList.length == 0) {
-                    //     this.$message.warning('请选择可用品类!');
-                    //     return;
-                    // } else {
-                    if (firstCategoryIds.length == 0 && secondCategoryIds.length == 0 && thirdCategoryIds.length === 0 && productIds.length == 0) {
-                        this.$message.warning('请选择可用品类!');
-                        return;
-                    }
-                    // }
-                    if (that.productList.checkAll) {
-                        data.categoryType = 1;// 全品类
-                    } else {
-                        if (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0 && productIds.length === 1) {
-                            data.categoryType = 5;// 单商品
-                        } else if (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0 && productIds.length > 1) {
-                            data.categoryType = 4;// 多商品
-                        } else if (((firstCategoryIds.length === 1 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0) || (firstCategoryIds.length === 0 && secondCategoryIds.length === 1 && thirdCategoryIds.length === 0) || (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 1)) && productIds.length === 0) {
-                            data.categoryType = 3;// 单品类
-                        } else {
-                            data.categoryType = 2;// 多品类
+                        if (!data.name) {
+                            this.$message.warning('请输入优惠券名称!');
+                            return;
                         }
-                    }
+                        if (!data.type) {
+                            this.$message.warning('请选择优惠券类型!');
+                            return;
+                        }
+                        if (!data.value) {
+                            if (data.type != 3) {
+                                this.$message.warning('请输入券值!');
+                            } else {
+                                this.$message.warning('请选中折扣值!');
+                            }
+                            return;
+                        }
+                        if (!data.couponTemplateId) {
+                            this.$message.warning('请选择券模板!');
+                            return;
+                        }
+                        if (this.useConditions) {
+                            data.useConditions = this.useConditions;
+                        } else {
+                            data.useConditions = 0;
+                        }
+                        data.id = this.id;
+                        const reg = /^[0-9]{1,5}$/;// 1-5位数字
+                        if (!this.isDay) {
+                            data.effectiveDays = this.day;
+                            if (!data.effectiveDays) {
+                                this.$message.warning('请输入可用周期数据!');
+                                return;
+                            }
+                            data.waitDays = 0;
+                            data.cycleFlag = 0;
+                            if (!reg.test(this.day)) {
+                                this.$message.warning('请输入1-5位数字的周期时间');
+                                return;
+                            }
+                        } else {
+                            data.waitDays = this.waitDays;
+                            data.effectiveDays = this.effectiveDays;
+                            data.cycleFlag = 1;
+                            if (!data.effectiveDays || !data.waitDays) {
+                                this.$message.warning('请输入可用周期数据!');
+                                return;
+                            }
+                            if (!reg.test(this.waitDays) || !reg.test(this.effectiveDays)) {
+                                this.$message.warning('请输入1-5位数字的周期时间');
+                                return;
+                            }
+                        }
+                        if (that.remindFlag) {
+                            data.remindFlag = 1;
+                            data.remindDays = this.remindDays;
+                            if (!data.remindDays) {
+                                this.$message.warning('请输入到期前提醒天数!');
+                                return;
+                            }
+                        } else {
+                            data.remindFlag = 0;
+                        }
+                        if (this.form.type == 4) {
+                            if (that.productList.firstCategoryIds.length === 0 && that.productList.secondCategoryIds.length === 0 && that.productList.thirdCategoryIds.length === 0 && that.productList.products.length === 0) {
+                                this.$message.warning('请选择可用品类!');
+                                return;
+                            }
+                            if (that.productList.firstCategoryIds instanceof Array) {
+                                data.firstCategoryIds = that.productList.firstCategoryIds.join(',');
+                                data.secondCategoryIds = that.productList.secondCategoryIds.join(',');
+                                data.thirdCategoryIds = that.productList.thirdCategoryIds.join(',');
+                                data.productIds = that.productList.products.join(',');
+                            } else {
+                                data.firstCategoryIds = that.productList.firstCategoryIds;
+                                data.secondCategoryIds = that.productList.secondCategoryIds;
+                                data.thirdCategoryIds = that.productList.thirdCategoryIds;
+                                data.productIds = that.productList.products;
+                            }
+                            data.categoryType = 5;
+                        } else {
+                            let firstCategoryIds = []; let secondCategoryIds = []; let thirdCategoryIds = []; let productIds = [];
+                            firstCategoryIds = that.productList.firstCategoryIds;
+                            secondCategoryIds = that.productList.secondCategoryIds;
+                            thirdCategoryIds = that.productList.thirdCategoryIds;
+                            productIds = that.productList.products;
+                            // if (that.productList.length == 0) {
+                            //     this.$message.warning('请选择可用品类!');
+                            //     return;
+                            // } else {
+                            if (firstCategoryIds.length == 0 && secondCategoryIds.length == 0 && thirdCategoryIds.length === 0 && productIds.length == 0) {
+                                this.$message.warning('请选择可用品类!');
+                                return;
+                            }
+                            // }
+                            if (that.productList.checkAll) {
+                                data.categoryType = 1;// 全品类
+                            } else {
+                                if (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0 && productIds.length === 1) {
+                                    data.categoryType = 5;// 单商品
+                                } else if (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0 && productIds.length > 1) {
+                                    data.categoryType = 4;// 多商品
+                                } else if (((firstCategoryIds.length === 1 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0) || (firstCategoryIds.length === 0 && secondCategoryIds.length === 1 && thirdCategoryIds.length === 0) || (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 1)) && productIds.length === 0) {
+                                    data.categoryType = 3;// 单品类
+                                } else {
+                                    data.categoryType = 2;// 多品类
+                                }
+                            }
 
-                    data.firstCategoryIds = firstCategoryIds.length ? firstCategoryIds.join(',') : '';
-                    data.secondCategoryIds = secondCategoryIds.length ? secondCategoryIds.join(',') : '';
-                    data.thirdCategoryIds = thirdCategoryIds.length ? thirdCategoryIds.join(',') : '';
-                    data.productIds = productIds.length ? productIds.join(',') : '';
-                }
-                if (!this.checkedUsers) {
-                    this.$message.warning('请选择可使用用户层级!');
-                    return;
-                }
-                if (that.totalNumber) {
-                    data.totalNumber = -1;
-                } else {
-                    if (!data.totalNumber) {
-                        this.$message.warning('请输入发放数量!');
-                        return;
+                            data.firstCategoryIds = firstCategoryIds.length ? firstCategoryIds.join(',') : '';
+                            data.secondCategoryIds = secondCategoryIds.length ? secondCategoryIds.join(',') : '';
+                            data.thirdCategoryIds = thirdCategoryIds.length ? thirdCategoryIds.join(',') : '';
+                            data.productIds = productIds.length ? productIds.join(',') : '';
+                        }
+                        if (!this.checkedUsers) {
+                            this.$message.warning('请选择可使用用户层级!');
+                            return;
+                        }
+                        if (that.totalNumber) {
+                            data.totalNumber = -1;
+                        } else {
+                            if (!data.totalNumber) {
+                                this.$message.warning('请输入发放数量!');
+                                return;
+                            }
+                        }
+                        if (that.getLimit) {
+                            data.getLimit = -1;
+                        } else {
+                            if (!data.totalNumber) {
+                                this.$message.warning('请输入每人限额!');
+                                return;
+                            }
+                        }
+                        if (this.useConditions) {
+                            data.useConditions = this.useConditions;
+                        } else {
+                            data.useConditions = 0;
+                        }
+                        that.btnLoading = true;
+                        request.addOrModifyCoupon(data).then(res => {
+                            that.$message.success(res.msg);
+                            that.$router.push('/discountCoupon');
+                            that.btnLoading = false;
+                        }).catch(error => {
+                            console.log(error);
+                            that.btnLoading = false;
+                        });
                     }
-                }
-                if (that.getLimit) {
-                    data.getLimit = -1;
-                } else {
-                    if (!data.totalNumber) {
-                        this.$message.warning('请输入每人限额!');
-                        return;
-                    }
-                }
-                if (that.remindFlag) {
-                    data.remindFlag = 1;
-                    data.remindDays = this.remindDays;
-                    if (!data.remindDays) {
-                        this.$message.warning('请输入到期前提醒天数!');
-                        return;
-                    }
-                } else {
-                    data.remindFlag = 0;
-                }
-                if (this.useConditions) {
-                    data.useConditions = this.useConditions;
-                } else {
-                    data.useConditions = 0;
-                }
-                that.btnLoading = true;
-                request.addOrModifyCoupon(data).then(res => {
-                    that.$message.success(res.msg);
-                    that.$router.push('/discountCoupon');
-                    that.btnLoading = false;
-                }).catch(error => {
-                    console.log(error);
-                    that.btnLoading = false;
                 });
             },
             // 取消

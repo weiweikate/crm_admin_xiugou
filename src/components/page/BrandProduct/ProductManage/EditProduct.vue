@@ -5,7 +5,7 @@
             <div class="pro-title">基本信息</div>
             <el-form :model="form" ref="form" label-width="100px">
                 <el-form-item label="产品名称">
-                    <el-input style="width:300px" :maxlength="16" v-model="form.name" placeholder="请输入产品名称"></el-input>
+                    <el-input style="width:300px" :maxlength="46" v-model="form.name" placeholder="请输入产品名称"></el-input>
                 </el-form-item>
                 <el-form-item label="产品图片">
                     <el-upload class="img-uploader" :action="uploadImg"
@@ -28,7 +28,7 @@
                             </div>
                         </transition-group>
                     </draggable>
-                    <el-upload class="img-uploader" :before-upload="beforeUploadArr" :action="uploadImg"
+                    <el-upload class="img-uploader" :before-upload="beforeAvatarUpload" :action="uploadImg"
                                :show-file-list="false" :on-success="successUpload" :disabled="isUseUpload" multiple>
                         <i class="el-icon-plus avatar-uploader-icon">添加图片</i>
                     </el-upload>
@@ -36,7 +36,7 @@
                 </el-form-item>
                 <el-form-item label="产品分类">
                     <el-cascader @change='getProItemId' v-model="proItemArr" :options="itemList"
-                                 @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
+                                  :props="itemProps"></el-cascader>
                     <span style="margin-left:30px">产品品牌</span>
                     <el-select filterable @change="getSupplyList" v-model="form.brandId" placeholder="请选择">
                         <el-option v-for="(v,k) in brandArr" :key="k" :label="v.name" :value="v.id"></el-option>
@@ -119,9 +119,7 @@
                 </el-upload>
                 <div class="tag-btn-group">
                     <el-button-group v-loading="tagLoading">
-                        <el-button :type="figureTag?'primary':''" @click="getAllTags(1,'figureTag', figureTag)">人物标签</el-button>
-                        <el-button :type="goodsTag?'primary':''" @click="getAllTags(2,'goodsTag', goodsTag)">商品标签</el-button>
-                        <el-button :type="sceneTag?'primary':''" @click="getAllTags(3,'sceneTag', sceneTag)">场景标签</el-button>
+                        <el-button v-for="(v, k) in tagTypeArr" :key="k" :type="v.selected?'primary':''" @click="getAllTags(v.id,k, v.selected)">{{v.name}}</el-button>
                     </el-button-group>
                 </div>
                 <div class="selected-tag">
@@ -142,7 +140,7 @@
                     </el-button>
                 </div>
                 <el-button type="primary" :loading="btnLoading" @click="submitForm">确认发布</el-button>
-                <el-button>取消</el-button>
+                <el-button @click="goBack">取消</el-button>
             </el-form>
         </el-card>
     </div>
@@ -156,14 +154,14 @@
     import * as api from '@/api/api.js';
     import utils from '@/utils/index.js';
     import request from '@/http/http';
-
+    import { beforeAvatarUpload } from '@/JS/commom';
     export default {
         components: {
             draggable,
             vBreadcrumb,
             icon
         },
-
+        mixins: [beforeAvatarUpload],
         data() {
             return {
                 nav: ['品牌产品管理', '产品管理', '发布产品'],
@@ -250,9 +248,7 @@
                 proItemArr: [],
                 btnLoading: false,
                 bodyLoading: false,
-                figureTag: false, // 人物标签
-                goodsTag: false, // 商品标签
-                sceneTag: false, // 场景标签
+                tagTypeArr: [], // 标签类型
                 tagLoading: false // 标签loading
             };
         },
@@ -264,6 +260,7 @@
         },
 
         activated() {
+            this.getAllTagType();
             this.uploadImg = api.uploadImg;
             this.imgArr = [];
             this.proItemArr = [];
@@ -287,8 +284,8 @@
             async getInfo() {
                 this.bodyLoading = true;
                 this.productId = this.$route.query.releaseProduct || sessionStorage.getItem('releaseProduct');
-                // 获取一级类目
-                await this.getFirstItem();
+                // 获取类目
+                await this.getAllCat();
                 // 获取品牌列表
                 await this.getBrandList();
                 // 获取运费模板
@@ -300,10 +297,8 @@
                     this.form.name = res.data.name;
                     this.form.firstCategoryId = Number(res.data.firstCategoryId);
                     this.proItemArr.push(this.form.firstCategoryId);
-                    this.handleItemChange(this.proItemArr);
                     this.form.secCategoryId = Number(res.data.secCategoryId);
                     this.proItemArr.push(this.form.secCategoryId);
-                    this.handleItemChange(this.proItemArr);
                     this.form.thirdCategoryId = Number(res.data.thirdCategoryId);
                     this.proItemArr.push(this.form.thirdCategoryId);
                     this.form.brandId = res.data.brandId;
@@ -340,10 +335,11 @@
                 if (this.imgArr.length == 0) {
                     this.$message.warning('请添加产品图片');
                     return false;
-                } else if (this.selectedTagArr.length == 0) {
-                    this.$message.warning('请添加产品标签');
-                    return false;
                 }
+                // else if (this.selectedTagArr.length == 0) {
+                //     this.$message.warning('请添加产品标签');
+                //     return false;
+                // }
                 if (this.productParam.length == 0) {
                     this.$message.warning('请输入产品参数');
                     return false;
@@ -510,34 +506,27 @@
                 });
                 if (!tmp) {
                     let typeId = 1;
-                    let tagName = 'figureTag';
-                    if (this.figureTag) {
-                        typeId = 1;
-                        tagName = 'figureTag';
-                    } else if (this.goodsTag) {
-                        typeId = 2;
-                        tagName = 'goodsTag';
-                    } else if (this.sceneTag) {
-                        typeId = 3;
-                        tagName = 'sceneTag';
-                    } else {
-                        return;
-                    }
+                    let tagName = '';
+                    this.tagTypeArr.forEach((v, k)=>{
+                        if (v.selected) {
+                            typeId = v.id;
+                            tagName = k;
+                        }
+                    })
                     const data = {
                         name: this.tagName,
-                        status: 1,
-                        typeId: typeId
+                        status: 1
                     };
                     request.addSysTagLibrary(data).then(res => {
                         this.$message.success(res.msg);
-                        this[tagName] = true;
-                        this.getAllTags(typeId, tagName, this[tagName]);
+                        this.selectedTagArr.push({ label: res.data.name, value: res.data.id });
+                        this.tagTypeArr[tagName].selected = true;
                         this.tagName = '';
                     }).catch(err => {
                         console.log(err);
                     });
                 } else {
-                    this.$message.warning('标签已经添加，请不要重复添加!');
+                    this.$message.warning('标签已存在，请不要重复添加!');
                 }
             },
             // 添加标签
@@ -549,63 +538,34 @@
                 v.selected = true;
                 this.selectedTagArr.push({ label: v.label, value: v.value });
             },
-            // 获取一级类目
-            getFirstItem() {
+            // 获取所有分类
+            getAllCat() {
                 this.itemList = [];
-                request.queryProductCategoryList({ fatherId: 0, level: 1, pageSize: 100000 }).then(res => {
-                    res.data.data.forEach((v, k) => {
+                request.getAllProductCategory({}).then(res => {
+                    res.data.firstList.forEach(v => {
                         this.itemList.push({ label: v.name, value: v.id, children: [] });
                     });
+                    res.data.secList.forEach(v => {
+                        for (let i = 0; i < this.itemList.length; i++) {
+                            if (v.fatherId == this.itemList[i].value) {
+                                this.itemList[i].children.push({ label: v.name, value: v.id, children: [] });
+                            }
+                        }
+                    });
+                    res.data.thirdList.forEach(v => {
+                        for (let i = 0; i < this.itemList.length; i++) {
+                            if (this.itemList[i].children.length == 0) { continue; }
+                            for (let j = 0; j < this.itemList[i].children.length; j++) {
+                                if (v.fatherId == this.itemList[i].children[j].value) {
+                                    this.itemList[i].children[j].children.push({ label: v.name, value: v.id });
+                                }
+                            }
+                        }
+                    });
+                    console.log(res);
                 }).catch(err => {
                     console.log(err);
                 });
-            },
-            // 获取二三级类目
-            async handleItemChange(val) {
-                let index = 0;
-                const data = {};
-                data.pageSize = 100000;
-                if (val[1]) {
-                    let tmpIndex = 0;
-                    this.itemList.forEach((v, k) => {
-                        if (v.value == val[0]) {
-                            tmpIndex = k;
-                            v.children.forEach((value, key) => {
-                                if (value.value == val[1]) {
-                                    index = key;
-                                }
-                            });
-                        }
-                    });
-                    data.fatherId = val[1];
-                    data.level = 3;
-                    data.status = 1;
-                    await request.queryProductCategoryList(data).then(res => {
-                        this.itemList[tmpIndex].children[index].children = [];
-                        res.data.data.forEach((v, k) => {
-                            this.itemList[tmpIndex].children[index].children.push({ label: v.name, value: v.id });
-                        });
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                } else {
-                    this.itemList.forEach((v, k) => {
-                        if (v.value == val[0]) {
-                            index = k;
-                        }
-                    });
-                    data.fatherId = val[0];
-                    data.level = 2;
-                    data.status = 2;
-                    await request.queryProductCategoryList(data).then(res => {
-                        this.itemList[index].children = [];
-                        res.data.data.forEach((v, k) => {
-                            this.itemList[index].children.push({ label: v.name, value: v.id, children: [] });
-                        });
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                }
             },
             // 获取一二三级类目id
             getProItemId(val) {
@@ -613,6 +573,7 @@
                 this.form.secCategoryId = val[1];
                 this.form.thirdCategoryId = val[2];
                 this.getProductParam(val[2]);
+                this.getAllTags(this.tagTypeArr[0].id, 0, this.tagTypeArr[0].selected);
             },
             // 获取品牌列表
             getBrandList(val) {
@@ -648,29 +609,45 @@
                 });
             },
             // 获取所有标签
-            getAllTags(val, name, status) {
-                this.figureTag = false;
-                this.goodsTag = false;
-                this.sceneTag = false;
-                this[name] = status;
+            getAllTags(val, key, status) {
+                if (this.form.secCategoryId === '') return;
+                this.tagTypeArr.forEach(v => {
+                    v.selected = false;
+                })
+                this.tagTypeArr[key].selected = status;
                 this.tagLoading = true;
-                request.querySysTagLibraryList({ typeId: val }).then(res => {
+                request.querySysTagLibraryList({ typeId: val, secCategoryId: this.form.secCategoryId }).then(res => {
                     this.tagLoading = false;
                     this.tagArr = [];
-                    this[name] = !this[name];
-                    res.data.forEach(v => {
+                    this.tagTypeArr[key].selected = !this.tagTypeArr[key].selected;
+                    res.data[0].sysTagLibraryVOList.forEach(v => {
                         this.tagArr.push({ label: v.name, value: v.id });
                     });
                     this.tagArr.forEach((v, k) => {
                         this.selectedTagArr.forEach((v1, k1) => {
                             if (v.value == v1.value) {
                                 v.selected = true;
-                                console.log(v);
                             }
                         });
                     });
                 }).catch(err => {
                     this.tagLoading = false;
+                    console.log(err);
+                });
+            },
+            // 获取所有标签类型
+            getAllTagType() {
+                request.querySysTagTypePageList({ pageSize: 100000 }).then(res => {
+                    this.tagTypeArr = [];
+                    if (res.data.data.length === 0) return;
+                    res.data.data.forEach(v => {
+                        this.tagTypeArr.push({
+                            id: v.id,
+                            name: v.name,
+                            isSelected: false
+                        })
+                    });
+                }).catch(err => {
                     console.log(err);
                 });
             },
@@ -685,6 +662,10 @@
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+            // 返回
+            goBack() {
+                this.$router.push('/productList');
             }
         }
     };

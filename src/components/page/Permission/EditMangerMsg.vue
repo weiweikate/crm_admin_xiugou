@@ -162,30 +162,22 @@ export default {
                 this.$message.warning('请输入手机号');
                 return;
             }
+            const data = {};
             const that = this;
             this.code = false;
             this.codeTime = 60;
-            const timer = setInterval(function() {
+            let timer = setInterval(function() {
                 that.codeTime--;
                 if (that.codeTime <= 0) {
                     that.code = true;
                     clearInterval(timer);
                 }
             }, 1000);
-            const data = {};
             data.phone = this.form.phone;
-            data.code = 'ADMIN_FIRSTLOGIN_CODE';
-            this.$axios.post(api.sendUpdatePwdCode, data)
-                .then(res => {
-                    if (res.data.code == 200) {
-                        this.$message.success('已发送验证码');
-                    } else {
-                        this.$message.warning(res.data.msg);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            data.templateCode = 'ADMIN_FIRSTLOGIN_CODE';
+            request.getCode(data).then(res => {
+                this.$message.success(res.msg);
+            });
         }
     }
 };

@@ -67,7 +67,7 @@
                     </el-table-column>
                     <el-table-column prop="nickName" label="领取人" align="center"></el-table-column>
                     <el-table-column label="使用时间" align="center">
-                        <template slot-scope="scope">
+                        <template slot-scope="scope" v-if="scope.row.status == 1">
                             {{scope.row.updateTime|formatDateAll}}
                         </template>
                     </el-table-column>
@@ -81,7 +81,7 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                                <el-button v-if="scope.row.updateTime" @click="productInfo(scope.row)" type="primary">
+                                <el-button v-if="scope.row.status == 1" @click="productInfo(scope.row)" type="primary">
                                     订单详情
                                 </el-button>
                         </template>
@@ -107,7 +107,7 @@
                         </div>
                         <el-button slot="reference" @click="isShowPop = true">删除</el-button>
                     </el-popover>
-                    <a :href="downloadCouponList" target="_blank">
+                    <a ref="exportData" @click="downloadCouponData">
                         <el-button type="primary">导出全部</el-button>
                     </a>
                 </div>
@@ -118,7 +118,6 @@
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import utils from '@/utils/index.js';
     import moment from 'moment';
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http.js';
@@ -148,37 +147,35 @@
                     currentPage: 1,
                     totalPage: 0
                 },
-                addMask: false,
-                left: '', // 剩余数量
-                value: '', // 券值
-                repertoryNumber: '', // 库存
-                params: {}, // 传参
+                id: {}, // 传参
                 downloadCouponList: '' // 导出接口地址
             };
         },
 
         activated() {
-            this.params.id = this.$route.query.id || JSON.parse(sessionStorage.getItem('couponData')).id;
-            this.repertoryNumber = '';
+            this.id = this.$route.query.couponDataId || sessionStorage.getItem('couponDataId');
             this.getList(1);
-            const status = this.form.status;
-            const couponConfigId = this.params.id;
-            const receiveStartTime = this.form.getDate ? moment(this.form.getDate[0]).format('YYYY-MM-DD') : '';
-            const receiveEndTime = this.form.getDate ? moment(this.form.getDate[1]).format('YYYY-MM-DD') : '';
-            const availableStartTime = this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '';
-            const availableEndTime = this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : '';
-            this.downloadCouponList = api.downloadCouponList + '?status=' + status + '&couponConfigId=' + couponConfigId + '&receiveStartTime=' + receiveStartTime + '&receiveEndTime=' + receiveEndTime + '&availableStartTime=' + availableStartTime + '&availableEndTime=' + availableEndTime;
+            this.downloadCouponData();
         },
 
         methods: {
-
+            downloadCouponData() {
+                const status = this.form.status;
+                const couponConfigId = this.id;
+                const receiveStartTime = this.form.getDate ? moment(this.form.getDate[0]).format('YYYY-MM-DD') : '';
+                const receiveEndTime = this.form.getDate ? moment(this.form.getDate[1]).format('YYYY-MM-DD') : '';
+                const availableStartTime = this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '';
+                const availableEndTime = this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : '';
+                this.downloadCouponList = api.downloadCouponList + '?status=' + status + '&couponConfigId=' + couponConfigId + '&receiveStartTime=' + receiveStartTime + '&receiveEndTime=' + receiveEndTime + '&availableStartTime=' + availableStartTime + '&availableEndTime=' + availableEndTime;
+                this.$refs.exportData.href = this.downloadCouponList;
+            },
             //   提交表单
             getList(val) {
                 const data = {
                     page: val,
                     pageSize: this.page.pageSize,
                     status: this.form.status,
-                    couponConfigId: this.params.id,
+                    couponConfigId: this.id,
                     receiveStartTime: this.form.getDate ? moment(this.form.getDate[0]).format('YYYY-MM-DD') : '',
                     receiveEndTime: this.form.getDate ? moment(this.form.getDate[1]).format('YYYY-MM-DD') : '',
                     availableStartTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',

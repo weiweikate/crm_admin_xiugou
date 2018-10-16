@@ -27,7 +27,7 @@
                     <template slot-scope="scope">
                         <el-button @click='editItem(scope.row)' type="primary">编辑</el-button>
                         <!--<el-button @click='preview(scope.row.id)' type="success">预览</el-button>-->
-                        <el-button type="warning" @click="del(scope.row.id)">删除</el-button>
+                        <el-button type="warning" @click="del(scope.row.code)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -43,7 +43,7 @@
                 </el-pagination>
             </div>
         </el-card>
-        <deletetoast :id="delId" :url="delUrl" :status="3" @msg="deleteToast" v-if="isShowDel"></deletetoast>
+        <deletetoast :id="delId" :url="delUrl" :status="3" :isTopic="true" @msg="deleteToast" v-if="isShowDel"></deletetoast>
     </div>
 </template>
 
@@ -105,7 +105,7 @@
             },
             // 删除专题
             del(val) {
-                this.delUrl = 'deleteTopicById';
+                this.delUrl = 'deleteTopicByCode';
                 this.delId = val;
                 this.isShowDel = true;
             },

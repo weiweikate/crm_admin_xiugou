@@ -96,9 +96,11 @@
 <script>
 import * as api from '@/api/api.js';
 import request from '@/http/http.js';
+import { beforeAvatarUpload } from '@/JS/commom';
+
 export default {
     components: {},
-
+    mixins: [beforeAvatarUpload],
     props: ['name', 'tplData'],
 
     watch: {
@@ -171,7 +173,14 @@ export default {
             if (this.pName == '') {
                 this.$message.warning('请输入专题名称');
                 return;
-            } else if (this.bannerForm.imgUrl == '') {
+            } else {
+                const reg = /^[A-Za-z_\u4e00-\u9fa5]{2,50}$/;
+                if (!reg.test(this.pName)) {
+                    this.$message.warning('请输入2-50位由汉字字母下划线组成的专题名称');
+                    return;
+                }
+            }
+            if (this.bannerForm.imgUrl == '') {
                 this.$message.warning('请上传banner图');
                 return;
             }
@@ -236,15 +245,6 @@ export default {
         // 上传头部banner成功回调
         handleAvatarSuccess(res) {
             this.bannerForm.imgUrl = res.data;
-        },
-        // 图片格式
-        beforeAvatarUpload(file) {
-            const isJPG = (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png');
-
-            if (!isJPG) {
-                this.$message.error('上传图片只能是 jpg,jpeg,png 格式!');
-            }
-            return isJPG;
         },
         // 取消
         cancel() {

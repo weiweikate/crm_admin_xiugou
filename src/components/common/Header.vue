@@ -19,14 +19,12 @@
                     </el-tooltip>
                 </div>
                 <!-- 消息中心 -->
-                <!-- <div class="btn-bell">
+                <div class="btn-bell">
                     <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
-                        <router-link to="/tabs">
-                            <i class="el-icon-bell"></i>
-                        </router-link>
+                        <i class="el-icon-bell" @click="getMsg"></i>
                     </el-tooltip>
                     <span class="btn-bell-badge" v-if="message"></span>
-                </div> -->
+                </div>
                 <!-- 用户头像 -->
                 <div v-if="face" class="user-avator"><img :src="face"></div>
                 <div v-else class="user-avator"><img src="../../assets/images/avatar.jpg"></div>
@@ -42,25 +40,28 @@
                 </el-dropdown>
             </div>
         </div>
+        <message-tip v-show="showMsg" ref="msg"></message-tip>
     </div>
 </template>
 <script>
 import bus from '../common/bus';
 import vTags from './Tags.vue';
-import * as api from '../../api/api.js';
+import messageTip from '@/components/page/Dashboard/messageTip';
 import request from '@/http/http.js';
 export default {
     components: {
-        vTags
+        vTags,
+        messageTip
     },
     data() {
         return {
             isShowTitle: true,
             collapse: false,
             fullscreen: false,
+            showMsg: false,
             face: '',
             name: '请登陆',
-            message: 2
+            message: 0
         };
     },
     computed: {
@@ -71,9 +72,10 @@ export default {
     },
     created() {
         this.id = localStorage.getItem('ms_userID');
+        // this.getNoReadNum();
         request.findAdminUserbyId({ id: this.id }).then(res => {
             this.face = res.data.face;
-        })
+        });
     },
     methods: {
     // 用户名下拉菜单选择事件
@@ -96,7 +98,6 @@ export default {
             bus.$emit('collapse', this.collapse);
             this.isShowTitle = !this.collapse;
         },
-
         // 全屏事件
         handleFullScreen() {
             const element = document.documentElement;
@@ -123,6 +124,23 @@ export default {
                 }
             }
             this.fullscreen = !this.fullscreen;
+        },
+        // 获取未读消息数量
+        getNoReadNum() {
+            clearInterval(timer);
+            var timer = setInterval(function() {
+                request.queryNewMessageCount({}).then(res => {
+                    this.message = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
+            }, 10000);
+        },
+        // 获取消息
+        getMsg() {
+            if (this.message == 0) return;
+            this.$refs.msg.getAllMsg();
+            this.showMsg = true;
         }
     }
 };
@@ -184,7 +202,7 @@ export default {
   width: 8px;
   height: 8px;
   border-radius: 4px;
-  background: #f56c6c;
+  background: #fff;
   color: #fff;
 }
 .btn-bell .el-icon-bell {

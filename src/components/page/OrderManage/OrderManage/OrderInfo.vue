@@ -21,21 +21,16 @@
                 <span v-if='orderStatus == 1' class="activite-status">当前订单状态：待支付</span>
                 <span v-if='orderStatus == 2' class="activite-status">当前订单状态：待发货</span>
                 <span v-if='orderStatus == 3' class="activite-status">当前订单状态：待收货</span>
-                <span v-if='orderStatus == 4' class="activite-status">当前订单状态：待自提</span>
-                <span v-if='orderStatus == 5' class="activite-status">当前订单状态：已完成（确认收货）</span>
-                <span v-if='orderStatus == 6' class="activite-status">当前订单状态：已关闭（退款关闭）</span>
-                <span v-if='orderStatus == 7' class="activite-status">当前订单状态：已完成</span>
-                <span v-if='orderStatus == 8' class="activite-status">当前订单状态：已关闭</span>
-                <span v-if='orderStatus == 9' class="activite-status">当前订单状态：用户删除</span>
-                <span v-if='orderStatus == 10' class="activite-status">当前订单状态：超时关闭</span>
+                <span v-if='orderStatus == 4' class="activite-status">当前订单状态：确认收货</span>
+                <span v-if='orderStatus == 5' class="activite-status">当前订单状态：已完成</span>
+                <span v-if='orderStatus == 6' class="activite-status">当前订单状态：已关闭(退货关闭)</span>
+                <span v-if='orderStatus == 7' class="activite-status">当前订单状态：已关闭(用户关闭)</span>
+                <span v-if='orderStatus == 8' class="activite-status">当前订单状态：已关闭(超时关闭)</span>
                 <span v-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
                 <span v-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
                 <br/>
                 <el-button v-if="orderStatus == 2" @click='orderSendOut' class="cloud-delivery-btn"
-                           type="danger">云仓发货
-                </el-button>
-                <el-button v-if="orderStatus == 4" @click='changeStatus(orderMsg.url)'
-                           class="cloud-delivery-btn" type="danger">已提货
+                           type="danger">推送云仓
                 </el-button>
                 <p class="preferential-info" @click='isShowPreferential = true'>优惠详情</p>
                 <span class="mark">标记</span>
@@ -52,28 +47,22 @@
             <div class="user-info">
                 <p class="info-title">买家信息</p>
                 <p class="info-content">
-                    <span class="smal-span">昵称：{{orderMsg.nickName}}</span>
-                    <span class="smal-span">联系方式：{{orderMsg.phone}}</span>
+                    <span class="smal-span">昵称：{{orderMsg.dealerName}}</span>
+                    <span class="smal-span">联系方式：{{orderMsg.dealerPhone}}</span>
                 </p>
-                <p v-if='orderStatus == 3 || orderStatus == 5 || orderStatus == 7' class="info-title">收货地址</p>
-                <p v-if='orderStatus == 3 || orderStatus == 5 || orderStatus == 7' class="info-content">
+                <p class="info-title">收货地址</p>
+                <p class="info-content">
                     <span class="smal-span">收货人：{{orderMsg.receiver}}</span>
                     <span class="smal-span">收货人联系方式：{{orderMsg.recevicePhone}}</span>
                 </p>
-                <p v-if='(orderStatus == 3 || orderStatus == 5 || orderStatus == 7) && pickedUp !=2'
-                   class="info-content">
+                <p class="info-content">
                     <span class="smal-span">收货地址：{{orderMsg.receiveAddress}}</span>
                 </p>
                 <p class="info-content">
                     <span class="smal-span">买家备注：{{orderMsg.buyerRemark}}</span>
                 </p>
-                <p v-if='orderStatus == 4 || orderStatus == 5 || orderStatus == 7' class="info-title">买家自提</p>
-                <p v-if='orderStatus == 4 || orderStatus == 5 || orderStatus == 7' class="info-content">
-                    <span class="smal-span">提货点：{{orderMsg.storehouseName}}</span>
-                    <el-button v-if='orderStatus == 4' type="primary" @click="isShowWarehouse = true">更换提货仓</el-button>
-                </p>
-                <p v-if='orderStatus == 3 || orderStatus == 5 || orderStatus == 7' class="info-title">物流信息</p>
-                <p v-if='orderStatus == 3 || orderStatus == 5 || orderStatus == 7' class="info-content">
+                <p v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5' class="info-title">物流信息</p>
+                <p v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5' class="info-content">
                     <span class="smal-span">物流公司名称：{{orderMsg.expressName}}</span>
                     <span class="smal-span">运单号：{{orderMsg.expressNo}}</span>
                     <span style="color:#33b4ff;cursor:pointer" @click="showLogisticsMsg">查看物流信息</span>
@@ -89,23 +78,23 @@
             <!-- 订单信息 -->
             <div class="order-info">
                 <p class="info-content">
-                    <span v-if='orderStatus != 9' class="content-con">订单号：{{ orderMsg.orderNum }}</span>
-                    <span v-if='orderStatus != 9' class="content-con">创建时间：{{ orderMsg.createTime | formatDate }}</span>
-                    <span v-if='orderStatus != 9' class="content-con">平台支付时间：{{ orderMsg.payTime | formatDate }}</span>
-                    <span v-if='orderStatus != 1 && orderStatus != 2 && orderStatus != 9' class="content-con">第三方支付时间：{{ orderMsg.payTime | formatDate }}</span>
+                    <span class="content-con">订单号：{{ orderMsg.orderNum }}</span>
+                    <span class="content-con">创建时间：{{ orderMsg.createTime | formatDateAll }}</span>
+                    <span class="content-con">平台支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
+                    <span v-if='orderStatus != 1 && orderStatus != 2' class="content-con">第三方支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
                 </p>
                 <p class="info-content">
-                    <span v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5 || orderStatus == 7'
-                          class="content-con">发货时间：{{ orderMsg.sendTime | formatDate }}</span>
-                    <span v-if='orderStatus == 6 || orderStatus == 8 || orderStatus == 10' class="content-con">取消时间：{{ orderMsg.cancleTime }}</span>
-                    <span v-if='orderStatus != 1 && orderStatus != 2 && orderStatus != 9' class="content-con">支付宝（第三方支付）交易号：{{ orderMsg.tradeNo }}</span>
-                    <span v-if='orderStatus == 5 || orderStatus == 7' class="content-con">确认时间：{{orderMsg.deliveryTime | formatDate}}</span>
+                    <span v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5'
+                          class="content-con">发货时间：{{ orderMsg.sendTime | formatDateAll }}</span>
+                    <span v-if='orderStatus == 6 || orderStatus == 7 || orderStatus == 8' class="content-con">取消时间：{{ orderMsg.cancleTime }}</span>
+                    <span v-if='orderStatus != 1 && orderStatus != 2 ' class="content-con">支付宝（第三方支付）交易号：{{ orderMsg.tradeNo }}</span>
+                    <span v-if='orderStatus == 4 || orderStatus == 5' class="content-con">确认时间：{{orderMsg.deliveryTime | formatDateAll}}</span>
                 </p>
                 <el-table border :data="tableData" :span-method="spanMethod">
                     <el-table-column label="产品名称" align="center" width="500px">
                         <template slot-scope="scope">
                             <div class="name">
-                                <img :src="scope.row.imgUrl" alt="">
+                                <img :src="scope.row.specImg" alt="">
                                 <span class="pro-name">{{scope.row.productName}}</span>
                                 <span class="pro-spec">{{scope.row.spec}}</span>
                             </div>
@@ -122,13 +111,12 @@
                     <el-table-column prop="status" label="交易状态" align="center">
                         <template slot-scope="scope">
                             <template v-if='scope.row.status == 1'>待支付</template>
-                            <template v-else-if='scope.row.status == 2'>待收货</template>
-                            <template v-else-if='scope.row.status == 3'>确认收货</template>
-                            <template v-else-if='scope.row.status == 4'>退款中</template>
-                            <template v-else-if='scope.row.status == 5'>退货中</template>
-                            <template v-else-if='scope.row.status == 6'>换货中</template>
-                            <template v-else-if='scope.row.status == 8'>已完成</template>
-                            <template v-else-if='scope.row.status == 9'>已关闭</template>
+                            <template v-else-if='scope.row.status == 2'>待发货</template>
+                            <template v-else-if='scope.row.status == 3'>待收货</template>
+                            <template v-else-if='scope.row.status == 4'>退货中</template>
+                            <template v-else-if='scope.row.status == 5'>确认收货</template>
+                            <template v-else-if='scope.row.status == 6'>已完成</template>
+                            <template v-else-if='scope.row.status == 7'>已关闭</template>
                         </template>
                     </el-table-column>
                     <el-table-column label="实收款" align="center">
@@ -153,37 +141,11 @@
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.returnProductType">
-                                <template v-if="scope.row.returnProductType==1">
-                                    <el-button v-if="scope.row.status==4" @click='toAfterSale(scope.row.id)'
-                                               type="primary">退款中
-                                    </el-button>
-                                    <el-button v-if="scope.row.status==8" @click='toAfterSale(scope.row.id)'
-                                               type="primary">退款完成
-                                    </el-button>
-                                </template>
-                                <template v-if="scope.row.returnProductType==2">
-                                    <el-button v-if="scope.row.status==5" @click='toAfterSale(scope.row.id)'
-                                               type="primary">退货中
-                                    </el-button>
-                                    <el-button v-if="scope.row.status==8" @click='toAfterSale(scope.row.id)'
-                                               type="primary">退货完成
-                                    </el-button>
-                                </template>
-                                <template v-if="scope.row.returnProductType==3">
-                                    <el-button v-if="scope.row.status==6" @click='toAfterSale(scope.row.id)'
-                                               type="primary">换货中
-                                    </el-button>
-                                    <el-button v-if="scope.row.status==8" @click='toAfterSale(scope.row.id)'
-                                               type="primary">换货完成
-                                    </el-button>
-                                </template>
+                            <template v-if="scope.row.returnType">
+                                <el-button @click='toAfterSale(scope.row.returnProductId)'type="primary">{{`${returnTypeArr[Number(scope.row.returnType)-1]}${afterSaleStatusArr[Number(scope.row.returnProductStatus)-1]}`}}</el-button>
                             </template>
                             <template v-else>
-                                <template v-if="scope.row.status==3||scope.row.status==8">已完成</template>
-                                <el-button v-if='scope.row.status == 4' @click="changeStatus(scope.row.status,3)"
-                                           type="primary">已自提
-                                </el-button>
+                                <el-button @click='toAfterSale(scope.row.returnProductId)'type="primary">商家退款</el-button>
                             </template>
                         </template>
                     </el-table-column>
@@ -201,16 +163,7 @@
             <p>优惠券说明：优惠券仅限于商品购物使用，只有满足消费100元才可以使用。</p>
             <p>发布人：杨小猛</p>
         </el-dialog>
-        <!-- 更换提货仓 -->
-        <el-dialog title="更换提货仓" width="30%" :visible.sync="isShowWarehouse">
-            <div class="warehouse-wrap">
-                <div v-for="(v,k) in warehouseArr" @click="changeWarehouse(v)" :key="k"
-                     :class="{'warehouse-box':true,'warehouse-box-active':v.active}">
-                    <!-- <p class="warehouse-box-tit">{{v.title}}</p> -->
-                    <p class="warehouse-box-con">{{(v.province==undefined?'':v.province) +v.city+v.area+v.address}}</p>
-                </div>
-            </div>
-        </el-dialog>
+
     </div>
 </template>
 
@@ -234,8 +187,8 @@
                 isShowPop: false, // 订单标记颜色是否显示
                 isShowPreferential: false, // 优惠活动
                 isShowWarehouse: false, // 更换提货仓
-                orderStatus: '', // 总订单状态: 1:待支付 2:待发货 3:待确认 4:待自提 5:确认收货 6:退款（关闭） 7:正常已完成 8:已关闭 9:用户删除 10:超时关闭
-                pickedUp: '', // 是否自提状态（1.正常 2.自提完成）
+                orderStatus: '', // 总订单状态: 1:待支付 2:待发货 3:待收货 4:确认收货 5:已完成 6:退货关闭 7:用户关闭 8:超时关闭
+                // pickedUp: '', // 是否自提状态（1.正常 2.自提完成）
                 markArr: [
                     { label: 'red', value: '1' },
                     { label: 'skyblue', value: '2' },
@@ -275,14 +228,10 @@
                     freeTimer: '', // 待支付倒计时
                     confirmTimer: '' // 待确认倒计时
                 },
-                // 标记颜色
-                markArr: [
-                    { label: 'red', value: '1' },
-                    { label: 'skyblue', value: '2' },
-                    { label: 'lightgreen', value: '3' },
-                    { label: 'orange', value: '4' },
-                    { label: 'purple', value: '5' }
-                ]
+                // returnType状态
+                returnTypeArr: ['退款', '退货', '换货'],
+                // 售后状态
+                afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭']
             };
         },
 
@@ -292,7 +241,7 @@
                 this.$route.query.orderInfoId || sessionStorage.getItem('orderInfoId');
             this.getInfo();
             // 获取提货仓列表
-            this.getStoreList();
+            // this.getStoreList();
         },
 
         deactivated() {
@@ -304,77 +253,77 @@
             //  获取信息
             getInfo() {
                 request.orderDetail({ id: this.orderId }).then(res => {
-                    this.orderMsg.status = res.data.data.status;
+                    this.orderMsg.status = res.data.status;
                     // pickedUp: 1：发货 2：自提
-                    // if(res.data.data.pickedUp == 1 && res.data.data.status==7){
+                    // if(res.data.pickedUp == 1 && res.data.status==7){
                     //   this.orderStatus = 7;
-                    // }else if(res.data.data.pickedUp == 2 && res.data.data.status==7){
+                    // }else if(res.data.pickedUp == 2 && res.data.status==7){
                     //   this.orderStatus = 9;
                     // }else{
-                    //   this.orderStatus = res.data.data.status;
+                    //   this.orderStatus = res.data.status;
                     // }
-                    this.orderStatus = res.data.data.status;
+                    this.orderStatus = res.data.status;
                     this.getProgressStu(this.orderStatus.toString());
-                    this.orderMsg.starIndex = res.data.data.star || 1;
+                    this.orderMsg.starIndex = res.data.star || 1;
                     this.orderMsg.star =
-                        res.data.data.star == null
+                        res.data.star == null
                             ? ''
-                            : this.markArr[res.data.data.star - 1].label;
-                    this.orderMsg.adminRemark = res.data.data.adminRemark;
-                    this.orderMsg.nickName = res.data.data.nickname;
-                    this.orderMsg.phone = res.data.data.phone;
-                    this.orderMsg.receiver = res.data.data.receiver;
-                    this.orderMsg.recevicePhone = res.data.data.recevicePhone;
+                            : this.markArr[res.data.star - 1].label;
+                    this.orderMsg.adminRemark = res.data.adminRemark;
+                    this.orderMsg.dealerName = res.data.dealerName;
+                    this.orderMsg.dealerPhone = res.data.dealerPhone;
+                    this.orderMsg.receiver = res.data.receiver;
+                    this.orderMsg.recevicePhone = res.data.recevicePhone;
                     this.orderMsg.receiveAddress = `${
-                        res.data.data.province == undefined ? '' : res.data.data.province
-                    }${res.data.data.city}${res.data.data.area}`;
-                    this.orderMsg.buyerRemark = res.data.data.buyerRemark;
-                    res.data.data.storehouseProvince = res.data.data.storehouseProvince == null ? '' : res.data.data.storehouseProvince;
-                    res.data.data.storehouseCity = res.data.data.storehouseCity == null ? '' : res.data.data.storehouseCity;
-                    res.data.data.storehouseArea = res.data.data.storehouseArea == null ? '' : res.data.data.storehouseArea;
-                    res.data.data.storehouseAddress = res.data.data.storehouseAddress == null ? '' : res.data.data.storehouseAddress;
+                        res.data.province == undefined ? '' : res.data.province
+                    }${res.data.city}${res.data.area}`;
+                    this.orderMsg.buyerRemark = res.data.buyerRemark;
+                    res.data.storehouseProvince = res.data.storehouseProvince == null ? '' : res.data.storehouseProvince;
+                    res.data.storehouseCity = res.data.storehouseCity == null ? '' : res.data.storehouseCity;
+                    res.data.storehouseArea = res.data.storehouseArea == null ? '' : res.data.storehouseArea;
+                    res.data.storehouseAddress = res.data.storehouseAddress == null ? '' : res.data.storehouseAddress;
                     this.orderMsg.storehouseName = `${
-                        res.data.data.storehouseProvince == null
+                        res.data.storehouseProvince == null
                             ? ''
-                            : res.data.data.storehouseProvince
-                    }${res.data.data.storehouseCity}${res.data.data.storehouseArea}${
-                        res.data.data.storehouseAddress
+                            : res.data.storehouseProvince
+                    }${res.data.storehouseCity}${res.data.storehouseArea}${
+                        res.data.storehouseAddress
                     }`;
-                    this.orderMsg.orderNum = res.data.data.orderNum;
-                    this.orderMsg.createTime = res.data.data.createTime; // 创建时间
-                    this.orderMsg.payTime = res.data.data.payTime; // 第三方支付时间
-                    this.orderMsg.deliveryTime = res.data.data.deliveryTime; // 确认时间
-                    this.orderMsg.sendTime = res.data.data.sendTime; // 发货时间
-                    // this.order.cancleTime = res.data.data.sendTime; // 取消时间
-                    this.orderMsg.tradeNo = res.data.data.tradeNo;
-                    // this.orderFreePayTime = res.data.data.createTime; // 倒计时
-                    this.orderMsg.expressName = res.data.data.expressName; // 物流公司名称
-                    this.orderMsg.expressNo = res.data.data.expressNo; // 物流单号
+                    this.orderMsg.orderNum = res.data.orderNum;
+                    this.orderMsg.createTime = res.data.createTime; // 创建时间
+                    this.orderMsg.payTime = res.data.payTime; // 第三方支付时间
+                    this.orderMsg.deliveryTime = res.data.deliveryTime; // 确认时间
+                    this.orderMsg.sendTime = res.data.sendTime; // 发货时间
+                    // this.order.cancleTime = res.data.sendTime; // 取消时间
+                    this.orderMsg.tradeNo = res.data.tradeNo;
+                    // this.orderFreePayTime = res.data.createTime; // 倒计时
+                    this.orderMsg.expressName = res.data.expressName; // 物流公司名称
+                    this.orderMsg.expressNo = res.data.expressNo; // 物流单号
                     this.tableData = [];
-                    this.pickedUp = res.data.data.pickedUp;
-                    res.data.data.list.forEach((v, k) => {
-                        v.totalPrice = res.data.data.totalPrice;
-                        v.freightPrice = res.data.data.freightPrice;
+                    // this.pickedUp = res.data.pickedUp;
+                    res.data.orderProductList.forEach((v, k) => {
+                        v.totalPrice = res.data.totalPrice;
+                        v.freightPrice = res.data.freightPrice;
                         v.tokenCoin =
-                            res.data.data.tokenCoin == null ? '0' : res.data.data.tokenCoin;
+                            res.data.tokenCoin == null ? '0' : res.data.tokenCoin;
                         v.balance =
-                            res.data.data.balance == null ? '0' : res.data.data.balance;
+                            res.data.balance == null ? '0' : res.data.balance;
                         v.userScore =
-                            res.data.data.userScore == null ? '0' : res.data.data.userScore;
-                        v.type = res.data.data.payType;
+                            res.data.userScore == null ? '0' : res.data.userScore;
+                        v.type = res.data.payType;
                         v.amounts =
-                            res.data.data.amounts == null ? '0' : res.data.data.amounts;
+                            res.data.amounts == null ? '0' : res.data.amounts;
                         v.couponPrice =
-                            res.data.data.couponPrice == null ? '0' : res.data.data.couponPrice;
+                            res.data.couponPrice == null ? '0' : res.data.couponPrice;
                         this.tableData.push(v);
                     });
                     // 待支付剩余时间
-                    if (res.data.data.overtimeClosedTime) {
-                        this.orderFreeTimeDown(res.data.data.overtimeClosedTime);
+                    if (res.data.shutOffTime) {
+                        this.orderFreeTimeDown(res.data.shutOffTime);
                     }
                     // 待完成剩余时间
-                    if (res.data.data.autoConfirmTime) {
-                        this.orderFinishTimeDown(res.data.data.autoConfirmTime);
+                    if (res.data.autoReceiveTime) {
+                        this.orderFinishTimeDown(res.data.autoReceiveTime);
                     }
                 }).catch(err => {
                     console.log(err);
@@ -410,7 +359,6 @@
                         this.boolsec = true;
                         this.boolThr = true;
                         this.boolFor = false;
-                        this.orderMsg.url = 'pickUpGoods';
                         break;
                     case '5':
                         this.boolFirst = true;
@@ -430,19 +378,7 @@
                         this.boolThr = true;
                         this.boolFor = true;
                         break;
-                    case '9':
-                        this.boolFirst = true;
-                        this.boolsec = true;
-                        this.boolThr = true;
-                        this.boolFor = true;
-                        break;
-                    case '9':
-                        this.boolFirst = true;
-                        this.boolsec = true;
-                        this.boolThr = true;
-                        this.boolFor = true;
-                        break;
-                    case '9':
+                    case '8':
                         this.boolFirst = true;
                         this.boolsec = true;
                         this.boolThr = true;
@@ -531,8 +467,8 @@
             // 获取提货仓列表
             getStoreList() {
                 this.warehouseArr = [];
-                request.queryStoreHouseList({ url: pApi.getOrderDetail }).then(res => {
-                    res.data.data.forEach((v, k) => {
+                request.queryStoreHouseList({ }).then(res => {
+                    res.data.forEach((v, k) => {
                         v.active = false;
                         this.warehouseArr.push(v);
                     });
@@ -540,29 +476,9 @@
                     console.log(err);
                 });
             },
-            // 更换提货仓
-            changeWarehouse(row) {
-                this.warehouseArr.forEach((v, k) => {
-                    v.active = false;
-                });
-                row.active = true;
-                const data = {
-                    orderId: this.orderId,
-                    storeHouseId: row.id
-                };
-                request.changeStoreHouse(data).then(res => {
-                    this.$message.success(res.msg);
-                    this.orderMsg.storehouseName =
-                        row.province == undefined
-                            ? ''
-                            : row.province + row.city + row.area + row.address;
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
             // 云仓发货
             orderSendOut() {
-                request.orderSendOut({ orderId: this.orderId }).then(res => {
+                request.orderSendOut({ expressName: '申通', 'expressNo': 28123152342345, id: this.orderId }).then(res => {
                     this.$message.success(res.msg);
                     this.getInfo();
                 }).catch(err => {
@@ -572,9 +488,9 @@
             // 备注
             changeColor(status, v) {
                 const data = {};
-                data.orderId = this.orderId;
-                data.star = status == 1 ? v.value : this.orderMsg.starIndex;
-                data.remarks = this.orderMsg.adminRemark;
+                data.id = this.orderId;
+                data.adminStars = status == 1 ? v.value : this.orderMsg.starIndex;
+                data.adminRemark = this.orderMsg.adminRemark;
                 request.orderSign(data).then(res => {
                     this.$message.success(res.mag);
                     this.orderMsg.star = this.markArr[Number(data.star) - 1].label;

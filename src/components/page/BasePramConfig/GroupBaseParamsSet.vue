@@ -12,7 +12,6 @@
                 <span class="point">元</span><br/>
                 <div class="btn-group">
                     <el-button :loading="btnLoading" type="primary" @click="submitForm">确认提交</el-button>
-                    <el-button @click="cancel">取消</el-button>
                 </div>
             </div>
         </el-card>

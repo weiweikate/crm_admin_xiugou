@@ -5,7 +5,7 @@
             <div class="brand-box">
                 <el-form :model="form" ref="form" :rules="rules">
                     <el-form-item prop="name" label="品牌名称">
-                        <el-input placeholder="请输入品牌名称" v-model="form.name"></el-input>
+                        <el-input placeholder="请输入品牌名称" v-model="form.name" minlength="2" maxlength="16"></el-input>
                     </el-form-item>
                     <el-form-item prop="area" label="品牌区域">
                         <el-input placeholder="请输入品牌区域" v-model="form.area"></el-input>
@@ -17,6 +17,7 @@
                                 :show-file-list="false"
                                 :on-preview="handlePreview"
                                 :on-remove="handleRemove"
+                                :before-upload="beforeAvatarUpload"
                                 :on-success="handleAvatarSuccess"
                         >
                             <img v-if="form.imgUrl" :src="form.imgUrl" class="avatar">
@@ -45,19 +46,20 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import request from '@/http/http.js';
     import * as api from '@/api/api.js';
+    import { beforeAvatarUpload } from '@/JS/commom';
 
     export default {
         components: {
             vBreadcrumb, icon
         },
+        mixins: [beforeAvatarUpload],
         data() {
             var checkName = (rule, value, callback) => {
                 if (!value) {
                     return callback(new Error('请输入品牌名称'));
                 } else {
-                    const reg = /^[A-Za-z0-9\u4e00-\u9fa5]{2,16}$/;
-                    if (!reg.test(value)) {
-                        callback(new Error('请输入2-16位由汉字字母数字组成的品牌名称'));
+                    if (value.length < 2 || value.length > 16) {
+                        callback(new Error('请输入2-16位的品牌名称'));
                     } else {
                         callback();
                     }

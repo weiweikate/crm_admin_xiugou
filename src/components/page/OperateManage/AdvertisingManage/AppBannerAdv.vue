@@ -35,7 +35,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="linkTypeCode" label="链接" align="center" v-if="pageType == 2" key="7"></el-table-column>
-                <el-table-column prop="id" label="ID" align="center" v-if="pageType != 2 && pageType != 8 && pageType != 12" key="8"></el-table-column>
+                <el-table-column prop="linkTypeCode" label="ID" align="center" v-if="pageType != 2 && pageType != 8 && pageType != 12" key="8"></el-table-column>
                 <el-table-column label="上传人/上传时间" align="center" v-if="pageType == 12" key="9"></el-table-column>
                 <el-table-column prop="remark" label="备注" align="center"></el-table-column>
                 <el-table-column prop="showBegintime" label="投放时间" align="center" key="10" v-if="pageType != 2 && pageType != 6 && pageType != 7 && pageType != 8 && pageType != 12">
@@ -85,13 +85,20 @@
                         <el-option v-for="(v,k) in linkTypeList" :key="k" :label="v.type" :value="v.id">{{v.type}}</el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item v-if="pageType!=3&&pageType!=12" label="请输入ID">
+                <el-form-item v-if="pageType!=3&&pageType!=6&&pageType!=12" label="请输入ID">
                     <el-input v-model="form.linkTypeCode" placeholder="请输入ID" @blur="getProductName"
                               auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item v-if="pageType==3" label="请输入店铺ID">
                     <el-input v-model="form.linkTypeCode" placeholder="请输入ID" @blur="getProductName"
                               auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item v-if="pageType==6&&form.linkType!=6" label="请输入ID/地址">
+                    <el-input v-model="form.linkTypeCode" placeholder="请输入ID/地址" @blur="getProductName"
+                              auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item v-if="pageType==6&&form.linkType==6" label="请输入ID/地址">
+                    <el-input v-model="form.linkTypeCode" placeholder="请输入ID/地址" auto-complete="off"></el-input>
                 </el-form-item>
                 <div class="inf-area">{{productName}}</div>
                 <el-form-item label="备注说明" v-if="pageType!=8">
@@ -139,7 +146,7 @@
     import deletetoast from '@/components/common/DeleteToast';
     import * as api from '@/api/api.js';
     import moment from 'moment';
-    import { myMixinTable, queryDictonary } from '@/JS/commom';
+    import { myMixinTable, queryDictonary, beforeAvatarUpload } from '@/JS/commom';
     import request from '@/http/http.js';
 
     export default {
@@ -147,7 +154,7 @@
             vBreadcrumb,
             deletetoast
         },
-        mixins: [myMixinTable, queryDictonary],
+        mixins: [myMixinTable, queryDictonary, beforeAvatarUpload],
 
         data() {
             return {
@@ -216,8 +223,22 @@
                 this.uploadImg = api.uploadImg;
                 pageType = typeof navName === 'string' ? Number(pageType) : pageType;
                 this.title = pageType === 8 ? '添加' : '添加banner图片';
-                if (pageType === 7) {
-                    this.linkTypeList = [{ type: '链接专题', id: 2 }];
+                if (pageType === 6) {
+                    this.linkTypeList = [{ type: '链接', id: 6 }, { type: '专题', id: 2 }];
+                } else if (pageType === 8) {
+                    this.linkTypeList = [{
+                        type: '链接产品',
+                        id: 1
+                    }, {
+                        type: '降价拍',
+                        id: 3
+                    }, {
+                        type: '秒杀',
+                        id: 4
+                    }, {
+                        type: '礼包',
+                        id: 5
+                    }];
                 } else {
                     this.linkTypeList = [{
                         type: '链接产品',
@@ -242,8 +263,7 @@
                     case 3: navName = 'APP首页明星店铺推荐位管理'; break;
                     case 4: navName = 'APP首页今日榜单广告位管理'; break;
                     case 5: navName = 'APP首页精品推荐广告位管理'; break;
-                    case 6: navName = 'APP首页超值热卖广告位管理'; break;
-                    case 7: navName = 'APP首页专题广告位管理'; break;
+                    case 6: navName = 'APP首页超值热卖专题广告位管理'; break;
                     case 8: navName = 'APP首页为你推荐广告位管理'; break;
                     case 9: navName = '拼店首页banner推荐位'; break;
                     case 10: navName = '类目搜索Banner广告位设置'; break;
@@ -275,22 +295,14 @@
             handleAvatarSuccess(res) {
                 this.form.imgUrl = res.data;
             },
-            // 图片格式
-            beforeAvatarUpload(file) {
-                const isJPG = (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png');
-
-                if (!isJPG) {
-                    this.$message.error('上传图片只能是 jpg,jpeg,png 格式!');
-                }
-                return isJPG;
-            },
             // 根据类型和code查询产品名称
             getProductName() {
                 const data = {
                     code: this.form.linkTypeCode,
                     type: this.form.linkType
                 };
-                if (this.pageType === 3) {
+                if (this.pageType == 3) {
+                    data.type = 8;
                     if (!data.code) return;
                 } else {
                     if (!data.code || !data.type) return;
@@ -306,8 +318,8 @@
             },
             // 添加
             addItem() {
-                this.mask = true;
                 this.closeDia();
+                this.mask = true;
             },
             // 编辑
             editItem(row) {
@@ -326,7 +338,9 @@
                     this.form.date[1] = row.showEndtime;
                 }
                 this.title = this.pageType === 8 ? '编辑' : '编辑banner图片';
-                this.getProductName();
+                if (this.pageType != 12 && (this.pageType == 6 && this.form.linkType != 6)) {
+                    this.getProductName();
+                }
             },
             // 添加编辑
             dealAdv() {
@@ -337,27 +351,26 @@
                     url = 'updateAdvertisement';
                 }
                 data.type = this.pageType;
-                if (this.form.date.length) {
+                if (this.form.date && this.form.date.length) {
                     data.showBegintime = this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss') : '';
                     data.showEndtime = this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss') : '';
                 }
-                if (this.pageType != 12) {
+                if (this.pageType != 12 && (this.pageType == 6 && this.form.linkType != 6)) {
                     if (!this.productName) {
                         this.$message.warning('请输入有效ID');
                         return;
                     }
                 }
+                this.btnLoading = true;
                 request[url](data).then(res => {
                     this.$message.success(res.msg);
                     this.getList(1);
                     this.closeDia();
-                    this.mask = false;
                     this.btnLoading = false;
                 }).catch(error => {
                     console.log(error);
                     this.btnLoading = false;
                     this.getList(1);
-                    this.mask = false;
                     this.closeDia();
                 });
             },
@@ -374,6 +387,7 @@
                 };
                 this.id = '';
                 this.productName = '';
+                this.mask = false;
             },
             // 删除
             del(val) {

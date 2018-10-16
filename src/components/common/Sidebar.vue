@@ -165,11 +165,11 @@
                             {
                                 index: 'orderList',
                                 title: '订单管理'
+                            },
+                            {
+                                index: 'giftOrderList',
+                                title: '礼包订单'
                             }
-                            // {
-                            //     index: "giftOrderList",
-                            //     title: "礼包订单"
-                            // }
                         ]
                     },
                     {
@@ -248,10 +248,6 @@
                                 title: '标签管理'
                             },
                             // {
-                            //     index: "currencyRatio",
-                            //     title: "货币比例设置"
-                            // },
-                            // {
                             //     index: "baseParamsSet",
                             //     title: "交易基础参数设置"
                             // },
@@ -311,10 +307,6 @@
                             //     title: '收益金比例设置'
                             // },
                             // {
-                            //     index: "withdrawalCharge",
-                            //     title: '提现手续费设置'
-                            // },
-                            // {
                             //     index: "profitDistrMange",
                             //     title: '利润分配设置'
                             // }
@@ -337,7 +329,24 @@
                             {
                                 index: 'backAddress',
                                 title: '寄回地址管理'
-                            }]
+                            },
+                            {
+                                index: 'currencyRatio',
+                                title: '货币比例设置'
+                            },
+                            {
+                                index: 'stockMsg',
+                                title: '库存消息提醒设置'
+                            },
+                            {
+                                index: 'withdrawalCharge',
+                                title: '提现设置'
+                            },
+                            {
+                                index: 'userAssociatedParam',
+                                title: '用户关联参数设置'
+                            }
+                        ]
                     },
 
                     {

@@ -23,78 +23,66 @@
     </div>
 </template>
 <script>
-import icon from "../../common/ico";
-import * as api from '../../../api/api.js';
+import icon from '../../common/ico';
+import request from '@/http/http.js';
 export default {
-  components: {
-    icon
-  },
-  data() {
-    return {
-      code: true,
-      codeTime: 0,
-      form: {
-        phone: "",
-        code: ""
-      },
-      rules: {
-        phone: [
-          { required: true, message: "请输入登陆手机号", trigger: "blur" }
-        ],
-        code: [{ required: true, message: "请输入验证码", trigger: "blur" }]
-      }
-    };
-  },
-  methods: {
-    submitForm(form) {
-      let data = {};
-      data.phone = this.form.phone;
-      data.code = this.form.code;
-      this.$axios.post(api.loginUpdateCheckCode,data)
-      .then(res=>{
-        if(res.data.code == 200){
-          localStorage.setItem("ms_phone", this.form.phone);
-          this.$emit("status", false);
-        }else{
-          this.$message.warning(res.data.msg);
-        }
-      })
-      .catch(err=>{
-        console.log(err);
-      })
+    components: {
+        icon
     },
-    // 获取验证码
-    getCode(){
-      if(this.form.phone == ''){
-        this.$message.warning('请输入手机号');
-        return;
-      }
-      let that = this;
-      this.code = false;
-      this.codeTime = 60;
-      let timer = setInterval(function(){
-          that.codeTime--;
-          if(that.codeTime <=0){
-              that.code = true;
-              clearInterval(timer);
-          }
-      },1000)
-      let data = {};
-      data.phone = this.form.phone;
-      data.code = 'ADMIN_FIRSTLOGIN_CODE';
-      this.$axios.post(api.sendUpdatePwdCode,data)
-      .then(res=>{
-        if(res.data.code == 200){
-          this.$message.success('已发送验证码');
-        }else{
-          this.$message.warning(res.data.msg);
-        }
-      })
-      .catch(err=>{
-        console.log(err);
-      })
+    data() {
+        return {
+            code: true,
+            codeTime: 0,
+            form: {
+                phone: '',
+                code: ''
+            },
+            rules: {
+                phone: [
+                    { required: true, message: '请输入登陆手机号', trigger: 'blur' }
+                ],
+                code: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+            }
+        };
     },
-  }
+    methods: {
+        submitForm(form) {
+            const data = {};
+            data.phone = this.form.phone;
+            data.code = this.form.code;
+            request.loginUpdateCheckCode(data).then(res => {
+                if (res.code === 10000) {
+                    localStorage.setItem('ms_phone', this.form.phone);
+                    this.$emit('status', false);
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        // 获取验证码
+        getCode() {
+            if (this.form.phone == '') {
+                this.$message.warning('请输入手机号');
+                return;
+            }
+            const that = this;
+            this.code = false;
+            const data = {};
+            data.phone = this.form.phone;
+            data.templateCode = 'ADMIN_FIRSTLOGIN_CODE';
+            request.getCode(data).then(res => {
+                this.codeTime = 60;
+                const timer = setInterval(function() {
+                    that.codeTime--;
+                    if (that.codeTime <= 0) {
+                        that.code = true;
+                        clearInterval(timer);
+                    }
+                }, 1000);
+                this.$message.success(res.msg);
+            });
+        }
+    }
 };
 </script>
 <style lang="less">

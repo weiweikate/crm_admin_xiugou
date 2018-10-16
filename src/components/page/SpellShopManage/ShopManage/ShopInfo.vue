@@ -36,7 +36,7 @@
                     </div>
                     <div class="shop-right">
                         <p class="shop-msg">
-                            <span>店铺经验：{{detail.experience}}</span>
+                            <span>店铺经验：{{detail.experience||0}}</span>
                         </p>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                     </div>
                     <div class="shop-right">
                         <p class="shop-msg">
-                            <span>店铺成员数：{{detail.storeUserName?detail.storeUserName:0}}/{{detail.maxUser}}</span>
+                            <span>店铺成员数：{{detail.storeUserNum||0}}/{{detail.maxUser}}</span>
                         </p>
                     </div>
                 </div>
@@ -165,13 +165,6 @@
         activated() {
             this.shopId =
                 this.$route.query.shopInfoId || sessionStorage.getItem('shopInfoId');
-            this.status =
-                this.$route.query.status || sessionStorage.getItem('status');
-            if (status === 2) {
-                this.nav = ['拼店店铺管理', '招募店铺详情'];
-            } else {
-                this.nav = ['拼店管理', '店铺管理', '店铺详情'];
-            }
             this.getInfo();
         },
 

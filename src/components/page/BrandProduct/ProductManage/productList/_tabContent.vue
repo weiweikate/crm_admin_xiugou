@@ -57,7 +57,11 @@
                     {{scope.row.maxPrice == undefined?'0':scope.row.maxPrice | formatPrice}}
                 </template>
             </el-table-column>
-            <el-table-column prop="stock" label="库存" align="center" min-width="50"></el-table-column>
+            <el-table-column prop="stock" label="库存" align="center" min-width="50">
+                <template slot-scope="scope">
+                    {{scope.row.stock || 0}}
+                </template>
+            </el-table-column>
             <el-table-column prop="saleNum" label="销量" align="center" min-width="50">
                 <template slot-scope="scope">
                     {{scope.row.saleNum || 0}}
@@ -65,7 +69,7 @@
             </el-table-column>
             <el-table-column label="发布时间/发布人" align="center" min-width="120">
                 <template slot-scope="scope">
-                    {{scope.row.createTime | formatDate}}<br/>{{`产品编辑:${scope.row.createAdmin}`}}
+                    {{scope.row.createTime |formatDateAll}}<br/>{{`产品编辑:${scope.row.adminName || ''}`}}
                 </template>
             </el-table-column>
             <el-table-column prop="" label="状态" align="center" min-width="50">
@@ -96,7 +100,7 @@
                             <el-button @click="auditProduct(scope.row,3)" type="danger">驳回审核</el-button>
                         </template>
                         <template v-else>
-                            <el-button v-if='scope.row.status != 4 && scope.row.status != 2'
+                            <el-button v-if='scope.row.status != 4'
                                        @click="editProduct(scope.row)" type="success">编辑产品
                             </el-button>
                             <template >
@@ -109,6 +113,8 @@
                             </template>
                         </template>
                         <el-button @click="productInfo(scope.row)" type="primary">查看详情
+                        </el-button>
+                        <el-button v-if='scope.row.status == 3' @click="productStatus(scope.row,'1')" type="success">提交审核
                         </el-button>
                     </div>
                 </template>
@@ -129,7 +135,7 @@
             <el-popover placement="top" width="160" v-model="isShowPop">
                 <p>确定删除吗？</p>
                 <div style="text-align: right; margin: 0">
-                    <el-button @click="batchOperate('6')" type="primary" size="mini">确定</el-button>
+                    <el-button @click="batchOperate('0')" type="primary" size="mini">确定</el-button>
                     <el-button size="mini" type="text" @click="isShowPop = false">取消</el-button>
                 </div>
                 <el-button slot="reference" @click="isShowPop = true">删除</el-button>
@@ -217,7 +223,7 @@ export default {
             this.status = '5';
         } else if (n === 'auditProduct') {
             this.status = '1';
-        } else if (n === 'modifyProduct') {
+        } else if (n === 'nAudit') {
             this.status = '3';
         }
         this.getFirstItem();

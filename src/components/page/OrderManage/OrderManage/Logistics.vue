@@ -79,13 +79,13 @@ export default {
     },
 
     activated() {
-        // this.orderId = this.$route.query.findExpressId || sessionStorage.getItem('findExpressId');
+        this.expNum = this.$route.query.findExpressId || sessionStorage.getItem('findExpressId');
         this.getLogisticsInfo();
     },
     methods: {
         getLogisticsInfo() {
             this.loading = true;
-            request.findLogisticsDetail({ orderId: 1 }).then(res => {
+            request.findLogisticsDetail({ expNum: this.expNum }).then(res => {
                 this.exName = res.data.showapi_res_body.expTextName;
                 this.exNo = res.data.showapi_res_body.mailNo;
                 this.progressList = res.data.showapi_res_body.data;

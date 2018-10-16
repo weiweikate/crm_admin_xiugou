@@ -25,6 +25,7 @@
                 <el-button type="primary" style="margin-bottom: 20px" @click="addSupplier">添加供应商</el-button>
                 <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%">
                     <el-table-column type="index" label="供应商编号" width="100" align="center"></el-table-column>
+                    <el-table-column prop="code" label="供应商ID" width="100" align="center"></el-table-column>
                     <el-table-column prop="name" label="供应商名称" align="center"></el-table-column>
                     <el-table-column label="供应商类型" width="100" align="center">
                         <template slot-scope="scope">
@@ -157,6 +158,7 @@
                 const that = this;
                 const data = that.form;
                 data.page = val;
+                data.pageSize = this.page.pageSize;
                 const addrss = that.address;
                 if (addrss && addrss[0]) {
                     data.provinceCode = addrss[0];
@@ -221,7 +223,6 @@
                 }
                 that.btnLoading = true;
                 request.stopProductSupplier(data).then(res => {
-                    console.log(res);
                     that.getList(that.page.currentPage);
                     that.btnLoading = false;
                     that.tipsMask = false;

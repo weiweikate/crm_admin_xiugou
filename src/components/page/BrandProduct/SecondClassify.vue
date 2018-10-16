@@ -53,6 +53,7 @@
                     <el-input readonly v-model="addForm.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
                                :action="uploadImg"
+                               :before-upload="beforeAvatarUpload"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
@@ -85,6 +86,7 @@
                     <el-input readonly v-model="form.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
                                :action="uploadImg"
+                               :before-upload="beforeAvatarUpload"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
@@ -117,7 +119,7 @@ import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
 import deleteToast from '@/components/common/DeleteToast';
 import utils from '@/utils/index.js';
-import { myMixinTable } from '@/JS/commom';
+import { myMixinTable, beforeAvatarUpload } from '@/JS/commom';
 import request from '@/http/http.js';
 import * as api from '@/api/api.js';
 
@@ -127,7 +129,7 @@ export default {
         icon,
         deleteToast
     },
-    mixins: [myMixinTable],
+    mixins: [myMixinTable, beforeAvatarUpload],
     data() {
         return {
 
@@ -177,7 +179,6 @@ export default {
     methods: {
         // 获取列表
         getList(val) {
-            const that = this;
             const data = {
                 page: val,
                 fatherId: this.id,

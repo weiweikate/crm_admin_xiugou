@@ -150,9 +150,9 @@
                         clearInterval(timer);
                     }
                 }, 1000);
-                const data = { phone: this.form2.phone, code: 'ADMIN_LOGIN_CODE' };
+                const data = { phone: this.form2.phone, templateCode: 'ADMIN_LOGIN_CODE' };
                 request.getCode(data).then(res => {
-                    this.$message.success(res.data.data);
+                    this.$message.success(res.msg);
                 });
             },
             // tab切换

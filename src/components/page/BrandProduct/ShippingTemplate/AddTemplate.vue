@@ -6,7 +6,7 @@
                 <el-form :model="form" ref="form" :rules="rules">
                     <el-form-item prop="name" label="模板名称">
                         <el-input class="lar-inp" placeholder="请输入模板名称(模板名称最少必须由1个字组成，最多不能超过16个字)"
-                                  v-model="form.name"></el-input>
+                                  v-model="form.name" maxlength="16"></el-input>
                     </el-form-item>
                     <el-form-item prop="country" class="address-item" label="产品发货地">
                         <el-select v-model="form.country" class="small-inp" @change="productArea">
@@ -237,6 +237,8 @@
             this.unit = '公斤';
             this.title1 = '首公斤数(kg)';
             this.title2 = '续公斤数(kg)';
+            this.checked = false;
+            console.log(this.freightFreePrice);
         },
         methods: {
 
@@ -275,6 +277,7 @@
                     if (!valid) {
                         return;
                     } else {
+                        console.log(this.form)
                         const data = that.form;
                         if (!that.form.provinceCode || !that.form.cityCode || !that.form.areaCode) {
                             that.$message.warning('请选择省市区！');
@@ -287,6 +290,7 @@
                             }
                             data.freightFreePrice = that.freightFreePrice;
                         }
+                        console.log(this.freightFreePrice);
                         const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
                         let flag = true;
                         const list = [];
@@ -311,14 +315,14 @@
                                 nextUnit: v.nextUnit,
                                 nextPirce: v.nextPirce
                             };
-                            if (v.provinceCode == '' || v.startUnit == '' || v.startPrice == '' || v.nextUnit == '' || v.nextPirce == '') {
+                            if (!v.freightTemplateInfoDetailList.length || v.startUnit === '' || v.startPrice === '' || v.nextUnit === '' || v.nextPirce === '') {
                                 flag = false;
                             } else {
                                 if (reg.test(v.startUnit) && reg.test(v.startPrice) && reg.test(v.nextUnit) && reg.test(v.nextPirce)) {
-                                    return true;
+                                    flag = true;
                                 } else {
                                     that.$message.warning('请输入合法数据');
-                                    return false;
+                                    flag = false;
                                 }
                             }
                             list.push(tableTemp);
@@ -330,8 +334,6 @@
                             return;
                         }
                         this.btnLoading = true;
-                        // console.log(data);
-                        // return;
                         request.addFreightTemplate(data).then(res => {
                             that.$message.success(res.msg);
                             that.$router.push('/shippingTemplate');
@@ -444,7 +446,7 @@
                 const that = this;
                 const data = that.tableData[this.rows - 1];
                 const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
-                if (data.includeAreaName == '' || data.startUnit == '' || data.startPrice == '' || data.nextUnit == '' || data.nextPirce == '') {
+                if (data.includeAreaName === '' || data.startUnit === '' || data.startPrice === '' || data.nextUnit === '' || data.nextPirce === '') {
                     return false;
                 } else {
                     if (reg.test(data.startUnit) && reg.test(data.startPrice) && reg.test(data.nextUnit) && reg.test(data.nextPirce)) {

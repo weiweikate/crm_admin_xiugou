@@ -5,10 +5,13 @@ const path = require('path');
 // const baseURL = 'http://172.16.10.88';
 // const baseURL = 'http://172.16.10.100';
 // const baseURL = 'http://172.16.10.41';
-// const baseURL = 'http://172.16.10.56';
+// const baseURL = 'http://172.16.10.111';
+const baseURL = 'http://172.16.10.56';
+// const baseURL = 'http://172.16.10.12';
 // const baseURL = 'http://172.16.10.19';
-const baseURL = 'http://172.16.10.12';
+// const baseURL = 'http://172.16.10.29';
 // const baseURL = 'http://testadmin.sharegoodsmall.com';
+// const baseURL = 'http://devadmin.sharegoodsmall.com';
 
 // 测试地址不需要端口号
 const url_1 = baseURL + ':8190';
@@ -26,7 +29,7 @@ module.exports = {
                 pathRewrite: {
                     '^/admin': url_1 + '/admin'
                 }
-            },
+            }
         },
         // Various Dev Server settings
 

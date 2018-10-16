@@ -233,6 +233,9 @@
                     that.second = [];
                     that.third = [];
                     that.productList = [];
+                    that.secondCategoryName = '';
+                    that.thirdCategoryName = '';
+                    that.productName = '';
                     that.secondClassifyTag = [];
                     that.thirdClassifyTag = [];
                     that.productTag = [];
@@ -262,6 +265,8 @@
                 if (status) {
                     that.secondCategoryName = item.name;
                     that.secondClassifyTag = item;
+                    that.thirdCategoryName = '';
+                    that.productName = '';
                     that.third = [];
                     that.productList = [];
                     that.thirdClassifyTag = [];
@@ -294,6 +299,7 @@
                         that.productList = [];
                         that.productTag = [];
                         that.products = [];
+                        that.productName = '';
                         that.thirdClassifyTag = item;
                     }
                     that.thirdCategoryId = item.id;
@@ -327,6 +333,10 @@
             deleteTags(num) {
                 if (num === 1) {
                     this.firstCategoryName = '';
+                    this.firstCategoryId = '';
+                    this.secondCategoryId = '';
+                    this.thirdCategoryId = '';
+                    this.productId = '';
                     this.firstClassifyTag = {};
                     this.second = [];
                     this.third = [];
@@ -336,6 +346,9 @@
                     this.deleteTags(4);
                 } else if (num === 2) {
                     this.secondCategoryName = '';
+                    this.secondCategoryId = '';
+                    this.thirdCategoryId = '';
+                    this.productId = '';
                     this.secondClassifyTag = {};
                     this.secondClassifyTag = {};
                     this.productList = [];
@@ -345,10 +358,13 @@
                     this.thirdCategoryName = '';
                     this.thirdClassifyTag = {};
                     this.thirdClassifyTag = {};
+                    this.thirdCategoryId = '';
+                    this.productId = '';
                     this.productList = [];
                     this.deleteTags(4);
                 } else {
                     this.productName = '';
+                    this.productId = '';
                     this.productTag = {};
                 }
             },

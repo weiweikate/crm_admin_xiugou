@@ -23,31 +23,31 @@
         <div class="tree-block" v-loading="loading">
             <!--上级代理-->
             <div class="first-title">
-                <div class="click-area" v-if="dealerAndUp.up_realname" @click="expandHigher()">
+                <div class="click-area" v-if="dealerAndUp.upRealname" @click="expandHigher()">
                     <span>上级代理</span>
                     <i :class="dealerAndUp.checked?'el-icon-caret-bottom':'el-icon-caret-top'"></i>
                 </div>
                 <div class="first-child jump" v-show="dealerAndUp.checked" @click="toDetail(dealerAndUp.id)">
                     <div class="img-area">
-                        <img v-if="dealerAndUp.up_head_img" :src="dealerAndUp.up_head_img" alt="">
+                        <img v-if="dealerAndUp.upHeadImg" :src="dealerAndUp.upHeadImg" alt="">
                         <img v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
                     <div class="tree-detail-area">
-                        <div>用户名：{{dealerAndUp.up_realname}}</div>
-                        <div>用户ID：{{dealerAndUp.up_id}}<span>授权号：{{dealerAndUp.up_code}}</span></div>
+                        <div>用户名：{{dealerAndUp.upNickname}}</div>
+                        <div>用户ID：{{dealerAndUp.upId}}<span>授权号：{{dealerAndUp.upCode}}</span></div>
                     </div>
                     <div class="clearfix"></div>
                 </div>
             </div>
             <!--用户本人-->
-            <div class="first-title" :class="dealerAndUp.up_realname?'line':''">
+            <div class="first-title" :class="dealerAndUp.upRealname?'line':''">
                 <div class="first-child">
                     <div class="img-area">
-                        <img v-if="dealerAndUp.head_img" :src="dealerAndUp.head_img" alt="">
+                        <img v-if="dealerAndUp.headImg" :src="dealerAndUp.headImg" alt="">
                         <img v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
                     <div class="tree-detail-area">
-                        <div>用户名：{{dealerAndUp.realname}}</div>
+                        <div>用户名：{{dealerAndUp.nickname}}</div>
                         <div>用户ID：{{dealerAndUp.id}}<span>授权号：{{dealerAndUp.code}}</span></div>
                     </div>
                     <div class="clearfix"></div>
@@ -71,9 +71,9 @@
                             <div>
                                 <div v-for="(direct,index) in firstList">
                                     <div class="direct-item" @click="toDetail(direct.id)">
-                                        <img v-if="direct.head_img" :src="direct.head_img" alt="">
+                                        <img v-if="direct.headImg" :src="direct.headImg" alt="">
                                         <img v-else src="../../../../assets/images/logo.png" alt="">
-                                        <span>用户名：{{direct.realname}}</span>
+                                        <span>用户名：{{direct.nickname}}</span>
                                         <span>用户ID：{{direct.id}}</span><span>授权号：{{direct.code}}</span>
                                     </div>
                                     <div @click="expendIndirect(index)" class="click-area">
@@ -84,7 +84,7 @@
                                         <!--间接代理-->
                                         <div v-for="indirect in direct.secList" class="indirect-area"
                                              @click="toDetail(indirect.id)">
-                                            <span>用户名：{{indirect.realname}}</span>
+                                            <span>用户名：{{indirect.nickname}}</span>
                                             <span>用户ID：{{indirect.id}}</span><span>授权号：{{indirect.code}}</span>
                                         </div>
                                     </div>

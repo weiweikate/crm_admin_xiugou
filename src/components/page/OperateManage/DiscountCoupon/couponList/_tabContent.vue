@@ -188,22 +188,10 @@ export default {
         },
         // 券数据
         couponData(row) {
-            let status;
-            if (row.type === 3) { // 折扣
-                status = 0;
-            } else {
-                status = 1;
-            }
-            const left = row.totalNumber - row.hasUsed;// 剩余数量
-            const params = {
-                id: row.id,
-                left: left,
-                status: status
-            };
-            sessionStorage.setItem('couponData', JSON.stringify(params));
+            sessionStorage.setItem('couponDataId', row.id);
             this.$router.push({
                 name: 'couponData',
-                query: { id: row.id, left: left, status: status }
+                query: { couponDataId: row.id }
             });
         },
         // 券详情

@@ -34,7 +34,7 @@
                             </div>
                         </transition-group>
                     </draggable>
-                    <el-upload class="img-uploader" :before-upload="beforeUploadArr" :action="uploadImg"
+                    <el-upload class="img-uploader" :before-upload="beforeAvatarUpload" :action="uploadImg"
                                :show-file-list="false" :on-success="successUpload" :disabled="isUseUpload" multiple>
                         <i class="el-icon-plus avatar-uploader-icon">添加图片</i>
                     </el-upload>
@@ -42,7 +42,7 @@
                 </el-form-item>
                 <el-form-item label="产品分类">
                     <el-cascader @change='getProItemId' v-model="proItemArr" :options="itemList"
-                                 @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
+                                 :props="itemProps"></el-cascader>
                     <span style="margin-left:30px">产品品牌</span>
                     <el-select filterable @change="getSupplyList" v-model="form.brandId" placeholder="请选择">
                         <el-option v-for="(v,k) in brandArr" :key="k" :label="v.name" :value="v.id"></el-option>
@@ -138,6 +138,17 @@
                 <el-form-item>
                     <el-checkbox label="是否设置购买时间" v-model="gifts.isSetBuyTime"></el-checkbox>
                 </el-form-item>
+                <el-form-item v-if="gifts.isSetBuyTime">
+                    <draggable v-model="selectedCoupon" >
+                        <transition-group>
+                            <div v-for="(v,k) in selectedCoupon" style="overflow: hidden; margin-bottom: 10px" :key="k">
+                                <span class="selected-coupon">{{v.name}} </span>
+                                <span class="delete-coupon" @click="deleteSelectedCoupon(k)">删除</span>
+                            </div>
+                        </transition-group>
+                    </draggable>
+                    <el-button type="primary" @click="showAddCouList">添加优惠券</el-button>
+                </el-form-item>
                 <el-form-item>
                     <el-checkbox label="经验值" v-model="gifts.isSetExp"></el-checkbox>
                 </el-form-item>
@@ -159,9 +170,7 @@
                 </el-form-item>
                 <div class="tag-btn-group">
                     <el-button-group v-loading="tagLoading">
-                        <el-button :type="figureTag?'primary':''" @click="getAllTags(1,'figureTag', figureTag)">人物标签</el-button>
-                        <el-button :type="goodsTag?'primary':''" @click="getAllTags(2,'goodsTag', goodsTag)">商品标签</el-button>
-                        <el-button :type="sceneTag?'primary':''" @click="getAllTags(3,'sceneTag', sceneTag)">场景标签</el-button>
+                        <el-button v-for="(v, k) in tagTypeArr" :key="k" :type="v.selected?'primary':''" @click="getAllTags(v.id,k, v.selected)">{{v.name}}</el-button>
                     </el-button-group>
                 </div>
                 <div class="selected-tag">
@@ -182,9 +191,37 @@
                     </el-button>
                 </div>
                 <el-button type="primary" :loading="btnLoading" @click="submitForm">确认发布</el-button>
-                <el-button>取消</el-button>
+                <el-button @click="goBack">取消</el-button>
             </el-form>
         </el-card>
+        <el-dialog title="优惠券列表" :visible.sync="isShowCouponList" width="30%">
+            <el-tabs v-model="couponType" v-loading="couponLoading" @tab-click="handleClick">
+                <el-tab-pane label="满减券" name="1">
+                    <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}} </span>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane label="折扣券" name="3">
+                    <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}} </span>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane label="抵扣券" name="4">
+                    <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}} </span>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane label="抵价券" name="2">
+                    <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}} </span>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
+            <span slot="footer">
+                <el-button type="primary" @click="confirmCoupon">确 定</el-button>
+                <el-button @click="isShowCouponList = false">取 消</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -196,14 +233,14 @@
     import * as api from '@/api/api.js';
     import utils from '@/utils/index.js';
     import request from '@/http/http';
-
+    import { beforeAvatarUpload } from '@/JS/commom';
     export default {
         components: {
             draggable,
             vBreadcrumb,
             icon
         },
-
+        mixins: [beforeAvatarUpload],
         data() {
             return {
                 nav: ['品牌产品管理', '礼包管理', '新建礼包'],
@@ -302,10 +339,14 @@
                 tagName: '',
                 proItemArr: [],
                 btnLoading: false,
-                figureTag: false, // 人物标签
-                goodsTag: false, // 商品标签
-                sceneTag: false, // 场景标签
-                tagLoading: false // 标签loading
+                tagTypeArr: [], // 标签类型
+                tagLoading: false, // 标签loading
+                isShowCouponList: false, // 优惠券列表弹窗
+                couponLoading: false, // 优惠券列表loding
+                selectedCoupon: [], // 已选中优惠券列表
+                couponList: [], // 优惠券列表
+                tmpCouponList: [], // 暂时存放优惠券列表
+                couponType: '1'
             };
         },
 
@@ -316,6 +357,7 @@
         },
 
         activated() {
+            this.getAllTagType();
             this.giftId = this.$route.query.giftId || sessionStorage.getItem('giftId');
             this.getInfo();
             this.uploadImg = api.uploadImg;
@@ -325,6 +367,7 @@
             this.selectedTagArr = [];
             this.productParam = [];
             this.chectedUser = [];
+            this.selectedCoupon = [];
             this.purchaseLimit = false;
             this.purchasevalue = '';
             this.isSetBuTime = false;
@@ -337,9 +380,7 @@
                 notSupportRetMoney: false, // 不支持退款
                 notSupportRetChange: false, // 不支持换货
                 notSupportRetGoods: false // 不支持退货
-            },
-            // 获取一级类目
-            this.getFirstItem();
+            };
             // 获取品牌列表
             this.getBrandList();
             // 获取运费模板
@@ -359,6 +400,7 @@
             // 获取礼包信息
             async getInfo() {
                 await this.getUserLevel();
+                await this.getAllCat();
                 request.findActivityPackageById({ packageId: this.giftId }).then(res => {
                     if (res.data.packageTagList !== null && res.data.packageTagList.length !== 0) {
                         res.data.packageTagList.forEach(v => {
@@ -367,21 +409,20 @@
                     }
                     if (res.data.userLevelList !== null && res.data.userLevelList.length !== 0) {
                         res.data.userLevelList.forEach(v => {
-                            this.chectedUser.push(v.userLevelId)
+                            this.chectedUser.push(v.userLevelId);
                         });
                     }
                     this.form.name = res.data.name;
                     this.form.weight = res.data.weight;
                     this.form.experience = res.data.experience;
-                    this.gifts.isSetExp = res.data.experience != '';
+                    this.gifts.isSetExp = res.data.experience !== '';
+                    this.gifts.isSetBuyTime = res.data.couponList.length !== 0;
                     this.form.dealDays = res.data.dealDays.toString();
                     this.form.type = res.data.type.toString();
                     this.form.firstCategoryId = Number(res.data.firstCategoryId);
                     this.proItemArr.push(this.form.firstCategoryId);
-                    this.handleItemChange(this.proItemArr);
                     this.form.secCategoryId = Number(res.data.secCategoryId);
                     this.proItemArr.push(this.form.secCategoryId);
-                    this.handleItemChange(this.proItemArr);
                     this.form.thirdCategoryId = Number(res.data.thirdCategoryId);
                     this.proItemArr.push(this.form.thirdCategoryId);
                     this.form.brandId = res.data.brandId;
@@ -409,6 +450,15 @@
                             this.productParam.push({ param: v.param, id: v.paramId, value: v.paramValue });
                         });
                     }
+                    if (res.data.couponList && res.data.couponList.length !== 0) {
+                        res.data.couponList.forEach(v => {
+                            this.selectedCoupon.push({
+                                name: v.couponName,
+                                id: v.couponId,
+                                selected: true
+                            });
+                        });
+                    }
                 }).catch(err => {
                     console.log(err);
                 });
@@ -418,10 +468,11 @@
                 if (!this.imgArr || this.imgArr.length == 0) {
                     this.$message.warning('请添加产品图片');
                     return false;
-                } else if (this.selectedTagArr.length == 0) {
-                    this.$message.warning('请添加产品标签');
-                    return false;
                 }
+                // else if (this.selectedTagArr.length == 0) {
+                //     this.$message.warning('请添加产品标签');
+                //     return false;
+                // }
                 if (this.productParam.length == 0) {
                     this.$message.warning('请输入产品参数');
                     return false;
@@ -474,6 +525,14 @@
                 this.chectedUser.forEach(v => {
                     data.userLevelList.push({ userLevelId: v });
                 });
+                data.couponList = [];
+                if (this.gifts.isSetBuyTime) {
+                    if (this.selectedCoupon.length !== 0) {
+                        this.selectedCoupon.forEach(v => {
+                            data.couponList.push({ couponId: v.id });
+                        });
+                    }
+                }
                 data.id = this.giftId;
                 this.btnLoading = true;
                 request.addActivityPackage(data).then(res => {
@@ -598,34 +657,27 @@
                 });
                 if (!tmp) {
                     let typeId = 1;
-                    let tagName = 'figureTag';
-                    if (this.figureTag) {
-                        typeId = 1;
-                        tagName = 'figureTag';
-                    } else if (this.goodsTag) {
-                        typeId = 2;
-                        tagName = 'goodsTag';
-                    } else if (this.sceneTag) {
-                        typeId = 3;
-                        tagName = 'sceneTag';
-                    } else {
-                        return;
-                    }
+                    let tagName = '';
+                    this.tagTypeArr.forEach((v, k) => {
+                        if (v.selected) {
+                            typeId = v.id;
+                            tagName = k;
+                        }
+                    })
                     const data = {
                         name: this.tagName,
-                        status: 1,
-                        typeId: typeId
+                        status: 1
                     };
                     request.addSysTagLibrary(data).then(res => {
                         this.$message.success(res.msg);
-                        this[tagName] = true;
-                        this.getAllTags(typeId, tagName, this[tagName]);
+                        this.selectedTagArr.push({ label: res.data.name, value: res.data.id });
+                        this.tagTypeArr[tagName].selected = true;
                         this.tagName = '';
                     }).catch(err => {
                         console.log(err);
                     });
                 } else {
-                    this.$message.warning('标签已经添加，请不要重复添加!');
+                    this.$message.warning('标签已存在，请不要重复添加!');
                 }
             },
             // 添加标签
@@ -637,63 +689,34 @@
                 v.selected = true;
                 this.selectedTagArr.push({ label: v.label, value: v.value });
             },
-            // 获取一级类目
-            getFirstItem() {
+            // 获取所有分类
+            getAllCat() {
                 this.itemList = [];
-                request.queryProductCategoryList({ fatherId: 0, level: 1, pageSize: 100000 }).then(res => {
-                    res.data.data.forEach((v, k) => {
+                request.getAllProductCategory({}).then(res => {
+                    res.data.firstList.forEach(v => {
                         this.itemList.push({ label: v.name, value: v.id, children: [] });
                     });
+                    res.data.secList.forEach(v => {
+                        for (let i = 0; i < this.itemList.length; i++) {
+                            if (v.fatherId == this.itemList[i].value) {
+                                this.itemList[i].children.push({ label: v.name, value: v.id, children: [] });
+                            }
+                        }
+                    });
+                    res.data.thirdList.forEach(v => {
+                        for (let i = 0; i < this.itemList.length; i++) {
+                            if (this.itemList[i].children.length == 0) { continue; }
+                            for (let j = 0; j < this.itemList[i].children.length; j++) {
+                                if (v.fatherId == this.itemList[i].children[j].value) {
+                                    this.itemList[i].children[j].children.push({ label: v.name, value: v.id });
+                                }
+                            }
+                        }
+                    });
+                    console.log(res);
                 }).catch(err => {
                     console.log(err);
                 });
-            },
-            // 获取二三级类目
-            handleItemChange(val) {
-                let index = 0;
-                const data = {};
-                data.pageSize = 100000;
-                if (val[1]) {
-                    let tmpIndex = 0;
-                    this.itemList.forEach((v, k) => {
-                        if (v.value == val[0]) {
-                            tmpIndex = k;
-                            v.children.forEach((value, key) => {
-                                if (value.value == val[1]) {
-                                    index = key;
-                                }
-                            });
-                        }
-                    });
-                    data.fatherId = val[1];
-                    data.level = 3;
-                    data.status = 1;
-                    request.queryProductCategoryList(data).then(res => {
-                        this.itemList[tmpIndex].children[index].children = [];
-                        res.data.data.forEach((v, k) => {
-                            this.itemList[tmpIndex].children[index].children.push({ label: v.name, value: v.id });
-                        });
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                } else {
-                    this.itemList.forEach((v, k) => {
-                        if (v.value == val[0]) {
-                            index = k;
-                        }
-                    });
-                    data.fatherId = val[0];
-                    data.level = 2;
-                    data.status = 1;
-                    request.queryProductCategoryList(data).then(res => {
-                        this.itemList[index].children = [];
-                        res.data.data.forEach((v, k) => {
-                            this.itemList[index].children.push({ label: v.name, value: v.id, children: [] });
-                        });
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                }
             },
             // 获取一二三级类目id
             getProItemId(val) {
@@ -701,6 +724,7 @@
                 this.form.secCategoryId = val[1];
                 this.form.thirdCategoryId = val[2];
                 this.getProductParam(val[2]);
+                this.getAllTags(this.tagTypeArr[0].id, 0, this.tagTypeArr[0].selected);
             },
             // 获取品牌列表
             getBrandList(val) {
@@ -736,17 +760,18 @@
                 });
             },
             // 获取所有标签
-            getAllTags(val, name, status) {
-                this.figureTag = false;
-                this.goodsTag = false;
-                this.sceneTag = false;
-                this[name] = status;
+            getAllTags(val, key, status) {
+                if (this.form.secCategoryId === '') return;
+                this.tagTypeArr.forEach(v => {
+                    v.selected = false;
+                })
+                this.tagTypeArr[key].selected = status;
                 this.tagLoading = true;
-                request.querySysTagLibraryList({ typeId: val }).then(res => {
+                request.querySysTagLibraryList({ typeId: val, secCategoryId: this.form.secCategoryId }).then(res => {
                     this.tagLoading = false;
                     this.tagArr = [];
-                    this[name] = !this[name];
-                    res.data.forEach(v => {
+                    this.tagTypeArr[key].selected = !this.tagTypeArr[key].selected;
+                    res.data[0].sysTagLibraryVOList.forEach(v => {
                         this.tagArr.push({ label: v.name, value: v.id });
                     });
                     this.tagArr.forEach((v, k) => {
@@ -758,6 +783,22 @@
                     });
                 }).catch(err => {
                     this.tagLoading = false;
+                    console.log(err);
+                });
+            },
+            // 获取所有标签类型
+            getAllTagType() {
+                request.querySysTagTypePageList({ pageSize: 100000 }).then(res => {
+                    this.tagTypeArr = [];
+                    if (res.data.data.length === 0) return;
+                    res.data.data.forEach(v => {
+                        this.tagTypeArr.push({
+                            id: v.id,
+                            name: v.name,
+                            isSelected: false
+                        })
+                    });
+                }).catch(err => {
                     console.log(err);
                 });
             },
@@ -781,6 +822,64 @@
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+            // 显示优惠券列表
+            showAddCouList() {
+                this.isShowCouponList = true;
+                this.handleClick({ name: '1' });
+                this.tmpCouponList = [];
+            },
+            // 选择优惠券类型
+            handleClick(tab) {
+                this.couponLoading = true;
+                request.queryCouponByType({ type: tab.name }).then(res => {
+                    this.couponLoading = false;
+                    this.couponList = [];
+                    const tmp = [];
+                    tmp.push(...this.selectedCoupon, ...this.tmpCouponList);
+                    if (res.data.length === 0) return;
+                    res.data.forEach(v => {
+                        const obj = {
+                            name: v.name,
+                            id: v.id,
+                            selected: false
+                        };
+                        for (let i = 0; i < tmp.length; i++) {
+                            if (tmp[i].id == obj.id) {
+                                obj.selected = true;
+                            }
+                        }
+                        this.couponList.push(obj);
+                    });
+                }).catch(err => {
+                    this.couponLoading = false;
+                    console.log(err);
+                });
+            },
+            // 删除选中优惠券
+            deleteSelectedCoupon(index) {
+                this.selectedCoupon.splice(index, 1);
+            },
+            //  选择优惠券
+            selectCoupon(coupon) {
+                coupon.selected = true;
+                const tmp = [];
+                tmp.push(...this.selectedCoupon, ...this.tmpCouponList);
+                for (let i = 0; i < tmp.length; i++) {
+                    if (tmp[i].id == coupon.id) {
+                        return;
+                    }
+                }
+                this.tmpCouponList.push(coupon);
+            },
+            // 确定添加优惠券
+            confirmCoupon() {
+                this.isShowCouponList = false;
+                this.selectedCoupon.push(...this.tmpCouponList);
+            },
+            // 返回
+            goBack() {
+                this.$router.push('/giftManage');
             }
         }
     };
@@ -876,6 +975,31 @@
         .add-tag {
             width: 100%;
             margin-top: 20px;
+        }
+        .selected-coupon{
+            display: block;
+            float: left;
+            width: 300px;
+            height: 30px;
+            line-height: 30px;
+            border: 1px solid #ccc;
+            padding-left: 10px;
+            border-radius: 10px;
+            margin-right: 10px;
+            cursor: pointer;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+        }
+        .active-selected{
+            background-color: skyblue;
+            color: #fff;
+            border: 1px solid skyblue;
+        }
+        .delete-coupon{
+            cursor: pointer;
+            color: skyblue;
+            float: left;
         }
         .tag-list {
             width: 100%;

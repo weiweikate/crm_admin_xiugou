@@ -102,7 +102,7 @@ export default {
         };
     },
     activated() {
-        this.form = { face: '' };
+        this.form = { face: '', deptmentId: [] };
         this.checkedUser = [[], [], [], [], [], [], [], [], [], [], []];
         this.checkAllUser = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
         this.uploadImg = api.uploadImg;
