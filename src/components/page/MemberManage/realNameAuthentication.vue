@@ -57,7 +57,7 @@
         <!-- 驳回认证 -->
         <el-dialog title="驳回理由" :visible.sync="dialogVisible" width="30%">
             <el-select v-model="freeReason" placeholder="请选择驳回理由" @change="changeReason">
-                <el-option v-for="(v,k) in reasonList" :key="k" :label="v.dValue" :value="v.dValue"></el-option>
+                <el-option v-for="(v,k) in reasonList" :key="k" :label="v.value" :value="v.value"></el-option>
             </el-select>
             <el-input style="margin-top:10px" v-model="reason" placeholder="请输入驳回理由" type="textarea" :rows="10"></el-input>
             <span slot="footer" class="dialog-footer">
@@ -96,16 +96,7 @@
                 reason: '', // 驳回理由
                 freeReason: '', // 快捷驳回理由
                 // 驳回理由列表
-                reasonList: [
-                    {
-                        label: '请提交正确的实名认证信息',
-                        value: '请提交正确的实名认证信息'
-                    },
-                    {
-                        label: '您的认证照片不符合要求，请重新认证',
-                        value: '您的认证照片不符合要求，请重新认证'
-                    }
-                ]
+                reasonList: []
             };
         },
         activated() {
@@ -145,7 +136,7 @@
                 this.freeReason = '';
                 this.reason = '';
                 this.dialogVisible = true;
-                await this.queryDictonary('JJYY');
+                await this.queryDictonary('SMBH');
                 this.reasonList = this.tmpAxiosData;
             },
             confirmRefuse() {

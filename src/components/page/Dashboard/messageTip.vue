@@ -70,6 +70,7 @@ export default {
         right: 0;
         background-color: #fff;
         padding: 30px 40px;
+        width: 615px;
         .message-content{
             cursor: pointer;
             font-size: 14px;

@@ -100,7 +100,7 @@
                             <el-button @click="auditProduct(scope.row,3)" type="danger">驳回审核</el-button>
                         </template>
                         <template v-else>
-                            <el-button v-if='scope.row.status != 4 && scope.row.status != 2'
+                            <el-button v-if='scope.row.status != 4'
                                        @click="editProduct(scope.row)" type="success">编辑产品
                             </el-button>
                             <template >
@@ -113,6 +113,8 @@
                             </template>
                         </template>
                         <el-button @click="productInfo(scope.row)" type="primary">查看详情
+                        </el-button>
+                        <el-button v-if='scope.row.status == 3' @click="productStatus(scope.row,'1')" type="success">提交审核
                         </el-button>
                     </div>
                 </template>
@@ -221,7 +223,7 @@ export default {
             this.status = '5';
         } else if (n === 'auditProduct') {
             this.status = '1';
-        } else if (n === 'modifyProduct') {
+        } else if (n === 'nAudit') {
             this.status = '3';
         }
         this.getFirstItem();

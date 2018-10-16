@@ -71,8 +71,6 @@
             }
         }
         .code-area {
-            width: 200px;
-            height: 310px;
             border-radius: 5px;
             border:1px solid #dfdfdf;
         }

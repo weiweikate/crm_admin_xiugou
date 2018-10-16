@@ -36,15 +36,15 @@
                 </el-form-item>
                 <el-form-item label="产品分类">
                     <el-cascader @change='getProItemId' v-model="proItemArr" :options="itemList"
-                                 @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
+                                  :props="itemProps"></el-cascader>
                     <span style="margin-left:30px">产品品牌</span>
                     <el-select filterable @change="getSupplyList" v-model="form.brandId" placeholder="请选择">
-                        <el-option v-for="(v,k) in brandArr" :key="k" :label="v.name" :value="v.id"></el-option>
+                        <el-option v-for="(v,k) in brandArr" :key="k" :label="v.name" :value="v.brandId"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="供应商">
                     <el-select @change="getBrandList" v-model="form.supplierId" placeholder="下拉搜索供应商">
-                        <el-option v-for="(v,k) in supplierArr" :key="k" :label="v.name" :value="v.id"></el-option>
+                        <el-option v-for="(v,k) in supplierArr" :key="k" :label="v.name" :value="v.supplierId"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="发货方">
@@ -284,8 +284,8 @@
             async getInfo() {
                 this.bodyLoading = true;
                 this.productId = this.$route.query.releaseProduct || sessionStorage.getItem('releaseProduct');
-                // 获取一级类目
-                await this.getFirstItem();
+                // 获取类目
+                await this.getAllCat();
                 // 获取品牌列表
                 await this.getBrandList();
                 // 获取运费模板
@@ -297,10 +297,8 @@
                     this.form.name = res.data.name;
                     this.form.firstCategoryId = Number(res.data.firstCategoryId);
                     this.proItemArr.push(this.form.firstCategoryId);
-                    this.handleItemChange(this.proItemArr);
                     this.form.secCategoryId = Number(res.data.secCategoryId);
                     this.proItemArr.push(this.form.secCategoryId);
-                    this.handleItemChange(this.proItemArr);
                     this.form.thirdCategoryId = Number(res.data.thirdCategoryId);
                     this.proItemArr.push(this.form.thirdCategoryId);
                     this.form.brandId = res.data.brandId;
@@ -540,63 +538,34 @@
                 v.selected = true;
                 this.selectedTagArr.push({ label: v.label, value: v.value });
             },
-            // 获取一级类目
-            getFirstItem() {
+            // 获取所有分类
+            getAllCat() {
                 this.itemList = [];
-                request.queryProductCategoryList({ fatherId: 0, level: 1, pageSize: 100000 }).then(res => {
-                    res.data.data.forEach((v, k) => {
+                request.getAllProductCategory({}).then(res => {
+                    res.data.firstList.forEach(v => {
                         this.itemList.push({ label: v.name, value: v.id, children: [] });
                     });
+                    res.data.secList.forEach(v => {
+                        for (let i = 0; i < this.itemList.length; i++) {
+                            if (v.fatherId == this.itemList[i].value) {
+                                this.itemList[i].children.push({ label: v.name, value: v.id, children: [] });
+                            }
+                        }
+                    });
+                    res.data.thirdList.forEach(v => {
+                        for (let i = 0; i < this.itemList.length; i++) {
+                            if (this.itemList[i].children.length == 0) { continue; }
+                            for (let j = 0; j < this.itemList[i].children.length; j++) {
+                                if (v.fatherId == this.itemList[i].children[j].value) {
+                                    this.itemList[i].children[j].children.push({ label: v.name, value: v.id });
+                                }
+                            }
+                        }
+                    });
+                    console.log(res);
                 }).catch(err => {
                     console.log(err);
                 });
-            },
-            // 获取二三级类目
-            async handleItemChange(val) {
-                let index = 0;
-                const data = {};
-                data.pageSize = 100000;
-                if (val[1]) {
-                    let tmpIndex = 0;
-                    this.itemList.forEach((v, k) => {
-                        if (v.value == val[0]) {
-                            tmpIndex = k;
-                            v.children.forEach((value, key) => {
-                                if (value.value == val[1]) {
-                                    index = key;
-                                }
-                            });
-                        }
-                    });
-                    data.fatherId = val[1];
-                    data.level = 3;
-                    data.status = 1;
-                    await request.queryProductCategoryList(data).then(res => {
-                        this.itemList[tmpIndex].children[index].children = [];
-                        res.data.data.forEach((v, k) => {
-                            this.itemList[tmpIndex].children[index].children.push({ label: v.name, value: v.id });
-                        });
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                } else {
-                    this.itemList.forEach((v, k) => {
-                        if (v.value == val[0]) {
-                            index = k;
-                        }
-                    });
-                    data.fatherId = val[0];
-                    data.level = 2;
-                    data.status = 2;
-                    await request.queryProductCategoryList(data).then(res => {
-                        this.itemList[index].children = [];
-                        res.data.data.forEach((v, k) => {
-                            this.itemList[index].children.push({ label: v.name, value: v.id, children: [] });
-                        });
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                }
             },
             // 获取一二三级类目id
             getProItemId(val) {
@@ -616,7 +585,11 @@
                     });
                 } else {
                     request.findProductBrandListNoStop({}).then(res => {
-                        this.brandArr = res.data;
+                        if (res.data.length === 0) return;
+                        this.brandArr = [];
+                        res.data.forEach(v => {
+                            this.brandArr.push({ brandId: v.id, name: v.name });
+                        });
                     }).catch(err => {
                         console.log(err);
                     });
@@ -625,7 +598,9 @@
             // 获取供应商列表
             getSupplyList(val) {
                 request.findByBrandId({ id: val }).then(res => {
-                    this.supplierArr = res.data;
+                    this.supplierArr = [];
+                    this.supplierArr.push({ name: '全部', id: '' });
+                    this.supplierArr.push(...res.data);
                 }).catch(err => {
                     console.log(err);
                 });
