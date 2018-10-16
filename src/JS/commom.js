@@ -48,7 +48,6 @@ const queryDictonary = {
                 code: dKey
             };
             await request.queryDictionaryDetailsType(data).then(res => {
-                console.log(res);
                 this.tmpAxiosData = res.data;
             }).catch(err => {
                 this.dicNum++;

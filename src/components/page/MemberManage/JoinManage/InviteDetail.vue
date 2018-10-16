@@ -12,7 +12,7 @@
                 </div>
                 <div class="item-row" v-else>
                     邀请失效期：
-                    {{msg.invalidTime|formatDate}}
+                    {{msg.invalidTime|formatDateAll}}
                 </div>
 
                 <div class="item-row">
@@ -21,7 +21,7 @@
                 </div>
                 <div class="item-row">
                     邀请时间：
-                    {{msg.createTime|formatDate}}
+                    {{msg.createTime|formatDateAll}}
                 </div>
 
             </div>

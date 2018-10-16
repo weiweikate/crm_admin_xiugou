@@ -72,7 +72,7 @@ export default {
     },
     created() {
         this.id = localStorage.getItem('ms_userID');
-        // this.getNoReadNum();
+        this.getNoReadNum();
         request.findAdminUserbyId({ id: this.id }).then(res => {
             this.face = res.data.face;
         });
@@ -127,6 +127,11 @@ export default {
         },
         // 获取未读消息数量
         getNoReadNum() {
+            request.queryNewMessageCount({}).then(res => {
+                this.message = res.data;
+            }).catch(err => {
+                console.log(err);
+            });
             clearInterval(timer);
             var timer = setInterval(function() {
                 request.queryNewMessageCount({}).then(res => {
@@ -134,7 +139,7 @@ export default {
                 }).catch(err => {
                     console.log(err);
                 });
-            }, 10000);
+            }, 100000);
         },
         // 获取消息
         getMsg() {

@@ -39,12 +39,12 @@
                                  :props="itemProps"></el-cascader>
                     <span style="margin-left:30px">产品品牌</span>
                     <el-select filterable @change="getSupplyList" v-model="form.brandId" placeholder="请选择">
-                        <el-option v-for="(v,k) in brandArr" :key="k" :label="v.name" :value="v.id"></el-option>
+                        <el-option v-for="(v,k) in brandArr" :key="k" :label="v.name" :value="v.brandId"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="供应商">
                     <el-select @change="getBrandList" v-model="form.supplierId" placeholder="下拉搜索供应商">
-                        <el-option v-for="(v,k) in supplierArr" :key="k" :label="v.name" :value="v.id"></el-option>
+                        <el-option v-for="(v,k) in supplierArr" :key="k" :label="v.name" :value="v.supplierId"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="发货方">
@@ -548,7 +548,11 @@
                     });
                 } else {
                     request.findProductBrandListNoStop({}).then(res => {
-                        this.brandArr = res.data;
+                        if (res.data.length === 0) return;
+                        this.brandArr = [];
+                        res.data.forEach(v => {
+                            this.brandArr.push({ brandId: v.id, name: v.name });
+                        });
                     }).catch(err => {
                         console.log(err);
                     });
@@ -557,7 +561,9 @@
             // 获取供应商列表
             getSupplyList(val) {
                 request.findByBrandId({ id: val }).then(res => {
-                    this.supplierArr = res.data;
+                    this.supplierArr = [];
+                    this.supplierArr.push({ name: '全部', id: '' });
+                    this.supplierArr.push(...res.data);
                 }).catch(err => {
                     console.log(err);
                 });

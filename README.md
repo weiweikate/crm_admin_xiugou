@@ -8,6 +8,7 @@
 打包上线分为测试环境和正式环境：
 测试环境：npm run build:test 其对应的服务地址在config/test.env.js配置
 正式环境：npm run build:prod 其对应的服务地址在config/prod.env.js配置
+开发环境：npm run build:dev 其对应的服务地址在config/dev.env.js配置
 ```
 
 发布到测试环境

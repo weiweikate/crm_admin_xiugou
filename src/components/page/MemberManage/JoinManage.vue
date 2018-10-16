@@ -34,6 +34,7 @@
             <div class="block">
                 <el-pagination
                         background
+                        :page-size="page.pageSize"
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="page.currentPage"
