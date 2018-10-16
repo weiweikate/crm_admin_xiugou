@@ -61,7 +61,7 @@ export default {
             showMsg: false,
             face: '',
             name: '请登陆',
-            message: 2
+            message: 0
         };
     },
     computed: {
@@ -134,10 +134,11 @@ export default {
                 }).catch(err => {
                     console.log(err);
                 });
-            }, 5000);
+            }, 10000);
         },
         // 获取消息
         getMsg() {
+            if (this.message == 0) return;
             this.$refs.msg.getAllMsg();
             this.showMsg = true;
         }

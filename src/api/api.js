@@ -241,6 +241,7 @@ export const makeSureOrder = '/order/order/makeSureOrder';
 export const uploadImg = '/admin/common/upload/oss'; // 上传图片
 export const addImg = '/common/upload/oss'; // 上传图片
 export const queryConfig = ['/config/sysconfig/queryConfig', { methods: 'get' }]; // 查询系统配置
+export const getAllProductCategory = ['/product/productCategory/queryList', { methods: 'post' }]; // 获取所有三级类目
 export const getCode = ['/adminUser/sendMessage', { methods: 'get' }]; // 获取短信验证码
 export const homeData = ['/user/home', { methods: 'get' }]; // 首页数据列表
 export const addOrModifyList = '/config/sysconfig/addOrModifyList'; // 批量新增系统配置
