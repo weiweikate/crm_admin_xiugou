@@ -24,7 +24,7 @@
                 <span v-else-if='orderStatus == 3' class="activite-status">当前订单状态：待收货</span>
                 <span v-else-if='orderStatus == 4' class="activite-status">当前订单状态：确认收货</span>
                 <span v-else-if='orderStatus == 5' class="activite-status">当前订单状态：已完成</span>
-                <span v-else-if='orderStatus == 6' class="activite-status">当前订单状态：已关闭(退货关闭)</span>
+                <span v-else-if='orderStatus == 6' class="activite-status">当前订单状态：已关闭(退货退款关闭)</span>
                 <span v-else-if='orderStatus == 7' class="activite-status">当前订单状态：已关闭(用户关闭)</span>
                 <span v-else-if='orderStatus == 8' class="activite-status">当前订单状态：已关闭(超时关闭)</span>
                 <span v-else-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
@@ -87,8 +87,8 @@
                 <p class="info-content">
                     <span v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5'
                           class="content-con">发货时间：{{ orderMsg.sendTime | formatDateAll }}</span>
-                    <span v-if='orderStatus == 6 || orderStatus == 7 || orderStatus == 8' class="content-con">取消时间：{{ orderMsg.cancleTime }}</span>
-                    <span v-if='orderStatus != 1 && orderStatus != 2 ' class="content-con">支付宝（第三方支付）交易号：{{ orderMsg.outTradeNo }}</span>
+                    <span v-if='orderStatus == 6 || orderStatus == 7 || orderStatus == 8' class="content-con">取消时间：{{ orderMsg.cancleTime | formatDateAll }}</span>
+                    <span v-if='orderStatus != 1 && orderStatus != 2 ' class="content-con">支付交易号：{{ orderMsg.outTradeNo }}</span>
                     <span v-if='orderStatus == 4 || orderStatus == 5' class="content-con">确认时间：{{orderMsg.deliveryTime | formatDateAll}}</span>
                 </p>
                 <el-table border :data="tableData" :span-method="spanMethod">

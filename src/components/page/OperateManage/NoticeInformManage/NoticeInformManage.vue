@@ -45,44 +45,42 @@
             </el-form>
             <template>
                 <el-table :data="tableData" border style="width: 100%">
-                    <el-table-column prop="id" label="ID" width="60" align="center"></el-table-column>
-                    <el-table-column prop="nType" label="类型" width="80" align="center">
+                    <el-table-column prop="code" label="ID" align="center"></el-table-column>
+                    <el-table-column prop="type" label="类型" width="80" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.nType==1">公告</template>
-                            <template v-if="scope.row.nType==2">通知</template>
+                            <template v-if="scope.row.type==100">公告</template>
+                            <template v-if="scope.row.type==200">通知</template>
                         </template>
                     </el-table-column>
                     <el-table-column prop="title" label="标题" align="center"></el-table-column>
-                    <el-table-column prop="push_way" label="推送用户" align="center"></el-table-column>
+                    <el-table-column prop="" label="推送用户" align="center"></el-table-column>
                     <el-table-column label="推送区域" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.pushCountry==1">全国</template>
-                            <template v-if="scope.row.pushCountry==2">国外</template>
-                            <template v-if="scope.row.pushCountry==3">
-                                {{scope.row.address}}
-                            </template>
+
                         </template>
                     </el-table-column>
-                    <el-table-column v-if="form.nType ==2" label="剩余失效时间" align="center">
+                    <el-table-column v-if="checked[1]" label="剩余失效时间" align="center">
                         <template slot-scope="scope">
-                            <template>{{scope.row.orderTime|formatDate}}</template>
+                            <template>{{scope.row.leftTime|formatDateAll}}</template>
                         </template>
                     </el-table-column>
                     <el-table-column label="推送时间" align="center">
                         <template slot-scope="scope">
-                            <template>{{scope.row.orderTime|formatDate}}</template>
+                            <template>{{scope.row.startTime|formatDateAll}}</template>
+                            <br>
+                            <template>{{scope.row.endTime|formatDateAll}}</template>
                         </template>
                     </el-table-column>
                     <el-table-column label="发布者/发布时间" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.name}}<br>{{scope.row.createTime|formatDate}}
+                            {{scope.row.createdUserName}}<br>{{scope.row.createdTime|formatDateAll}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="status" label="状态" align="center">
+                    <el-table-column label="状态" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.status==1">待推送</template>
-                            <template v-if="scope.row.status==2">已推送</template>
-                            <template v-if="scope.row.status==3">取消推送</template>
+                            <template v-if="scope.row.status==100">待推送</template>
+                            <template v-if="scope.row.status==200">已推送</template>
+                            <template v-if="scope.row.status==300">取消推送</template>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" align="center">
@@ -90,13 +88,13 @@
                             <el-button type="primary" size="small" @click="detailItem(scope.$index,scope.row)">查看详情
                             </el-button>
                             <el-button type="warning" size="small" @click="upStatusItem(scope.row.id,2)"
-                                       v-if="scope.row.status==2">再次推送
+                                       v-if="scope.row.status==200">再次推送
                             </el-button>
                             <el-button type="success" size="small" @click="upStatusItem(scope.row.id,3)"
-                                       v-if="scope.row.status==1">取消推送
+                                       v-if="scope.row.status==100">取消推送
                             </el-button>
                             <el-button type="danger" size="small" @click="upStatusItem(scope.row.id,4)"
-                                       v-if="scope.row.status==3" style="width: 80px"> 删除
+                                       v-if="scope.row.status==300" style="width: 80px"> 删除
                             </el-button>
                         </template>
                     </el-table-column>
@@ -221,25 +219,25 @@ export default {
                 endTime: that.form.date ? moment(that.form.date[1]).format('YYYY-MM-DD') : ''
             };
             that.tableLoading = true;
-            request.getNoticeList(data).then(res => {
-                that.tableLoading = false;
-                for (const i in res.data) {
-                    const arr = res.data[i].pushWay.split(',');
-                    const temp = [];
-                    for (const j in that.levelIds) {
-                        for (const k in arr) {
-                            if (arr[k] == that.levelIds[j]) {
-                                const name = that.levels[j];
-                                if (temp.indexOf(name) == -1) {
-                                    temp.push(that.levels[j]);
-                                }
-                            }
-                        }
-                    }
-                    res.data[i].pushWay = temp.join(',');
-                }
-                that.tableData = res.data;
-                that.page.totalPage = res.totalNum;
+            request.queryNoticeList(data).then(res => {
+                // that.tableLoading = false;
+                // for (const i in res.data) {
+                //     const arr = res.data[i].pushWay.split(',');
+                //     const temp = [];
+                //     for (const j in that.levelIds) {
+                //         for (const k in arr) {
+                //             if (arr[k] == that.levelIds[j]) {
+                //                 const name = that.levels[j];
+                //                 if (temp.indexOf(name) == -1) {
+                //                     temp.push(that.levels[j]);
+                //                 }
+                //             }
+                //         }
+                //     }
+                //     res.data[i].pushWay = temp.join(',');
+                // }
+                that.tableData = res.data.data;
+                that.page.totalPage = res.data.totalNum;
             }).catch(err => {
                 that.tableLoading = false;
                 console.log(err);
@@ -273,7 +271,7 @@ export default {
                 status: that.status
             };
             that.btnLoading = true;
-            request.updateNoticeStatus(data).then(res => {
+            request.cancelNoticeById(data).then(res => {
                 that.tipsMask = false;
                 that.$message.success(res.msg);
                 that.getList(that.page.currentPage);

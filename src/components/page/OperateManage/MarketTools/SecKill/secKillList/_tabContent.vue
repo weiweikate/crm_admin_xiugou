@@ -92,7 +92,7 @@
             </el-table-column>
             <el-table-column label="预约购买人数" align="center" min-width="60">
                 <template slot-scope="scope">
-                    <template>{{scope.row.subNumber?scope.row.subNumber:'0'}}</template>
+                    <template>{{scope.row.raseCount?scope.row.raseCount:'0'}}</template>
                 </template>
             </el-table-column>
             <el-table-column prop="" label="状态" align="center">
@@ -404,7 +404,11 @@
                 request.bathUpdateActiviySeckillStatus(data).then(res => {
                     this.isShowPop = false;
                     this.isShowEndPop = false;
-                    this.$message.success(res.msg);
+                    if (res.data == 0) {
+                        this.$message.success(res.msg);
+                    } else {
+                        this.$message.warning(res.data + '条数据不能执行该操作!');
+                    }
                     this.getList(this.page.currentPage);
                 }).catch(err => {
                     console.log(err);

@@ -270,3 +270,14 @@ export const querySysTagTypePageList = '/config/sysTagType/querySysTagTypePageLi
 // 修改标签状态
 export const updateSysTagTypeStatusById = ['/config/sysTagType/deleteById', { methods: 'get' }];
 
+/** ************通知公告*****************/
+// 取消公告
+export const cancelNoticeById = ['/notice/cancelNoticeById', { methods: 'get' }];
+// 删除公告
+export const deleteNoticeById = ['/notice/deleteNoticeById', { methods: 'get' }];
+// 查询公告byId
+export const queryNoticeById = ['/notice/queryNoticeById', { methods: 'get' }];
+// 查询公告列表
+export const queryNoticeList = '/notice/queryNoticeList';
+// 插入修改公告
+export const saveNotice = '/notice/saveNotice';

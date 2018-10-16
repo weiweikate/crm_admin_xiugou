@@ -318,6 +318,7 @@
                             height: 100px;
                             margin-left: 4%;
                             text-align: center;
+                            line-height: 20px !important;
                             span{
                                 display: inline-block;
                                 margin-top: 30px;

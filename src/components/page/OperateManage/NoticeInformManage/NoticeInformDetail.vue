@@ -18,17 +18,7 @@
                         <span class="label" v-if="checked[0]"><span class="required">*</span>公告详情</span>
                         <span class="label" v-else><span class="required">*</span>通知详情</span>
                         <template>
-                            <div style="display: inline-block">
-                                <!-- quill-editor插件标签 分别绑定各个事件-->
-                                <quill-editor v-model="form.content" disabled="" ref="myQuillEditor"></quill-editor>
-                                <!-- 文件上传input 将它隐藏-->
-                                <!--<el-upload :action="qnLocation" :before-upload='beforeUpload' :data="uploadData"-->
-                                           <!--:on-success='upScuccess' ref="upload" style="display:none">-->
-                                    <!--<el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">-->
-                                        <!--点击上传-->
-                                    <!--</el-button>-->
-                                <!--</el-upload>-->
-                            </div>
+                            <el-input type="textarea" class="detail-content" maxlength="180" disabled="" v-model="form.content" placeholder="请输入"></el-input>
                         </template>
                     </el-form-item>
 
@@ -64,10 +54,6 @@
                             <region @regionMsg='getRegion' :regionMsg='address' :isDisabled="true"></region>
                         </div>
                     </el-form-item>
-                    <el-form-item>
-                        <span class="label">发布者</span>
-                        {{form.name}}
-                    </el-form-item>
                 </el-form>
             </div>
         </div>
@@ -92,7 +78,7 @@
                 checked: [true, false],
                 title: '', //   标题
                 form: {
-                    nType: '1', //   1:公告   2：通知
+                    type: 100, //   100:公告   200：通知
                     content: '', //   内容
                     pushType: '1', //   1：即时推送  2：定时推送
                     pushWay: '', //   推送人群
@@ -113,41 +99,11 @@
                 users: [],
                 isIndeterminate: false,
                 content: '', // 文章内容
-                editorOption: {
-                    placeholder: '请输入内容',
-                    modules: {
-                        // 配置富文本
-                        toolbar: [
-                            ['bold', 'italic', 'underline', 'strike'],
-                            ['blockquote', 'code-block'],
-                            [{ header: 1 }, { header: 2 }],
-                            [{ direction: 'rtl' }],
-                            [{ size: ['small', false, 'large', 'huge'] }],
-                            [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                            [{ color: [] }, { background: [] }],
-                            [{ font: [] }],
-                            [{ align: [] }],
-                            ['clean'],
-                            ['link', 'image']
-                        ]
-                    }
-                },
                 id: '',
                 address: ''
             };
         },
-        // 页面加载后执行 为编辑器的图片图标和视频图标绑定点击事件
-        mounted() {
-            // 为图片ICON绑定事件 getModule 为编辑器的内部属性
-            this.$refs.myQuillEditor.quill
-                .getModule('toolbar')
-                .addHandler('image', this.imgHandler);
-        },
         created() {
-            this.$refs = {
-                myQuillEditor: HTMLInputElement,
-                imgInput: HTMLInputElement
-            };
         },
         activated() {
             this.id =
@@ -156,11 +112,6 @@
             this.getDetail();
         },
         methods: {
-            // 获取省市区
-            getRegion(msg) {
-                this.address = msg;
-                console.log(msg);
-            },
             // 获取详情
             getDetail() {
                 const that = this;
@@ -168,59 +119,48 @@
                     id: that.id
                 };
                 that.loading = true;
-                request.getNoticeDetailById(data).then(res => {
-                    that.form = res.data.data;
-                    that.title = res.data.data.title;
-                    that.form.name = res.data.data.name;
+                request.queryNoticeById(data).then(res => {
+                    that.form = res.data;
+                    that.title = res.data.title;
                     that.form.content = xss(that.form.content);
-                    const reginArr = [];
-                    reginArr.push(res.data.data.province_id, res.data.data.city_id, res.data.data.area_id);
-                    that.address = reginArr;
-                    if (res.data.data.n_type == 1) {
+                    if (res.data.type == 100) {
                         that.checked = [true, false];
                     } else {
                         that.checked = [false, true];
                     }
                     request.getUserLevelList({}).then(resData => {
                         let count = 0;
-                        const arr = res.data.data.push_way.split(',');
-                        for (const i in resData.data.data) {
-                            const name = resData.data.data[i].name;
-                            if (that.users.indexOf(name) == -1) {
-                                that.users.push(name);
-                            }
-                            for (const j in arr) {
-                                if (arr[j] == resData.data.data[i].id) {
-                                    count++;
-                                    if (that.checkedUsers.indexOf(name) == -1) {
-                                        that.checkedUsers.push(name);
-                                    }
-                                }
-                            }
-                        }
-                        if (count == resData.data.data.length) {
-                            that.checkAll = true;
-                            that.isIndeterminate = false;
-                        }
+                        // const arr = res.data.push_way.split(',');
+                        // for (const i in resData.data.data) {
+                        //     const name = resData.data.data[i].name;
+                        //     if (that.users.indexOf(name) == -1) {
+                        //         that.users.push(name);
+                        //     }
+                        //     for (const j in arr) {
+                        //         if (arr[j] == resData.data.data[i].id) {
+                        //             count++;
+                        //             if (that.checkedUsers.indexOf(name) == -1) {
+                        //                 that.checkedUsers.push(name);
+                        //             }
+                        //         }
+                        //     }
+                        // }
+                        // if (count == resData.data.length) {
+                        //     that.checkAll = true;
+                        //     that.isIndeterminate = false;
+                        // }
                     })
                         .catch(err => {
                             console.log(err);
                         });
 
-                    that.form.pushType = res.data.data.push_type.toString();
-                    that.form.pushCountry = res.data.data.push_country.toString();
-                    that.date = res.data.data.order_time ? moment(res.data.data.order_time).format('YYYY-MM-DD HH:mm:ss') : '';
+                    that.date = res.data.order_time ? moment(res.data.order_time).format('YYYY-MM-DD HH:mm:ss') : '';
                     that.loading = false;
                 })
                     .catch(err => {
                         that.loading = false;
                     });
-            },
-            // 点击图片ICON触发事件
-            imgHandler() {
-                return false;
             }
-
         }
     };
 </script>
@@ -369,8 +309,11 @@
                 width: 150px;
             }
         }
-        .quill-editor {
-            width: 800px;
+        .detail-content,.el-textarea__inner{
+            width: 350px;
+            height: 200px;
+            resize: none;
+            overflow: hidden;
         }
     }
 </style>

@@ -4,41 +4,30 @@
         <div class="container">
             <div class="inf-box">
                 <div style="margin: -30px 0 20px 80px">
-                    <div class="tab-item" :class="checked[0]?'checked':''" @click="change(0)">公告</div>
-                    <div class="tab-item" :class="checked[1]?'checked':''" @click="change(1)" style="margin-left: -5px">
+                    <div class="tab-item" :class="index==0?'checked':''" @click="change(0)">公告</div>
+                    <div class="tab-item" :class="index==1?'checked':''" @click="change(1)" style="margin-left: -5px">
                         通知
                     </div>
                 </div>
-                <el-form :model="form" ref="form" v-loading="loading">
-                    <!--<el-form-item :prop="title" v-if="checked[0]">-->
-                        <!--<span class="label"><span class="required">*</span>公告标题</span>-->
-                        <!--<el-input placeholder="请输入公告标题" maxlength="16" v-model="title"></el-input>-->
-                    <!--</el-form-item>-->
-                    <el-form-item :prop="title" v-if="checked[0]" label="公告标题" required="">
-                        <el-input placeholder="请输入公告标题" maxlength="16" v-model="title"></el-input>
+                <el-form :model="form" ref="form" :rules="rules" v-loading="loading">
+                    <el-form-item prop="title" :label="info[index].name">
+                        <el-input maxlength="16" v-model="title"></el-input>
                     </el-form-item>
-                    <el-form-item :label="detailTitle" required="" class="content-area">
-                        <!--<span class="label" v-if="checked[0]"><span class="required">*</span>公告详情</span>-->
-                        <!--<span class="label" v-else><span class="required">*</span>通知详情</span>-->
-                        <!--<template>-->
-                            <!--<div style="display: inline-block">-->
-                                <!--&lt;!&ndash; quill-editor插件标签 分别绑定各个事件&ndash;&gt;-->
-                                <!--<quill-editor v-model="form.content" ref="myQuillEditor" :options="editorOption"-->
-                                              <!--@change="onEditorChange($event)"></quill-editor>-->
-                                <!--&lt;!&ndash; 文件上传input 将它隐藏&ndash;&gt;-->
-                                <!--<el-upload :action="qnLocation" :data="uploadData"-->
-                                           <!--:on-success='upScuccess' ref="upload" style="display:none">-->
-                                    <!--<el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">-->
-                                        <!--点击上传-->
-                                    <!--</el-button>-->
-                                <!--</el-upload>-->
-                            <!--</div>-->
-                        <!--</template>-->
+                    <el-form-item prop="content" :label="info[index].detail" class="content-area">
                         <el-input type="textarea" class="detail-content" maxlength="180" @input="getContentCount" v-model="form.content" placeholder="请输入"></el-input>
                         <span class="content-count">{{count}}/180</span>
                     </el-form-item>
-
-                    <el-form-item label="推送方式" style="position: relative">
+                    <el-form-item label="推送时间" v-if="index==0">
+                        <el-date-picker
+                            v-model="form.date"
+                            type="datetimerange"
+                            format="yyyy-MM-dd HH:mm:ss"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                        >
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="推送方式" v-if="index==1" class="send-type" style="position: relative">
                         <el-radio-group @change="changeStyle" v-model="form.pushType">
                             <el-radio :label="1" value="1">即时推送</el-radio>
                             <el-radio :label="2" value="2">定时推送</el-radio>
@@ -51,6 +40,9 @@
                                 :picker-options="pickerOptions"
                                 placeholder="选择日期时间">
                         </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="通知有效期" v-if="index==1">
+                        <el-input @change="checkDay" v-model="form.effectDay" placeholder="请输入有效期"></el-input>天
                     </el-form-item>
                     <el-form-item label="推送人群">
                         <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">
@@ -73,7 +65,7 @@
                         </div>
                     </el-form-item>
                     <el-form-item label="推送区域" prop="pushCountry" class="region-area">
-                        <el-button type="primary" @click="chooseArea">选择区域</el-button>
+                        <el-button type="primary" @click="chooseSendArea">选择区域</el-button>
                     </el-form-item>
                     <div class="submit-btn">
                         <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">确认保存</el-button>
@@ -83,8 +75,7 @@
             </div>
         </div>
         <!--选择区域-->
-        <choose-area @getArea='chooseAreaToast' :index="tableIndex" :chooseData="chooseData" :preData="preData"
-                     v-if="isShowArea"></choose-area>
+        <choose-area @getArea='chooseAreaToast' :chooseData="chooseData" v-if="isShowArea"></choose-area>
     </div>
 
 </template>
@@ -103,19 +94,44 @@
             vBreadcrumb, icon, chooseArea
         },
         data() {
+            var checkTitle = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('标题不能为空'));
+                } else {
+                    callback();
+                }
+            };
+            var checkContent = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('详情不能为空'));
+                } else {
+                    callback();
+                }
+            };
             return {
-                checked: [true, false],
-                title: '', //   标题
-                detailTitle: '公告详情', // 公告详情/通知详情
+                rules: {
+                    title: [{ validator: checkTitle, trigger: 'blur' }],
+                    content: [{ validator: checkContent, trigger: 'blur' }]
+                },
+                info: [{
+                    name: '公告标题',
+                    detail: '公告详情',
+                    checked: true
+                }, {
+                    name: '通知标题',
+                    detail: '通知详情',
+                    checked: false
+                }],
+                index: 0,
                 form: {
-                    nType: '1', //   1:公告   2：通知
+                    title: '',
+                    type: 100, //   1:公告   2：通知
                     content: '', //   内容
-                    pushType: '', //   1：即时推送  2：定时推送
-                    pushWay: '', //   推送人群
-                    pushCountry: '' //   1：全国 2：国外 3：定省
+                    date: '',
+                    provinces: [],
+                    effectDay: ''// 有效天数
                 },
                 count: 0, // 详情长度
-                date: '',
                 loading: false,
                 checkAll: false,
                 checkedUsers: [],
@@ -132,7 +148,8 @@
                 time: '',
                 notRegist: false, // 未注册用户
                 newRegist: false, // 新注册用户
-                isShowArea: false
+                isShowArea: false,
+                chooseData: []
             };
         },
         created() {
@@ -140,13 +157,13 @@
         activated() {
             utils.cleanFormData(1, this.form);
             // console.log(this.form)
-            this.form.nType = '1';
+            this.form.type = 100;
             this.title = '';
             this.isIndeterminate = false;
             this.checkAll = false;
-            this.date = '';
             this.form.content = '';
-            this.checked = [true, false];
+            this.info[0].checked = true;
+            this.info[1].checked = false;
             // this.form.pushType='1';
             // this.form.pushCountry='3';
             this.getLevelList();
@@ -209,125 +226,81 @@
             },
             // 选项卡切换
             change(num) {
-                const that = this;
-                that.checked = [false, false];
-                that.checked[num] = true;
                 utils.cleanFormData(1, this.form);
-                that.form.nType = num + 1;
-                this.form.content = '';
-                that.isIndeterminate = false;
-                that.checkAll = false;
-                that.date = '';
-                that.getLevelList();
-                if (num == 1) {
-                    that.title = '';
-                }
+                this.index = num;
+                this.info[num].checked = true;
+                this.info[1 - num].checked = false;
+                this.form.type = num == 0 ? 100 : 200;
+                this.isIndeterminate = false;
+                this.checkAll = false;
+                this.getLevelList();
             },
             // 提交表单
-            submitForm() {
-                const that = this;
-                const params = {};
-                params.pushType = that.form.pushType;
-                params.nType = that.form.nType;
-                params.pushCountry = that.form.pushCountry;
-                params.pushWay = that.form.pushWay;
-                // params.content=xss(that.form.content);
-                params.content = that.form.content;
-                params.createAdmin = that.form.createAdmin;
-                params.original_img = that.form.original_img;
-                params.small_img = that.form.small_img;
-                if (that.form.nType == 1) {
-                    params.title = that.title;
-                    if (!params.title) {
-                        that.$message.warning('请输入公告标题!');
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (!valid) {
                         return;
-                    }
-                }
-                if (!params.content) {
-                    that.$message.warning('请输入详情!');
-                    return;
-                }
-                if (!params.pushType) {
-                    that.$message.warning('请选择推送方式!');
-                    return;
-                } else {
-                    if (params.pushType == 2) {
-                        if (!that.date) {
-                            that.$message.warning('请选择推送时间!');
-                            return;
-                        } else {
-                            params.orderTime = moment(that.date).format('YYYY-MM-DD HH:mm:ss');
-                        }
-                    }
-                }
-                if (!params.pushWay) {
-                    that.$message.warning('请选择推送人群!');
-                    return;
-                } else {
-                    params.pushWay = params.pushWay.slice(0, -1);
-                }
-                if (params.pushCountry != undefined) {
-                    if (params.pushCountry == 3) {
-                        if (that.address) {
-                            params.provinceId = that.address[0];
-                            if (that.address[1]) {
-                                params.cityId = that.address[1];
-                            } else {
-                                params.cityId = '';
-                            }
-                            if (that.address[2]) {
-                                params.areaId = that.address[2];
-                            } else {
-                                params.areaId = '';
-                            }
-                        } else {
-                            that.$message.warning('请选择具体推送区域!');
+                    } else {
+                        const params = this[formName];
+                        if (!params.content) {
+                            this.$message.warning('请输入详情!');
                             return;
                         }
+                        if (!params.pushType) {
+                            this.$message.warning('请选择推送方式!');
+                            return;
+                        } else {
+                            if (params.pushType == 2) {
+                                if (!this.date) {
+                                    this.$message.warning('请选择推送时间!');
+                                    return;
+                                } else {
+                                    params.orderTime = moment(this.date).format('YYYY-MM-DD HH:mm:ss');
+                                }
+                            }
+                        }
+                        this.btnLoading = true;
+                        request.saveNotice(params).then(res => {
+                            this.$message.success(res.msg);
+                            this.$router.push('/noticeInformManage');
+                            this.btnLoading = false;
+                        }).catch(err => {
+                            this.btnLoading = false;
+                        });
                     }
-                } else {
-                    that.$message.warning('请选择推送区域!');
+                });
+            },
+            // 选择区域
+            chooseSendArea() {
+                this.isShowArea = true;
+                console.log(this.isShowArea);
+            },
+            // 选择区域
+            chooseAreaToast(getArea) {
+                this.isShowArea = false;
+                this.form.provinces = [];
+                if (getArea) {
+                    let includeAreaName = ''; let includeArea = '';
+                    for (const i in getArea) {
+                        includeAreaName += getArea[i].provinceName + ':' + getArea[i].cityNames + ',';
+                        includeArea += getArea[i].provinceCode + ':' + getArea[i].cityCodes + ',';
+                        const tempItem = {
+                            provinceCode: getArea[i].provinceCode,
+                            cityCodes: getArea[i].cityCodes,
+                            provinceName: getArea[i].provinceName,
+                            cityNames: getArea[i].cityNames
+                        };
+                        this.form.provinces.push(tempItem);
+                    }
+                }
+            },
+            // 有效期判断
+            checkDay() {
+                const reg = /^(0|[1-9]\d*)$/;
+                if (!reg.test(this.form.effectDay)) {
+                    this.$message.warning('请输入合法数据');
                     return;
                 }
-                that.btnLoading = true;
-                request.addNotice(params).then(res => {
-                    that.$message.success(res.msg);
-                    that.$router.push('/noticeInformManage');
-                    that.btnLoading = false;
-                })
-                    .catch(err => {
-                        that.btnLoading = false;
-                    });
-            }
-        },
-        // 选择区域
-        chooseArea() {
-            this.isShowArea = true;
-        },
-        // 选择区域
-        chooseAreaToast(getArea) {
-            this.isShowArea = false;
-            this.tableData[this.tableIndex].freightTemplateInfoDetailList = [];
-            if (getArea) {
-                // const index = getArea.indexOf('IDS');
-                // this.tableData[this.tableIndex].includeAreaName = getArea.substring(0, index);// 名称
-                // this.tableData[this.tableIndex].includeArea = getArea.substring(index + 4);// id
-                // console.log(getArea.substring(0, index))
-                // console.log(getArea.substring(index + 4));//zipcode
-                let includeAreaName = ''; let includeArea = '';
-                for (const i in getArea) {
-                    includeAreaName += getArea[i].provinceName + ':' + getArea[i].cityNames + ',';
-                    includeArea += getArea[i].provinceCode + ':' + getArea[i].cityCodes + ',';
-                    const tempItem = {
-                        provinceCode: getArea[i].provinceCode,
-                        cityCodes: getArea[i].cityCodes,
-                        provinceName: getArea[i].provinceName,
-                        cityNames: getArea[i].cityNames
-                    };
-                    this.tableData[this.tableIndex].freightTemplateInfoDetailList.push(tempItem);
-                }
-                this.tableData[this.tableIndex].includeAreaName = includeAreaName.slice(0, -1);
-                this.tableData[this.tableIndex].includeArea = includeArea.slice(0, -1);
             }
         }
 
@@ -451,12 +424,14 @@
             margin-left: 0 !important;
             line-height: 32px;
         }
-        .el-date-editor {
-            position: absolute;
-            top: 32px;
-            left: 210px;
-            .el-input__inner {
-                width: 200px;
+        .send-type{
+            .el-date-editor {
+                position: absolute;
+                top: 32px;
+                left: 210px;
+                .el-input__inner {
+                    width: 200px;
+                }
             }
         }
         .el-date-editor.el-input {
@@ -500,6 +475,9 @@
                 width: 100px;
                 text-align: right;
             }
+        }
+        .el-form-item__error{
+            margin-left: 110px;
         }
     }
 </style>

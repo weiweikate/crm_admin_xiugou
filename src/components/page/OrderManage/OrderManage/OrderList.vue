@@ -75,8 +75,8 @@
                 <el-tab-pane label="待确认" name="3">
                     <v-orderlist ref="3"></v-orderlist>
                 </el-tab-pane>
-                <el-tab-pane label="退款中" name="4">
-                    <v-orderlist ref="4"></v-orderlist>
+                <el-tab-pane label="退款中" name="9">
+                    <v-orderlist ref="9"></v-orderlist>
                 </el-tab-pane>
                 <el-tab-pane label="已完成" name="5">
                     <v-orderlist ref="5"></v-orderlist>
@@ -126,7 +126,6 @@ export default {
                 threeMonths: '',
                 closeReason: '',
                 pickUp: '',
-                afterSaleStatus: '', // 售后状态
                 refundStatus: ''// 退款状态
             },
             formData: {},
@@ -142,27 +141,24 @@ export default {
                 id: 3
             }],
             // 退款状态数组
-            refundStatusArr: [{
-                type: '退款中+退款成功',
+            refundStatusArr: [ {
+                type: '退款中',
                 id: 1
             }, {
-                type: '退款中',
+                type: '退款成功',
                 id: 2
             }, {
-                type: '退款成功',
+                type: '换货中',
                 id: 3
             }, {
-                type: '退货中',
+                type: '换货成功',
                 id: 4
+            }, {
+                type: '退货中',
+                id: 5
             }, {
                 type: '退货成功',
-                id: 5
-            }, {
-                type: '换货中',
-                id: 4
-            }, {
-                type: '换货成功',
-                id: 5
+                id: 6
             }],
             // 关闭状态
             closeReasonArr: [{
