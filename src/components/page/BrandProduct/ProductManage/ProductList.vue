@@ -15,6 +15,9 @@
                 <el-tab-pane label="审核产品" name="auditProduct">
                     <v-tab-content v-if="activeName == 'auditProduct'" :name='activeName'></v-tab-content>
                 </el-tab-pane>
+                <el-tab-pane label="未通过产品" name="nAudit">
+                    <v-tab-content v-if="activeName == 'nAudit'" :name='activeName'></v-tab-content>
+                </el-tab-pane>
                 <!--<el-tab-pane label="推荐产品" name="auditProduct">-->
                     <!--<v-tab-content v-if="activeName == 'auditProduct'" :name='activeName'></v-tab-content>-->
                 <!--</el-tab-pane>-->
