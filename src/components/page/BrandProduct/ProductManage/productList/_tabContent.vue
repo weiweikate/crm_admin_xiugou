@@ -114,6 +114,8 @@
                         </template>
                         <el-button @click="productInfo(scope.row)" type="primary">查看详情
                         </el-button>
+                        <el-button v-if='scope.row.status == 3' @click="productStatus(scope.row,'1')" type="success">提交审核
+                        </el-button>
                     </div>
                 </template>
             </el-table-column>
