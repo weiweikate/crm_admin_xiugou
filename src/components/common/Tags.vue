@@ -28,9 +28,9 @@
         data() {
             return {
                 tagsList: [],
-                extraLst:[],
-                showOthers:false
-            }
+                extraLst: [],
+                showOthers: false
+            };
         },
         methods: {
             isActive(path) {
@@ -42,54 +42,54 @@
                 const item = this.tagsList[index] ? this.tagsList[index] : this.tagsList[index - 1];
                 if (item) {
                     delItem.path === this.$route.path && this.$router.push(item.path);
-                }else{
+                } else {
                     this.$router.push('/dashboard');
                 }
             },
             // 关闭全部标签
-            closeAll(){
+            closeAll() {
                 this.tagsList = [];
                 this.$router.push('/dashboard');
             },
             // 关闭其他标签
-            closeOther(){
+            closeOther() {
                 const curItem = this.tagsList.filter(item => {
                     return item.path === this.$route.path;
-                })
+                });
                 this.tagsList = curItem;
             },
             // 设置标签
-            setTags(route){
-                let that = this;
+            setTags(route) {
+                const that = this;
                 const isExist = this.tagsList.some(item => {
                     return item.path === route.path;
-                })
+                });
                 !isExist && this.tagsList.push({
                     title: route.meta.title,
                     path: route.path
-                })
-                if(!isExist && this.tagsList.length>11){
-                    this.showOthers=true;
+                });
+                if (!isExist && this.tagsList.length > 11) {
+                    this.showOthers = true;
                     this.extraLst.push({
-                    title: route.meta.title,
-                    path: route.path
-                })
+                        title: route.meta.title,
+                        path: route.path
+                    });
                 }
             },
-            handleTags(command){
-                if(command === 'other'){
+            handleTags(command) {
+                if (command === 'other') {
                     this.closeOther();
                     this.extraLst = [];
-                }else if(command === 'all'){
+                } else if (command === 'all') {
                     this.closeAll();
                     this.extraLst = [];
-                }else{
-                    let path = command.split('-')[1];
+                } else {
+                    const path = command.split('-')[1];
                     this.$router.push(path);
                 }
             },
-            checkout(row){
-                if(row.length <= 11){
+            checkout(row) {
+                if (row.length <= 11) {
                     this.extraLst = [];
                 }
             }
@@ -99,15 +99,15 @@
                 return this.tagsList.length > 0;
             }
         },
-        watch:{
-            $route(newValue, oldValue){
+        watch: {
+            $route(newValue, oldValue) {
                 this.setTags(newValue);
             }
         },
-        created(){
+        created() {
             this.setTags(this.$route);
         }
-    }
+    };
 
 </script>
 

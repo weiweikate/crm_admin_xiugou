@@ -100,7 +100,8 @@
             this.submitForm();
         },
         methods: {
-            submitForm() {
+            submitForm: function() {
+                this.form.time = this.form.time ? this.form.time : [];
                 const data = {
                     page: this.page.currentPage,
                     pageSize: this.page.pageSize,

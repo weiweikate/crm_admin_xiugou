@@ -1,6 +1,6 @@
 <template>
-    <div class="message-tip" @click="closeMask" v-loading="loading">
-        <div class="message-wrap">
+    <div class="message-tip" @click="closeMask">
+        <div class="message-wrap" v-loading="loading">
             <div class="message-content" @click.stop="" v-for="(v,k) in messageArr" :key="k">
                 <el-tag type="danger" class="msg-tag">未读</el-tag>
                 <div class="msg-title">{{`【${v.title}】`}}</div>

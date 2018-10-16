@@ -128,23 +128,23 @@ export default {
         // 获取未读消息数量
         getNoReadNum() {
             request.queryNewMessageCount({}).then(res => {
-                this.message = res.data;
+                this.message = res.data || 0;
             }).catch(err => {
                 console.log(err);
             });
             clearInterval(timer);
             var timer = setInterval(function() {
                 request.queryNewMessageCount({}).then(res => {
-                    this.message = res.data;
+                    this.message = res.data || 0;
                 }).catch(err => {
                     console.log(err);
                 });
             }, 100000);
         },
         // 获取消息
-        getMsg() {
+        async getMsg() {
             if (this.message == 0) return;
-            this.$refs.msg.getAllMsg();
+            await this.$refs.msg.getAllMsg();
             this.showMsg = true;
         }
     }
@@ -242,7 +242,7 @@ export default {
   float: left;
   margin-top: 20px;
   left: 300px;
-  width: 66%;
+  width: 60%;
   height: 30px;
 }
 @keyframes bounce-in {
