@@ -54,7 +54,7 @@ axios.interceptors.response.use(
         //     }, 1000);
         //     return Promise.reject(res.data.msg);
         // }
-        return res.data;
+        return res.data || {};
     },
     err => {
         Message.error({ duration: 1000, message: '网络异常' });

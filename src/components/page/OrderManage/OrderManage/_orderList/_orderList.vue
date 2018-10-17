@@ -148,6 +148,7 @@
                         //     res.data.data[i].totalPrice == null
                         //         ? '0'
                         //         : res.data.data[i].totalPrice;
+                        res.data.data[i].orderProductList = res.data.data[i].orderProductList || [];
                         this.tableData.push(res.data.data[i]);
                     }
                     this.page.totalPage = res.data.totalNum;

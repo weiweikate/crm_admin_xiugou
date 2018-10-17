@@ -159,23 +159,9 @@
                 const data = that.form;
                 data.page = val;
                 data.pageSize = this.page.pageSize;
-                const addrss = that.address;
-                if (addrss && addrss[0]) {
-                    data.provinceCode = addrss[0];
-                    if(addrss[0] == 0){
-                        data.provinceCode = '';
-                    }
-                    if (addrss[1]) {
-                        data.cityCode = addrss[1];
-                    }
-                    if (addrss[2]) {
-                        data.areaCode = addrss[2];
-                    }
-                } else {
-                    data.provinceCode = '';
-                    data.cityCode = '';
-                    data.areaCode = '';
-                }
+                data.provinceId = this.address[0] == '0' ? '' : this.address[0];
+                data.cityId = this.address[1];
+                data.areaId = this.address[2];
                 that.tableLoading = true;
                 request.queryProductSupplierList(data).then(res => {
                     that.tableLoading = false;

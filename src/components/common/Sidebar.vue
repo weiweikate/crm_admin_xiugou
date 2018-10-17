@@ -270,46 +270,46 @@
                         index: '2',
                         title: '结算管理',
                         subs: [
-                            // {
-                            //     index: "withdrawalAudit",
-                            //     title: "提现申请审核"
-                            // },
-                            // {
-                            //     index: "refundMange",
-                            //     title: '退款记录'
-                            // },
-                            // {
-                            //     index: "returnGoodsMange",
-                            //     title: '退货记录'
-                            // },
-                            // {
-                            //     index: "exchangeMange",
-                            //     title: '换货记录'
-                            // },
-                            // {
-                            //     index: "supplierSettMange",
-                            //     title: '供应商结算管理'
-                            // },
-                            // {
-                            //     index: "depositPayment",
-                            //     title: '保证金缴纳记录'
-                            // },
-                            // {
-                            //     index: "cloudWarHouseMange",
-                            //     title: '云仓结算管理'
-                            // },
-                            // {
-                            //     index: "flatAccountInfo",
-                            //     title: '平台账户收入明细'
-                            // },
-                            // {
-                            //     index: "soFar",
-                            //     title: '收益金比例设置'
-                            // },
-                            // {
-                            //     index: "profitDistrMange",
-                            //     title: '利润分配设置'
-                            // }
+                            {
+                                index: 'withdrawalAudit',
+                                title: '提现申请审核'
+                            },
+                            {
+                                index: 'refundMange',
+                                title: '退款记录'
+                            },
+                            {
+                                index: 'returnGoodsMange',
+                                title: '退货记录'
+                            },
+                            {
+                                index: 'exchangeMange',
+                                title: '换货记录'
+                            },
+                            {
+                                index: 'supplierSettMange',
+                                title: '供应商结算管理'
+                            },
+                            {
+                                index: 'depositPayment',
+                                title: '保证金缴纳记录'
+                            },
+                            {
+                                index: 'cloudWarHouseMange',
+                                title: '云仓结算管理'
+                            },
+                            {
+                                index: 'flatAccountInfo',
+                                title: '平台账户收入明细'
+                            },
+                            {
+                                index: 'soFar',
+                                title: '收益金比例设置'
+                            },
+                            {
+                                index: 'profitDistrMange',
+                                title: '利润分配设置'
+                            }
                         ]
                     },
 

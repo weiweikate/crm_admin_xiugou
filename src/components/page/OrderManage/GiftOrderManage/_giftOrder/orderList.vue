@@ -134,6 +134,7 @@
             getList(val) {
                 this.data.page = this.page.currentPage;
                 this.data.size = this.page.pageSize;
+                this.data.type = 2;
                 this.tableData = [];
                 this.pageLoading = true;
                 request.queryOrderPageList(this.data).then(res => {

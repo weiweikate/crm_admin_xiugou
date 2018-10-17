@@ -2,7 +2,7 @@
     <div class="member">
         <v-breadcrumb :nav="['会员管理','会员管理']"></v-breadcrumb>
         <el-card style="margin:10px 0 20px">
-            <el-form ref="form" :inline="true" :model="form">
+            <el-form ref="form" inline :model="form">
                 <el-form-item prop="id" label="会员搜索" label-width="120">
                     <el-input style="width:200px" placeholder="可通过用户ID/授权码/昵称" v-model="form.id"></el-input>
                 </el-form-item>
@@ -34,12 +34,12 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="getList(1)" type="primary">查询</el-button>
+                    <el-button type="primary">导出</el-button>
                     <!--<el-button @click="resetForm('form')">重置</el-button>-->
                 </el-form-item>
             </el-form>
         </el-card>
         <div class="table-block">
-            <el-button type="primary" style="margin-bottom: 10px">导出</el-button>
             <el-table v-loading="tableLoading" :data="tableData" stripe border style="width: 100%">
                 <el-table-column prop="id" label="用户ID" width="60" align="center"></el-table-column>
                 <el-table-column prop="nickname" label="用户昵称" align="center"></el-table-column>
@@ -51,7 +51,7 @@
                 <!--<el-table-column prop="month_count" label="本月登录" align="center"></el-table-column>-->
                 <el-table-column label="最近登录时间" align="center">
                     <template slot-scope="scope">
-                        <template>{{scope.row.lastLoginTime|formatDate}}</template>
+                        <template>{{scope.row.lastLoginTime|formatDateAll}}</template>
                     </template>
                 </el-table-column>
                 <el-table-column prop="code" label="授权码" align="center"></el-table-column>
@@ -181,20 +181,9 @@ export default {
             data.page = val;
             data.pageSize = this.page.pageSize;
             data.levelId = that.exportForm.levelId;
-            const addrss = that.address;
-            if (addrss && addrss[0]) {
-                data.provinceId = addrss[0];
-                if (addrss[1]) {
-                    data.cityId = addrss[1];
-                }
-                if (addrss[2]) {
-                    data.areaId = addrss[2];
-                }
-            } else {
-                data.provinceId = '';
-                data.cityId = '';
-                data.areaId = '';
-            }
+            data.provinceId = this.address[0] == '0' ? '' : this.address[0];
+            data.cityId = this.address[1];
+            data.areaId = this.address[2];
             that.tableLoading = true;
             request.queryUserPageList(data).then(res => {
                 that.tableLoading = false;
