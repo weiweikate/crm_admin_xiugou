@@ -76,7 +76,7 @@
                     </el-form-item>
                     <el-form-item v-for="(v3,k3) in v2.topicBannerProductList" :key="k3" label="添加产品" label-width="130px">
                         <div class="del-row">
-                            <span v-if='k3>0' @click="delProduct(k,k2,k3)" class="del-btn">x</span>
+                            <span @click="delProduct(k,k2,k3)" class="del-btn">x</span>
                             <el-input v-model="v3.prodCode" class="inp" placeholder="请输入产品ID"></el-input>
                             <el-select v-model="v3.productType" class="prod-type">
                                 <el-option v-for="(pv,pk) in prodTypeList" :label="pv.label" :value="pv.value" :key="pk"></el-option>
@@ -214,16 +214,6 @@
                                 throw '请输入产品id';
                             }
                         });
-                        v.topicNavbarBannerList.forEach((v2, k2) => {
-                            if (v2.bannerImg == '') {
-                                throw '请上传banner图';
-                            }
-                            v2.topicBannerProductList.forEach((v3, k3) => {
-                                if (v3.prodCode == '') {
-                                    throw '请输入产品id';
-                                }
-                            });
-                        });
                     });
                 } catch (error) {
                     this.$message.warning(error);
@@ -252,7 +242,7 @@
             },
             // 删除banner下的产品
             delProduct(bIndex, mIndex, sIndex) {
-                this.topicNavbarList[bIndex].topicNavbarBannerList[mIndex].topicBannerProducts.splice(sIndex, 1);
+                this.topicNavbarList[bIndex].topicNavbarBannerList[mIndex].topicBannerProductList.splice(sIndex, 1);
             },
             //   添加导航
             addNav() {

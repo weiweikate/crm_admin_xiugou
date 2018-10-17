@@ -34,8 +34,8 @@
         </transition>
         <div class="table-block">
             <div style="margin: -20px 0 20px">
-                <div class="tab-item" :class="checked[0]?'checked':''" @click="change(0)">公告</div>
-                <div class="tab-item" :class="checked[1]?'checked':''" @click="change(1)" style="margin-left: -5px">通知
+                <div class="tab-item" :class="index==0?'checked':''" @click="change(0)">公告</div>
+                <div class="tab-item" :class="index==1?'checked':''" @click="change(1)" style="margin-left: -5px">通知
                 </div>
             </div>
             <el-form ref="exportForm" :inline="true" :model="form" class="search-area">
@@ -53,15 +53,10 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="title" label="标题" align="center"></el-table-column>
-                    <el-table-column prop="" label="推送用户" align="center"></el-table-column>
+                    <el-table-column prop="userLevel" label="推送用户" align="center"></el-table-column>
                     <el-table-column label="推送区域" align="center">
                         <template slot-scope="scope">
 
-                        </template>
-                    </el-table-column>
-                    <el-table-column v-if="checked[1]" label="剩余失效时间" align="center">
-                        <template slot-scope="scope">
-                            <template>{{scope.row.leftTime|formatDateAll}}</template>
                         </template>
                     </el-table-column>
                     <el-table-column label="推送时间" align="center">
@@ -87,13 +82,15 @@
                         <template slot-scope="scope">
                             <el-button type="primary" size="small" @click="detailItem(scope.$index,scope.row)">查看详情
                             </el-button>
+                            <el-button type="success" v-if="index==0" size="small" @click="detailItem(scope.$index,scope.row)">编辑
+                            </el-button>
                             <el-button type="warning" size="small" @click="upStatusItem(scope.row.id,2)"
                                        v-if="scope.row.status==200">再次推送
                             </el-button>
-                            <el-button type="success" size="small" @click="upStatusItem(scope.row.id,3)"
+                            <el-button type="warning" size="small" @click="upStatusItem(scope.row.id,3)"
                                        v-if="scope.row.status==100">取消推送
                             </el-button>
-                            <el-button type="danger" size="small" @click="upStatusItem(scope.row.id,4)"
+                            <el-button type="warning" size="small" @click="upStatusItem(scope.row.id,4)"
                                        v-if="scope.row.status==300" style="width: 80px"> 删除
                             </el-button>
                         </template>
@@ -148,7 +145,7 @@ export default {
     data() {
         return {
 
-            checked: [true, false],
+            index: 0,
             tableData: [],
             height: '',
             tipsMask: false,
@@ -166,8 +163,8 @@ export default {
             selected: '',
             nav: ['服务管理', '公告'],
             isShowDelToast: false,
-            status: '',
             id: '',
+            url: '',
             btnLoading: false,
             levels: [],
             levelIds: []
@@ -180,13 +177,12 @@ export default {
     },
     methods: {
         getTableData() {
-            const that = this;
             request.getUserLevelList({}).then(res => {
                 for (const i in res.data) {
                     const name = res.data[i].name;
                     const id = res.data[i].id;
-                    that.levels.push(name);
-                    that.levelIds.push(id);
+                    this.levels.push(name);
+                    this.levelIds.push(id);
                 }
                 this.getList(this.page.currentPage);
             }).catch(err => {
@@ -194,52 +190,53 @@ export default {
             });
         },
         change(num) {
-            const that = this;
-            that.checked = [false, false];
-            that.checked[num] = true;
+            this.index = num;
             if (num == 0) { // 公告
-                that.nav = ['服务管理', '公告'];
-                that.form.nType = 1;
+                this.nav = ['服务管理', '公告'];
+                this.form.nType = 1;
             } else { // 通知
-                that.nav = ['服务管理', '通知'];
-                that.form.nType = 2;
+                this.nav = ['服务管理', '通知'];
+                this.form.nType = 2;
             }
-            that.page.currentPage = 1;
-            that.getList(that.page.currentPage);
+            this.page.currentPage = 1;
+            this.getList(this.page.currentPage);
         },
         // 获取列表
         getList(val) {
-            const that = this;
             const data = {
                 page: val,
-                status: that.form.status,
-                name: that.form.name,
-                nType: that.form.nType,
-                beginTime: that.form.date ? moment(that.form.date[0]).format('YYYY-MM-DD') : '',
-                endTime: that.form.date ? moment(that.form.date[1]).format('YYYY-MM-DD') : ''
+                status: this.form.status,
+                name: this.form.name,
+                nType: this.form.nType,
+                beginTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
+                endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : ''
             };
-            that.tableLoading = true;
+            this.tableLoading = true;
             request.queryNoticeList(data).then(res => {
-                // that.tableLoading = false;
-                // for (const i in res.data) {
-                //     const arr = res.data[i].pushWay.split(',');
-                //     const temp = [];
-                //     for (const j in that.levelIds) {
-                //         for (const k in arr) {
-                //             if (arr[k] == that.levelIds[j]) {
-                //                 const name = that.levels[j];
-                //                 if (temp.indexOf(name) == -1) {
-                //                     temp.push(that.levels[j]);
-                //                 }
-                //             }
-                //         }
-                //     }
-                //     res.data[i].pushWay = temp.join(',');
-                // }
-                that.tableData = res.data.data;
-                that.page.totalPage = res.data.totalNum;
+                this.tableLoading = false;
+                for (const i in res.data.data) {
+                    res.data.data[i].userLevel = res.data.data[i].userLevel.substring(1, res.data.data[i].userLevel.length - 1);
+                    const arr = res.data.data[i].userLevel.split(',');
+                    const temp = [];
+                    for (const k in arr) {
+                        for (const j in this.levelIds) {
+                            if (arr[k] == this.levelIds[j]) {
+                                const name = this.levels[j];
+                                if (temp.indexOf(name) == -1) {
+                                    temp.push(this.levels[j]);
+                                }
+                            }
+                        }
+                        if (arr[k] == 'new') {
+                            temp.push('新注册用户');
+                        }
+                    }
+                    res.data.data[i].userLevel = temp.join(',');
+                }
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
             }).catch(err => {
-                that.tableLoading = false;
+                this.tableLoading = false;
                 console.log(err);
             });
         },
@@ -250,36 +247,35 @@ export default {
         },
         // 再次推送,取消推送
         upStatusItem(id, status) {
-            const that = this;
-            that.tipsMask = true;
+            this.tipsMask = true;
             if (status == 2) {
-                that.info = '确定再次推送？';
+                this.info = '确定再次推送？';
+                this.url = 'cancelNoticeById';
             }
             if (status == 3) {
-                that.info = '确定取消推送？';
+                this.info = '确定取消推送？';
+                this.url = 'cancelNoticeById';
             }
             if (status == 4) {
-                that.info = '确定删除？';
+                this.info = '确定删除？';
+                this.url = 'deleteNoticeById';
             }
-            that.status = status;
-            that.id = id;
+            this.id = id;
         },
         oprSure() {
-            const that = this;
             const data = {
-                id: that.id,
-                status: that.status
+                id: this.id
             };
-            that.btnLoading = true;
-            request.cancelNoticeById(data).then(res => {
-                that.tipsMask = false;
-                that.$message.success(res.msg);
-                that.getList(that.page.currentPage);
-                that.btnLoading = false;
+            this.btnLoading = true;
+            request[this.url](data).then(res => {
+                this.tipsMask = false;
+                this.$message.success(res.msg);
+                this.getList(this.page.currentPage);
+                this.btnLoading = false;
             }).catch(err => {
                 console.log(err);
-                that.btnLoading = false;
-                that.tipsMask = false;
+                this.btnLoading = false;
+                this.tipsMask = false;
             });
         },
         // 发布通知/公告

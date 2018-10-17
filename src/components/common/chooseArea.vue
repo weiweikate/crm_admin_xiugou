@@ -57,7 +57,7 @@
 
     export default {
         components: {},
-        props: ['index', 'chooseData', 'preData'],
+        props: ['index', 'chooseData', 'preData', 'isNotice'],
         data() {
             return {
                 area: [], // 封装所有数据的大容器
@@ -85,14 +85,19 @@
             };
         },
         created() {
-            const that = this;
             // 获取所有表格信息
-            that.getAllData(that.chooseData);
+            this.getAllData(this.chooseData);
             // 获取表格当前行信息
-            if (that.preData) {
-                that.getAllData(that.preData);
+            if (this.preData) {
+                this.getAllData(this.preData);
             }
-            that.getProvinceListGroupByDistrict();// 加载省列表
+            if (this.isNotice) {
+                this.preChooseData = this.allChooseData;
+                this.preChooseProvinceIds = this.allChooseProvinceIds;
+                this.preCityIds = this.allCityIds;
+                this.preCityNames = this.allCityNames;
+            }
+            this.getProvinceListGroupByDistrict();// 加载省列表
         },
 
         methods: {
@@ -121,7 +126,6 @@
                         const includeAreaName = tempData[i].includeAreaName.replace(/:/g, ',').split(',');
                         for (let j = 0; j < includeArea.length; j++) {
                             if (includeArea[j].slice(2, 6) == '0000') {
-                                // includeArea[j]=typeof includeArea[j]=='string'?includeArea[j]:includeArea[j].toString();
                                 const param = {
                                     provinceId: includeArea[j],
                                     provinceName: includeAreaName[j],
@@ -160,7 +164,6 @@
             // 获取省
             getProvinceListGroupByDistrict() {
                 const that = this;
-
                 const data = {};
                 request.getProvinceListGroupByDistrict(data).then(res => {
                     const arr = ['', '华东', '华南', '华中', '华北', '西北', '西南', '东北', '港澳台', '海外'];
@@ -503,27 +506,6 @@
                     this.$emit('getArea', false);
                 }
             }
-            // closeToask(opr) {
-            //     const that = this;
-            //     that.checkNames = [];
-            //     that.checkIds = [];
-            //     for (const i in that.preChooseData) {
-            //         if (that.preChooseData[i].cityNames.length) {
-            //             const tempName = that.preChooseData[i].provinceName + ':' + that.preChooseData[i].cityNames.join(',');
-            //             const tempId = that.preChooseData[i].provinceId + ':' + that.preChooseData[i].cityIds.join(',');
-            //             if (that.checkNames.indexOf(tempName) == -1) {
-            //                 that.checkNames.push(tempName);
-            //                 that.checkIds.push(tempId);
-            //             }
-            //         }
-            //     }
-            //
-            //     if (opr) {
-            //         that.$emit('getArea', that.checkNames + 'IDS:' + that.checkIds);
-            //     } else {
-            //         that.$emit('getArea', false);
-            //     }
-            // }
         }
     };
 </script>

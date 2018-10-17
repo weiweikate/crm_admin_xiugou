@@ -11,13 +11,13 @@
                 </div>
                 <el-form :model="form" ref="form" :rules="rules" v-loading="loading">
                     <el-form-item prop="title" :label="info[index].name">
-                        <el-input maxlength="16" v-model="title"></el-input>
+                        <el-input maxlength="16" v-model="form.title"></el-input>
                     </el-form-item>
                     <el-form-item prop="content" :label="info[index].detail" class="content-area">
                         <el-input type="textarea" class="detail-content" maxlength="180" @input="getContentCount" v-model="form.content" placeholder="请输入"></el-input>
                         <span class="content-count">{{count}}/180</span>
                     </el-form-item>
-                    <el-form-item label="推送时间" v-if="index==0">
+                    <el-form-item label="推送时间">
                         <el-date-picker
                             v-model="form.date"
                             type="datetimerange"
@@ -26,23 +26,6 @@
                             end-placeholder="结束日期"
                         >
                         </el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="推送方式" v-if="index==1" class="send-type" style="position: relative">
-                        <el-radio-group @change="changeStyle" v-model="form.pushType">
-                            <el-radio :label="1" value="1">即时推送</el-radio>
-                            <el-radio :label="2" value="2">定时推送</el-radio>
-                        </el-radio-group>
-                        <el-date-picker
-                                v-model="date"
-                                type="datetime"
-                                :disabled="dateDisabled"
-                                format="yyyy-MM-dd HH:mm:ss"
-                                :picker-options="pickerOptions"
-                                placeholder="选择日期时间">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="通知有效期" v-if="index==1">
-                        <el-input @change="checkDay" v-model="form.effectDay" placeholder="请输入有效期"></el-input>天
                     </el-form-item>
                     <el-form-item label="推送人群">
                         <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">
@@ -53,7 +36,7 @@
                             <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{item.name}}
                             </el-checkbox>
                         </el-checkbox-group>
-                        <div style="margin-left: 112px">
+                        <div style="margin-left: 112px" v-if="index==0">
                             <el-checkbox v-model="notRegist">
                                 未注册用户
                             </el-checkbox>
@@ -65,7 +48,10 @@
                         </div>
                     </el-form-item>
                     <el-form-item label="推送区域" prop="pushCountry" class="region-area">
-                        <el-button type="primary" @click="chooseSendArea">选择区域</el-button>
+                        <div style="margin-left: 112px">
+                            <div v-for="(v,k) in form.provinces" :key="k">{{v.provinceName}}:{{v.cityNames}}</div>
+                            <el-button type="primary" @click="chooseSendArea">选择区域</el-button>
+                        </div>
                     </el-form-item>
                     <div class="submit-btn">
                         <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">确认保存</el-button>
@@ -75,7 +61,7 @@
             </div>
         </div>
         <!--选择区域-->
-        <choose-area @getArea='chooseAreaToast' :chooseData="chooseData" v-if="isShowArea"></choose-area>
+        <choose-area @getArea='chooseAreaToast' :chooseData="chooseData" :preData="chooseData" :isNotice="true" v-if="isShowArea"></choose-area>
     </div>
 
 </template>
@@ -155,20 +141,24 @@
         created() {
         },
         activated() {
-            utils.cleanFormData(1, this.form);
-            // console.log(this.form)
-            this.form.type = 100;
-            this.title = '';
-            this.isIndeterminate = false;
-            this.checkAll = false;
-            this.form.content = '';
-            this.info[0].checked = true;
-            this.info[1].checked = false;
-            // this.form.pushType='1';
-            // this.form.pushCountry='3';
+            this.formData();
             this.getLevelList();
         },
         methods: {
+            formData() {
+                this.form = {
+                    title: '',
+                    type: 100, //   1:公告   2：通知
+                    content: '', //   内容
+                    date: '',
+                    provinces: [],
+                    effectDay: ''// 有效天数
+                };
+                this.info[0].checked = true;
+                this.info[1].checked = false;
+                this.isIndeterminate = false;
+                this.checkAll = false;
+            },
             // 取消
             cancel() {
                 this.$router.push('/noticeInformManage');
@@ -196,37 +186,35 @@
             },
             // 推送人群选择
             handleCheckAllChange(val) {
-                const that = this;
-                that.checkedUsers = val ? that.users : [];
-                that.isIndeterminate = false;
+                this.checkedUsers = val ? this.users : [];
+                this.isIndeterminate = false;
                 if (val) {
                     let result = '';
-                    for (let i = 0; i < that.users.length; i++) {
-                        result += that.users[i].id + ',';
+                    for (let i = 0; i < this.users.length; i++) {
+                        result += this.users[i].id + ',';
                     }
-                    that.form.pushWay = result;
+                    this.form.userLevel = result;
                 } else {
-                    that.form.pushWay = '';
+                    this.form.userLevel = '';
                 }
             },
             handleCheckedUsersChange(value) {
-                const that = this;
                 const checkedCount = value.length;
                 let result = '';
-                for (const i in that.users) {
+                for (const i in this.users) {
                     for (const j in value) {
-                        if (that.users[i].id == value[j].id) {
-                            result += that.users[i].id + ',';
+                        if (this.users[i].id == value[j].id) {
+                            result += this.users[i].id + ',';
                         }
                     }
                 }
-                that.form.pushWay = result;
-                that.checkAll = checkedCount === that.users.length;
-                that.isIndeterminate = checkedCount > 0 && checkedCount < that.users.length;
+                this.form.userLevel = result;
+                this.checkAll = checkedCount === this.users.length;
+                this.isIndeterminate = checkedCount > 0 && checkedCount < this.users.length;
             },
             // 选项卡切换
             change(num) {
-                utils.cleanFormData(1, this.form);
+                this.formData();
                 this.index = num;
                 this.info[num].checked = true;
                 this.info[1 - num].checked = false;
@@ -242,23 +230,35 @@
                         return;
                     } else {
                         const params = this[formName];
-                        if (!params.content) {
-                            this.$message.warning('请输入详情!');
-                            return;
-                        }
-                        if (!params.pushType) {
-                            this.$message.warning('请选择推送方式!');
+                        //
+                        // if (!params.pushType) {
+                        //     this.$message.warning('请选择推送方式!');
+                        //     return;
+                        // } else {
+                        //     if (params.pushType == 2) {
+                        //         if (!this.date) {
+                        //             this.$message.warning('请选择推送时间!');
+                        //             return;
+                        //         } else {
+                        //             params.orderTime = moment(this.date).format('YYYY-MM-DD HH:mm:ss');
+                        //         }
+                        //     }
+                        // }
+                        if (!this.form.date.length) {
+                            this.$message.warning('请选择推送时间');
                             return;
                         } else {
-                            if (params.pushType == 2) {
-                                if (!this.date) {
-                                    this.$message.warning('请选择推送时间!');
-                                    return;
-                                } else {
-                                    params.orderTime = moment(this.date).format('YYYY-MM-DD HH:mm:ss');
-                                }
-                            }
+                            params.startTime = moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss');
+                            params.endTime = moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss');
                         }
+                        if (!params.userLevel) {
+                            this.$message.warning('请选择推送人群');
+                            return;
+                        }
+                        if (this.newRegist) {
+                            params.userLevel += 'new' + '，';
+                        }
+                        params.userLevel = params.userLevel.slice(0, -1);
                         this.btnLoading = true;
                         request.saveNotice(params).then(res => {
                             this.$message.success(res.msg);
@@ -273,13 +273,13 @@
             // 选择区域
             chooseSendArea() {
                 this.isShowArea = true;
-                console.log(this.isShowArea);
+                this.chooseData = this.form.provinces;
             },
             // 选择区域
             chooseAreaToast(getArea) {
                 this.isShowArea = false;
-                this.form.provinces = [];
                 if (getArea) {
+                    this.form.provinces = [];
                     let includeAreaName = ''; let includeArea = '';
                     for (const i in getArea) {
                         includeAreaName += getArea[i].provinceName + ':' + getArea[i].cityNames + ',';
@@ -288,18 +288,12 @@
                             provinceCode: getArea[i].provinceCode,
                             cityCodes: getArea[i].cityCodes,
                             provinceName: getArea[i].provinceName,
-                            cityNames: getArea[i].cityNames
+                            cityNames: getArea[i].cityNames,
+                            includeAreaName: includeAreaName.slice(0, -1),
+                            includeArea: includeArea.slice(0, -1)
                         };
                         this.form.provinces.push(tempItem);
                     }
-                }
-            },
-            // 有效期判断
-            checkDay() {
-                const reg = /^(0|[1-9]\d*)$/;
-                if (!reg.test(this.form.effectDay)) {
-                    this.$message.warning('请输入合法数据');
-                    return;
                 }
             }
         }

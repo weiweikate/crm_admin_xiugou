@@ -63,7 +63,7 @@
                         <div class="operate">
                             <template v-if="value.returnType">
                                 <!--退款 退货 换货处理-->
-                                <el-button @click='toAfterSale(value.returnProductId)'type="primary">{{`${returnTypeArr[Number(value.returnType)-1]}${afterSaleStatusArr[Number(value.returnProductStatus)-1]}`}}</el-button>
+                                <el-button @click='toAfterSale(value.returnProductId)' type="primary">{{`${returnTypeArr[Number(value.returnType)-1]}${afterSaleStatusArr[Number(value.returnProductStatus)-1]}`}}</el-button>
                             </template>
                             <template v-else>
                                 <template v-if="value.status==6">已完成</template>
@@ -148,6 +148,7 @@
                         //     res.data.data[i].totalPrice == null
                         //         ? '0'
                         //         : res.data.data[i].totalPrice;
+                        res.data.data[i].orderProductList = res.data.data[i].orderProductList || [];
                         this.tableData.push(res.data.data[i]);
                     }
                     this.page.totalPage = res.data.totalNum;

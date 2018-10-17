@@ -50,6 +50,8 @@
       <div v-for="(v,k) in topicNavbarList.topicNavbarBannerList" :key="k" class="add-banner">
         <el-form label-width="130px">
           <el-form-item label="添加banner">
+              <div class="del-area">
+                  <span @click="delBanner(k)" class="del-btn">x</span>
             <el-input class="my-inp" v-model="v.bannerImg" disabled placeholder="请上传图片"></el-input>
             <el-upload class="icon-uploader"
                     :action="uploadImg"
@@ -59,6 +61,7 @@
                 <el-button style="width:100px;height:32px" size="small" type="primary">上传</el-button>
             </el-upload>
             <span style="color:#fe8080"><br/>建议图片750px*350px</span>
+              </div>
           </el-form-item>
           <el-form-item label=" " >
             <div class="upload-img-show">
@@ -68,7 +71,7 @@
           </el-form-item>
           <el-form-item v-for="(v1,k1) in v.topicBannerProductList" :key="k1" label="添加产品" label-width="130px">
             <div class="del-row">
-              <span v-if='k1>0' @click="delProduct(k,k1)" class="del-btn">x</span>
+              <span @click="delProduct(k,k1)" class="del-btn">x</span>
               <el-input v-model="v1.prodCode" class="inp" placeholder="请输入产品ID"></el-input>
               <el-select v-model="v1.productType" class="prod-type">
                 <el-option v-for="(pv,pk) in prodTypeList" :label="pv.label" :value="pv.value" :key="pk"></el-option>
@@ -197,16 +200,16 @@ export default {
                         throw '请输入产品ID';
                     }
                 });
-                this.topicNavbarList.topicNavbarBannerList.forEach((v, k) => {
-                    if (v.bannerImg == '') {
-                        throw '请上传banner图';
-                    }
-                    v.topicBannerProductList.forEach((v1, k1) => {
-                        if (v1.prodCode == '') {
-                            throw '请输入产品ID';
-                        }
-                    });
-                });
+                // this.topicNavbarList.topicNavbarBannerList.forEach((v, k) => {
+                //     if (v.bannerImg == '') {
+                //         throw '请上传banner图';
+                //     }
+                //     v.topicBannerProductList.forEach((v1, k1) => {
+                //         if (v1.prodCode == '') {
+                //             throw '请输入产品ID';
+                //         }
+                //     });
+                // });
             } catch (error) {
                 this.$message.warning(error);
                 return;
@@ -228,6 +231,10 @@ export default {
             }).catch(err => {
                 console.log(err);
             });
+        },
+        // 删除区间banner
+        delBanner(index) {
+            this.topicNavbarList.topicNavbarBannerList.splice(index, 1);
         },
         // 添加banner
         addBanner() {
@@ -288,5 +295,8 @@ export default {
   .del-row{position: relative;
     .del-btn{position: absolute;top:-10px;right: 145px;width: 25px;height: 25px;border-radius: 50%;background-color: #c6c6c6;text-align: center;line-height: 25px;color: #fff;z-index: 99;cursor: pointer;}
   }
+    .del-area{position: relative;
+        .del-btn{position: absolute;top:0;right: 20px;width: 25px;height: 25px;border-radius: 50%;background-color: #c6c6c6;text-align: center;line-height: 25px;color: #fff;z-index: 99;cursor: pointer;}
+    }
 }
 </style>

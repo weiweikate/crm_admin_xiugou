@@ -610,6 +610,9 @@
                         result = '1元券支付';
                         break;
                     case 5:
+                        result = '三方支付+1元券支付';
+                        break;
+                    case 6:
                         result = '余额支付+1元券支付';
                         break;
                     case 7:
