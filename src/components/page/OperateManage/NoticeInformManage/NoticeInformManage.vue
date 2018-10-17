@@ -82,7 +82,7 @@
                         <template slot-scope="scope">
                             <el-button type="primary" size="small" @click="detailItem(scope.$index,scope.row)">查看详情
                             </el-button>
-                            <el-button type="success" v-if="index==0" size="small" @click="detailItem(scope.$index,scope.row)">编辑
+                            <el-button type="success" v-if="index==0" size="small" @click="editItem(scope.row)">编辑
                             </el-button>
                             <el-button type="warning" size="small" @click="upStatusItem(scope.row.id,2)"
                                        v-if="scope.row.status==200">再次推送
@@ -287,6 +287,11 @@ export default {
             this.$refs[formName].resetFields();
             this.form.date = '';
             this.getList(this.page.currentPage);
+        },
+        // 编辑
+        editItem(row) {
+            sessionStorage.setItem('noticeId', row.id);
+            this.$router.push({ path: '/editNotice', query: { noticeId: row.id }});
         }
     }
 };

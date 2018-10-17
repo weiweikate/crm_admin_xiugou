@@ -4,35 +4,26 @@
         <div class="container">
             <div class="inf-box">
                 <div style="margin: -30px 0 20px 80px">
-                    <div class="tab-item" :class="checked[0]?'checked':''">公告</div>
-                    <div class="tab-item" :class="checked[1]?'checked':''" style="margin-left: -5px">
+                    <div class="tab-item" :class="index==0?'checked':''">公告</div>
+                    <div class="tab-item" :class="index==1?'checked':''" style="margin-left: -5px">
                         通知
                     </div>
                 </div>
                 <el-form :model="form" ref="form" v-loading="loading">
-                    <el-form-item prop="title" v-if="checked[0]">
-                        <span class="label"><span class="required">*</span>公告标题</span>
-                        <el-input placeholder="请输入公告标题" disabled="" v-model="title"></el-input>
+                    <el-form-item prop="title" :label="nav[index]">
+                        <el-input placeholder="请输入公告标题" disabled="" v-model="form.title"></el-input>
                     </el-form-item>
-                    <el-form-item>
-                        <span class="label" v-if="checked[0]"><span class="required">*</span>公告详情</span>
-                        <span class="label" v-else><span class="required">*</span>通知详情</span>
-                        <template>
-                            <el-input type="textarea" class="detail-content" maxlength="180" disabled="" v-model="form.content" placeholder="请输入"></el-input>
-                        </template>
+                    <el-form-item :label="detail[index]">
+                        <el-input type="textarea" class="detail-content" maxlength="180" disabled="" v-model="form.content" placeholder="请输入"></el-input>
                     </el-form-item>
-
-                    <el-form-item label="推送方式" style="position: relative">
-                        <el-radio-group v-model="form.pushType" disabled="">
-                            <el-radio label="1" value="1">即时推送</el-radio>
-                            <el-radio label="2" value="2">定时推送</el-radio>
-                        </el-radio-group>
+                    <el-form-item label="推送时间">
                         <el-date-picker
-                                v-model="date"
-                                type="datetime"
-                                disabled=""
-                                format="yyyy-MM-dd HH:mm:ss"
-                                placeholder="选择日期时间">
+                            v-model="form.date"
+                            type="datetimerange"
+                            format="yyyy-MM-dd HH:mm:ss"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                        >
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="推送人群">
@@ -44,14 +35,20 @@
                             <el-checkbox v-for="item in users" :label="item" :key="item">{{item}}
                             </el-checkbox>
                         </el-checkbox-group>
+                        <div style="margin-left: 112px" v-if="index==0">
+                            <el-checkbox v-model="notRegist" disabled="">
+                                未注册用户
+                            </el-checkbox>
+                        </div>
+                        <div style="margin-left: 112px">
+                            <el-checkbox v-model="newRegist" disabled="">
+                                新注册用户
+                            </el-checkbox>
+                        </div>
                     </el-form-item>
                     <el-form-item label="推送区域" class="region-area">
-                        <el-radio-group v-model="form.pushCountry" disabled="">
-                            <el-radio label="1" value="1">全国</el-radio>
-                            <el-radio label="2" value="2">国外</el-radio>
-                        </el-radio-group>
-                        <div class="el-cascader" v-if="form.pushCountry==3">
-                            <region @regionMsg='getRegion' :regionMsg='address' :isDisabled="true"></region>
+                        <div style="margin-left: 112px">
+                            <div v-for="(v,k) in form.provinces" :key="k">{{v.provinceName}}:{{v.cityNames}}</div>
                         </div>
                     </el-form-item>
                 </el-form>
@@ -63,44 +60,28 @@
 <script>
     import icon from '@/components/common/ico';
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import Quill from 'quill';
-    import * as api from '@/api/api';
     import moment from 'moment';
-    import region from '@/components/common/Region';
     import request from '@/http/http.js';
-    import xss from 'xss';
+
     export default {
         components: {
-            vBreadcrumb, icon, region
+            vBreadcrumb, icon
         },
         data() {
             return {
-                checked: [true, false],
-                title: '', //   标题
-                form: {
-                    type: 100, //   100:公告   200：通知
-                    content: '', //   内容
-                    pushType: '1', //   1：即时推送  2：定时推送
-                    pushWay: '', //   推送人群
-                    pushCountry: '', //   1：全国 2：国外 3：定省
-                    provinceId: '', //   省
-                    cityId: '', //   市
-                    areaId: '', //   区
-                    createAdmin: '', //   发布人
-                    original_img: '',
-                    small_img: '',
-                    name: ''
-                },
-                imageUrl: '',
-                date: '',
+                form: {},
                 loading: false,
                 checkAll: false,
                 checkedUsers: [],
                 users: [],
                 isIndeterminate: false,
-                content: '', // 文章内容
                 id: '',
-                address: ''
+                index: 0,
+                title: '',
+                notRegist: false,
+                newRegist: false,
+                nav: ['公告标题', '通知标题'],
+                detail: ['公告详情', '通知详情']
             };
         },
         created() {
@@ -114,51 +95,48 @@
         methods: {
             // 获取详情
             getDetail() {
-                const that = this;
                 const data = {
-                    id: that.id
+                    id: this.id
                 };
-                that.loading = true;
+                this.loading = true;
                 request.queryNoticeById(data).then(res => {
-                    that.form = res.data;
-                    that.title = res.data.title;
-                    that.form.content = xss(that.form.content);
-                    if (res.data.type == 100) {
-                        that.checked = [true, false];
-                    } else {
-                        that.checked = [false, true];
-                    }
+                    this.form = res.data;
+                    this.index = res.data.type == 100 ? 0 : 1;
                     request.getUserLevelList({}).then(resData => {
                         let count = 0;
-                        // const arr = res.data.push_way.split(',');
-                        // for (const i in resData.data.data) {
-                        //     const name = resData.data.data[i].name;
-                        //     if (that.users.indexOf(name) == -1) {
-                        //         that.users.push(name);
-                        //     }
-                        //     for (const j in arr) {
-                        //         if (arr[j] == resData.data.data[i].id) {
-                        //             count++;
-                        //             if (that.checkedUsers.indexOf(name) == -1) {
-                        //                 that.checkedUsers.push(name);
-                        //             }
-                        //         }
-                        //     }
-                        // }
-                        // if (count == resData.data.length) {
-                        //     that.checkAll = true;
-                        //     that.isIndeterminate = false;
-                        // }
+                        const arr = res.data.userLevel.split(',');
+                        for (const i in resData.data.data) {
+                            const name = resData.data.data[i].name;
+                            if (this.users.indexOf(name) == -1) {
+                                this.users.push(name);
+                            }
+                            for (const j in arr) {
+                                if (arr[j] == resData.data.data[i].id) {
+                                    count++;
+                                    if (this.checkedUsers.indexOf(name) == -1) {
+                                        this.checkedUsers.push(name);
+                                    }
+                                }
+                                if (arr[j] == 'new') {
+                                    this.newRegist = true;
+                                }
+                            }
+                        }
+                        if (count == resData.data.length) {
+                            this.checkAll = true;
+                            this.isIndeterminate = false;
+                        }
                     })
                         .catch(err => {
                             console.log(err);
                         });
 
-                    that.date = res.data.order_time ? moment(res.data.order_time).format('YYYY-MM-DD HH:mm:ss') : '';
-                    that.loading = false;
+                    this.form.date[0] = res.data.startTime ? moment(res.data.startTime).format('YYYY-MM-DD HH:mm:ss') : '';
+                    this.form.date[1] = res.data.endTime ? moment(res.data.endTime).format('YYYY-MM-DD HH:mm:ss') : '';
+                    this.loading = false;
                 })
                     .catch(err => {
-                        that.loading = false;
+                        this.loading = false;
                     });
             }
         }

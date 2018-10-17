@@ -214,6 +214,16 @@
                                 throw '请输入产品id';
                             }
                         });
+                        v.topicNavbarBannerList.forEach((v2, k2) => {
+                            if (v2.bannerImg == '') {
+                                throw '请上传banner图';
+                            }
+                            v2.topicBannerProductList.forEach((v3, k3) => {
+                                if (v3.prodCode == '') {
+                                    throw '请输入产品id';
+                                }
+                            });
+                        });
                     });
                 } catch (error) {
                     this.$message.warning(error);

@@ -58,6 +58,7 @@ export default {
         this.name = '';
         this.tplId = this.$route.query.topicId || sessionStorage.getItem('topicId');
         this.tpl = '1';
+        this.comp = 'tpl1';
         if (this.tplId == 'add') {
             this.title = '添加专题';
             this.tplInfo = 'add';

@@ -140,9 +140,58 @@
         },
         activated() {
             this.formData();
-            this.getLevelList();
+            this.id =
+                this.$route.query.id ||
+                JSON.parse(sessionStorage.getItem('noticeInformDetail').id);
+            this.getDetail();
         },
         methods: {
+            // 获取详情
+            getDetail() {
+                const data = {
+                    id: this.id
+                };
+                this.loading = true;
+                request.queryNoticeById(data).then(res => {
+                    this.form = res.data;
+                    this.index = res.data.type == 100 ? 0 : 1;
+                    request.getUserLevelList({}).then(resData => {
+                        let count = 0;
+                        const arr = res.data.userLevel.split(',');
+                        for (const i in resData.data.data) {
+                            const name = resData.data.data[i].name;
+                            if (this.users.indexOf(name) == -1) {
+                                this.users.push(name);
+                            }
+                            for (const j in arr) {
+                                if (arr[j] == resData.data.data[i].id) {
+                                    count++;
+                                    if (this.checkedUsers.indexOf(name) == -1) {
+                                        this.checkedUsers.push(name);
+                                    }
+                                }
+                                if (arr[j] == 'new') {
+                                    this.newRegist = true;
+                                }
+                            }
+                        }
+                        if (count == resData.data.length) {
+                            this.checkAll = true;
+                            this.isIndeterminate = false;
+                        }
+                    })
+                        .catch(err => {
+                            console.log(err);
+                        });
+
+                    this.form.date[0] = res.data.startTime ? moment(res.data.startTime).format('YYYY-MM-DD HH:mm:ss') : '';
+                    this.form.date[1] = res.data.endTime ? moment(res.data.endTime).format('YYYY-MM-DD HH:mm:ss') : '';
+                    this.loading = false;
+                })
+                    .catch(err => {
+                        this.loading = false;
+                    });
+            },
             formData() {
                 this.form = {
                     title: '',

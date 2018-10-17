@@ -489,6 +489,12 @@ export default new Router({
                     meta: { title: '通知/公告详情', url: '/admin/notice/findNoticeDetailById' }
                 },
                 {
+                    name: 'editNotice',
+                    path: '/editNotice',
+                    component: resolve => require(['../components/page/OperateManage/NoticeInformManage/EditNotice.vue'], resolve),
+                    meta: { title: '编辑公告', url: '/admin/notice/findNoticeDetailById' }
+                },
+                {
                     name: 'feedBack',
                     path: '/feedBack',
                     component: resolve => require(['../components/page/ServiceManage/FeedBack.vue'], resolve),

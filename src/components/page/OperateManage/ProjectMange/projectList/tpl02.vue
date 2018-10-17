@@ -200,16 +200,16 @@ export default {
                         throw '请输入产品ID';
                     }
                 });
-                // this.topicNavbarList.topicNavbarBannerList.forEach((v, k) => {
-                //     if (v.bannerImg == '') {
-                //         throw '请上传banner图';
-                //     }
-                //     v.topicBannerProductList.forEach((v1, k1) => {
-                //         if (v1.prodCode == '') {
-                //             throw '请输入产品ID';
-                //         }
-                //     });
-                // });
+                this.topicNavbarList.topicNavbarBannerList.forEach((v, k) => {
+                    if (v.bannerImg == '') {
+                        throw '请上传banner图';
+                    }
+                    v.topicBannerProductList.forEach((v1, k1) => {
+                        if (v1.prodCode == '') {
+                            throw '请输入产品ID';
+                        }
+                    });
+                });
             } catch (error) {
                 this.$message.warning(error);
                 return;
@@ -238,7 +238,7 @@ export default {
         },
         // 添加banner
         addBanner() {
-            this.topicNavbarList.topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [] });
+            this.topicNavbarList.topicNavbarBannerList == undefined || null ? this.topicNavbarList.topicNavbarBannerList = [{ bannerImg: '', topicBannerProductList: [] }] : this.topicNavbarList.topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [] });
         },
         // 添加banner图产品
         addBannerProduct(index) {
