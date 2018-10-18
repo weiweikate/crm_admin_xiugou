@@ -157,7 +157,6 @@
             },
             // tab切换
             tabClick(params) {
-
             },
             // 获取权限列表
             getUserPriList(id) {

@@ -15,6 +15,9 @@
                 <el-tab-pane label="审核产品" name="auditGift">
                     <v-tab-content ref = 'auditGift'></v-tab-content>
                 </el-tab-pane>
+                <el-tab-pane label="未通过产品" name="noPass">
+                    <v-tab-content ref = 'noPass'></v-tab-content>
+                </el-tab-pane>
             </el-tabs>
         </el-card>
 
@@ -49,6 +52,7 @@
                     case 'upGift': status = '5'; break;
                     case 'downGift': status = '6'; break;
                     case 'auditGift': status = '2'; break;
+                    case 'noPass': status = '3'; break;
                 }
                 this.$refs[tab.name].giftStatus = status;
                 this.$refs[tab.name].getList(this.$refs[tab.name].page.currentPage);
