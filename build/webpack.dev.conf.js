@@ -11,6 +11,9 @@ const portfinder = require('portfinder');
 const HOST = process.env.HOST;
 const PORT = process.env.PORT && Number(process.env.PORT);
 
+const getRepoInfo = require('git-repo-info');
+const info = getRepoInfo();
+const ut = require('../src/utils/index.js');
 const devWebpackConfig = merge(baseWebpackConfig, {
     module: {
         rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
@@ -39,6 +42,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     },
     plugins: [
         new webpack.DefinePlugin({
+            'VERSION': `"${ut.formatTime(new Date())}--${info.tag}"`,
             'process.env': require('../config/dev.env')
         }),
         new webpack.HotModuleReplacementPlugin(),

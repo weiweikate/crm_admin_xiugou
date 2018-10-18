@@ -2,5 +2,5 @@
 module.exports = {
     NODE_ENV: '"development"',
     EVN_CONFIG: '"dev"',
-    API_ROOT: '"http://devadmin.sharegoodsmall.com/"'
+    API_ROOT: '""'
 };

@@ -23,6 +23,7 @@
         "echarts": "4.1.0",
         "element-ui": "2.3.3",
         "eslint-plugin-html": "4.0.5",
+        "git-repo-info": "^2.0.0",
         "js-md5": "0.7.3",
         "less": "3.0.4",
         "less-loader": "4.1.0",
