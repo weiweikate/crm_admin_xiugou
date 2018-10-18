@@ -1,41 +1,41 @@
 var md5 = require('js-md5');
 var moment = require('moment');
-let encryptData = function (data) {
+const encryptData = function(data) {
     var tmpData = {};
     for (var k in tmpData) {
         delete tmpData[k];
     }
-    let key = '&key=juReWeb@key';
+    const key = '&key=juReWeb@key';
     var itemArr = [];
     for (const item in data) {
-        if (data[item] != "" && data[item] != undefined) {
-            itemArr.push(item + "=" + data[item]);
-            tmpData[item] = data[item]
+        if (data[item] != '' && data[item] != undefined) {
+            itemArr.push(item + '=' + data[item]);
+            tmpData[item] = data[item];
         }
     }
-    var tmpArr = itemArr.sort().join("&");
+    var tmpArr = itemArr.sort().join('&');
     var res = tmpArr + key;
     var sign = md5(res);
     var timestamp = new Date().getTime();
     tmpData.sign = sign.toUpperCase();
     tmpData.timestamp = timestamp;
     return tmpData;
-}
+};
 
 // 清除数据
-let cleanFormData = function (form) {
+const cleanFormData = function(form) {
     for (const key in form) {
-        if(form[key] instanceof Array){
+        if (form[key] instanceof Array) {
             form[key] = [];
-        }else if(form[key] instanceof Object){
+        } else if (form[key] instanceof Object) {
             form[key] = {};
-        }else{
+        } else {
             form[key] = '';
         }
     }
-}
+};
 //  三级联动
-let handleCity = function (regionoption,v1, v2, v3) {
+const handleCity = function(regionoption, v1, v2, v3) {
     var cityArr = [];
     for (var i in regionoption) {
         if (regionoption[i].value == v1) {
@@ -65,11 +65,11 @@ let handleCity = function (regionoption,v1, v2, v3) {
         }
     }
     return cityArr;
-}
-let handleCityIndex = function (regionoption,v1, v2, v3) {
+};
+const handleCityIndex = function(regionoption, v1, v2, v3) {
     var cityIndArr = [];
     for (var i in regionoption) {
-        if (v1.indexOf(regionoption[i].label) !=-1) {
+        if (v1.indexOf(regionoption[i].label) != -1) {
             cityIndArr.push(regionoption[i].value);
         }
     }
@@ -96,29 +96,27 @@ let handleCityIndex = function (regionoption,v1, v2, v3) {
         }
     }
     return cityIndArr;
-}
+};
 
 // 权限判断
-let permissionControl = function (per) {
-    let userPrivilegeList = JSON.parse(localStorage.getItem('privilegeList'));
-    if(userPrivilegeList.indexOf(per) !=-1){
+const permissionControl = function(per) {
+    const userPrivilegeList = JSON.parse(localStorage.getItem('privilegeList'));
+    if (userPrivilegeList.indexOf(per) != -1) {
         return true;
-    }else{
+    } else {
         return false;
     }
-}
+};
 // 格式化时间
-let formatTime = function(value,status){
-    if(value == undefined || value == null){
+const formatTime = function(value, status) {
+    if (value == undefined || value == null) {
         return '';
     }
-    if(status == 1){
-        return value == ''?'':moment(value).format('YYYY-MM-DD');
+    if (status == 1) {
+        return value == '' ? '' : moment(value).format('YYYY-MM-DD');
     }
-    return value == ''?'':moment(value).format('YYYY-MM-DD HH:mm:ss');
-}
-
-
+    return value == '' ? '' : moment(value).format('YYYY-MM-DD HH:mm:ss');
+};
 
 module.exports.encryptData = encryptData;
 module.exports.cleanFormData = cleanFormData;

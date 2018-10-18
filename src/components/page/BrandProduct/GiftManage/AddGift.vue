@@ -99,7 +99,7 @@
                 <div class="pro-title">使用限制</div>
                 <el-form-item>
                     <el-checkbox disabled label="不支持优惠卷" v-model="limit.notSupportCoupon"></el-checkbox>
-                    <el-checkbox label="不支持1元积分抵扣" v-model="limit.notSupportScore"></el-checkbox>
+                    <!--<el-checkbox label="不支持1元积分抵扣" v-model="limit.notSupportScore"></el-checkbox>-->
                 </el-form-item>
                 <el-form-item>
                     <el-checkbox :disabled="form.type == 2" label="不支持退款" v-model="limit.notSupportRetMoney"></el-checkbox>

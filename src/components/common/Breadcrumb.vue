@@ -4,7 +4,7 @@
             <el-breadcrumb-item class="bread-item" v-for="(item,index) in nav" :key="index"><icon class="ico" v-if="index == 0" ico="icon-dingwei1" />{{item}}</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="now-date">
-            <span style="color: red">2018-10-18 14:22更新 v1.0.7</span>
+            <span style="color: red">{{version}}</span>
           {{time}}
         </div>
     </div>
@@ -19,10 +19,12 @@ export default {
     },
     data() {
         return {
-            time: ''
+            time: '',
+            version: ''
         };
     },
     created() {
+        this.version = VERSION;
         this.timeDown();
     },
     methods: {
