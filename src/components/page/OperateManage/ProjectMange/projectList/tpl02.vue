@@ -195,21 +195,27 @@ export default {
                 return;
             }
             try {
-                this.topicNavbarList.topicBannerProducts.forEach((v, k) => {
-                    if (v.prodCode == '') {
-                        throw '请输入产品ID';
-                    }
-                });
-                this.topicNavbarList.topicNavbarBannerList.forEach((v, k) => {
-                    if (v.bannerImg == '') {
-                        throw '请上传banner图';
-                    }
-                    v.topicBannerProductList.forEach((v1, k1) => {
-                        if (v1.prodCode == '') {
+                if (this.topicNavbarList.topicBannerProducts && this.topicNavbarList.topicBannerProducts.length) {
+                    this.topicNavbarList.topicBannerProducts.forEach((v, k) => {
+                        if (v.prodCode == '') {
                             throw '请输入产品ID';
                         }
                     });
-                });
+                }
+                if (this.topicNavbarList.topicNavbarBannerList && this.topicNavbarList.topicNavbarBannerList.length) {
+                    this.topicNavbarList.topicNavbarBannerList.forEach((v, k) => {
+                        if (v.bannerImg == '') {
+                            throw '请上传banner图';
+                        }
+                        if (v.topicBannerProductList && v.topicBannerProductList.length) {
+                            v.topicBannerProductList.forEach((v1, k1) => {
+                                if (v1.prodCode == '') {
+                                    throw '请输入产品ID';
+                                }
+                            });
+                        }
+                    });
+                }
             } catch (error) {
                 this.$message.warning(error);
                 return;
@@ -242,6 +248,9 @@ export default {
         },
         // 添加banner图产品
         addBannerProduct(index) {
+            if (this.topicNavbarList.topicNavbarBannerList[index].topicBannerProductList == undefined || null) {
+                this.topicNavbarList.topicNavbarBannerList[index].topicBannerProductList = [];
+            }
             this.topicNavbarList.topicNavbarBannerList[index].topicBannerProductList.push({ prodCode: '', productType: 99 });
         },
         // 上传banner图

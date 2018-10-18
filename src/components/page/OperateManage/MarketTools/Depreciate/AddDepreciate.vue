@@ -37,17 +37,20 @@
                 <el-form-item label="开始时间" prop="beginTime">
                     <el-date-picker
                         type="datetime"
-                        v-model="form.beginTime"
+                        v-model="beginTime"
                         v-if="form.endTime"
+                        format="yyyy-MM-dd HH:mm:ss"
                         @input="calDurationTime(showDuration)"
                         placeholder="选择开始时间">
                     </el-date-picker>
                     <el-date-picker
                         type="datetime"
+                        format="yyyy-MM-dd HH:mm:ss"
                         v-else
-                        v-model="form.beginTime"
+                        v-model="beginTime"
                         placeholder="选择开始时间">
                     </el-date-picker>
+                    <span style="display: none" v-model="time"></span>
                 </el-form-item>
                 <el-form-item prop="orderCloseTime" label="设置关闭订单">
                     <el-input class="small" v-model="form.orderCloseTime"></el-input>
@@ -208,7 +211,6 @@
                 },
                 form: {
                     floorPrice: '', // 最低价格
-                    beginTime: '', // 开始时间
                     intervalTime: '', // 降价幅度 分钟数
                     downPrice: '', // 降价幅度 金额
                     floorPriceTime: '', // 降到底价还允许购买的时间
@@ -218,6 +220,8 @@
                     totalNumber: '', // 发放总数量
                     limitNumber: ''// 限购数量,默认为0
                 },
+                beginTime: '', // 开始时间
+                time: '', // 开始时间
                 showMask: false, // 选择商品弹窗
                 productDetail: {}, // 选择的商品的商品信息
                 showDuration: false, // 显示持续时间
@@ -284,7 +288,7 @@
                 const minutes = time - day * 60 * 24 - hour * 60;// 分钟
                 this.showDuration = status;
                 this.duration = day + '天' + ' ' + this.addZero(hour) + ':' + this.addZero(minutes) + ':00';
-                this.calEndTime(this.form.beginTime, this.durationTime, this.form.floorPriceTime);
+                this.calEndTime(this.beginTime, this.durationTime, this.form.floorPriceTime);
             },
 
             // 不足10补零
@@ -295,11 +299,11 @@
             calEndTimeByStartDurationTime() {
                 const status = this.showDuration;
                 this.calDurationTime(status);
-                this.calEndTime(this.form.beginTime, this.durationTime, this.form.floorPriceTime);
+                this.calEndTime(this.beginTime, this.durationTime, this.form.floorPriceTime);
             },
             // 计算结束时间
             calEndTime(start, allTime, floorPriceTime) {
-                if (this.form.startPrice && this.form.floorPrice && this.form.intervalTime && this.form.downPrice && this.form.beginTime && this.form.floorPriceTime) {
+                if (this.form.startPrice && this.form.floorPrice && this.form.intervalTime && this.form.downPrice && this.beginTime && this.form.floorPriceTime) {
                     this.form.endTime = moment(new Date(start).getTime() + (Number(allTime) + Number(floorPriceTime)) * 60 * 1000).format('YYYY-MM-DD HH:mm:ss');
                 }
             },
@@ -312,14 +316,15 @@
                             this.$message.warning('请选择商品！');
                             return;
                         }
-                        if (!this.form.beginTime) {
+                        if (!this.beginTime) {
                             this.$message.warning('请选择开始时间！');
                             return;
                         }
                         // 表单提交
                         const data = this.form;
                         if (!data.limitNumber) data.limitNumber = -1;
-                        data.beginTime = moment(this.form.beginTime).format('YYYY-MM-DD HH:mm:ss'); // 活动开始时间
+                        this.time = this.beginTime;
+                        data.beginTime = moment(this.time).format('YYYY-MM-DD HH:mm:ss'); // 活动开始时间
                         // data.productCode = this.productDetail.productCode; // 产品编号
                         data.productId = this.productDetail.productId; // 产品ID
                         // data.productImg = this.productDetail.specImg; // 产品主图url

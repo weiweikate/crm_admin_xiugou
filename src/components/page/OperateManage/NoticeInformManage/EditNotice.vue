@@ -1,19 +1,16 @@
 <template>
     <div>
-        <v-breadcrumb :nav="['服务管理','公告/通知','发布公告/通知']"></v-breadcrumb>
+        <v-breadcrumb :nav="['服务管理','公告/通知','编辑公告']"></v-breadcrumb>
         <div class="container">
             <div class="inf-box">
                 <div style="margin: -30px 0 20px 80px">
-                    <div class="tab-item" :class="index==0?'checked':''" @click="change(0)">公告</div>
-                    <div class="tab-item" :class="index==1?'checked':''" @click="change(1)" style="margin-left: -5px">
-                        通知
-                    </div>
+                    <div class="tab-item checked">公告</div>
                 </div>
                 <el-form :model="form" ref="form" :rules="rules" v-loading="loading">
-                    <el-form-item prop="title" :label="info[index].name">
+                    <el-form-item prop="title" label="公告标题">
                         <el-input maxlength="16" v-model="form.title"></el-input>
                     </el-form-item>
-                    <el-form-item prop="content" :label="info[index].detail" class="content-area">
+                    <el-form-item prop="content" label="公告详情" class="content-area">
                         <el-input type="textarea" class="detail-content" maxlength="180" @input="getContentCount" v-model="form.content" placeholder="请输入"></el-input>
                         <span class="content-count">{{count}}/180</span>
                     </el-form-item>
@@ -36,7 +33,7 @@
                             <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{item.name}}
                             </el-checkbox>
                         </el-checkbox-group>
-                        <div style="margin-left: 112px" v-if="index==0">
+                        <div style="margin-left: 112px">
                             <el-checkbox v-model="notRegist">
                                 未注册用户
                             </el-checkbox>
@@ -99,14 +96,6 @@
                     title: [{ validator: checkTitle, trigger: 'blur' }],
                     content: [{ validator: checkContent, trigger: 'blur' }]
                 },
-                info: [{
-                    name: '公告标题',
-                    detail: '公告详情'
-                }, {
-                    name: '通知标题',
-                    detail: '通知详情'
-                }],
-                index: 0,
                 form: {
                     title: '',
                     type: 100, //   1:公告   2：通知
@@ -154,7 +143,6 @@
                 this.loading = true;
                 request.queryNoticeById(data).then(res => {
                     this.form = res.data;
-                    this.index = res.data.type == 100 ? 0 : 1;
                     request.getUserLevelList({}).then(resData => {
                         let count = 0;
                         const arr = res.data.userLevel.split(',');
@@ -173,6 +161,9 @@
                                 if (arr[j] == 'new') {
                                     this.newRegist = true;
                                 }
+                                if (arr[j] == 'no') {
+                                    this.notRegist = true;
+                                }
                             }
                         }
                         if (count == resData.data.length) {
@@ -186,6 +177,7 @@
 
                     this.form.date[0] = res.data.startTime ? moment(res.data.startTime).format('YYYY-MM-DD HH:mm:ss') : '';
                     this.form.date[1] = res.data.endTime ? moment(res.data.endTime).format('YYYY-MM-DD HH:mm:ss') : '';
+                    this.count = res.data.content.length;
                     this.loading = false;
                 })
                     .catch(err => {
@@ -257,17 +249,6 @@
                 this.checkAll = checkedCount === this.users.length;
                 this.isIndeterminate = checkedCount > 0 && checkedCount < this.users.length;
             },
-            // 选项卡切换
-            change(num) {
-                this.formData();
-                this.index = num;
-                this.info[num].checked = true;
-                this.info[1 - num].checked = false;
-                this.form.type = num == 0 ? 100 : 200;
-                this.isIndeterminate = false;
-                this.checkAll = false;
-                this.getLevelList();
-            },
             // 提交表单
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
@@ -303,6 +284,10 @@
                         if (this.newRegist) {
                             params.userLevel += 'new' + '，';
                         }
+                        if (this.notRegist) {
+                            params.userLevel += 'no' + '，';
+                        }
+                        params.id = this.id;
                         params.userLevel = params.userLevel.slice(0, -1);
                         this.btnLoading = true;
                         request.saveNotice(params).then(res => {

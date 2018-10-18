@@ -226,20 +226,6 @@
                         return;
                     } else {
                         const params = this[formName];
-                        //
-                        // if (!params.pushType) {
-                        //     this.$message.warning('请选择推送方式!');
-                        //     return;
-                        // } else {
-                        //     if (params.pushType == 2) {
-                        //         if (!this.date) {
-                        //             this.$message.warning('请选择推送时间!');
-                        //             return;
-                        //         } else {
-                        //             params.orderTime = moment(this.date).format('YYYY-MM-DD HH:mm:ss');
-                        //         }
-                        //     }
-                        // }
                         if (!this.form.date.length) {
                             this.$message.warning('请选择推送时间');
                             return;
@@ -253,6 +239,9 @@
                         }
                         if (this.newRegist) {
                             params.userLevel += 'new' + '，';
+                        }
+                        if (this.notRegist) {
+                            params.userLevel += 'no' + '，';
                         }
                         params.userLevel = params.userLevel.slice(0, -1);
                         this.btnLoading = true;

@@ -148,7 +148,7 @@ export default {
                 {
                     navName: '',
                     type: 1, // 导航属性 1文字 2时间
-                    topicBannerProducts: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }],
+                    topicBannerProducts: [{ prodCode: '', productType: 99 }],
                     topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
                 }
             ]
@@ -163,7 +163,7 @@ export default {
             {
                 navName: '',
                 type: 1,
-                topicBannerProducts: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }],
+                topicBannerProducts: [{ prodCode: '', productType: 99 }],
                 topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
             }
         ];
@@ -195,25 +195,34 @@ export default {
             }
             // 判空
             try {
+                if (!this.topicNavbarList.length) {
+                    return;
+                }
                 this.topicNavbarList.forEach((v, k) => {
                     if (v.navName == '') {
                         throw '请输入导航名称';
                     }
-                    v.topicBannerProducts.forEach((v1, k1) => {
-                        if (v1.prodCode == '') {
-                            throw '请输入产品id';
-                        }
-                    });
-                    v.topicNavbarBannerList.forEach((v2, k2) => {
-                        if (v2.bannerImg == '') {
-                            throw '请上传banner图';
-                        }
-                        v2.topicBannerProductList.forEach((v3, k3) => {
-                            if (v3.prodCode == '') {
+                    if (v.topicBannerProducts) {
+                        v.topicBannerProducts.forEach((v1, k1) => {
+                            if (v1.prodCode == '') {
                                 throw '请输入产品id';
                             }
                         });
-                    });
+                    }
+                    if (v.topicNavbarBannerList && v.topicNavbarBannerList.length) {
+                        v.topicNavbarBannerList.forEach((v2, k2) => {
+                            if (v2.bannerImg == '') {
+                                throw '请上传banner图';
+                            }
+                            if (v2.topicBannerProductList && v2.topicBannerProductList.length) {
+                                v2.topicBannerProductList.forEach((v3, k3) => {
+                                    if (v3.prodCode == '') {
+                                        throw '请输入产品id';
+                                    }
+                                });
+                            }
+                        });
+                    }
                 });
             } catch (error) {
                 this.$message.warning(error);
@@ -249,7 +258,7 @@ export default {
                 {
                     navName: '',
                     type: 1,
-                    topicBannerProducts: [{ prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }, { prodCode: '', productType: 99 }],
+                    topicBannerProducts: [{ prodCode: '', productType: 99 }],
                     topicNavbarBannerList: []
                 }
             );
@@ -269,6 +278,9 @@ export default {
         },
         //   添加banner的产品
         addBannerProduct(bIndex, sIndex) {
+            if (this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList == undefined || null) {
+                this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList = [];
+            }
             this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList.push({ prodCode: '', productType: 99 });
             this.$set(this.topicNavbarList, bIndex, this.topicNavbarList[bIndex]);
         },

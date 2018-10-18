@@ -120,6 +120,9 @@
                                 if (arr[j] == 'new') {
                                     this.newRegist = true;
                                 }
+                                if (arr[j] == 'no') {
+                                    this.notRegist = true;
+                                }
                             }
                         }
                         if (count == resData.data.length) {

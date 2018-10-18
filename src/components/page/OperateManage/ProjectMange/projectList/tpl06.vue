@@ -44,13 +44,14 @@
                     <el-input v-if="navItem==1" minlength="1" maxlength="6" v-model="v.navName" class="inp" placeholder="请输入"></el-input>
                     <el-date-picker
                         v-else
-                        v-model="v.navName"
+                        v-model="v.time"
                         format="yyyy-MM-dd HH:mm"
                         type="datetime"
                         class="inp"
                         :picker-options="pickerOptions[k]"
                         placeholder="选择日期时间">
                     </el-date-picker>
+                        <span style="display: none" v-model="v.navName"></span>
                     <span v-if='k>0' @click="delNav(k)" class="del-btn">x</span>
         </div>
                 </el-form-item>
@@ -166,12 +167,17 @@
                 topicNavbarList: [
                     {
                         navName: '',
+                        time: '',
                         type: 1, // 导航属性 1文字 2时间
                         topicBannerProducts: [{ prodCode: '', productType: 1 }],
                         topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 1 }] }]
                     }
                 ],
-                pickerOptions: [{}]
+                pickerOptions: [{
+                    disabledDate(time) {
+                        return time.getTime() < new Date() - 8.64e7;
+                    }
+                }]
             };
         },
 
@@ -182,6 +188,7 @@
             this.topicNavbarList = [
                 {
                     navName: '',
+                    time: '',
                     type: this.navItem,
                     topicBannerProducts: [{ prodCode: '', productType: 1 }],
                     topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
@@ -191,6 +198,9 @@
                 this.bannerForm.imgUrl = this.tplData.imgUrl;
                 this.bannerForm.tip = this.tplData.remark;
                 this.topicNavbarList = this.tplData.topicNavbarList;
+                for (const i in this.topicNavbarList) {
+                    this.topicNavbarList[i].time = this.topicNavbarList[i].navName;
+                }
                 this.navItem = this.tplData.topicNavbarList[0].type;
                 this.id = this.tplData.id;
             }
@@ -198,6 +208,7 @@
                 this.topicNavbarList = [
                     {
                         navName: '',
+                        time: '',
                         type: this.navItem,
                         topicBannerProducts: [{ prodCode: '', productType: 1 }],
                         topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [{ prodCode: '', productType: 1 }] }]
@@ -213,6 +224,8 @@
                 this.topicNavbarList.forEach(function(v, k) {
                     v.type = item;
                     v.navName = '';
+                    v.time = '';
+
                 });
             },
             // 确认保存
@@ -234,35 +247,43 @@
                 }
                 // 判空
                 try {
+                    if (!this.topicNavbarList.length) {
+                        return;
+                    }
                     this.topicNavbarList.forEach((v, k) => {
-                        if (v.navName == '') {
-                            throw '请输入导航名称';
+                        if (v.navName == '' && v.time == '') {
+                            throw '请输入导航';
                         } else {
                             if (this.navItem == 2) {
-                                v.navName = moment(v.navName).format('YYYY-MM-DD HH:mm');
+                                v.navName = moment(v.time).format('YYYY-MM-DD HH:mm');
                             }
                         }
-                        v.topicBannerProducts.forEach((v1, k1) => {
-                            if (v1.prodCode == '') {
-                                throw '请输入产品id';
-                            }
-                        });
-                        v.topicNavbarBannerList.forEach((v2, k2) => {
-                            if (v2.bannerImg == '') {
-                                throw '请上传banner图';
-                            }
-                            v2.topicBannerProductList.forEach((v3, k3) => {
-                                if (v3.prodCode == '') {
+                        if (v.topicBannerProducts) {
+                            v.topicBannerProducts.forEach((v1, k1) => {
+                                if (v1.prodCode == '') {
                                     throw '请输入产品id';
                                 }
                             });
-                        });
+                        }
+                        if (v.topicNavbarBannerList && v.topicNavbarBannerList.length) {
+                            v.topicNavbarBannerList.forEach((v2, k2) => {
+                                if (v2.bannerImg == '') {
+                                    throw '请上传banner图';
+                                }
+                                if (v2.topicBannerProductList && v2.topicBannerProductList.length) {
+                                    v2.topicBannerProductList.forEach((v3, k3) => {
+                                        if (v3.prodCode == '') {
+                                            throw '请输入产品id';
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     });
                 } catch (error) {
                     this.$message.warning(error);
                     return;
                 }
-
                 const data = {};
                 if (this.id != '') {
                     data.id = this.id.toString();
@@ -292,8 +313,9 @@
                 this.topicNavbarList.push(
                     {
                         navName: '',
+                        time: '',
                         type: this.navItem,
-                        topicBannerProducts: [{ prodCode: '', productType: 1 }, { prodCode: '', productType: 1 }],
+                        topicBannerProducts: [{ prodCode: '', productType: 1 }],
                         topicNavbarBannerList: []
                     }
                 );
@@ -301,7 +323,7 @@
                 if (this.navItem == 2) {
                     this.pickerOptions.push({
                         disabledDate(time) {
-                            return time.getTime() < that.topicNavbarList[that.topicNavbarList.length - 2].navName;
+                            return time.getTime() < that.topicNavbarList[that.topicNavbarList.length - 2].time.getTime() - 8.64e7;
                         }
                     });
                 }
@@ -322,6 +344,9 @@
             },
             //   添加banner的产品
             addBannerProduct(bIndex, sIndex) {
+                if (this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList == undefined || null) {
+                    this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList = [];
+                }
                 this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList.push({ prodCode: '', productType: 1 });
                 this.$set(this.topicNavbarList, bIndex, this.topicNavbarList[bIndex]);
             },

@@ -230,8 +230,23 @@ export default {
                         if (arr[k] == 'new') {
                             temp.push('新注册用户');
                         }
+                        if (arr[k] == 'no') {
+                            temp.push('未注册用户');
+                        }
                     }
-                    res.data.data[i].userLevel = temp.join(',');
+                    if (this.index == 0) {
+                        if (temp.length == this.levelIds.length + 2) {
+                            res.data.data[i].userLevel = '全部';
+                        } else {
+                            res.data.data[i].userLevel = temp.join(',');
+                        }
+                    } else {
+                        if (temp.length == this.levelIds.length + 1) {
+                            res.data.data[i].userLevel = '全部';
+                        } else {
+                            res.data.data[i].userLevel = temp.join(',');
+                        }
+                    }
                 }
                 this.tableData = res.data.data;
                 this.page.totalPage = res.data.totalNum;
