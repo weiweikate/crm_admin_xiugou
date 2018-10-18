@@ -453,17 +453,17 @@
                             secondCategoryIds = that.productList.secondCategoryIds;
                             thirdCategoryIds = that.productList.thirdCategoryIds;
                             productIds = that.productList.products;
-                            // if (that.productList.length == 0) {
-                            //     this.$message.warning('请选择可用品类!');
-                            //     return;
-                            // } else {
                             if (firstCategoryIds.length == 0 && secondCategoryIds.length == 0 && thirdCategoryIds.length === 0 && productIds.length == 0) {
                                 this.$message.warning('请选择可用品类!');
                                 return;
                             }
-                            // }
+                            data.firstCategoryIds = firstCategoryIds.length ? firstCategoryIds.join(',') : '';
+                            data.secondCategoryIds = secondCategoryIds.length ? secondCategoryIds.join(',') : '';
+                            data.thirdCategoryIds = thirdCategoryIds.length ? thirdCategoryIds.join(',') : '';
+                            data.productIds = productIds.length ? productIds.join(',') : '';
                             if (that.productList.checkAll) {
                                 data.categoryType = 1;// 全品类
+                                data.firstCategoryIds = -1;
                             } else {
                                 if (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0 && productIds.length === 1) {
                                     data.categoryType = 5;// 单商品
@@ -475,11 +475,6 @@
                                     data.categoryType = 2;// 多品类
                                 }
                             }
-
-                            data.firstCategoryIds = firstCategoryIds.length ? firstCategoryIds.join(',') : '';
-                            data.secondCategoryIds = secondCategoryIds.length ? secondCategoryIds.join(',') : '';
-                            data.thirdCategoryIds = thirdCategoryIds.length ? thirdCategoryIds.join(',') : '';
-                            data.productIds = productIds.length ? productIds.join(',') : '';
                         }
                         if (!this.checkedUsers) {
                             this.$message.warning('请选择可使用用户层级!');

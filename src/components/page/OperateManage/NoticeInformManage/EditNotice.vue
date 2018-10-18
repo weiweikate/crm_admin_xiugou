@@ -31,7 +31,7 @@
                         </el-checkbox>
                         <div style="margin: 15px 0;"></div>
                         <el-checkbox-group v-model="checkedUsers" @change="handleCheckedUsersChange">
-                            <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{item}}
+                            <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{item.name}}
                             </el-checkbox>
                         </el-checkbox-group>
                         <div style="margin-left: 112px">
@@ -151,14 +151,15 @@
                         const arr = res.data.userLevel.split(',');
                         for (const i in resData.data) {
                             const name = resData.data[i].name;
-                            if (this.users.indexOf(name) == -1) {
-                                this.users.push(name);
-                            }
+                            // if (this.users.indexOf(name) == -1) {
+                            //     this.users.push(name);
+                            // }
+                            this.users = resData.data;
                             for (const j in arr) {
                                 if (arr[j] == resData.data[i].id) {
                                     count++;
                                     if (this.checkedUsers.indexOf(name) == -1) {
-                                        this.checkedUsers.push(name);
+                                        this.checkedUsers.push(resData.data[i]);
                                     }
                                 }
                                 if (arr[j] === 'new') {
@@ -172,6 +173,8 @@
                         if (count == resData.data.length) {
                             this.checkAll = true;
                             this.isIndeterminate = false;
+                        } else {
+                            this.isIndeterminate = true;
                         }
                     }).catch(err => {
                         console.log(err);
@@ -209,14 +212,6 @@
                 } else {
                     this.dateDisabled = false;
                 }
-            },
-            // 获取用户层级列表
-            getLevelList() {
-                request.getUserLevelList({}).then(res => {
-                    this.users = res.data;
-                }).catch(err => {
-                    console.log(err);
-                });
             },
             // 推送人群选择
             handleCheckAllChange(val) {
@@ -265,10 +260,10 @@
                             return;
                         }
                         if (this.newRegist && params.userLevel.indexOf('new') == -1) {
-                            params.userLevel += 'new' + ',';
+                            params.userLevel += ',' + 'new' + ',';
                         }
                         if (this.notRegist && params.userLevel.indexOf('no') == -1) {
-                            params.userLevel += 'no' + ',';
+                            params.userLevel += ',' + 'no' + ',';
                         }
                         params.id = this.id;
                         if (params.userLevel.lastIndexOf(',') == params.userLevel.length - 1) {
