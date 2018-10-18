@@ -4,10 +4,9 @@
             <span class="spec" :style="{width:w.name,minWidth:w.minWidth}">产品名称</span>
             <span class="spec" :style="{width:w.price,minWidth:w.minWidth}">单价</span>
             <span class="spec" :style="{width:w.num,minWidth:w.minWidth}">数量</span>
-            <span class="spec" :style="{width:w.consignee,minWidth:w.minWidth}">收货人</span>
+            <span class="spec" :style="{width:w.consignee,minWidth:w.minWidth}">买家</span>
             <span class="spec" :style="{width:w.status,minWidth:w.minWidth}">交易状态</span>
             <span class="spec" :style="{width:w.collection,minWidth:w.minWidth}">实收款</span>
-            <span class="spec" :style="{width:w.shipper,minWidth:w.minWidth}">发货方</span>
             <span class="spec" :style="{width:w.operate,minWidth:w.minWidth}">操作</span>
         </div>
         <div v-for="(v,k) in tableData" :key="k" class="tab-wrap">
@@ -37,7 +36,7 @@
                         </div>
                         <div class="price">{{value.price}}</div>
                         <div class="num">{{value.num}}</div>
-                        <div class="consignee">{{v.receiver}}</div>
+                        <div class="consignee"><span>{{v.receiver}}<br>{{v.recevicePhone}}</span></div>
                     </div>
                 </div>
                 <div class="center">
@@ -54,7 +53,7 @@
                     </div>
                     <div class="collection"
                          :style="{height:120*v.orderProductList.length+v.orderProductList.length-1+'px',paddingTop:120*v.orderProductList.length/2-30+'px'}">
-                        <span>{{v.totalPrice | handleMoney}}<br>（含运费：{{v.freightPrice | handleMoney}}）</span>
+                        <span>{{v.totalPrice | handleMoney}}<br>（含运费：{{(v.freightPrice||0) | handleMoney}}）</span>
                     </div>
                 </div>
                 <div class="right">
@@ -102,7 +101,6 @@
                     consignee: '12%',
                     status: '8%',
                     collection: '12%',
-                    shipper: '8%',
                     operate: '15%',
                     minWidth: '100px'
                 },
@@ -141,14 +139,15 @@
                     this.pageLoading = false;
                     for (const i in res.data.data) {
                         // res.data.data[i].isShowPop = false;
-                        // res.data.data[i].starColor =
-                        //     this.markArr[res.data.data[i].stars - 1] == undefined
-                        //         ? '#ccc'
-                        //         : this.markArr[res.data.data[i].stars - 1].label;
+                        res.data.data[i].starColor =
+                            this.markArr[res.data.data[i].adminStars - 1] == undefined
+                                ? '#ccc'
+                                : this.markArr[res.data.data[i].adminStars - 1].label;
                         // res.data.data[i].price =
                         //     res.data.data[i].totalPrice == null
                         //         ? '0'
                         //         : res.data.data[i].totalPrice;
+                        res.data.data[i].orderProductList = res.data.data[i].orderProductList || [];
                         this.tableData.push(res.data.data[i]);
                     }
                     this.page.totalPage = res.data.totalNum;
@@ -160,9 +159,9 @@
             // 修改星级
             changeColor(v1, v) {
                 const data = {};
-                data.orderId = v.id;
-                data.star = v1.value;
-                data.remarks = v.adminRemark;
+                data.id = v.id;
+                data.adminStars = v1.value;
+                data.adminRemark = v.adminRemark;
                 request.orderSign(data).then(res => {
                     this.$message.success(res.msg);
                     v.starColor = v1.label;
@@ -190,8 +189,8 @@
             },
             // 订单详情
             orderInfo(row) {
-                sessionStorage.setItem('orderInfoId', row.id);
-                this.$router.push({ name: 'orderInfo', query: { orderInfoId: row.id }});
+                sessionStorage.setItem('giftOrderInfoId', row.id);
+                this.$router.push({ name: 'giftOrderInfo', query: { giftOrderInfoId: row.id }});
             },
             // 订单多选框
             orderCheckBox(row) {
@@ -319,7 +318,11 @@
                             height: 100px;
                             margin-left: 4%;
                             text-align: center;
-                            line-height: 100px;
+                            line-height: 20px !important;
+                            span{
+                                display: inline-block;
+                                margin-top: 30px;
+                            }
                         }
                     }
                     .bar:last-child {

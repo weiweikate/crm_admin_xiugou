@@ -3,14 +3,11 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="query-panue" :body-style="{ padding: '20px 20px'}">
             <el-form :model="form" ref="form" inline label-width="120px">
-                <el-form-item prop="producdCode" label="产品编号">
-                    <el-input v-model="form.producdCode" placeholder="请输入产品名称"></el-input>
-                </el-form-item>
-                <el-form-item prop="username" label="买家姓名">
-                    <el-input v-model="form.username" placeholder="请输入收货人姓名"></el-input>
-                </el-form-item>
                 <el-form-item prop="orderNum" label="订单编号">
                     <el-input v-model="form.orderNum" placeholder="请输入订单编号"></el-input>
+                </el-form-item>
+                <el-form-item prop="productCode" label="产品编号">
+                    <el-input v-model="form.productCode" placeholder="请输入产品编号"></el-input>
                 </el-form-item>
                 <el-form-item prop="productName" label="产品名称">
                     <el-input v-model="form.productName" placeholder="请输入产品名称"></el-input>
@@ -20,7 +17,10 @@
                         <el-option v-for="(v,k) in starArr" :key="k" :label="v.label" :value="v.value"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="dateRange" label="下单时间">
+                <el-form-item prop="receiver" label="买家姓名">
+                    <el-input v-model="form.receiver" placeholder="请输入买家姓名"></el-input>
+                </el-form-item>
+                <el-form-item prop="dateRange" label="成交时间">
                     <el-date-picker
                         v-model="dateRange"
                         type="datetimerange"
@@ -53,8 +53,8 @@
                 <el-tab-pane label="已完成" name="5">
                     <v-orderlist ref="5"></v-orderlist>
                 </el-tab-pane>
-                <el-tab-pane label="已关闭" name="closed">
-                    <v-orderlist ref="allOrder"></v-orderlist>
+                <el-tab-pane label="已关闭" name="6">
+                    <v-orderlist ref="6"></v-orderlist>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
@@ -77,7 +77,7 @@
 
         data() {
             return {
-                nav: ['订单管理', '礼包订单管理'],
+                nav: ['订单管理', '订单管理'],
                 activeName: 'all',
                 dateRange: [],
                 starArr: [
@@ -88,11 +88,13 @@
                     { label: '紫色标记', value: '5' }
                 ],
                 form: {
-                    producdCode: '',
-                    username: '',
                     orderNum: '',
                     productName: '',
-                    stars: ''
+                    receiver: '',
+                    productCode: '',
+                    stars: '',
+                    today: '',
+                    pickUp: ''
                 },
                 formData: {}
             };
@@ -117,6 +119,9 @@
             //  重置表单
             resetForm(formName) {
                 this.$refs[formName].resetFields();
+                this.form.today = '';
+                this.form.yesterday = '';
+                this.form.threeMonths = '';
                 this.dateRange = [];
                 this.getList({ name: 'all' });
             },
@@ -124,7 +129,7 @@
             handleClick(tab) {
                 this.activeName = tab.name;
                 this.getList();
-            }
+            },
         }
     };
 </script>

@@ -8,7 +8,7 @@
                     <el-input style="width:300px" :maxlength="16" v-model="form.name" placeholder="请输入产品名称"></el-input>
                 </el-form-item>
                 <el-form-item label="礼包类型">
-                    <el-select v-model="form.type" placeholder="下拉搜索供应商">
+                    <el-select v-model="form.type" @change="changeGiftStatus" placeholder="下拉搜索供应商">
                         <el-option label="普通礼包" value="1"></el-option>
                         <el-option label="升级礼包" value="2"></el-option>
                     </el-select>
@@ -59,7 +59,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="产品重量">
-                    <el-input style="width:300px" :maxlength="16" v-model="form.weight" placeholder="请输入产品重量"></el-input>
+                    <el-input-number :controls="false" style="width:300px" :min="0" v-model="form.weight" placeholder="请输入产品重量"></el-input-number>
                 </el-form-item>
                 <el-form-item label="产品参数">
                     <div class="product-param">
@@ -98,13 +98,13 @@
                 </el-form-item>
                 <div class="pro-title">使用限制</div>
                 <el-form-item>
-                    <el-checkbox label="不支持优惠卷" v-model="limit.notSupportCoupon"></el-checkbox>
-                    <el-checkbox label="不支持积分抵扣" v-model="limit.notSupportScore"></el-checkbox>
+                    <el-checkbox disabled label="不支持优惠卷" v-model="limit.notSupportCoupon"></el-checkbox>
+                    <el-checkbox label="不支持1元积分抵扣" v-model="limit.notSupportScore"></el-checkbox>
                 </el-form-item>
                 <el-form-item>
-                    <el-checkbox label="不支持退款" v-model="limit.notSupportRetMoney"></el-checkbox>
-                    <el-checkbox label="不支持换货" v-model="limit.notSupportRetChange"></el-checkbox>
-                    <el-checkbox label="不支持退货" v-model="limit.notSupportRetGoods"></el-checkbox>
+                    <el-checkbox :disabled="form.type == 2" label="不支持退款" v-model="limit.notSupportRetMoney"></el-checkbox>
+                    <el-checkbox :disabled="form.type == 2" label="不支持换货" v-model="limit.notSupportRetChange"></el-checkbox>
+                    <el-checkbox :disabled="form.type == 2" label="不支持退货" v-model="limit.notSupportRetGoods"></el-checkbox>
                 </el-form-item>
                 <hr style="border: 0;height: 1px;background-color: #eee;"/>
                 <el-form-item label="">
@@ -136,7 +136,7 @@
                 </el-form-item>
                 <div class="pro-title">赠品</div>
                 <el-form-item>
-                    <el-checkbox label="是否设置购买时间" v-model="gifts.isSetBuyTime"></el-checkbox>
+                    <el-checkbox label="是否设置优惠券" v-model="gifts.isSetBuyTime"></el-checkbox>
                 </el-form-item>
                 <el-form-item v-if="gifts.isSetBuyTime">
                     <draggable v-model="selectedCoupon" >
@@ -150,7 +150,7 @@
                     <el-button type="primary" @click="showAddCouList">添加优惠券</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-checkbox label="经验值" v-model="gifts.isSetExp"></el-checkbox>
+                    <el-checkbox v-if="form.type == 2" label="经验值" v-model="gifts.isSetExp"></el-checkbox>
                 </el-form-item>
                 <el-form-item v-if="gifts.isSetExp" label="设置赠送经验值" style="margin-left: 85px">
                     <el-input style="width:300px" :maxlength="16" v-model="form.experience" placeholder="请输入经验值"></el-input> 点
@@ -810,6 +810,19 @@
             confirmCoupon() {
                 this.isShowCouponList = false;
                 this.selectedCoupon.push(...this.tmpCouponList);
+            },
+            // 修改礼包状态
+            changeGiftStatus(status) {
+                if (status == 1) {
+                    this.gifts.isSetExp = false;
+                    this.limit.notSupportCoupon = true; // 不支持优惠券
+                    this.form.experience = '';
+                } else {
+                    this.limit.notSupportCoupon = true; // 不支持优惠券
+                    this.limit.notSupportRetMoney = true; // 不支持退款
+                    this.limit.notSupportRetChange = true; // 不支持换货
+                    this.limit.notSupportRetGoods = true; // 不支持退货
+                }
             },
             // 返回
             goBack() {

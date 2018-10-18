@@ -962,9 +962,9 @@ export default new Router({
                 },
                 {
                     name: 'logistics',
-                    path: '/expMange',
+                    path: '/logistics',
                     component: resolve => require(['../components/page/OrderManage/OrderManage/Logistics.vue'], resolve),
-                    meta: { title: '物流详情', url: '/dashboard' }
+                    meta: { title: '物流详情', url: '/logistics' }
                 },
                 {
                     name: 'giftOrderList',
