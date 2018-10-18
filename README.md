@@ -38,3 +38,15 @@ request.demo(参数).then(res=>{}).catch(err=>{})
 ## 访问
 开发地址： [http://devadmin.sharegoodsmall.com/](http://devadmin.sharegoodsmall.com/)
 测试地址： [http://testadmin.sharegoodsmall.com](http://testadmin.sharegoodsmall.com)
+
+
+
+## 本地服务
+请在config.js配置需要代理的服务器地址
+[http://localhost:8989](http://localhost:8989)
+
+```bash
+npm run server
+```
+
+> 
