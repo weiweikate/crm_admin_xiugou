@@ -7,13 +7,13 @@
                     <el-form-item prop="status" label="状态" label-width="120">
                         <el-select v-model="form.status" placeholder="请选择">
                             <el-option label="全部状态" value=""></el-option>
-                            <el-option label="待推送" value="1"></el-option>
-                            <el-option label="已推送" value="2"></el-option>
-                            <el-option label="取消推送" value="3"></el-option>
+                            <el-option label="待推送" value="100"></el-option>
+                            <el-option label="已推送" value="200"></el-option>
+                            <el-option label="取消推送" value="300"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item prop="name" label="发布者" label-width="120">
-                        <el-input style="width:200px" placeholder="请输入发布者" v-model="form.name"></el-input>
+                    <el-form-item prop="keyword" label="发布者/关键词" label-width="120">
+                        <el-input style="width:200px" placeholder="请输入发布者/关键词" v-model="form.keyword"></el-input>
                     </el-form-item>
                     <el-form-item prop="date" label="时间" label-width="120">
                         <el-date-picker
@@ -56,7 +56,7 @@
                     <el-table-column prop="userLevel" label="推送用户" align="center"></el-table-column>
                     <el-table-column label="推送区域">
                         <template slot-scope="scope">
-                            <div v-for="(v,k) in scope.row.provinces" :key="k">{{v.provinceName}}:{{v.cityNames}}</div>
+                            <div class="area-detail" v-for="(v,k) in scope.row.provinces" :key="k" :title="v.cityNames">{{v.provinceName}}:{{v.cityNames}}</div>
                         </template>
                     </el-table-column>
                     <el-table-column label="推送时间" align="center">
@@ -153,9 +153,9 @@ export default {
             formLabelWidth: '100px',
             form: {
                 status: '',
-                name: '',
+                keyword: '',
                 date: '',
-                nType: '1'
+                type: 100
             },
             exportForm: {
                 level: ''
@@ -193,10 +193,10 @@ export default {
             this.index = num;
             if (num == 0) { // 公告
                 this.nav = ['服务管理', '公告'];
-                this.form.nType = 1;
+                this.form.type = 100;
             } else { // 通知
                 this.nav = ['服务管理', '通知'];
-                this.form.nType = 2;
+                this.form.type = 200;
             }
             this.page.currentPage = 1;
             this.getList(this.page.currentPage);
@@ -207,8 +207,8 @@ export default {
                 page: val,
                 pageSize: this.page.pageSize,
                 status: this.form.status,
-                name: this.form.name,
-                nType: this.form.nType,
+                keyword: this.form.keyword,
+                type: this.form.type,
                 startTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
                 endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : ''
             };
@@ -433,6 +433,11 @@ export default {
                     }
                 }
             }
+        }
+        .area-detail{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
     }

@@ -160,15 +160,20 @@
             getProducts(params) {
                 this.resetValue();
                 if (params.firstCategoryIds) {
-                    if (params.firstCategoryIds.indexOf(',') == -1) {
-                        this.firstTagIds = this.firstCategoryIds = [Number(params.firstCategoryIds)];
-                        this.firstCategoryNames = [params.firstCategoryNames];
+                    if (params.firstCategoryIds != -1) {
+                        if (params.firstCategoryIds.indexOf(',') == -1) {
+                            this.firstTagIds = this.firstCategoryIds = [Number(params.firstCategoryIds)];
+                            this.firstCategoryNames = [params.firstCategoryNames];
+                        } else {
+                            this.firstTagIds = this.firstCategoryIds = this.toNumber(params.firstCategoryIds.split(','));
+                            this.firstCategoryNames = params.firstCategoryNames.split(',');
+                        }
+                        for (const i in this.firstTagIds) {
+                            this.firstClassifyTags.push({ id: this.firstTagIds[i], name: this.firstCategoryNames[i] });
+                        }
                     } else {
-                        this.firstTagIds = this.firstCategoryIds = this.toNumber(params.firstCategoryIds.split(','));
-                        this.firstCategoryNames = params.firstCategoryNames.split(',');
-                    }
-                    for (const i in this.firstTagIds) {
-                        this.firstClassifyTags.push({ id: this.firstTagIds[i], name: this.firstCategoryNames[i] });
+                        this.firstCategoryIds = -1;
+                        this.checkAll = true;
                     }
                 } else {
                     this.firstCategoryNames = this.firstTagIds = this.firstCategoryIds = [];
@@ -265,11 +270,23 @@
                 // 获取一级类目并回显选中状态
                 request.queryProductCategoryList(data).then(res => {
                     that.first = res.data.data;
+                    if (that.firstCategoryIds == -1) {
+                        that.firstCategoryIds = [];
+                        that.firstCategoryNames = [];
+                        that.firstTagIds = [];
+                        that.firstClassifyTags = [];
+                    }
                     res.data.data.forEach(function(v, k) {
-                        if (that.firstTagIds.indexOf(v.id) != -1) {
+                        if (that.firstTagIds.indexOf(v.id) != -1 || that.checkAll) {
                             that.firstChecked[k] = true;
                         } else {
                             that.firstChecked[k] = false;
+                        }
+                        if (that.checkAll) {
+                            that.firstCategoryNames.push(v.name);
+                            that.firstTagIds.push(v.id);
+                            that.firstCategoryIds.push(v.id);
+                            that.firstClassifyTags.push({ id: v.id, name: v.name });
                         }
                     });
                     that.loading = false;

@@ -42,7 +42,8 @@
                 </el-form-item>
                 <el-form-item label="可用品类:">
                     <div style="margin-left: 71px">
-                        <div class="classify-item" v-if="detail.firstCategoryNames" :title="detail.firstCategoryNames">一级类目：{{detail.firstCategoryNames}}</div>
+                        <div class="classify-item" v-if="detail.firstCategoryNames!='全品类'" :title="detail.firstCategoryNames">一级类目：{{detail.firstCategoryNames}}</div>
+                        <div class="classify-item" v-else>{{detail.firstCategoryNames}}</div>
                         <div class="classify-item" v-if="detail.secondCategoryNames" :title="detail.secondCategoryNames">二级类目：{{detail.secondCategoryNames}}</div>
                         <div class="classify-item" v-if="detail.thirdCategoryNames" :title="detail.thirdCategoryNames">三级类目：{{detail.thirdCategoryNames}}</div>
                         <div class="classify-item" v-if="detail.productIds" :title="detail.productIds">产品ID：{{detail.productIds}}</div>
