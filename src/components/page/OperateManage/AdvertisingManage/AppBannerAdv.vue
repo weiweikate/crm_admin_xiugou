@@ -224,7 +224,7 @@
                 pageType = typeof navName === 'string' ? Number(pageType) : pageType;
                 this.title = pageType === 8 ? '添加' : '添加banner图片';
                 if (pageType === 6) {
-                    this.linkTypeList = [{ type: '链接', id: 6 }, { type: '专题', id: 2 }];
+                    this.linkTypeList = [{ type: '链接', id: 6 }, { type: '专题', id: 2 }, { type: '产品', id: 1 }, { type: '礼包', id: 5 }];
                 } else if (pageType === 8) {
                     this.linkTypeList = [{
                         type: '链接产品',

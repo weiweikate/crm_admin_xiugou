@@ -54,9 +54,9 @@
                     </el-table-column>
                     <el-table-column prop="title" label="标题" align="center"></el-table-column>
                     <el-table-column prop="userLevel" label="推送用户" align="center"></el-table-column>
-                    <el-table-column label="推送区域" align="center">
+                    <el-table-column label="推送区域">
                         <template slot-scope="scope">
-
+                            <div v-for="(v,k) in scope.row.provinces" :key="k">{{v.provinceName}}:{{v.cityNames}}</div>
                         </template>
                     </el-table-column>
                     <el-table-column label="推送时间" align="center">
@@ -75,10 +75,10 @@
                         <template slot-scope="scope">
                             <template v-if="scope.row.status==100">待推送</template>
                             <template v-if="scope.row.status==200">已推送</template>
-                            <template v-if="scope.row.status==300">取消推送</template>
+                            <template v-if="scope.row.status==300">已取消</template>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" align="center">
+                    <el-table-column label="操作" min-width="120">
                         <template slot-scope="scope">
                             <el-button type="primary" size="small" @click="detailItem(scope.$index,scope.row)">查看详情
                             </el-button>
@@ -205,17 +205,17 @@ export default {
         getList(val) {
             const data = {
                 page: val,
+                pageSize: this.page.pageSize,
                 status: this.form.status,
                 name: this.form.name,
                 nType: this.form.nType,
-                beginTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
+                startTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
                 endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : ''
             };
             this.tableLoading = true;
             request.queryNoticeList(data).then(res => {
                 this.tableLoading = false;
                 for (const i in res.data.data) {
-                    res.data.data[i].userLevel = res.data.data[i].userLevel.substring(1, res.data.data[i].userLevel.length - 1);
                     const arr = res.data.data[i].userLevel.split(',');
                     const temp = [];
                     for (const k in arr) {
@@ -257,8 +257,8 @@ export default {
         },
         // 详情
         detailItem(index, row) {
-            localStorage.setItem('addNoticeInform', row.id);
-            this.$router.push({ path: '/noticeInformDetail', query: { id: row.id }});
+            sessionStorage.setItem('noticeInformId', row.id);
+            this.$router.push({ path: '/noticeInformDetail', query: { noticeInformId: row.id }});
         },
         // 再次推送,取消推送
         upStatusItem(id, status) {

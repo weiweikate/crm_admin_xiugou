@@ -19,8 +19,8 @@
                     <el-form-item label="推送时间">
                         <el-date-picker
                             v-model="form.date"
+                            disabled=""
                             type="datetimerange"
-                            format="yyyy-MM-dd HH:mm:ss"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
                         >
@@ -50,6 +50,9 @@
                         <div style="margin-left: 112px">
                             <div v-for="(v,k) in form.provinces" :key="k">{{v.provinceName}}:{{v.cityNames}}</div>
                         </div>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="back">返回列表</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -88,8 +91,7 @@
         },
         activated() {
             this.id =
-                this.$route.query.id ||
-                JSON.parse(sessionStorage.getItem('noticeInformDetail').id);
+                this.$route.query.noticeInformId || sessionStorage.getItem('noticeInformId');
             this.getDetail();
         },
         methods: {
@@ -101,17 +103,20 @@
                 this.loading = true;
                 request.queryNoticeById(data).then(res => {
                     this.form = res.data;
+                    this.form.date = [];
                     this.index = res.data.type == 100 ? 0 : 1;
+                    this.form.date[0] = res.data.startTime ? moment(res.data.startTime).format('YYYY-MM-DD HH:mm:ss') : '';
+                    this.form.date[1] = res.data.endTime ? moment(res.data.endTime).format('YYYY-MM-DD HH:mm:ss') : '';
                     request.getUserLevelList({}).then(resData => {
                         let count = 0;
                         const arr = res.data.userLevel.split(',');
-                        for (const i in resData.data.data) {
-                            const name = resData.data.data[i].name;
+                        for (const i in resData.data) {
+                            const name = resData.data[i].name;
                             if (this.users.indexOf(name) == -1) {
                                 this.users.push(name);
                             }
                             for (const j in arr) {
-                                if (arr[j] == resData.data.data[i].id) {
+                                if (arr[j] == resData.data[i].id) {
                                     count++;
                                     if (this.checkedUsers.indexOf(name) == -1) {
                                         this.checkedUsers.push(name);
@@ -129,18 +134,17 @@
                             this.checkAll = true;
                             this.isIndeterminate = false;
                         }
-                    })
-                        .catch(err => {
-                            console.log(err);
-                        });
-
-                    this.form.date[0] = res.data.startTime ? moment(res.data.startTime).format('YYYY-MM-DD HH:mm:ss') : '';
-                    this.form.date[1] = res.data.endTime ? moment(res.data.endTime).format('YYYY-MM-DD HH:mm:ss') : '';
-                    this.loading = false;
-                })
-                    .catch(err => {
-                        this.loading = false;
+                    }).catch(err => {
+                        console.log(err);
                     });
+                    this.loading = false;
+                }).catch(err => {
+                    this.loading = false;
+                });
+            },
+            // 返回列表
+            back() {
+                this.$router.push('/noticeInformManage');
             }
         }
     };
@@ -254,21 +258,14 @@
             padding: 0 50px 20px 100px
         }
         .el-checkbox-group {
-            margin-left: 112px;
+            margin-left: 135px;
         }
         .el-radio {
             display: block;
             margin-left: 0;
             line-height: 32px;
         }
-        .el-date-editor {
-            position: absolute;
-            top: 32px;
-            left: 210px;
-            .el-input__inner {
-                width: 200px;
-            }
-        }
+
         .el-date-editor.el-input {
             width: 200px
         }

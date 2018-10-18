@@ -21,6 +21,7 @@
                             format="yyyy-MM-dd HH:mm:ss"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
+                            :picker-options="pickerOptions"
                         >
                         </el-date-picker>
                     </el-form-item>
@@ -30,7 +31,7 @@
                         </el-checkbox>
                         <div style="margin: 15px 0;"></div>
                         <el-checkbox-group v-model="checkedUsers" @change="handleCheckedUsersChange">
-                            <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{item.name}}
+                            <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{item}}
                             </el-checkbox>
                         </el-checkbox-group>
                         <div style="margin-left: 112px">
@@ -130,8 +131,7 @@
         activated() {
             this.formData();
             this.id =
-                this.$route.query.id ||
-                JSON.parse(sessionStorage.getItem('noticeInformDetail').id);
+                this.$route.query.noticeId || sessionStorage.getItem('noticeId');
             this.getDetail();
         },
         methods: {
@@ -143,25 +143,28 @@
                 this.loading = true;
                 request.queryNoticeById(data).then(res => {
                     this.form = res.data;
+                    this.form.date = [];
+                    this.form.date[0] = res.data.startTime ? moment(res.data.startTime).format('YYYY-MM-DD HH:mm:ss') : '';
+                    this.form.date[1] = res.data.endTime ? moment(res.data.endTime).format('YYYY-MM-DD HH:mm:ss') : '';
                     request.getUserLevelList({}).then(resData => {
                         let count = 0;
                         const arr = res.data.userLevel.split(',');
-                        for (const i in resData.data.data) {
-                            const name = resData.data.data[i].name;
+                        for (const i in resData.data) {
+                            const name = resData.data[i].name;
                             if (this.users.indexOf(name) == -1) {
                                 this.users.push(name);
                             }
                             for (const j in arr) {
-                                if (arr[j] == resData.data.data[i].id) {
+                                if (arr[j] == resData.data[i].id) {
                                     count++;
                                     if (this.checkedUsers.indexOf(name) == -1) {
                                         this.checkedUsers.push(name);
                                     }
                                 }
-                                if (arr[j] == 'new') {
+                                if (arr[j] === 'new') {
                                     this.newRegist = true;
                                 }
-                                if (arr[j] == 'no') {
+                                if (arr[j] === 'no') {
                                     this.notRegist = true;
                                 }
                             }
@@ -170,19 +173,13 @@
                             this.checkAll = true;
                             this.isIndeterminate = false;
                         }
-                    })
-                        .catch(err => {
-                            console.log(err);
-                        });
-
-                    this.form.date[0] = res.data.startTime ? moment(res.data.startTime).format('YYYY-MM-DD HH:mm:ss') : '';
-                    this.form.date[1] = res.data.endTime ? moment(res.data.endTime).format('YYYY-MM-DD HH:mm:ss') : '';
-                    this.count = res.data.content.length;
-                    this.loading = false;
-                })
-                    .catch(err => {
-                        this.loading = false;
+                    }).catch(err => {
+                        console.log(err);
                     });
+                    this.loading = false;
+                }).catch(err => {
+                    this.loading = false;
+                });
             },
             formData() {
                 this.form = {
@@ -256,20 +253,6 @@
                         return;
                     } else {
                         const params = this[formName];
-                        //
-                        // if (!params.pushType) {
-                        //     this.$message.warning('请选择推送方式!');
-                        //     return;
-                        // } else {
-                        //     if (params.pushType == 2) {
-                        //         if (!this.date) {
-                        //             this.$message.warning('请选择推送时间!');
-                        //             return;
-                        //         } else {
-                        //             params.orderTime = moment(this.date).format('YYYY-MM-DD HH:mm:ss');
-                        //         }
-                        //     }
-                        // }
                         if (!this.form.date.length) {
                             this.$message.warning('请选择推送时间');
                             return;
@@ -281,14 +264,28 @@
                             this.$message.warning('请选择推送人群');
                             return;
                         }
-                        if (this.newRegist) {
-                            params.userLevel += 'new' + '，';
+                        if (this.newRegist && params.userLevel.indexOf('new') == -1) {
+                            params.userLevel += 'new' + ',';
                         }
-                        if (this.notRegist) {
-                            params.userLevel += 'no' + '，';
+                        if (this.notRegist && params.userLevel.indexOf('no') == -1) {
+                            params.userLevel += 'no' + ',';
                         }
                         params.id = this.id;
-                        params.userLevel = params.userLevel.slice(0, -1);
+                        if (params.userLevel.lastIndexOf(',') == params.userLevel.length - 1) {
+                            params.userLevel = params.userLevel.slice(0, -1);
+                        }
+                        if (!this.newRegist || !this.notRegist) {
+                            params.userLevel = params.userLevel.split(',');
+                            for (const i in params.userLevel) {
+                                if (params.userLevel[i] == 'new' && !this.newRegist) {
+                                    params.userLevel.splice(i, 1);
+                                }
+                                if (params.userLevel[i] == 'no' && !this.notRegist) {
+                                    params.userLevel.splice(i, 1);
+                                }
+                            }
+                            params.userLevel = params.userLevel.join(',');
+                        }
                         this.btnLoading = true;
                         request.saveNotice(params).then(res => {
                             this.$message.success(res.msg);
@@ -303,9 +300,12 @@
             // 选择区域
             chooseSendArea() {
                 this.isShowArea = true;
+                for (const i in this.form.provinces) {
+                    this.form.provinces[i].includeAreaName = this.form.provinces[i].provinceName + ':' + this.form.provinces[i].cityNames;
+                    this.form.provinces[i].includeArea = this.form.provinces[i].provinceCode + ':' + this.form.provinces[i].cityCodes;
+                }
                 this.chooseData = this.form.provinces;
             },
-            // 选择区域
             chooseAreaToast(getArea) {
                 this.isShowArea = false;
                 if (getArea) {
@@ -447,16 +447,6 @@
             display: block;
             margin-left: 0 !important;
             line-height: 32px;
-        }
-        .send-type{
-            .el-date-editor {
-                position: absolute;
-                top: 32px;
-                left: 210px;
-                .el-input__inner {
-                    width: 200px;
-                }
-            }
         }
         .el-date-editor.el-input {
             width: 200px
