@@ -24,6 +24,7 @@
                             format="yyyy-MM-dd HH:mm:ss"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
+                            :picker-options="pickerOptions"
                         >
                         </el-date-picker>
                     </el-form-item>
@@ -133,7 +134,7 @@
                 notRegist: false, // 未注册用户
                 newRegist: false, // 新注册用户
                 isShowArea: false,
-                chooseData: []
+                chooseData: [],
             };
         },
         created() {
@@ -238,10 +239,10 @@
                             return;
                         }
                         if (this.newRegist) {
-                            params.userLevel += 'new' + '，';
+                            params.userLevel += 'new' + ',';
                         }
                         if (this.notRegist) {
-                            params.userLevel += 'no' + '，';
+                            params.userLevel += 'no' + ',';
                         }
                         params.userLevel = params.userLevel.slice(0, -1);
                         this.btnLoading = true;
@@ -403,16 +404,7 @@
             margin-left: 0 !important;
             line-height: 32px;
         }
-        .send-type{
-            .el-date-editor {
-                position: absolute;
-                top: 32px;
-                left: 210px;
-                .el-input__inner {
-                    width: 200px;
-                }
-            }
-        }
+
         .el-date-editor.el-input {
             width: 200px
         }

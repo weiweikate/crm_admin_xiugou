@@ -13,6 +13,9 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 // const env = require('../config/prod.env')
 const env = config.build[process.env.env_config + 'Env'];
+const getRepoInfo = require('git-repo-info');
+const info = getRepoInfo();
+const ut = require('../src/utils/index.js');
 
 const webpackConfig = merge(baseWebpackConfig, {
     module: {
@@ -31,6 +34,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
         new webpack.DefinePlugin({
+            'VERSION': `"${ut.formatTime(new Date())}--${info.tag}"`,
             'process.env': env
         }),
         new UglifyJsPlugin({
