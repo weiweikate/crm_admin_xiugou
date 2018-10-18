@@ -72,7 +72,7 @@ export const findReturnProductInfo = '/admin/returnProduct/findReturnProductInfo
 // 退货订单详情
 export const sendEcReturnProduct = '/admin/returnProduct/sendEcReturnProduct';
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-export const findLogisticsDetail = ['/logistics/findLogisticsDetail', { methods: 'get' }]; // 物流测试
+export const findLogisticsDetail = ['/order/logistics/findLogisticsDetail', { methods: 'get' }]; // 物流测试
 
 // 订单管理
 // 订单列表

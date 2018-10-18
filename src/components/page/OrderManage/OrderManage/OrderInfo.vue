@@ -510,8 +510,8 @@
             },
             // 查看物流信息
             showLogisticsMsg() {
-                sessionStorage.setItem('findExpressId', this.orderId);
-                this.$router.push({ name: 'logistics', query: { findExpressId: this.orderId }});
+                sessionStorage.setItem('findExpressId', this.orderMsg.expressNo);
+                this.$router.push({ name: 'logistics', query: { findExpressId: this.orderMsg.expressNo }});
             },
             // 获取提货仓列表
             getStoreList() {
