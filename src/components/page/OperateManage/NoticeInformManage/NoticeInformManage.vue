@@ -8,6 +8,7 @@
                         <el-select v-model="form.status" placeholder="请选择">
                             <el-option label="全部状态" value=""></el-option>
                             <el-option label="待推送" value="100"></el-option>
+                            <el-option label="正在推送" value="150"></el-option>
                             <el-option label="已推送" value="200"></el-option>
                             <el-option label="取消推送" value="300"></el-option>
                         </el-select>
@@ -74,6 +75,7 @@
                     <el-table-column label="状态" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.status==100">待推送</template>
+                            <template v-if="scope.row.status==150">正在推送</template>
                             <template v-if="scope.row.status==200">已推送</template>
                             <template v-if="scope.row.status==300">已取消</template>
                         </template>
@@ -84,9 +86,9 @@
                             </el-button>
                             <el-button type="success" v-if="index==0" size="small" @click="editItem(scope.row)">编辑
                             </el-button>
-                            <el-button type="warning" size="small" @click="upStatusItem(scope.row.id,2)"
-                                       v-if="scope.row.status==200">再次推送
-                            </el-button>
+                            <!--<el-button type="warning" size="small" @click="upStatusItem(scope.row.id,2)"-->
+                                       <!--v-if="scope.row.status==200">再次推送-->
+                            <!--</el-button>-->
                             <el-button type="warning" size="small" @click="upStatusItem(scope.row.id,3)"
                                        v-if="scope.row.status==100">取消推送
                             </el-button>
@@ -263,10 +265,10 @@ export default {
         // 再次推送,取消推送
         upStatusItem(id, status) {
             this.tipsMask = true;
-            if (status == 2) {
-                this.info = '确定再次推送？';
-                this.url = 'cancelNoticeById';
-            }
+            // if (status == 2) {
+            //     this.info = '确定再次推送？';
+            //     this.url = 'cancelNoticeById';
+            // }
             if (status == 3) {
                 this.info = '确定取消推送？';
                 this.url = 'cancelNoticeById';

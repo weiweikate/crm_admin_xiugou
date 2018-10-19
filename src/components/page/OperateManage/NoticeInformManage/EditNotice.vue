@@ -205,14 +205,6 @@
                 const length = this.form.content.length;
                 this.count = length;
             },
-            // 推送方式
-            changeStyle() {
-                if (this.form.pushType == 1) {
-                    this.dateDisabled = true;
-                } else {
-                    this.dateDisabled = false;
-                }
-            },
             // 推送人群选择
             handleCheckAllChange(val) {
                 this.checkedUsers = val ? this.users : [];

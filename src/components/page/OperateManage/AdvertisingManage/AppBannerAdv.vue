@@ -5,7 +5,8 @@
             <el-button @click="addItem"  type="primary" style="margin-bottom:20px" v-if="pageType!=10">添加banner图片
             </el-button>
             <el-table border :data="tableData">
-                <el-table-column type="index" label="编号" align="center"></el-table-column>
+                <el-table-column type="index" label="编号" align="center" v-if="pageType!=10" key="0"></el-table-column>
+                <el-table-column prop="firstStageId" label="编号" align="center" v-if="pageType == 10" key="12"></el-table-column>
                 <el-table-column prop="firstStageName" label="一级分类" align="center" v-if="pageType == 10" key="1"></el-table-column>
                 <el-table-column prop="" label="产品" v-if="pageType == 8" key="2" min-width="120">
                     <template slot-scope="scope">
