@@ -207,6 +207,10 @@
                         title: '运营管理',
                         subs: [
                             {
+                                index: 'showHome',
+                                title: '发现管理'
+                            },
+                            {
                                 index: 'discountCoupon',
                                 title: '优惠券设置'
                             },

@@ -606,6 +606,12 @@ export default new Router({
                 },
                 // 运营管理
                 {
+                    name: 'showHome',
+                    path: '/showHome',
+                    component: resolve => require(['../components/page/OperateManage/showField/showHome.vue'], resolve),
+                    meta: { title: '发现管理', url: '/showHome' }
+                },
+                {
                     name: 'helpCenter',
                     path: '/helpCenter',
                     component: resolve => require(['../components/page/OperateManage/HelpCenter/HelpCenter.vue'], resolve),
