@@ -102,8 +102,7 @@
                     <p v-if="isSetBuTime" style="margin: 10px 0 0 70px">可购买时间：
                         <el-date-picker
                             v-model="setBuyTime"
-                            format="yyyy-MM-dd"
-                            type="daterange"
+                            type="datetimerange"
                             range-separator="至"
                             start-placeholder="年 / 月 / 日"
                             end-placeholder="年 / 月 / 日">
@@ -341,8 +340,8 @@
                 data.productParamValueVOList = this.form.productParamValueVOList;
                 data.videoUrl = this.videoUrl;
                 data.buyLimit = this.purchaseLimit ? this.purchasevalue : 0;
-                data.beginTime = this.setBuyTime[0] === undefined ? '' : utils.formatTime(this.setBuyTime[0], 1);
-                data.endTime = this.setBuyTime[1] === undefined ? '' : utils.formatTime(this.setBuyTime[1], 1);
+                data.beginTime = this.setBuyTime[0] === undefined ? '' : utils.formatTime(this.setBuyTime[0]);
+                data.endTime = this.setBuyTime[1] === undefined ? '' : utils.formatTime(this.setBuyTime[1]);
                 data.productTagDTOList = [];
                 this.selectedTagArr.forEach(v => {
                     data.productTagDTOList.push({ tagId: v.value });

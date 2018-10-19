@@ -102,8 +102,7 @@
                     <p v-if="isSetBuTime" style="margin: 10px 0 0 70px">可购买时间：
                         <el-date-picker
                             v-model="setBuyTime"
-                            format="yyyy-MM-dd"
-                            type="daterange"
+                            type="datetimerange"
                             range-separator="至"
                             start-placeholder="年 / 月 / 日"
                             end-placeholder="年 / 月 / 日">
@@ -319,6 +318,8 @@
                     this.purchasevalue = res.data.buyLimit;
                     this.setBuyTime.push(res.data.beginTime);
                     this.setBuyTime.push(res.data.endTime);
+                    this.$set(this.setBuyTime, 0, this.setBuyTime[0]);
+                    this.$set(this.setBuyTime, 1, this.setBuyTime[1]);
                     this.isSetBuTime = !!res.data.beginTime;
                     this.videoUrl = res.data.videoUrl;
                     res.data.productParamValueVOList.forEach((v, k) => {
@@ -377,8 +378,8 @@
                 data.productParamValueVOList = this.form.productParamValueVOList;
                 data.videoUrl = this.videoUrl;
                 data.buyLimit = this.purchaseLimit ? this.purchasevalue : 0;
-                data.beginTime = this.setBuyTime[0] === undefined ? '' : utils.formatTime(this.setBuyTime[0], 1);
-                data.endTime = this.setBuyTime[1] === undefined ? '' : utils.formatTime(this.setBuyTime[1], 1);
+                data.beginTime = this.setBuyTime[0] === undefined ? '' : utils.formatTime(this.setBuyTime[0]);
+                data.endTime = this.setBuyTime[1] === undefined ? '' : utils.formatTime(this.setBuyTime[1]);
                 data.productTagDTOList = [];
                 this.selectedTagArr.forEach(v => {
                     data.productTagDTOList.push({ tagId: v.value });
@@ -507,12 +508,12 @@
                 if (!tmp) {
                     let typeId = 1;
                     let tagName = '';
-                    this.tagTypeArr.forEach((v, k)=>{
+                    this.tagTypeArr.forEach((v, k) => {
                         if (v.selected) {
                             typeId = v.id;
                             tagName = k;
                         }
-                    })
+                    });
                     const data = {
                         name: this.tagName,
                         status: 1
@@ -619,7 +620,7 @@
                 if (this.form.secCategoryId === '') return;
                 this.tagTypeArr.forEach(v => {
                     v.selected = false;
-                })
+                });
                 this.tagTypeArr[key].selected = status;
                 this.tagLoading = true;
                 request.querySysTagLibraryList({ typeId: val, secCategoryId: this.form.secCategoryId }).then(res => {
@@ -651,7 +652,7 @@
                             id: v.id,
                             name: v.name,
                             isSelected: false
-                        })
+                        });
                     });
                 }).catch(err => {
                     console.log(err);
