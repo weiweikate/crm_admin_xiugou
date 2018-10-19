@@ -207,8 +207,8 @@
             };
         },
         activated() {
-            this.status = this.$route.query.appBannerAdvStatus || this.sessionStorage.getItem('appBannerAdvStatus');
-            this.pageType = this.$route.query.appBannerAdvPageType || this.sessionStorage.getItem('appBannerAdvPageType');
+            this.status = this.$route.query.appBannerAdvStatus || sessionStorage.getItem('appBannerAdvStatus');
+            this.pageType = this.$route.query.appBannerAdvPageType || sessionStorage.getItem('appBannerAdvPageType');
             this.setConfig(this.status, this.pageType);
             this.tableData = [];
             this.getList(this.page.currentPage);
