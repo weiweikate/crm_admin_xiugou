@@ -246,6 +246,14 @@
                                 index: 'labelManage',
                                 title: '标签管理'
                             },
+                            {
+                                index: 'signInManage',
+                                title: '签到管理'
+                            },
+                            {
+                                index: 'promotionOrderManage',
+                                title: '推广订单管理'
+                            },
                             // {
                             //     index: "baseParamsSet",
                             //     title: "交易基础参数设置"

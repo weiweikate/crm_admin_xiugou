@@ -254,7 +254,7 @@
                     result: '一旦下架，不能再开启'
                 }],
                 index: '', // 删除0结束1
-                id: '', // 操作id
+                activityCode: '', // 操作code
                 isShowPop: false,
                 isShowEndPop: false,
                 multipleSelection: [] // 复选框
@@ -349,7 +349,7 @@
             endOrDelete(num, row) {
                 this.index = num;
                 this.showMask = true;
-                this.id = row.id;
+                this.activityCode = row.activityCode;
             },
             // 结束或删除操作确认取消
             closeMask(status) {
@@ -367,7 +367,7 @@
             },
             // 结束、删除
             changeStatus(data) {
-                data.id = this.id;
+                data.activityCode = this.activityCode;
                 this.btnLoading = true;
                 request.updateActiviySeckillStatus(data).then(res => {
                     this.getList(this.page.currentPage);
@@ -387,7 +387,7 @@
                 const that = this;
                 this.multipleSelection = [];
                 val.forEach((v, k) => {
-                    that.multipleSelection.push(v.id);
+                    that.multipleSelection.push(v.activityCode);
                 });
             },
             // 批量操作
@@ -399,7 +399,7 @@
                 // status 0:删除 5：结束
                 const data = {
                     status: status,
-                    ids: this.multipleSelection
+                    activityCodes: this.multipleSelection
                 };
                 request.bathUpdateActiviySeckillStatus(data).then(res => {
                     this.isShowPop = false;

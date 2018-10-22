@@ -60,7 +60,6 @@
                 <el-button type="warning" @click="orderBtn('today')">今日订单</el-button>
                 <el-button type="warning" @click="orderBtn('yesterday')">昨日订单</el-button>
                 <el-button type="warning" @click="orderBtn('threeMonths')">最近三个月订单</el-button>
-                <el-button type="warning" @click="unDealOrder">待处理订单</el-button>
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部订单" name="all">
@@ -200,10 +199,6 @@ export default {
         handleClick(tab) {
             this.activeName = tab.name;
             this.getList();
-        },
-        // 待处理订单
-        unDealOrder() {
-            this.$router.push('/undealOrder');
         },
         toAfterSale(id) {
             sessionStorage.setItem('afterSaleOprId', id);

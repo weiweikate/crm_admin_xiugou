@@ -36,7 +36,7 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 
     export default {
         components: {
@@ -44,7 +44,7 @@
         },
         data() {
             return {
-                nav: ["运营管理", "营销工具管理"],
+                nav: ['运营管理', '营销工具管理'],
                 list: [
                     // {
                     //     img: 'static/img/discountCode.png',
@@ -68,14 +68,14 @@
                         content: '创建商品套餐让顾客购买',
                         page: '/packageList'
                     }]
-            }
+            };
         },
         methods: {
             toPage(page) {
-                this.$router.push(page)
+                this.$router.push(page);
             }
         }
-    }
+    };
 </script>
 
 <style scoped lang="less">
@@ -100,12 +100,14 @@
             .title {
                 font-size: 16px;
                 font-weight: 600;
+                margin-bottom: 15px;
+                display: inline-block;
             }
             .left{
                 float: left;
             }
             .content-area{
-                margin:20px 10px 0;
+                margin:0 10px;
             }
             .clearfix{
                 clear: both;

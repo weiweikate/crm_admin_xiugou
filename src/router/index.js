@@ -702,6 +702,36 @@ export default new Router({
                     meta: { title: '产品标签管理', url: '/productLabelManage' }
                 },
                 {
+                    name: 'signInManage',
+                    path: '/signInManage',
+                    component: resolve => require(['../components/page/OperateManage/SignInManage/SignInManage.vue'], resolve),
+                    meta: { title: '签到管理', url: '/signInManage' }
+                },
+                {
+                    name: 'signInParamsSet',
+                    path: '/signInParamsSet',
+                    component: resolve => require(['../components/page/OperateManage/SignInManage/SignInParamsSet/SignInParamsSet.vue'], resolve),
+                    meta: { title: '签到参数设置', url: '/signInParamsSet' }
+                },
+                {
+                    name: 'promotionOrderManage',
+                    path: '/promotionOrderManage',
+                    component: resolve => require(['../components/page/OperateManage/PromotionOrderManage/PromotionOrderManage.vue'], resolve),
+                    meta: { title: '推广订单管理', url: '/promotionOrderManage' }
+                },
+                {
+                    name: 'promotionOrderList',
+                    path: '/promotionOrderList',
+                    component: resolve => require(['../components/page/OperateManage/PromotionOrderManage/PromotionOrderManage/PromotionOrderList.vue'], resolve),
+                    meta: { title: '推广订单查看', url: '/PromotionOrderList' }
+                },
+                {
+                    name: 'promotionOrderInfo',
+                    path: '/promotionOrderInfo',
+                    component: resolve => require(['../components/page/OperateManage/PromotionOrderManage/PromotionOrderManage/PromotionOrderInfo.vue'], resolve),
+                    meta: { title: '推广订单详情', url: '/promotionOrderInfo' }
+                },
+                {
                     name: 'baseParamsSet',
                     path: '/baseParamsSet',
                     component: resolve => require(['../components/page/BasePramConfig/BaseParamsSet.vue'], resolve),
@@ -956,13 +986,13 @@ export default new Router({
                 // {
                 //     name: 'labelManage',
                 //     path: '/labelManage',
-                //     component: resolve => require(['../components/page/OperateManage/LabelManage/LabelManage.vue'], resolve),
+                //     component: resolve => require(['../components/page/OperateManage/LabelManage/SignInManage.vue'], resolve),
                 //     meta: { title: '标签管理', url: '/labelManage' }
                 // },
                 // {
                 //     name: 'productLabel',
                 //     path: '/productLabel',
-                //     component: resolve => require(['../components/page/OperateManage/LabelManage/ProductLabel/ProductLabel.vue'], resolve),
+                //     component: resolve => require(['../components/page/OperateManage/LabelManage/SignInParamsSet/SignInParamsSet.vue'], resolve),
                 //     meta: { title: '产品标签', url: '/productLabel' }
                 // },
                 // 订单管理
@@ -971,12 +1001,6 @@ export default new Router({
                     path: '/orderList',
                     component: resolve => require(['../components/page/OrderManage/OrderManage/OrderList.vue'], resolve),
                     meta: { title: '订单管理', url: '/orderManage' }
-                },
-                {
-                    name: 'undealOrder',
-                    path: '/undealOrder',
-                    component: resolve => require(['../components/page/OrderManage/OrderManage/UndealOrder.vue'], resolve),
-                    meta: { title: '待处理订单', url: '/admin/order/queryPendingOrderPageList' }
                 },
                 {
                     name: 'orderInfo',

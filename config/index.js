@@ -10,7 +10,7 @@ const baseURL = 'http://172.16.10.19';
 // const baseURL = 'http://172.16.10.29';
 // const baseURL = 'http://172.16.10.111';
 // const baseURL = 'http://testadmin.sharegoodsmall.com';
-// const baseURL = 'http://testadmin.sharegoodsmall.com';
+// const baseURL = 'http://devadmin.sharegoodsmall.com';
 
 // 测试地址不需要端口号
 const url_1 = baseURL + ':8190';

@@ -37,9 +37,9 @@
                 <div class="item yellow" @click="toPage(3,10)">
                     类目搜索Banner广告位设置
                 </div>
-                <!--<div class="item yellow" @click="toPage(1,11)">-->
-                    <!--秀场banner推荐图-->
-                <!--</div>-->
+                <div class="item yellow" @click="toPage(1,11)">
+                    秀场banner推荐图
+                </div>
                 <!--<div class="item yellow" @click="toPage(4,12)">-->
                     <!--登录首页头图展示位-->
                 <!--</div>-->

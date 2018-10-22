@@ -37,25 +37,25 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import * as api from "@/api/OperateManage/MarketToolsManage/index.js";
-    import * as pApi from "@/privilegeList/OperateManage/MarketToolsManage/index.js";
-    import utils from "@/utils/index.js";
-    import moment from 'moment'
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import * as api from '@/api/OperateManage/MarketToolsManage/index.js';
+    import * as pApi from '@/privilegeList/OperateManage/MarketToolsManage/index.js';
+    import utils from '@/utils/index.js';
+    import moment from 'moment';
 
     export default {
-        props: ["name"],
-        components: {vBreadcrumb},
+        props: ['name'],
+        components: { vBreadcrumb },
 
         data() {
             return {
-                nav: ["运营管理",'营销工具管理', "奖品池管理",'冻结库存活动'],
+                nav: ['运营管理', '营销工具管理', '奖品池管理', '冻结库存活动'],
                 // 权限控制
                 p: {
 
                 },
 
-                tableData: [{id:111}],
+                tableData: [{ id: 111 }],
                 tableLoading: false,
                 page: {
                     currentPage: 1,
@@ -63,14 +63,14 @@
                     pageSize: 20
                 },
 
-                id: '',//操作id
+                id: ''// 操作id
 
             };
         },
 
         activated() {
             this.pControl();
-            this.submitForm(1)
+            this.submitForm(1);
         },
 
         methods: {
@@ -83,7 +83,7 @@
             },
             //   提交表单
             submitForm(val) {
-                let data = {};
+                const data = {};
                 data.page = val;
                 this.page.currentPage = val;
                 this.tableLoading = true;
@@ -100,16 +100,16 @@
                         this.tableLoading = false;
                     });
             },
-            //分页
+            // 分页
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
                 this.submitForm(val);
             },
-            //查看
-            watchItem(row){
-                this.$router.push('/packageList')
+            // 查看
+            watchItem(row) {
+                this.$router.push('/packageList');
             }
         }
     };

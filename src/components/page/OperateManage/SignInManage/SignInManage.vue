@@ -30,13 +30,13 @@
         },
         data() {
             return {
-                nav: ['运营管理', '标签管理'],
+                nav: ['运营管理', '签到管理'],
                 list: [
                     {
-                        img: 'static/img/productLabel.png',
-                        title: '产品标签类型设置',
-                        content: '产品标签分组',
-                        page: '/productLabel'
+                        img: 'static/img/signInManage.png',
+                        title: '签到管理设置',
+                        content: '每日签到秀豆设置',
+                        page: '/signInParamsSet'
                     }]
             };
         },

@@ -75,12 +75,14 @@
             .title {
                 font-size: 16px;
                 font-weight: 600;
+                margin-bottom: 15px;
+                display: inline-block;
             }
             .left{
                 float: left;
             }
             .content-area{
-                margin:20px 10px 0;
+                margin:0 10px;
             }
             .clearfix{
                 clear: both;

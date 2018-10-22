@@ -32,7 +32,7 @@
                     <el-form-item label="邮费方式">
                         <el-radio-group v-model="form.freightType" @change="chooseStyle">
                             <el-radio label="1">自定义运费</el-radio>
-                            <el-radio label="2">平台承担运费</el-radio>
+                            <el-radio label="3">平台承担运费</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item class="address-item" label="是否满包邮">
@@ -53,13 +53,13 @@
                         </div>
                         <el-form-item class="express-area">
                             默认运费
-                            <el-input class="small-inp" v-model="startUnit" @blur="checkUnit(startUnit,1)"></el-input>
+                            <el-input class="small-inp" v-model="startUnit"></el-input>
                             {{unit}}内
-                            <el-input class="small-inp" v-model="startPrice" @blur="checkUnit(startPrice,2)"></el-input>
+                            <el-input class="small-inp" v-model="startPrice"></el-input>
                             元，每增加
-                            <el-input class="small-inp" v-model="nextUnit" @blur="checkUnit(nextUnit,3)"></el-input>
+                            <el-input class="small-inp" v-model="nextUnit"></el-input>
                             {{unit}}，增加运费
-                            <el-input class="small-inp" v-model="nextPirce" @blur="checkUnit(nextPirce,4)"></el-input>
+                            <el-input class="small-inp" v-model="nextPirce"></el-input>
                             元
                             <div class="color-red">{{tips}}</div>
                             <el-table :data="tableData" border>
@@ -99,7 +99,7 @@
                             <div><span class="color-blue" @click="addSetting()">增加制定省市运费设置</span></div>
                         </el-form-item>
                         <el-form-item label="是否启用">
-                            <el-radio-group v-model="form.status" @change="chooseStyle">
+                            <el-radio-group v-model="form.status">
                                 <el-radio label="1">启用</el-radio>
                                 <el-radio label="2">关闭</el-radio>
                             </el-radio-group>
@@ -251,26 +251,26 @@
                 this.form.areaCode = this.address[2];
             },
             // checkUnit
-            checkUnit(val, num) {
-                const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
-                if (val && (!reg.test(val) || val > 999.99)) {
-                    this.$message.warning('请输入合法数据');
-                    switch (num) {
-                        case 1:
-                            this.startUnit = '';
-                            break;
-                        case 2:
-                            this.startPrice = '';
-                            break;
-                        case 3:
-                            this.nextUnit = '';
-                            break;
-                        case 4:
-                            this.nextPirce = '';
-                            break;
-                    }
-                }
-            },
+            // checkUnit(val, num) {
+            //     const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
+            //     if (val && (!reg.test(val) || val > 999.99)) {
+            //         this.$message.warning('请输入合法数据');
+            //         switch (num) {
+            //             case 1:
+            //                 this.startUnit = '';
+            //                 break;
+            //             case 2:
+            //                 this.startPrice = '';
+            //                 break;
+            //             case 3:
+            //                 this.nextUnit = '';
+            //                 break;
+            //             case 4:
+            //                 this.nextPirce = '';
+            //                 break;
+            //         }
+            //     }
+            // },
             // 确认保存
             submitForm(formName) {
                 const that = this;
@@ -278,7 +278,7 @@
                     if (!valid) {
                         return;
                     } else {
-                        console.log(this.form)
+                        console.log(this.form);
                         const data = that.form;
                         if (!that.form.provinceCode || !that.form.cityCode || !that.form.areaCode) {
                             that.$message.warning('请选择省市区！');
@@ -290,8 +290,8 @@
                                 return;
                             }
                             data.freightFreePrice = that.freightFreePrice;
+                            data.freightType = 2;
                         }
-                        console.log(this.freightFreePrice);
                         const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
                         let flag = true;
                         const list = [];
@@ -307,6 +307,18 @@
                                 cityNames: ''
                             }]
                         };
+                        let flag1 = true;
+                        if (temp.startUnit === '' || temp.startPrice === '' || temp.nextUnit === '' || temp.nextPirce === '') {
+                            this.$message.warning('请填写完整的运费设置!');
+                            flag1 = false;
+                        } else {
+                            if (reg.test(temp.startUnit) && reg.test(temp.startPrice) && reg.test(temp.nextUnit) && reg.test(temp.nextPirce)) {
+                                flag1 = true;
+                            } else {
+                                that.$message.warning('请输入合法数据');
+                                flag1 = false;
+                            }
+                        }
                         list.push(temp);
                         that.tableData.forEach(function(v, k) {
                             const tableTemp = {
@@ -317,6 +329,7 @@
                                 nextPirce: v.nextPirce
                             };
                             if (!v.freightTemplateInfoDetailList.length || v.startUnit === '' || v.startPrice === '' || v.nextUnit === '' || v.nextPirce === '') {
+                                this.$message.warning('请填写完整的运费设置!');
                                 flag = false;
                             } else {
                                 if (reg.test(v.startUnit) && reg.test(v.startPrice) && reg.test(v.nextUnit) && reg.test(v.nextPirce)) {
@@ -330,10 +343,7 @@
                         });
                         // data.freightTemplateInfoList = JSON.stringify(list);
                         data.freightTemplateInfoList = list;
-                        if (!flag) {
-                            this.$message.warning('请输入合法数据!');
-                            return;
-                        }
+                        if (!flag || !flag1) return;
                         this.btnLoading = true;
                         request.addFreightTemplate(data).then(res => {
                             that.$message.success(res.msg);
@@ -352,8 +362,8 @@
             },
             // 是否包邮
             chooseStyle() {
-                this.showTips = this.form.freightType == 2;
-                this.isShowExpress = !(this.form.freightType == 2);
+                this.showTips = this.form.freightType == 3;
+                this.isShowExpress = !(this.form.freightType == 3);
             },
             // 计价方式
             calcType() {

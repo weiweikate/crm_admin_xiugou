@@ -3,7 +3,7 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 45px',color:'#666' }">
             <div>
-                <div class="area">标签管理</div>
+                <div class="area">推广订单管理</div>
                 <div class="wrap">
                     <div class="item" v-for="(item,index) in list" :key="index" @click="toPage(item.page)">
                         <div class="left">
@@ -17,6 +17,20 @@
                     </div>
                 </div>
             </div>
+            <!--<div style="margin-top: 50px">-->
+                <!--<div class="area">设置</div>-->
+                <!--<div>-->
+                    <!--<div class="item" @click="toPage('/prizePoll')">-->
+                        <!--<div class="left">-->
+                            <!--<img src="/static/img/prizePoll.png" alt="">-->
+                        <!--</div>-->
+                        <!--<div class="left content-area">-->
+                            <!--<span class="title">奖品池管理</span><br>-->
+                            <!--<span>活动奖品编辑</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
         </el-card>
     </div>
 </template>
@@ -30,13 +44,23 @@
         },
         data() {
             return {
-                nav: ['运营管理', '标签管理'],
+                nav: ['运营管理', '推广订单管理'],
                 list: [
                     {
-                        img: 'static/img/productLabel.png',
-                        title: '产品标签类型设置',
-                        content: '产品标签分组',
-                        page: '/productLabel'
+                        img: 'static/img/secKill.png',
+                        title: '推广订单管理设置',
+                        content: '查看所有的推广订单',
+                        page: '/promotionOrderList'
+                    }, {
+                        img: 'static/img/depreciate.png',
+                        title: '套餐管理',
+                        content: '查看设置推广套餐',
+                        page: '/depreciate'
+                    }, {
+                        img: 'static/img/package.png',
+                        title: '红包翻倍周期设置',
+                        content: '可以设置红包推荐概率',
+                        page: '/packageList'
                     }]
             };
         },
