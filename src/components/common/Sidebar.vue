@@ -308,7 +308,11 @@
                             {
                                 index: 'profitDistrMange',
                                 title: '利润分配设置'
-                            }
+                            },
+                            {
+                                index: 'showValueList',
+                                title: '秀值分配设置'
+                            },
                         ]
                     },
 

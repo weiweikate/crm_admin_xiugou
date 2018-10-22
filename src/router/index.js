@@ -1094,6 +1094,18 @@ export default new Router({
                     meta: { title: '利润分配模板', url: '/admin/settlementConfig/operateSettlementConfig' }
                 },
                 {
+                    name: 'showValueList',
+                    path: '/showValueList',
+                    component: resolve => require(['../components/page/ShowValue/ShowValueList.vue'], resolve),
+                    meta: { title: '秀值分配设置', url: '/showValueList' }
+                },
+                {
+                    name: 'showValueSet',
+                    path: '/showValueSet',
+                    component: resolve => require(['../components/page/ShowValue/ShowValueSet.vue'], resolve),
+                    meta: { title: '新建利润分配模板', url: '/showValueSet' }
+                },
+                {
                     name: 'demo',
                     path: '/demo',
                     component: resolve => require(['../components/page/demo.vue'], resolve),
