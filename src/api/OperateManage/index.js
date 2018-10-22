@@ -145,6 +145,13 @@ export const addBadWord = '/config/sysBadWord/addBadWord'; // 添加敏感词
 export const deleteBadWord = ['/config/sysBadWord/deleteBadWord', { methods: 'get' }]; // 删除敏感词
 export const queryBadWord = '/config/sysBadWord/queryBadWord'; // 查询敏感词列表
 export const getAllWordsByPage = '/hotWord/getAllWordsByPage'; // 关键词分页列表
+/** ************发现管理*****************/
+export const addDiscoverCategory = '/discoverCategory/addDiscoverCategory'; // 添加分类
+export const addDiscoverArticle = '/discoverArticle/addDiscoverArticle'; // 添加文章
+export const updateDiscoverCategory = '/discoverCategory/updateDiscoverCategory'; // 编辑分类
+export const queryDiscoverCategoryPageList = '/discoverCategory/queryDiscoverCategoryPageList'; // 分类列表
+export const findDiscoverCategoryById = ['/discoverCategory/findDiscoverCategoryById', { methods: 'get' }]; // 根据id查询分类详情
+export const deleteDiscoverCategoryById = ['/discoverCategory/deleteDiscoverCategoryById', { methods: 'get' }]; // 删除分类
 
 // 优惠券
 // 分页查询优惠券

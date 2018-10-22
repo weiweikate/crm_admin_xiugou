@@ -1,5 +1,5 @@
 <template>
-    <div class="market-tools">
+    <div class="show-field">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 45px',color:'#666' }">
             <div>
@@ -36,12 +36,12 @@
                         img: 'static/img/show_list.png',
                         title: '发现列表',
                         content: '所有发布的发现',
-                        page: '/secKill'
+                        page: '/foundList'
                     }, {
                         img: 'static/img/show_item.png',
                         title: '发现分类管理',
                         content: '发现分类设置',
-                        page: '/depreciate'
+                        page: '/foundCategory'
                     }]
             };
         },
@@ -54,7 +54,7 @@
 </script>
 
 <style scoped lang="less">
-    .market-tools {
+    .show-field {
         .area {
             font-size: 18px;
             color: #222222;

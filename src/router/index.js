@@ -612,6 +612,30 @@ export default new Router({
                     meta: { title: '发现管理', url: '/showHome' }
                 },
                 {
+                    name: 'foundCategory',
+                    path: '/foundCategory',
+                    component: resolve => require(['../components/page/OperateManage/showField/found/foundCategory.vue'], resolve),
+                    meta: { title: '分类列表', url: '/foundCategory' }
+                },
+                {
+                    name: 'addFoundCategory',
+                    path: '/addFoundCategory',
+                    component: resolve => require(['../components/page/OperateManage/showField/found/addFoundCategory.vue'], resolve),
+                    meta: { title: '分类管理', url: '/addFoundCategory' }
+                },
+                {
+                    name: 'foundList',
+                    path: '/foundList',
+                    component: resolve => require(['../components/page/OperateManage/showField/found/foundList.vue'], resolve),
+                    meta: { title: '发现列表', url: '/foundList' }
+                },
+                {
+                    name: 'addFound',
+                    path: '/addFound',
+                    component: resolve => require(['../components/page/OperateManage/showField/found/addFound.vue'], resolve),
+                    meta: { title: '添加发现', url: '/addFound' }
+                },
+                {
                     name: 'helpCenter',
                     path: '/helpCenter',
                     component: resolve => require(['../components/page/OperateManage/HelpCenter/HelpCenter.vue'], resolve),
