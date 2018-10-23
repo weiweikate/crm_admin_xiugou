@@ -55,7 +55,7 @@
         components: { vBreadcrumb, tpl },
         data() {
             return {
-                nav: ['结算管理', '秀值分配设置', '新建利润分配模板'],
+                nav: ['秀值模块', '秀值分配设置', '新建利润分配模板'],
                 id: '',
                 url: '',
                 form: {

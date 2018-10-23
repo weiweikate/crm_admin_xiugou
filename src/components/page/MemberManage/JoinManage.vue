@@ -20,7 +20,7 @@
                     <el-table-column prop="id" label="邀请记录ID" align="center"></el-table-column>
                     <el-table-column prop="levelName" label="邀请层级" align="center"></el-table-column>
                     <el-table-column prop="invalidTime" label="邀请时间" align="center">
-                        <template slot-scope="scope">{{scope.row.invalidTime|formatDate}}</template>
+                        <template slot-scope="scope">{{scope.row.invalidTime|formatDateAll}}</template>
                     </el-table-column>
                     <el-table-column prop="adminName" label="发起者" align="center"></el-table-column>
                     <el-table-column label="操作" align="center">

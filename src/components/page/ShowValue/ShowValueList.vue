@@ -41,7 +41,7 @@
         components: { vBreadcrumb },
         data() {
             return {
-                nav: ['结算管理', '秀值分配设置'],
+                nav: ['秀值模块', '秀值分配设置'],
                 tableData: [{ id: 1, imgUrl: 'https://mr-test-sg.oss-cn-hangzhou.aliyuncs.com/sharegoods/TB2mMgxiIyYBuNkSnfoXXcWgVXa_!!2867551008.jpg' }]
             };
         },

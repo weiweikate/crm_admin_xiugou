@@ -316,14 +316,9 @@
                             {
                                 index: 'profitDistrMange',
                                 title: '利润分配设置'
-                            },
-                            {
-                                index: 'showValueList',
-                                title: '秀值分配设置'
-                            },
+                            }
                         ]
                     },
-
                     {
                         icon: 'icon-huiyuanzhanghaoguanli',
                         index: '11',
@@ -359,7 +354,17 @@
                             }
                         ]
                     },
-
+                    {
+                        icon: 'icon-suyuan',
+                        index: '12',
+                        title: '秀值模块',
+                        subs: [
+                            {
+                                index: 'showValueList',
+                                title: '秀值分配设置'
+                            },
+                        ]
+                    },
                     {
                         icon: 'icon-shezhi',
                         index: '10',

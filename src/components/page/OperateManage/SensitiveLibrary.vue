@@ -27,14 +27,14 @@
         <!--删除弹窗-->
         <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
         <!-- 添加弹窗 -->
-        <el-dialog title="添加敏感词" :visible.sync="dialogVisible" width="30%">
+        <el-dialog title="添加敏感词" :visible.sync="dialogVisible" width="30%" :before-close="beforeClose">
             <p style="text-align:center">
                 <span>敏感词</span>
                 <el-input v-model="senWord" style='width:210px'></el-input>
             </p>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="addSen">确 定</el-button>
-                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button @click="beforeClose">取 消</el-button>
             </span>
         </el-dialog>
     </div>
@@ -83,6 +83,10 @@ export default {
             }).catch(err => {
                 console.log(err);
             });
+        },
+        beforeClose(){
+            this.senWord = '';
+            this.dialogVisible = false;
         },
         //  获取数据
         getList(val) {

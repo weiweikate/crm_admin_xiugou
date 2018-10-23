@@ -7,7 +7,7 @@
                     <el-form :model="form">
                         <div class="title-item">邀请层级</div>
                         <el-form-item>
-                            <div class="level-area" v-for="(item,index) in levelList" @click="checkLevel(index,item.level)"
+                            <div class="level-area" v-for="(item,index) in levelList" @click="checkLevel(index,item.levelId)"
                                  :class="num==index?'checked':''">
                                 <div class="upper">
                                     <icon class="icon" ico="icon-zhucedengluyonghuming"></icon>
