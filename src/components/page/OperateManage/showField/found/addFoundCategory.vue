@@ -107,6 +107,7 @@
                 this.$refs['form'].validate((valid) => {
                     if (valid) {
                         this.btnLoading = true;
+                        this.form.updateType = 1;
                         request[this.url](this.form).then(res => {
                             this.btnLoading = false;
                             this.$message.success(res.msg);

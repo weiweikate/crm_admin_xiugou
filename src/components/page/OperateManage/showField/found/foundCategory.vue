@@ -18,7 +18,7 @@
         <el-card style="margin-top: 10px">
             <el-button type="primary" style="margin-bottom: 10px" @click="$router.push('addFoundCategory')">新建分类</el-button>
             <el-table v-loading="loading" :data="tableData" border stripe @sort-change="sortChange">
-                <el-table-column prop="code" label="编号" align="center"></el-table-column>
+                <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column label="图标" align="center">
                     <template slot-scope="scope">
                         <img :src="scope.row.icon" alt="">
@@ -70,9 +70,7 @@
                 nav: ['运营管理', '发现管理', '发布者管理'],
                 tableData: [],
                 loading: false,
-                form: {
-
-                },
+                form: {},
                 isShowDelToast: false,
                 delId: '',
                 delUrl: '',
@@ -97,7 +95,12 @@
                 });
             },
             sortChange({ column, prop, order }) {
-                console.log(column, prop, order);
+                if(order === 'ascending'){
+                    this.form.rank = 'asc';
+                }else{
+                    this.form.rank = 'desc';
+                }
+                this.getList();
             },
             // 编辑
             editFound(row) {
@@ -106,8 +109,9 @@
             },
             // 开启、关闭
             changeStatus(row, status) {
-                request.updateDiscoverCategory({ id: row.id, status: status }).then(res => {
+                request.updateDiscoverCategory({ id: row.id, status: status, updateType: '2' }).then(res => {
                     this.$message.success(res.msg);
+                    row.status = status;
                 }).catch(err => {
                 });
             },

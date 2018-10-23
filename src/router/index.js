@@ -633,7 +633,13 @@ export default new Router({
                     name: 'addFound',
                     path: '/addFound',
                     component: resolve => require(['../components/page/OperateManage/showField/found/addFound.vue'], resolve),
-                    meta: { title: '添加发现', url: '/addFound' }
+                    meta: { title: '发现管理', url: '/addFound' }
+                },
+                {
+                    name: 'articalInfo',
+                    path: '/articalInfo',
+                    component: resolve => require(['../components/page/OperateManage/showField/found/articalInfo.vue'], resolve),
+                    meta: { title: '查看', url: '/articalInfo' }
                 },
                 {
                     name: 'helpCenter',

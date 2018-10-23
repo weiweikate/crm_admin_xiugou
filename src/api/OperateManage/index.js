@@ -149,9 +149,15 @@ export const getAllWordsByPage = '/hotWord/getAllWordsByPage'; // 关键词分�
 export const addDiscoverCategory = '/discoverCategory/addDiscoverCategory'; // 添加分类
 export const addDiscoverArticle = '/discoverArticle/addDiscoverArticle'; // 添加文章
 export const updateDiscoverCategory = '/discoverCategory/updateDiscoverCategory'; // 编辑分类
+export const updateDiscoverArticle = '/discoverArticle/updateDiscoverArticle'; // 编辑文章
 export const queryDiscoverCategoryPageList = '/discoverCategory/queryDiscoverCategoryPageList'; // 分类列表
+export const queryDiscoverArticlePageList = '/discoverArticle/queryDiscoverArticlePageList'; // 文章列表
 export const findDiscoverCategoryById = ['/discoverCategory/findDiscoverCategoryById', { methods: 'get' }]; // 根据id查询分类详情
+export const findDiscoverArticleById = ['/discoverArticle/findDiscoverArticleById', { methods: 'get' }]; // 根据id查询文章详情
 export const deleteDiscoverCategoryById = ['/discoverCategory/deleteDiscoverCategoryById', { methods: 'get' }]; // 删除分类
+export const deleteDiscoverArticleById = ['/discoverArticle/deleteDiscoverArticleById', { methods: 'get' }]; // 删除文章
+export const queryArticalPublishCategoryList = ['/discoverArticle/queryCategoryList', { methods: 'get' }]; // 查询分类列表
+export const queryArticalPublishCUserList = ['/discoverArticle/queryUserList', { methods: 'get' }]; // 查询发布者列表
 
 // 优惠券
 // 分页查询优惠券

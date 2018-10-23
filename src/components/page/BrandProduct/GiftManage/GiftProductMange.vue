@@ -30,7 +30,7 @@
             </div>
             <div style="margin-top:20px">
                 <el-button :loading="btnLoading" type="primary" @click="submitForm">提交</el-button>
-                <el-button>取消</el-button>
+                <el-button @click="goBack">取消</el-button>
             </div>
         </el-card>
     </div>
@@ -195,6 +195,10 @@ export default {
                     }
                 });
             }
+        },
+        // 返回
+        goBack() {
+            this.$router.push('/giftManage');
         }
     }
 };

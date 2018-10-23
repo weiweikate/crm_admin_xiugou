@@ -1,18 +1,16 @@
 <template>
     <div class="add-found">
         <v-breadcrumb :nav="nav"></v-breadcrumb>
-        <el-card>
+        <el-card v-loading="pageLoading">
             <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-                <el-form-item prop="adminName" label="发布者">
-                    <el-select v-model="form.adminName">
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="wcj" value="1"></el-option>
+                <el-form-item prop="userId" label="发布者">
+                    <el-select v-model="form.userId">
+                        <el-option v-for="(v, k) in userList" :key="k" :label="v.nickname" :value="v.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="categoryId" label="选择分类">
                     <el-select v-model="form.categoryId">
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="wcj" value="1"></el-option>
+                        <el-option v-for="(v, k) in catcList" :key="k" :label="v.name" :value="v.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="title" label="标题">
@@ -24,6 +22,7 @@
                         :on-success="uploadSuccess1"
                         :on-remove="handleRemove1"
                         :limit="1"
+                        :before-upload="beforeUploadCoverImg"
                         :file-list="fileList1"
                         list-type="picture-card">
                         <el-button size="small" type="primary">点击上传</el-button>
@@ -33,6 +32,7 @@
                 <el-form-item label="上传图片">
                     <el-upload
                         :action="upload"
+                        :before-upload="beforeUploadImg"
                         :on-success="uploadSuccess2"
                         :on-remove="handleRemove2"
                         :limit="6"
@@ -59,6 +59,12 @@
                 </el-form-item>
                 <el-form-item label="商品推广">
                     <p class="link-position" v-for="(v, k) in linkPosition" :key="k">
+                        <span>类型</span>
+                        <el-select v-model="v.type" style="width: 120px">
+                            <el-option label="请选择类型" value=""></el-option>
+                            <el-option label="产品ID" value="1"></el-option>
+                            <el-option label="专题" value="2"></el-option>
+                        </el-select>
                         <span>链接位置</span>
                         <el-input @blur="getProductName(v)" style="width: 210px" v-model="v.id" placeholder="产品ID"></el-input>
                         <span>{{v.name}}</span>
@@ -67,7 +73,7 @@
                     <p><span class="add" @click="addPosition" type="primary">新增</span></p>
                 </el-form-item>
                 <el-form-item label="">
-                    <el-button type="primary" @click="submitForm">保 存</el-button>
+                    <el-button :loading="btnLoading" type="primary" @click="submitForm">保 存</el-button>
                     <el-button>取 消</el-button>
                 </el-form-item>
             </el-form>
@@ -87,14 +93,18 @@
             return {
                 nav: ['运营管理', '发现管理', '分类管理', '新建发布者'],
                 id: '',
+                url: '',
                 form: {
-                    adminName: '',
+                    userId: '',
                     categoryId: '',
                     title: '',
                     content: '',
                     generalize: ''
                 },
-                linkPosition: [{ id: '', name: '' }],
+                coverImgSize: '',
+                userList: [],
+                catcList: [],
+                linkPosition: [{ id: '', name: '', type: '' }],
                 editorOption: {
                     placeholder: '请输入内容',
                     modules: {
@@ -122,13 +132,15 @@
                         { required: true, message: '请输入标题名称', trigger: 'blue' },
                         { min: 1, max: 20, message: '标题的文字不能超过1~20个字符', trigger: 'change' }
                     ],
-                    adminName: [
+                    userId: [
                         { required: true, message: '请输入发布者', trigger: 'blue' }
                     ],
                     categoryId: [
                         { required: true, message: '请选择分类', trigger: 'blue' }
                     ]
-                }
+                },
+                btnLoading: false,
+                pageLoading: false
             };
         },
         computed: {
@@ -150,6 +162,56 @@
                 .addHandler('image', this.imgHandler);
         },
         methods: {
+            // 判断封面图是否符合尺寸
+            beforeUploadCoverImg(file){
+                let that = this;
+                return new Promise(function(resolve, reject) {
+                    let _URL = window.URL || window.webkitURL;
+                    let image = new Image();
+                    image.onload = function() {
+                        if((image.width == 336 && image.height == 336) || (image.width == 336 && image.height == 446) || (image.width == 336 && image.height == 250)){
+                            that.coverImgSize = `${image.width}*${image.height}`;
+                            resolve();
+                        }else{
+                            console.log(`${image.width}*${image.height}`);
+                            reject();
+                        }
+                    };
+                    image.src = _URL.createObjectURL(file);
+                }).then(
+                    () => {
+                        return file;
+                    },
+                    () => {
+                        this.$message.error("上传图片尺寸不符合!");
+                        return Promise.reject();
+                    }
+                );
+            },
+            // 判断普通图片是否符合尺寸
+            beforeUploadImg(file){
+                return new Promise(function(resolve, reject) {
+                    let _URL = window.URL || window.webkitURL;
+                    let image = new Image();
+                    image.onload = function() {
+                        if(image.width == 750 && image.height == 750){
+                            resolve();
+                        }else{
+                            console.log(`${image.width}*${image.height}`);
+                            reject();
+                        }
+                    };
+                    image.src = _URL.createObjectURL(file);
+                }).then(
+                    () => {
+                        return file;
+                    },
+                    () => {
+                        this.$message.error("上传图片尺寸不符合!");
+                        return Promise.reject();
+                    }
+                );
+            },
             uploadSuccess1(res, file, fileList) {
                 file.url = res.data;
                 this.fileList1 = fileList;
@@ -165,11 +227,47 @@
                 this.fileList2 = fileList;
             },
             // 获取信息
-            getInfo() {
+            async getInfo() {
+                this.form= {generalize: ''}
+                this.linkPosition= [];
+                this.fileList1 = [];
+                this.fileList2 = [];
+                await request.queryArticalPublishCategoryList({}).then(res=>{
+                    this.catcList = res.data;
+                })
+                await request.queryArticalPublishCUserList({}).then(res=>{
+                    this.userList = res.data;
+                })
                 if (this.id === null) {
                     this.nav[3] = '新建发布者';
+                    this.url = 'addDiscoverArticle';
                 } else {
                     this.nav[3] = '编辑发布者';
+                    this.url= 'updateDiscoverArticle';
+                    this.form.id = this.id;
+                    this.pageLoading = true;
+                    request.findDiscoverArticleById({id: this.id}).then(res=>{
+                        this.pageLoading = false;
+                        this.form.userId = res.data.userId;
+                        this.form.categoryId = res.data.categoryId;
+                        this.form.title = res.data.title;
+                        this.form.content = res.data.content;
+                        this.form.generalize = res.data.generalize.toString();
+                        if(res.data.discoverArticleProductList){
+                            res.data.discoverArticleProductList.forEach(v=>{
+                                this.linkPosition.push({id: v.code, name: v.name, type: v.type.toString()});
+                            })
+                        }
+                        res.data.sysImgFileDTOS.forEach(v=>{
+                            this.fileList2.push({url: v.originalImg})
+                        })
+                        if(res.data.coverImg !== ''){
+                            this.fileList1.push({url: res.data.coverImg})
+                        }
+                    }).catch(err=>{
+                        this.pageLoading = false;
+                        console.log(err);
+                    })
                 }
             },
             // 富文本编辑器
@@ -214,7 +312,7 @@
             },
             // 添加连接位置
             addPosition() {
-                this.linkPosition.push({ id: '', name: '' });
+                this.linkPosition.push({ id: '', name: '', type: '' });
             },
             // 删除链接
             delPosition(index) {
@@ -222,9 +320,10 @@
             },
             // 根据类型和code查询产品名称
             getProductName(row) {
+                if(!row.type) return;
                 const data = {
                     code: row.id,
-                    type: 1
+                    type: row.type
                 };
                 request.getInfoByCode(data).then(res => {
                     if (res.data === '') {
@@ -243,6 +342,7 @@
                         const imgArr1 = [];
                         const imgArr2 = [];
                         const codeArr = [];
+                        const typeArr = [];
                         if (this.fileList1.length !== 0) {
                             this.fileList1.forEach(v => {
                                 imgArr1.push(v.url);
@@ -256,17 +356,25 @@
                         if (this.linkPosition.length !== 0) {
                             this.linkPosition.forEach(v => {
                                 codeArr.push(v.id)
+                                typeArr.push(v.type)
                             });
                         }
                         const data = {
                             ...this.form,
                             coverImg: imgArr1.join(','),
                             img: imgArr2.join(','),
-                            codeList: codeArr.join(',')
+                            codeList: codeArr.join(','),
+                            typeList: typeArr.join(','),
+                            imgSize: '750*750',
+                            coverImgSize: this.coverImgSize
                         };
-                        request.addDiscoverArticle(data).then(res => {
-                            console.log(res);
+                        this.btnloading = true;
+                        request[this.url](data).then(res => {
+                            this.btnloading = false;
+                            this.$message.success(res.msg);
+                            this.$router.push('foundList');
                         }).catch(err => {
+                            this.btnloading = false;
                             console.log(err);
                         });
                     } else {

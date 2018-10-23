@@ -37,17 +37,17 @@ export default {
             productId: '',
             btnLoading: false,
             btnStyle: 'primary',
-            unit: '1',
+            unit: '包',
             unitArr: [
-                { label: '包', value: '1' },
-                { label: '箱', value: '2' },
-                { label: '件', value: '3' },
-                { label: '条', value: '4' },
-                { label: '盒', value: '5' },
-                { label: 'KG', value: '6' },
-                { label: '吨', value: '7' },
-                { label: '平米', value: '8' },
-                { label: '立方', value: '9' }
+                { label: '包', value: '包' },
+                { label: '箱', value: '箱' },
+                { label: '件', value: '件' },
+                { label: '条', value: '条' },
+                { label: '盒', value: '盒' },
+                { label: 'KG', value: 'KG' },
+                { label: '吨', value: '吨' },
+                { label: '平米', value: '平米' },
+                { label: '立方', value: '立方' }
             ],
             tableData: []
         };
