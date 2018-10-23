@@ -732,6 +732,24 @@ export default new Router({
                     meta: { title: '推广订单详情', url: '/promotionOrderInfo' }
                 },
                 {
+                    name: 'packageManage',
+                    path: '/packageManage',
+                    component: resolve => require(['../components/page/OperateManage/PromotionOrderManage/PackageManage/PackageManage.vue'], resolve),
+                    meta: { title: '套餐管理', url: '/packageManage' }
+                },
+                {
+                    name: 'addPromotionPackage',
+                    path: '/addPromotionPackage',
+                    component: resolve => require(['../components/page/OperateManage/PromotionOrderManage/PackageManage/AddPromotionPackage.vue'], resolve),
+                    meta: { title: '新建套餐', url: '/addPromotionPackage' }
+                },
+                {
+                    name: 'redPackageSet',
+                    path: '/redPackageSet',
+                    component: resolve => require(['../components/page/OperateManage/PromotionOrderManage/RedPackageSet/RedPackageSet.vue'], resolve),
+                    meta: { title: '红包翻倍周期设置', url: '/redPackageSet' }
+                },
+                {
                     name: 'baseParamsSet',
                     path: '/baseParamsSet',
                     component: resolve => require(['../components/page/BasePramConfig/BaseParamsSet.vue'], resolve),
@@ -1116,6 +1134,18 @@ export default new Router({
                     path: '/profitTpl',
                     component: resolve => require(['../components/page/SettlementMange/ProfitTpl.vue'], resolve),
                     meta: { title: '利润分配模板', url: '/admin/settlementConfig/operateSettlementConfig' }
+                },
+                {
+                    name: 'showValueList',
+                    path: '/showValueList',
+                    component: resolve => require(['../components/page/ShowValue/ShowValueList.vue'], resolve),
+                    meta: { title: '秀值分配设置', url: '/showValueList' }
+                },
+                {
+                    name: 'showValueSet',
+                    path: '/showValueSet',
+                    component: resolve => require(['../components/page/ShowValue/ShowValueSet.vue'], resolve),
+                    meta: { title: '新建利润分配模板', url: '/showValueSet' }
                 },
                 {
                     name: 'demo',

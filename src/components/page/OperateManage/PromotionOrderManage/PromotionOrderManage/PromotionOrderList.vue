@@ -68,7 +68,7 @@
                 nav: ['运营管理', '推广订单管理', '推广订单查看'],
                 activeName: 'all',
                 form: {
-                    name: '',
+                    names: '',
                     packageName: ''
                 },
                 dateRange: []

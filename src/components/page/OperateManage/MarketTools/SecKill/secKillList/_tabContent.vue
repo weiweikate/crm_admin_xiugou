@@ -87,7 +87,7 @@
             <el-table-column prop="totalNumber" label="库存数量" align="center" min-width="60"></el-table-column>
             <el-table-column label="销量" align="center" min-width="60">
                 <template slot-scope="scope">
-                    <template>{{scope.row.saleNumber?scope.row.saleNumber:'0'}}</template>
+                    <template>{{scope.row.totalNumber-scope.row.surplusNumber}}</template>
                 </template>
             </el-table-column>
             <el-table-column label="预约购买人数" align="center" min-width="60">

@@ -8,7 +8,7 @@
                     <el-input v-model="form.name" placeholder="请输入优惠券名称"></el-input>
                 </el-form-item>
                 <el-form-item label="券类型">
-                    <el-select v-model="form.type" placeholder="请选择">
+                    <el-select v-model="form.type" placeholder="请选择" @change="chooseType">
                         <el-option v-for="(v,k) in typeArr" :key="k" :label="v.name"
                                    :value="v.type"></el-option>
                     </el-select>
@@ -223,6 +223,10 @@
         },
 
         methods: {
+            // 优惠券选择切换
+            chooseType() {
+                this.form.value = '';
+            },
             // 获取优惠券详情
             getDetail() {
                 const data = {

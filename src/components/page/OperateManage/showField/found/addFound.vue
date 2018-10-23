@@ -23,7 +23,7 @@
                         :action="upload"
                         :on-success="uploadSuccess1"
                         :on-remove="handleRemove1"
-                        :limit="6"
+                        :limit="1"
                         :file-list="fileList1"
                         list-type="picture-card">
                         <el-button size="small" type="primary">点击上传</el-button>

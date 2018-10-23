@@ -8,7 +8,7 @@
                     <el-input v-model="form.name" placeholder="请输入优惠券名称"></el-input>
                 </el-form-item>
                 <el-form-item label="券类型">
-                    <el-select v-model="form.type" placeholder="请选择">
+                    <el-select v-model="form.type" placeholder="请选择" @change="chooseType">
                         <el-option v-for="(v,k) in typeArr" :key="k" :label="v.name"
                                    :value="v.type"></el-option>
                     </el-select>
@@ -203,28 +203,31 @@
             };
         },
         activated() {
-            utils.cleanFormData(this.form);
-            this.getLevelList();// 加载用户层级
-            this.queryTemplateList();// 优惠券模版
-            // 数据清除
-            this.isIndeterminate = false;
-            this.checkAll = false;
-            this.getLimit = false;
-            this.totalNumber = false;
-            this.productList = [];
-            this.day = '';
-            this.remindFlag = false;
-            this.waitDays = '';
-            this.effectiveDays = '';
-            this.isDay = false;
-            this.useConditions = '';
-            this.remindFlag = '';
-            this.checkedUsers = [];
-            this.getProducts = {};
-            this.remindDays = '';
+            this.resetValue();
         },
 
         methods: {
+            resetValue() {
+                utils.cleanFormData(this.form);
+                this.getLevelList();// 加载用户层级
+                this.queryTemplateList();// 优惠券模版
+                // 数据清除
+                this.isIndeterminate = false;
+                this.checkAll = false;
+                this.getLimit = false;
+                this.totalNumber = false;
+                this.productList = [];
+                this.day = '';
+                this.remindFlag = false;
+                this.waitDays = '';
+                this.effectiveDays = '';
+                this.isDay = false;
+                this.useConditions = '';
+                this.remindFlag = '';
+                this.checkedUsers = [];
+                this.getProducts = {};
+                this.remindDays = '';
+            },
             // 优惠券模版
             queryTemplateList() {
                 request.queryTemplateList({}).then(res => {
@@ -232,6 +235,10 @@
                 }).catch(error => {
                     console.log(error);
                 });
+            },
+            // 优惠券选择切换
+            chooseType() {
+                this.form.value = '';
             },
             // 获取用户层级列表
             getLevelList() {

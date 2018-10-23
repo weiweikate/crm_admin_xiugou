@@ -63,7 +63,7 @@
                 </el-form-item>
 
                 <el-form-item label="优惠券说明:">
-                    <span>{{detail.remarks}}</span>
+                    <span class="remark">{{detail.remarks}}</span>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -214,6 +214,11 @@
                 overflow: hidden;
             }
 
+        }
+        .remark{
+            word-break: break-all;
+            display: block;
+            margin-right: 20px;
         }
     }
 </style>

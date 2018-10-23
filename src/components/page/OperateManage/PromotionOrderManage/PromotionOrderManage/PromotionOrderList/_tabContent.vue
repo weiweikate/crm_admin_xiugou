@@ -73,7 +73,7 @@
                 </div>
                 <div class="mask-content">
                     <div class="del-tip">
-                        <div>确认取消{{name}}推广吗？</div>
+                        <div>确认取消{{names}}推广吗？</div>
                     </div>
                     <div class="del-btn-group">
                         <el-button :loading="btnLoading" @click="closeMask(true)" type="primary">确认</el-button>
@@ -103,7 +103,7 @@
                 tableData: [],
                 tableLoading: false,
                 showMask: false, // 是否显示弹窗
-                name: '',
+                names: '',
                 btnLoading: false, // 弹窗操作按钮样式
                 index: '', // 删除0结束1
                 id: '', // 操作id

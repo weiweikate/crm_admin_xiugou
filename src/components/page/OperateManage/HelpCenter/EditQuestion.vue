@@ -4,7 +4,7 @@
     <el-card :body-style="{ padding: '30px 60px' }">
         <el-form :model="form" label-width="70px">
           <el-form-item label="问题标题">
-              <el-input class="input-sty" v-model="form.questionTitle" placeholder="请输入问题标题"></el-input>
+              <el-input class="input-sty" maxlength="16" v-model="form.questionTitle" placeholder="请输入问题标题"></el-input>
           </el-form-item>
           <el-form-item label="问题详情">
             <div style="display: inline-block;width:80%">
@@ -141,11 +141,16 @@ export default {
         submitForm() {
             const data = {};
             data.title = this.form.questionTitle;
+            const reg = /^[A-Za-z_\u4e00-\u9fa5]{2,16}$/;
+            if (!reg.test(data.title)) {
+                this.$message.warning('请输入2-16位由汉字字母下划线组成的标题');
+                return;
+            }
             data.content = this.form.content;
             data.typeId = this.questionTypeId;
             data.id = this.questionId;
             request.updateHelpQuestion(data).then(res => {
-                // this.$message.success(res.data.msg);
+                this.$message.success(res.msg);
                 this.$router.push('/questionList');
             }).catch(error => {
                 console.log(error);

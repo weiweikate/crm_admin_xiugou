@@ -47,20 +47,20 @@
                 nav: ['运营管理', '推广订单管理'],
                 list: [
                     {
-                        img: 'static/img/secKill.png',
+                        img: 'static/img/promotionOrderList.png',
                         title: '推广订单管理设置',
                         content: '查看所有的推广订单',
                         page: '/promotionOrderList'
                     }, {
-                        img: 'static/img/depreciate.png',
+                        img: 'static/img/packageManage.png',
                         title: '套餐管理',
                         content: '查看设置推广套餐',
-                        page: '/depreciate'
+                        page: '/packageManage'
                     }, {
-                        img: 'static/img/package.png',
+                        img: 'static/img/redPackageSet.png',
                         title: '红包翻倍周期设置',
                         content: '可以设置红包推荐概率',
-                        page: '/packageList'
+                        page: '/RedPackageSet'
                     }]
             };
         },
