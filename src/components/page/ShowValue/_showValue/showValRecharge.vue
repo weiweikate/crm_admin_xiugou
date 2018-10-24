@@ -80,10 +80,11 @@
                 <el-radio label="single">单人充值</el-radio>
                 <el-radio label="batch">批量充值</el-radio>
             </el-radio-group>
-            <single ref="single"></single>
+            <single v-show="rechargeType == 'single'" ref="single"></single>
+            <batch v-show="rechargeType == 'batch'" ref="batch"></batch>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="rechargeDia = false">确 定</el-button>
-            <el-button @click="rechargeDia = false">取 消</el-button>
+                <el-button type="primary" @click="handleClose">确 定</el-button>
+            <el-button @click="handleClose">取 消</el-button>
           </span>
         </el-dialog>
     </div>
@@ -94,10 +95,11 @@ import request from '@/http/http';
 import { myMixinTable } from '@/JS/commom';
 import utils from '@/utils/index';
 import single from './singleRecharge';
+import batch from './batchRecharge';
 export default {
     props: ['status'],
     mixins: [myMixinTable],
-    components: {single},
+    components: { single, batch },
     data() {
         return {
             form: {
@@ -139,7 +141,22 @@ export default {
                 console.log(err);
             });
         },
-        handleClose() {},
+        handleClose() {
+            this.$refs['batch'].form = {
+                phone: '',
+                date: '',
+                tip: '',
+                signUp: '',
+                checkedUsers: []
+            };
+            this.checkedAll = false;
+            this.$refs['single'].form = {
+                phone: '',
+                money: '',
+                tip: ''
+            }
+            this.rechargeDia = false;
+        },
         // 修改充值状态
         changeRechargeType(val) {
             console.log(val);
