@@ -34,7 +34,7 @@
                     <el-table-column min-width="350px" label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button type="primary" size="small" @click="upSet(scope.$index,scope.row)">晋级设置</el-button>
-                            <el-button type="warning" size="small" @click="downSet(scope.$index,scope.row)">降级设置</el-button>
+                            <el-button type="warning" :disabled="scope.row.level == 0" size="small" @click="downSet(scope.$index,scope.row)">降级设置</el-button>
                             <!--<el-button type="primary" size="small" @click="priceLevel(scope.$index,scope.row)">价格阶层</el-button>-->
                             <el-button type="success" size="small" @click="editItem(scope.$index,scope.row)">编辑
                             </el-button>

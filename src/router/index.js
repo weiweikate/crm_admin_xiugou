@@ -1154,11 +1154,23 @@ export default new Router({
                     meta: { title: '新建利润分配模板', url: '/showValueSet' }
                 },
                 {
+                    name: 'showValueParamSet',
+                    path: '/showValueParamSet',
+                    component: resolve => require(['../components/page/ShowValue/ShowValueParamSet.vue'], resolve),
+                    meta: { title: '秀值参数设置', url: '/showValueParamSet' }
+                },
+                {
+                    name: 'showValReCharge',
+                    path: '/showValReCharge',
+                    component: resolve => require(['../components/page/ShowValue/ShowValReCharge.vue'], resolve),
+                    meta: { title: '秀值账户充值', url: '/showValReCharge' }
+                },
+                {
                     name: 'demo',
                     path: '/demo',
                     component: resolve => require(['../components/page/demo.vue'], resolve),
                     meta: { title: 'demo', url: '/admin/settlementConfig/operateSettlementConfig' }
-                }
+                },
             ]
         },
         {

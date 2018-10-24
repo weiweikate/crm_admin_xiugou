@@ -70,28 +70,28 @@
 export default {
     props: ['name'],
     computed: {
-      tplName(){
-          return this.name;
-      }
+        tplName() {
+            return this.name;
+        }
     },
-    data(){
+    data() {
         return {
             userLevel: [
-                {name: 'v0', level: '1', valueX: [0,0,0], valueY: [0,0,0], valueZ: [0,0,0]},
-                {name: 'v1', level: '2', valueX: [0,0,0], valueY: [0,0,0], valueZ: [0,0,0]},
-                {name: 'v2', level: '3', valueX: [0,0,0], valueY: [0,0,0], valueZ: [0,0,0]},
-                {name: 'v3', level: '4', valueX: [0,0,0], valueY: [0,0,0], valueZ: [0,0,0]},
-                {name: 'v4', level: '5', valueX: [0,0,0], valueY: [0,0,0], valueZ: [0,0,0]},
-                {name: 'v5', level: '6', valueX: [0,0,0], valueY: [0,0,0], valueZ: [0,0,0]},
+                { name: 'v0', level: '1', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
+                { name: 'v1', level: '2', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
+                { name: 'v2', level: '3', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
+                { name: 'v3', level: '4', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
+                { name: 'v4', level: '5', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
+                { name: 'v5', level: '6', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] }
             ],
             valueX: false,
             valueY: false,
             valueZ: false
-        }
+        };
     },
     methods: {
-        changeStatus(status, val){
-            if(!status){
+        changeStatus(status, val) {
+            if (!status) {
                 for (let i = 0; i < this.userLevel.length; i++) {
                     for (let j = 0; j < this.userLevel[i][val].length; j++) {
                         this.userLevel[i][val][j] = 0;

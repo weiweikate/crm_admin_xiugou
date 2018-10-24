@@ -47,9 +47,9 @@
         },
         methods: {
             // 编辑模版
-            editTpl(row){
-                sessionStorage.setItem('showValueTplId', row.id)
-                this.$router.push({name: 'showValueSet', query: {'showValueTplId': row.id}});
+            editTpl(row) {
+                sessionStorage.setItem('showValueTplId', row.id);
+                this.$router.push({ name: 'showValueSet', query: { 'showValueTplId': row.id }});
             }
         }
     };

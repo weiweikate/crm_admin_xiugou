@@ -1,0 +1,83 @@
+<template>
+    <div class="show-value-param-set">
+        <v-breadcrumb :nav="nav"></v-breadcrumb>
+        <el-card>
+            <div class="param-title">秀值参数设置</div>
+            <p class="tip">实际领取秀值金，现金与秀豆的分配比例</p>
+            <div class="ratio-set">
+                <p>现金比例</p>
+                <el-input-number :min="0" :max="100" :controls="false" class="inp" @input="computedBeanRation" v-model="cashRatio"></el-input-number>
+                <span>%</span>
+            </div>
+            <div class="ratio-set">
+                <p>秀豆比例</p>
+                <el-input-number :min="0" :max="100" :controls="false" disabled class="inp" v-model="beanRatio"></el-input-number>
+                <span>%</span>
+            </div>
+            <div style="clear: both"></div>
+            <p class="tip">现金兑换秀豆规</p>
+            <div class="ratio-set">
+                <el-input-number :min="0" :controls="false" class="inp" v-model="bean"></el-input-number>
+                <span>秀豆 = </span>
+            </div>
+            <div class="ratio-set">
+                <el-input-number :min="0" :controls="false" disabled class="inp" v-model="money"></el-input-number>
+                <span>元</span>
+            </div>
+            <div style="clear: both"></div>
+            <el-button type="primary">提 交</el-button>
+        </el-card>
+    </div>
+</template>
+
+<script>
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import request from '@/http/http';
+export default {
+    data() {
+        return {
+            nav: ['秀值模块', '秀值分配比例设置'],
+            cashRatio: '', // 现金比例
+            beanRatio: '', // 秀豆比例
+            bean: '', // 秀豆
+            money: 0.01
+        };
+    },
+    components: { vBreadcrumb },
+    methods: {
+        computedBeanRation() {
+            this.beanRatio = 100 - this.cashRatio;
+        }
+    }
+};
+</script>
+
+<style lang="less" scoped>
+.show-value-param-set{
+    .param-title{
+        background-color: #f7f7f7;
+        height: 60px;
+        width: 100%;
+        line-height: 60px;
+        font-weight: 700;
+        padding: 0 20px;
+        box-sizing: border-box;
+        font-size: 18px;
+    }
+    .tip{
+        padding: 50px 0 30px 20px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+    .ratio-set{
+        padding-left: 20px;
+        font-size: 14px;
+        width: 200px;
+        float: left;
+        & .inp {
+            width: 150px;
+            margin-top: 5px;
+        }
+    }
+}
+</style>

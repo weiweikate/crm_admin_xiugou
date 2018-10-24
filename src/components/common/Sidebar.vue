@@ -363,6 +363,14 @@
                                 index: 'showValueList',
                                 title: '秀值分配设置'
                             },
+                            {
+                                index: 'showValueParamSet',
+                                title: '秀值参数设置'
+                            },
+                            {
+                                index: 'showValReCharge',
+                                title: '秀值账户充值'
+                            }
                         ]
                     },
                     {

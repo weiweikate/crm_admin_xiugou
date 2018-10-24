@@ -66,20 +66,20 @@
                     beginTime: '',
                     endTime: ''
                 },
-                profitParm:[{label: '其他1', value:'1'}],
+                profitParm: [{ label: '其他1', value: '1' }],
                 active: '1',
                 isSetTime: true,
                 pageLoading: false,
                 btnLoading: false
             };
         },
-        activated(){
+        activated() {
             this.id = this.$route.query.showValueTplId || sessionStorage.getItem('showValueTplId');
             this.getInfo();
         },
         methods: {
             // 提交表单
-            submitForm(){
+            submitForm() {
 
             },
             // 获取信息
@@ -94,16 +94,16 @@
                 }
             },
             // 计算秀豆占比
-            computedShowBean(val){
+            computedShowBean(val) {
                 this.form.showBean = 100 - val;
             },
             // 切换秀值秀豆
-            toggleShowModle(val){
+            toggleShowModle(val) {
                 this.active = val;
             },
             // 是否启用时间
-            changeTimeStatus(status){
-                if(!status){
+            changeTimeStatus(status) {
+                if (!status) {
                     this.form.beginTime = '';
                     this.form.endTime = '';
                 }

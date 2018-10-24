@@ -1,7 +1,20 @@
 /*表格样式*/
 .table-block{padding: 20px 20px 60px;background: #fff}
-.block{float:right;margin-top: 10px}
+.block{float:right;margin: 10px 0}
 
 .table-block .el-form-item{margin-bottom: 0 !important;}
 .search-area{margin-bottom: 20px}
 .search-area .el-input__inner{width: 160px}
+.el-button--primary{
+    background-color: #5c9df8;
+    border-color: #5c9df8;
+}
+.el-button--primary:hover{
+    background-color: #5c9df8;
+    border-color: #5c9df8;
+    /*box-shadow: 0px 0px 6px 24px rgba(92, 157, 248, 0.5);*/
+}
+
+/*清除浮动*/
+.clear {zoom:1;}    /*==for IE6/7 Maxthon2==*/
+.clear :after {clear:both;content:'.';display:block;width: 0;height: 0;visibility:hidden;}
