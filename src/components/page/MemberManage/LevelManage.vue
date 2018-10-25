@@ -270,7 +270,7 @@
                 const data = {};
                 data.name = this[formName].name;
                 data.level = this[formName].level;
-                if (!data.name || !data.level) {
+                if (data.name === '' || data.level === '') {
                     this.$message.warning('层级、层级名称不能为空!');
                     return;
                 }

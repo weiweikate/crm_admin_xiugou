@@ -368,9 +368,8 @@
                 }
                 if (num === 1) {
                     this.isFirstAllCheck();
-                }
-                if (num === 2) { // 产品=>三级类目全部选中=>二级=>选中一级类目，清除二级类目
-                    this.isUpCheck(1);
+                } else { // 产品=>三级类目全部选中=>二级=>选中一级类目，清除二级类目
+                    this.isUpCheck(num - 1);
                 }
                 this.transValue();
             },
@@ -385,7 +384,7 @@
                     that.second.forEach(function(v, k) {
                         that.deleteTags(2, v, 'false');// 删除二级类目标签值
                     });
-                    that.deleteProductTags(item);// 删除对应产品标签值
+                    // that.deleteProductTags(item);// 删除对应产品标签值
                 } else {
                     that.deleteTags(1, item, 'false');// 移除一级类目标签值
                     that.changePreValues(item, 'delete', 1);
@@ -509,7 +508,7 @@
                         that.addTags(3, item);// 增加三级类目标签值
                         that.changePreValues(item, 'add', 3);
                         that.productList.forEach(function(v, k) {
-                            that.deleteTags(4, v, 'false');// 删除三级类目标签值
+                            that.deleteTags(4, v, 'false');// 删除产品标签值
                         });
                     } else {
                         that.deleteTags(3, item, 'false');// 移除三级类目标签值
@@ -517,6 +516,7 @@
                     }
                     that.isUpCheck(1);// 一级类目的选中状态
                     that.isUpCheck(2);// 二级类目的选中状态
+                    // that.isUpCheck(3);// 三级类目的选中状态
                     if (that.thirdCategoryId == item.id) {
                         that.changeNextValues(3, index);// 改变产品的选中状态
                         return;
@@ -589,7 +589,7 @@
             deleteProductTags(item) {
                 const that = this;
                 that.checkedList.forEach(function(v, k) {
-                    if (v.id == item.id) {
+                    if (item && v.id == item.id) {
                         for (const i in that.productTagIds) {
                             const tempId = that.productTagIds[i];
                             if (v.productIds.indexOf(tempId) != -1) {
@@ -615,7 +615,7 @@
                     }
                 } else {
                     for (const i in tempIds) {
-                        if (item.id == tempIds[i]) {
+                        if (item && item.id == tempIds[i]) {
                             tempIds.splice(i, 1);
                             tempNames.splice(i, 1);
                         }
@@ -653,7 +653,7 @@
                 const tagIds = num === 1 ? this.firstTagIds : num === 2 ? this.secondTagIds : num === 3 ? this.thirdTagIds : this.productTagIds;
                 const preClassifyId = num === 2 ? this.firstCategoryId : num === 3 ? this.secondCategoryId : this.thirdCategoryId;// 对应上一级类目id
                 const preTagIds = num === 2 ? this.secondTagIds : num === 3 ? this.thirdTagIds : this.productTagIds;// 对应上一级标签ids;
-                if (tagIds.indexOf(item.id) == -1) {
+                if (item && tagIds.indexOf(item.id) == -1) {
                     if (num != 1) {
                         if (preTagIds.indexOf(preClassifyId) == -1) {
                             tag.push(item);
@@ -667,6 +667,7 @@
             },
             // 移除标签
             deleteTags(num, item, isTag) {
+                console.log(item)
                 const classifyIds = [];// 选择框数据ids
                 const tagIds = num === 1 ? this.firstTagIds : num === 2 ? this.secondTagIds : num === 3 ? this.thirdTagIds : this.productTagIds;
                 const tag = num === 1 ? this.firstClassifyTags : num === 2 ? this.secondClassifyTags : num === 3 ? this.thirdClassifyTags : this.productTags;
@@ -675,7 +676,7 @@
                 const ids = num === 1 ? this.firstCategoryIds : num === 2 ? this.secondCategoryIds : num === 3 ? this.thirdCategoryIds : this.productIds;
 
                 for (const i in tagIds) {
-                    if (item.id == tagIds[i]) {
+                    if (item && item.id == tagIds[i]) {
                         tag.splice(i, 1);
                         tagIds.splice(i, 1);
                     }
@@ -685,7 +686,7 @@
                         classifyIds.push(v.id);
                     });
                     for (const i in classifyIds) {
-                        if (item.id == classifyIds[i]) {
+                        if (item && item.id == classifyIds[i]) {
                             classifyChecked[i] = false;
                             this.$set(classifyChecked, i, classifyChecked[i]);
                             if (num !== 4) {
@@ -697,7 +698,7 @@
                         }
                     }
                     for (const i in ids) {
-                        if (ids[i] == item.id) {
+                        if (item && ids[i] == item.id) {
                             ids.splice(i, 1);
                         }
                     }

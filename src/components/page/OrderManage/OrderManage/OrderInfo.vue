@@ -19,16 +19,16 @@
             </div>
             <div class="top">
                 <span v-if='orderStatus == 1&&orderMsg.outTradeNo' class="activite-status">当前订单状态：继续支付</span>
-                <span v-else-if='orderStatus == 1&&!orderMsg.outTradeNo' class="activite-status">当前订单状态：待支付</span>
-                <span v-else-if='orderStatus == 2' class="activite-status">当前订单状态：待发货</span>
-                <span v-else-if='orderStatus == 3' class="activite-status">当前订单状态：待收货</span>
-                <span v-else-if='orderStatus == 4' class="activite-status">当前订单状态：确认收货</span>
-                <span v-else-if='orderStatus == 5' class="activite-status">当前订单状态：已完成</span>
-                <span v-else-if='orderStatus == 6' class="activite-status">当前订单状态：已关闭(退货退款关闭)</span>
-                <span v-else-if='orderStatus == 7' class="activite-status">当前订单状态：已关闭(用户关闭)</span>
-                <span v-else-if='orderStatus == 8' class="activite-status">当前订单状态：已关闭(超时关闭)</span>
-                <span v-else-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
-                <span v-else-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
+                <span v-if='orderStatus == 1&&!orderMsg.outTradeNo' class="activite-status">当前订单状态：待支付</span>
+                <span v-if='orderStatus == 2' class="activite-status">当前订单状态：待发货</span>
+                <span v-if='orderStatus == 3' class="activite-status">当前订单状态：待收货</span>
+                <span v-if='orderStatus == 4' class="activite-status">当前订单状态：确认收货</span>
+                <span v-if='orderStatus == 5' class="activite-status">当前订单状态：已完成</span>
+                <span v-if='orderStatus == 6' class="activite-status">当前订单状态：已关闭(退货退款关闭)</span>
+                <span v-if='orderStatus == 7' class="activite-status">当前订单状态：已关闭(用户关闭)</span>
+                <span v-if='orderStatus == 8' class="activite-status">当前订单状态：已关闭(超时关闭)</span>
+                <span v-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
+                <span v-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
                 <br/>
                 <el-button v-if="orderStatus == 2" @click='orderSendOut' class="cloud-delivery-btn"
                            type="danger">推送云仓
@@ -82,7 +82,7 @@
                     <span class="content-con">订单号：{{ orderMsg.orderNum }}</span>
                     <span class="content-con">创建时间：{{ orderMsg.createTime | formatDateAll }}</span>
                     <span class="content-con" v-if="orderMsg.payTime">平台支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
-                    <span v-if='orderStatus != 1 && orderStatus != 2' class="content-con">第三方支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
+                    <span v-if='orderStatus == 5' class="content-con">第三方支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
                 </p>
                 <p class="info-content">
                     <span v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5'
@@ -105,8 +105,8 @@
                     <el-table-column prop="num" label="数量" align="center"></el-table-column>
                     <el-table-column label="买家" align="center">
                         <template slot-scope="scope">
-                            <span>{{scope.row.receiver}}</span><br/>
-                            <span>{{scope.row.recevicePhone}}</span>
+                            <span>{{scope.row.dealerName}}</span><br/>
+                            <span>{{scope.row.dealerPhone}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="status" label="交易状态" align="center">
@@ -349,6 +349,8 @@
                         v.totalPrice = res.data.totalPrice;
                         v.freightPrice = res.data.freightPrice;
                         v.isBusinessRefund = false;
+                        v.dealerName = res.data.dealerName;
+                        v.dealerPhone = res.data.dealerPhone;
                         const present = new Date().getTime();
                         if ((!v.finishTime && v.status > 1 && v.status < 6) || present < v.finishTime || v.returnProductId && (v.returnProductStatus == 7 || v.returnProductStatus == 8)) {
                             v.isBusinessRefund = true;

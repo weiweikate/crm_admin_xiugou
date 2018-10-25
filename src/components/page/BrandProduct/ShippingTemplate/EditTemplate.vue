@@ -32,7 +32,7 @@
                     <el-form-item label="邮费方式">
                         <el-radio-group v-model="form.freightType" @change="chooseStyle">
                             <el-radio label="1">自定义运费</el-radio>
-                            <el-radio label="3">平台承担运费</el-radio>
+                            <el-radio label="2">平台承担运费</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item class="address-item" label="是否满包邮" v-if="form.freightType==1">
@@ -241,7 +241,7 @@
                     that.form.status = freightTemplate.status.toString();
                     that.sendDays = freightTemplate.sendDays;
                     that.freightFreePrice = freightTemplate.freightFreePrice;
-                    if (that.freightFreePrice && freightTemplate.freightType == 2) {
+                    if (that.freightFreePrice && freightTemplate.freightType == 3) {
                         that.form.freightType = '1';
                     }
                     // that.detailData = res.data.data.userProduct;
@@ -251,8 +251,8 @@
                     that.form.provinceCode = freightTemplate.provinceCode;
                     that.form.cityCode = freightTemplate.cityCode;
                     that.form.areaCode = freightTemplate.areaCode;
-                    that.isShowExpress = freightTemplate.freightType != 3;
-                    that.checked = freightTemplate.freightType == 2;
+                    that.isShowExpress = freightTemplate.freightType != 2;
+                    that.checked = freightTemplate.freightType == 3;
                     const list = res.data.freightTemplateInfoList;
                     that.startUnit = list[0].startUnit;
                     that.startPrice = list[0].startPrice;
@@ -316,13 +316,13 @@
                             that.$message.warning('请选择省市区！');
                             return;
                         }
-                        if (that.checked) {
+                        if (that.checked && data.freightType != 2) {
                             if (!that.freightFreePrice) {
                                 that.$message.warning('请输入满包邮金额！');
                                 return;
                             }
                             data.freightFreePrice = that.freightFreePrice;
-                            data.freightType = 2;
+                            data.freightType = 3;
                         }
                         const list = [];
                         const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
@@ -339,40 +339,42 @@
                             }]
                         };
                         let flag1 = true;
-                        if (temp.startUnit === '' || temp.startPrice === '' || temp.nextUnit === '' || temp.nextPirce === '') {
-                            this.$message.warning('请填写完整的运费设置!');
-                            flag1 = false;
-                        } else {
-                            if (reg.test(temp.startUnit) && reg.test(temp.startPrice) && reg.test(temp.nextUnit) && reg.test(temp.nextPirce)) {
-                                flag1 = true;
-                            } else {
-                                that.$message.warning('请输入合法数据');
-                                flag1 = false;
-                            }
-                        }
-                        list.push(temp);
                         let flag = true;
-                        that.tableData.forEach(function(v, k) {
-                            const tableTemp = {
-                                freightTemplateInfoDetailList: v.freightTemplateInfoDetailList,
-                                startUnit: v.startUnit,
-                                startPrice: v.startPrice,
-                                nextUnit: v.nextUnit,
-                                nextPirce: v.nextPirce
-                            };
-                            if (!v.freightTemplateInfoDetailList.length || v.startUnit === '' || v.startPrice === '' || v.nextUnit === '' || v.nextPirce === '') {
+                        if (this.form.freightType != 2) {
+                            if (temp.startUnit === '' || temp.startPrice === '' || temp.nextUnit === '' || temp.nextPirce === '') {
                                 this.$message.warning('请填写完整的运费设置!');
-                                flag = false;
+                                flag1 = false;
                             } else {
-                                if (reg.test(v.startUnit) && reg.test(v.startPrice) && reg.test(v.nextUnit) && reg.test(v.nextPirce)) {
-                                    flag = true;
+                                if (reg.test(temp.startUnit) && reg.test(temp.startPrice) && reg.test(temp.nextUnit) && reg.test(temp.nextPirce)) {
+                                    flag1 = true;
                                 } else {
                                     that.$message.warning('请输入合法数据');
-                                    flag = false;
+                                    flag1 = false;
                                 }
                             }
-                            list.push(tableTemp);
-                        });
+                            list.push(temp);
+                            that.tableData.forEach(function(v, k) {
+                                const tableTemp = {
+                                    freightTemplateInfoDetailList: v.freightTemplateInfoDetailList,
+                                    startUnit: v.startUnit,
+                                    startPrice: v.startPrice,
+                                    nextUnit: v.nextUnit,
+                                    nextPirce: v.nextPirce
+                                };
+                                if (!v.freightTemplateInfoDetailList.length || v.startUnit === '' || v.startPrice === '' || v.nextUnit === '' || v.nextPirce === '') {
+                                    this.$message.warning('请填写完整的运费设置!');
+                                    flag = false;
+                                } else {
+                                    if (reg.test(v.startUnit) && reg.test(v.startPrice) && reg.test(v.nextUnit) && reg.test(v.nextPirce)) {
+                                        flag = true;
+                                    } else {
+                                        that.$message.warning('请输入合法数据');
+                                        flag = false;
+                                    }
+                                }
+                                list.push(tableTemp);
+                            });
+                        }
                         // data.freightTemplateInfoList = JSON.stringify(list);
                         data.freightTemplateInfoList = list;
                         if (!flag || !flag1) return;
@@ -394,8 +396,8 @@
             },
             // 是否包邮
             chooseStyle() {
-                this.showTips = this.form.freightType == 3;
-                this.isShowExpress = !(this.form.freightType == 3);
+                this.showTips = this.form.freightType == 2;
+                this.isShowExpress = !(this.form.freightType == 2);
             },
             // 计价方式
             calcType() {

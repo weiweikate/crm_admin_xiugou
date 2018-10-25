@@ -5,9 +5,9 @@
           <div class="currency-title">红包翻倍周期设置</div>
           <div class="currency-wrap">
               <span class="currency-small-title">每</span>
-              <el-input v-model="orderCancleTime" class="input-sty"></el-input><span class="point">天</span>
+              <el-input v-model="doubling_period" class="input-sty"></el-input><span class="point">天</span>
               <span class="currency-small-title">概率增加</span>
-              <el-input v-model="payOvertime" class="input-sty" placeholder="默认0不翻倍"></el-input><span class="point">倍</span><br />
+              <el-input v-model="increase_probability" class="input-sty" placeholder="默认0不翻倍"></el-input><span class="point">倍</span><br />
               <div class="btn-group">
                   <el-button :loading="btnLoading" type="primary" @click="submitForm">确定</el-button>
               </div>
@@ -28,11 +28,8 @@ export default {
             nav: ['运营管理', '推广订单管理', '红包翻倍周期设置'],
             bodyLoading: false,
             btnLoading: false,
-            orderCancleTime: '',
-            toBeConfirmTime: '',
-            returnGoodsTime: '',
-            returnDownTime: '',
-            payOvertime: ''
+            doubling_period: '',
+            increase_probability: ''
         };
     },
 
@@ -44,14 +41,12 @@ export default {
         // 获取数据
         getInfo() {
             const data = {
-                codes: 'time_order_cancel,pay_overtime,time_goods_confirm,time_express_send'
+                codes: 'doubling_period,increase_probability'
             };
             this.bodyLoading = true;
             request.queryConfig(data).then(res => {
-                this.orderCancleTime = res.data[0].value;
-                this.toBeConfirmTime = res.data[2].value;
-                this.returnDownTime = res.data[3].value;
-                this.payOvertime = res.data[1].value;
+                this.doubling_period = res.data[0].value;
+                this.increase_probability = res.data[1].value;
                 this.bodyLoading = false;
             }).catch(err => {
                 this.bodyLoading = false;
@@ -63,37 +58,18 @@ export default {
             const data = {
                 configVOS: [
                     {
-                        code: 'time_order_cancel',
-                        name: '订单自动取消时间',
-                        value: this.orderCancleTime,
-                        value_type: 1,
-                        status: 1
+                        code: 'doubling_period',
+                        value: this.doubling_period
                     },
                     {
-                        code: 'pay_overtime',
-                        name: '支付超时退款时间',
-                        value: this.payOvertime,
-                        value_type: 1,
-                        status: 1
-                    },
-                    {
-                        code: 'time_goods_confirm',
-                        name: '待确认收货时间',
-                        value: this.toBeConfirmTime,
-                        value_type: 1,
-                        status: 1
-                    },
-                    {
-                        code: 'time_express_send',
-                        name: '退货/换货申请运单提交倒计时',
-                        value: this.returnDownTime,
-                        value_type: 1,
-                        status: 1
+                        code: 'increase_probability',
+                        value: this.increase_probability
                     }
                 ]
             };
             const reg = /^(0|[1-9]\d*)$/;
-            if (!reg.test(this.orderCancleTime) || !reg.test(this.payOvertime) || !reg.test(this.toBeConfirmTime) || !reg.test(this.returnDownTime)) {
+            const reg1 = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
+            if (!reg.test(this.doubling_period) || !reg1.test(this.increase_probability)) {
                 this.$message.warning('请输入合法数据!');
                 return;
             }
@@ -105,10 +81,6 @@ export default {
                 console.log(err);
                 this.btnLoading = false;
             });
-        },
-        // 取消
-        cancle() {
-            this.getInfo();
         }
     }
 };

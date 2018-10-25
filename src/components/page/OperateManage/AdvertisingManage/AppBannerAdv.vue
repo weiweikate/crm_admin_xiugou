@@ -362,6 +362,12 @@
                         return;
                     }
                 }
+                if (this.pageType != 10 && this.pageType != 12) {
+                    if (!this.form.rank) {
+                        this.$message.warning('请输入排序');
+                        return;
+                    }
+                }
                 this.btnLoading = true;
                 request[url](data).then(res => {
                     this.$message.success(res.msg);

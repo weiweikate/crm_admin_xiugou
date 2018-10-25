@@ -15,7 +15,7 @@
             </div>
           </el-form-item>
           <el-form-item label=" ">
-              <el-button type="primary" @click="submitForm">确认保存</el-button>
+              <el-button type="primary" :loading="btnLoading" @click="submitForm">确认保存</el-button>
               <el-button @click="backTolist">取消</el-button>
           </el-form-item>
         </el-form>
@@ -60,7 +60,8 @@ export default {
                     ]
                 }
             },
-            uploadData: {}
+            uploadData: {},
+            btnLoading: false
         };
     },
     computed: {
@@ -133,11 +134,14 @@ export default {
             }
             data.content = this.form.content;
             data.typeId = this.questionTypeId;
+            this.btnLoading = true;
             request.addHelpQuestion(data).then(res => {
                 this.$message.success(res.msg);
                 this.$router.push('/questionList');
+                this.btnLoading = false;
             }).catch(error => {
                 console.log(error);
+                this.btnLoading = false;
             });
         },
         backTolist() {

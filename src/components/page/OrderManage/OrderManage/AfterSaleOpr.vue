@@ -171,7 +171,7 @@
                                 <div class="item">订单编号：{{returnProduct.orderNum}}</div>
                                 <div class="item">成交时间：{{returnProduct.payTime|formatDateAll}}</div>
                                 <div class="item">单价：¥{{returnProduct.price}}*{{returnProduct.num}}(数量)</div>
-                                <div class="item">邮费：¥0.00</div>
+                                <div class="item">邮费：¥{{returnProduct.freightPrice}}</div>
                                 <div class="item">商品总价：¥{{returnProduct.price*returnProduct.num}}</div>
                                 <div class="item">更换型号：{{returnProduct.exchangeSpec}} 数量*{{returnProduct.num}}</div>
                                 <div class="item">换货原因：{{returnProduct.returnReason}}</div>
@@ -243,7 +243,6 @@
                             <div v-if="status==3">
                                 <div class="tips">商家不同意退货申请</div>
                             </div>
-
                             <div v-if="status==4">
                                 <div class="tips">提示：收到买家退货时，请验货后同意退款</div>
                                 <div class="tips" style="margin-left: 40px">如果买家在超时结束前未退货，退货申请将自动关闭</div>
@@ -314,7 +313,7 @@
                                 <div class="item">订单编号：{{returnProduct.orderNum}}</div>
                                 <div class="item">成交时间：{{returnProduct.payTime|formatDateAll}}</div>
                                 <div class="item">单价：¥{{returnProduct.price}}*{{returnProduct.num}}(数量)</div>
-                                <div class="item">邮费：¥8.00</div>
+                                <div class="item">邮费：¥{{returnProduct.freightPrice}}</div>
                                 <div class="item">商品总价：¥{{returnProduct.price*returnProduct.num}}</div>
                                 <div class="item">退货原因：{{returnProduct.returnReason}}</div>
                                 <div class="item">退货说明：{{returnProduct.remark}}</div>
@@ -406,7 +405,7 @@
                                 <div class="item">订单编号：{{returnProduct.orderNum}}</div>
                                 <div class="item">成交时间：{{returnProduct.payTime|formatDateAll}}</div>
                                 <div class="item">单价：¥{{returnProduct.price}}*{{returnProduct.num}}(数量)</div>
-                                <div class="item">邮费：¥8.00</div>
+                                <div class="item">邮费：¥{{returnProduct.freightPrice}}</div>
                                 <div class="item">商品总价：¥{{returnProduct.price*returnProduct.num}}</div>
                                 <div class="item">退款编号：{{returnProduct.refundNo}}</div>
                                 <div class="item">退款金额：¥88.50</div>
@@ -864,8 +863,8 @@
             // },
             // 查看物流信息
             watchLogistics() {
-                sessionStorage.setItem('findExpressId', this.orderId);
-                this.$router.push({ name: 'logistics', query: { findExpressId: this.orderId }});
+                sessionStorage.setItem('findExpressId', this.returnProduct.expressNo);
+                this.$router.push({ name: 'logistics', query: { findExpressId: this.returnProduct.expressNo }});
             },
             // 倒计时
             getDistanceTime(time) {

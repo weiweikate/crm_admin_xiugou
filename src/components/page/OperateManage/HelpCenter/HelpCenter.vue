@@ -116,7 +116,6 @@ export default {
             this.imgUrl = '';
         },
         confirmAddQuesType() {
-            this.addQuesTypeBtn = true;
             const data = {
                 name: this.questionType,
                 imgUrl: this.imgUrl
@@ -129,6 +128,7 @@ export default {
                 this.$message.warning('请添加图片!');
                 return;
             }
+            this.addQuesTypeBtn = true;
             request
                 .addHelpType(data)
                 .then(res => {

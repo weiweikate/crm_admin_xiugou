@@ -6,7 +6,7 @@
             <div class="currency-area">
                 <div class="currency-wrap" v-for="(v,k) in daysList" :key="k">
                     <span class="currency-small-title">连续签到{{k+1}}天可得</span>
-                    <el-input v-model="v.value" placeholder="请输入数值" class="input-sty"></el-input><span class="point">秀豆</span>
+                    <el-input v-model="daysList[k]" placeholder="请输入数值" class="input-sty"></el-input><span class="point">秀豆</span>
                     <span v-if="k>0" class="opr-btn" @click="deleteItem(k)">删除</span>
                 </div>
                 <div>
@@ -41,9 +41,7 @@
                 nav: ['基础参数设置', '交易基础参数设置'],
                 bodyLoading: false,
                 btnLoading: false,
-                daysList: [{
-                    value: ''
-                }],
+                daysList: [],
                 greaterDays: ''
             };
         },
@@ -55,8 +53,20 @@
         methods: {
             // 获取数据
             getInfo() {
+                const data = {
+                    codes: 'continue_sign_in'
+                };
                 this.bodyLoading = true;
                 request.queryConfig(data).then(res => {
+                    let values = []; let daysValue = [];
+                    this.daysList = [];
+                    // values = res.data[0].value.indexOf(',') != -1 ? res.data[0].value.split(',') : [res.data[0].value];
+                    values = res.data[0].value.split(',');
+                    daysValue = values.slice(0, -1);
+                    this.greaterDays = values[values.length - 1];
+                    daysValue.forEach((v, k) => {
+                        this.daysList.push(v);
+                    });
                     this.bodyLoading = false;
                 }).catch(err => {
                     this.bodyLoading = false;
@@ -69,11 +79,11 @@
                 for (let i = 0; i < this.daysList.length; i++) {
                     let pre = '';
                     if (i === 0) {
-                        pre = this.daysList[0].value;
+                        pre = this.daysList[0];
                     } else {
-                        pre = this.daysList[i - 1].value;
+                        pre = this.daysList[i - 1];
                     }
-                    const v = this.daysList[i].value;
+                    const v = this.daysList[i];
                     if (!v || !reg.test(v) || v < pre) {
                         this.$message.warning('请输入合法数据');
                         return;
@@ -83,6 +93,14 @@
                     this.$message.warning('请输入合法数据');
                     return;
                 }
+                const data = {
+                    configVOS: [{
+                        code: 'continue_sign_in',
+                        value: this.daysList.join(',') + ',' + this.greaterDays
+                    }
+
+                    ]
+                };
                 this.btnLoading = true;
                 request.addOrModifyList(data).then(res => {
                     this.$message.success(res.msg);
