@@ -2,7 +2,7 @@
     <div class="app-banner-adv">
         <v-breadcrumb :nav="nav"></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
-            <el-button @click="addItem"  type="primary" style="margin-bottom:20px" v-if="pageType!=10">添加banner图片
+            <el-button @click="addItem"  type="primary" style="margin-bottom:20px" v-if="pageType!=10">添加产品
             </el-button>
             <el-table border :data="tableData">
                 <el-table-column type="index" label="编号" align="center" v-if="pageType!=10" key="0"></el-table-column>

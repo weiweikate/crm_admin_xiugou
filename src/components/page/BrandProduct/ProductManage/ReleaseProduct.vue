@@ -621,8 +621,8 @@
             },
             // 获取产品参数
             getProductParam(secId) {
+                this.productParam = [];
                 request.queryProductCategoryParamList({ id: secId }).then(res => {
-                    this.productParam = [];
                     res.data.forEach((v, k) => {
                         v.value = '';
                         this.productParam.push(v);

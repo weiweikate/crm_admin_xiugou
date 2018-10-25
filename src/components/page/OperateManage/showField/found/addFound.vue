@@ -63,7 +63,7 @@
                         <el-select v-model="v.type" style="width: 120px">
                             <el-option label="请选择类型" value=""></el-option>
                             <el-option label="产品ID" value="1"></el-option>
-                            <el-option label="专题" value="2"></el-option>
+                            <!--<el-option label="专题" value="2"></el-option>-->
                         </el-select>
                         <span>链接位置</span>
                         <el-input @blur="getProductName(v)" style="width: 210px" v-model="v.id" placeholder="产品ID"></el-input>

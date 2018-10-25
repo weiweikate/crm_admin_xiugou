@@ -74,12 +74,14 @@
         <el-dialog
             title="秀值充值"
             :visible.sync="rechargeDia"
-            width="30%"
+            width="500px"
             :before-close="handleClose">
-            <el-radio-group v-model="rechargeType" @change="changeRechargeType">
-                <el-radio label="single">单人充值</el-radio>
-                <el-radio label="batch">批量充值</el-radio>
-            </el-radio-group>
+            <p class="radio-group">
+                <el-radio-group v-model="rechargeType" @change="changeRechargeType">
+                    <el-radio label="single">单人充值</el-radio>
+                    <el-radio label="batch">批量充值</el-radio>
+                </el-radio-group>
+            </p>
             <single v-show="rechargeType == 'single'" ref="single"></single>
             <batch v-show="rechargeType == 'batch'" ref="batch"></batch>
             <span slot="footer" class="dialog-footer">
@@ -178,6 +180,10 @@ export default {
                 color: #ff6868;
             }
         }
+    }
+    .radio-group{
+        box-sizing: border-box;
+        padding-left: 120px;
     }
 }
 </style>

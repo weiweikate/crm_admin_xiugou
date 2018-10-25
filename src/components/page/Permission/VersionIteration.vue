@@ -111,6 +111,7 @@
                     this.title = '编辑版本信息';
                     this.url = 'updateVersionRecord';
                     this.isShowAddQues = !this.isShowAddQues;
+                    row.forceUpdate = row.forceUpdate.toString()
                     this.form = row;
                 } else {
                     this.form.type = this.activeName === 'IOS' ? 2 : 1;

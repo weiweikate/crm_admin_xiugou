@@ -25,7 +25,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="remark" label="备注说明" align="center"></el-table-column>
-                    <el-table-column label="是否自动晋级" align="center">
+                    <el-table-column label="是否能晋级" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.autoUp == 1">是</template>
                             <template v-if="scope.row.autoUp == 2">否</template>
@@ -34,7 +34,7 @@
                     <el-table-column min-width="350px" label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button type="primary" size="small" @click="upSet(scope.$index,scope.row)">晋级设置</el-button>
-                            <el-button type="warning" :disabled="scope.row.level == 0" size="small" @click="downSet(scope.$index,scope.row)">降级设置</el-button>
+                            <el-button type="warning" size="small" @click="downSet(scope.$index,scope.row)">降级设置</el-button>
                             <!--<el-button type="primary" size="small" @click="priceLevel(scope.$index,scope.row)">价格阶层</el-button>-->
                             <el-button type="success" size="small" @click="editItem(scope.$index,scope.row)">编辑
                             </el-button>

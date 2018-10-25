@@ -444,10 +444,6 @@
             .title {
                 margin: 30px 0 20px 0;
             }
-            button {
-                background-color: #11a95d;
-                border-color: #11a95d;
-            }
             .small-wrap {
                 // background-color: skyblue;
                 margin: 0 0 20px 10px;

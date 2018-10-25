@@ -24,7 +24,13 @@
             <el-button type="primary" style="margin-bottom: 10px" @click="$router.push('addFound')">新建发现文章</el-button>
             <el-table v-loading="tabLoading" :data="tableData" border stripe @sort-change="sortChange">
                 <el-table-column prop="code" label="编号" align="center"></el-table-column>
-                <el-table-column prop="content" label="内容" align="center"></el-table-column>
+                <el-table-column prop="content" label="内容" align="center">
+                    <template slot-scope="scope">
+                        <div class="over-hidden" :title="scope.row.content">
+                            {{scope.row.content}}
+                        </div>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="nickName" label="绑定发布者" align="center"></el-table-column>
                 <el-table-column prop="click" label="浏览量" sortable align="center">
                     <template slot-scope="scope">

@@ -1172,6 +1172,18 @@ export default new Router({
                     meta: { title: '现金分享任务管理', url: '/taskHome' }
                 },
                 {
+                    name: 'showTaskList',
+                    path: '/showTaskList',
+                    component: resolve => require(['../components/page/ShowValue/ShowTaskList.vue'], resolve),
+                    meta: { title: '用户任务看板', url: '/showTaskList' }
+                },
+                {
+                    name: 'showCashTaskList',
+                    path: '/showCashTaskList',
+                    component: resolve => require(['../components/page/ShowValue/ShowCashTaskList.vue'], resolve),
+                    meta: { title: '秀值任务查看', url: '/showCashTaskList' }
+                },
+                {
                     name: 'demo',
                     path: '/demo',
                     component: resolve => require(['../components/page/demo.vue'], resolve),
