@@ -22,35 +22,34 @@
 </template>
 
 <script>
-    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-
-    export default {
-        components: {
-            vBreadcrumb
-        },
-        data() {
-            return {
-                nav: ['运营管理', '发现管理'],
-                list: [
-                    {
-                        img: 'static/img/show_list.png',
-                        title: '用户任务看版',
-                        content: '查看平台用户的秀值任务状态',
-                        page: '/foundList'
-                    }, {
-                        img: 'static/img/show_item.png',
-                        title: '秀值任务查看',
-                        content: '查看平台秀值任务',
-                        page: '/foundCategory'
-                    }]
-            };
-        },
-        methods: {
-            toPage(page) {
-                this.$router.push(page);
-            }
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+export default {
+    components: {
+        vBreadcrumb
+    },
+    data() {
+        return {
+            nav: ['运营管理', '发现管理'],
+            list: [
+                {
+                    img: 'static/img/show_list.png',
+                    title: '用户任务看版',
+                    content: '查看平台用户的秀值任务状态',
+                    page: '/showTaskList'
+                }, {
+                    img: 'static/img/show_item.png',
+                    title: '秀值任务查看',
+                    content: '查看平台秀值任务',
+                    page: '/showCashTaskList'
+                }]
+        };
+    },
+    methods: {
+        toPage(page) {
+            this.$router.push(page);
         }
-    };
+    }
+};
 </script>
 
 <style scoped lang="less">

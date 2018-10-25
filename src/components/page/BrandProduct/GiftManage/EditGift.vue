@@ -164,7 +164,7 @@
                 <div class="pro-title">礼包可购买角色设置</div>
                 <el-form-item>
                     <el-checkbox-group v-model="chectedUser">
-                        <el-checkbox v-for="(v,k) in userLevel" :label="v.id" :key="k">{{v.name}}</el-checkbox>
+                        <el-checkbox v-for="(v,k) in userLevel" :label="v.level" :key="k">{{v.name}}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <div class="tag-btn-group">
@@ -812,8 +812,8 @@
             },
             // 获取产品参数
             getProductParam(secId) {
+                this.productParam = [];
                 request.queryProductCategoryParamList({ id: secId }).then(res => {
-                    this.productParam = [];
                     res.data.forEach((v, k) => {
                         v.value = '';
                         this.productParam.push(v);

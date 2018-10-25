@@ -263,6 +263,7 @@
             this.uploadImg = api.uploadImg;
             this.imgArr = [];
             this.proItemArr = [];
+            this.setBuyTime = [];
             this.videoUrl = '';
             this.selectedTagArr = [];
             this.tagArr = [];
@@ -660,8 +661,8 @@
             },
             // 获取产品参数
             async getProductParam(secId) {
+                this.productParam = [];
                 await request.queryProductCategoryParamList({ id: secId }).then(res => {
-                    this.productParam = [];
                     res.data.forEach((v, k) => {
                         v.value = '';
                         this.productParam.push(v);
