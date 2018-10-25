@@ -17,7 +17,7 @@
                 </div>
             </el-form-item>
             <el-form-item label="充值秀值数">
-                <el-input-number :controls="false" :min="0" v-model="form.money" class="inp" placeholder="请输入充值金额"></el-input-number>
+                <el-input-number :controls="false" :precision="2" :step="0.01" :min="0" :max="9999999999.99" v-model="form.money" class="inp" placeholder="请输入充值金额"></el-input-number>
             </el-form-item>
             <el-form-item label="备注">
                 <el-input v-model="form.tip" :maxlength="180" type="textarea" class="inp" placeholder="请输入备注0-180字"></el-input>
@@ -33,7 +33,7 @@ export default {
         return {
             form: {
                 phone: '',
-                money: '',
+                money: 0,
                 tip: ''
             }
         }

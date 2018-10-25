@@ -360,6 +360,10 @@
                         title: '秀值模块',
                         subs: [
                             {
+                                index: 'taskHome',
+                                title: '现金分享任务管理'
+                            },
+                            {
                                 index: 'showValueList',
                                 title: '秀值分配设置'
                             },

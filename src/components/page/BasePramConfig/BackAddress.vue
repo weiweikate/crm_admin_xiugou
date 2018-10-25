@@ -8,7 +8,7 @@
                     <el-table-column type="index" label="编号" width="60" align="center"></el-table-column>
                     <el-table-column label="详细地址" align="center">
                         <template slot-scope="scope">
-                            <template>{{scope.row.provinceCode}}{{scope.row.address}}</template>
+                            <template>{{scope.row.provinceName||''}}{{scope.row.cityName||''}}{{scope.row.areaName||''}}{{scope.row.address||''}}</template>
                         </template>
                     </el-table-column>
                     <el-table-column prop="receiver" label="联系人" align="center"></el-table-column>

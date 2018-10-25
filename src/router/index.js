@@ -1166,6 +1166,12 @@ export default new Router({
                     meta: { title: '秀值账户充值', url: '/showValReCharge' }
                 },
                 {
+                    name: 'taskHome',
+                    path: '/taskHome',
+                    component: resolve => require(['../components/page/ShowValue/TaskHome.vue'], resolve),
+                    meta: { title: '现金分享任务管理', url: '/taskHome' }
+                },
+                {
                     name: 'demo',
                     path: '/demo',
                     component: resolve => require(['../components/page/demo.vue'], resolve),

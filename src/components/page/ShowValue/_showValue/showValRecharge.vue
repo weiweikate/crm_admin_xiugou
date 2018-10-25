@@ -155,6 +155,7 @@ export default {
                 money: '',
                 tip: ''
             }
+            this.rechargeType = 'single'
             this.rechargeDia = false;
         },
         // 修改充值状态
