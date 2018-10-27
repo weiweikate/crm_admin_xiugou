@@ -343,6 +343,7 @@
                                 list.push(tableTemp);
                             });
                             data.freightTemplateInfoList = list;
+                            this.form.freightType = '1';
                         } else {
                             data.freightTemplateInfoList = [];
                             data.freightFreePrice = '';

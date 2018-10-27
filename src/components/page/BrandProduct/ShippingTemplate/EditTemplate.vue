@@ -240,7 +240,6 @@
                     that.form.freightType = freightTemplate.freightType.toString();
                     that.form.status = freightTemplate.status.toString();
                     that.sendDays = freightTemplate.sendDays;
-                    that.freightFreePrice = freightTemplate.freightFreePrice;
                     if (that.freightFreePrice && freightTemplate.freightType == 3) {
                         that.form.freightType = '1';
                     }
@@ -253,23 +252,26 @@
                     that.form.areaCode = freightTemplate.areaCode;
                     that.isShowExpress = freightTemplate.freightType != 2;
                     that.checked = freightTemplate.freightType == 3;
-                    const list = res.data.freightTemplateInfoList;
-                    that.startUnit = list[0].startUnit;
-                    that.startPrice = list[0].startPrice;
-                    that.nextUnit = list[0].nextUnit;
-                    that.nextPirce = list[0].nextPirce;
-                    for (let i = 1; i < list.length; i++) {
-                        let includeArea = ''; let includeAreaName = '';
-                        for (const j in list[i].freightTemplateInfoDetailList) {
-                            const temp = list[i].freightTemplateInfoDetailList[j];
-                            includeArea += temp.provinceCode + ':' + temp.cityCodes + ',';
-                            includeAreaName += temp.provinceName + ':' + temp.cityNames + ',';
+                    if (freightTemplate.freightType != 2) {
+                        that.freightFreePrice = freightTemplate.freightFreePrice;
+                        const list = res.data.freightTemplateInfoList;
+                        that.startUnit = list[0].startUnit;
+                        that.startPrice = list[0].startPrice;
+                        that.nextUnit = list[0].nextUnit;
+                        that.nextPirce = list[0].nextPirce;
+                        for (let i = 1; i < list.length; i++) {
+                            let includeArea = ''; let includeAreaName = '';
+                            for (const j in list[i].freightTemplateInfoDetailList) {
+                                const temp = list[i].freightTemplateInfoDetailList[j];
+                                includeArea += temp.provinceCode + ':' + temp.cityCodes + ',';
+                                includeAreaName += temp.provinceName + ':' + temp.cityNames + ',';
+                            }
+                            list[i].includeArea = includeArea.slice(0, -1);
+                            list[i].includeAreaName = includeAreaName.slice(0, -1);
+                            that.tableData.push(list[i]);
                         }
-                        list[i].includeArea = includeArea.slice(0, -1);
-                        list[i].includeAreaName = includeAreaName.slice(0, -1);
-                        that.tableData.push(list[i]);
+                        that.rows = list.length - 1;
                     }
-                    that.rows = list.length - 1;
                 }).catch(err => {
                     that.loading = false;
                 });
@@ -375,11 +377,14 @@
                                 list.push(tableTemp);
                             });
                             data.freightTemplateInfoList = list;
+                            this.form.freightType = '1';
                         } else {
                             data.freightTemplateInfoList = [];
                             data.freightFreePrice = '';
                         }
-                        if (!flag || !flag1) return;
+                        if (!flag || !flag1) {
+                            return;
+                        }
                         this.btnLoading = true;
                         request.addFreightTemplate(data).then(res => {
                             that.$message.success(res.msg);
