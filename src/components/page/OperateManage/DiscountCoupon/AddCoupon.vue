@@ -360,7 +360,7 @@
                             data.remindFlag = 0;
                         }
                         if (this.form.type == 4) {
-                            if (that.productList.firstCategoryIds.length === 0 && that.productList.secondCategoryIds.length === 0 && that.productList.thirdCategoryIds.length === 0 && that.productList.products.length === 0) {
+                            if (!that.productList.products) {
                                 this.$message.warning('请选择可用品类!');
                                 return;
                             }
