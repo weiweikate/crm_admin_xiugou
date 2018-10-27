@@ -218,7 +218,7 @@
                     startPrice: '', // 起拍价格
                     orderCloseTime: '', // 自动关闭订单时间
                     totalNumber: '', // 发放总数量
-                    limitNumber: ''// 限购数量,默认为0
+                    limitNumber: ''// 限购数量
                 },
                 beginTime: '', // 开始时间
                 time: '', // 开始时间

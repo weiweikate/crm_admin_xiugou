@@ -8,8 +8,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="getList(1)" type="primary">查询</el-button>
-                    <el-button type="primary">导出</el-button>
-                    <!--<el-button @click="resetForm('form')">重置</el-button>-->
+                    <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -18,31 +17,35 @@
             <el-table v-loading="tableLoading" :height="height" border :data="tableData">
                 <el-table-column type="index" label="编号" align="center" width="50"></el-table-column>
                 <el-table-column prop="name" label="套餐名称" align="center"></el-table-column>
-                <el-table-column prop="name" label="套餐金额(元)" align="center"></el-table-column>
-                <el-table-column prop="name" label="套餐单红包金额(元)" align="center"></el-table-column>
-                <el-table-column prop="name" label="红包数" align="center"></el-table-column>
-                <el-table-column prop="name" label="推广周期(天)" align="center"></el-table-column>
-                <el-table-column prop="name" label="翻倍周期(天)" align="center"></el-table-column>
-                <el-table-column prop="name" label="翻倍次数" align="center"></el-table-column>
+                <el-table-column prop="total" label="套餐金额(元)" align="center"></el-table-column>
+                <el-table-column prop="price" label="套餐单红包金额(元)" align="center"></el-table-column>
+                <el-table-column prop="count" label="红包数" align="center"></el-table-column>
+                <el-table-column prop="cycle" label="推广周期(天)" align="center"></el-table-column>
+                <el-table-column prop="period" label="翻倍周期(天)" align="center"></el-table-column>
+                <el-table-column prop="probability" label="翻倍次数" align="center"></el-table-column>
                 <el-table-column prop="name" label="总库存数(份)" align="center"></el-table-column>
-                <el-table-column prop="name" label="已售份数" align="center"></el-table-column>
-                <el-table-column prop="name" label="剩余份数" align="center"></el-table-column>
-                <el-table-column prop="name" label="正在进行中(份)" align="center"></el-table-column>
-                <el-table-column prop="name" label="备注" align="center"></el-table-column>
+                <el-table-column prop="sold" label="已售份数" align="center">
+                    <template slot-scope="scope">{{scope.row.sold||0}}</template>
+                </el-table-column>
+                <el-table-column prop="remain" label="剩余份数" align="center"></el-table-column>
+                <el-table-column label="正在进行中(份)" align="center">
+                    <template slot-scope="scope">{{scope.row.processing||0}}</template>
+                </el-table-column>
+                <el-table-column prop="remark" label="备注" align="center">
+                </el-table-column>
                 <el-table-column prop="" label="状态" align="center">
                     <template slot-scope="scope">
                         <template v-if='scope.row.status == 1'>正常</template>
-                        <template v-if='scope.row.status == 2'>关闭</template>
+                        <template v-if='scope.row.status == 0||scope.row.status == 2'>关闭</template>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="150">
+                <el-table-column label="操作" min-width="200">
                     <template slot-scope="scope">
                         <el-button type="success"  @click="addInventory(scope.row)">增加库存</el-button>
-                        <br>
                         <el-button type="primary" @click="buyDetail(scope.row)">购买详情</el-button>
-                        <br>
-                        <el-button @click="loseDiscountCoupon(scope.row,0)" v-if="scope.row.status==1" type="danger">关闭</el-button>
-                        <el-button @click="loseDiscountCoupon(scope.row,1)" else type="warning">开启</el-button>
+                        <el-button type="warning" @click="toDetail(scope.row)">查看详情</el-button>
+                        <el-button @click="openOrClose(scope.row,0)" v-if="scope.row.status==1" type="danger">关闭</el-button>
+                        <!--<el-button @click="openOrClose(scope.row,1)" v-else type="warning">开启</el-button>-->
                     </template>
                 </el-table-column>
             </el-table>
@@ -59,9 +62,9 @@
             </div>
             <div class="mask" v-if="addMask">
                 <div class="content">
-                    <div class="item"><span>增加：</span><el-input v-model="num" placeholder="请输入数值"></el-input>份</div>
+                    <div class="item"><span>增加</span><el-input v-model="count" placeholder="请输入数值"></el-input>份</div>
                     <div style="text-align: center;margin-top: 30px">
-                        <el-button type="primary" btnLoading="false" @click="addRepertory">确定</el-button>
+                        <el-button type="primary" :loading="btnLoading"  @click="addRepertory">确定</el-button>
                         <el-button @click="addMask=false">取消</el-button>
                     </div>
 
@@ -118,7 +121,8 @@ export default {
             }, {
                 tip: '确认开启该套餐吗？'
             }],
-            index: ''// 关闭0开启1
+            index: '', // 关闭0开启1
+            count: '' // 增加红包数
         };
     },
     created() {
@@ -133,26 +137,23 @@ export default {
         getList(val) {
             const data = {
                 page: val,
-                status: this.status,
+                name: this.form.name,
                 pageSize: this.page.pageSize
             };
-            data.page = val;
-            data.status = this.status;
-            this.page.currentPage = val;
             this.tableLoading = true;
-            request.queryCouponList(data).then(res => {
-                if (!res.data) return;
-                this.tableData = [];
-                for (const i in res.data.data) {
-                    if (res.data.data[i].couponUserLevelList) {
-                        const userLevelIds = [];
-                        for (const j in res.data.data[i].couponUserLevelList) {
-                            userLevelIds.push(res.data.data[i].couponUserLevelList[j].name);
-                        }
-                        res.data.data[i].userLevelIds = userLevelIds.join(',');
-                    }
-                    // this.tableData.push(res.data.data[i])
-                }
+            request.queryPromotionPackagePageList(data).then(res => {
+                // if (!res.data) return;
+                // this.tableData = [];
+                // for (const i in res.data.data) {
+                //     if (res.data.data[i].couponUserLevelList) {
+                //         const userLevelIds = [];
+                //         for (const j in res.data.data[i].couponUserLevelList) {
+                //             userLevelIds.push(res.data.data[i].couponUserLevelList[j].name);
+                //         }
+                //         res.data.data[i].userLevelIds = userLevelIds.join(',');
+                //     }
+                //     // this.tableData.push(res.data.data[i])
+                // }
                 this.tableData = res.data.data;
                 this.page.totalPage = res.data.totalNum;
                 this.tableLoading = false;
@@ -165,22 +166,23 @@ export default {
         addPackage() {
             this.$router.push('/addPromotionPackage');
         },
-        // 添加券库存
+        // 添加库存
         addInventory(row) {
             this.addMask = true;
+            this.count = '';
             this.id = row.id;
         },
         addRepertory() {
             const data = {
                 id: this.id,
-                num: this.num
+                remain: this.count
             };
-            if (!this.num) {
-                this.$message.warning('请输入库存!');
+            if (!this.count || !/^(0|[1-9]\d*)$/.test(this.count)) {
+                this.$message.warning('请输入数值!');
                 return;
             }
             this.btnLoading = true;
-            request.addCouponStock(data).then(res => {
+            request.updatePromotionPackageStockAndStatus(data).then(res => {
                 this.$message.success(res.msg);
                 this.addMask = false;
                 this.getList(1);
@@ -190,15 +192,42 @@ export default {
                 this.btnLoading = false;
             });
         },
-        // 失效
-        loseDiscountCoupon(row, num) {
+        // 开启关闭
+        openOrClose(row, num) {
             this.id = row.id;
             this.index = num;
             this.showMask = true;
         },
+        closeMask() {
+            const data = {
+                id: this.id,
+                status: this.index
+            };
+            this.btnLoading = true;
+            request.updatePromotionPackageStockAndStatus(data).then(res => {
+                this.$message.success(res.msg);
+                this.showMask = false;
+                this.getList(1);
+                this.btnLoading = false;
+            }).catch(error => {
+                console.log(error);
+                this.btnLoading = false;
+            });
+        },
+        // 查看详情
+        toDetail(row) {
+            sessionStorage.setItem('packageDetailId', row.id);
+            this.$router.push({ path: 'packageDetail', query: { packageDetailId: row.id }});
+        },
         // 购买详情
-        buyDetail() {
-            this.$router.push('/promotionOrderList');
+        buyDetail(row) {
+            sessionStorage.setItem('promotionOrderId', row.id);
+            this.$router.push({ path: 'promotionOrderList', query: { promotionOrderId: row.id }});
+        },
+        // 重置表单
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
+            this.getList(1);
         }
     },
     filters: {
@@ -282,12 +311,12 @@ export default {
                 .item{
                     line-height: 40px;
                     span{
-                        width: 80px;
                         display: inline-block;
                         margin-left: 50px;
                     }
                     .el-input{
-                        width: 210px;
+                        width: 150px;
+                        margin: 0 10px;
                     }
                 }
                 .el-button:first-child{

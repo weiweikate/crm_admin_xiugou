@@ -294,3 +294,14 @@ export const queryNoticeById = ['/notice/queryNoticeById', { methods: 'get' }];
 export const queryNoticeList = '/notice/queryNoticeList';
 // 插入修改公告
 export const saveNotice = '/notice/saveNotice';
+
+/** ************推广订单*****************/
+// 套餐管理
+// 添加
+export const addPromotionPackage = '/promotion/promotionPackage/addPromotionPackage';
+// 列表
+export const queryPromotionPackagePageList = '/promotion/promotionPackage/queryPromotionPackagePageList';
+// 添加库存/修改红包状态
+export const updatePromotionPackageStockAndStatus = '/promotion/promotionPackage/updatePromotionPackageStockAndStatus';
+// 查询
+export const findPromotionPackageDetailsById = ['/promotion/promotionPackage/findPromotionPackageDetailsById', { methods: 'get' }];

@@ -502,7 +502,7 @@
             // item选中项 index选中索引值
             getProductList(item, index) {
                 const that = this;
-                if (index) {
+                if (index || index === 0) {
                     if (that.thirdChecked[index]) { // 改变对应三级类目的选中值
                         that.thirdCategoryName = item.name;
                         that.addTags(3, item);// 增加三级类目标签值
@@ -667,7 +667,6 @@
             },
             // 移除标签
             deleteTags(num, item, isTag) {
-                console.log(item)
                 const classifyIds = [];// 选择框数据ids
                 const tagIds = num === 1 ? this.firstTagIds : num === 2 ? this.secondTagIds : num === 3 ? this.thirdTagIds : this.productTagIds;
                 const tag = num === 1 ? this.firstClassifyTags : num === 2 ? this.secondClassifyTags : num === 3 ? this.thirdClassifyTags : this.productTags;

@@ -750,6 +750,12 @@ export default new Router({
                     meta: { title: '新建套餐', url: '/addPromotionPackage' }
                 },
                 {
+                    name: 'packageDetail',
+                    path: '/packageDetail',
+                    component: resolve => require(['../components/page/OperateManage/PromotionOrderManage/PackageManage/PackageDetail.vue'], resolve),
+                    meta: { title: '套餐详情', url: '/packageDetail' }
+                },
+                {
                     name: 'redPackageSet',
                     path: '/redPackageSet',
                     component: resolve => require(['../components/page/OperateManage/PromotionOrderManage/RedPackageSet/RedPackageSet.vue'], resolve),

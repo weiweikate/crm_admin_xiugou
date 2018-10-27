@@ -10,21 +10,34 @@
                     <el-input v-model="form.price" placeholder="请输入数值" @input="calMoney" class="input-sty"></el-input>
                     <span class="point">元</span>
                 </el-form-item>
-                <el-form-item prop="num" label="红包数">
-                    <el-input v-model="form.num" placeholder="请输入数值" @input="calMoney" class="input-sty"></el-input>
+                <el-form-item prop="count" label="红包数">
+                    <el-input v-model="form.count" placeholder="请输入数值" @input="calMoney" class="input-sty"></el-input>
                     <span class="point">份</span>
                 </el-form-item>
                 <el-form-item label="套餐金额">
-                    <el-input v-model="form.money" disabled="" placeholder="请输入数值" class="input-sty"></el-input>
+                    <el-input v-model="form.total" disabled="" placeholder="请输入数值" class="input-sty"></el-input>
                     <span class="point">元</span>
                 </el-form-item>
-                <el-form-item prop="days" label="推广周期">
-                    <el-input v-model="form.days" placeholder="请输入数值" class="input-sty"></el-input>
+                <el-form-item prop="cycle" label="推广周期">
+                    <el-input v-model="form.cycle" placeholder="请输入数值" class="input-sty"></el-input>
                     <span class="point">天</span>
                 </el-form-item>
-                <el-form-item prop="buyNumber" label="可购买数">
-                    <el-input v-model="form.buyNumber" placeholder="请输入数值" class="input-sty"></el-input>
+                <el-form-item prop="remain" label="可购买数">
+                    <el-input v-model="form.remain" placeholder="请输入数值" class="input-sty"></el-input>
                     <span class="point">份</span>
+                </el-form-item>
+                <el-form-item label="是否限购">
+                    <el-radio-group v-model="buyLimit">
+                        <el-radio :label="1">是</el-radio>
+                        <el-radio :label="2">否</el-radio>
+                    </el-radio-group>
+                    <div v-if="buyLimit==1">
+                        <span>每人限购份数</span><el-input v-model="form.buyLimit" placeholder="请输入数值" class="input-sty small-inp"></el-input>
+                        <span class="point">份</span>
+                    </div>
+                </el-form-item>
+                <el-form-item prop="remark" label="备注">
+                    <el-input type="textarea" v-model="form.remark" maxlength="180" placeholder="请输入备注" class="input-sty remark-inp"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button :loading="btnLoading" type="primary" @click="submitForm('form')">确认保存</el-button>
@@ -39,6 +52,8 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import request from '@/http/http';
+    import utils from '@/utils/index.js';
+
     export default {
         components: { vBreadcrumb },
 
@@ -62,6 +77,18 @@
                     }
                 }
             };
+            var isInt5 = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请输入数值'));
+                } else {
+                    const reg = /^[1-9]*[1-9][0-9]*$/;
+                    if (!reg.test(value) || value.length > 5) {
+                        return callback(new Error('请输入1-5位数字'));
+                    } else {
+                        callback();
+                    }
+                }
+            };
             var isDouble = (rule, value, callback) => {
                 if (!value) {
                     return callback(new Error('请输入数值'));
@@ -78,20 +105,24 @@
                 nav: ['运营管理', '推广订单管理', '套餐管理', '新建套餐'],
                 bodyLoading: false,
                 btnLoading: false,
+                buyLimit: 1, // 是否限购 1是2否
                 form: {
                     name: '',
                     price: '',
-                    num: '',
-                    money: '',
-                    days: '',
-                    buyNumber: ''
+                    count: '',
+                    total: '',
+                    cycle: '',
+                    remain: '',
+                    buyLimit: '',
+                    remark: ''
                 },
                 rules: {
                     name: [{ validator: checkName, trigger: 'blur' }],
                     price: [{ validator: isDouble, trigger: 'blur' }],
-                    num: [{ validator: isInt, trigger: 'blur' }],
-                    days: [{ validator: isInt, trigger: 'blur' }],
-                    buyNumber: [{ validator: isInt, trigger: 'blur' }]
+                    count: [{ validator: isInt, trigger: 'blur' }],
+                    cycle: [{ validator: isInt5, trigger: 'blur' }],
+                    buyLimit: [{ validator: isInt, trigger: 'blur' }],
+                    remain: [{ validator: isInt, trigger: 'blur' }]
                 }
 
             };
@@ -105,9 +136,19 @@
             submitForm(formName) {
                 this.$refs.form.validate((valid) => {
                     if (valid) {
+                        const data = this[formName];
+                        if (this.buyLimit == 1) {
+                            if (!this.form.buyLimit) {
+                                this.$message.warning('请输入限购数量');
+                                return;
+                            }
+                        } else {
+                            this.form.buyLimit = -1;
+                        }
                         this.btnLoading = true;
-                        request.addOrModifyList({}).then(res => {
+                        request.addPromotionPackage(data).then(res => {
                             this.$message.success(res.msg);
+                            this.$router.push('/packageManage');
                             this.btnLoading = false;
                         }).catch(err => {
                             console.log(err);
@@ -122,11 +163,12 @@
             },
             // 取消
             cancel() {
-                this.getInfo();
+                utils.cleanFormData(this.form);
+                this.buyLimit = 1;
             },
             calMoney() {
-                if (this.form.num && this.form.price) {
-                    this.form.money = this.form.price * this.form.num;
+                if (this.form.count && this.form.price) {
+                    this.form.total = this.form.price * this.form.count;
                 }
             }
         }
@@ -136,6 +178,10 @@
     .add-promotionPackage {
         .input-sty {
             width: 250px;
+        }
+        .small-inp{
+            width: 160px;
+            margin-left: 5px;
         }
         .point {
             font-size: 14px;
@@ -151,6 +197,10 @@
         }
         .add-btn{
             margin-left: 100px;
+        }
+        .remark-inp,/deep/.el-textarea__inner{
+            height: 150px;
+            resize: none;
         }
     }
 </style>

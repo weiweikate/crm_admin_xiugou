@@ -272,12 +272,16 @@
                     this.showLevel(userLevelIds.join(','));
                     if (detail.getLimit == -1) {
                         this.getLimit = true;
+                        this.form.getLimit = '';
                     } else {
+                        this.getLimit = false;
                         this.form.getLimit = detail.getLimit;
                     }
                     if (detail.totalNumber == -1) {
                         this.totalNumber = true;
+                        this.form.totalNumber = '';
                     } else {
+                        this.totalNumber = false;
                         this.form.totalNumber = detail.totalNumber;
                     }
                     const temp = {
