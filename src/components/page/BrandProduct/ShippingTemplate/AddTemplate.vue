@@ -342,9 +342,11 @@
                                 }
                                 list.push(tableTemp);
                             });
+                            data.freightTemplateInfoList = list;
+                        } else {
+                            data.freightTemplateInfoList = [];
+                            data.freightFreePrice = '';
                         }
-                        // data.freightTemplateInfoList = JSON.stringify(list);
-                        data.freightTemplateInfoList = list;
                         if (!flag || !flag1) return;
                         this.btnLoading = true;
                         request.addFreightTemplate(data).then(res => {
