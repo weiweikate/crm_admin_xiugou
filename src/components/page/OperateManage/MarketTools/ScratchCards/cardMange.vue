@@ -54,6 +54,9 @@
                 <el-form-item prop="tip" label="未中奖提示语:">
                     <el-input class="inp" v-model="form.tip"></el-input>
                 </el-form-item>
+                <el-form-item prop="tip" label="未中奖提示语:">
+                    <el-button type="primary" @click="submitForm">提 交</el-button>
+                </el-form-item>
             </el-form>
         </el-card>
         <el-dialog title="优惠券列表" :visible.sync="isShowCouponList" width="500px">
