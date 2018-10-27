@@ -34,7 +34,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
         new webpack.DefinePlugin({
-            'VERSION': `"${ut.formatTime(new Date())}--${info.tag}"`,
+            'VERSION': `"${ut.formatTime(new Date())}--${info.tag || ''}"`,
             'process.env': env
         }),
         new UglifyJsPlugin({

@@ -1013,6 +1013,24 @@ export default new Router({
                     component: resolve => require(['../components/page/OperateManage/MarketTools/PrizePoll/BlockStockActivity.vue'], resolve),
                     meta: { title: '冻结库存活动', url: '/blockStockActivity' }
                 },
+                {
+                    name: 'scratchCardsList',
+                    path: '/scratchCardsList',
+                    component: resolve => require(['../components/page/OperateManage/MarketTools/ScratchCards/ScratchCardsList'], resolve),
+                    meta: { title: '刮刮卡', url: '/scratchCardsList' }
+                },
+                {
+                    name: 'cardMange',
+                    path: '/cardMange',
+                    component: resolve => require(['../components/page/OperateManage/MarketTools/ScratchCards/cardMange'], resolve),
+                    meta: { title: '刮刮卡管理', url: '/cardMange' }
+                },
+                {
+                    name: 'activityUse',
+                    path: '/activityUse',
+                    component: resolve => require(['../components/page/OperateManage/MarketTools/ScratchCards/activityUse'], resolve),
+                    meta: { title: '当前活动使用', url: '/activityUse' }
+                },
                 // {
                 //     name: 'labelManage',
                 //     path: '/labelManage',

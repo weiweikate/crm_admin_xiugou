@@ -92,7 +92,7 @@
                     <el-checkbox label="是否限购" v-model="purchaseLimit"></el-checkbox>
                     <br>
                     <p v-if="purchaseLimit" style="margin: 10px 0 0 70px">限购数量：
-                        <el-input v-model="purchasevalue" class="my-inp"></el-input>
+                        <el-input-number :min="0" :controls="false" v-model="purchasevalue" class="my-inp"></el-input-number>
                         件/人
                     </p>
                 </el-form-item>
@@ -315,7 +315,7 @@
                     this.limit.notSupportRetMoney = (this.form.restrictions & 4) !== 0;
                     this.limit.notSupportRetChange = (this.form.restrictions & 8) !== 0;
                     this.limit.notSupportRetGoods = (this.form.restrictions & 16) !== 0;
-                    this.purchaseLimit = res.data.buyLimit !== 0;
+                    this.purchaseLimit = res.data.buyLimit !== -1;
                     this.purchasevalue = res.data.buyLimit;
                     this.setBuyTime.push(res.data.beginTime);
                     this.setBuyTime.push(res.data.endTime);
@@ -378,7 +378,7 @@
                 const data = this.form;
                 data.productParamValueVOList = this.form.productParamValueVOList;
                 data.videoUrl = this.videoUrl;
-                data.buyLimit = this.purchaseLimit ? this.purchasevalue : 0;
+                data.buyLimit = this.purchaseLimit ? this.purchasevalue : -1;
                 data.beginTime = this.setBuyTime[0] === undefined ? '' : utils.formatTime(this.setBuyTime[0]);
                 data.endTime = this.setBuyTime[1] === undefined ? '' : utils.formatTime(this.setBuyTime[1]);
                 data.productTagDTOList = [];

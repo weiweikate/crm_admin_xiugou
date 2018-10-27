@@ -111,7 +111,7 @@
                     <el-checkbox label="是否限购" v-model="purchaseLimit"></el-checkbox>
                     <br>
                     <p v-if="purchaseLimit" style="margin: 10px 0 0 70px">限购数量：
-                        <el-input v-model="purchasevalue" class="my-inp"></el-input>
+                        <el-input-number :min="0" :controls="false" v-model="purchasevalue" class="my-inp"></el-input-number>
                         件/人
                     </p>
                 </el-form-item>
@@ -164,7 +164,7 @@
                 <div class="pro-title">礼包可购买角色设置</div>
                 <el-form-item>
                     <el-checkbox-group v-model="chectedUser">
-                        <el-checkbox v-for="(v,k) in userLevel" :label="v.level" :key="k">{{v.name}}</el-checkbox>
+                        <el-checkbox v-for="(v,k) in userLevel" :label="v.id" :key="k">{{v.name}}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <div class="tag-btn-group">
@@ -438,7 +438,7 @@
                     this.limit.notSupportRetMoney = (this.form.restrictions & 4) !== 0;
                     this.limit.notSupportRetChange = (this.form.restrictions & 8) !== 0;
                     this.limit.notSupportRetGoods = (this.form.restrictions & 16) !== 0;
-                    this.purchaseLimit = res.data.buyLimit !== 0;
+                    this.purchaseLimit = res.data.buyLimit !== -1;
                     this.purchasevalue = res.data.buyLimit;
                     this.setBuyTime.push(res.data.beginTime);
                     this.setBuyTime.push(res.data.endTime);

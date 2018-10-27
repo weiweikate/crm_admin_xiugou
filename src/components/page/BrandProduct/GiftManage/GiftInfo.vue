@@ -20,6 +20,9 @@
                 <el-form-item label="产品详情：">
                     <div v-html='content'></div>
                 </el-form-item>
+                <el-form-item label=" ">
+                    <el-button type="primary" @click="$router.push('/giftManage')">返 回</el-button>
+                </el-form-item>
             </el-form>
         </el-card>
     </div>

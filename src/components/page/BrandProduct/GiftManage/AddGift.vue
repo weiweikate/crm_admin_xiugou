@@ -111,7 +111,7 @@
                     <el-checkbox label="是否限购" v-model="purchaseLimit"></el-checkbox>
                     <br>
                     <p v-if="purchaseLimit" style="margin: 10px 0 0 70px">限购数量：
-                        <el-input v-model="purchasevalue" class="my-inp"></el-input>
+                        <el-input-number :min="0" :controls="false" v-model="purchasevalue" class="my-inp"></el-input-number>
                         件/人
                     </p>
                 </el-form-item>
@@ -164,7 +164,7 @@
                 <div class="pro-title">礼包可购买角色设置</div>
                 <el-form-item>
                     <el-checkbox-group v-model="chectedUser">
-                        <el-checkbox v-for="(v,k) in userLevel" :label="v.level" :key="k">{{v.name}}</el-checkbox>
+                        <el-checkbox v-for="(v,k) in userLevel" :label="v.id" :key="k">{{v.name}}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <div class="tag-btn-group">
@@ -194,7 +194,7 @@
             </el-form>
         </el-card>
         <el-dialog title="优惠券列表" :visible.sync="isShowCouponList" width="30%">
-            <el-tabs v-model="couponType" v-loading="couponLoading" @tab-click="handleClick">
+            <el-tabs v-model="couponTypecouponType" v-loading="couponLoading" @tab-click="handleClick">
                 <el-tab-pane label="满减券" name="1">
                     <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
                         <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}} </span>

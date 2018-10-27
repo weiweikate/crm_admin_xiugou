@@ -40,7 +40,7 @@ try {
             return axios[methods](`/admin${url}`, data)
                 .then(res => {
                     // 错误信息拦截
-                    if (res.code === 10009 || res.code === 70004) {
+                    if (res.code === 10009) {
                         sessionStorage.clear();
                         localStorage.clear();
                         Message.warning({
@@ -48,7 +48,7 @@ try {
                             message: res.msg
                         });
                         setTimeout(function() {
-                            // location.reload();
+                            location.reload();
                         }, 1000);
                         return Promise.reject(res.msg);
                     }

@@ -67,6 +67,11 @@
                         title: '优惠套餐',
                         content: '创建商品套餐让顾客购买',
                         page: '/packageList'
+                    }, {
+                        img: 'static/img/package.png',
+                        title: '刮刮卡',
+                        content: '创建商品套餐让顾客购买',
+                        page: '/scratchCardsList'
                     }]
             };
         },

@@ -42,7 +42,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'VERSION': `"${ut.formatTime(new Date())}--${info.tag}"`,
+            'VERSION': `"${ut.formatTime(new Date())}--${info.tag || ''}"`,
             'process.env': require('../config/dev.env')
         }),
         new webpack.HotModuleReplacementPlugin(),

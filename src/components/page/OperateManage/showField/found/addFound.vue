@@ -163,16 +163,16 @@
         },
         methods: {
             // 判断封面图是否符合尺寸
-            beforeUploadCoverImg(file){
-                let that = this;
+            beforeUploadCoverImg(file) {
+                const that = this;
                 return new Promise(function(resolve, reject) {
-                    let _URL = window.URL || window.webkitURL;
-                    let image = new Image();
+                    const _URL = window.URL || window.webkitURL;
+                    const image = new Image();
                     image.onload = function() {
-                        if((image.width == 336 && image.height == 336) || (image.width == 336 && image.height == 446) || (image.width == 336 && image.height == 250)){
+                        if ((image.width == 336 && image.height == 336) || (image.width == 336 && image.height == 446) || (image.width == 336 && image.height == 250)) {
                             that.coverImgSize = `${image.width}*${image.height}`;
                             resolve();
-                        }else{
+                        } else {
                             console.log(`${image.width}*${image.height}`);
                             reject();
                         }
@@ -183,20 +183,20 @@
                         return file;
                     },
                     () => {
-                        this.$message.error("上传图片尺寸不符合!");
+                        this.$message.error('上传图片尺寸不符合!');
                         return Promise.reject();
                     }
                 );
             },
             // 判断普通图片是否符合尺寸
-            beforeUploadImg(file){
+            beforeUploadImg(file) {
                 return new Promise(function(resolve, reject) {
-                    let _URL = window.URL || window.webkitURL;
-                    let image = new Image();
+                    const _URL = window.URL || window.webkitURL;
+                    const image = new Image();
                     image.onload = function() {
-                        if(image.width == 750 && image.height == 750){
+                        if (image.width <= 750 && image.height <= 750) {
                             resolve();
-                        }else{
+                        } else {
                             console.log(`${image.width}*${image.height}`);
                             reject();
                         }
@@ -207,7 +207,7 @@
                         return file;
                     },
                     () => {
-                        this.$message.error("上传图片尺寸不符合!");
+                        this.$message.error('上传图片尺寸不符合!');
                         return Promise.reject();
                     }
                 );
@@ -228,46 +228,46 @@
             },
             // 获取信息
             async getInfo() {
-                this.form= {generalize: ''}
-                this.linkPosition= [];
+                this.form = { generalize: '' };
+                this.linkPosition = [];
                 this.fileList1 = [];
                 this.fileList2 = [];
-                await request.queryArticalPublishCategoryList({}).then(res=>{
+                await request.queryArticalPublishCategoryList({}).then(res => {
                     this.catcList = res.data;
-                })
-                await request.queryArticalPublishCUserList({}).then(res=>{
+                });
+                await request.queryArticalPublishCUserList({}).then(res => {
                     this.userList = res.data;
-                })
+                });
                 if (this.id === null) {
                     this.nav[3] = '新建发布者';
                     this.url = 'addDiscoverArticle';
                 } else {
                     this.nav[3] = '编辑发布者';
-                    this.url= 'updateDiscoverArticle';
+                    this.url = 'updateDiscoverArticle';
                     this.form.id = this.id;
                     this.pageLoading = true;
-                    request.findDiscoverArticleById({id: this.id}).then(res=>{
+                    request.findDiscoverArticleById({ id: this.id }).then(res => {
                         this.pageLoading = false;
                         this.form.userId = res.data.userId;
                         this.form.categoryId = res.data.categoryId;
                         this.form.title = res.data.title;
                         this.form.content = res.data.content;
                         this.form.generalize = res.data.generalize.toString();
-                        if(res.data.discoverArticleProductList){
-                            res.data.discoverArticleProductList.forEach(v=>{
-                                this.linkPosition.push({id: v.code, name: v.name, type: v.type.toString()});
-                            })
+                        if (res.data.discoverArticleProductList) {
+                            res.data.discoverArticleProductList.forEach(v => {
+                                this.linkPosition.push({ id: v.code, name: v.name, type: v.type.toString() });
+                            });
                         }
-                        res.data.sysImgFileDTOS.forEach(v=>{
-                            this.fileList2.push({url: v.originalImg})
-                        })
-                        if(res.data.coverImg !== ''){
-                            this.fileList1.push({url: res.data.coverImg})
+                        res.data.sysImgFileDTOS.forEach(v => {
+                            this.fileList2.push({ url: v.originalImg });
+                        });
+                        if (res.data.coverImg !== '') {
+                            this.fileList1.push({ url: res.data.coverImg });
                         }
-                    }).catch(err=>{
+                    }).catch(err => {
                         this.pageLoading = false;
                         console.log(err);
-                    })
+                    });
                 }
             },
             // 富文本编辑器
@@ -320,7 +320,7 @@
             },
             // 根据类型和code查询产品名称
             getProductName(row) {
-                if(!row.type) return;
+                if (!row.type) return;
                 const data = {
                     code: row.id,
                     type: row.type
@@ -355,8 +355,8 @@
                         }
                         if (this.linkPosition.length !== 0) {
                             this.linkPosition.forEach(v => {
-                                codeArr.push(v.id)
-                                typeArr.push(v.type)
+                                codeArr.push(v.id);
+                                typeArr.push(v.type);
                             });
                         }
                         const data = {
