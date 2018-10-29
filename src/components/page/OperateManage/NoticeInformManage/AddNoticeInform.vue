@@ -2,7 +2,7 @@
     <div>
         <v-breadcrumb :nav="['服务管理','公告/通知','发布公告/通知']"></v-breadcrumb>
         <div class="container">
-            <div class="inf-box">
+            <div class="information-box">
                 <div style="margin: -30px 0 20px 80px">
                     <div class="tab-item" :class="index==0?'checked':''" @click="change(0)">公告</div>
                     <div class="tab-item" :class="index==1?'checked':''" @click="change(1)" style="margin-left: -5px">
@@ -286,8 +286,8 @@
 
     };
 </script>
-<style lang="less">
-    .inf-box {
+<style lang="less" scoped>
+    /deep/.information-box {
         .tab-item {
             width: 116px;
             height: 50px;

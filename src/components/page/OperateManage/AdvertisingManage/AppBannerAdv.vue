@@ -369,6 +369,7 @@
                     }
                 }
                 this.btnLoading = true;
+                data.date = [];
                 request[url](data).then(res => {
                     this.$message.success(res.msg);
                     this.getList(1);

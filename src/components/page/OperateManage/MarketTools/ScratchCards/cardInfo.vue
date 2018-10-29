@@ -2,17 +2,17 @@
     <div class="card-mange">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card>
-            <el-form :model="form" :rules="rules" ref="form" label-width="120px">
+            <el-form label-width="120px">
                 <el-form-item prop="name" label="活动名称:">
                     <span>{{form.name}}</span>
                 </el-form-item>
                 <el-form-item prop="prize" label="刮刮卡奖品:">
                     <el-table :data="tableData" border stripe class="mt10">
                         <el-table-column type="index" label="编号" align="center"></el-table-column>
-                        <el-table-column prop="name" label="奖品名称" align="center"></el-table-column>
-                        <el-table-column prop="num" label="赠送值" align="center">
+                        <el-table-column prop="awardName" label="奖品名称" align="center"></el-table-column>
+                        <el-table-column prop="giftValue" label="赠送值" align="center">
                             <template slot-scope="scope">
-                                {{scope.row.type == 1?'/':scope.row.num}}
+                                {{scope.row.type == 1?'/':scope.row.giftValue}}
                             </template>
                         </el-table-column>
                         <el-table-column prop="type" label="类型" align="center">
@@ -20,25 +20,25 @@
                                 {{scope.row.type == 1?'优惠券':'秀豆'}}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="prizeNum" label="奖品发放数" align="center">
+                        <el-table-column prop="totalNum" label="奖品发放数" align="center">
+                            <!--<template slot-scope="scope">-->
+                                <!--<template>{{scope.row.totalNum}}</template>-->
+                            <!--</template>-->
+                        </el-table-column>
+                        <el-table-column prop="totalSurplusNum" label="剩余数量" align="center"></el-table-column>
+                        <el-table-column prop="stockNum" label="库存数量" align="center">
                             <template slot-scope="scope">
-                                <template :disabled="status == 2">{{cope.row.prizeNum}}</template>
+                                {{scope.row.stockNum == -1?'不限量':scope.row.stockNum}}
                             </template>
                         </el-table-column>
-                        <el-table-column v-if="status == 2" prop="id" label="剩余数量" align="center"></el-table-column>
-                        <el-table-column prop="stock" label="库存数量" align="center">
+                        <!--<el-table-column prop="addNum" label="增加发放数" align="center">-->
+                            <!--<template slot-scope="scope">-->
+                                <!--<template>{{scope.row.addNum}}</template>-->
+                            <!--</template>-->
+                        <!--</el-table-column>-->
+                        <el-table-column prop="winRate" label="中奖概率" align="center">
                             <template slot-scope="scope">
-                                {{scope.row.stock == -1?'不限量':scope.row.stock}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column v-if="status == 2" prop="addNum" label="增加发放数" align="center">
-                            <template slot-scope="scope">
-                                <template>{{scope.row.addNum}}</template>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="ratio" label="中奖概率" align="center">
-                            <template slot-scope="scope">
-                                <template>{{scope.row.ratio}}</template>
+                                <template>{{scope.row.winRate}}%</template>
                             </template>
                         </el-table-column>
                         <el-table-column label="状态" align="center">
@@ -48,13 +48,10 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <p>总中奖概率：{{totalRatio}}</p>
-                </el-form-item>
-                <el-form-item prop="tip" label="总中奖概率:">
-                    <span>{{form.tip}}</span>
+                    <p>总中奖概率：{{totalRatio}}%</p>
                 </el-form-item>
                 <el-form-item prop="tip" label="未中奖提示语:">
-                    <span>{{form.tip}}</span>
+                    <span>{{form.loseHint}}</span>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="back">返回列表</el-button>
@@ -79,7 +76,8 @@
                     prize: '',
                     tip: ''
                 },
-                tableData: [],
+                totalRatio: 0,
+                tableData: []
             };
         },
         activated() {
@@ -92,7 +90,13 @@
                     id: this.id
                 };
                 request.findScratchCardById(data).then(res => {
+                    if (!res.data) return;
+                    this.totalRatio = 0;
                     this.form = res.data;
+                    this.tableData = res.data.scratchCardPrize;
+                    this.tableData.forEach((v, k) => {
+                        this.totalRatio += v.winRate;
+                    });
                 }).catch(err => {
                     console.log(err);
                 });

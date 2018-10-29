@@ -201,6 +201,13 @@
                 this.topicNavbarList = this.tplData.topicNavbarList;
                 for (const i in this.topicNavbarList) {
                     this.topicNavbarList[i].time = new Date(this.topicNavbarList[i].navName);
+                    if (i > 0) {
+                        this.pickerOptions[i] = {
+                            disabledDate(time) {
+                                return time.getTime() < new Date(that.topicNavbarList[i].time) - 8.64e7;
+                            }
+                        };
+                    }
                 }
                 this.navItem = this.tplData.topicNavbarList[0].type;
                 this.id = this.tplData.id;

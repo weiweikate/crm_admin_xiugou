@@ -4,7 +4,7 @@
         <el-card>
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
                 <el-form-item prop="name" label="活动名称:">
-                    <el-input class="inp" v-model="form.name"></el-input>
+                    <el-input class="inp" v-model="form.name" placeholder="请输入名称"></el-input>
                 </el-form-item>
                 <el-form-item prop="prize" label="刮刮卡奖品:">
                     <el-button type="primary" @click="showAddCouList">+ 添加优惠券</el-button>
@@ -22,25 +22,25 @@
                                 {{scope.row.type == 1?'优惠券':'秀豆'}}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="stock" label="库存数量" align="center">
+                        <el-table-column prop="totalNumber" label="库存数量" align="center">
                             <template slot-scope="scope">
-                                {{scope.row.stock == -1?'不限量':scope.row.stock}}
+                                {{scope.row.totalNumber == -1?'不限量':scope.row.totalNumber}}
                             </template>
                         </el-table-column>
-                        <el-table-column v-if="status == 2" prop="id" label="剩余数量" align="center"></el-table-column>
-                        <el-table-column prop="prizeNum" label="奖品发放数" align="center">
+                        <el-table-column v-if="status == 2" prop="totalSurplusNum" label="剩余数量" align="center"></el-table-column>
+                        <el-table-column prop="totalNum" label="奖品发放数" align="center">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 2" :min="0" :controls="false" v-model="scope.row.prizeNum"></el-input-number>
+                                <el-input-number :disabled="status == 2" :min="0" :controls="false" v-model="scope.row.totalNum"></el-input-number>
                             </template>
                         </el-table-column>
-                        <el-table-column v-if="status == 2" prop="addNum" label="增加发放数" align="center">
+                        <el-table-column v-if="status == 2" prop="totalNum" label="增加发放数" align="center">
                             <template slot-scope="scope">
-                                <el-input-number :min="0" :controls="false" v-model="scope.row.addNum"></el-input-number>
+                                <el-input-number :min="0" :controls="false" v-model="scope.row.totalNum"></el-input-number>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="ratio" label="中奖概率" align="center">
+                        <el-table-column prop="winRate" label="中奖概率" align="center">
                             <template slot-scope="scope">
-                                <el-input-number @blur="computedRatio(scope.row,scope.$index)" :min="0" :controls="false" v-model="scope.row.ratio"></el-input-number>%
+                                <el-input-number @blur="computedRatio" :min="0" :controls="false" v-model="scope.row.winRate"></el-input-number>%
                             </template>
                         </el-table-column>
                         <el-table-column prop="id" label="操作" align="center">
@@ -49,10 +49,10 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <p>总中奖概率：{{totalRatio}}</p>
+                    <p>总中奖概率：{{totalRatio}}%</p>
                 </el-form-item>
-                <el-form-item prop="tip" label="未中奖提示语:">
-                    <el-input class="inp" v-model="form.tip"></el-input>
+                <el-form-item prop="loseHint" label="未中奖提示语:">
+                    <el-input class="inp" v-model="form.loseHint" placeholder="请输入提示语"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" :loading="btnLoading" @click="submitForm">提 交</el-button>
@@ -116,8 +116,7 @@
                 url: '',
                 form: {
                     name: '',
-                    prize: '',
-                    tip: ''
+                    loseHint: ''
                 },
                 form1: {
                     name: '', // 秀豆名称
@@ -130,7 +129,7 @@
                         { required: true, message: '请输入活动名称', trigger: 'blur' },
                         { min: 1, max: 16, message: '活动名称长度在1到16个字符', trigger: 'blur' }
                     ],
-                    tip: [
+                    loseHint: [
                         { required: true, message: '请输入未中奖提示语', trigger: 'blur' }
                     ]
                 },
@@ -153,9 +152,22 @@
         },
         methods: {
             submitForm() {
-                console.log(this.url);
                 this.btnLoading = true;
-                request[this.url]().then(res => {
+                const data = this.form;
+                data.scratchCardPrize = [];
+                this.tableData.forEach((v, k) => {
+                    const temp = {
+                        awardName: v.name,
+                        giftValue: v.num ? v.num : '',
+                        type: v.type,
+                        totalNum: v.totalNum,
+                        winRate: v.winRate
+                    };
+                    if (v.id) temp.awardId = v.id;
+                    data.scratchCardPrize.push(temp);
+                });
+                if (!this.id) data.id = this.id;
+                request[this.url](data).then(res => {
                     this.$message.success(res.msg);
                     this.$router.push('/scratchCardsList');
                     this.btnLoading = false;
@@ -187,14 +199,16 @@
                 });
             },
             // 计算总概率
-            computedRatio(row, index) {
-                this.totalRatio += row.ratio || 0;
-                if (this.totalRatio > 100) {
-                    this.totalRatio -= row.ratio;
-                    this.tableData[index].ratio = 0;
-                    this.$set(this.tableData, index, this.tableData[index]);
-                    this.$message.warning('中奖概率不能大于100');
-                }
+            computedRatio() {
+                this.totalRatio = 0;
+                this.tableData.forEach((v, k) => {
+                    this.totalRatio += v.winRate || 0;
+                    if (this.totalRatio > 100) {
+                        this.totalRatio -= v.winRate;
+                        v.winRate = 0;
+                        this.$message.warning('中奖概率不能大于100');
+                    }
+                });
             },
             // 显示优惠券列表
             showAddCouList() {
@@ -214,7 +228,7 @@
                     res.data.forEach(v => {
                         const obj = {
                             name: v.name,
-                            stock: v.totalNumber,
+                            totalNumber: v.totalNumber,
                             id: v.id,
                             selected: false,
                             type: 1 // 1：优惠券 2：秀豆
@@ -265,7 +279,7 @@
                     name: this.form1.name,
                     num: this.form1.num,
                     type: 2,
-                    stock: -1
+                    totalNumber: -1
                 });
                 this.beforeClose();
             },

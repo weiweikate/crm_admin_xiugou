@@ -194,12 +194,20 @@
                     topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
                 }
             ];
+            const that = this;
             if (this.tplData != 'add') {
                 this.bannerForm.imgUrl = this.tplData.imgUrl;
                 this.bannerForm.tip = this.tplData.remark;
                 this.topicNavbarList = this.tplData.topicNavbarList;
                 for (const i in this.topicNavbarList) {
                     this.topicNavbarList[i].time = new Date(this.topicNavbarList[i].navName);
+                    if (i > 0) {
+                        this.pickerOptions[i] = {
+                            disabledDate(time) {
+                                return time.getTime() < new Date(that.topicNavbarList[i].time) - 8.64e7;
+                            }
+                        };
+                    }
                 }
                 this.navItem = this.tplData.topicNavbarList[0].type;
                 this.id = this.tplData.id;
@@ -225,7 +233,6 @@
                     v.type = item;
                     v.navName = '';
                     v.time = '';
-
                 });
             },
             // 确认保存

@@ -60,11 +60,11 @@
                 </el-table-column>
                 <el-table-column label="操作" width="320px">
                     <template slot-scope="scope">
-                        <el-button type="primary" v-if="scope.row.status==1" @click="showTip(scope.row.code, '1')">暂停</el-button>
-                        <el-button type="primary" v-if="scope.row.status==2" @click="showTip(scope.row.code, '2')">开启</el-button>
+                        <el-button type="primary" v-if="scope.row.status==1" @click="showTip(scope.row.code, '2')">暂停</el-button>
+                        <el-button type="primary" v-if="scope.row.status==2" @click="showTip(scope.row.code, '1')">开启</el-button>
                         <el-button type="warning" @click="editCard(scope.row.id)">编辑</el-button>
                         <el-button type="success" @click="toDetail(scope.row.id)">详情</el-button>
-                        <el-button type="danger" v-if="scope.row.status==1" @click="showTip(scope.row.code, '3')">删除</el-button>
+                        <el-button type="danger" v-if="scope.row.status==1" @click="showTip(scope.row.code, '0')">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -80,7 +80,7 @@
                 </el-pagination>
             </div>
         </el-card>
-        <toask ref="toask"></toask>
+        <toask ref="toask" @msg="closeToask"></toask>
     </div>
 </template>
 
@@ -110,7 +110,7 @@
             };
         },
         activated() {
-            this.getList(1);
+            this.getList(this.page.currentPage);
             this.getCreateUserList();// 加载发布人列表
         },
         methods: {
@@ -136,6 +136,7 @@
                     updateStartTime: this.form.updateTime ? utils.formatTime(this.form.updateTime[0], 1) : '',
                     updateEndTime: this.form.updateTime ? utils.formatTime(this.form.updateTime[1], 1) : ''
                 };
+                this.page.currentPage = val;
                 request.queryScratchCardList(data).then(res => {
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
@@ -165,6 +166,11 @@
             toDetail(id) {
                 sessionStorage.setItem('cardInfoId', id);
                 this.$router.push({ name: 'cardInfo', query: { cardInfoId: id }});
+            },
+            closeToask(status) {
+                if (status) {
+                    this.getList(this.page.currentPage);
+                }
             }
         }
     };
