@@ -1,5 +1,5 @@
 <template>
-    <div class="tab-content">
+    <div class="tab-gift-content">
       <el-button @click="releaseProduct" class="add-product" type="primary">添加礼包</el-button>
       <div class="search-pane">
           <el-form :model="form" ref='form' inline label-width="100px">
@@ -306,7 +306,7 @@ export default {
 };
 </script>
 <style lang='less'>
-.tab-content {
+.tab-gift-content {
   .add-product {
     margin: 0 0 20px 0;
   }

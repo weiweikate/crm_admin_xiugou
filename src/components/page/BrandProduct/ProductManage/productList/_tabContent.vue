@@ -62,9 +62,9 @@
                     {{scope.row.stock || 0}}
                 </template>
             </el-table-column>
-            <el-table-column prop="saleNum" label="销量" align="center" min-width="50">
+            <el-table-column prop="salesNum" label="销量" align="center" min-width="50">
                 <template slot-scope="scope">
-                    {{scope.row.saleNum || 0}}
+                    {{scope.row.salesNum || 0}}
                 </template>
             </el-table-column>
             <el-table-column label="发布时间/发布人" align="center" min-width="120">
@@ -201,7 +201,7 @@ export default {
         if (this.flag) {
             this.status = '4';
         }
-        this.getList(1);
+        this.getList(this.page.currentPage);
     },
 
     mounted() {

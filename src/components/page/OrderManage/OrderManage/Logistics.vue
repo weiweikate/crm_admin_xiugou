@@ -9,7 +9,7 @@
                     <li v-for="(v,k) in progressList" :key="k">
                         <span>{{v.time | formatOrderTime}}</span>
                         <span v-if='k != 0 ' class="spec"><span class="circle"></span></span>
-                        <span v-else class="spec"><img src="@/assets/images/logistics-2.png" alt=""></span>
+                        <span v-else class="spec"><img class="img-ico" src="@/assets/images/logistics-3.png" alt=""></span>
                         <span>
                             <p v-if='status == 1 && k == 0' class="status">快递收件</p>
                             <p v-else-if='status == 2 && k == 0' class="status">运输中</p>
@@ -160,10 +160,11 @@ export default {
                         background: #fff;
                         z-index: 2;
                         text-align: center;
-                        img{
+                        .img-ico{
                             width:40px;
                             height: 40px;
                             vertical-align: middle;
+                            border: none;
                         }
                         .circle{
                             width: 10px;
@@ -181,7 +182,7 @@ export default {
                 .line{
                     width: 2px;
                     background-color: #dddddd;
-                    height: 85%;
+                    height: 90%;
                     position: absolute;
                     top:0;
                     left: 106px;

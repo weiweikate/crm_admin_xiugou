@@ -77,9 +77,9 @@
                 </el-table-column>
                 <el-table-column label="状态" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.status==1">待激活</template>
-                        <template v-if="scope.row.status==2">正常</template>
-                        <template v-if="scope.row.status==3">已关闭</template>
+                        <template v-if="scope.row.status==0">待激活</template>
+                        <template v-if="scope.row.status==1">正常</template>
+                        <template v-if="scope.row.status==2">已关闭</template>
                     </template>
                 </el-table-column>
                 <el-table-column min-width="160" label="操作" align="center">

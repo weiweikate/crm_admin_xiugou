@@ -3,12 +3,12 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card style="margin-bottom: 10px">
             <el-form :model="form" ref="form" inline label-width="120px">
-                <el-form-item prop="taskUser" label="任务人">
-                    <el-input v-model="form.taskUser"></el-input>
+                <el-form-item prop="userName" label="任务人">
+                    <el-input v-model="form.userName"></el-input>
                 </el-form-item>
-                <el-form-item prop="taskType" label="任务类型">
-                    <el-select v-model="form.taskType">
-                        <el-option v-for="(v, k) in taskTypeArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                <el-form-item prop="name" label="任务名称">
+                    <el-select v-model="form.name">
+                        <el-option v-for="(v, k) in taskTypeArr" :key="k" :label="v" :value="v"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="taskTime" label="任务时间">
@@ -38,7 +38,9 @@
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-import tpl from './_showValue/showTaskList'
+import tpl from './_showValue/showTaskList';
+import utils from '@/utils/index';
+import request from '../../../http/http';
 export default {
     components: {
         vBreadcrumb,
@@ -48,25 +50,43 @@ export default {
         return {
             nav: ['秀值模块', '秀值任务管理', '用户任务看板'],
             form: {
-                taskUser: '',
-                taskType: '',
-                taskTime: []
+                userName: '',
+                name: '',
+                taskTime: [],
+                startTime: '',
+                endTime: ''
             },
-            taskTypeArr: [{label: '15-99', value: '1'}],
+            taskTypeArr: [],
             activeName: 'all'
-        }
+        };
     },
     activated() {
         this.submitForm();
+        this.getTaskName();
     },
     methods: {
         submitForm() {
+            if (!this.form.taskTime) this.form.taskTime = [];
+            this.form.startTime = this.form.taskTime.length !== 0 ? utils.formatTime(this.form.taskTime[0]) : '';
+            this.form.endTime = this.form.taskTime.length !== 0 ? utils.formatTime(this.form.taskTime[1]) : '';
             this.$refs[this.activeName].form = this.form;
-            this.$refs[this.activeName].getList();
+            this.$refs[this.activeName].getList(1);
+        },
+        // 获取任务名称
+        getTaskName() {
+            request.userTaskNameQuery({}).then(res => {
+                this.taskTypeArr = [];
+                res.data.forEach(v => {
+                    v = v.split(',').join('-');
+                    this.taskTypeArr.push(v);
+                });
+            }).catch(err => {
+                console.log(err);
+            });
         },
         handleClickTab(tab) {
             this.$refs[tab.name].form = this.form;
-            this.$refs[tab.name].getList();
+            this.$refs[tab.name].getList(1);
         }
     }
 };
