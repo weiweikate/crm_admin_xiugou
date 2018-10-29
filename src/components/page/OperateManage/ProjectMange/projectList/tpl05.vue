@@ -194,12 +194,13 @@
                     topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
                 }
             ];
+            let that=this;
             if (this.tplData != 'add') {
                 this.bannerForm.imgUrl = this.tplData.imgUrl;
                 this.bannerForm.remark = this.tplData.remark;
                 this.topicNavbarList = this.tplData.topicNavbarList;
                 for (const i in this.topicNavbarList) {
-                    this.topicNavbarList[i].time = this.topicNavbarList[i].navName;
+                    this.topicNavbarList[i].time = new Date(this.topicNavbarList[i].navName);
                 }
                 this.navItem = this.tplData.topicNavbarList[0].type;
                 this.id = this.tplData.id;
@@ -320,7 +321,7 @@
                 if (this.navItem == 2) {
                     this.pickerOptions.push({
                         disabledDate(time) {
-                            return time.getTime() < that.topicNavbarList[that.topicNavbarList.length - 2].time.getTime() - 8.64e7;
+                            return time.getTime() < new Date(that.topicNavbarList[that.topicNavbarList.length - 2].time) - 8.64e7;
                         }
                     });
                 }
