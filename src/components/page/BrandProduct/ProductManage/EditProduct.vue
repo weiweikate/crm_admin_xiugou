@@ -381,6 +381,10 @@
                 data.buyLimit = this.purchaseLimit ? this.purchasevalue : -1;
                 data.beginTime = this.setBuyTime[0] === undefined ? '' : utils.formatTime(this.setBuyTime[0]);
                 data.endTime = this.setBuyTime[1] === undefined ? '' : utils.formatTime(this.setBuyTime[1]);
+                if (!this.isSetBuTime) {
+                    data.beginTime = '';
+                    data.endTime = '';
+                }
                 data.productTagDTOList = [];
                 this.selectedTagArr.forEach(v => {
                     data.productTagDTOList.push({ tagId: v.value });
