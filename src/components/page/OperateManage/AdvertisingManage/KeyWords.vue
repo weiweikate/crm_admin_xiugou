@@ -157,6 +157,7 @@ export default {
                 name: that.form.wordName,
                 pageSize: that.page.pageSize
             };
+            this.page.currentPage = val;
             that.tableLoading = true;
             request.getHotWordsByPage(data).then(res => {
                 that.tableLoading = false;

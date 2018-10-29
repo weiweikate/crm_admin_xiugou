@@ -1026,6 +1026,12 @@ export default new Router({
                     meta: { title: '刮刮卡管理', url: '/cardMange' }
                 },
                 {
+                    name: 'cardInfo',
+                    path: '/cardInfo',
+                    component: resolve => require(['../components/page/OperateManage/MarketTools/ScratchCards/cardInfo'], resolve),
+                    meta: { title: '刮刮卡详情', url: '/cardInfo' }
+                },
+                {
                     name: 'activityUse',
                     path: '/activityUse',
                     component: resolve => require(['../components/page/OperateManage/MarketTools/ScratchCards/activityUse'], resolve),

@@ -140,7 +140,7 @@ export default {
                 id: 3
             }],
             // 退款状态数组
-            refundStatusArr: [ {
+            refundStatusArr: [{
                 type: '退款中',
                 id: 1
             }, {
@@ -161,11 +161,14 @@ export default {
             }],
             // 关闭状态
             closeReasonArr: [{
-                type: '取消超时关闭',
-                id: 1
+                type: '取消关闭',
+                id: 7
             }, {
                 type: '退款完成',
-                id: 2
+                id: 6
+            }, {
+                type: '超时关闭',
+                id: 8
             }]
         };
     },

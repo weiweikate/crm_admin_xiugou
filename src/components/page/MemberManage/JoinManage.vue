@@ -80,6 +80,7 @@ export default {
                 pageSize: this.page.pageSize,
                 adminName: this.form.initiator
             };
+            this.page.currentPage = val;
             this.tableLoading = true;
             request.queryList(data).then(res => {
                 this.tableData = res.data.data;
@@ -92,13 +93,13 @@ export default {
         },
         // 详情
         detailItem(row) {
-            let msg = JSON.stringify(row)
+            const msg = JSON.stringify(row);
             sessionStorage.setItem('inviteDetail', msg);
             this.$router.push({ path: '/inviteDetail', query: { inviteDetail: msg }});
         },
         // 查看邀请
         watchItem(row) {
-            let msg = JSON.stringify(row)
+            const msg = JSON.stringify(row);
             sessionStorage.setItem('inviteLink', msg);
             this.$router.push({ path: '/inviteLink', query: { inviteLink: msg }});
         },

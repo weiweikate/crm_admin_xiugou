@@ -23,11 +23,13 @@
                 <el-table-column prop="cycle" label="推广周期(天)" align="center"></el-table-column>
                 <el-table-column prop="period" label="翻倍周期(天)" align="center"></el-table-column>
                 <el-table-column prop="probability" label="翻倍次数" align="center"></el-table-column>
-                <el-table-column prop="name" label="总库存数(份)" align="center"></el-table-column>
+                <el-table-column prop="totalNumber" label="总库存数(份)" align="center"></el-table-column>
                 <el-table-column prop="sold" label="已售份数" align="center">
                     <template slot-scope="scope">{{scope.row.sold||0}}</template>
                 </el-table-column>
-                <el-table-column prop="remain" label="剩余份数" align="center"></el-table-column>
+                <el-table-column label="剩余份数" align="center">
+                    <template slot-scope="scope">{{scope.row.totalNumber-scope.row.sold}}</template>
+                </el-table-column>
                 <el-table-column label="正在进行中(份)" align="center">
                     <template slot-scope="scope">{{scope.row.processing||0}}</template>
                 </el-table-column>
@@ -175,7 +177,7 @@ export default {
         addRepertory() {
             const data = {
                 id: this.id,
-                remain: this.count
+                totalNumber: this.count
             };
             if (!this.count || !/^(0|[1-9]\d*)$/.test(this.count)) {
                 this.$message.warning('请输入数值!');

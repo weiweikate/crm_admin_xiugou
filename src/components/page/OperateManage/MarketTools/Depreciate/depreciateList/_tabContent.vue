@@ -319,13 +319,13 @@
             }
         },
         created() {
-            this.getList(1);
+            this.getList(this.page.currentPage);
             this.getCreateUserList();// 加载发布人列表
             const winHeight = window.screen.availHeight - 520;
             this.height = winHeight;
         },
         activated() {
-            this.getList(1);
+            this.getList(this.page.currentPage);
             this.getCreateUserList();// 加载发布人列表
         },
 

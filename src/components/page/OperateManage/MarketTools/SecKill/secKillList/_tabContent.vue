@@ -283,11 +283,11 @@
         created() {
             const winHeight = window.screen.availHeight - 520;
             this.height = winHeight;
-            this.getList(1);
+            this.getList(this.page.currentPage);
             this.getCreateUserList();// 加载发布人列表
         },
         activated() {
-            this.getList(1);
+            this.getList(this.page.currentPage);
             this.getCreateUserList();// 加载发布人列表
         },
 

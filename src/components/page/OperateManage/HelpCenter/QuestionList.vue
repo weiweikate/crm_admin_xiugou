@@ -60,17 +60,18 @@ export default {
     activated() {
         this.height = window.screen.availHeight - 400;
         this.questionTypeId = this.$route.query.questionTypeId || sessionStorage.getItem('questionTypeId');
-        this.getList();
+        this.getList(this.page.currentPage);
     },
 
     methods: {
         // 获取数据
-        getList() {
+        getList(val) {
             const data = {
                 typeId: this.questionTypeId,
                 page: this.page.currentPage,
                 pageSize: this.page.pageSize
             };
+            this.page.currentPage = val;
             request.queryHelpQuestionPageList(data).then(res => {
                 this.tableData = [];
                 this.tableData = res.data.data;

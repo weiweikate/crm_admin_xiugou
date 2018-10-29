@@ -69,6 +69,7 @@ export default {
                 page: val,
                 size: this.page.pageSize
             };
+            this.page.currentPage = val;
             request.getStoreTipOffList(data).then(res => {
                 if (!res.data) return;
                 this.tableData = res.data.data;

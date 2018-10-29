@@ -178,7 +178,7 @@ export default {
         this.type =
             this.$route.query.type || JSON.parse(sessionStorage.getItem('thirdClassify')).type;
         this.superiorName =
-            this.$route.query.superiorName ||JSON.parse(sessionStorage.getItem('thirdClassify')).superiorName;
+            this.$route.query.superiorName || JSON.parse(sessionStorage.getItem('thirdClassify')).superiorName;
         this.getList(this.page.currentPage);
     },
     methods: {
@@ -191,6 +191,7 @@ export default {
                 pageSize: this.page.pageSize,
                 level: 3
             };
+            this.page.currentPage = val;
             request.queryProductCategoryList(data).then(res => {
                 this.tableData = [];
                 this.tableData = res.data.data;

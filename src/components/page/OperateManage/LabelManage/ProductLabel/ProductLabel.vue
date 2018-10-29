@@ -73,6 +73,7 @@ export default {
                 level: 1,
                 fatherId: 0
             };
+            this.page.currentPage = val;
             request.queryProductCategoryList(data).then(res => {
                 this.tableData = [];
                 this.tableData = res.data.data;

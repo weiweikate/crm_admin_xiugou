@@ -278,6 +278,7 @@
                     if (!valid) {
                         return;
                     } else {
+
                         console.log(this.form);
                         const data = that.form;
                         if (!that.form.provinceCode || !that.form.cityCode || !that.form.areaCode) {

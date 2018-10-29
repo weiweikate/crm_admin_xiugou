@@ -165,6 +165,7 @@
                     endTime: that.form.date ? moment(that.form.date[1]).format('YYYY-MM-DD') : ''
                 };
                 that.tableLoading = true;
+                this.page.currentPage = val;
                 request.queryFeedbackList(data).then(res => {
                     that.tableLoading = false;
                     that.tableData=res.data.data;

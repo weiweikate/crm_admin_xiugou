@@ -112,9 +112,7 @@
             },
             // 添加
             addItem() {
-                this.daysList.push({
-                    value: ''
-                });
+                this.daysList.push('');
             },
             // 删除
             deleteItem(index) {

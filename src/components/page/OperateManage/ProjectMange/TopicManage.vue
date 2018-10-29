@@ -91,6 +91,7 @@
                     page: val,
                     pageSize: this.page.pageSize
                 };
+                this.page.currentPage = val;
                 this.tableLoading = true;
                 request.topicList(data).then(res => {
                     if (!res.data) return;

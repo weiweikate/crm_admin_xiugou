@@ -117,6 +117,7 @@
                     status: that.form.status,
                     name: that.form.name
                 };
+                this.page.currentPage = val;
                 that.tableLoading = true;
                 request.getProductBrandList(data).then(res => {
                     that.tableLoading = false;

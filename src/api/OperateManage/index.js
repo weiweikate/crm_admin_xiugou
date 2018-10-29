@@ -305,3 +305,15 @@ export const queryPromotionPackagePageList = '/promotion/promotionPackage/queryP
 export const updatePromotionPackageStockAndStatus = '/promotion/promotionPackage/updatePromotionPackageStockAndStatus';
 // 查询
 export const findPromotionPackageDetailsById = ['/promotion/promotionPackage/findPromotionPackageDetailsById', { methods: 'get' }];
+
+/** ************刮刮乐*****************/
+// 新增刮刮卡
+export const addScratchCard = '/scratch/scratchCard/addScratchCard';
+// 查询
+export const findScratchCardById = ['/scratch/scratchCard/findById', { methods: 'get' }];
+// 列表
+export const queryScratchCardList = '/scratch/scratchCard/queryList';
+// 修改状态
+export const updateScratchCardById = ['/scratch/scratchCard/updateById', { methods: 'get' }];
+// 修改
+export const updateScratchCard = '/scratch/scratchCard/updateScratchCard';

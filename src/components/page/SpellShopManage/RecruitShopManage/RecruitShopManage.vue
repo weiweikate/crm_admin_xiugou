@@ -101,6 +101,7 @@ export default {
                 size: this.page.pageSize,
                 status: 3
             };
+            this.page.currentPage = val;
             request.getStoreList(data).then(res => {
                 this.tableData = [];
                 if (!res.data) return;

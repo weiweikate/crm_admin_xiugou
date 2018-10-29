@@ -84,6 +84,7 @@
                     pageSize: that.page.pageSize,
                     keyword: that.form.keyword
                 };
+                this.page.currentPage = val;
                 that.tableLoading = true;
                 request.getWordsByPage(data).then(res => {
                     that.tableLoading = false;

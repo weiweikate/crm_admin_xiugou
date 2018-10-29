@@ -185,6 +185,7 @@ export default {
                 pageSize: this.page.pageSize,
                 level: 2
             };
+            this.page.currentPage = val;
             request.queryProductCategoryList(data).then(res => {
                 this.tableData = [];
                 this.tableData = res.data.data;

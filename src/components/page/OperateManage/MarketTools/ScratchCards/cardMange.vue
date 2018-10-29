@@ -10,7 +10,7 @@
                     <el-button type="primary" @click="showAddCouList">+ 添加优惠券</el-button>
                     <el-button type="primary" @click="isShowShowBeanList = true">+ 添加秀豆奖品</el-button>
                     <el-table :data="tableData" border stripe class="mt10">
-                        <el-table-column prop="id" label="编号" align="center"></el-table-column>
+                        <el-table-column type="index" label="编号" align="center"></el-table-column>
                         <el-table-column prop="name" label="奖品名称" align="center"></el-table-column>
                         <el-table-column prop="num" label="赠送值" align="center">
                             <template slot-scope="scope">
@@ -45,7 +45,7 @@
                         </el-table-column>
                         <el-table-column prop="id" label="操作" align="center">
                             <template slot-scope="scope">
-                                <el-button type="danger" @click="deleteSelectedCoupon(scope.$index, scope.row.type)">删除</el-button>
+                                <el-button type="danger" @click="deleteSelectedCoupon(scope.$index, scope.row.type)">取消奖品</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -54,8 +54,8 @@
                 <el-form-item prop="tip" label="未中奖提示语:">
                     <el-input class="inp" v-model="form.tip"></el-input>
                 </el-form-item>
-                <el-form-item prop="tip" label="未中奖提示语:">
-                    <el-button type="primary" @click="submitForm">提 交</el-button>
+                <el-form-item>
+                    <el-button type="primary" :loading="btnLoading" @click="submitForm">提 交</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -111,7 +111,7 @@
         components: { vBreadcrumb },
         data() {
             return {
-                nav: ['运营管理', '营销工具管理', '新建刮刮卡'],
+                nav: ['运营管理', '营销工具管理', '刮刮卡', '新建刮刮卡'],
                 id: '',
                 url: '',
                 form: {
@@ -143,7 +143,8 @@
                 tmpCouponList: [], // 暂时存放优惠券列表
                 couponType: '1',
                 // 秀豆
-                isShowShowBeanList: false
+                isShowShowBeanList: false,
+                btnLoading: false
             };
         },
         activated() {
@@ -153,17 +154,37 @@
         methods: {
             submitForm() {
                 console.log(this.url);
+                this.btnLoading = true;
+                request[this.url]().then(res => {
+                    this.$message.success(res.msg);
+                    this.$router.push('/scratchCardsList');
+                    this.btnLoading = false;
+                }).catch(err => {
+                    console.log(err);
+                    this.btnLoading = false;
+                });
             },
             getInfo() {
-                if (this.id == '') {
+                if (!this.id) {
                     this.status = 1;
-                    this.nav[2] = '新建刮刮卡';
-                    this.url = 'add';
+                    this.nav[3] = '新建刮刮卡';
+                    this.url = 'addScratchCard';
                 } else {
                     this.status = 2;
-                    this.nav[2] = '编辑刮刮卡';
-                    this.url = 'edit';
+                    this.nav[3] = '编辑刮刮卡';
+                    this.url = 'updateScratchCard';
+                    this.getDetail();
                 }
+            },
+            getDetail() {
+                const data = {
+                    id: this.id
+                };
+                request.findScratchCardById(data).then(res => {
+                    this.form = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 计算总概率
             computedRatio(row, index) {

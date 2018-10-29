@@ -128,7 +128,7 @@ export default {
         this.height = winHeight;
     },
     activated() {
-        this.getList(1);
+        this.getList(this.page.currentPage);
     },
 
     mounted() {
@@ -142,7 +142,7 @@ export default {
         } else if (n === 'ended') {
             this.status = '0';
         }
-        this.getList(1);
+        this.getList(this.page.currentPage);
     },
     methods: {
         //  提交表单

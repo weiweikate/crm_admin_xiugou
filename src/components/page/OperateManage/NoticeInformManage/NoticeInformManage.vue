@@ -214,6 +214,7 @@ export default {
                 startTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
                 endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : ''
             };
+            this.page.currentPage = val;
             this.tableLoading = true;
             request.queryNoticeList(data).then(res => {
                 this.tableLoading = false;

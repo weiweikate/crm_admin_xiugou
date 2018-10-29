@@ -93,6 +93,7 @@ export default {
                 page: val,
                 pageSize: this.page.pageSize
             };
+            this.page.currentPage = val;
             request.querySysTagTypePageList(data).then(res => {
                 this.tableData = [];
                 this.tableData = res.data.data;

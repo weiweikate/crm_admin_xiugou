@@ -151,6 +151,7 @@ export default {
                 page: val,
                 size: this.page.pageSize
             };
+            this.page.currentPage = val;
             request
                 .getStoreList(data)
                 .then(res => {
