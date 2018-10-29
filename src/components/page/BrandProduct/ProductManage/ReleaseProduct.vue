@@ -79,7 +79,7 @@
                 </el-form-item>
                 <div class="pro-title">使用限制</div>
                 <el-form-item>
-                    <el-checkbox label="不支持优惠卷" v-model="limit.notSupportCoupon"></el-checkbox>
+                    <el-checkbox label="不支持优惠券" v-model="limit.notSupportCoupon"></el-checkbox>
                     <!--<el-checkbox label="不支持1元券抵扣" v-model="limit.notSupportScore"></el-checkbox>-->
                 </el-form-item>
                 <el-form-item>

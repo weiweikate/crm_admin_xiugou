@@ -89,7 +89,7 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import deleteToast from '@/components/common/DeleteToast';
-    import utils from '@/utils/index'
+    import utils from '@/utils/index';
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http';
     export default {
@@ -113,37 +113,37 @@
                 delUri: ''
             };
         },
-        activated(){
+        activated() {
             this.getList();
         },
         methods: {
             // 获取文章列表
-            getList(){
-                if(!this.time)this.time = [];
+            getList() {
+                if (!this.time) this.time = [];
                 this.form.beginTime = this.time.length != 0 ? utils.formatTime(this.time[0]) : '';
                 this.form.endTime = this.time.length != 0 ? utils.formatTime(this.time[1]) : '';
-                let data = {
+                const data = {
                     ...this.form,
                     page: this.page.currentPage,
                     pageSize: this.page.pageSize
-                }
+                };
                 this.tabLoading = true;
-                request.queryDiscoverArticlePageList(data).then(res=>{
+                request.queryDiscoverArticlePageList(data).then(res => {
                     this.tabLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
-                }).catch(err=>{
+                }).catch(err => {
                     this.tabLoading = false;
                     console.log(err);
-                })
+                });
             },
             // 排序
             sortChange({ column, prop, order }) {
                 delete this.form['clickRank'];
                 delete this.form['collectRank'];
                 delete this.form['praiseRank'];
-                if(prop){
-                    this.form[`${prop}Rank`] = order === 'ascending'?'asc':'desc';
+                if (prop) {
+                    this.form[`${prop}Rank`] = order === 'ascending' ? 'asc' : 'desc';
                 }
                 this.getList();
             },
@@ -153,7 +153,7 @@
                 this.$router.push({ name: 'addFound', query: { 'foundId': row.id }});
             },
             // 查看详情
-            showInfo(row){
+            showInfo(row) {
                 sessionStorage.setItem('foundId', row.id);
                 this.$router.push({ name: 'articalInfo', query: { 'foundId': row.id }});
             },

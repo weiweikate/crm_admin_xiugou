@@ -1214,6 +1214,12 @@ export default new Router({
                     meta: { title: '秀值任务查看', url: '/showCashTaskList' }
                 },
                 {
+                    name: 'showValueAccount',
+                    path: '/showValueAccount',
+                    component: resolve => require(['../components/page/MemberManage/UserAccount/ShowValueAccount.vue'], resolve),
+                    meta: { title: '秀值账户收支明细', url: '/showValueAccount' }
+                },
+                {
                     name: 'demo',
                     path: '/demo',
                     component: resolve => require(['../components/page/demo.vue'], resolve),
