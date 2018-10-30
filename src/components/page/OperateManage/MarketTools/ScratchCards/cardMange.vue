@@ -11,10 +11,10 @@
                     <el-button type="primary" @click="isShowShowBeanList = true">+ 添加秀豆奖品</el-button>
                     <el-table :data="tableData" border stripe class="mt10">
                         <el-table-column type="index" label="编号" align="center"></el-table-column>
-                        <el-table-column prop="name" label="奖品名称" align="center"></el-table-column>
-                        <el-table-column prop="num" label="赠送值" align="center">
+                        <el-table-column prop="awardName" label="奖品名称" align="center"></el-table-column>
+                        <el-table-column prop="giftValue" label="赠送值" align="center">
                             <template slot-scope="scope">
-                                {{scope.row.type == 1?'/':scope.row.num}}
+                                {{scope.row.type == 1?'/':scope.row.giftValue}}
                             </template>
                         </el-table-column>
                         <el-table-column prop="type" label="类型" align="center">
@@ -22,30 +22,35 @@
                                 {{scope.row.type == 1?'优惠券':'秀豆'}}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="totalNumber" label="库存数量" align="center">
-                            <template slot-scope="scope">
-                                {{scope.row.totalNumber == -1?'不限量':scope.row.totalNumber}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column v-if="status == 2" prop="totalSurplusNum" label="剩余数量" align="center"></el-table-column>
                         <el-table-column prop="totalNum" label="奖品发放数" align="center">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 2" :min="0" :controls="false" v-model="scope.row.totalNum"></el-input-number>
+                                <el-input-number v-if="status==1" :min="0" :controls="false" v-model="scope.row.totalNum"></el-input-number>
+                                <span v-else>{{scope.row.totalNum||0}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column v-if="status == 2" prop="totalNum" label="增加发放数" align="center">
+                        <el-table-column v-if="status == 2" label="剩余数量" align="center">
+                            <template slot-scope="scope">{{scope.row.totalSurplusNum||0}}</template>
+                        </el-table-column>
+                        <el-table-column prop="stockNum" label="库存数量" align="center">
                             <template slot-scope="scope">
-                                <el-input-number :min="0" :controls="false" v-model="scope.row.totalNum"></el-input-number>
+                                {{scope.row.stockNum == -1?'不限量':scope.row.stockNum}}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="winRate" label="中奖概率" align="center">
+                        <el-table-column v-if="status == 2" prop="addNum" label="增加发放数" align="center">
+                            <template slot-scope="scope">
+                                <el-input-number :min="0" :controls="false" v-model="scope.row.addNum"></el-input-number>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="winRate" label="中奖概率" align="center" min-width="100">
                             <template slot-scope="scope">
                                 <el-input-number @blur="computedRatio" :min="0" :controls="false" v-model="scope.row.winRate"></el-input-number>%
                             </template>
                         </el-table-column>
                         <el-table-column prop="id" label="操作" align="center">
                             <template slot-scope="scope">
-                                <el-button type="danger" @click="deleteSelectedCoupon(scope.$index, scope.row.type)">取消奖品</el-button>
+                                <el-button type="danger" v-if="scope.row.status==1" @click="updateStatus(scope.row,2)">启用</el-button>
+                                <el-button type="danger" v-else-if="scope.row.status==2" @click="updateStatus(scope.row,1)">停用</el-button>
+                                <el-button type="danger" v-else @click="deleteSelectedCoupon(scope.$index, scope.row.type)">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -55,7 +60,8 @@
                     <el-input class="inp" v-model="form.loseHint" placeholder="请输入提示语"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" :loading="btnLoading" @click="submitForm">提 交</el-button>
+                    <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">提 交</el-button>
+                    <el-button type="success" @click="cancel">取 消</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -63,22 +69,22 @@
             <el-tabs v-model="couponType" v-loading="couponLoading" @tab-click="handleClick">
                 <el-tab-pane label="满减券" name="1">
                     <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
-                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}} </span>
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.awardName}} </span>
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="折扣券" name="3">
                     <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
-                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}} </span>
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.awardName}} </span>
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="抵扣券" name="4">
                     <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
-                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}} </span>
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.awardName}} </span>
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="抵价券" name="2">
                     <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
-                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}} </span>
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.awardName}} </span>
                     </div>
                 </el-tab-pane>
             </el-tabs>
@@ -90,7 +96,7 @@
         <el-dialog title="秀豆奖品" :visible.sync="isShowShowBeanList" :before-close="beforeClose" width="500px">
             <el-form :model="form1" ref="form" label-width="120px">
                 <el-form-item prop="name" label="奖品名称:">
-                    <el-input class="inp" v-model="form1.name"></el-input>
+                    <el-input class="inp" v-model="form1.awardName"></el-input>
                 </el-form-item>
                 <el-form-item prop="num" label="赠送秀豆:">
                     <el-input-number :controls="false" :min="0" class="inp" v-model="form1.num"></el-input-number>
@@ -119,8 +125,8 @@
                     loseHint: ''
                 },
                 form1: {
-                    name: '', // 秀豆名称
-                    num: ''
+                    awardName: '', // 秀豆名称
+                    giftValue: ''
                 },
                 tableData: [],
                 status: '', // 1.添加 2.编辑
@@ -148,45 +154,66 @@
         },
         activated() {
             this.id = this.$route.query.cardId || sessionStorage.getItem('cardId');
+            this.status = this.$route.query.status == 'add' ? 1 : 2;
             this.getInfo();
         },
         methods: {
-            submitForm() {
-                this.btnLoading = true;
-                const data = this.form;
-                data.scratchCardPrize = [];
-                this.tableData.forEach((v, k) => {
-                    const temp = {
-                        awardName: v.name,
-                        giftValue: v.num ? v.num : '',
-                        type: v.type,
-                        totalNum: v.totalNum,
-                        winRate: v.winRate
-                    };
-                    if (v.id) temp.awardId = v.id;
-                    data.scratchCardPrize.push(temp);
-                });
-                if (!this.id) data.id = this.id;
-                request[this.url](data).then(res => {
-                    this.$message.success(res.msg);
-                    this.$router.push('/scratchCardsList');
-                    this.btnLoading = false;
-                }).catch(err => {
-                    console.log(err);
-                    this.btnLoading = false;
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (!valid) return;
+                    const data = this.form;
+                    if (this.status == 2) {
+                        this.tableData.forEach((v, k) => {
+                            v.totalNum = v.addNum || 0;
+                        });
+                        data.id = this.id;
+                    }
+                    try {
+                        this.tableData.forEach((v, k) => {
+                            if (v.stockNum != -1 && v.totalNum > v.stockNum) {
+                                throw '发放数不能大于库存';
+                            }
+                        });
+                    } catch (error) {
+                        this.$message.warning(error);
+                        return;
+                    }
+
+                    data.scratchCardPrize = this.tableData;
+                    this.btnLoading = true;
+                    request[this.url](data).then(res => {
+                        this.$message.success(res.msg);
+                        this.$router.push('/scratchCardsList');
+                        this.btnLoading = false;
+                    }).catch(err => {
+                        console.log(err);
+                        this.btnLoading = false;
+                    });
                 });
             },
             getInfo() {
-                if (!this.id) {
-                    this.status = 1;
+                if (this.status == 1) {
+                    // this.status = 1;
                     this.nav[3] = '新建刮刮卡';
                     this.url = 'addScratchCard';
+                    this.resetValue();
                 } else {
-                    this.status = 2;
+                    // this.status = 2;
                     this.nav[3] = '编辑刮刮卡';
                     this.url = 'updateScratchCard';
                     this.getDetail();
                 }
+                this.totalRatio = 0;
+            },
+            resetValue() {
+                this.form = {
+                    name: '',
+                    loseHint: ''
+                };
+                this.totalRatio = 0;
+                this.tableData = [];
+                this.selectedCoupon = [];
+                this.tempChooseList = [];
             },
             getDetail() {
                 const data = {
@@ -194,6 +221,13 @@
                 };
                 request.findScratchCardById(data).then(res => {
                     this.form = res.data;
+                    this.tableData = res.data.scratchCardPrize;
+                    this.tableData.forEach((v, k) => {
+                        this.totalRatio += v.winRate;
+                        if (v.type == 1) {
+                            this.selectedCoupon.push(v);
+                        }
+                    });
                 }).catch(err => {
                     console.log(err);
                 });
@@ -227,14 +261,14 @@
                     if (res.data.length === 0) return;
                     res.data.forEach(v => {
                         const obj = {
-                            name: v.name,
-                            totalNumber: v.totalNumber,
-                            id: v.id,
+                            awardName: v.name,
+                            stockNum: v.totalNumber,
+                            awardId: v.id,
                             selected: false,
                             type: 1 // 1：优惠券 2：秀豆
                         };
                         for (let i = 0; i < tmp.length; i++) {
-                            if (tmp[i].id == obj.id) {
+                            if (tmp[i].awardId == obj.awardId) {
                                 obj.selected = true;
                             }
                         }
@@ -258,7 +292,7 @@
                 const tmp = [];
                 tmp.push(...this.selectedCoupon, ...this.tmpCouponList);
                 for (let i = 0; i < tmp.length; i++) {
-                    if (tmp[i].id == coupon.id) {
+                    if (tmp[i].awardId == coupon.awardId) {
                         return;
                     }
                 }
@@ -267,17 +301,18 @@
             // 确定添加优惠券
             confirmCoupon() {
                 this.isShowCouponList = false;
+                this.tableData = [];
                 this.selectedCoupon.push(...this.tmpCouponList);
                 this.tableData.push(...this.selectedCoupon);
             },
             // 添加秀豆
             addBean() {
-                if (this.form1.name == '' || this.num == '') {
+                if (this.form1.awardName == '' || this.giftValue == '') {
                     return this.$message.warning('输入的数值不能为空');
                 }
                 this.tableData.push({
-                    name: this.form1.name,
-                    num: this.form1.num,
+                    awardName: this.form1.awardName,
+                    giftValue: this.form1.giftValue,
                     type: 2,
                     totalNumber: -1
                 });
@@ -285,10 +320,18 @@
             },
             beforeClose() {
                 this.form1 = {
-                    name: '',
-                    num: ''
+                    awardName: '',
+                    giftValue: ''
                 };
                 this.isShowShowBeanList = false;
+            },
+            // 取消
+            cancel() {
+                this.$router.push('/scratchCardsList');
+            },
+            // 停用启用
+            updateStatus(row, num) {
+                row.status = num;
             }
         }
     };

@@ -3,8 +3,8 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="query-panue" :body-style="{ padding: '20px 20px'}">
             <el-form :model="form" ref="form" inline label-width="120px">
-                <el-form-item prop="name" label="推广人">
-                    <el-input v-model="form.name" placeholder="请输入推广人"></el-input>
+                <el-form-item prop="nickname" label="推广人">
+                    <el-input v-model="form.nickname" placeholder="请输入推广人"></el-input>
                 </el-form-item>
                 <el-form-item prop="dateRange" label="推广时间">
                     <el-date-picker
@@ -29,20 +29,16 @@
         <el-card :body-style="{ padding: '20px 50px'}" style="margin-top: 20px">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="all">
-                    <!--<v-tab-content ref="all" v-if="activeName == 'all'" :name='activeName'></v-tab-content>-->
                     <v-tab-content ref="all"></v-tab-content>
                 </el-tab-pane>
-                <el-tab-pane label="正常" name="normal">
-                    <!--<v-tab-content ref="normal" v-if="activeName == 'normal'" :name='activeName'></v-tab-content>-->
-                    <v-tab-content ref="normal"></v-tab-content>
+                <el-tab-pane label="正常" name="1">
+                    <v-tab-content ref="1"></v-tab-content>
                 </el-tab-pane>
-                <el-tab-pane label="取消" name="cancel">
-                    <!--<v-tab-content ref="cancel" v-if="activeName == 'cancel'" :name='activeName'></v-tab-content>-->
-                    <v-tab-content ref="cancel"></v-tab-content>
+                <el-tab-pane label="取消" name="3">
+                    <v-tab-content ref="3"></v-tab-content>
                 </el-tab-pane>
-                <el-tab-pane label="结束" name="ended">
-                    <!--<v-tab-content ref="ended" v-if="activeName == 'ended'" :name='activeName'></v-tab-content>-->
-                    <v-tab-content ref="ended"></v-tab-content>
+                <el-tab-pane label="结束" name="2">
+                    <v-tab-content ref="2"></v-tab-content>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
@@ -68,7 +64,7 @@
                 nav: ['运营管理', '推广订单管理', '推广订单查看'],
                 activeName: 'all',
                 form: {
-                    names: '',
+                    nickname: '',
                     packageName: ''
                 },
                 dateRange: []
@@ -82,14 +78,15 @@
             getList() {
                 const data = {};
                 Object.assign(data, this.form);
-                data.startTime = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : '';
-                data.endTime = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : '';
+                data.startTime = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '';
+                data.endTime = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : '';
                 data.status = this.activeName === 'all' ? '' : this.activeName;
                 this.$refs[this.activeName].data = data;
                 this.$refs[this.activeName].getList();
             },
             handleClick(tab) {
                 this.activeName = tab.name;
+                this.getList();
             },
             //  重置表单
             resetForm(formName) {

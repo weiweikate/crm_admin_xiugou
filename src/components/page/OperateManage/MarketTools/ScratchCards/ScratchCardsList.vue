@@ -34,13 +34,13 @@
             </el-form>
         </el-card>
         <el-card>
-            <el-button type="primary" class="mb10" @click="$router.push('cardMange')">新增刮刮卡</el-button>
+            <el-button type="primary" class="mb10" @click="$router.push({path:'cardMange',query:{status:'add'}})">新增刮刮卡</el-button>
             <el-table :data="tableData" border stripe>
                 <el-table-column prop="code" label="编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="刮刮卡名称" align="center"></el-table-column>
                 <el-table-column prop="numItems" label="奖项数" align="center"></el-table-column>
-                <el-table-column prop="stockNum" label="奖品发放数" align="center"></el-table-column>
-                <el-table-column prop="totalSurplusNum" label="剩余数量" align="center"></el-table-column>
+                <el-table-column prop="sumTotalNum" label="奖品发放数" align="center"></el-table-column>
+                <el-table-column prop="residualQuantity" label="剩余数量" align="center"></el-table-column>
                 <el-table-column prop="id" label="当前活动使用数" align="center">
                     <template slot-scope="scope">
                         <el-tag style="cursor: pointer" @click="showUse(scope.row)">{{scope.row.id}}</el-tag>

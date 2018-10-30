@@ -306,6 +306,16 @@ export const updatePromotionPackageStockAndStatus = '/promotion/promotionPackage
 // 查询
 export const findPromotionPackageDetailsById = ['/promotion/promotionPackage/findPromotionPackageDetailsById', { methods: 'get' }];
 
+//推广订单
+// 列表
+export const queryPromotionPromoterPageList = '/promotion/promotionPromoter/queryPromotionPromoterPageList';
+// 分页查询用户购买信息列表
+export const queryPromotionReceiveRecordPageList = '/promotion/promotionReceiveRecord/queryPromotionReceiveRecordPageList';
+// 取消
+export const updatePromotionStatusById = '/promotion/promotionPromoter/updateStatusById';
+// 查询
+export const findPromotionPromoterDetailById = ['/promotion/promotionPromoter/findPromotionPromoterDetailById', { methods: 'get' }];
+
 /** ************刮刮乐*****************/
 // 新增刮刮卡
 export const addScratchCard = '/scratch/scratchCard/addScratchCard';

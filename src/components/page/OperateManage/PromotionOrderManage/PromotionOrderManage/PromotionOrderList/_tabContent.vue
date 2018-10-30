@@ -1,9 +1,9 @@
 <template>
     <div class="tab-content">
-        <el-table v-loading="tableLoading" :height="height" border :data="tableData">
-            <el-table-column prop="activityCode" align="center" label="编号" min-width="100"></el-table-column>
-            <el-table-column prop="name" label="套餐名称" align="center"></el-table-column>
-            <el-table-column prop="spec" label="推广人" align="center"></el-table-column>
+        <el-table v-loading="tableLoading" border :data="tableData">
+            <el-table-column prop="packageId" align="center" label="编号" min-width="100"></el-table-column>
+            <el-table-column prop="packageName" label="套餐名称" align="center"></el-table-column>
+            <el-table-column prop="nickname" label="推广人" align="center"></el-table-column>
             <el-table-column label="开始时间" align="center">
                 <template slot-scope="scope">
                     <template v-if="scope.row.startTime">{{scope.row.startTime | formatDateAll}}</template>
@@ -16,24 +16,24 @@
             </el-table-column>
             <el-table-column label="红包总数/金额" align="center">
                 <template slot-scope="scope">
-                   {{scope.row.endTime}}/{{scope.row.endTime}}
+                   {{scope.row.count}}/{{scope.row.total}}
                 </template>
             </el-table-column>
             <el-table-column label="已分发数/金额" align="center">
                 <template slot-scope="scope">
-                   {{scope.row.endTime}}/{{scope.row.endTime}}
+                   {{scope.row.sold}}/{{scope.row.sold*scope.row.price}}
                 </template>
             </el-table-column>
             <el-table-column label="剩余数/金额" align="center">
                 <template slot-scope="scope">
-                   {{scope.row.endTime}}/{{scope.row.endTime}}
+                   {{scope.row.remain}}/{{scope.row.remain*scope.row.price}}
                 </template>
             </el-table-column>
             <el-table-column prop="" label="状态" align="center">
                 <template slot-scope="scope">
-                    <template v-if='scope.row.status == 1'>进行中</template>
-                    <template v-if='scope.row.status == 2'>已取消</template>
-                    <template v-if='scope.row.status == 3'>已结束</template>
+                    <template v-if='scope.row.status == 1'>正常</template>
+                    <template v-if='scope.row.status == 3'>已取消</template>
+                    <template v-if='scope.row.status == 2'>已结束</template>
                 </template>
             </el-table-column>
             <el-table-column label="操作" align="center" min-width="100">
@@ -41,14 +41,14 @@
                     <el-button style="margin-bottom:10px" type="primary"
                                @click="toDetail(scope.row)">详情
                     </el-button>
-                    <el-button style="margin-bottom:10px" type="danger" @click="endOrDelete(1,scope.row)"
-                               v-if="scope.row.status == 1||scope.row.status == 2">
+                    <el-button style="margin-bottom:10px" type="danger" @click="cancelItem(1,scope.row)"
+                               v-if="scope.row.status == 1">
                         取消
                     </el-button>
-                    <el-button style="margin-bottom:10px" type="danger" @click="endOrDelete(0,scope.row)"
-                               v-if="scope.row.status != 1&&scope.row.status != 2">
-                        删除
-                    </el-button>
+                    <!--<el-button style="margin-bottom:10px" type="danger" @click="endOrDelete(0,scope.row)"-->
+                               <!--v-if="scope.row.status != 1&&scope.row.status != 3">-->
+                        <!--删除-->
+                    <!--</el-button>-->
                 </template>
             </el-table-column>
 
@@ -89,11 +89,12 @@
     import moment from 'moment';
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http.js';
+    import icon from '@/components/common/ico.vue';
 
     export default {
-        props: ['name'],
         mixins: [myMixinTable],
         components: {
+            icon
         },
 
         data() {
@@ -110,42 +111,14 @@
                 height: ''
             };
         },
-
-        computed: {
-            // 降价拍状态
-            depStaName() {
-                switch (this.name) {
-                    case 'all':
-                        return '';
-                        break;
-                    case 'notStart':
-                        return '1';
-                        break;
-                    case 'cancel':
-                        return '2';
-                        break;
-                    case 'ended':
-                        return '3';
-                        break;
-                }
-            }
-        },
-        created() {
-            this.getList(1);
-            const winHeight = window.screen.availHeight - 520;
-            this.height = winHeight;
-        },
-        activated() {
-            this.getList(1);
-        },
-
         methods: {
             //   提交表单
             getList(val) {
                 this.data.page = val;
                 this.data.pageSize = this.page.pageSize;
                 this.tableLoading = true;
-                request.operatorDepreciatelist(this.data).then(res => {
+                this.page.currentPage = val;
+                request.queryPromotionPromoterPageList(this.data).then(res => {
                     this.tableData = [];
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
@@ -155,25 +128,26 @@
                         this.tableLoading = false;
                     });
             },
-            // 结束或删除操作
-            endOrDelete(num, row) {
+            // 取消操作
+            cancelItem(num, row) {
                 this.index = num;
                 this.showMask = true;
+                this.names = row.nickname;
                 this.id = row.id;
             },
-            // 结束或删除操作确认取消
+            // 确认取消
             closeMask(status) {
                 if (status) {
                     const data = {};
                     let url = '';
                     if (this.index == 0) {
                         // data.status = this.index;
-                        url = 'deleteActivityDepreciate';
+                        // url = 'deleteActivityDepreciate';
                     } else if (this.index == 1) {
-                        url = 'modifyActivityDepreciate';
+                        url = 'updatePromotionStatusById';
                         // data.status = 5;
                     } else {
-                        url = 'reduceStockById';
+                        // url = 'reduceStockById';
                         // data.status = 6;
                     }
                     this.changeStatus(data, url);
@@ -181,15 +155,13 @@
                     this.showMask = false;
                 }
             },
-            // 结束、删除、减少数量
             changeStatus(data, url) {
-                data.list = this.id;
+                data.id = this.id;
                 this.btnLoading = true;
                 request[url](data).then(res => {
                     this.$message.success(res.msg);
                     this.getList(this.page.currentPage);
                     this.showMask = false;
-                    this.inventoryMask = false;
                     this.btnLoading = false;
                 })
                     .catch(err => {

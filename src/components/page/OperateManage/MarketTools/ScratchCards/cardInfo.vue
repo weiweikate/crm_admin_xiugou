@@ -73,8 +73,7 @@
                 url: '',
                 form: {
                     name: '',
-                    prize: '',
-                    tip: ''
+                    loseHint: ''
                 },
                 totalRatio: 0,
                 tableData: []
