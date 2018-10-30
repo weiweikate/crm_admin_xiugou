@@ -13,7 +13,7 @@
                     </div>
                     <div class="item-row">
                         <div class="item">昵称：{{dealer.nickname}}</div>
-                        <div class="item">微信名称：{{dealer.wechatId}}</div>
+                        <div class="item">微信名称：{{dealer.wechatName}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item">手机号：{{dealer.phone}}</div>

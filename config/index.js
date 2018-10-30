@@ -7,7 +7,6 @@ const baseURL = 'http://172.16.10.56';
 // const baseURL = 'http://172.16.10.41';
 // const baseURL = 'http://172.16.10.12';
 // const baseURL = 'http://172.16.10.19';
-// const baseURL = 'http://172.16.10.111';
 // const baseURL = 'http://testadmin.sharegoodsmall.com';
 // const baseURL = 'http://devadmin.sharegoodsmall.com';
 

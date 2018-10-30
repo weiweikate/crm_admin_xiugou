@@ -136,7 +136,18 @@
         },
         activated() {
             this.getList(1);
-            console.log(this.form);
+            this.form = {
+                type: '',
+                maxMoney: '',
+                minMoney: '',
+                minActualMoney: '',
+                maxActualMoney: '',
+                firstMoney: '',
+                afterMoney: '',
+                scratchCode: '',
+                highHits: '',
+                remarks: ''
+            };
         },
         methods: {
             // 表单校验

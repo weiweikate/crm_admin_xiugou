@@ -15,7 +15,11 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="sort" label="排序" align="center"></el-table-column>
-                    <el-table-column prop="porductNum" label="产品数" align="center"></el-table-column>
+                    <el-table-column prop="porductNum" label="产品数" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="primary" @click="goProduct(scope.row)">{{scope.row.porductNum}}</el-button>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="status" label="状态" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.status == 1">启用</template>
@@ -284,6 +288,19 @@ export default {
             this.addMask = false;
             this.editMask = false;
             this.getList(this.page.currentPage);
+        },
+        // 跳转产品列表页
+        goProduct(row) {
+            sessionStorage.setItem('firstCategoryId', row.classId);
+            sessionStorage.setItem('secCategoryId', row.fatherId);
+            sessionStorage.setItem('thirdCatId', row.id);
+            sessionStorage.setItem('flag', 2);
+            this.$router.push({ name: 'productList', query: {
+                firstCategoryId: row.classId,
+                secCategoryId: row.fatherId,
+                thirdCatId: row.id,
+                flag: 2
+            }});
         },
         // 跳转到产品详细参数
         toDetailParam(row) {

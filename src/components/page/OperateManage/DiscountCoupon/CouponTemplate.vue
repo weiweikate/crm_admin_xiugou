@@ -4,7 +4,7 @@
         <el-card>
             <div class="area">
                 <div class="item" v-for="(item,k) in list" :key="k">
-                    <img :src="item.imgUrl" alt="">
+                    <img :src="item.imageUrl" alt="">
                 </div>
             </div>
         </el-card>
@@ -49,8 +49,6 @@
                     color: #ff6868;
                 }
                 img{
-                    width: 375px;
-                    height: 200px;
                     border-radius: 20px;
                 }
             }
