@@ -89,7 +89,8 @@
                 nav: ['运营管理', '营销工具管理', '降价拍', '降价拍详情'],
                 detail: {},
                 countArr: [],
-                shareArr: []
+                shareArr: [],
+                id: ''
             };
         },
 
@@ -123,7 +124,12 @@
                 }).catch(err => {
                     this.btnLoading = false;
                 });
-                request.queryPromotionReceiveRecordPageList({ id: 1 }).then(res => {
+                const param = {
+                    page: this.page.currentPage,
+                    pageSize: this.page.pageSize,
+                    packageId: this.id
+                };
+                request.queryPromotionReceiveRecordPageList(param).then(res => {
                     this.shareArr = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                 }).catch(err => {

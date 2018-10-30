@@ -22,12 +22,12 @@
                     <el-input v-model="form.cycle" placeholder="请输入数值" class="input-sty"></el-input>
                     <span class="point">天</span>
                 </el-form-item>
-                <el-form-item prop="remain" label="可购买数">
-                    <el-input v-model="form.remain" placeholder="请输入数值" class="input-sty"></el-input>
+                <el-form-item prop="totalNumber" label="可购买数">
+                    <el-input v-model="form.totalNumber" placeholder="请输入数值" class="input-sty"></el-input>
                     <span class="point">份</span>
                 </el-form-item>
                 <el-form-item label="是否限购">
-                    <el-radio-group v-model="buyLimit">
+                    <el-radio-group v-model="buyLimit" @change="changeNum">
                         <el-radio :label="1">是</el-radio>
                         <el-radio :label="2">否</el-radio>
                     </el-radio-group>
@@ -112,7 +112,7 @@
                     count: '',
                     total: '',
                     cycle: '',
-                    remain: '',
+                    totalNumber: '',
                     buyLimit: '',
                     remark: ''
                 },
@@ -122,13 +122,14 @@
                     count: [{ validator: isInt, trigger: 'blur' }],
                     cycle: [{ validator: isInt5, trigger: 'blur' }],
                     buyLimit: [{ validator: isInt, trigger: 'blur' }],
-                    remain: [{ validator: isInt, trigger: 'blur' }]
+                    totalNumber: [{ validator: isInt, trigger: 'blur' }]
                 }
 
             };
         },
 
         activated() {
+            this.resetVlaue();
         },
 
         methods: {
@@ -162,9 +163,16 @@
                 });
             },
             // 取消
-            cancel() {
+            resetVlaue() {
                 utils.cleanFormData(this.form);
                 this.buyLimit = 1;
+            },
+            //返回列表
+            cancel(){
+                this.$router.push('/packageManage')
+            },
+            changeNum() {
+                this.form.buyLimit = '';
             },
             calMoney() {
                 if (this.form.count && this.form.price) {

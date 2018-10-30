@@ -171,7 +171,7 @@
             // 查看详情
             toDetail(row) {
                 sessionStorage.setItem('promotionOrderId', row.id);
-                this.$router.push({ path: '/promotionOrderInfo', query: { promotionOrderId: row.id }});
+                this.$router.push({ path: '/promotionOrderInfo', query: { promotionOrderId: row.id}});
             }
         }
     };

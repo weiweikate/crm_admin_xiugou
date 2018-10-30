@@ -19,7 +19,7 @@
                     <span>{{detail.cycle}}天</span>
                 </el-form-item>
                 <el-form-item label="可购买数">
-                    <span>{{detail.remain}}份</span>
+                    <span>{{detail.totalNumber-detail.sold}}份</span>
                 </el-form-item>
                 <el-button @click="backToList" type="primary">返回</el-button>
             </el-form>

@@ -67,10 +67,12 @@
                     nickname: '',
                     packageName: ''
                 },
-                dateRange: []
+                dateRange: [],
+                promotionOrderId: ''
             };
         },
         activated() {
+            this.promotionOrderId = this.$route.query.promotionOrderId || sessionStorage.getItem('promotionOrderId');
             this.handleClick({ name: 'all' });
         },
         methods: {
@@ -81,6 +83,7 @@
                 data.startTime = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '';
                 data.endTime = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : '';
                 data.status = this.activeName === 'all' ? '' : this.activeName;
+                data.packageId = this.promotionOrderId;
                 this.$refs[this.activeName].data = data;
                 this.$refs[this.activeName].getList();
             },

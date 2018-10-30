@@ -15,8 +15,8 @@
                     <!--<div class="small-content">升级经验值<el-input class="inp"></el-input></div>-->
                     <!--<div class="small-content">升级经验值<el-input class="inp"></el-input></div>-->
                     <!--</div>-->
-                    <el-button type="success" :disabled="status == 0" @click="showMask(0)">设置升级经验值</el-button>
-                    <el-button type="success" :disabled="status == 0" @click="showMask(1)">设置必要条件</el-button>
+                    <el-button type="success" @click="showMask(0)">设置升级经验值</el-button>
+                    <el-button type="success" @click="showMask(1)">设置必要条件</el-button>
                 </div>
                 <div>
                     <p class="title">邀请推荐维度</p>

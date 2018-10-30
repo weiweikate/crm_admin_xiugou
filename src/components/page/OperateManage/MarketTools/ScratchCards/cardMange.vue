@@ -98,8 +98,8 @@
                 <el-form-item prop="name" label="奖品名称:">
                     <el-input class="inp" v-model="form1.awardName"></el-input>
                 </el-form-item>
-                <el-form-item prop="num" label="赠送秀豆:">
-                    <el-input-number :controls="false" :min="0" class="inp" v-model="form1.num"></el-input-number>
+                <el-form-item prop="giftValue" label="赠送秀豆:">
+                    <el-input-number :controls="false" :min="0" class="inp" v-model="form1.giftValue"></el-input-number>
                 </el-form-item>
             </el-form>
             <span slot="footer">
@@ -126,7 +126,8 @@
                 },
                 form1: {
                     awardName: '', // 秀豆名称
-                    giftValue: ''
+                    giftValue: '',
+                    stockNum: -1
                 },
                 tableData: [],
                 status: '', // 1.添加 2.编辑
@@ -170,8 +171,16 @@
                     }
                     try {
                         this.tableData.forEach((v, k) => {
-                            if (v.stockNum != -1 && v.totalNum > v.stockNum) {
-                                throw '发放数不能大于库存';
+                            const isInt = /^0|[1-9]\d*$/; const isDouble = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
+                            if (!isInt.test(v.totalNum) || v.totalNum.length > 12) {
+                                throw '发放数为1-12位数字';
+                            } else {
+                                if (v.stockNum != -1 && v.totalNum > v.stockNum) {
+                                    throw '发放数不能大于库存';
+                                }
+                            }
+                            if (!isDouble.test(v.winRate)) {
+                                throw '中奖概率保留2位小数';
                             }
                         });
                     } catch (error) {
@@ -192,11 +201,11 @@
                 });
             },
             getInfo() {
+                this.resetValue();
                 if (this.status == 1) {
                     // this.status = 1;
                     this.nav[3] = '新建刮刮卡';
                     this.url = 'addScratchCard';
-                    this.resetValue();
                 } else {
                     // this.status = 2;
                     this.nav[3] = '编辑刮刮卡';
@@ -224,9 +233,7 @@
                     this.tableData = res.data.scratchCardPrize;
                     this.tableData.forEach((v, k) => {
                         this.totalRatio += v.winRate;
-                        if (v.type == 1) {
-                            this.selectedCoupon.push(v);
-                        }
+                        this.selectedCoupon.push(v);
                     });
                 }).catch(err => {
                     console.log(err);
@@ -281,9 +288,7 @@
             },
             // 删除
             deleteSelectedCoupon(index, status) {
-                if (status == 1) {
-                    this.selectedCoupon.splice(index, 1);
-                }
+                this.selectedCoupon.splice(index, 1);
                 this.tableData.splice(index, 1);
             },
             //  选择优惠券
@@ -310,12 +315,14 @@
                 if (this.form1.awardName == '' || this.giftValue == '') {
                     return this.$message.warning('输入的数值不能为空');
                 }
-                this.tableData.push({
+                const temp = {
                     awardName: this.form1.awardName,
                     giftValue: this.form1.giftValue,
                     type: 2,
-                    totalNumber: -1
-                });
+                    stockNum: -1
+                };
+                this.tableData.push(temp);
+                this.selectedCoupon.push(temp);
                 this.beforeClose();
             },
             beforeClose() {
