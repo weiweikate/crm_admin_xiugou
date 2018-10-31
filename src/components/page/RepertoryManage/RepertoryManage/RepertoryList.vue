@@ -1,5 +1,5 @@
 <template>
-    <div class="shop-list">
+    <div class="repertory-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
             <el-form :model="form" ref="form" inline label-width="100px">
@@ -111,26 +111,18 @@
             </div>
         </el-card>
         <el-dialog :title="title" :visible.sync="mask">
-            <el-form v-model="form">
+            <el-form v-model="formMask">
                 <el-form-item label="管理员手机">
-                    <span>{{form.phone}}</span>
+                    <span>{{formMask.phone}}</span>
                 </el-form-item>
                 <el-form-item>
-                    <el-input v-model="name" auto-complete="off" disabled=""></el-input>
-                </el-form-item>
-                <el-form-item label="是否启用" :label-width="formLabelWidth">
-                    <el-select v-model="addForm.status">
-                        <el-option label="是" value="1"></el-option>
-                        <el-option label="否" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item prop="name" label="APP排序" :label-width="formLabelWidth">
-                    <el-input v-model="addForm.sort" auto-complete="off"></el-input>
+                    <el-input v-model="formMask.code" auto-complete="off" disabled=""></el-input>
+                    <el-button type="primary">发送验证码</el-button>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="addOrEdit('form')">确 认</el-button>
-                <el-button @click="cancel">取 消</el-button>
+                <el-button type="primary" @click="sure('formMask')">确 认</el-button>
+                <el-button @click="mask=false">取 消</el-button>
             </div>
         </el-dialog>
     </div>
@@ -151,7 +143,10 @@ export default {
         return {
             nav: ['云仓仓库管理', '仓库管理'],
             tableData: [],
-            form: {}
+            form: {},
+            formMask: {},
+            title: '启用仓库',
+            mask: false
         };
     },
     activated() {
@@ -212,13 +207,16 @@ export default {
         },
         // 停用启用
         openOrClose(row) {
-
+            this.mask = true;
+        },
+        sure(formName) {
+            this.mask = false;
         }
     }
 };
 </script>
 <style lang='less' scoped>
-.shop-list {
+.repertory-list {
     .block {
         margin: 10px 0;
     }
@@ -226,5 +224,27 @@ export default {
         color: #33b4ff;
         cursor: pointer;
     }
+    /*弹窗样式*/
+    /deep/.el-dialog {
+        width: 530px;
+        border-radius: 10px;
+        .el-dialog__header {
+            border-bottom: 1px solid #eee;
+            padding: 20px 20px 10px 50px;
+        }
+        .el-dialog__title {
+            color: #ff6868;
+        }
+        .el-input {
+            display: inline;
+        }
+        .el-input__inner {
+            width: 360px;
+        }
+        .el-dialog__footer {
+            margin-right: 30px;
+        }
+    }
+
 }
 </style>

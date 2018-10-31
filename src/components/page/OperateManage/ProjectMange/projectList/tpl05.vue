@@ -48,9 +48,17 @@
                         format="yyyy-MM-dd HH:mm"
                         type="datetime"
                         class="inp"
-                        :picker-options="pickerOptions[k]"
                         placeholder="选择日期时间">
                     </el-date-picker>
+                    <!--<el-date-picker-->
+                        <!--v-else-->
+                        <!--v-model="v.time"-->
+                        <!--format="yyyy-MM-dd HH:mm"-->
+                        <!--type="datetime"-->
+                        <!--class="inp"-->
+                        <!--:picker-options="pickerOptions[k]"-->
+                        <!--placeholder="选择日期时间">-->
+                    <!--</el-date-picker>-->
                         <span style="display: none" v-model="v.navName"></span>
                         <span v-if='k>0' @click="delNav(k)" class="del-btn">x</span>
                     </div>
@@ -172,12 +180,12 @@
                         topicBannerProducts: [{ prodCode: '', productType: 2 }],
                         topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
                     }
-                ],
-                pickerOptions: [{
-                    disabledDate(time) {
-                        return time.getTime() < new Date() - 8.64e7;
-                    }
-                }]
+                ]
+                // pickerOptions: [{
+                //     disabledDate(time) {
+                //         return time.getTime() < new Date() - 8.64e7;
+                //     }
+                // }]
             };
         },
 
@@ -194,20 +202,20 @@
                     topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
                 }
             ];
-            let that=this;
+            // let that=this;
             if (this.tplData != 'add') {
                 this.bannerForm.imgUrl = this.tplData.imgUrl;
                 this.bannerForm.remark = this.tplData.remark;
                 this.topicNavbarList = this.tplData.topicNavbarList;
                 for (const i in this.topicNavbarList) {
                     this.topicNavbarList[i].time = new Date(this.topicNavbarList[i].navName);
-                    if (i > 0) {
-                        this.pickerOptions[i] = {
-                            disabledDate(time) {
-                                return time.getTime() < new Date(that.topicNavbarList[i].time) - 8.64e7;
-                            }
-                        };
-                    }
+                    // if (i > 0) {
+                    //     this.pickerOptions[i] = {
+                    //         disabledDate(time) {
+                    //             return time.getTime() < new Date(that.topicNavbarList[i].time) - 8.64e7;
+                    //         }
+                    //     };
+                    // }
                 }
                 this.navItem = this.tplData.topicNavbarList[0].type;
                 this.id = this.tplData.id;
@@ -324,14 +332,14 @@
                         topicNavbarBannerList: []
                     }
                 );
-                const that = this;
-                if (this.navItem == 2) {
-                    this.pickerOptions.push({
-                        disabledDate(time) {
-                            return time.getTime() < new Date(that.topicNavbarList[that.topicNavbarList.length - 2].time) - 8.64e7;
-                        }
-                    });
-                }
+                // const that = this;
+                // if (this.navItem == 2) {
+                //     this.pickerOptions.push({
+                //         disabledDate(time) {
+                //             return time.getTime() < new Date(that.topicNavbarList[that.topicNavbarList.length - 2].time) - 8.64e7;
+                //         }
+                //     });
+                // }
             },
             // 删除导航
             delNav(index) {
