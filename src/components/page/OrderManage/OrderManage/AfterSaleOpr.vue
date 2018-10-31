@@ -409,7 +409,7 @@
                                 <div class="item">商品总价：¥{{returnProduct.price*returnProduct.num}}</div>
                                 <div class="item">退款编号：{{returnProduct.refundNo}}</div>
                                 <div class="item" v-if="returnProduct.orderReturnAmounts">退款金额：¥{{returnAmountsRecord.actualBalance+returnAmountsRecord.actualAmounts+returnAmountsRecord.actualTokenCoin}}</div>
-                                <div class="item" v-else>¥{{returnProduct.price*returnProduct.num}}</div>
+                                <div class="item" v-else>退款金额：¥{{returnProduct.price*returnProduct.num}}</div>
                                 <div class="item">原因：{{returnProduct.returnReason}}</div>
                                 <div class="item">要求：仅退款</div>
                                 <div class="item">买家说明：{{returnProduct.remark}}</div>

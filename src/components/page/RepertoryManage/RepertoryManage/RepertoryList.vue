@@ -191,10 +191,10 @@ export default {
         },
         // 查看详情
         showInfo(row) {
-            sessionStorage.setItem('shopInfoId', row.id);
+            sessionStorage.setItem('repertoryInfoId', row.id);
             this.$router.push({
-                name: 'shopInfo',
-                query: { shopInfoId: row.id }
+                name: 'repertoryInfo',
+                query: { repertoryInfoId: row.id }
             });
         },
         // 编辑
@@ -210,14 +210,6 @@ export default {
             this.$refs[formName].resetFields();
             this.form.date = '';
             this.getList(this.page.currentPage);
-        },
-        // 跳到成员列表
-        toUserList(row) {
-            sessionStorage.setItem('recruitShopId', row.id);
-            this.$router.push({
-                name: 'shopMemberManage',
-                query: { recruitShopId: row.id }
-            });
         },
         // 停用启用
         openOrClose(row, num) {
