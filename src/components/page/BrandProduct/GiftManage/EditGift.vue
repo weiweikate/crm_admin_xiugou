@@ -157,7 +157,7 @@
                 <div class="pro-title">产品详情</div>
                 <quill-editor v-model="form.content" ref="myQuillEditor" :options="editorOption"
                               @change="onEditorChange($event)"></quill-editor>
-                <el-upload :action="uploadImg" :data="uploadData" :on-success='upScuccess' ref="upload"
+                <el-upload :action="uploadImg" multiple :data="uploadData" :on-success='upScuccess' ref="upload"
                            style="display:none">
                     <el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">点击上传</el-button>
                 </el-upload>
@@ -630,7 +630,7 @@
                 } else {
                     this.$message.error(`${vm.uploadType}插入失败`);
                 }
-                this.$refs['upload'].clearFiles(); // 插入成功后清除input的内容
+                // this.$refs['upload'].clearFiles(); // 插入成功后清除input的内容
             },
             // 点击图片ICON触发事件
             imgHandler(state) {
