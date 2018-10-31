@@ -100,6 +100,7 @@
                 request.findCouponById(data).then(res => {
                     this.detail = res.data;
                     const userLevelIds = [];
+                    this.allUser = false;
                     for (const i in res.data.userLevel) {
                         userLevelIds.push(res.data.userLevel[i].userLevelId);
                     }

@@ -1242,6 +1242,12 @@ export default new Router({
                     path: '/repertoryInfo',
                     component: resolve => require(['../components/page/RepertoryManage/RepertoryManage/RepertoryInfo.vue'], resolve),
                     meta: { title: '仓库详情', url: '/repertoryInfo' }
+                },
+                {
+                    name: 'areaSet',
+                    path: '/areaSet',
+                    component: resolve => require(['../components/page/RepertoryManage/RepertoryAreaSet/areaSet.vue'], resolve),
+                    meta: { title: '区域设置', url: '/areaSet' }
                 }
             ]
         },
