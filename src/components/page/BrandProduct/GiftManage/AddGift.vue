@@ -355,6 +355,7 @@
         },
 
         activated() {
+            this.form.restrictions = 0;
             this.getAllTagType();
             this.getUserLevel();
             this.uploadImg = api.uploadImg;
@@ -422,7 +423,7 @@
                 if (!isCanSubmit) {
                     return;
                 }
-                this.form.restrictions = Number(this.form.restrictions);
+                this.form.restrictions = 0;
                 if (this.limit.notSupportCoupon) {
                     this.form.restrictions += 1;
                 }

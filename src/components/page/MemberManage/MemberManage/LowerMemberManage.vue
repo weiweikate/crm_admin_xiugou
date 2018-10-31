@@ -50,7 +50,7 @@
                     </el-table-column>
                     <el-table-column label="最近登录时间" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.lastLoginTime">{{scope.row.lastLoginTime|formatDate}}</template>
+                            <template v-if="scope.row.lastLoginTime">{{scope.row.lastLoginTime|formatDateAll}}</template>
                         </template>
                     </el-table-column>
                     <el-table-column prop="code" label="授权码" align="center"></el-table-column>

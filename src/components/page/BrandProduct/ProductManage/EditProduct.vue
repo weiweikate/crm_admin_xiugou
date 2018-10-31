@@ -259,6 +259,7 @@
         },
 
         activated() {
+            this.form.restrictions = 0;
             this.getAllTagType();
             this.uploadImg = api.uploadImg;
             this.imgArr = [];

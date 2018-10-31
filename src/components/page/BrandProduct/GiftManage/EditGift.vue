@@ -278,7 +278,7 @@
                     dealDays: '',
                     supplierId: '',
                     experience: '',
-                    stockType: '1',
+                    stockType: '',
                     sendMode: '',
                     weight: '',
                     freightTemplateId: '',
@@ -356,6 +356,7 @@
         },
 
         activated() {
+            this.form.restrictions = 0;
             this.getAllTagType();
             this.giftId = this.$route.query.giftId || sessionStorage.getItem('giftId');
             this.getInfo();
@@ -384,8 +385,7 @@
             this.getBrandList();
             // 获取运费模板
             this.getFreightTemplate();
-            utils.cleanFormData(this.form);
-            this.form.stockType = '1';
+            // utils.cleanFormData(this.form);
         },
 
         mounted() {
@@ -411,6 +411,7 @@
                             this.chectedUser.push(v.userLevelId);
                         });
                     }
+                    this.form.stockType = res.data.stockType.toString();
                     this.form.name = res.data.name;
                     this.form.weight = res.data.weight;
                     this.form.experience = res.data.experience;
@@ -446,6 +447,7 @@
                     this.$set(this.setBuyTime, 1, this.setBuyTime[1]);
                     this.isSetBuTime = !!res.data.beginTime;
                     this.videoUrl = res.data.videoUrl;
+                    this.productParam = [];
                     if (res.data.paramValueList && res.data.paramValueList.length !== 0) {
                         res.data.paramValueList.forEach((v, k) => {
                             this.productParam.push({ param: v.param, id: v.paramId, value: v.paramValue });
@@ -491,7 +493,7 @@
                 if (!isCanSubmit) {
                     return;
                 }
-                this.form.restrictions = Number(this.form.restrictions);
+                this.form.restrictions = 0;
                 if (this.limit.notSupportCoupon) {
                     this.form.restrictions += 1;
                 }
@@ -542,7 +544,6 @@
                 data.id = this.giftId;
                 this.btnLoading = true;
                 request.addActivityPackage(data).then(res => {
-                    console.log(res);
                     this.btnLoading = false;
                     this.$message.success(res.msg);
                     this.$router.push('/giftManage');
@@ -719,7 +720,6 @@
                             }
                         }
                     });
-                    console.log(res);
                 }).catch(err => {
                     console.log(err);
                 });

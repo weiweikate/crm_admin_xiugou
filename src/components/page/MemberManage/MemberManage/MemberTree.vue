@@ -22,25 +22,29 @@
         <!--</transition>-->
         <div class="tree-block" v-loading="loading">
             <!--上级代理-->
-            <div class="first-title">
-                <div class="click-area" v-if="dealerAndUp.upRealname" @click="expandHigher()">
+            <div class="first-title" v-if="upUser">
+                <div class="click-area">
                     <span>上级代理</span>
-                    <i :class="dealerAndUp.checked?'el-icon-caret-bottom':'el-icon-caret-top'"></i>
+                    <!--<i :class="dealerAndUp.checked?'el-icon-caret-bottom':'el-icon-caret-top'"></i>-->
                 </div>
-                <div class="first-child jump" v-show="dealerAndUp.checked" @click="toDetail(dealerAndUp.id)">
+                <div class="first-child jump">
                     <div class="img-area">
-                        <img v-if="dealerAndUp.upHeadImg" :src="dealerAndUp.upHeadImg" alt="">
+                        <img v-if="upUser.headImg" :src="upUser.headImg" alt="">
                         <img v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
                     <div class="tree-detail-area">
-                        <div>用户名：{{dealerAndUp.upNickname}}</div>
-                        <div>用户ID：{{dealerAndUp.upId}}<span>授权号：{{dealerAndUp.upCode}}</span></div>
+                        <div>用户名：{{dealerAndUp.nickname}}</div>
+                        <div>用户ID：{{dealerAndUp.id}}<span>授权号：{{dealerAndUp.code}}</span></div>
                     </div>
                     <div class="clearfix"></div>
                 </div>
             </div>
             <!--用户本人-->
             <div class="first-title" :class="dealerAndUp.upRealname?'line':''">
+                <div class="click-area">
+                    <span>当前用户</span>
+                    <!--<i :class="dealerAndUp.checked?'el-icon-caret-bottom':'el-icon-caret-top'"></i>-->
+                </div>
                 <div class="first-child">
                     <div class="img-area">
                         <img v-if="dealerAndUp.headImg" :src="dealerAndUp.headImg" alt="">
@@ -120,6 +124,7 @@
                     phone: ''
                 },
                 dealerAndUp: {},
+                upUser: {},
                 firstList: [],
                 lower: {
                     totalCount: '',
@@ -151,6 +156,7 @@
                     console.log(res);
                     res.data.userAndUp.checked = false;
                     that.dealerAndUp = res.data.userAndUp;
+                    that.upUser = res.data.userDTO;
                     that.lower.totalCount = res.data.totalCount;
                     for (const i in res.data.firstList) {
                         res.data.firstList[i].checked = false;

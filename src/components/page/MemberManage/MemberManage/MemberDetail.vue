@@ -26,8 +26,8 @@
                         <div class="item">地址信息 ：{{dealer.province}}{{dealer.city}}{{dealer.area}}{{dealer.address}}</div>
                     </div>
                     <div class="item-row">
-                        <div class="item">注册时间：{{dealer.regTime|formatDate}}</div>
-                        <div class="item">最近登录时间：{{dealer.lastLoginTime|formatDate}}</div>
+                        <div class="item">注册时间：{{dealer.regTime|formatDateAll}}</div>
+                        <div class="item">最近登录时间：{{dealer.lastLoginTime|formatDateAll}}</div>
                     </div>
                 </div>
                 <div class="center">
@@ -129,7 +129,7 @@
                     </div>
                     <div class="item-row" >
                         <div class="item">
-                            <span>消费金额{{money}}元</span>
+                            <span>消费金额{{dealer.balance || 0}}元</span>
                         </div>
                     </div>
                 </div>
@@ -174,8 +174,6 @@
                 otherStore: '',
                 // 开设的店铺
                 myStore: '',
-                // 消费金额
-                money: 0,
                 // 晋升记录
                 record: []
             };
