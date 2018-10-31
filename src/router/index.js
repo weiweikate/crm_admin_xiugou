@@ -1231,6 +1231,12 @@ export default new Router({
                     component: resolve => require(['../components/page/RepertoryManage/RepertoryManage/RepertoryList.vue'], resolve),
                     meta: { title: '仓库管理', url: '/repertoryList' }
                 },
+                {
+                    name: 'repertorySet',
+                    path: '/repertorySet',
+                    component: resolve => require(['../components/page/RepertoryManage/RepertoryManage/RepertorySet.vue'], resolve),
+                    meta: { title: '仓库设置', url: '/repertorySet' }
+                }
             ]
         },
         {

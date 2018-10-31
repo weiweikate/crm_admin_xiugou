@@ -43,7 +43,7 @@
             </el-form>
         </el-card>
         <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
-           <el-button type="primary" style="margin-bottom: 20px">新建仓库</el-button>
+           <el-button type="primary" style="margin-bottom: 20px" @click="$router.push({path:'repertorySet',query:{type:'add'}})">新建仓库</el-button>
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="id" label="仓库ID" align="center"></el-table-column>
@@ -92,9 +92,9 @@
                 <el-table-column label="操作" min-width="150">
                     <template slot-scope="scope">
                         <el-button @click="showInfo(scope.row)" type="primary">详情</el-button>
-                        <el-button @click="showInfo(scope.row)" type="success" v-if="scope.row.status==2">编辑</el-button>
-                        <el-button @click="openOrClose(scope.row)" type="warning" v-if="scope.row.status==1">停用</el-button>
-                        <el-button @click="openOrClose(scope.row)" type="warning" v-if="scope.row.status==2">启用</el-button>
+                        <el-button @click="editRepertory(scope.row)" type="success" v-if="scope.row.status==2">编辑</el-button>
+                        <el-button @click="openOrClose(scope.row,1)" type="warning" v-if="scope.row.status==1">停用</el-button>
+                        <el-button @click="openOrClose(scope.row,2)" type="warning" v-if="scope.row.status==2">启用</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -112,12 +112,16 @@
         </el-card>
         <el-dialog :title="title" :visible.sync="mask">
             <el-form v-model="formMask">
-                <el-form-item label="管理员手机">
+                <el-form-item label="管理员手机" v-if="code">
                     <span>{{formMask.phone}}</span>
                 </el-form-item>
+                <el-form-item  v-else>
+                    <span>已向手机号{{formMask.phone}}发送验证码，请注意查收</span>
+                </el-form-item>
                 <el-form-item>
-                    <el-input v-model="formMask.code" auto-complete="off" disabled=""></el-input>
-                    <el-button type="primary">发送验证码</el-button>
+                    <el-input v-model="formMask.code" placeholder="请输入验证码" auto-complete="off"></el-input>
+                    <el-button type="primary" @click="getCode" v-if="code">发送验证码</el-button>
+                    <el-button class="code-btn" type="primary" v-else>{{codeTime}}s</el-button>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -146,7 +150,9 @@ export default {
             form: {},
             formMask: {},
             title: '启用仓库',
-            mask: false
+            mask: false,
+            codeTime: 0,
+            code: true
         };
     },
     activated() {
@@ -183,12 +189,20 @@ export default {
                     console.log(error);
                 });
         },
-        // 查看店铺详情
+        // 查看详情
         showInfo(row) {
             sessionStorage.setItem('shopInfoId', row.id);
             this.$router.push({
                 name: 'shopInfo',
                 query: { shopInfoId: row.id }
+            });
+        },
+        // 编辑
+        editRepertory(row) {
+            sessionStorage.setItem('repertoryId', row.id);
+            this.$router.push({
+                name: 'repertorySet',
+                query: { repertoryId: row.id }
             });
         },
         // 重置表单
@@ -206,11 +220,32 @@ export default {
             });
         },
         // 停用启用
-        openOrClose(row) {
+        openOrClose(row, num) {
             this.mask = true;
+            this.formMask.phone = localStorage.getItem('ms_userPhone');
+            this.formMask.id = row.id;
+            this.formMask.status = row.status;
+            this.title = num == 1 ? '停用仓库' : '启用仓库';
         },
         sure(formName) {
             this.mask = false;
+        },
+        getCode() {
+            const that = this;
+            this.code = false;
+            const data = {};
+            data.phone = this.formMask.phone;
+            // request.getCode(data).then(res => {
+            //     this.codeTime = 60;
+            //     const timer = setInterval(function() {
+            //         that.codeTime--;
+            //         if (that.codeTime <= 0) {
+            //             that.code = true;
+            //             clearInterval(timer);
+            //         }
+            //     }, 1000);
+            //     this.$message.success(res.msg);
+            // });
         }
     }
 };
@@ -230,7 +265,7 @@ export default {
         border-radius: 10px;
         .el-dialog__header {
             border-bottom: 1px solid #eee;
-            padding: 20px 20px 10px 50px;
+            padding: 20px 20px 10px;
         }
         .el-dialog__title {
             color: #ff6868;
