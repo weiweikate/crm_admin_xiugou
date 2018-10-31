@@ -10,11 +10,17 @@
                         <el-option value="3">供应商仓</el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="supplierId" label="供应商ID">
+                <el-form-item prop="supplierId" label="供应商ID" v-if="form.type==3">
                     <el-input class="inp" v-model="form.supplierId" placeholder="请输入供应商ID"></el-input>
                 </el-form-item>
-                <el-form-item prop="supplierName" label="供应商名称">
+                <el-form-item prop="supplierName" label="供应商名称" v-if="form.type==3">
                     <el-input class="inp" v-model="form.supplierName" placeholder="请输入供应商名称"></el-input>
+                </el-form-item>
+                <el-form-item prop="type" label="加盟仓类型" v-if="form.type==2">
+                    <el-select v-model="form.type" placeholder="请选择加盟仓类型" class="inp">
+                        <el-option value="1">百世汇通</el-option>
+                        <el-option value="2">顺丰</el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item prop="code" label="仓库编码">
                     <el-input class="inp" v-model="form.code" placeholder="请输入仓库编码"></el-input>

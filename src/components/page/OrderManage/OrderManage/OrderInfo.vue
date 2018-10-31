@@ -122,7 +122,7 @@
                     </el-table-column>
                     <el-table-column label="实收款" align="center">
                         <template slot-scope="scope">
-                            实收款:{{scope.row.totalPrice | handleMoney}}<br/>
+                            实收款:{{scope.row.totalPrice+scope.row.freightPrice | handleMoney}}<br/>
                             （含运费:{{scope.row.freightPrice | handleMoney}}）
                         </template>
                     </el-table-column>
