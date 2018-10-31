@@ -74,7 +74,7 @@
                 </el-form-item>
                 <el-form-item label="">
                     <el-button :loading="btnLoading" type="primary" @click="submitForm">保 存</el-button>
-                    <el-button>取 消</el-button>
+                    <el-button @click="$router.push('foundList')">取 消</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -102,6 +102,7 @@
                     generalize: ''
                 },
                 coverImgSize: '',
+                imageSize: '',
                 userList: [],
                 catcList: [],
                 linkPosition: [{ id: '', name: '', type: '' }],
@@ -153,7 +154,16 @@
             this.getInfo();
         },
         deactivated() {
-            sessionStorage.clear('foundId');
+            this.form = {
+                userId: '',
+                categoryId: '',
+                title: '',
+                content: '',
+                generalize: ''
+            }
+            this.linkPosition = [];
+            this.fileList2 = [];
+            this.fileList1 = [];
         },
         mounted() {
             // 为图片ICON绑定事件 getModule 为编辑器的内部属性
@@ -190,11 +200,13 @@
             },
             // 判断普通图片是否符合尺寸
             beforeUploadImg(file) {
+                const that = this;
                 return new Promise(function(resolve, reject) {
                     const _URL = window.URL || window.webkitURL;
                     const image = new Image();
                     image.onload = function() {
                         if (image.width <= 750 && image.height <= 750) {
+                            that.imageSize = `${image.width}*${image.height}`;
                             resolve();
                         } else {
                             console.log(`${image.width}*${image.height}`);
@@ -365,7 +377,7 @@
                             img: imgArr2.join(','),
                             codeList: codeArr.join(','),
                             typeList: typeArr.join(','),
-                            imgSize: '750*750',
+                            imgSize: this.imageSize,
                             coverImgSize: this.coverImgSize
                         };
                         this.btnloading = true;

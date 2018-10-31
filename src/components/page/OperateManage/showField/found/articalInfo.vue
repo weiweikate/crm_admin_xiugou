@@ -47,7 +47,7 @@ export default {
         };
     },
     activated(){
-        this.id = this.$route.query.foundId || sessionStorage.getItem('foundId');
+        this.id = this.$route.query.foundInfoId || sessionStorage.getItem('foundInfoId');
         this.getInfo();
     },
     methods: {

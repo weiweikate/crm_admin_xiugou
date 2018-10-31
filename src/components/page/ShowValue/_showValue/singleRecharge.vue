@@ -1,19 +1,20 @@
 <template>
     <div class="single-recharge">
         <el-form :model="form" style="margin: 0 auto" label-width="120px">
-            <el-form-item label="手机号码">
+            <el-form-item label="会员ID">
                 <el-autocomplete
                     class="inp"
                     v-model="form.phone"
                     :fetch-suggestions="querySearchAsync"
+                    @select="selectUser"
                     placeholder="模糊搜索"
                 ></el-autocomplete>
-                <div class="info-card">
-                    <p>会员编号：</p>
-                    <p>昵称：</p>
-                    <p>手机号：</p>
-                    <p>姓名：</p>
-                    <p>身份证号：</p>
+                <div class="info-card" v-if="showMsg">
+                    <p>会员编号：{{msg.code || ''}}</p>
+                    <p>昵称：{{msg.nickname || ''}}</p>
+                    <p>手机号：{{msg.phone || ''}}</p>
+                    <p>姓名：{{msg.realname || ''}}</p>
+                    <p>身份证号：{{msg.idcard || ''}}</p>
                 </div>
             </el-form-item>
             <el-form-item label="充值秀值数">
@@ -31,16 +32,31 @@ import request from '@/http/http';
 export default {
     data() {
         return {
+            showMsg: false,
             form: {
                 phone: '',
                 money: 0,
                 tip: ''
-            }
-        }
+            },
+            msg: {}
+        };
     },
     methods: {
         // 搜索手机号
-        querySearchAsync(queryString, cb) {}
+        querySearchAsync(queryString, cb) {
+            if (queryString === '') return;
+            request.queryUserByCode({ code: queryString }).then(res => {
+                let arr = [];
+                arr.push({name: res.data.code, value: res.data.code});
+                this.msg = res.data;
+                cb(arr)
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        selectUser() {
+            this.showMsg = true;
+        }
     }
 };
 </script>

@@ -24,10 +24,10 @@
             <el-button type="primary" style="margin-bottom: 10px" @click="$router.push('addFound')">新建发现文章</el-button>
             <el-table v-loading="tabLoading" :data="tableData" border stripe @sort-change="sortChange">
                 <el-table-column prop="code" label="编号" align="center"></el-table-column>
-                <el-table-column prop="content" label="内容" align="center">
+                <el-table-column prop="pureContent" label="内容" align="center">
                     <template slot-scope="scope">
-                        <div class="over-hidden" :title="scope.row.content">
-                            {{scope.row.content}}
+                        <div class="over-hidden" :title="scope.row.pureContent">
+                            {{scope.row.pureContent}}
                         </div>
                     </template>
                 </el-table-column>
@@ -154,8 +154,8 @@
             },
             // 查看详情
             showInfo(row) {
-                sessionStorage.setItem('foundId', row.id);
-                this.$router.push({ name: 'articalInfo', query: { 'foundId': row.id }});
+                sessionStorage.setItem('foundInfoId', row.id);
+                this.$router.push({ name: 'articalInfo', query: { 'foundInfoId': row.id }});
             },
             // 删除
             delItem(index, id) {

@@ -135,7 +135,7 @@
             submitForm() {
                 const that = this;
                 const data = {};
-                data.levelId = that.form.levelId;
+                data.levelId = that.form.levelId.toString();
                 data.inviteType = that.form.inviteType;
                 data.invalidType = that.form.invalidType;
                 data.adminId = localStorage.getItem('ms_userID');

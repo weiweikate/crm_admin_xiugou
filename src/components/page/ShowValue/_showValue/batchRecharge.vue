@@ -18,7 +18,7 @@
             </el-form-item>
             <el-form-item label="用户层级">
                 <el-checkbox v-model="checkedAll" @change="handleCheckAllChange">全选</el-checkbox>
-                <el-button style="margin-left: 10px" :disabled="!checkedAll" size="mini" type="primary">查询</el-button>
+                <el-button style="margin-left: 10px" :disabled="form.checkedUsers.length === 0" size="mini" type="primary" @click="queryUser">查询</el-button>
                 <el-checkbox-group v-loading="loading" class="check-group" v-model="form.checkedUsers" @change="handleCheckedUser">
                     <el-checkbox v-for="(v, k) in userLevel" :key="k" :label="v.levelId">{{v.name}}</el-checkbox>
                 </el-checkbox-group>
@@ -43,12 +43,13 @@
         data() {
             return {
                 form: {
-                    phone: '',
+                    money: '',
                     date: '',
                     tip: '',
                     signUp: '',
                     checkedUsers: []
                 },
+                selectedUser: '',
                 checkedAll: false,
                 loading: false,
                 userLevel: []
@@ -70,6 +71,7 @@
         },
         created() {
             this.getUserLevel();
+            this.form.date = new Date();
         },
         methods: {
             // 全选
@@ -92,6 +94,18 @@
                     this.userLevel = res.data;
                 }).catch(err => {
                     this.loading = false;
+                    console.log(err);
+                });
+            },
+            // 获取查询结果
+            queryUser() {
+                let data = {
+                    idList: this.form.checkedUsers.join(',')
+                }
+                request.queryUserCountByLevelId(data).then(res => {
+                    this.selectedUser = data.idList;
+                    console.log(res);
+                }).catch(err => {
                     console.log(err);
                 });
             }

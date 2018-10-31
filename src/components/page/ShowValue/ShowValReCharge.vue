@@ -29,9 +29,12 @@ export default {
             activeName: 'all'
         };
     },
+    activated() {
+        this.$refs[this.activeName].getList(1);
+    },
     methods: {
         handleClickTab(tab) {
-            this.$refs[tab.name].getList();
+            this.$refs[tab.name].getList(1);
         }
     }
 };
