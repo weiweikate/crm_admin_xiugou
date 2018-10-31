@@ -96,10 +96,10 @@
         <el-dialog title="秀豆奖品" :visible.sync="isShowShowBeanList" :before-close="beforeClose" width="500px">
             <el-form :model="form1" ref="form" label-width="120px">
                 <el-form-item prop="name" label="奖品名称:">
-                    <el-input class="inp" v-model="form1.awardName"></el-input>
+                    <el-input class="inp" v-model="form1.awardName" maxlength="16"></el-input>
                 </el-form-item>
                 <el-form-item prop="giftValue" label="赠送秀豆:">
-                    <el-input-number :controls="false" :min="0" class="inp" v-model="form1.giftValue"></el-input-number>
+                    <el-input-number :controls="false" :min="0" maxlength="12" class="inp" v-model="form1.giftValue"></el-input-number>
                 </el-form-item>
             </el-form>
             <span slot="footer">
@@ -312,6 +312,10 @@
             },
             // 添加秀豆
             addBean() {
+                const isInt = /^[1-9]*[1-9][0-9]*$/;
+                if (!isInt.test(this.giftValue)) {
+                    return this.$message.warning('请输入1-12位的正整数');
+                }
                 if (this.form1.awardName == '' || this.giftValue == '') {
                     return this.$message.warning('输入的数值不能为空');
                 }

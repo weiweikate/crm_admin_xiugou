@@ -94,12 +94,19 @@
                     <el-input v-model="form.linkTypeCode" placeholder="请输入ID" @blur="getProductName"
                               auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item v-if="pageType==6&&form.linkType!=6" label="请输入ID/地址">
-                    <el-input v-model="form.linkTypeCode" placeholder="请输入ID/地址" @blur="getProductName"
+                <!--<el-form-item v-if="pageType==6&&form.linkType!=6" label="请输入ID/地址">-->
+                    <!--<el-input v-model="form.linkTypeCode" placeholder="请输入ID/地址" @blur="getProductName"-->
+                              <!--auto-complete="off"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item v-if="pageType==6&&form.linkType==6" label="请输入ID/地址">-->
+                    <!--<el-input v-model="form.linkTypeCode" placeholder="请输入ID/地址" auto-complete="off"></el-input>-->
+                <!--</el-form-item>-->
+                <el-form-item v-if="pageType==6&&form.linkType!=6" label="请输入ID">
+                    <el-input v-model="form.linkTypeCode" placeholder="请输入ID" @blur="getProductName"
                               auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item v-if="pageType==6&&form.linkType==6" label="请输入ID/地址">
-                    <el-input v-model="form.linkTypeCode" placeholder="请输入ID/地址" auto-complete="off"></el-input>
+                <el-form-item v-if="pageType==6&&form.linkType==6" label="请输入ID">
+                    <el-input v-model="form.linkTypeCode" placeholder="请输入ID" auto-complete="off"></el-input>
                 </el-form-item>
                 <div class="inf-area">{{productName}}</div>
                 <el-form-item label="备注说明" v-if="pageType!=8">
@@ -225,7 +232,8 @@
                 pageType = typeof navName === 'string' ? Number(pageType) : pageType;
                 this.title = pageType === 8 ? '添加' : '添加banner图片';
                 if (pageType === 6) {
-                    this.linkTypeList = [{ type: '链接', id: 6 }, { type: '专题', id: 2 }, { type: '产品', id: 1 }, { type: '礼包', id: 5 }];
+                    // this.linkTypeList = [{ type: '链接', id: 6 }, { type: '专题', id: 2 }, { type: '产品', id: 1 }, { type: '礼包', id: 5 }];
+                    this.linkTypeList = [{ type: '专题', id: 2 }, { type: '产品', id: 1 }, { type: '礼包', id: 5 }];
                 } else if (pageType === 8) {
                     this.linkTypeList = [{
                         type: '链接产品',
@@ -362,6 +370,14 @@
                         return;
                     }
                 }
+                // if (this.form.linkType == 6) {
+                //     if (this.form.linkType == 6) {
+                //         const reg = /^((https|http|ftp|rtsp|mms){0,1}(:\/\/){0,1})www\.(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$/;
+                //         if (!reg.test(this.form.linkTypeCode)) {
+                //             return this.$message.warning('请输入有效网址');
+                //         }
+                //     }
+                // }
                 if (this.pageType != 10 && this.pageType != 12) {
                     if (!this.form.rank) {
                         this.$message.warning('请输入排序');

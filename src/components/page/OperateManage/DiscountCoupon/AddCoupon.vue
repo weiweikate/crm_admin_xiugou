@@ -14,11 +14,11 @@
                     </el-select>
                 </el-form-item>
                 <div class="line"></div>
-                <el-form-item label="券值" v-if="form.type!=3">
+                <el-form-item label="券值" v-if="form.type!=3&&form.type!=4">
                     <el-input v-model="form.value" placeholder="请输入券值"></el-input>
                     元
                 </el-form-item>
-                <el-form-item label="折扣" v-else>
+                <el-form-item label="折扣" v-if="form.type==3">
                     <el-select v-model="form.value" placeholder="请选择">
                         <el-option v-for="(v,k) in discountArr" :key="k" :label="v.name"
                                    :value="v.type"></el-option>
@@ -301,13 +301,17 @@
                             this.$message.warning('请选择优惠券类型!');
                             return;
                         }
-                        if (!data.value) {
-                            if (data.type != 3) {
-                                this.$message.warning('请输入券值!');
-                            } else {
-                                this.$message.warning('请选中折扣值!');
+                        if (data.type != 4) {
+                            if (!data.value) {
+                                if (data.type != 3) {
+                                    this.$message.warning('请输入券值!');
+                                } else {
+                                    this.$message.warning('请选中折扣值!');
+                                }
+                                return;
                             }
-                            return;
+                        } else {
+                            data.value = 0;
                         }
                         if (!data.couponTemplateId) {
                             this.$message.warning('请选择券模板!');

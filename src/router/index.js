@@ -1225,6 +1225,12 @@ export default new Router({
                     component: resolve => require(['../components/page/demo.vue'], resolve),
                     meta: { title: 'demo', url: '/admin/settlementConfig/operateSettlementConfig' }
                 },
+                {
+                    name: 'repertoryList',
+                    path: '/repertoryList',
+                    component: resolve => require(['../components/page/RepertoryManage/RepertoryManage/RepertoryList.vue'], resolve),
+                    meta: { title: '仓库管理', url: '/repertoryList' }
+                },
             ]
         },
         {

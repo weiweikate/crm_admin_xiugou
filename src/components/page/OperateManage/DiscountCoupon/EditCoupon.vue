@@ -14,11 +14,11 @@
                     </el-select>
                 </el-form-item>
                 <div class="line"></div>
-                <el-form-item label="券值" v-if="form.type!=3">
+                <el-form-item label="券值" v-if="form.type!=3&&form.type!=4">
                     <el-input v-model="form.value" placeholder="请输入券值"></el-input>
                     元
                 </el-form-item>
-                <el-form-item label="折扣" v-else>
+                <el-form-item label="折扣"  v-if="form.type==3">
                     <el-select v-model="form.value" placeholder="请选择">
                         <el-option v-for="(v,k) in discountArr" :key="k" :label="v.name"
                                    :value="v.type"></el-option>
@@ -256,11 +256,14 @@
                     };
                     if (detail.cycleFlag == 1) { // 1是周期礼包，0不是
                         this.isDay = true;
+                        this.day = '';
                         this.waitDays = detail.waitDays;
                         this.effectiveDays = detail.effectiveDays;
                     } else {
                         this.isDay = false;
                         this.day = detail.effectiveDays;
+                        this.waitDays = '';
+                        this.effectiveDays = '';
                     }
                     this.remindFlag = detail.remindFlag == 1;// 1提醒2不提醒
                     this.remindDays = detail.remindDays;// 几天前提醒
@@ -384,13 +387,17 @@
                             this.$message.warning('请选择优惠券类型!');
                             return;
                         }
-                        if (!data.value) {
-                            if (data.type != 3) {
-                                this.$message.warning('请输入券值!');
-                            } else {
-                                this.$message.warning('请选中折扣值!');
+                        if (data.type != 4) {
+                            if (!data.value) {
+                                if (data.type != 3) {
+                                    this.$message.warning('请输入券值!');
+                                } else {
+                                    this.$message.warning('请选中折扣值!');
+                                }
+                                return;
                             }
-                            return;
+                        } else {
+                            data.value = 0;
                         }
                         if (!data.couponTemplateId) {
                             this.$message.warning('请选择券模板!');
