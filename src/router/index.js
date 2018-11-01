@@ -884,7 +884,7 @@ export default new Router({
                 {
                     name: 'couponData',
                     path: '/couponData',
-                    component: resolve => require(['../components/page/OperateManage/DiscountCoupon/CouponData.vue'], resolve),
+                    component: resolve => require(['../components/page/OperateManage/DiscountCoupon/couponData.vue'], resolve),
                     meta: { title: '券数据', url: '/admin/discountCouponDealer/discountCouponDealerPageList' }
                 },
                 {
