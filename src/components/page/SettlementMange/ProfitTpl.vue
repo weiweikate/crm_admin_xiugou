@@ -277,51 +277,6 @@ export default {
             data.enableTime = this.startTime == undefined ? '' : utils.formatTime(this.startTime);
             // 关闭时间
             data.stopTime = this.stopTime == undefined ? '' : utils.formatTime(this.stopTime);
-            // X值
-            data.xShopownerOne = this.formX[0].value[0].value / 100;
-            data.xShopownerTwo = this.formX[0].value[1].value / 100;
-            data.xShopownerThree = this.formX[0].value[2].value / 100;
-            data.xClerk = this.formX[1].value / 100;
-            data.xUp = this.formX[2].value / 100;
-            data.xSuper = this.formX[3].value / 100;
-            data.xHelpWork = this.formX[4].value / 100;
-            data.xSelf = this.formX[5].value / 100;
-            data.xOtherOne = this.formX[6].value / 100;
-            data.xOtherTwo = this.formX[7].value / 100;
-            data.xOtherThree = this.formX[8].value / 100;
-            // Y值
-            data.yShopownerOne = this.formY[0].value[0].value / 100;
-            data.yShopownerTwo = this.formY[0].value[1].value / 100;
-            data.yShopownerThree = this.formY[0].value[2].value / 100;
-            data.yClerk = this.formY[1].value / 100;
-            data.yUp = this.formY[2].value / 100;
-            data.ySuper = this.formY[3].value / 100;
-            data.yHelpWork = this.formY[4].value / 100;
-            data.ySelf = this.formY[5].value / 100;
-            data.yOtherOne = this.formY[6].value / 100;
-            data.yOtherTwo = this.formY[7].value / 100;
-            data.yOtherThree = this.formY[8].value / 100;
-            // Z值
-            data.zShopownerOne = this.formZ[0].value[0].value / 100;
-            data.zShopownerTwo = this.formZ[0].value[1].value / 100;
-            data.zShopownerThree = this.formZ[0].value[2].value / 100;
-            data.zClerk = this.formZ[1].value / 100;
-            data.zUp = this.formZ[2].value / 100;
-            data.zSuper = this.formZ[3].value / 100;
-            data.zHelpWork = this.formZ[4].value / 100;
-            data.zSelf = this.formZ[5].value / 100;
-            data.zOtherOne = this.formZ[6].value / 100;
-            data.zOtherTwo = this.formZ[7].value / 100;
-            data.zOtherThree = this.formZ[8].value / 100;
-            data.id = this.tplId;
-            this.btnLoading = true;
-            this.$axios.post(this.url, data).then(res => {
-                this.$message.success(res.data.msg);
-                this.btnLoading = false;
-                this.$router.push('profitDistrMange');
-            }).catch(err => {
-                this.btnLoading = false;
-            });
         },
         //  动态计算品牌个人奖励金
         changePerMoney() {
