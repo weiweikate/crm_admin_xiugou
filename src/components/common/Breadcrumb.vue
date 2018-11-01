@@ -4,7 +4,6 @@
             <el-breadcrumb-item class="bread-item" v-for="(item,index) in nav" :key="index"><icon class="ico" v-if="index == 0" ico="icon-dingwei1" />{{item}}</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="now-date">
-            <span style="color: red">{{version}}</span>
           {{time}}
         </div>
     </div>
@@ -24,7 +23,6 @@ export default {
         };
     },
     created() {
-        this.version = VERSION;
         this.timeDown();
     },
     methods: {

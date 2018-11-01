@@ -9,7 +9,7 @@
                             <el-option label="全部状态" value=""></el-option>
                             <el-option label="待推送" value="100"></el-option>
                             <el-option label="进行中" value="150"></el-option>
-                            <el-option label="已推送" value="200"></el-option>
+                            <el-option label="已结束" value="200"></el-option>
                             <el-option label="取消推送" value="300"></el-option>
                         </el-select>
                     </el-form-item>
@@ -76,7 +76,7 @@
                         <template slot-scope="scope">
                             <template v-if="scope.row.status==100">待推送</template>
                             <template v-if="scope.row.status==150">进行中</template>
-                            <template v-if="scope.row.status==200">已推送</template>
+                            <template v-if="scope.row.status==200">已结束</template>
                             <template v-if="scope.row.status==300">已取消</template>
                         </template>
                     </el-table-column>

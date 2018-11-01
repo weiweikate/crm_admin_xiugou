@@ -12,24 +12,24 @@
             </el-row><br/>
             <el-row>
                 <el-col :span="6">
-                    <div @click="goPage('3')" class="card them1">其他1账户收入明细</div>
+                    <div @click="goPage('8')" class="card them1">其他1账户收入明细</div>
                 </el-col>
                 <el-col :span="6">
-                    <div @click="goPage('4')" class="card them2">其他2账户收入明细</div>
+                    <div @click="goPage('3')" class="card them2">其他2账户收入明细</div>
                 </el-col>
                 <el-col :span="6">
-                    <div @click="goPage('5')" class="card them3">其他3账户收入明细</div>
+                    <div @click="goPage('4')" class="card them3">其他3账户收入明细</div>
                 </el-col>
             </el-row><br/>
             <el-row>
                 <el-col :span="6">
-                    <div @click="goPage('6')" class="card them1">店主账户收支明细</div>
+                    <div @click="goPage('5')" class="card them1">店主账户收支明细</div>
                 </el-col>
                 <el-col :span="6">
-                    <div @click="goPage('7')" class="card them2">店员账户收支明细</div>
+                    <div @click="goPage('6')" class="card them2">店员账户收支明细</div>
                 </el-col>
                 <el-col :span="6">
-                    <div @click="goPage('8')" class="card them3">直接上级（销售提成）账户收支明细</div>
+                    <div @click="goPage('7')" class="card them3">直接上级（销售提成）账户收支明细</div>
                 </el-col>
             </el-row><br/>
             <el-row>
@@ -41,75 +41,75 @@
                 </el-col>
             </el-row>
         </el-card>
-        
+
     </div>
 </template>
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 export default {
-  components: {vBreadcrumb},
+    components: { vBreadcrumb },
 
-  data () {
-    return {
-    };
-  },
+    data() {
+        return {
+        };
+    },
 
-  methods: {
-      goPage(val){
-          let url = '';
-          let flag = '';
-          let flag1 = '';
-          switch (val) {
-            case '1':
-                url = 'flatAct01';
-                flag = 1;
-                break;
-            case '2':
-                url = 'flatAct01';
-                flag = 2;
-                break;
-            case '3':
-                url = 'flatAct01';
-                flag = 3;
-                break;
-            case '4':
-                url = 'flatAct01';
-                flag = 4;
-                break;
-            case '5':
-                url = 'flatAct01';
-                flag = 5;
-                break;
-            case '6':
-                url = 'flatAct02';
-                flag1 = 1;
-                break;
-            case '7':
-                url = 'flatAct02';
-                flag1 = 2;
-                break;
-            case '8':
-                url = 'flatAct02';
-                flag1 = 3;
-                break;
-            case '9':
-                url = 'flatAct02';
-                flag1 = 4;
-                break;
-            case '10':
-                url = 'flatAct02';
-                flag1 = 5;
-                break;
-              default:
-                  break;
-          }
-          sessionStorage.setItem('flag1',flag);
-          sessionStorage.setItem('flag',flag);
-          this.$router.push({name:url,query:{flag:flag,flag1:flag1}});
-      }
-  }
-}
+    methods: {
+        goPage(val) {
+            let url = '';
+            let flag = '';
+            let flag1 = '';
+            switch (val) {
+                case '1':
+                    url = 'flatAct01';
+                    flag = 1;
+                    break;
+                case '2':
+                    url = 'flatAct01';
+                    flag = 2;
+                    break;
+                case '8':
+                    url = 'flatAct01';
+                    flag = 8;
+                    break;
+                case '3':
+                    url = 'flatAct01';
+                    flag = 3;
+                    break;
+                case '4':
+                    url = 'flatAct01';
+                    flag = 4;
+                    break;
+                case '5':
+                    url = 'flatAct02';
+                    flag1 = 5;
+                    break;
+                case '6':
+                    url = 'flatAct02';
+                    flag1 = 6;
+                    break;
+                case '7':
+                    url = 'flatAct02';
+                    flag1 = 7;
+                    break;
+                case '9':
+                    url = 'flatAct02';
+                    flag1 = 4;
+                    break;
+                case '10':
+                    url = 'flatAct02';
+                    flag1 = 5;
+                    break;
+                default:
+                    break;
+            }
+            sessionStorage.setItem('flag1', flag1);
+            sessionStorage.setItem('flag', flag);
+            this.$router.push({ name: url, query: { flag: flag, flag1: flag1 }});
+        }
+    }
+};
 
 </script>
 <style lang='less' scoped>

@@ -46,6 +46,7 @@
                 </el-tab-pane> -->
             </el-tabs>
         </div>
+        <div style="text-align: center">更新时间:{{version}}</div>
     </div>
 </template>
 
@@ -59,6 +60,7 @@
         },
         data() {
             return {
+                version: process.env.version,
                 loginType: 'first',
                 btnLoading: false,
                 code: true,
@@ -143,7 +145,7 @@
                 const that = this;
                 this.code = false;
                 this.codeTime = 60;
-                const timer = setInterval(function() {
+                const timer = setInterval(function () {
                     that.codeTime--;
                     if (that.codeTime <= 0) {
                         that.code = true;
