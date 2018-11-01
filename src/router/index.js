@@ -1248,6 +1248,48 @@ export default new Router({
                     path: '/areaSet',
                     component: resolve => require(['../components/page/RepertoryManage/RepertoryAreaSet/areaSet.vue'], resolve),
                     meta: { title: '区域设置', url: '/areaSet' }
+                },
+                {
+                    name: 'repertoryReportList',
+                    path: '/repertoryReportList',
+                    component: resolve => require(['../components/page/RepertoryManage/RepertoryReport/RepertoryReportList.vue'], resolve),
+                    meta: { title: '入库单', url: '/repertoryReportList' }
+                },
+                {
+                    name: 'repertoryReportSet',
+                    path: '/repertoryReportSet',
+                    component: resolve => require(['../components/page/RepertoryManage/RepertoryReport/RepertoryReportSet.vue'], resolve),
+                    meta: { title: '入库单设置', url: '/repertoryReportSet' }
+                },
+                {
+                    name: 'repertoryReportInfo',
+                    path: '/repertoryReportInfo',
+                    component: resolve => require(['../components/page/RepertoryManage/RepertoryReport/RepertoryReportInfo.vue'], resolve),
+                    meta: { title: '入库单详情', url: '/repertoryReportInfo' }
+                },
+                {
+                    name: 'repertoryInventory',
+                    path: '/repertoryInventory',
+                    component: resolve => require(['../components/page/RepertoryManage/RepertoryData/RepertoryInventory.vue'], resolve),
+                    meta: { title: '仓库存货数', url: '/repertoryInventory' }
+                },
+                {
+                    name: 'repertoryInventoryInfo',
+                    path: '/repertoryInventoryInfo',
+                    component: resolve => require(['../components/page/RepertoryManage/RepertoryData/RepertoryInventoryInfo.vue'], resolve),
+                    meta: { title: '仓库存货数详情', url: '/repertoryInventoryInfo' }
+                },
+                {
+                    name: 'repertoryBad',
+                    path: '/repertoryBad',
+                    component: resolve => require(['../components/page/RepertoryManage/RepertoryData/RepertoryBad.vue'], resolve),
+                    meta: { title: '仓库报损数', url: '/repertoryBad' }
+                },
+                {
+                    name: 'repertoryBadInfo',
+                    path: '/repertoryBadInfo',
+                    component: resolve => require(['../components/page/RepertoryManage/RepertoryData/RepertoryBadInfo.vue'], resolve),
+                    meta: { title: '仓库报损数详情', url: '/repertoryBadInfo' }
                 }
             ]
         },

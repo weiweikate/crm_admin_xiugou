@@ -403,30 +403,26 @@
                             //     title: "数据字典"
                             // }
                         ]
+                    },
+                    {
+                        icon: 'icon-shezhi',
+                        index: '21',
+                        title: '云仓仓库管理',
+                        subs: [
+                            {
+                                index: 'repertoryList',
+                                title: '仓库管理'
+                            },
+                            {
+                                index: 'areaSet',
+                                title: '区域设置'
+                            },
+                            {
+                                index: 'repertoryReportList',
+                                title: '仓库单'
+                            }
+                        ]
                     }
-                    // {
-                    //     icon: 'icon-shezhi',
-                    //     index: '21',
-                    //     title: '云仓仓库管理',
-                    //     subs: [
-                    //         {
-                    //             index: 'repertoryList',
-                    //             title: '仓库管理'
-                    //         },
-                    //         {
-                    //             index: 'areaSet',
-                    //             title: '区域设置'
-                    //         },
-                    //         {
-                    //             index: 'repertoryData',
-                    //             title: '仓库数据同步'
-                    //         },
-                    //         {
-                    //             index: 'repertoryReport',
-                    //             title: '仓库单'
-                    //         }
-                    //     ]
-                    // }
                 ]
             };
         },

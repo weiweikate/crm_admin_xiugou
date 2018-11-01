@@ -7,7 +7,7 @@
                     <el-input v-model="form.name" placeholder="请输入仓库名称"></el-input>
                 </el-form-item>
                 <el-form-item prop="code" label="仓库编码">
-                    <el-input v-model="form.code" placeholder="仓库编码"></el-input>
+                    <el-input v-model="form.code" placeholder="请输入仓库编码"></el-input>
                 </el-form-item>
                 <el-form-item prop="supplierName" label="供应商名称">
                     <el-input v-model="form.supplierName" placeholder="请输入供应商名称"></el-input>
