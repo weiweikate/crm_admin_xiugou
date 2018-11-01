@@ -908,7 +908,7 @@ export default new Router({
                 {
                     name: 'topicTemplate',
                     path: '/topicTemplate',
-                    component: resolve => require(['../components/page/OperateManage/ProjectMange/topicTemplate.vue'], resolve),
+                    component: resolve => require(['../components/page/OperateManage/ProjectMange/TopicTemplate.vue'], resolve),
                     meta: { title: '专题模板', url: '/admin/topic/list' }
                 },
                 {
@@ -1246,7 +1246,7 @@ export default new Router({
                 {
                     name: 'areaSet',
                     path: '/areaSet',
-                    component: resolve => require(['../components/page/RepertoryManage/RepertoryAreaSet/areaSet.vue'], resolve),
+                    component: resolve => require(['../components/page/RepertoryManage/RepertoryAreaSet/AreaSet.vue'], resolve),
                     meta: { title: '区域设置', url: '/areaSet' }
                 },
                 {
