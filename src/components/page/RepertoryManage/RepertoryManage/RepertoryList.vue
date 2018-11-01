@@ -75,13 +75,13 @@
                 </el-table-column>
                 <el-table-column label="仓库品类数" align="center">
                     <template slot-scope="scope">
-                        <el-tag v-if="scope.row.productCount">{{scope.row.productCount}}</el-tag>
+                        <el-button type="primary" @click="toProduct(scope.row)" v-if="scope.row.productCount">{{scope.row.productCount}}</el-button>
                         <span v-else>/</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="仓库报损数" align="center">
                     <template slot-scope="scope">
-                        <el-tag v-if="scope.row.lossCount">{{scope.row.lossCount}}</el-tag>
+                        <el-button @click="toLoss(scope.row)" v-if="scope.row.lossCount">{{scope.row.lossCount}}</el-button>
                         <span v-else>/</span>
                     </template>
                 </el-table-column>
@@ -133,7 +133,7 @@
                     <span>已向手机号{{formMask.phone}}发送验证码，请注意查收</span>
                 </el-form-item>
                 <el-form-item>
-                    <el-input v-model="formMask.code" placeholder="请输入验证码" auto-complete="off"></el-input>
+                    <el-input v-model="formMask.verifyCode" placeholder="请输入验证码" auto-complete="off"></el-input>
                     <el-button type="primary" @click="getCode" v-if="code">发送验证码</el-button>
                     <el-button class="code-btn" type="primary" v-else>{{codeTime}}s</el-button>
                 </el-form-item>
@@ -235,23 +235,45 @@ export default {
         },
         sure(formName) {
             this.mask = false;
+            const data = {};
+            data.verifyCode = this.formMask.verifyCode;
+            data.warehouseId = this.formMask.id;
+            if (!data.verifyCode) {
+                return this.$message.warning('请获取验证码');
+            }
+            this.btnLoading = true;
+            request.startOrStopRepertory(data).then(res => {
+                this.$message.success(res.msg);
+                this.mask = false;
+                this.getList(this.page.currentPage);
+                this.btnLoading = false;
+            });
         },
         getCode() {
             const that = this;
             this.code = false;
             const data = {};
             data.phone = this.formMask.phone;
-            // request.getCode(data).then(res => {
-            //     this.codeTime = 60;
-            //     const timer = setInterval(function() {
-            //         that.codeTime--;
-            //         if (that.codeTime <= 0) {
-            //             that.code = true;
-            //             clearInterval(timer);
-            //         }
-            //     }, 1000);
-            //     this.$message.success(res.msg);
-            // });
+            request.sendWarehouseMessage(data).then(res => {
+                this.codeTime = 60;
+                const timer = setInterval(function() {
+                    that.codeTime--;
+                    if (that.codeTime <= 0) {
+                        that.code = true;
+                        clearInterval(timer);
+                    }
+                }, 1000);
+                this.$message.success(res.msg);
+            });
+        },
+        // 跳转到品类数
+        toProduct(row) {
+            sessionStorage.setItem('repertotyId', row.id);
+            this.$router.push({ path: '/repertoryInventory', query: { repertotyId: row.id }});
+        },
+        toLoss(row) {
+            sessionStorage.setItem('repertotyId', row.id);
+            this.$router.push({ path: '/repertoryBad', query: { repertotyId: row.id }});
         }
     }
 };

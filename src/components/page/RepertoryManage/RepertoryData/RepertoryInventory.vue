@@ -74,7 +74,8 @@ export default {
     data() {
         return {
             nav: ['云仓仓库管理', '仓库管理', '仓库存货数'],
-            tableData: []
+            tableData: [],
+            form: {}
         };
     },
     activated() {

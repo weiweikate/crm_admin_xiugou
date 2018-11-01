@@ -5,21 +5,23 @@
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
                 <el-form-item prop="type" label="仓库类型">
                     <el-select v-model="form.type" placeholder="请选择仓库类型" class="inp">
-                        <el-option value="1">自建仓</el-option>
-                        <el-option value="2">加盟仓</el-option>
-                        <el-option value="3">供应商仓</el-option>
+                        <el-option value="1" label="自建仓">自建仓</el-option>
+                        <el-option value="2" label="加盟仓">加盟仓</el-option>
+                        <el-option value="3" label="供应商仓">供应商仓</el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="supplierId" label="供应商ID" v-if="form.type==3">
-                    <el-input class="inp" v-model="form.supplierId" placeholder="请输入供应商ID"></el-input>
+                <el-form-item prop="supplierCode" label="供应商ID" v-if="form.type==3">
+                    <el-input class="inp" v-model="form.supplierCode" placeholder="请输入供应商ID"></el-input>
                 </el-form-item>
                 <el-form-item prop="supplierName" label="供应商名称" v-if="form.type==3">
                     <el-input class="inp" v-model="form.supplierName" placeholder="请输入供应商名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="type" label="加盟仓类型" v-if="form.type==2">
-                    <el-select v-model="form.type" placeholder="请选择加盟仓类型" class="inp">
-                        <el-option value="1">百世汇通</el-option>
-                        <el-option value="2">顺丰</el-option>
+                <el-form-item prop="joinWarehouseType" label="加盟仓类型" v-if="form.type==2">
+                    <el-select v-model="form.joinWarehouseType" placeholder="请选择加盟仓类型" class="inp">
+                        <el-option value="1" label="百世汇通">百世汇通</el-option>
+                        <el-option value="2" label="顺丰">顺丰</el-option>
+                        <el-option value="3" label="申通">申通</el-option>
+                        <el-option value="4" label="韵达">韵达</el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="code" label="仓库编码">
@@ -28,40 +30,40 @@
                 <el-form-item prop="name" label="仓库名称">
                     <el-input class="inp" v-model="form.name" placeholder="请输入仓库名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="user" label="仓库负责人">
-                    <el-input class="inp" v-model="form.user" placeholder="请输入仓库负责人"></el-input>
+                <el-form-item prop="manager" label="仓库负责人">
+                    <el-input class="inp" v-model="form.manager" placeholder="请输入仓库负责人"></el-input>
                 </el-form-item>
-                <el-form-item prop="phone" label="仓库负责人手机号">
-                    <el-input class="inp" v-model="form.phone" placeholder="请输入仓库负责人手机号"></el-input>
+                <el-form-item prop="managerPhone" label="仓库负责人手机号">
+                    <el-input class="inp" v-model="form.managerPhone" placeholder="请输入仓库负责人手机号"></el-input>
                 </el-form-item>
                 <el-form-item prop="address" label="仓库地址">
-                    <region @regionMsg='getRegion(1)' :regionMsg='address' :num="1"></region>
+                    <region @regionMsg='getRepertoryRegion' :regionMsg='address' ref="1"></region>
                     <div style="margin-top: 10px">
                         <el-input type="textarea" class="inp-textarea" placeholder="请输入详细地址" v-model="form.address"></el-input>
                     </div>
                 </el-form-item>
-                <el-form-item prop="send" label="是否能发货">
-                    <el-radio-group v-model="form.send">
+                <el-form-item prop="sendGoods" label="是否能发货">
+                    <el-radio-group v-model="form.sendGoods">
                         <el-radio :label="1">是</el-radio>
                         <el-radio :label="2">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item prop="back" label="是否为退货仓">
-                    <el-radio-group v-model="form.back">
+                <el-form-item prop="returnGoods" label="是否为退货仓">
+                    <el-radio-group v-model="form.returnGoods">
                         <el-radio :label="1">是</el-radio>
                         <el-radio :label="2">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item prop="linkName" label="联系人名称">
-                    <el-input class="inp" v-model="form.linkName" placeholder="请输入联系人名称"></el-input>
+                <el-form-item prop="returnManager" label="退货仓联系人名称" v-if="form.returnGoods==1">
+                    <el-input class="inp" v-model="form.returnManager" placeholder="请输入退货仓联系人名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="linkPhone" label="退货仓联系方式">
-                    <el-input class="inp" v-model="form.linkPhone" placeholder="请输入退货仓联系方式"></el-input>
+                <el-form-item prop="returnContact" label="退货仓联系方式" v-if="form.returnGoods==1">
+                    <el-input class="inp" v-model="form.returnContact" placeholder="请输入退货仓联系方式"></el-input>
                 </el-form-item>
-                <el-form-item prop="phone" label="仓库地址">
-                    <region @regionMsg='getRegion(2)' :regionMsg='address' :num="2"></region>
+                <el-form-item prop="returnWarehouseAddress" label="退货仓仓库地址" v-if="form.returnGoods==1">
+                    <region @regionMsg='getRegion' :regionMsg='returnWarehouseAddress' ref="2"></region>
                     <div style="margin-top: 10px">
-                        <el-input type="textarea" class="inp-textarea" placeholder="请输入详细地址" v-model="form.address"></el-input>
+                        <el-input type="textarea" class="inp-textarea" placeholder="请输入详细地址" v-model="form.returnWarehouseAddress"></el-input>
                     </div>
                 </el-form-item>
                 <el-form-item prop="remark" label="备注">
@@ -84,46 +86,47 @@
     export default {
         components: { vBreadcrumb, region },
         data() {
-            var isPhone = (rule, value, callback) => {
+            var ismanagerPhone = (rule, value, callreturnGoods) => {
                 if (!value) {
-                    return callback(new Error('请输入仓库负责人手机号'));
+                    return callreturnGoods(new Error('请输入仓库负责人手机号'));
                 } else {
                     const reg = /^1[3-8]\d{9}$/;
                     if (!reg.test(value)) {
-                        callback(new Error('请输入正确的手机号格式'));
+                        callreturnGoods(new Error('请输入正确的手机号格式'));
                     } else {
-                        callback();
+                        callreturnGoods();
                     }
                 }
             };
-            var isMobile = (rule, value, callback) => {
+            var isMobile = (rule, value, callreturnGoods) => {
                 if (!value) {
-                    return callback(new Error('请输入退货仓联系方式'));
+                    return callreturnGoods(new Error('请输入退货仓联系方式'));
                 } else {
                     const reg = /^((0\d{2,3}-?\d{7,8})|(1[3-8]\d{9}))$/;
                     if (!reg.test(value)) {
-                        callback(new Error('请输入正确的联系方式'));
+                        callreturnGoods(new Error('请输入正确的联系方式'));
                     } else {
-                        callback();
+                        callreturnGoods();
                     }
                 }
             };
             return {
                 nav: ['云仓仓库管理', '仓库管理', '新建仓库'],
                 id: '',
-                url: '',
                 form: {
                     type: '',
-                    supplierId: '',
+                    supplierCode: '',
                     supplierName: '',
                     code: '',
                     name: '',
-                    user: '',
-                    phone: '',
-                    send: 1,
-                    back: 1,
-                    linkName: '',
-                    linkPhone: '',
+                    manager: '',
+                    managerPhone: '',
+                    sendGoods: 1,
+                    returnGoods: 1,
+                    returnManager: '',
+                    returnContact: '',
+                    address: '',
+                    returnWarehouseAddress: '',
                     remark: ''
                 },
                 tableData: [],
@@ -132,7 +135,7 @@
                     type: [
                         { required: true, message: '请选择仓库类型', trigger: 'blur' }
                     ],
-                    supplierId: [
+                    supplierCode: [
                         { required: true, message: '请输入供应商ID', trigger: 'blur' }
                     ],
                     supplierName: [
@@ -144,32 +147,37 @@
                     name: [
                         { required: true, message: '请输入仓库名称', trigger: 'blur' }
                     ],
-                    user: [
+                    manager: [
                         { required: true, message: '请输入仓库负责人', trigger: 'blur' }
                     ],
-                    phone: [
+                    managerPhone: [
                         { required: true, message: '请输入仓库负责人手机号', trigger: 'blur' },
-                        { validator: isPhone, trigger: 'blur' }
+                        { validator: ismanagerPhone, trigger: 'blur' }
                     ],
                     address: [
                         { required: true, message: '请输入仓库地址', trigger: 'blur' }
                     ],
-                    send: [
+                    returnWarehouseAddress: [
+                        { required: true, message: '请输入退货仓仓库地址', trigger: 'blur' }
+                    ],
+                    sendGoods: [
                         { required: true, message: '请选择是否能发货', trigger: 'blur' }
                     ],
-                    back: [
+                    returnGoods: [
                         { required: true, message: '请选择是否为退货仓', trigger: 'blur' }
                     ],
-                    linkName: [
+                    returnManager: [
                         { required: true, message: '请输入联系人名称', trigger: 'blur' }
                     ],
-                    linkPhone: [
+                    returnContact: [
                         { required: true, message: '请输入退货仓联系方式', trigger: 'blur' },
                         { validator: isMobile, trigger: 'blur' }
                     ]
                 },
                 btnLoading: false,
-                address: ''
+                address: '',
+                returnWarehouseAddress: '',
+                num: ''
             };
         },
         activated() {
@@ -181,12 +189,14 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (!valid) return;
-                    const data = this.form;
-                    if (this.status == 2) {
+                    const data = this[formName];
+                    if (this.type == 2) {
                         data.id = this.id;
                     }
+                    data.sendGoods = data.sendGoods == 1;
+                    data.returnGoods = data.returnGoods == 1;
                     this.btnLoading = true;
-                    request[this.url](data).then(res => {
+                    request.addOrUpdateRepertory(data).then(res => {
                         this.$message.success(res.msg);
                         this.$router.push('/repertoryList');
                         this.btnLoading = false;
@@ -200,26 +210,26 @@
                 this.resetValue();
                 if (this.type == 1) {
                     this.nav[2] = '新建仓库';
-                    this.url = 'addScratchCard';
                 } else {
                     this.nav[2] = '编辑仓库';
-                    this.url = 'updateScratchCard';
                     this.getDetail();
                 }
             },
             resetValue() {
                 this.form = {
                     type: '',
-                    supplierId: '',
+                    supplierCode: '',
                     supplierName: '',
                     code: '',
                     name: '',
-                    user: '',
-                    phone: '',
-                    send: 1,
-                    back: 1,
-                    linkName: '',
-                    linkPhone: '',
+                    manager: '',
+                    managerPhone: '',
+                    sendGoods: 1,
+                    returnGoods: 1,
+                    returnManager: '',
+                    returnContact: '',
+                    address: '',
+                    returnWarehouseAddress: '',
                     remark: ''
                 };
             },
@@ -227,7 +237,7 @@
                 const data = {
                     id: this.id
                 };
-                request.findScratchCardById(data).then(res => {
+                request.queryRepertoryById(data).then(res => {
                     this.form = res.data;
                     this.tableData = res.data.scratchCardPrize;
                     this.tableData.forEach((v, k) => {
@@ -239,11 +249,17 @@
                 });
             },
             // 获取省市区
-            getRegion(num, msg) {
+            getRegion(msg) {
+                this.returnWarehouseAddress = msg;
+                this.form.returnProvinceCode = this.returnWarehouseAddress[0];
+                this.form.returnCityCode = this.returnWarehouseAddress[1];
+                this.form.returnDistrictCode = this.returnWarehouseAddress[2];
+            },
+            getRepertoryRegion(msg) {
                 this.address = msg;
-                this.form.provinceCode = this.address[0];
-                this.form.cityCode = this.address[1];
-                this.form.areaCode = this.address[2];
+                this.form.addressProvinceCode = this.address[0];
+                this.form.addressCityCode = this.address[1];
+                this.form.addressDistrictCode = this.address[2];
             },
             // 取消
             cancel() {

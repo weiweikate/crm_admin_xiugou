@@ -212,10 +212,10 @@
 
             // 查看详情
             productInfo(row) {
-                sessionStorage.setItem('orderInfoId', row.id);
+                sessionStorage.setItem('orderInfoId', row.orderId);
                 this.$router.push({
                     name: 'orderInfo',
-                    query: { orderInfoId: row.id }
+                    query: { orderInfoId: row.orderId }
                 });
             },
             // 批量操作

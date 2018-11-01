@@ -4,11 +4,11 @@
         <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
            <el-button type="primary" style="margin-bottom: 20px" @click="$router.push({path:'repertorySet',query:{type:'add'}})">新建仓库</el-button>
             <el-table :data="tableData" border>
-                <el-table-column prop="province" label="省" align="center"></el-table-column>
+                <el-table-column prop="addressName" label="省" align="center"></el-table-column>
                 <el-table-column prop="name" label="发货仓">
                     <template slot-scope="scope">
                         <div class="fl">
-                            <div v-for="(v,k) in scope.row.send" :key="k" v-if="k<3">发货仓{{k}}：<div class="text-wrap">{{v.name}}</div></div>
+                            <div v-for="(v,k) in scope.row.sendList" :key="k" v-if="k<3">发货仓{{k}}：<div class="text-wrap">{{v.name}}</div></div>
                         </div>
                         <div class="fr">
                             <span class="color-blue" @click="watchAll(scope.row)">查看全部</span>
@@ -19,7 +19,7 @@
                 <el-table-column label="退货仓">
                     <template slot-scope="scope">
                         <div class="fl">
-                            <div v-for="(v,k) in scope.row.back" :key="k" v-if="k<3">发货仓{{k}}：<div class="text-wrap">{{v.name}}</div></div>
+                            <div v-for="(v,k) in scope.row.returnList" :key="k" v-if="k<3">发货仓{{k}}：<div class="text-wrap">{{v.name}}</div></div>
                         </div>
                         <div class="fr">
                             <span class="color-blue" @click="watchAll(scope.row)">查看全部</span>
@@ -93,45 +93,7 @@ export default {
     data() {
         return {
             nav: ['云仓仓库管理', '区域设置'],
-            tableData: [{
-                province: '浙江省',
-                send: [{
-                    name: '111',
-                    id: 0
-                }, {
-                    name: 222,
-                    id: 1
-                }, {
-                    name: '333',
-                    id: 0
-                }, {
-                    name: 444,
-                    id: 1
-                }],
-                back: [{
-                    name: 1111,
-                    id: 0
-                }, {
-                    name: 222,
-                    id: 1
-                }]
-            }, {
-                province: '湖北省',
-                send: [{
-                    name: 3333,
-                    id: 0
-                }, {
-                    name: 222,
-                    id: 1
-                }],
-                back: [{
-                    name: 4444,
-                    id: 0
-                }, {
-                    name: 222,
-                    id: 1
-                }]
-            }],
+            tableData: [],
             form: {},
             formMask: {},
             mask: false,
@@ -143,16 +105,15 @@ export default {
         };
     },
     activated() {
-        // this.getList();
+        this.getList();
     },
     methods: {
         // 获取数据
         getList() {
-            request.getStoreList({}).then(res => {
+            request.areaWarehouseList({}).then(res => {
                 this.tableData = [];
                 if (!res.data) return;
-                this.tableData = res.data.data;
-                this.page.totalPage = res.data.totalNum;
+                this.tableData = res.data;
             }).catch(error => {
                 console.log(error);
             });

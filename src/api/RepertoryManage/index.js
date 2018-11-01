@@ -17,6 +17,8 @@ export const queryRepertoryById = ['/warehouse/queryById', { methods: 'get' }];
 export const queryRepertoryList = '/warehouse/queryList';
 // 启用停用
 export const startOrStopRepertory = ['/warehouse/startOrStop', { methods: 'get' }];
+// 启用停用
+export const sendWarehouseMessage = ['/sms/sendWarehouseMessage', { methods: 'get' }];
 
 // 入库单
 // 添加或修改入库单
@@ -30,4 +32,4 @@ export const getSKUById = '/goods/getSKUById';
 // 入库单处获取sku列表(商品规格)
 export const SKUList = '/goods/SKUList';
 // 入库单处获取spu列表
-// export const SPUList = '/goods/SPUList';
+export const SPUList = '/goods/SPUList';

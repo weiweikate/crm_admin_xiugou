@@ -133,7 +133,7 @@ export default {
             const data = {
                 id: that.id
             };
-            request.findDealerById(data).then(res => {
+            request.queryRepertoryById(data).then(res => {
                 that.detail = res.data;
             }).catch(err => {
                 console.log(err);

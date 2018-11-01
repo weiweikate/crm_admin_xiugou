@@ -15,7 +15,7 @@
 import request from '@/http/http.js';
 
 export default {
-    props: ['regionMsg', 'isDisabled', 'num'],
+    props: ['regionMsg', 'isDisabled'],
     data() {
         return {
             pLoading: false,
@@ -104,12 +104,7 @@ export default {
                 this.areaArr.push({ label: '全部', value: '' });
                 this.area = this.areaArr[0];
                 if (val == false) {
-                    // this.$emit('regionMsg', this.region);
-                    if (this.num) {
-                        this.$emit('regionMsg(' + this.num + ')', this.region);
-                    } else {
-                        this.$emit('regionMsg', this.region);
-                    }
+                    this.$emit('regionMsg', this.region);
                 }
                 return;
             } else {
@@ -133,12 +128,7 @@ export default {
                 this.region.push(this.city);
                 this.region.push(this.area);
                 if (val == false) {
-                    if (this.num) {
-                        this.$emit('regionMsg(' + this.num + ')', this.region);
-                    } else {
-                        this.$emit('regionMsg', this.region);
-                    }
-                    // this.$emit('regionMsg', this.region);
+                    this.$emit('regionMsg', this.region);
                 }
             }).catch(error => {
                 console.log(error);
@@ -150,11 +140,7 @@ export default {
             this.region.push(this.province);
             this.region.push(this.city);
             this.region.push(this.area);
-            if (this.num) {
-                this.$emit('regionMsg(' + this.num + ')', this.region);
-            } else {
-                this.$emit('regionMsg', this.region);
-            }
+            this.$emit('regionMsg', this.region);
         }
     }
 };
