@@ -17,8 +17,8 @@
                             <el-form-item label="昵称">
                                 <el-input v-model="dealer.nickname" placeholder="请输入昵称" size="medium"></el-input>
                             </el-form-item>
-                            <el-form-item label="微信号">
-                                <el-input v-model="dealer.wechatId" placeholder="请输入微信号" size="medium"></el-input>
+                            <el-form-item label="微信名称">
+                                <div :title="dealer.wechatName">{{dealer.wechatName}}</div>
                             </el-form-item>
                         </div>
                         <div class="form-item">

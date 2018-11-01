@@ -48,7 +48,6 @@ export default {
                 id: that.id
             };
             request.findDealerById(data).then(res => {
-                console.log(res);
                 that.detail = res.data;
                 that.img.push(res.data.frontPhoto, res.data.backPhoto);
             }).catch(err => {

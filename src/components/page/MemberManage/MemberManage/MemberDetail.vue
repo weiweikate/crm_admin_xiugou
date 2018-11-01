@@ -38,11 +38,11 @@
                         <img class="img" v-if="dealer.headImg" :src="dealer.headImg" alt="">
                         <img class="img" v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
-                    <!--<div>-->
-                        <!--<el-button type="primary" @click="btnClicked('/lowerMemberManage')">-->
-                            <!--下级代理({{dealer.sub_level_num}})-->
-                        <!--</el-button>-->
-                    <!--</div>-->
+                    <div>
+                        <el-button type="primary" @click="toLower">
+                            下级代理({{dealer.junior || 0}})
+                        </el-button>
+                    </div>
                     <div>
                         <el-button type="primary" @click="btnClicked('/memberTree')"
                                    style="margin-left: 0">查看会员树状图
@@ -59,7 +59,7 @@
                     <!--</div>-->
                     <div>
                         <el-button type="primary" @click="realName"
-                                   style="margin-left: 0">实名信息
+                                   style="margin-left: 0">实名信息{{dealer.myCardNum?'(已实名)':''}}
                         </el-button>
                     </div>
                     <div>
@@ -229,6 +229,11 @@
                 const id = this.id;
                 sessionStorage.setItem('memberId', id);
                 this.$router.push({ path: page, query: { 'memberId': id }});
+            },
+            // 跳到下级列表
+            toLower() {
+                sessionStorage.setItem('memberId', this.id);
+                this.$router.push({ path: '/lowerMemberManage' });
             },
             // 跳转到店铺详情
             shopInfo() {

@@ -54,3 +54,5 @@ export const updateSettlementConfigStatus = '/admin/settlementConfig/updateSettl
 // 保证金缴纳记录
 export const storePayRecordList = '/admin/storePayRecord/list';
 //********************************************************************************************************************************************************
+export const queryFlatAccountByType = ['/settle/dealFlow/queryByType', { methods: 'post' }]; // 平台账户收益明细
+export const addProfitTpl = ['/settle/template/addProfitTpl', { methods: 'post' }]; //添加结算模版
