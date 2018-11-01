@@ -279,7 +279,7 @@ export default {
                         itemStyle: { color: colorArr[k] }
                     });
                     this.userNum += v.count;
-                })
+                });
                 this.echartsInit();
             }).catch(err => {
                 console.log(err);

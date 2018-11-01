@@ -104,6 +104,7 @@ export default {
                     this.tableData = [];
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
+                    this.page.currentPage = res.data.currentPage;
                 })
                 .catch(error => {
                     console.log(error);

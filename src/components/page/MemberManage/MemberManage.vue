@@ -190,6 +190,7 @@ export default {
                 that.tableData = [];
                 that.tableData = res.data.data;
                 that.page.totalPage = res.data.totalNum;
+                that.page.currentPage = res.data.currentPage;
             }).catch(err => {
                 that.tableLoading = false;
                 console.log(err);

@@ -132,6 +132,7 @@
                     this.tabLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
+                    this.page.currentPage = res.data.currentPage;
                 }).catch(err => {
                     this.tabLoading = false;
                     console.log(err);
