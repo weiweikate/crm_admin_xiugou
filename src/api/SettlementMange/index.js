@@ -53,3 +53,4 @@ export const updateSettlementConfigStatus = '/admin/settlementConfig/updateSettl
 
 // 保证金缴纳记录
 export const storePayRecordList = '/admin/storePayRecord/list';
+//********************************************************************************************************************************************************
