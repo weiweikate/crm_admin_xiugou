@@ -25,10 +25,10 @@
             <el-table-column label="操作" align="center" width="300px">
                 <template slot-scope="scope">
                     <el-button @click="accountMsg(scope.row)" type="primary">账户明细</el-button>
-                    <el-button @click="audit(scope.row,1)" v-if='scope.row.status == 0 && p.auditWithdrawMoney' type="danger">确认</el-button>
-                    <el-button @click="audit(scope.row,2)" v-if='scope.row.status == 0 && p.auditWithdrawMoney' type="warning">驳回</el-button>
-                    <el-button :loading="btnloading" @click="record(scope.row)" v-if='scope.row.status == 1 && p.queryWithdrawMoneyById' type="warning">打款记录</el-button>
-                    <el-button :loading="refReaBtnLoading" @click="showRefuseReason(scope.row)" v-if='scope.row.status == 2 && p.queryRefusalReason' type="danger">查看驳回理由</el-button>
+                    <el-button @click="audit(scope.row,1)" v-if='scope.row.status == 0' type="danger">确认</el-button>
+                    <el-button @click="audit(scope.row,2)" v-if='scope.row.status == 0' type="warning">驳回</el-button>
+                    <el-button :loading="btnloading" @click="record(scope.row)" v-if='scope.row.status == 1' type="warning">打款记录</el-button>
+                    <el-button :loading="refReaBtnLoading" @click="showRefuseReason(scope.row)" v-if='scope.row.status == 2' type="danger">查看驳回理由</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -94,12 +94,6 @@ export default {
 
     data() {
         return {
-        // 权限控制
-            p: {
-                auditWithdrawMoney: false, // 同意/驳回提现
-                queryWithdrawMoneyById: false, // 查看打款记录
-                queryRefusalReason: false // 查看驳回理由
-            },
             // 表格数据
             table: [],
             // 快捷回复列表
@@ -138,15 +132,16 @@ export default {
 
     created() {
         this.table = this.tableData;
-        this.pControl();
     },
 
     methods: {
-    // 权限控制
-        pControl() {
-            for (const k in this.p) {
-                this.p[k] = utils.pc(pApi[k]);
-            }
+        //  查询
+        getList(val) {
+            const data = {};
+            data.nickName = this.form.applyPeople;
+            data.withdraNo = this.form.withdraNo;
+            data.startTime = this.form.time.length == 0 ? '' : utils.formatTime(this.form.time[0], 1);
+            data.endTime = this.form.time.length == 0 ? '' : utils.formatTime(this.form.time[1], 1);
         },
         // 账户明细
         accountMsg() {
@@ -185,7 +180,6 @@ export default {
             }
             this.$axios.post(this.auditUrl, data).then(res => {
                 this.$message.success(res.data.data.msg);
-                this.$emit('updataData', true);
                 this.isShowAuditDia = false;
             });
         },

@@ -2,5 +2,5 @@
 module.exports = {
     NODE_ENV: '"production"',
     EVN_CONFIG: '"prod"',
-    API_ROOT: '"https://sg.dnvhot.tech/"'
+    API_ROOT: '""'
 };

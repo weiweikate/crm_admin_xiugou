@@ -13,7 +13,7 @@
                     <el-date-picker v-model="form.time" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
                 </el-form-item>
                 <el-form-item label=" ">
-                    <el-button type="primary" @click="getList(1)">查询</el-button>
+                    <el-button type="primary" @click="submitForm(1)">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
@@ -21,16 +21,16 @@
         <el-card style='margin-top:20px' :body-style="{ padding: '30px'}">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部申请" name="1">
-                    <v-tab v-if='activeName == "1"' :tableData='tableData' @updataData='updata'></v-tab>
+                    <v-tab ref="1"></v-tab>
                 </el-tab-pane>
                 <el-tab-pane label="待确认" name="2">
-                    <v-tab v-if='activeName == "2"' :tableData='tableData' @updataData='updata'></v-tab>
+                    <v-tab ref="2"></v-tab>
                 </el-tab-pane>
                 <el-tab-pane label="已确认" name="3">
-                    <v-tab v-if='activeName == "3"' :tableData='tableData' @updataData='updata'></v-tab>
+                    <v-tab ref="3"></v-tab>
                 </el-tab-pane>
                 <el-tab-pane label="已驳回" name="4">
-                    <v-tab v-if='activeName == "4"' :tableData='tableData' @updataData='updata'></v-tab>
+                    <v-tab ref="4"></v-tab>
                 </el-tab-pane>
             </el-tabs>
             <div class="block">
@@ -49,82 +49,48 @@
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-import vTab from '@/components/page/SettlementMange/_common/withdrawalTab.vue'
-import utils from '@/utils/index.js'
+import vTab from '@/components/page/SettlementMange/_common/withdrawalTab.vue';
+import utils from '@/utils/index.js';
 import * as api from '@/api/SettlementMange/index.js';
 import * as pApi from '@/privilegeList/SettlementMange/index.js';
-import { myMixinTable,queryDictonary } from '@/JS/commom';
+import { myMixinTable, queryDictonary } from '@/JS/commom';
 export default {
-  components: {vBreadcrumb,vTab},
+    components: { vBreadcrumb, vTab },
 
-  mixins:[myMixinTable,queryDictonary],
+    mixins: [myMixinTable, queryDictonary],
 
-  data () {
-    return {
-        activeName:'1', // 选项卡当前名称
-        // 表单
-        form:{
-            applyPeople:'', // 申请人
-            withdraNo:'', // 提现编号
-            time:[], // 发起时间
+    data() {
+        return {
+            activeName: '1', // 选项卡当前名称
+            // 表单
+            form: {
+                applyPeople: '', // 申请人
+                withdraNo: '', // 提现编号
+                time: [] // 发起时间
+            },
+            tableData: []
+        };
+    },
+
+    activated() {
+
+    },
+
+    methods: {
+        // tab 选项卡切换
+        handleClick(tab) {
+            console.log(this.$refs[tab.name]);
         },
-        tableData:[],
-    };
-  },
+        // 提交表单
+        submitForm(val) {
 
-  activated(){
-      this.getList(this.page.currentPage);
-  },
-
-  methods: {
-    //   tab 选项卡切换
-    handleClick(tab) {
-        this.activeName = tab.name;
-        this.getList(1);
-    },
-    //  查询
-    getList(val){
-        let data = {};
-        data.nickName = this.form.applyPeople;
-        data.withdraNo = this.form.withdraNo;
-        data.startTime = this.form.time.length == 0?'':utils.formatTime(this.form.time[0],1);
-        data.endTime = this.form.time.length == 0?'':utils.formatTime(this.form.time[1],1);
-        switch (this.activeName) {
-            case '1':
-                data.status = '';
-                break;
-            case '2':
-                data.status = '0';
-                break;
-            case '3':
-                data.status = '1';
-                break;
-            case '4':
-                data.status = '2';
-                break;
-            default:
-                break;
+        },
+        // 重置表单
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
         }
-        this.page.currentPage = val;
-        data.page = val;
-        data.url = pApi.queryWithdrawMoneyList;
-        this.$axios.post(api.queryWithdrawMoneyList,data).then(res=>{
-            this.tableData = [];
-            this.page.totalPage = res.data.data.resultCount;
-            this.tableData = res.data.data.data;
-        })
-    },
-    // 重置表单
-    resetForm(formName){
-        this.$refs[formName].resetFields();
-        this.getList(1);
-    },
-    // 获取子组件数据
-    updata(val){
-        this.getList(this.page.currentPage)
     }
-  }
-}
+};
 
 </script>
 <style lang='less' scoped>
