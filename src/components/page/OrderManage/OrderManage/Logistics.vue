@@ -34,7 +34,7 @@
                             <!--<p class="special">包裹正在等待揽件</p>-->
                         <!--</span>-->
                     <!--</li>-->
-                    <li class="line"></li>
+                    <li class="line" :style="{height: lineHeight+'px'}"></li>
                 </ul>
 
             </div>
@@ -68,7 +68,8 @@ export default {
             status: '', // 订单状态
             progressList: [], // 物流
             exName: '', // 物流公司名称
-            exNo: '' // 物流单号
+            exNo: '', // 物流单号
+            lineHeight: ''
         };
     },
 
@@ -80,6 +81,7 @@ export default {
 
     activated() {
         this.expNum = this.$route.query.findExpressId || sessionStorage.getItem('findExpressId');
+        this.lineHeight = '';
         this.getLogisticsInfo();
     },
     methods: {
@@ -90,6 +92,9 @@ export default {
                 this.exNo = res.data.showapi_res_body.mailNo;
                 this.progressList = res.data.showapi_res_body.data;
                 this.status = res.data.showapi_res_body.status;
+                if (res.data.showapi_res_body.data.length !== 0) {
+                    this.lineHeight = (res.data.showapi_res_body.data.length - 1) * 100;
+                }
                 this.loading = false;
             }).catch(err => {
                 this.loading = false;
@@ -182,7 +187,6 @@ export default {
                 .line{
                     width: 2px;
                     background-color: #dddddd;
-                    height: 90%;
                     position: absolute;
                     top:0;
                     left: 106px;
