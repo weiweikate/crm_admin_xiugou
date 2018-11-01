@@ -29,44 +29,54 @@
                 </el-table-column>
             </el-table>
         </el-card>
+        <!--仓库新增-->
         <el-dialog title="仓库新增" :visible.sync="mask">
-        <el-form v-model="formMask">
-            <el-form-item label="仓库编码">
-                <el-input class="inp" placeholder="请输入仓库编码" v-model="formMask.code"></el-input>
-            </el-form-item>
-            <el-form-item label="仓库名称">
-                <el-input class="inp" placeholder="请输入仓库名称" v-model="formMask.name"></el-input>
-            </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="sure('formMask')">确 认</el-button>
-            <el-button @click="mask=false">取 消</el-button>
-        </div>
-    </el-dialog>
-        <el-dialog title="仓库新增" :visible.sync="allMask">
+            <el-form v-model="formMask">
+                <el-form-item label="仓库编码">
+                    <el-input class="inp" placeholder="请输入仓库编码" v-model="formMask.code"></el-input>
+                </el-form-item>
+                <el-form-item label="仓库名称">
+                    <el-input class="inp" placeholder="请输入仓库名称" v-model="formMask.name"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="sure('formMask')">确 认</el-button>
+                <el-button @click="mask=false">取 消</el-button>
+            </div>
+        </el-dialog>
+        <!--查看全部-->
+        <el-dialog title="查看全部" :visible.sync="allMask">
             <div>
                 <span>浙江省</span>
                 <span>
-                    <i class="el-icon-circle-plus-outline" @click="addRepertory()"></i>
+                    <i class="el-icon-circle-plus-outline" @click="addRepertory"></i>
                 </span>
             </div>
-           <el-table :data="allData" border>
+            <el-table :data="allData" border>
                 <el-table-column label="仓库排序" align="center">
                     <template slot-scope="scope">发货仓{{scope.$index}}</template>
                 </el-table-column>
                 <el-table-column prop="name" label="仓库名称" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <span class="color-blue" @click="upOrDown('-1',scope.$index)" v-if="scope.$index!=0">上移</span>
-                        <span class="color-blue" @click="upOrDown('1',scope.$index)" v-if="scope.$index!=allData.length-1">下移</span>
-                        <span class="color-blue" @click="upOrDown('0',scope.$index)" v-if="scope.$index!=0">置顶</span>
+                        <span class="color-blue" @click="upOrDown(-1,scope.$index)" v-if="scope.$index!=0">上移</span>
+                        <span class="color-blue" @click="upOrDown(1,scope.$index)" v-if="scope.$index!=allData.length-1">下移</span>
+                        <span class="color-blue" @click="upOrDown(0,scope.$index)" v-if="scope.$index!=0">置顶</span>
                         <span class="color-blue" @click="deleteData(scope.$index)">删除</span>
                     </template>
                 </el-table-column>
-           </el-table>
+            </el-table>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="sure('formMask')">确 认</el-button>
                 <el-button @click="allMask=false">取 消</el-button>
+            </div>
+        </el-dialog>
+        <!--删除-->
+        <el-dialog title="温馨提示" :visible.sync="deleteMask">
+            <div class="tip">确认要删除？</div>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="deleteSure">确 认</el-button>
+                <el-button @click="deleteMask=false">取 消</el-button>
             </div>
         </el-dialog>
     </div>
@@ -126,7 +136,10 @@ export default {
             formMask: {},
             mask: false,
             allMask: false,
-            allData: []
+            allData: [], // 查看全部数据
+            deleteMask: false,
+            index: '', // 删除索引
+            row: ''// 查看全部添加参数
         };
     },
     activated() {
@@ -158,31 +171,34 @@ export default {
         watchAll(row) {
             this.allData = row.send;
             this.allMask = true;
+            this.row = row;
         },
         // 上移下移置顶
-        // num:-1上移 1下移 置顶
+        // num:-1上移 1下移 0置顶
         upOrDown(num, index) {
-            let _this = this.allData[index];
-            const newArr = [];
+            const _this = this.allData[index];
+            const tempArr = [];
             if (num == 0) {
-                newArr.push(_this);
-                console.log(this.allData.splice(index, 1))
-                newArr.push(this.allData.splice(index, 1));
+                tempArr.push(_this);
+                this.allData.splice(index, 1);
+                const newArr = tempArr.concat(this.allData);
                 this.allData = newArr;
             } else {
-                let change = this.allData[index + num];
-                if (num == 1) {
-                    [_this, change] = [change, _this];
-                } else {
-                    [change, _this] = [_this, change];
-                }
-                this.allData[index] = _this;
-                this.allData[index + num] = change;
+                const change = this.allData[index + num];
+                this.allData[index] = change;
+                this.allData[index + num] = _this;
+                this.$set(this.allData, index, change);
+                this.$set(this.allData, index + num, _this);
             }
         },
         // 删除
         deleteData(index) {
-            this.allData.splice(index, 1);
+            this.deleteMask = true;
+            this.index = index;
+        },
+        deleteSure() {
+            this.allData.splice(this.index, 1);
+            this.deleteMask = false;
         }
     }
 };
@@ -209,10 +225,10 @@ export default {
         width: 20%;
         cursor: pointer;
         text-align: right;
-        i{
-            font-size: 20px;
-            vertical-align: middle;
-        }
+    }
+    i{
+        font-size: 20px;
+        vertical-align: middle;
     }
     /*弹窗样式*/
     /deep/.el-dialog {
@@ -233,6 +249,10 @@ export default {
         }
         .el-dialog__footer {
             margin-right: 30px;
+        }
+        .tip{
+            text-align: center;
+            font-size: 20px;
         }
     }
 

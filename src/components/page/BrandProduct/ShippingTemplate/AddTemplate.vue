@@ -35,7 +35,7 @@
                             <el-radio label="2">平台承担运费</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item class="address-item" label="是否满包邮" v-if="form.freightType==1">
+                    <el-form-item class="address-item" label="是否满包邮" v-if="form.freightType==1||checked">
                         <el-checkbox v-model="checked">满
                             <el-input class="small-inp" :disabled="!checked" v-model="freightFreePrice"></el-input>
                             元包邮</el-checkbox>
@@ -344,7 +344,6 @@
                                 list.push(tableTemp);
                             });
                             data.freightTemplateInfoList = list;
-                            this.form.freightType = '1';
                         } else {
                             data.freightTemplateInfoList = [];
                             data.freightFreePrice = '';
@@ -353,6 +352,7 @@
                         this.btnLoading = true;
                         request.addFreightTemplate(data).then(res => {
                             that.$message.success(res.msg);
+                            this.form.freightType = '1';
                             that.$router.push('/shippingTemplate');
                             this.btnLoading = false;
                         }).catch(error => {

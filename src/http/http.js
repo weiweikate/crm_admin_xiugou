@@ -8,11 +8,12 @@ import * as api_6 from '@/api/SettlementMange/index.js';
 import * as api_7 from '@/api/SpellShopManage/index.js';
 import * as api_8 from '@/api/BasePramConfig/index.js';
 import * as api_9 from '@/api/ShowValue/index.js';
+import * as api_10 from '@/api/RepertoryManage/index.js';
 import qs from 'qs';
 import { Message } from 'element-ui';
 
 const api = {};
-Object.assign(api, api_1, api_2, api_3, api_4, api_5, api_6, api_7, api_8, api_9);
+Object.assign(api, api_1, api_2, api_3, api_4, api_5, api_6, api_7, api_8, api_9,api_10);
 
 const urlList = [];
 const request = {};

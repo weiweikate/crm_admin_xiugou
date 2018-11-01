@@ -35,7 +35,7 @@
                             <el-radio label="2">平台承担运费</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item class="address-item" label="是否满包邮" v-if="form.freightType==1">
+                    <el-form-item class="address-item" label="是否满包邮" v-if="form.freightType==1||checked">
                         <el-checkbox v-model="checked">满
                             <el-input class="small-inp" :disabled="!checked" v-model="freightFreePrice"></el-input>
                             元包邮</el-checkbox>
@@ -240,7 +240,8 @@
                     that.form.freightType = freightTemplate.freightType.toString();
                     that.form.status = freightTemplate.status.toString();
                     that.sendDays = freightTemplate.sendDays;
-                    if (that.freightFreePrice && freightTemplate.freightType == 3) {
+                    that.checked = freightTemplate.freightType == 3;
+                    if (that.checked) {
                         that.form.freightType = '1';
                     }
                     // that.detailData = res.data.data.userProduct;
@@ -251,7 +252,6 @@
                     that.form.cityCode = freightTemplate.cityCode;
                     that.form.areaCode = freightTemplate.areaCode;
                     that.isShowExpress = freightTemplate.freightType != 2;
-                    that.checked = freightTemplate.freightType == 3;
                     if (freightTemplate.freightType != 2) {
                         that.freightFreePrice = freightTemplate.freightFreePrice;
                         const list = res.data.freightTemplateInfoList;
@@ -324,6 +324,7 @@
                                 return;
                             }
                             data.freightFreePrice = that.freightFreePrice;
+                            this.form.freightType = '1';
                             data.freightType = 3;
                         }
                         const list = [];
@@ -377,7 +378,6 @@
                                 list.push(tableTemp);
                             });
                             data.freightTemplateInfoList = list;
-                            this.form.freightType = '1';
                         } else {
                             data.freightTemplateInfoList = [];
                             data.freightFreePrice = '';
