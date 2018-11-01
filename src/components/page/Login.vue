@@ -66,7 +66,7 @@
                 form1: {
                     phone: '',
                     password: ''
-                    // phone: '',
+                    // phone: '18667159736',
                     // password: 'a123456'
                 },
                 form2: {

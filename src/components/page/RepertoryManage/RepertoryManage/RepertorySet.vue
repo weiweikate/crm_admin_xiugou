@@ -34,20 +34,20 @@
                 <el-form-item prop="phone" label="仓库负责人手机号">
                     <el-input class="inp" v-model="form.phone" placeholder="请输入仓库负责人手机号"></el-input>
                 </el-form-item>
-                <el-form-item prop="phone" label="仓库地址">
+                <el-form-item prop="address" label="仓库地址">
                     <region @regionMsg='getRegion(1)' :regionMsg='address' :num="1"></region>
                     <div style="margin-top: 10px">
                         <el-input type="textarea" class="inp-textarea" placeholder="请输入详细地址" v-model="form.address"></el-input>
                     </div>
                 </el-form-item>
-                <el-form-item prop="send" label="是否能发货" required="">
+                <el-form-item prop="send" label="是否能发货">
                     <el-radio-group v-model="form.send">
                         <el-radio :label="1">是</el-radio>
                         <el-radio :label="2">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item prop="send" label="是否为退货仓" required="">
-                    <el-radio-group v-model="form.send">
+                <el-form-item prop="back" label="是否为退货仓">
+                    <el-radio-group v-model="form.back">
                         <el-radio :label="1">是</el-radio>
                         <el-radio :label="2">否</el-radio>
                     </el-radio-group>
@@ -84,19 +84,44 @@
     export default {
         components: { vBreadcrumb, region },
         data() {
+            var isPhone = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请输入仓库负责人手机号'));
+                } else {
+                    const reg = /^1[3-8]\d{9}$/;
+                    if (!reg.test(value)) {
+                        callback(new Error('请输入正确的手机号格式'));
+                    } else {
+                        callback();
+                    }
+                }
+            };
+            var isMobile = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请输入退货仓联系方式'));
+                } else {
+                    const reg = /^((0\d{2,3}-?\d{7,8})|(1[3-8]\d{9}))$/;
+                    if (!reg.test(value)) {
+                        callback(new Error('请输入正确的联系方式'));
+                    } else {
+                        callback();
+                    }
+                }
+            };
             return {
                 nav: ['云仓仓库管理', '仓库管理', '新建仓库'],
                 id: '',
                 url: '',
                 form: {
-                    type: 1,
+                    type: '',
                     supplierId: '',
                     supplierName: '',
                     code: '',
                     name: '',
                     user: '',
                     phone: '',
-                    send: '',
+                    send: 1,
+                    back: 1,
                     linkName: '',
                     linkPhone: '',
                     remark: ''
@@ -104,12 +129,43 @@
                 tableData: [],
                 type: '', // 1.添加 2.编辑
                 rules: {
-                    name: [
-                        { required: true, message: '请输入活动名称', trigger: 'blur' },
-                        { min: 1, max: 16, message: '活动名称长度在1到16个字符', trigger: 'blur' }
+                    type: [
+                        { required: true, message: '请选择仓库类型', trigger: 'blur' }
                     ],
-                    loseHint: [
-                        { required: true, message: '请输入未中奖提示语', trigger: 'blur' }
+                    supplierId: [
+                        { required: true, message: '请输入供应商ID', trigger: 'blur' }
+                    ],
+                    supplierName: [
+                        { required: true, message: '请输入供应商名称', trigger: 'blur' }
+                    ],
+                    code: [
+                        { required: true, message: '请输入仓库编码', trigger: 'blur' }
+                    ],
+                    name: [
+                        { required: true, message: '请输入仓库名称', trigger: 'blur' }
+                    ],
+                    user: [
+                        { required: true, message: '请输入仓库负责人', trigger: 'blur' }
+                    ],
+                    phone: [
+                        { required: true, message: '请输入仓库负责人手机号', trigger: 'blur' },
+                        { validator: isPhone, trigger: 'blur' }
+                    ],
+                    address: [
+                        { required: true, message: '请输入仓库地址', trigger: 'blur' }
+                    ],
+                    send: [
+                        { required: true, message: '请选择是否能发货', trigger: 'blur' }
+                    ],
+                    back: [
+                        { required: true, message: '请选择是否为退货仓', trigger: 'blur' }
+                    ],
+                    linkName: [
+                        { required: true, message: '请输入联系人名称', trigger: 'blur' }
+                    ],
+                    linkPhone: [
+                        { required: true, message: '请输入退货仓联系方式', trigger: 'blur' },
+                        { validator: isMobile, trigger: 'blur' }
                     ]
                 },
                 btnLoading: false,
@@ -127,35 +183,12 @@
                     if (!valid) return;
                     const data = this.form;
                     if (this.status == 2) {
-                        this.tableData.forEach((v, k) => {
-                            v.totalNum = v.addNum || 0;
-                        });
                         data.id = this.id;
                     }
-                    try {
-                        this.tableData.forEach((v, k) => {
-                            const isInt = /^0|[1-9]\d*$/; const isDouble = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
-                            if (!isInt.test(v.totalNum) || v.totalNum.length > 12) {
-                                throw '发放数为1-12位数字';
-                            } else {
-                                if (v.stockNum != -1 && v.totalNum > v.stockNum) {
-                                    throw '发放数不能大于库存';
-                                }
-                            }
-                            if (!isDouble.test(v.winRate)) {
-                                throw '中奖概率保留2位小数';
-                            }
-                        });
-                    } catch (error) {
-                        this.$message.warning(error);
-                        return;
-                    }
-
-                    data.scratchCardPrize = this.tableData;
                     this.btnLoading = true;
                     request[this.url](data).then(res => {
                         this.$message.success(res.msg);
-                        this.$router.push('/scratchCardsList');
+                        this.$router.push('/repertoryList');
                         this.btnLoading = false;
                     }).catch(err => {
                         console.log(err);
@@ -176,13 +209,19 @@
             },
             resetValue() {
                 this.form = {
+                    type: '',
+                    supplierId: '',
+                    supplierName: '',
+                    code: '',
                     name: '',
-                    loseHint: ''
+                    user: '',
+                    phone: '',
+                    send: 1,
+                    back: 1,
+                    linkName: '',
+                    linkPhone: '',
+                    remark: ''
                 };
-                this.totalRatio = 0;
-                this.tableData = [];
-                this.selectedCoupon = [];
-                this.tempChooseList = [];
             },
             getDetail() {
                 const data = {
@@ -201,16 +240,14 @@
             },
             // 获取省市区
             getRegion(num, msg) {
-                console.log(num);
                 this.address = msg;
                 this.form.provinceCode = this.address[0];
                 this.form.cityCode = this.address[1];
                 this.form.areaCode = this.address[2];
-                console.log(this.$refs);
             },
             // 取消
             cancel() {
-                this.$router.push('/scratchCardsList');
+                this.$router.push('/repertoryList');
             }
         }
     };

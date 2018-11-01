@@ -109,16 +109,12 @@
             // 跳到产品列表页
             toProductList(item, num) {
                 sessionStorage.setItem('supplierId', this.id);
-                sessionStorage.setItem('firstCategoryId', item.first_category_id);
-                sessionStorage.setItem('secCategoryId', item.sec_category_id);
-                sessionStorage.setItem('brand_id', item.brand_id);
+                sessionStorage.setItem('brandId', item.brandId);
                 sessionStorage.setItem('flag', num);
                 this.$router.push({ path: '/productList',
                     query: {
                         'supplierId': this.id,
-                        'firstCategoryId': item.first_category_id,
-                        'secCategoryId': item.sec_category_id,
-                        'brand_id': item.brand_id,
+                        'brandId': item.brandId,
                         'flag': num
                     }
                 });

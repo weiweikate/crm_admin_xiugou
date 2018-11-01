@@ -168,6 +168,7 @@
                         ]
                     },
                     // {
+<<<<<<< HEAD
                     //     icon: 'icon-suyuan',
                     //     index: '4',
                     //     title: '溯源管理',
@@ -189,6 +190,29 @@
                     //         //     title: "防伪码模板"
                     //         // }
                     //     ]
+=======
+                    // icon: 'icon-suyuan',
+                    // index: '4',
+                    // title: '溯源管理',
+                    // subs: [
+                    // {
+                    //     index: "rootsCodeMange",
+                    //     title: "溯源防伪码管理"
+                    // },
+                    // {
+                    //     index: "rootsCodeParams",
+                    //     title: "防伪码参数设置"
+                    // },
+                    // {
+                    //     index: "rootsCodeQuery",
+                    //     title: "防伪码查询"
+                    // },
+                    // {
+                    //     index: "rootsCodeTpl",
+                    //     title: "防伪码模板"
+                    // }
+                    // ]
+>>>>>>> b42361f8e7c8d2b2c432c89f1b4998733a1a5fa1
                     // },
                     {
                         icon: 'icon-huiyuanzhanghaoguanli',
@@ -403,26 +427,30 @@
                             //     title: "数据字典"
                             // }
                         ]
-                    },
-                    {
-                        icon: 'icon-shezhi',
-                        index: '21',
-                        title: '云仓仓库管理',
-                        subs: [
-                            {
-                                index: 'repertoryList',
-                                title: '仓库管理'
-                            },
-                            {
-                                index: 'repertoryData',
-                                title: '仓库数据同步'
-                            },
-                            {
-                                index: 'repertoryReport',
-                                title: '仓库单'
-                            }
-                        ]
                     }
+                    // {
+                    //     icon: 'icon-shezhi',
+                    //     index: '21',
+                    //     title: '云仓仓库管理',
+                    //     subs: [
+                    //         {
+                    //             index: 'repertoryList',
+                    //             title: '仓库管理'
+                    //         },
+                    //         {
+                    //             index: 'areaSet',
+                    //             title: '区域设置'
+                    //         },
+                    //         {
+                    //             index: 'repertoryData',
+                    //             title: '仓库数据同步'
+                    //         },
+                    //         {
+                    //             index: 'repertoryReport',
+                    //             title: '仓库单'
+                    //         }
+                    //     ]
+                    // }
                 ]
             };
         },

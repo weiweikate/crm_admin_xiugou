@@ -48,6 +48,7 @@
                         format="yyyy-MM-dd HH:mm"
                         type="datetime"
                         class="inp"
+                        @blur="changeTime"
                         placeholder="选择日期时间">
                     </el-date-picker>
                     <!--<el-date-picker-->
@@ -234,6 +235,9 @@
         },
 
         methods: {
+            changeTime() {
+                this.$mount();
+            },
             // 更改导航属性值
             changeNavType() {
                 const item = this.navItem;

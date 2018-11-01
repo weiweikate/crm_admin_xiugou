@@ -251,7 +251,7 @@ export default {
                     data.supplierId = this.supplierId;
                     data.firstCategoryId = this.firstCategoryId;
                     data.secCategoryId = this.secCategoryId;
-                    data.brandId = '';
+                    data.brandId = this.brandId;
                 } else if (this.flag == 1) {
                     data.supplierId = this.supplierId;
                     data.brandId = this.brand_id;
@@ -259,7 +259,7 @@ export default {
                     data.secCategoryId = '';
                 } else if (this.flag == 2) {
                     data.supplierId = '';
-                    data.brandId = '';
+                    data.brandId = this.brandId;
                     data.firstCategoryId = this.firstCategoryId;
                     data.secCategoryId = this.secCategoryId;
                     data.thirdCategoryId = this.thirdCatId;
