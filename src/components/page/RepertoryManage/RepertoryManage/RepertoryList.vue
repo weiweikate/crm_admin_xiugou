@@ -3,11 +3,11 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
             <el-form :model="form" ref="form" inline label-width="100px">
-                <el-form-item prop="name" label="仓库名称">
-                    <el-input v-model="form.name" placeholder="请输入仓库名称"></el-input>
+                <el-form-item prop="warehouseName" label="仓库名称">
+                    <el-input v-model="form.warehouseName" placeholder="请输入仓库名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="code" label="仓库编码">
-                    <el-input v-model="form.code" placeholder="请输入仓库编码"></el-input>
+                <el-form-item prop="warehouseCode" label="仓库编码">
+                    <el-input v-model="form.warehouseCode" placeholder="请输入仓库编码"></el-input>
                 </el-form-item>
                 <el-form-item prop="supplierName" label="供应商名称">
                     <el-input v-model="form.supplierName" placeholder="请输入供应商名称"></el-input>
@@ -32,8 +32,9 @@
                 <el-form-item prop="type" label="仓库类别">
                     <el-select v-model="form.type" placeholder="请选择仓库类别">
                         <el-option value="">全部</el-option>
-                        <el-option value="1">发货仓</el-option>
-                        <el-option value="2">退货仓</el-option>
+                        <el-option value="1">自建仓</el-option>
+                        <el-option value="2">加盟仓</el-option>
+                        <el-option value="3">供应商仓</el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="">
@@ -49,9 +50,22 @@
                 <el-table-column prop="id" label="仓库ID" align="center"></el-table-column>
                 <el-table-column prop="name" label="仓库名称" align="center"></el-table-column>
                 <el-table-column prop="code" label="仓库编码" align="center"></el-table-column>
-                <el-table-column prop="type" label="仓库类型" align="center"></el-table-column>
-                <el-table-column prop="type" label="加盟仓类型" align="center"></el-table-column>
-                <el-table-column prop="supplierId" label="供应商ID" align="center"></el-table-column>
+                <el-table-column prop="type" label="仓库类型" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.type==1">自建仓</template>
+                        <template v-if="scope.row.type==2">加盟仓</template>
+                        <template v-if="scope.row.type==3">供应商仓</template>
+                    </template>
+                </el-table-column>
+                <el-table-column label="加盟仓类型" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.joinWarehouseType==1">百世汇通</template>
+                        <template v-if="scope.row.joinWarehouseType==2">顺丰</template>
+                        <template v-if="scope.row.joinWarehouseType==3">申通</template>
+                        <template v-if="scope.row.joinWarehouseType==4">韵达</template>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="supplierCode" label="供应商ID" align="center"></el-table-column>
                 <el-table-column prop="supplierName" label="供应商名称" align="center"></el-table-column>
                 <el-table-column label="仓库状态" align="center">
                     <template slot-scope="scope">
@@ -61,29 +75,29 @@
                 </el-table-column>
                 <el-table-column label="仓库品类数" align="center">
                     <template slot-scope="scope">
-                        <el-tag v-if="scope.row.num">{{scope.row.num}}</el-tag>
+                        <el-tag v-if="scope.row.productCount">{{scope.row.productCount}}</el-tag>
                         <span v-else>/</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="仓库报损数" align="center">
                     <template slot-scope="scope">
-                        <el-tag v-if="scope.row.num">{{scope.row.num}}</el-tag>
+                        <el-tag v-if="scope.row.lossCount">{{scope.row.lossCount}}</el-tag>
                         <span v-else>/</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="是否为发货仓" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.status==1">是</template>
-                        <template v-if="scope.row.status==2">否</template>
+                        <template v-if="scope.row.sendGoods==1">是</template>
+                        <template v-if="scope.row.sendGoods==2">否</template>
                     </template>
                 </el-table-column>
                 <el-table-column label="是否为退货仓" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.status==1">是</template>
-                        <template v-if="scope.row.status==2">否</template>
+                        <template v-if="scope.row.returnGoods==1">是</template>
+                        <template v-if="scope.row.returnGoods==2">否</template>
                     </template>
                 </el-table-column>
-                <el-table-column prop="user" label="创建人" align="center"></el-table-column>
+                <el-table-column prop="createUserName" label="创建人" align="center"></el-table-column>
                 <el-table-column label="仓库创建时间" align="center">
                     <template slot-scope="scope">
                         <template>{{scope.row.createTime|formatDateAll}}</template>
@@ -162,9 +176,9 @@ export default {
         // 获取数据
         getList(val) {
             const data = {
-                name: this.form.name,
+                warehouseName: this.form.warehouseName,
                 supplierName: this.form.supplierName,
-                code: this.form.code,
+                warehouseCode: this.form.warehouseCode,
                 status: this.form.status,
                 type: this.form.type,
                 startTime: this.form.date
@@ -174,11 +188,11 @@ export default {
                     ? moment(this.form.date[1]).format('YYYY-MM-DD')
                     : '',
                 page: val,
-                size: this.page.pageSize
+                pageSize: this.page.pageSize
             };
             this.page.currentPage = val;
             request
-                .getStoreList(data)
+                .queryRepertoryList(data)
                 .then(res => {
                     this.tableData = [];
                     if (!res.data) return;

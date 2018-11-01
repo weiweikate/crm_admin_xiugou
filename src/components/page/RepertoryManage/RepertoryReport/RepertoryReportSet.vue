@@ -18,7 +18,7 @@
                     <el-input class="inp" v-model="form.supplierName" placeholder="请输入出库仓库编码"></el-input>
                 </el-form-item>
                 <el-form-item prop="code" label="入库方">
-                    <el-input class="inp" v-model="form.code" placeholder="请输入入库方名称或编码"></el-input>
+                    <el-autocomplete class="inp" v-model="form.code" :fetch-suggestions="querySearchAsync" @select="handleSelect" placeholder="请输入入库方名称或编码"></el-autocomplete>
                 </el-form-item>
                 <el-form-item prop="name" label="入库仓库编码">
                     <el-input class="inp" v-model="form.name" disabled=""></el-input>
@@ -35,15 +35,88 @@
                 <el-form-item prop="linkPhone" label="送货人姓名">
                     <el-input class="inp" v-model="form.linkPhone" placeholder="请输入送货人姓名"></el-input>
                 </el-form-item>
-                <el-form-item prop="linkPhone" label="送货人联系方式">
+                <el-form-item prop="linkPhone" label="送货人联系方式" class="spec">
                     <el-input class="inp" v-model="form.linkPhone" placeholder="请输入送货人联系方式"></el-input>
                 </el-form-item>
                 <el-form-item prop="remark" label="备注">
                     <el-input type="textarea" class="inp-textarea" v-model="form.remark" maxlength="180" placeholder="请填写备注"></el-input>
                 </el-form-item>
                 <div class="title">入库货物信息</div>
+                <el-form-item prop="supplierId" label="产品名称">
+                    <el-input class="inp" v-model="form.supplierId" placeholder="请输入产品名称"></el-input>
+                </el-form-item>
+                <el-form-item prop="supplierName" label="产品ID">
+                    <el-input class="inp" v-model="form.supplierName" placeholder="请输入产品ID"></el-input>
+                </el-form-item>
+                <el-form-item prop="code" label="经销商ID">
+                    <el-input class="inp" v-model="form.code" placeholder="请输入经销商ID"></el-input>
+                </el-form-item>
+                <el-form-item prop="name" label="经销商名称">
+                    <el-input class="inp" v-model="form.name" placeholder="请输入经销商名称"></el-input>
+                </el-form-item>
+                <el-form-item label="">
+                    <el-button type="primary" @click="getData">搜索</el-button>
+                    <el-button @click="resetForm('form')">重置</el-button>
+                </el-form-item>
+                <el-table :data="tableData" border>
+                    <el-table-column type="index" label="序号" align="center"></el-table-column>
+                    <el-table-column prop="id" label="产品名称" align="center"></el-table-column>
+                    <el-table-column prop="name" label="产品类目" align="center"></el-table-column>
+                    <el-table-column prop="type" label="产品ID" align="center"></el-table-column>
+                    <el-table-column prop="type" label="供应商ID" align="center"></el-table-column>
+                    <el-table-column prop="supplierId" label="供应商名称" align="center"></el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button @click="editNumber(scope.row)" type="primary">编辑数量</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div class="block">
+                    <el-pagination
+                        background
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="page.currentPage"
+                        :page-size="page.pageSize"
+                        layout="total, prev, pager, next, jumper"
+                        :total="page.totalPage">
+                    </el-pagination>
+                </div>
+                <table class="selected-product" v-for="(item,index) in chooseists" :key="index">
+                    <tr v-for="(v,k) in item.productLists" :key="k">
+                        <td v-if="k==0" :rowspan="item.productLists.length" style="width: 50px">{{index+1}}</td>
+                        <td>{{(v.productName || '')+(v.spec || '')}}</td>
+                        <td>产品ID：{{v.productCode}}</td>
+                        <td style="min-width:100px">x1</td>
+                        <td style="min-width:80px;cursor: pointer;color:#33b4ff" @click="delSelectedPro(k,index)">删除
+                        </td>
+                    </tr>
+                </table>
+                <div style="margin-top: 40px">
+                    <el-button type="primary" @click="submitForm('form')">确认提交</el-button>
+                    <el-button @click="$router.push('/repertoryReportList')">取消</el-button>
+                </div>
             </el-form>
         </el-card>
+        <el-dialog title="入库数量" :visible.sync="mask">
+           <el-table border :data="tableData">
+               <el-table-column prop="name" label="产品名称" align="center"></el-table-column>
+               <el-table-column prop="name" label="商品唯一码" align="center"></el-table-column>
+               <el-table-column prop="name" label="颜色" align="center"></el-table-column>
+               <el-table-column prop="name" label="版本" align="center"></el-table-column>
+               <el-table-column prop="name" label="规格" align="center"></el-table-column>
+               <el-table-column prop="name" label="类型" align="center"></el-table-column>
+               <el-table-column prop="name" label="采购数" align="center">
+                   <template slot-scope="scope">
+                       <el-input-number :min="0" :controls="false"></el-input-number>件
+                   </template>
+               </el-table-column>
+           </el-table>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="save">确认保存</el-button>
+                <el-button @click="mask=false">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -51,9 +124,11 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import request from '@/http/http';
     import region from '@/components/common/Region.vue';
+    import { myMixinTable } from '@/JS/commom';
 
     export default {
         components: { vBreadcrumb, region },
+        mixins: [myMixinTable],
         data() {
             var isPhone = (rule, value, callback) => {
                 if (!value) {
@@ -97,7 +172,9 @@
                     linkPhone: '',
                     remark: ''
                 },
-                tableData: [],
+                tableData: [{
+                    name: '111'
+                }],
                 type: '', // 1.添加 2.编辑
                 rules: {
                     type: [
@@ -140,7 +217,9 @@
                     ]
                 },
                 btnLoading: false,
-                address: ''
+                address: '',
+                mask: false,
+                chooseists: []
             };
         },
         activated() {
@@ -170,10 +249,10 @@
             getInfo() {
                 this.resetValue();
                 if (this.type == 1) {
-                    this.nav[2] = '新建仓库';
+                    this.nav[2] = '新建入库单';
                     this.url = 'addScratchCard';
                 } else {
-                    this.nav[2] = '编辑仓库';
+                    this.nav[2] = '编辑入库单';
                     this.url = 'updateScratchCard';
                     this.getDetail();
                 }
@@ -209,16 +288,49 @@
                     console.log(err);
                 });
             },
-            // 获取省市区
-            getRegion(num, msg) {
-                this.address = msg;
-                this.form.provinceCode = this.address[0];
-                this.form.cityCode = this.address[1];
-                this.form.areaCode = this.address[2];
-            },
+
             // 取消
             cancel() {
                 this.$router.push('/repertoryList');
+            },
+            querySearchAsync(queryString, cb) {
+                // if (queryString == '') {
+                //     return;
+                // }
+                // this.checkList = [];
+                // this.$axios.post(api.queryProductByNameOrCode, {condition: queryString, activityType: 3}).then(res => {
+                //     let tmpArr = [];
+                //     res.data.data.forEach((v, k) => {
+                //         let o = {};
+                //         o.value = `${v.name} 产品ID：${v.prodCode}`;
+                //         o.id = v.id;
+                //         o.name = v.name;
+                //         o.prodCode = v.prodCode;
+                //         o.productNum = v.productNum;
+                //         tmpArr.push(o);
+                //     });
+                //     cb(tmpArr)
+                // })
+            },
+            handleSelect(item) {
+                console.log(item);
+            },
+            getData() {
+
+            },
+            save() {
+
+            },
+            // 编辑数量
+            editNumber() {
+                this.mask = true;
+            },
+            // 删除已选择产品 index对应packageList索引值 cIndex对应packageList[index].productLists索引值
+            delSelectedPro(cIndex, index) {
+                this.packageLists[index].productLists.splice(cIndex, 1);
+                if (!this.packageLists[index].productLists.length) {
+                    this.packageLists.splice(index, 1);
+                }
             }
         }
     };
@@ -226,9 +338,22 @@
 
 <style lang="less" scoped>
 .report-set{
+    .title{
+        width: 100%;
+        height: 60px;
+        background-color: #f7f7f7;
+        line-height: 60px;
+        padding: 0 20px;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+    }
     /deep/.el-form-item{
         width: 33%;
         display: inline-block;
+    }
+    .spec{
+        width: 100%;
     }
     /deep/.el-dialog {
         border-radius: 10px;
@@ -240,6 +365,10 @@
                 color: #ff6868;
             }
         }
+        .el-input-number--small{
+            width: 70px;
+            margin-right: 5px;
+        }
     }
     .inp{
         width: 300px;
@@ -248,6 +377,19 @@
         resize: none;
         width: 300px;
         height: 150px;
+    }
+    .selected-product {
+        border-collapse: collapse;
+        text-align: center;
+        margin-top: 50px;
+        width: 60%;
+        border: 1px solid #ebeef5;
+        border-radius: 5px;
+        font-size: 14px;
+        th, td {
+            border: 1px solid #ebeef5;
+            height: 55px;
+        }
     }
 }
 </style>
