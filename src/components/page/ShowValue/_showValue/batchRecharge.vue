@@ -20,7 +20,7 @@
                 <el-checkbox v-model="checkedAll" @change="handleCheckAllChange">全选</el-checkbox>
                 <el-button style="margin-left: 10px" :disabled="form.checkedUsers.length === 0" size="mini" type="primary" @click="queryUser">查询</el-button>
                 <el-checkbox-group v-loading="loading" class="check-group" v-model="form.checkedUsers" @change="handleCheckedUser">
-                    <el-checkbox v-for="(v, k) in userLevel" :key="k" :label="v.levelId">{{v.name}}</el-checkbox>
+                    <el-checkbox v-for="(v, k) in userLevel" :key="k" :label="v.name">{{v.name}}</el-checkbox>
                 </el-checkbox-group>
                 <div class="total">
                     <p>全部：{{totalNum}}人</p>
@@ -79,7 +79,7 @@
                 this.form.checkedUsers = [];
                 if (val && this.userLevel.length !== 0) {
                     this.userLevel.forEach(v => {
-                        this.form.checkedUsers.push(v.levelId);
+                        this.form.checkedUsers.push(v.name);
                     });
                 }
             },

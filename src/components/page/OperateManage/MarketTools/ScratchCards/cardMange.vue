@@ -313,10 +313,10 @@
             // 添加秀豆
             addBean() {
                 const isInt = /^[1-9]*[1-9][0-9]*$/;
-                if (!isInt.test(this.giftValue)) {
+                if (!isInt.test(this.form1.giftValue)) {
                     return this.$message.warning('请输入1-12位的正整数');
                 }
-                if (this.form1.awardName == '' || this.giftValue == '') {
+                if (this.form1.awardName == '' || this.form1.giftValue == '') {
                     return this.$message.warning('输入的数值不能为空');
                 }
                 const temp = {

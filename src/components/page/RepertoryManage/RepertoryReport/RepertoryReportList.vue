@@ -181,7 +181,7 @@ export default {
         showInfo(row) {
             sessionStorage.setItem('reportInfoId', row.id);
             this.$router.push({
-                name: 'reportInfoId',
+                name: 'repertoryReportInfo',
                 query: { repertoryInfoId: row.id }
             });
         },
@@ -240,6 +240,10 @@ export default {
         }
         .el-dialog__footer {
             margin-right: 30px;
+        }
+        .tip{
+            text-align: center;
+            font-size: 20px;
         }
     }
 

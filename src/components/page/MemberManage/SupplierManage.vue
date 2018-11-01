@@ -167,6 +167,7 @@
                     that.tableLoading = false;
                     that.tableData = res.data.data;
                     that.page.totalPage = res.data.totalNum;
+                    this.page.currentPage = res.data.currentPage;
                 }).catch(err => {
                     that.tableLoading = false;
                     console.log(err);

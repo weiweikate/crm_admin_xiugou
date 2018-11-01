@@ -167,29 +167,6 @@
                             }
                         ]
                     },
-                    // {
-                    // icon: 'icon-suyuan',
-                    // index: '4',
-                    // title: '溯源管理',
-                    // subs: [
-                    // {
-                    //     index: "rootsCodeMange",
-                    //     title: "溯源防伪码管理"
-                    // },
-                    // {
-                    //     index: "rootsCodeParams",
-                    //     title: "防伪码参数设置"
-                    // },
-                    // {
-                    //     index: "rootsCodeQuery",
-                    //     title: "防伪码查询"
-                    // },
-                    // {
-                    //     index: "rootsCodeTpl",
-                    //     title: "防伪码模板"
-                    // }
-                    // ]
-                    // },
                     {
                         icon: 'icon-huiyuanzhanghaoguanli',
                         index: '8',

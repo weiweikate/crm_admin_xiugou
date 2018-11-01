@@ -8,7 +8,7 @@
                     <el-input style="width:300px" :maxlength="16" v-model="form.name" placeholder="请输入产品名称"></el-input>
                 </el-form-item>
                 <el-form-item label="礼包类型">
-                    <el-select v-model="form.type" @change="changeGiftStatus" placeholder="下拉搜索供应商">
+                    <el-select v-model="form.type" @change="changeGiftStatus" placeholder="下拉选择礼包类型">
                         <el-option label="普通礼包" value="1"></el-option>
                         <el-option label="升级礼包" value="2"></el-option>
                     </el-select>

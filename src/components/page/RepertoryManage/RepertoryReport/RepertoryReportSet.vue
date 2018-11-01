@@ -1,76 +1,47 @@
 <template>
-    <div class="repertory-set">
+    <div class="report-set">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card>
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
-                <el-form-item prop="type" label="仓库类型">
+                <div class="title">基础信息</div>
+                <el-form-item prop="type" label="类型">
                     <el-select v-model="form.type" placeholder="请选择仓库类型" class="inp">
-                        <el-option value="1">自建仓</el-option>
-                        <el-option value="2">加盟仓</el-option>
-                        <el-option value="3">供应商仓</el-option>
+                        <el-option value="1">采购入库</el-option>
+                        <el-option value="2">调拨入库</el-option>
+                        <el-option value="3">盘盈入库</el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="supplierId" label="供应商ID" v-if="form.type==3">
-                    <el-input class="inp" v-model="form.supplierId" placeholder="请输入供应商ID"></el-input>
+                <el-form-item prop="supplierId" label="出库方">
+                    <el-input class="inp" v-model="form.supplierId" placeholder="请输入出库方名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="supplierName" label="供应商名称" v-if="form.type==3">
-                    <el-input class="inp" v-model="form.supplierName" placeholder="请输入供应商名称"></el-input>
+                <el-form-item prop="supplierName" label="出库仓库编码">
+                    <el-input class="inp" v-model="form.supplierName" placeholder="请输入出库仓库编码"></el-input>
                 </el-form-item>
-                <el-form-item prop="type" label="加盟仓类型" v-if="form.type==2">
-                    <el-select v-model="form.type" placeholder="请选择加盟仓类型" class="inp">
-                        <el-option value="1">百世汇通</el-option>
-                        <el-option value="2">顺丰</el-option>
-                    </el-select>
+                <el-form-item prop="code" label="入库方">
+                    <el-input class="inp" v-model="form.code" placeholder="请输入入库方名称或编码"></el-input>
                 </el-form-item>
-                <el-form-item prop="code" label="仓库编码">
-                    <el-input class="inp" v-model="form.code" placeholder="请输入仓库编码"></el-input>
+                <el-form-item prop="name" label="入库仓库编码">
+                    <el-input class="inp" v-model="form.name" disabled=""></el-input>
                 </el-form-item>
-                <el-form-item prop="name" label="仓库名称">
-                    <el-input class="inp" v-model="form.name" placeholder="请输入仓库名称"></el-input>
+                <el-form-item prop="user" label="入库地址">
+                    <el-input class="inp" v-model="form.user" disabled=""></el-input>
                 </el-form-item>
-                <el-form-item prop="user" label="仓库负责人">
-                    <el-input class="inp" v-model="form.user" placeholder="请输入仓库负责人"></el-input>
+                <el-form-item prop="phone" label="入库单填写人">
+                    <el-input class="inp" v-model="form.phone" disabled=""></el-input>
                 </el-form-item>
-                <el-form-item prop="phone" label="仓库负责人手机号">
-                    <el-input class="inp" v-model="form.phone" placeholder="请输入仓库负责人手机号"></el-input>
+                <el-form-item prop="linkName" label="联系方式">
+                    <el-input class="inp" v-model="form.linkName" placeholder="请输入联系方式"></el-input>
                 </el-form-item>
-                <el-form-item prop="address" label="仓库地址">
-                    <region @regionMsg='getRegion(1)' :regionMsg='address' :num="1"></region>
-                    <div style="margin-top: 10px">
-                        <el-input type="textarea" class="inp-textarea" placeholder="请输入详细地址" v-model="form.address"></el-input>
-                    </div>
+                <el-form-item prop="linkPhone" label="送货人姓名">
+                    <el-input class="inp" v-model="form.linkPhone" placeholder="请输入送货人姓名"></el-input>
                 </el-form-item>
-                <el-form-item prop="send" label="是否能发货">
-                    <el-radio-group v-model="form.send">
-                        <el-radio :label="1">是</el-radio>
-                        <el-radio :label="2">否</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item prop="back" label="是否为退货仓">
-                    <el-radio-group v-model="form.back">
-                        <el-radio :label="1">是</el-radio>
-                        <el-radio :label="2">否</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item prop="linkName" label="联系人名称">
-                    <el-input class="inp" v-model="form.linkName" placeholder="请输入联系人名称"></el-input>
-                </el-form-item>
-                <el-form-item prop="linkPhone" label="退货仓联系方式">
-                    <el-input class="inp" v-model="form.linkPhone" placeholder="请输入退货仓联系方式"></el-input>
-                </el-form-item>
-                <el-form-item prop="phone" label="仓库地址">
-                    <region @regionMsg='getRegion(2)' :regionMsg='address' :num="2"></region>
-                    <div style="margin-top: 10px">
-                        <el-input type="textarea" class="inp-textarea" placeholder="请输入详细地址" v-model="form.address"></el-input>
-                    </div>
+                <el-form-item prop="linkPhone" label="送货人联系方式">
+                    <el-input class="inp" v-model="form.linkPhone" placeholder="请输入送货人联系方式"></el-input>
                 </el-form-item>
                 <el-form-item prop="remark" label="备注">
                     <el-input type="textarea" class="inp-textarea" v-model="form.remark" maxlength="180" placeholder="请填写备注"></el-input>
                 </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">提 交</el-button>
-                    <el-button type="success" @click="cancel">取 消</el-button>
-                </el-form-item>
+                <div class="title">入库货物信息</div>
             </el-form>
         </el-card>
     </div>
@@ -109,7 +80,7 @@
                 }
             };
             return {
-                nav: ['云仓仓库管理', '仓库管理', '新建仓库'],
+                nav: ['云仓仓库管理', '入库单', '新建入库单'],
                 id: '',
                 url: '',
                 form: {
@@ -254,7 +225,11 @@
 </script>
 
 <style lang="less" scoped>
-.repertory-set{
+.report-set{
+    /deep/.el-form-item{
+        width: 33%;
+        display: inline-block;
+    }
     /deep/.el-dialog {
         border-radius: 10px;
         overflow: auto;
