@@ -353,6 +353,9 @@
             },
             // 添加编辑
             dealAdv() {
+                if (this.pageType == 3) {
+                    this.form.linkType = 8;
+                }
                 const data = this.form;
                 let url = 'addAdvertisement';
                 if (this.id) {

@@ -2,30 +2,30 @@
     <div class="show-val-recharge">
         <el-card>
             <el-form :model="form" ref='form' inline label-width="100px">
-                <el-form-item prop="userId" label="会员ID">
-                    <el-input v-model="form.userId" placeholder="模糊搜索"></el-input>
+                <el-form-item prop="userCode" label="会员ID">
+                    <el-input v-model="form.userCode" placeholder="模糊搜索"></el-input>
                 </el-form-item>
                 <el-form-item prop="nickName" label="会员昵称">
                     <el-input v-model="form.nickName" placeholder="模糊搜索"></el-input>
                 </el-form-item>
-                <el-form-item prop="levelId" label="会员层级">
-                    <el-select v-model="form.levelId">
+                <el-form-item prop="level" label="会员层级">
+                    <el-select v-model="form.level">
                         <el-option label="全部" value=""></el-option>
-                        <el-option v-for="(v, k) in userLevel" :key="k" :label="v.name" :value="v.id"></el-option>
+                        <el-option v-for="(v, k) in userLevel" :key="k" :label="v.name" :value="v.name"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="type" label="充值类型">
+                <el-form-item prop="payType" label="充值类型">
                     <el-select v-model="form.payType">
                         <el-option label="全部" value=""></el-option>
                         <el-option label="单人" value="1"></el-option>
                         <el-option label="批量" value="2"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="createAdmin" label="创建人">
-                    <el-input v-model="form.createAdmin" placeholder="模糊搜索"></el-input>
+                <el-form-item prop="createAdminName" label="创建人">
+                    <el-input v-model="form.createAdminName" placeholder="模糊搜索"></el-input>
                 </el-form-item>
-                <el-form-item prop="updateAdmin" label="处理人">
-                    <el-input v-model="form.updateAdmin" placeholder="模糊搜索"></el-input>
+                <el-form-item prop="updateAdminName" label="处理人">
+                    <el-input v-model="form.updateAdminName" placeholder="模糊搜索"></el-input>
                 </el-form-item>
                 <el-form-item prop="time" label="充值时间">
                     <el-date-picker type="datetimerange" v-model="form.time" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
@@ -50,16 +50,21 @@
                         {{scope.row.accountType == 1?'秀值账户':'/'}}
                     </template>
                 </el-table-column>
-                <el-table-column label="会员昵称/ID" align="center">
+                <el-table-column label="会员昵称/ID" min-width="100px" align="center">
                     <template slot-scope="scope">
-                        <span @click="showUser(scope.row)" class="link">{{scope.row.nickName || ''}}</span><br><span @click="showUser(scope.row)" class="link">{{scope.row.userCode || ''}}</span>
+                        <span @click="showUser(scope.row)" class="link">{{scope.row.nickName || '/'}}</span><br>
+                        <span @click="showUser(scope.row)" class="link">{{scope.row.userCode || '/'}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="userLevel" label="层级" align="center"></el-table-column>
                 <el-table-column prop="payCount" label="充值数" align="center"></el-table-column>
                 <el-table-column prop="userNum" label="充值人数" align="center"></el-table-column>
                 <el-table-column prop="payAmount" label="充值金额" align="center"></el-table-column>
-                <el-table-column prop="createTime" label="充值时间" align="center"></el-table-column>
+                <el-table-column prop="createTime" label="充值时间" min-width="100px" align="center">
+                    <template slot-scope="scope" v-if="scope.row.createTime">
+                        {{scope.row.createTime | formatDateAll}}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="createAdminName" label="创建人" align="center"></el-table-column>
                 <el-table-column prop="updateAdminName" label="处理人" align="center"></el-table-column>
                 <el-table-column prop="status" label="状态" align="center">
@@ -123,12 +128,12 @@ export default {
     data() {
         return {
             form: {
-                userId: '',
+                userCode: '',
                 nickName: '',
-                levelId: '',
+                level: '',
                 payType: '',
-                createAdmin: '',
-                updateAdmin: '',
+                createAdminName: '',
+                updateAdminName: '',
                 time: [],
                 beginTime: '',
                 endTime: ''

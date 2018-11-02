@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     <div class="right">
-                        <img v-if="img" :src="img" alt="">
+                        <img v-if="dealer.headImg" :src="dealer.headImg" alt="">
                         <img v-else src="../../../../assets/images/logo.png" alt="">
                         <el-upload
                                 :action="uploadImg"
@@ -86,18 +86,17 @@
                 address: '',
                 form: {},
                 phone: true,
-                idCard: true,
-                img: ''
+                idCard: true
             };
         },
         created() {
+            console.log(this.dealer);
             this.uploadImg = api.uploadImg;
             const reginArr = [];
             if (this.dealer.provinceId) {
                 reginArr.push(this.dealer.provinceId, this.dealer.cityId, this.dealer.areaId);
                 this.address = reginArr;
             }
-            this.img = this.dealer.head_img;
         },
         methods: {
             // 获取省市区
@@ -110,8 +109,7 @@
             },
             // 上传图片
             handleAvatarSuccess(res, file) {
-                this.img = res.data;
-                this.dealer.head_img = res.data;
+                this.dealer.headImg = res.data;
             },
             beforeAvatarUpload(file) {
                 const isJPG = (file.type === 'image/jpeg' || file.type === 'image/png');
@@ -148,7 +146,7 @@
                 const data = {};
                 data.id = that.id;
                 data.address = that.dealer.address;
-                data.headImg = that.img;
+                data.headImg = that.dealer.headImg;
                 data.idcard = that.dealer.idcard;
                 data.nickname = that.dealer.nickname;
                 data.phone = that.dealer.phone;
