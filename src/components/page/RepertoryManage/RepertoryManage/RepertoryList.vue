@@ -79,12 +79,13 @@
                         <span v-else>/</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="仓库报损数" align="center">
-                    <template slot-scope="scope">
-                        <el-button @click="toLoss(scope.row)" v-if="scope.row.lossCount">{{scope.row.lossCount}}</el-button>
-                        <span v-else>/</span>
-                    </template>
-                </el-table-column>
+                <el-table-column prop="lossCount" label="仓库报损数" align="center"></el-table-column>
+                <!--<el-table-column label="仓库报损数" align="center">-->
+                    <!--<template slot-scope="scope">-->
+                        <!--<el-button @click="toLoss(scope.row)" v-if="scope.row.lossCount">{{scope.row.lossCount}}</el-button>-->
+                        <!--<span v-else>/</span>-->
+                    <!--</template>-->
+                <!--</el-table-column>-->
                 <el-table-column label="是否为发货仓" align="center">
                     <template slot-scope="scope">
                         <template v-if="scope.row.sendGoods==1">是</template>
@@ -253,7 +254,6 @@ export default {
             const that = this;
             this.code = false;
             const data = {};
-            data.phone = this.formMask.phone;
             request.sendWarehouseMessage(data).then(res => {
                 this.codeTime = 60;
                 const timer = setInterval(function() {

@@ -10,7 +10,7 @@
                             <el-option label="待推送" value="100"></el-option>
                             <el-option label="进行中" value="150"></el-option>
                             <el-option label="已结束" value="200"></el-option>
-                            <el-option label="取消推送" value="300"></el-option>
+                            <el-option label="已取消" value="300"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item prop="keyword" label="发布者/关键词" label-width="120">

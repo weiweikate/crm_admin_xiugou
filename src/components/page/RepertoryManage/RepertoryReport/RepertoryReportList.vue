@@ -3,15 +3,15 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
             <el-form :model="form" ref="form" inline label-width="100px">
-                <el-form-item prop="name" label="入库单编号">
-                    <el-input v-model="form.name" placeholder="请输入入库单编号"></el-input>
+                <el-form-item prop="code" label="入库单编号">
+                    <el-input v-model="form.code" placeholder="请输入入库单编号"></el-input>
                 </el-form-item>
                 <el-form-item prop="type" label="入库类别">
                     <el-select v-model="form.type" placeholder="请选择入库类别">
                         <el-option value="">全部</el-option>
                         <el-option value="1">采购入库</el-option>
-                        <el-option value="2">调拨入库</el-option>
                         <el-option value="2">盘盈入库</el-option>
+                        <el-option value="3">调拨入库</el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="date" label="创建时间">
@@ -24,23 +24,23 @@
                     >
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item prop="code" label="出库仓库编号">
-                    <el-input v-model="form.code" placeholder="请输入出库仓库编号"></el-input>
+                <el-form-item prop="deliverWarehouseCode" label="出库仓库编号">
+                    <el-input v-model="form.deliverWarehouseCode" placeholder="请输入出库仓库编号"></el-input>
                 </el-form-item>
-                <el-form-item prop="supplierName" label="出库方">
-                    <el-input v-model="form.supplierName" placeholder="请输入出库方"></el-input>
+                <el-form-item prop="deliverWarehouseName" label="出库方">
+                    <el-input v-model="form.deliverWarehouseName" placeholder="请输入出库方"></el-input>
                 </el-form-item>
-                <el-form-item prop="supplierName" label="入库仓库编号">
-                    <el-input v-model="form.supplierName" placeholder="请输入入库仓库编号"></el-input>
+                <el-form-item prop="receiveWarehouseCode" label="入库仓库编号">
+                    <el-input v-model="form.receiveWarehouseCode" placeholder="请输入入库仓库编号"></el-input>
                 </el-form-item>
-                <el-form-item prop="supplierName" label="入库方">
-                    <el-input v-model="form.supplierName" placeholder="请输入入库方"></el-input>
+                <el-form-item prop="receiveWarehouseName" label="入库方">
+                    <el-input v-model="form.receiveWarehouseName" placeholder="请输入入库方"></el-input>
                 </el-form-item>
-                <el-form-item prop="supplierName" label="送货人姓名">
-                    <el-input v-model="form.supplierName" placeholder="请输入送货人姓名"></el-input>
+                <el-form-item prop="goodsSenderName" label="送货人姓名">
+                    <el-input v-model="form.goodsSenderName" placeholder="请输入送货人姓名"></el-input>
                 </el-form-item>
-                <el-form-item prop="supplierName" label="联系方式">
-                    <el-input v-model="form.supplierName" placeholder="请输入联系方式"></el-input>
+                <el-form-item prop="contactPhone" label="联系方式">
+                    <el-input v-model="form.contactPhone" placeholder="请输入联系方式"></el-input>
                 </el-form-item>
                 <el-form-item prop="status" label="状态">
                     <el-select v-model="form.status" placeholder="请选择">
@@ -65,7 +65,7 @@
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="id" label="入库单编号" align="center"></el-table-column>
-                <el-table-column prop="name" label="入库类别" align="center"></el-table-column>
+                <el-table-column prop="code" label="入库类别" align="center"></el-table-column>
                 <el-table-column label="创建时间" align="center">
                     <template slot-scope="scope">
                         <template>{{scope.row.createTime|formatDateAll}}</template>
@@ -150,9 +150,13 @@ export default {
         // 获取数据
         getList(val) {
             const data = {
-                name: this.form.name,
-                supplierName: this.form.supplierName,
                 code: this.form.code,
+                contactPhone: this.form.contactPhone,
+                deliverWarehouseCode: this.form.deliverWarehouseCode,
+                deliverWarehouseName: this.form.deliverWarehouseName,
+                goodsSenderName: this.form.goodsSenderName,
+                receiveWarehouseCode: this.form.receiveWarehouseCode,
+                receiveWarehouseName: this.form.receiveWarehouseName,
                 status: this.form.status,
                 type: this.form.type,
                 startTime: this.form.date
@@ -165,23 +169,20 @@ export default {
                 size: this.page.pageSize
             };
             this.page.currentPage = val;
-            request
-                .getStoreList(data)
-                .then(res => {
-                    this.tableData = [];
-                    if (!res.data) return;
-                    this.tableData = res.data.data;
-                    this.page.totalPage = res.data.totalNum;
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+            request.getNoteList(data).then(res => {
+                this.tableData = [];
+                if (!res.data) return;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
+            }).catch(error => {
+                console.log(error);
+            });
         },
         // 查看详情
         showInfo(row) {
             sessionStorage.setItem('reportInfoId', row.id);
             this.$router.push({
-                name: 'repertoryReportInfo',
+                code: 'repertoryReportInfo',
                 query: { repertoryInfoId: row.id }
             });
         },
@@ -189,7 +190,7 @@ export default {
         editReport(row) {
             sessionStorage.setItem('reportId', row.id);
             this.$router.push({
-                name: 'repertoryReportSet',
+                code: 'repertoryReportSet',
                 query: { reportId: row.id }
             });
         },

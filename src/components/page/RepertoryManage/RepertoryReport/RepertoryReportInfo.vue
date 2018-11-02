@@ -95,23 +95,14 @@ export default {
         // 获取数据
         getList(val) {
             const data = {
-                name: this.form.name,
-                supplierName: this.form.supplierName,
-                code: this.form.code,
-                status: this.form.status,
-                type: this.form.type,
-                startTime: this.form.date
-                    ? moment(this.form.date[0]).format('YYYY-MM-DD')
-                    : '',
-                endTime: this.form.date
-                    ? moment(this.form.date[1]).format('YYYY-MM-DD')
-                    : '',
+                productId: this.form.status,
+                warehouseId: this.form.type,
                 page: val,
-                size: this.page.pageSize
+                pageSize: this.page.pageSize
             };
             this.page.currentPage = val;
             request
-                .getStoreList(data)
+                .aaa(data)
                 .then(res => {
                     this.tableData = [];
                     if (!res.data) return;

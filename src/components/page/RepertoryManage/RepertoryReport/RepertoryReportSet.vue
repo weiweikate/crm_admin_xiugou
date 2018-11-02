@@ -42,29 +42,29 @@
                     <el-input type="textarea" class="inp-textarea" v-model="form.remark" maxlength="180" placeholder="请填写备注"></el-input>
                 </el-form-item>
                 <div class="title">入库货物信息</div>
-                <el-form-item prop="supplierId" label="产品名称">
-                    <el-input class="inp" v-model="form.supplierId" placeholder="请输入产品名称"></el-input>
+                <el-form-item prop="productName" label="产品名称">
+                    <el-input class="inp" v-model="form.productName" placeholder="请输入产品名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="supplierName" label="产品ID">
-                    <el-input class="inp" v-model="form.supplierName" placeholder="请输入产品ID"></el-input>
+                <el-form-item prop="prodCode" label="产品ID">
+                    <el-input class="inp" v-model="form.prodCode" placeholder="请输入产品ID"></el-input>
                 </el-form-item>
-                <el-form-item prop="code" label="经销商ID">
-                    <el-input class="inp" v-model="form.code" placeholder="请输入经销商ID"></el-input>
+                <el-form-item prop="supplierCode" label="经销商ID">
+                    <el-input class="inp" v-model="form.supplierCode" placeholder="请输入经销商ID"></el-input>
                 </el-form-item>
-                <el-form-item prop="name" label="经销商名称">
-                    <el-input class="inp" v-model="form.name" placeholder="请输入经销商名称"></el-input>
+                <el-form-item prop="supplierName" label="经销商名称">
+                    <el-input class="inp" v-model="form.supplierName" placeholder="请输入经销商名称"></el-input>
                 </el-form-item>
                 <el-form-item label="">
-                    <el-button type="primary" @click="getData">搜索</el-button>
+                    <el-button type="primary" @click="getList(1)">搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
                 <el-table :data="tableData" border>
                     <el-table-column type="index" label="序号" align="center"></el-table-column>
-                    <el-table-column prop="id" label="产品名称" align="center"></el-table-column>
-                    <el-table-column prop="name" label="产品类目" align="center"></el-table-column>
-                    <el-table-column prop="type" label="产品ID" align="center"></el-table-column>
-                    <el-table-column prop="type" label="供应商ID" align="center"></el-table-column>
-                    <el-table-column prop="supplierId" label="供应商名称" align="center"></el-table-column>
+                    <el-table-column prop="name" label="产品名称" align="center"></el-table-column>
+                    <el-table-column prop="productCategory" label="产品类目" align="center"></el-table-column>
+                    <el-table-column prop="prodCode" label="产品ID" align="center"></el-table-column>
+                    <el-table-column prop="supplierCode" label="供应商ID" align="center"></el-table-column>
+                    <el-table-column prop="supplierName" label="供应商名称" align="center"></el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button @click="editNumber(scope.row)" type="primary">编辑数量</el-button>
@@ -82,7 +82,7 @@
                         :total="page.totalPage">
                     </el-pagination>
                 </div>
-                <table class="selected-product" v-for="(item,index) in chooseists" :key="index">
+                <table class="selected-product" v-for="(item,index) in chooseLists" :key="index">
                     <tr v-for="(v,k) in item.productLists" :key="k">
                         <td v-if="k==0" :rowspan="item.productLists.length" style="width: 50px">{{index+1}}</td>
                         <td>{{(v.productName || '')+(v.spec || '')}}</td>
@@ -99,7 +99,7 @@
             </el-form>
         </el-card>
         <el-dialog title="入库数量" :visible.sync="mask">
-           <el-table border :data="tableData">
+           <el-table border :data="chooseData">
                <el-table-column prop="name" label="产品名称" align="center"></el-table-column>
                <el-table-column prop="name" label="商品唯一码" align="center"></el-table-column>
                <el-table-column prop="name" label="颜色" align="center"></el-table-column>
@@ -172,9 +172,7 @@
                     linkPhone: '',
                     remark: ''
                 },
-                tableData: [{
-                    name: '111'
-                }],
+                tableData: [],
                 type: '', // 1.添加 2.编辑
                 rules: {
                     type: [
@@ -182,9 +180,6 @@
                     ],
                     supplierId: [
                         { required: true, message: '请输入供应商ID', trigger: 'blur' }
-                    ],
-                    supplierName: [
-                        { required: true, message: '请输入供应商名称', trigger: 'blur' }
                     ],
                     code: [
                         { required: true, message: '请输入仓库编码', trigger: 'blur' }
@@ -219,15 +214,43 @@
                 btnLoading: false,
                 address: '',
                 mask: false,
-                chooseists: []
+                chooseLists: [],
+                chooseData: []
             };
         },
         activated() {
             this.id = this.$route.query.repertoryId || sessionStorage.getItem('repertoryId');
             this.type = this.$route.query.type == 'add' ? 1 : 2;
             this.getInfo();
+            this.getList(this.page.currentPage);
         },
         methods: {
+            getList(val) {
+                const data = {
+                    supplierName: this.form.supplierName,
+                    productName: this.form.productName,
+                    supplierCode: this.form.supplierCode,
+                    prodCode: this.form.prodCode,
+                    page: val,
+                    pageSize: this.page.pageSize
+                };
+                this.page.currentPage = val;
+                request.SPUList(data).then(res => {
+                    this.tableData = res.data.data;
+                    this.page.totalPage = res.data.totalNum;
+                }).catch(err => {
+                    console.log(err);
+                    this.btnLoading = false;
+                });
+            },
+            // 重置表单
+            resetForm(formName) {
+                this.form.supplierName = '';
+                this.form.productName = '';
+                this.form.supplierCode = '';
+                this.form.prodCode = '';
+                this.getList(this.page.currentPage);
+            },
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (!valid) return;
@@ -297,7 +320,6 @@
                 // if (queryString == '') {
                 //     return;
                 // }
-                // this.checkList = [];
                 // this.$axios.post(api.queryProductByNameOrCode, {condition: queryString, activityType: 3}).then(res => {
                 //     let tmpArr = [];
                 //     res.data.data.forEach((v, k) => {
@@ -315,15 +337,20 @@
             handleSelect(item) {
                 console.log(item);
             },
-            getData() {
-
-            },
             save() {
 
             },
             // 编辑数量
-            editNumber() {
+            editNumber(row) {
                 this.mask = true;
+                const data = {
+                    productId: row.id
+                };
+                request.SKUList(data).then(res => {
+                    this.chooseData = res.data.data;
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 删除已选择产品 index对应packageList索引值 cIndex对应packageList[index].productLists索引值
             delSelectedPro(cIndex, index) {

@@ -2,7 +2,6 @@
     <div class="repertory-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
-           <el-button type="primary" style="margin-bottom: 20px" @click="$router.push({path:'repertorySet',query:{type:'add'}})">新建仓库</el-button>
             <el-table :data="tableData" border>
                 <el-table-column prop="addressName" label="省" align="center"></el-table-column>
                 <el-table-column prop="name" label="发货仓">
@@ -33,10 +32,10 @@
         <el-dialog title="仓库新增" :visible.sync="mask">
             <el-form v-model="formMask">
                 <el-form-item label="仓库编码">
-                    <el-input class="inp" placeholder="请输入仓库编码" v-model="formMask.code"></el-input>
+                    <el-autocomplete class="inp" :fetch-suggestions="querySearchAsync" @select="handleSelect" placeholder="请输入仓库编码或名称" v-model="formMask.code"></el-autocomplete>
                 </el-form-item>
                 <el-form-item label="仓库名称">
-                    <el-input class="inp" placeholder="请输入仓库名称" v-model="formMask.name"></el-input>
+                    <el-input class="inp" placeholder="请输入仓库名称" disabled="" v-model="formMask.name"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -121,6 +120,30 @@ export default {
         // 新增仓库
         addRepertory(row) {
             this.mask = true;
+            this.formMask.name = '';
+            this.formMask.code = '';
+        },
+        // 模糊搜索
+        querySearchAsync(queryString, cb) {
+            if (queryString == '') {
+                return;
+            }
+            request.findWarehouseLike({ 'keyword': this.formMask.code }).then(res => {
+                const tmpArr = [];
+                res.data.forEach((v, k) => {
+                    const o = {};
+                    o.value = `${v.name} 仓库编码：${v.code}`;
+                    o.code = v.code;
+                    o.name = v.name;
+                    tmpArr.push(o);
+                });
+                cb(tmpArr);
+            });
+        },
+        handleSelect(item) {
+            console.log(item)
+            this.formMask.code = item.code;
+            this.formMask.name = item.name;
         },
         sure(formName) {
             if (!this[formName].code || !this[formName].name) {

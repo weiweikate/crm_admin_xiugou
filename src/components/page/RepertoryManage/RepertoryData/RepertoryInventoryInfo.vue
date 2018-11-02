@@ -49,26 +49,28 @@ export default {
     data() {
         return {
             nav: ['云仓仓库管理', '仓库管理', '仓库存货数'],
-            tableData: []
+            tableData: [],
+            productId: '',
+            warehouseId: ''
         };
     },
     activated() {
+        this.productId = this.$route.query.repertoryInventoryInfoId || sessionStorage.getItem('repertoryInventoryInfoId');
+        this.warehouseId = this.$route.query.warehouseId || sessionStorage.getItem('warehouseId');
         this.getList(this.page.currentPage);
     },
     methods: {
         // 获取数据
         getList(val) {
             const data = {
-                name: this.form.name,
-                supplierName: this.form.supplierName,
-                code: this.form.code,
-                supplierId: this.form.supplierId,
+                productId: this.productId,
+                warehouseId: this.warehouseId,
                 page: val,
                 pageSize: this.page.pageSize
             };
             this.page.currentPage = val;
             request
-                .getStoreList(data)
+                .SKUListByProductId(data)
                 .then(res => {
                     this.tableData = [];
                     if (!res.data) return;
@@ -78,14 +80,6 @@ export default {
                 .catch(error => {
                     console.log(error);
                 });
-        },
-        // 查看详情
-        showInfo(row) {
-            sessionStorage.setItem('repertoryInfoId', row.id);
-            this.$router.push({
-                name: 'repertoryInfo',
-                query: { repertoryInfoId: row.id }
-            });
         }
     }
 };

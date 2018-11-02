@@ -59,36 +59,36 @@
 </template>
 
 <script>
-    import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import * as api from "@/api/OperateManage/MarketToolsManage/index.js";
-    import * as pApi from "@/privilegeList/OperateManage/MarketToolsManage/index.js";
-    import utils from "@/utils/index.js";
-    import icon from "@/components/common/ico";
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import * as api from '@/api/OperateManage/MarketToolsManage/index.js';
+    import * as pApi from '@/privilegeList/OperateManage/MarketToolsManage/index.js';
+    import utils from '@/utils/index.js';
+    import icon from '@/components/common/ico';
 
     export default {
-        components: {vBreadcrumb, icon},
+        components: { vBreadcrumb, icon },
 
         data() {
             return {
-                nav: ["运营管理", "营销工具管理", "优惠套餐", "产品管理"],
-                packageCode: "", // 套餐code
-                id:'',//套餐Id
-                keyWords: "", // 关键字搜索
-                keyWordsID: '',    // 关键字id
-                showResult: false,//是否显示搜索结果
-                tableData: [],    // 规格表格
+                nav: ['运营管理', '营销工具管理', '优惠套餐', '产品管理'],
+                packageCode: '', // 套餐code
+                id: '', // 套餐Id
+                keyWords: '', // 关键字搜索
+                keyWordsID: '', // 关键字id
+                showResult: false, // 是否显示搜索结果
+                tableData: [], // 规格表格
                 checkList: [], // 选择商品列表
                 selectedPro: [], // 已选择商品
-                productSpecList: [], //缓存选择的商品及其规格
-                productIds: [],//缓存选择的商品ids
-                noResult: false,//搜索无可用数据
-                name: '',//产品名称
-                prodCode: '',//产品编码
-                productNum:'',//产品库存
-                packageLists: [],//选择的商品套餐数组
-                tempProductLists: [],//临时缓存选中的商品数组，供后续显示套餐数组使用
-                tempSpecIds: [],//临时缓存选择的规格ids
-                btnLoading:false,//提交按钮防重
+                productSpecList: [], // 缓存选择的商品及其规格
+                productIds: [], // 缓存选择的商品ids
+                noResult: false, // 搜索无可用数据
+                name: '', // 产品名称
+                prodCode: '', // 产品编码
+                productNum: '', // 产品库存
+                packageLists: [], // 选择的商品套餐数组
+                tempProductLists: [], // 临时缓存选中的商品数组，供后续显示套餐数组使用
+                tempSpecIds: [], // 临时缓存选择的规格ids
+                btnLoading: false// 提交按钮防重
             };
         },
 
@@ -96,7 +96,7 @@
             this.packageCode = this.$route.query.packageCode;
             this.id = this.$route.query.id;
             this.tableData = [];
-            this.productLists=[];
+            this.productLists = [];
             this.keyWords = '';
             this.showResult = false;
             this.getPackageProInfo();
@@ -105,28 +105,28 @@
         methods: {
             //   获取套餐产品信息
             getPackageProInfo() {
-                this.$axios.post(api.queryPackageProductList, {packageCode: this.packageCode}).then(res => {
+                this.$axios.post(api.queryPackageProductList, { packageCode: this.packageCode }).then(res => {
                     this.packageLists = [];
                     res.data.data.forEach((v, k) => {
-                        let temp = {productLists:[],id:v.productId};
-                        let tempSpec=v.specValues.split(',');
-                        let tempProductPriceId=v.productPriceId.split(',');
-                        for(let i in tempSpec){
-                            let tempPro={
-                                packageCodeProductId:v.id,
-                                productPriceId:tempProductPriceId[i],
-                                specValues:tempSpec[i],
-                                productName:v.productName,
-                                spec:tempSpec[i],
-                                productCode:v.productCode,
-                                productId:v.id,
-                                id:tempProductPriceId[i]
+                        const temp = { productLists: [], id: v.productId };
+                        const tempSpec = v.specValues.split(',');
+                        const tempProductPriceId = v.productPriceId.split(',');
+                        for (const i in tempSpec) {
+                            const tempPro = {
+                                packageCodeProductId: v.id,
+                                productPriceId: tempProductPriceId[i],
+                                specValues: tempSpec[i],
+                                productName: v.productName,
+                                spec: tempSpec[i],
+                                productCode: v.productCode,
+                                productId: v.id,
+                                id: tempProductPriceId[i]
                             };
-                            temp.productLists.push(tempPro)
+                            temp.productLists.push(tempPro);
                         }
                         this.packageLists.push(temp);
-                    })
-                })
+                    });
+                });
             },
             //  提交表单
             submitForm() {
@@ -134,35 +134,35 @@
                     this.$message.warning('请选择产品规格！');
                     return;
                 }
-                let proStr=[];
+                const proStr = [];
                 this.packageLists.forEach((v, k) => {
-                    let o = {};
+                    const o = {};
                     o.productId = v.id;
-                    o.num=1;
-                    o.specStr=[];
-                    v.productLists.forEach((v1,k1)=>{
-                        let temp={
-                            packageCodeProductId:v1.productId,
-                            productPriceId:v1.id,
-                            specValues:v1.spec,
+                    o.num = 1;
+                    o.specStr = [];
+                    v.productLists.forEach((v1, k1) => {
+                        const temp = {
+                            packageCodeProductId: v1.productId,
+                            productPriceId: v1.id,
+                            specValues: v1.spec
                         };
-                        o.specStr.push(temp)
+                        o.specStr.push(temp);
                     });
                     proStr.push(o);
                 });
-                let data = {};
+                const data = {};
                 data.id = this.id;
                 data.packageCode = this.packageCode;
                 data.jsonStr = JSON.stringify(proStr);
-                data.url=pApi.addPackageProduct;
-                this.btnLoading=true;
+                data.url = pApi.addPackageProduct;
+                this.btnLoading = true;
                 this.$axios.post(api.addPackageProduct, data).then(res => {
                     this.$message.success(res.data.msg);
                     this.$router.push('/packageList');
-                    this.btnLoading=false
-                }).catch(res=>{
-                    this.btnLoading=false
-                })
+                    this.btnLoading = false;
+                }).catch(res => {
+                    this.btnLoading = false;
+                });
             },
             // 模糊查询
             querySearchAsync(queryString, cb) {
@@ -170,10 +170,10 @@
                     return;
                 }
                 this.checkList = [];
-                this.$axios.post(api.queryProductByNameOrCode, {condition: queryString, activityType: 3}).then(res => {
-                    let tmpArr = [];
+                this.$axios.post(api.queryProductByNameOrCode, { condition: queryString, activityType: 3 }).then(res => {
+                    const tmpArr = [];
                     res.data.data.forEach((v, k) => {
-                        let o = {};
+                        const o = {};
                         o.value = `${v.name} 产品ID：${v.prodCode}`;
                         o.id = v.id;
                         o.name = v.name;
@@ -181,14 +181,14 @@
                         o.productNum = v.productNum;
                         tmpArr.push(o);
                     });
-                    cb(tmpArr)
-                })
+                    cb(tmpArr);
+                });
             },
             // 模糊查询id
             handleSelect(item) {
-                if(item.id!=this.keyWordsID){//搜索新的产品，缓存的数据清空
-                    this.tempSpecIds=[];
-                    this.tempProductLists=[]
+                if (item.id != this.keyWordsID) { // 搜索新的产品，缓存的数据清空
+                    this.tempSpecIds = [];
+                    this.tempProductLists = [];
                 }
                 this.keyWordsID = item.id;
                 this.name = item.name;
@@ -197,66 +197,66 @@
             },
             // 根据id查询规格列表
             getSpecList() {
-                let that = this;
+                const that = this;
                 if (that.keyWordsID == '') {
                     that.$message.success('暂无数据');
                     return;
                 }
-                if (that.productNum == 0 ) {//无库存
+                if (that.productNum == 0) { // 无库存
                     that.noResult = true;
                 } else {
                     that.noResult = false;
-                    that.$axios.post(api.queryProductSpecById, {productId: that.keyWordsID}).then(res => {
+                    that.$axios.post(api.queryProductSpecById, { productId: that.keyWordsID }).then(res => {
                         that.showResult = true;
-                        that.tableData=[];
-                        res.data.data.forEach(function (v, k) {
-                            v.checked=false;
+                        that.tableData = [];
+                        res.data.data.forEach(function(v, k) {
+                            v.checked = false;
                             that.tableData.push(v);
                         });
-                    })
+                    });
                 }
             },
 
             // 选择商品操作
             selectPro(row) {
-                let checked = row.checked;
-                if (checked == true) {//添加规格
+                const checked = row.checked;
+                if (checked == true) { // 添加规格
                     if (this.tempSpecIds.indexOf(row.id) == -1) {
                         this.tempSpecIds.push(row.id);
                         this.tempProductLists.push(row);
                     }
-                } else {//取消
-                    for(let i in this.tempSpecIds){
-                        if(this.tempSpecIds[i]==row.id){
-                            this.tempSpecIds.splice(i,1);
-                            this.tempProductLists.splice(i,1)
+                } else { // 取消
+                    for (const i in this.tempSpecIds) {
+                        if (this.tempSpecIds[i] == row.id) {
+                            this.tempSpecIds.splice(i, 1);
+                            this.tempProductLists.splice(i, 1);
                         }
                     }
                 }
             },
             // 选中产品后确认添加套餐，并清空缓存的产品列表，表格数据
             setPackage() {
-               if(!this.tempSpecIds.length){
-                   this.$message.warning('请选择产品规格!');
-                   return
-               }
-               this.packageLists.push({productLists:this.tempProductLists,id:this.keyWordsID});
-               this.tempSpecIds=[];
-               this.tempProductLists=[];
-               this.getSpecList();
+                if (!this.tempSpecIds.length) {
+                    this.$message.warning('请选择产品规格!');
+                    return;
+                }
+                this.packageLists.push({ productLists: this.tempProductLists, id: this.keyWordsID });
+                this.tempSpecIds = [];
+                this.tempProductLists = [];
+                this.getSpecList();
             },
 
             // 删除已选择产品 index对应packageList索引值 cIndex对应packageList[index].productLists索引值
-            delSelectedPro(cIndex,index) {
-               this.packageLists[index].productLists.splice(cIndex,1);
-               if(!this.packageLists[index].productLists.length){
-                   this.packageLists.splice(index,1)
-               }
+            delSelectedPro(cIndex, index) {
+                this.packageLists[index].productLists.splice(cIndex, 1);
+                if (!this.packageLists[index].productLists.length) {
+                    this.packageLists.splice(index, 1);
+                }
             },
 
-            //返回列表
-            backToList(){
-                this.$router.push('/packageList')
+            // 返回列表
+            backToList() {
+                this.$router.push('/packageList');
             }
         }
     };

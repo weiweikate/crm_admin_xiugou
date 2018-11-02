@@ -239,11 +239,12 @@
                 };
                 request.queryRepertoryById(data).then(res => {
                     this.form = res.data;
-                    this.tableData = res.data.scratchCardPrize;
-                    this.tableData.forEach((v, k) => {
-                        this.totalRatio += v.winRate;
-                        this.selectedCoupon.push(v);
-                    });
+                    this.form.type = res.data.type.toString();
+                    this.form.sendGoods = res.data.sendGoods ? 1 : 2;
+                    this.form.returnGoods = res.data.returnGoods ? 1 : 2;
+                    const reginArr = [];
+                    reginArr.push(res.data.addressProvinceCode, res.data.addressCityCode, res.data.addressDistrictCode);
+                    this.address = reginArr;
                 }).catch(err => {
                     console.log(err);
                 });
