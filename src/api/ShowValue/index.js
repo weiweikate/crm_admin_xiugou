@@ -8,3 +8,4 @@ export const queryUserByCode = ['/user/showValueRecord/queryUserByCode', { metho
 export const queryUserCountByLevelId = ['/user/showValueRecord/queryUserCountByLevelId', { methods: 'get' }]; // 根据用户层级查询用户信息
 export const updateRecordAudit = ['/user/showValueRecord/updateRecord', { methods: 'get' }]; // 通过/审核
 export const queryRecordPageList = ['/user/showValueRecord/queryRecordPageList', { methods: 'post' }]; // 查询充值记录列表
+export const addShowValBeanTemplate = ['/showValueTemplate/addTemplate', { methods: 'post' }]; // 添加模板

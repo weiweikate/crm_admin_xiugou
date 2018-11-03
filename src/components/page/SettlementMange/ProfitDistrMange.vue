@@ -38,7 +38,7 @@
 
 <script>
 import * as api from '@/api/SettlementMange/index.js';
-import vBreadcrumb from '../../common/Breadcrumb.vue';
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 export default {
     components: { vBreadcrumb },
 

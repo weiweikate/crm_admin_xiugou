@@ -5,7 +5,7 @@
             <p class="small-title">间接分润</p>
             <p class="level" v-for="(v, k) in userLevel" :key='`XJ${k}`'>
                 <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueX" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueX[0]" class="inp"></el-input-number>
+                <el-input-number :disabled="!valueX" :controls="false" prefix="2" :min="0" placeholder="请输入数值" v-model="v.valueX[0]" class="inp"></el-input-number>
                 <span>%</span>
             </p>
             <p class="small-title">直接分润</p>
@@ -82,7 +82,8 @@ export default {
                 { name: 'v2', level: '3', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
                 { name: 'v3', level: '4', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
                 { name: 'v4', level: '5', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
-                { name: 'v5', level: '6', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] }
+                { name: 'v5', level: '6', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
+                { name: 'v6', level: '7', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] }
             ],
             valueX: false,
             valueY: false,

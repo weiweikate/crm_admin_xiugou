@@ -75,6 +75,7 @@
 import utils from '@/utils/index.js';
 import * as api from '@/api/SettlementMange/index.js';
 import vBreadcrumb from '../../common/Breadcrumb.vue';
+import request from '@/http/http';
 export default {
     components: { vBreadcrumb },
 
@@ -90,11 +91,8 @@ export default {
             checkX: false, // 拼店X
             formX: [
                 { disable: false, label: '店主', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
-                { disable: false, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
-                { disable: false, label: '直接上级', value: 0 }, // 直接上级
-                { disable: false, label: '间接上级', value: 0 }, // 间接上级
+                { disable: false, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, label: '助业金', value: 0 }, // 助业金
-                { disable: false, label: '自己', value: 0 }, // 自己
                 { disable: false, label: '其他1', value: 0 }, // 其他
                 { disable: false, label: '其他2', value: 0 }, // 其他
                 { disable: false, label: '其他3', value: 0 } // 其他
@@ -102,11 +100,8 @@ export default {
             checkY: false, // 拼店Y
             formY: [
                 { disable: false, label: '店主', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
-                { disable: false, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
-                { disable: false, label: '直接上级', value: 0 }, // 直接上级
-                { disable: false, label: '间接上级', value: 0 }, // 间接上级
+                { disable: false, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, label: '助业金', value: 0 }, // 助业金
-                { disable: false, label: '自己', value: 0 }, // 自己
                 { disable: false, label: '其他1', value: 0 }, // 其他
                 { disable: false, label: '其他2', value: 0 }, // 其他
                 { disable: false, label: '其他3', value: 0 } // 其他
@@ -114,11 +109,8 @@ export default {
             checkZ: false, // 拼店Z
             formZ: [
                 { disable: false, label: '店主', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
-                { disable: false, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
-                { disable: false, label: '直接上级', value: 0 }, // 直接上级
-                { disable: false, label: '间接上级', value: 0 }, // 间接上级
+                { disable: false, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, label: '助业金', value: 0 }, // 助业金
-                { disable: false, label: '自己', value: 0 }, // 自己
                 { disable: false, label: '其他1', value: 0 }, // 其他
                 { disable: false, label: '其他2', value: 0 }, // 其他
                 { disable: false, label: '其他3', value: 0 } // 其他
@@ -266,17 +258,42 @@ export default {
         },
         //  提交表单
         submitForm() {
-            const data = {};
-            // 模板名称
-            data.name = this.tplName;
-            // 品牌店铺奖励金：拼店用户参与
-            data.xRatio = this.shopMoney / 100;
-            // 品牌个人奖励金
-            data.yRatio = this.personMoney / 100;
-            // 开启时间
-            data.enableTime = this.startTime == undefined ? '' : utils.formatTime(this.startTime);
-            // 关闭时间
-            data.stopTime = this.stopTime == undefined ? '' : utils.formatTime(this.stopTime);
+            const data = {
+                name: this.tplName,
+                storeRate: this.shopMoney,
+                personalRate: this.personMoney,
+                startTime: this.startTime == undefined ? '' : utils.formatTime(this.startTime),
+                endTime: this.stopTime == undefined ? '' : utils.formatTime(this.stopTime),
+                details: []
+            };
+            const nameArr = ['X', 'Y', 'Z'];
+            nameArr.forEach(v => {
+                const name = `form${v}`;
+                const obj = {
+                    storeStartOne: this[name][0].value[0].value,
+                    storeStartTwo: this[name][0].value[1].value,
+                    storeStartThree: this[name][0].value[2].value,
+                    v0: this[name][1].value[0].value,
+                    v1: this[name][1].value[1].value,
+                    v2: this[name][1].value[2].value,
+                    v3: this[name][1].value[3].value,
+                    v4: this[name][1].value[4].value,
+                    v5: this[name][1].value[5].value,
+                    v6: this[name][1].value[6].value,
+                    assistance: this[name][2].value,
+                    otherOne: this[name][3].value,
+                    otherTwo: this[name][4].value,
+                    otherThree: this[name][5].value,
+                    type: v
+                };
+                data.details.push(obj);
+            });
+            console.log(data);
+            request.addProfitTpl(data).then(res => {
+                console.log(res);
+            }).catch(err => {
+                console.log(err);
+            });
         },
         //  动态计算品牌个人奖励金
         changePerMoney() {
@@ -295,7 +312,7 @@ export default {
                 if (index == 0) {
                     this[`form${form}`][index].value = [{ value: '' }, { value: '' }, { value: '' }];
                 } else if (index == 1) {
-                    this[`form${form}`][index].value = [{ value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }];
+                    this[`form${form}`][index].value = [{ value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: 0 }];
                 } else {
                     this[`form${form}`][index].value = '';
                 }
@@ -315,11 +332,8 @@ export default {
             this.checkX = false; // 拼店X
             this.formX = [
                 { disable: false, val: 1, label: '店主', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
-                { disable: false, val: 2, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
-                { disable: false, val: 4, label: '直接上级', value: 0 }, // 直接上级
-                { disable: false, val: 8, label: '间接上级', value: 0 }, // 间接上级
+                { disable: false, val: 2, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, val: 16, label: '助业金', value: 0 }, // 助业金
-                { disable: false, val: 32, label: '自己', value: 0 }, // 自己
                 { disable: false, val: 64, label: '其他1', value: 0 }, // 其他
                 { disable: false, val: 128, label: '其他2', value: 0 }, // 其他
                 { disable: false, val: 256, label: '其他3', value: 0 } // 其他
@@ -327,11 +341,8 @@ export default {
             this.checkY = false; // 拼店Y
             this.formY = [
                 { disable: false, val: 1, label: '店主', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
-                { disable: false, val: 2, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
-                { disable: false, val: 4, label: '直接上级', value: 0 }, // 直接上级
-                { disable: false, val: 8, label: '间接上级', value: 0 }, // 间接上级
+                { disable: false, val: 2, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, val: 16, label: '助业金', value: 0 }, // 助业金
-                { disable: false, val: 32, label: '自己', value: 0 }, // 自己
                 { disable: false, val: 64, label: '其他1', value: 0 }, // 其他
                 { disable: false, val: 128, label: '其他2', value: 0 }, // 其他
                 { disable: false, val: 256, label: '其他3', value: 0 } // 其他
@@ -339,11 +350,8 @@ export default {
             this.checkZ = false; // 拼店Z
             this.formZ = [
                 { disable: false, val: 1, label: '店主', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
-                { disable: false, val: 2, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
-                { disable: false, val: 4, label: '直接上级', value: 0 }, // 直接上级
-                { disable: false, val: 8, label: '间接上级', value: 0 }, // 间接上级
+                { disable: false, val: 2, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, val: 16, label: '助业金', value: 0 }, // 助业金
-                { disable: false, val: 32, label: '自己', value: 0 }, // 自己
                 { disable: false, val: 64, label: '其他1', value: 0 }, // 其他
                 { disable: false, val: 128, label: '其他2', value: 0 }, // 其他
                 { disable: false, val: 256, label: '其他3', value: 0 } // 其他
