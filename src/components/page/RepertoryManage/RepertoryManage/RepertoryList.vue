@@ -15,15 +15,15 @@
                 <el-form-item prop="status" label="仓库状态">
                     <el-select v-model="form.status" placeholder="请选择仓库状态">
                         <el-option value="">全部</el-option>
-                        <el-option value="1">启用</el-option>
-                        <el-option value="2">停用</el-option>
+                        <el-option value="1" label="启用">启用</el-option>
+                        <el-option value="2" label="停用">停用</el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="date" label="仓库创建时间">
                     <el-date-picker
-                        v-model="form.date"
                         type="datetimerange"
                         format="yyyy-MM-dd"
+                        v-model="form.date"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"
                     >
@@ -32,9 +32,9 @@
                 <el-form-item prop="type" label="仓库类别">
                     <el-select v-model="form.type" placeholder="请选择仓库类别">
                         <el-option value="">全部</el-option>
-                        <el-option value="1">自建仓</el-option>
-                        <el-option value="2">加盟仓</el-option>
-                        <el-option value="3">供应商仓</el-option>
+                        <el-option value="1" label="自建仓">自建仓</el-option>
+                        <el-option value="2" label="加盟仓">加盟仓</el-option>
+                        <el-option value="3" label="供应商仓">供应商仓</el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="">
@@ -88,14 +88,12 @@
                 <!--</el-table-column>-->
                 <el-table-column label="是否为发货仓" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.sendGoods==1">是</template>
-                        <template v-if="scope.row.sendGoods==2">否</template>
+                        <template>{{scope.row.sendGoods?'是':'否'}}</template>
                     </template>
                 </el-table-column>
                 <el-table-column label="是否为退货仓" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.returnGoods==1">是</template>
-                        <template v-if="scope.row.returnGoods==2">否</template>
+                        <template>{{scope.row.returnGoods?'是':'否'}}</template>
                     </template>
                 </el-table-column>
                 <el-table-column prop="createUserName" label="创建人" align="center"></el-table-column>
@@ -183,10 +181,10 @@ export default {
                 status: this.form.status,
                 type: this.form.type,
                 startTime: this.form.date
-                    ? moment(this.form.date[0]).format('YYYY-MM-DD')
+                    ? moment(this.form.date[0]).format('YYYY-MM-DD 00:00:00')
                     : '',
                 endTime: this.form.date
-                    ? moment(this.form.date[1]).format('YYYY-MM-DD')
+                    ? moment(this.form.date[1]).format('YYYY-MM-DD 23:59:59')
                     : '',
                 page: val,
                 pageSize: this.page.pageSize

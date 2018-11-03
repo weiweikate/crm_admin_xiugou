@@ -6,37 +6,37 @@
                 <div class="title">基础信息</div>
                 <el-form-item prop="type" label="类型">
                     <el-select v-model="form.type" placeholder="请选择仓库类型" class="inp">
-                        <el-option value="1">采购入库</el-option>
-                        <el-option value="2">调拨入库</el-option>
-                        <el-option value="3">盘盈入库</el-option>
+                        <el-option value="1" label="采购入库">采购入库</el-option>
+                        <el-option value="2" label="盘盈入库">盘盈入库</el-option>
+                        <el-option value="3" label="调拨入库">调拨入库</el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="supplierId" label="出库方">
-                    <el-input class="inp" v-model="form.supplierId" placeholder="请输入出库方名称"></el-input>
+                <el-form-item prop="deliverWarehouseName" label="出库方">
+                    <el-input class="inp" v-model="form.deliverWarehouseName" placeholder="请输入出库方名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="supplierName" label="出库仓库编码">
-                    <el-input class="inp" v-model="form.supplierName" placeholder="请输入出库仓库编码"></el-input>
+                <el-form-item prop="deliverWarehouseCode" label="出库仓库编码">
+                    <el-input class="inp" v-model="form.deliverWarehouseCode" placeholder="请输入出库仓库编码"></el-input>
                 </el-form-item>
-                <el-form-item prop="code" label="入库方">
-                    <el-autocomplete class="inp" v-model="form.code" :fetch-suggestions="querySearchAsync" @select="handleSelect" placeholder="请输入入库方名称或编码"></el-autocomplete>
+                <el-form-item prop="receiveWarehouseName" label="入库方">
+                    <el-autocomplete class="inp" v-model="form.receiveWarehouseName" :fetch-suggestions="querySearchAsync" @select="handleSelect" placeholder="请输入入库方名称或编码"></el-autocomplete>
                 </el-form-item>
-                <el-form-item prop="name" label="入库仓库编码">
-                    <el-input class="inp" v-model="form.name" disabled=""></el-input>
+                <el-form-item prop="receiveWarehouseCode" label="入库仓库编码">
+                    <el-input class="inp" v-model="form.receiveWarehouseCode" disabled=""></el-input>
                 </el-form-item>
-                <el-form-item prop="user" label="入库地址">
-                    <el-input class="inp" v-model="form.user" disabled=""></el-input>
+                <el-form-item prop="receiveWarehouseAddress" label="入库地址">
+                    <el-input class="inp" v-model="form.receiveWarehouseAddress" disabled=""></el-input>
                 </el-form-item>
-                <el-form-item prop="phone" label="入库单填写人">
-                    <el-input class="inp" v-model="form.phone" disabled=""></el-input>
+                <el-form-item prop="contactUserName" label="入库单填写人">
+                    <el-input class="inp" v-model="form.contactUserName" disabled=""></el-input>
                 </el-form-item>
-                <el-form-item prop="linkName" label="联系方式">
-                    <el-input class="inp" v-model="form.linkName" placeholder="请输入联系方式"></el-input>
+                <el-form-item prop="contactPhone" label="联系方式">
+                    <el-input class="inp" v-model="form.contactPhone" placeholder="请输入联系方式"></el-input>
                 </el-form-item>
-                <el-form-item prop="linkPhone" label="送货人姓名">
-                    <el-input class="inp" v-model="form.linkPhone" placeholder="请输入送货人姓名"></el-input>
+                <el-form-item prop="goodsSenderName" label="送货人姓名">
+                    <el-input class="inp" v-model="form.goodsSenderName" placeholder="请输入送货人姓名"></el-input>
                 </el-form-item>
-                <el-form-item prop="linkPhone" label="送货人联系方式" class="spec">
-                    <el-input class="inp" v-model="form.linkPhone" placeholder="请输入送货人联系方式"></el-input>
+                <el-form-item prop="goodsSenderPhone" label="送货人联系方式" class="spec">
+                    <el-input class="inp" v-model="form.goodsSenderPhone" placeholder="请输入送货人联系方式"></el-input>
                 </el-form-item>
                 <el-form-item prop="remark" label="备注">
                     <el-input type="textarea" class="inp-textarea" v-model="form.remark" maxlength="180" placeholder="请填写备注"></el-input>
@@ -83,11 +83,11 @@
                     </el-pagination>
                 </div>
                 <table class="selected-product" v-for="(item,index) in chooseLists" :key="index">
-                    <tr v-for="(v,k) in item.productLists" :key="k">
-                        <td v-if="k==0" :rowspan="item.productLists.length" style="width: 50px">{{index+1}}</td>
-                        <td>{{(v.productName || '')+(v.spec || '')}}</td>
-                        <td>产品ID：{{v.productCode}}</td>
-                        <td style="min-width:100px">x1</td>
+                    <tr v-for="(v,k) in item.skuList" :key="k">
+                        <td v-if="k==0" :rowspan="item.skuList.length" style="width: 50px">{{index+1}}</td>
+                        <td>{{(v.name || '')+(v.specifyValues || '')}}</td>
+                        <td>产品ID：{{v.prodCode}}</td>
+                        <td style="min-width:100px">x{{v.estimateCount}}</td>
                         <td style="min-width:80px;cursor: pointer;color:#33b4ff" @click="delSelectedPro(k,index)">删除
                         </td>
                     </tr>
@@ -101,14 +101,23 @@
         <el-dialog title="入库数量" :visible.sync="mask">
            <el-table border :data="chooseData">
                <el-table-column prop="name" label="产品名称" align="center"></el-table-column>
-               <el-table-column prop="name" label="商品唯一码" align="center"></el-table-column>
-               <el-table-column prop="name" label="颜色" align="center"></el-table-column>
-               <el-table-column prop="name" label="版本" align="center"></el-table-column>
-               <el-table-column prop="name" label="规格" align="center"></el-table-column>
-               <el-table-column prop="name" label="类型" align="center"></el-table-column>
+               <el-table-column prop="skuCode" label="商品唯一码" align="center"></el-table-column>
+               <template v-for='(v,k) in headData'>
+                   <el-table-column
+                       :show-overflow-tooltip="true"
+                       :prop="v.value"
+                       :label="v.name"
+                       :key="k"
+                       align="center">
+                   </el-table-column>
+               </template>
+               <!--<el-table-column prop="specifies" label="颜色" align="center"></el-table-column>-->
+               <!--<el-table-column prop="name" label="版本" align="center"></el-table-column>-->
+               <!--<el-table-column prop="specifyValues" label="规格" align="center"></el-table-column>-->
+               <!--<el-table-column prop="name" label="类型" align="center"></el-table-column>-->
                <el-table-column prop="name" label="采购数" align="center">
                    <template slot-scope="scope">
-                       <el-input-number :min="0" :controls="false"></el-input-number>件
+                       <el-input-number :min="0" :controls="false" v-model="scope.row.estimateCount"></el-input-number>件
                    </template>
                </el-table-column>
            </el-table>
@@ -154,23 +163,38 @@
                     }
                 }
             };
+            var isCode = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请输入出库仓库编码'));
+                } else {
+                    const reg = /^[0-9]*$/;
+                    if (!reg.test(value)) {
+                        callback(new Error('请输入数字'));
+                    } else {
+                        callback();
+                    }
+                }
+            };
             return {
                 nav: ['云仓仓库管理', '入库单', '新建入库单'],
                 id: '',
-                url: '',
                 form: {
                     type: '',
-                    supplierId: '',
+                    deliverWarehouseName: '',
+                    deliverWarehouseCode: '',
+                    receiveWarehouseName: '',
+                    receiveWarehouseCode: '',
+                    receiveWarehouseAddress: '',
+                    contactUserName: '',
+                    contactPhone: '',
+                    goodsSenderName: '',
+                    goodsSenderPhone: '',
+                    remark: '',
+                    productName: '',
+                    prodCode: '',
+                    supplierCode: '',
                     supplierName: '',
-                    code: '',
-                    name: '',
-                    user: '',
-                    phone: '',
-                    send: 1,
-                    back: 1,
-                    linkName: '',
-                    linkPhone: '',
-                    remark: ''
+                    spuList: []
                 },
                 tableData: [],
                 type: '', // 1.添加 2.编辑
@@ -178,48 +202,47 @@
                     type: [
                         { required: true, message: '请选择仓库类型', trigger: 'blur' }
                     ],
-                    supplierId: [
-                        { required: true, message: '请输入供应商ID', trigger: 'blur' }
+                    deliverWarehouseName: [
+                        { required: true, message: '请输入出库方名称', trigger: 'blur' }
                     ],
-                    code: [
-                        { required: true, message: '请输入仓库编码', trigger: 'blur' }
+                    deliverWarehouseCode: [
+                        { required: true, message: '请输入出库仓库编码', trigger: 'blur' },
+                        { validator: isCode, trigger: 'blur' }
                     ],
-                    name: [
-                        { required: true, message: '请输入仓库名称', trigger: 'blur' }
+                    receiveWarehouseName: [
+                        { required: true, message: '请输入入库方名称或编码', trigger: 'blur' }
                     ],
-                    user: [
-                        { required: true, message: '请输入仓库负责人', trigger: 'blur' }
+                    receiveWarehouseCode: [
+                        { required: true, message: '请输入入库方名称或编码', trigger: 'blur' }
                     ],
-                    phone: [
-                        { required: true, message: '请输入仓库负责人手机号', trigger: 'blur' },
+                    receiveWarehouseAddress: [
+                        { required: true, message: '请输入入库地址', trigger: 'blur' }
+                    ],
+                    contactUserName: [
+                        { required: true, message: '请输入入库单填写人', trigger: 'blur' }
+                    ],
+                    contactPhone: [
+                        { required: true, message: '请输入联系方式', trigger: 'blur' },
                         { validator: isPhone, trigger: 'blur' }
                     ],
-                    address: [
-                        { required: true, message: '请输入仓库地址', trigger: 'blur' }
-                    ],
-                    send: [
-                        { required: true, message: '请选择是否能发货', trigger: 'blur' }
-                    ],
-                    back: [
-                        { required: true, message: '请选择是否为退货仓', trigger: 'blur' }
-                    ],
-                    linkName: [
-                        { required: true, message: '请输入联系人名称', trigger: 'blur' }
-                    ],
-                    linkPhone: [
-                        { required: true, message: '请输入退货仓联系方式', trigger: 'blur' },
+                    goodsSenderPhone: [
                         { validator: isMobile, trigger: 'blur' }
                     ]
                 },
                 btnLoading: false,
-                address: '',
+                receiveWarehouseAddress: '',
                 mask: false,
-                chooseLists: [],
-                chooseData: []
+                chooseLists: [{ prodCode: '', productId: '', skuList: [] }], // 产品列表
+                prodCode: '', // 编辑数量选中的产品code
+                productIds: [], // 添加的产品ids
+                productId: '', // 编辑数量选中的产品id
+                isIndex: 0, // 编辑过数量的索引值
+                chooseData: [], // 当前选中的规格数据
+                headData: []// 规格表头
             };
         },
         activated() {
-            this.id = this.$route.query.repertoryId || sessionStorage.getItem('repertoryId');
+            this.id = this.$route.query.reportId || sessionStorage.getItem('reportId');
             this.type = this.$route.query.type == 'add' ? 1 : 2;
             this.getInfo();
             this.getList(this.page.currentPage);
@@ -258,10 +281,26 @@
                     if (this.status == 2) {
                         data.id = this.id;
                     }
+                    if (!this.chooseLists.length) {
+                        return this.$message.warning('请添加产品');
+                    }
+                    data.spuList = [];
+                    this.chooseLists.forEach((v, k) => {
+                        const temp = {
+                            productId: v.productId,
+                            skuList: []
+                        };
+                        v.skuList.forEach((v1, k1) => {
+                            v1.productId = v.productId;
+                            v1.productSpecPriceId = v1.id;
+                        });
+                        temp.skuList = v.skuList;
+                        data.spuList.push(temp);
+                    });
                     this.btnLoading = true;
-                    request[this.url](data).then(res => {
+                    request.addOrUpdateReport(data).then(res => {
                         this.$message.success(res.msg);
-                        this.$router.push('/repertoryList');
+                        this.$router.push('/repertoryReportList');
                         this.btnLoading = false;
                     }).catch(err => {
                         console.log(err);
@@ -273,39 +312,52 @@
                 this.resetValue();
                 if (this.type == 1) {
                     this.nav[2] = '新建入库单';
-                    this.url = 'addScratchCard';
                 } else {
                     this.nav[2] = '编辑入库单';
-                    this.url = 'updateScratchCard';
                     this.getDetail();
                 }
+                this.form.contactUserName = localStorage.getItem('ms_username');
+                this.form.contactPhone = localStorage.getItem('ms_userPhone');
+                this.form.contactUserNameId = localStorage.getItem('ms_userID');
             },
             resetValue() {
                 this.form = {
                     type: '',
-                    supplierId: '',
+                    deliverWarehouseName: '',
+                    deliverWarehouseCode: '',
+                    receiveWarehouseName: '',
+                    receiveWarehouseCode: '',
+                    receiveWarehouseAddress: '',
+                    contactUserName: '',
+                    contactPhone: '',
+                    goodsSenderName: '',
+                    goodsSenderPhone: '',
+                    remark: '',
+                    productName: '',
+                    prodCode: '',
+                    supplierCode: '',
                     supplierName: '',
-                    code: '',
-                    name: '',
-                    user: '',
-                    phone: '',
-                    send: 1,
-                    back: 1,
-                    linkName: '',
-                    linkPhone: '',
-                    remark: ''
+                    spuList: []
                 };
+                this.chooseLists = [{ prodCode: '', productId: '', skuList: [] }];
+                this.productIds = [];
+                this.productId = '';
+                this.prodCode = '';
+                this.isIndex = 0;
             },
             getDetail() {
                 const data = {
                     id: this.id
                 };
-                request.findScratchCardById(data).then(res => {
+                this.chooseLists = [];
+                request.getNoteById(data).then(res => {
                     this.form = res.data;
-                    this.tableData = res.data.scratchCardPrize;
-                    this.tableData.forEach((v, k) => {
-                        this.totalRatio += v.winRate;
-                        this.selectedCoupon.push(v);
+                    res.data.spuList.forEach((v, k) => {
+                        v.skuList.forEach((v1, k1) => {
+                            v1.id = v1.productSpecPriceId;
+                        });
+                        this.productIds.push(v.productId);
+                        this.chooseLists.push(v);
                     });
                 }).catch(err => {
                     console.log(err);
@@ -314,49 +366,118 @@
 
             // 取消
             cancel() {
-                this.$router.push('/repertoryList');
+                this.$router.push('/repertoryReportList');
             },
             querySearchAsync(queryString, cb) {
-                // if (queryString == '') {
-                //     return;
-                // }
-                // this.$axios.post(api.queryProductByNameOrCode, {condition: queryString, activityType: 3}).then(res => {
-                //     let tmpArr = [];
-                //     res.data.data.forEach((v, k) => {
-                //         let o = {};
-                //         o.value = `${v.name} 产品ID：${v.prodCode}`;
-                //         o.id = v.id;
-                //         o.name = v.name;
-                //         o.prodCode = v.prodCode;
-                //         o.productNum = v.productNum;
-                //         tmpArr.push(o);
-                //     });
-                //     cb(tmpArr)
-                // })
+                if (queryString == '') {
+                    return;
+                }
+                request.findWarehouseLike({ 'keyword': this.form.receiveWarehouseName }).then(res => {
+                    const tmpArr = [];
+                    res.data.forEach((v, k) => {
+                        const o = {};
+                        o.value = `${v.name} 仓库编码：${v.code}`;
+                        o.code = v.code;
+                        o.name = v.name;
+                        o.type = v.type;
+                        o.receiveWarehouseAddress = v.receiveWarehouseAddress;
+                        o.id = v.id;
+                        tmpArr.push(o);
+                    });
+                    cb(tmpArr);
+                });
             },
             handleSelect(item) {
-                console.log(item);
+                this.$set(this.form, 'receiveWarehouseCode', item.code);
+                this.$set(this.form, 'receiveWarehouseName', item.name);
+                this.$set(this.form, 'receiveWarehouseAddress', item.receiveWarehouseAddress);
+                this.$set(this.form, 'receiveWarehouseId', item.id);
             },
             save() {
-
+                this.chooseLists[this.isIndex].skuList = [];
+                let flag = true;
+                this.chooseData.forEach((v, k) => {
+                    if (v.estimateCount) {
+                        if (!/^[1-9]*[1-9][0-9]*$/.test(v.estimateCount)) {
+                            this.$message.warning('数量请输入正整数');
+                            flag = false;
+                        } else {
+                            this.chooseLists[this.isIndex].skuList.push(v);
+                            this.chooseLists[this.isIndex].prodCode = v.prodCode;
+                            this.chooseLists[this.isIndex].productId = v.productId;
+                        }
+                    }
+                    this.productIds[this.isIndex] = this.productId;
+                });
+                if (flag) {
+                    this.mask = false;
+                }
+                this.isIndex = 0;
             },
             // 编辑数量
             editNumber(row) {
                 this.mask = true;
                 const data = {
-                    productId: row.id
+                    productId: row.id,
+                    page: 1,
+                    pageSize: 10000
                 };
+                let flag = true;
+                this.productIds.forEach((v, k) => {
+                    if (row.id == v) {
+                        this.isIndex = k;
+                        flag = false;
+                    }
+                });
+
+                if (this.productIds.length && flag) {
+                    this.isIndex = this.productIds.length;
+                    this.chooseLists.push({
+                        prodCode: '',
+                        productId: '',
+                        skuList: []
+                    });
+                }
+                this.prodCode = row.prodCode;
+                this.productId = row.id;
+                this.chooseData = [];
                 request.SKUList(data).then(res => {
-                    this.chooseData = res.data.data;
+                    res.data.data.forEach((v, k) => {
+                        v.prodCode = row.prodCode;
+                        v.productId = row.id;
+                        this.productIds.forEach((v1, k1) => {
+                            // if (v1 == row.prodCode) {
+                            if (v1 == row.id) {
+                                this.chooseLists[k1].skuList.forEach((v2, k2) => {
+                                    if (v2.id == v.id) {
+                                        v.estimateCount = this.chooseLists[k1].skuList[k2].estimateCount;
+                                    }
+                                });
+                            }
+                        });
+                        this.chooseData.push(v);
+                        this.headData = [];
+                        if (!v.specifies || !v.specifyValues) return;
+                        const specs = v.specifies.split('-');
+                        const specValues = v.specifyValues.split('-');
+                        specs.forEach((v1, k1) => {
+                            const temp = {
+                                value: v1,
+                                name: v1
+                            };
+                            this.headData.push(temp);
+                            this.chooseData[k][v1] = specValues[k1];
+                        });
+                    });
                 }).catch(err => {
                     console.log(err);
                 });
             },
-            // 删除已选择产品 index对应packageList索引值 cIndex对应packageList[index].productLists索引值
+            // 删除已选择产品 index对应packageList索引值 cIndex对应packageList[index].skuList索引值
             delSelectedPro(cIndex, index) {
-                this.packageLists[index].productLists.splice(cIndex, 1);
-                if (!this.packageLists[index].productLists.length) {
-                    this.packageLists.splice(index, 1);
+                this.chooseLists[index].skuList.splice(cIndex, 1);
+                if (!this.chooseLists[index].skuList.length) {
+                    this.chooseLists.splice(index, 1);
                 }
             }
         }
@@ -391,6 +512,10 @@
             .el-dialog__title {
                 color: #ff6868;
             }
+        }
+        .el-dialog__body{
+            max-height: 500px;
+            overflow-y: auto;
         }
         .el-input-number--small{
             width: 70px;

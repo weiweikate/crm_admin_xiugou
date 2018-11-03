@@ -7,22 +7,22 @@
                 <el-table-column prop="name" label="发货仓">
                     <template slot-scope="scope">
                         <div class="fl">
-                            <div v-for="(v,k) in scope.row.sendList" :key="k" v-if="k<3">发货仓{{k}}：<div class="text-wrap">{{v.name}}</div></div>
+                            <div v-for="(v,k) in scope.row.sendList" :key="k" v-if="k<3">发货仓{{k+1}}：<div class="text-wrap">{{v.warehouseName}}</div></div>
                         </div>
                         <div class="fr">
-                            <span class="color-blue" @click="watchAll(scope.row)">查看全部</span>
-                            <i class="el-icon-circle-plus-outline" @click="addRepertory(scope.row)"></i>
+                            <span class="color-blue" @click="watchAll(scope.row,1)">查看全部</span>
+                            <i class="el-icon-circle-plus-outline" @click="addRepertory(scope.row.sendList,scope.row.addressCode,1)"></i>
                         </div>
                     </template>
                 </el-table-column>
                 <el-table-column label="退货仓">
                     <template slot-scope="scope">
                         <div class="fl">
-                            <div v-for="(v,k) in scope.row.returnList" :key="k" v-if="k<3">发货仓{{k}}：<div class="text-wrap">{{v.name}}</div></div>
+                            <div v-for="(v,k) in scope.row.returnList" :key="k" v-if="k<3">退货仓{{k+1}}：<div class="text-wrap">{{v.warehouseName}}</div></div>
                         </div>
                         <div class="fr">
-                            <span class="color-blue" @click="watchAll(scope.row)">查看全部</span>
-                            <i class="el-icon-circle-plus-outline" @click="addRepertory(scope.row)"></i>
+                            <span class="color-blue" @click="watchAll(scope.row,2)">查看全部</span>
+                            <i class="el-icon-circle-plus-outline" @click="addRepertory(scope.row.returnList,scope.row.addressCode,2)"></i>
                         </div>
                     </template>
                 </el-table-column>
@@ -39,7 +39,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="sure('formMask')">确 认</el-button>
+                <el-button type="primary" :loading="btnLoading" @click="sure('formMask')">确 认</el-button>
                 <el-button @click="mask=false">取 消</el-button>
             </div>
         </el-dialog>
@@ -48,14 +48,14 @@
             <div>
                 <span>浙江省</span>
                 <span>
-                    <i class="el-icon-circle-plus-outline" @click="addRepertory"></i>
+                    <i class="el-icon-circle-plus-outline" @click="addRepertory(allData,addressCode,type)"></i>
                 </span>
             </div>
-            <el-table :data="allData" border>
+            <el-table :data="allData" border width="100%">
                 <el-table-column label="仓库排序" align="center">
-                    <template slot-scope="scope">发货仓{{scope.$index}}</template>
+                    <template slot-scope="scope">{{title[type]}}{{scope.$index+1}}</template>
                 </el-table-column>
-                <el-table-column prop="name" label="仓库名称" align="center"></el-table-column>
+                <el-table-column prop="warehouseName" label="仓库名称" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <span class="color-blue" @click="upOrDown(-1,scope.$index)" v-if="scope.$index!=0">上移</span>
@@ -66,7 +66,7 @@
                 </el-table-column>
             </el-table>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="sure('formMask')">确 认</el-button>
+                <el-button type="primary" :loading="btnLoading" @click="sureSort">确 认</el-button>
                 <el-button @click="allMask=false">取 消</el-button>
             </div>
         </el-dialog>
@@ -74,7 +74,7 @@
         <el-dialog title="温馨提示" :visible.sync="deleteMask">
             <div class="tip">确认要删除？</div>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="deleteSure">确 认</el-button>
+                <el-button type="primary" :loading="btnLoading" @click="deleteSure">确 认</el-button>
                 <el-button @click="deleteMask=false">取 消</el-button>
             </div>
         </el-dialog>
@@ -100,7 +100,11 @@ export default {
             allData: [], // 查看全部数据
             deleteMask: false,
             index: '', // 删除索引
-            row: ''// 查看全部添加参数
+            row: '', // 查看全部添加参数
+            addressCode: '',
+            type: '', // 发货仓1  退货仓2
+            btnLoading: false,
+            title: ['', '发货仓', '退货仓']
         };
     },
     activated() {
@@ -118,10 +122,13 @@ export default {
             });
         },
         // 新增仓库
-        addRepertory(row) {
+        addRepertory(allData, addressCode, num) {
             this.mask = true;
             this.formMask.name = '';
             this.formMask.code = '';
+            this.addressCode = addressCode;
+            this.type = num;
+            this.allData = allData;
         },
         // 模糊搜索
         querySearchAsync(queryString, cb) {
@@ -135,27 +142,50 @@ export default {
                     o.value = `${v.name} 仓库编码：${v.code}`;
                     o.code = v.code;
                     o.name = v.name;
+                    o.type = v.type;
+                    o.id = v.id;
                     tmpArr.push(o);
                 });
                 cb(tmpArr);
             });
         },
         handleSelect(item) {
-            console.log(item)
-            this.formMask.code = item.code;
-            this.formMask.name = item.name;
+            this.formMask = item;
+            this.$set(this.formMask, 'code', item.code);
+            this.$set(this.formMask, 'name', item.name);
         },
         sure(formName) {
             if (!this[formName].code || !this[formName].name) {
                 return this.$message.warning('请输入仓库编码和名称');
             }
-            this.mask = false;
+            const data = this.formMask;
+            data.addressCode = this.addressCode;
+            data.type = this.type;
+            data.warehouseId = this.formMask.id;
+            data.warehouseName = this.formMask.name;
+            this.btnLoading = true;
+            request.addAreaOption(data).then(res => {
+                this.$message.success(res.msg);
+                this.mask = false;
+                if (!this.allData) {
+                    this.allData = [];
+                    this.$set(this.allData, 0, data);
+                } else {
+                    this.allData.push(data);
+                }
+                this.btnLoading = false;
+            }).catch(err => {
+                console.log(err);
+                this.btnLoading = false;
+            });
         },
         // 查看全部
-        watchAll(row) {
-            this.allData = row.send;
+        watchAll(row, num) {
+            this.allData = num == 1 ? row.sendList : row.returnList;
             this.allMask = true;
             this.row = row;
+            this.addressCode = row.addressCode;
+            this.type = num;
         },
         // 上移下移置顶
         // num:-1上移 1下移 0置顶
@@ -174,6 +204,29 @@ export default {
                 this.$set(this.allData, index, change);
                 this.$set(this.allData, index + num, _this);
             }
+        },
+        sureSort() {
+            this.btnLoading = true;
+            const data = {
+                provinceCode: this.addressCode,
+                type: this.type,
+                list: []
+            };
+            this.allData.forEach((v, k) => {
+                const temp = v;
+                temp.sort = k + 1;
+                temp.addressCode = this.addressCode;
+                temp.type = this.type;
+                data.list.push(temp);
+            });
+            request.areaOption(data).then(res => {
+                this.$message.success(res.msg);
+                this.allMask = false;
+                this.btnLoading = false;
+            }).catch(err => {
+                console.log(err);
+                this.btnLoading = false;
+            });
         },
         // 删除
         deleteData(index) {

@@ -65,20 +65,26 @@
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="id" label="入库单编号" align="center"></el-table-column>
-                <el-table-column prop="code" label="入库类别" align="center"></el-table-column>
+                <el-table-column prop="type" label="入库类别" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.type==1">采购入库</template>
+                        <template v-if="scope.row.type==2">盘盈入库</template>
+                        <template v-if="scope.row.type==3">调拨入库</template>
+                    </template>
+                </el-table-column>
                 <el-table-column label="创建时间" align="center">
                     <template slot-scope="scope">
                         <template>{{scope.row.createTime|formatDateAll}}</template>
                     </template>
                 </el-table-column>
-                <el-table-column prop="type" label="创建人" align="center"></el-table-column>
-                <el-table-column prop="type" label="联系方式" align="center"></el-table-column>
-                <el-table-column prop="supplierId" label="出库仓库编号" align="center"></el-table-column>
-                <el-table-column prop="supplierName" label="出库方" align="center"></el-table-column>
-                <el-table-column prop="supplierId" label="入库仓库编号" align="center"></el-table-column>
-                <el-table-column prop="supplierName" label="入库方" align="center"></el-table-column>
-                <el-table-column prop="supplierName" label="送货人姓名" align="center"></el-table-column>
-                <el-table-column prop="supplierName" label="送货人联系方式" align="center"></el-table-column>
+                <el-table-column prop="contactUserName" label="创建人" align="center"></el-table-column>
+                <el-table-column prop="contactPhone" label="联系方式" align="center"></el-table-column>
+                <el-table-column prop="deliverWarehouseCode" label="出库仓库编号" align="center"></el-table-column>
+                <el-table-column prop="deliverWarehouseName" label="出库方" align="center"></el-table-column>
+                <el-table-column prop="receiveWarehouseCode" label="入库仓库编号" align="center"></el-table-column>
+                <el-table-column prop="receiveWarehouseName" label="入库方" align="center"></el-table-column>
+                <el-table-column prop="goodsSenderName" label="送货人姓名" align="center"></el-table-column>
+                <el-table-column prop="goodsSenderPhone" label="送货人联系方式" align="center"></el-table-column>
                 <el-table-column label="状态" align="center">
                     <template slot-scope="scope">
                         <template v-if="scope.row.status==1">未推送</template>
@@ -182,7 +188,7 @@ export default {
         showInfo(row) {
             sessionStorage.setItem('reportInfoId', row.id);
             this.$router.push({
-                code: 'repertoryReportInfo',
+                path: 'repertoryReportInfo',
                 query: { repertoryInfoId: row.id }
             });
         },
@@ -190,7 +196,7 @@ export default {
         editReport(row) {
             sessionStorage.setItem('reportId', row.id);
             this.$router.push({
-                code: 'repertoryReportSet',
+                path: 'repertoryReportSet',
                 query: { reportId: row.id }
             });
         },

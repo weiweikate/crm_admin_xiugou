@@ -11,10 +11,10 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="supplierCode" label="供应商ID" v-if="form.type==3">
-                    <el-input class="inp" v-model="form.supplierCode" placeholder="请输入供应商ID"></el-input>
+                    <el-autocomplete class="inp" placeholder="请输入供应商ID" v-model="form.supplierCode" :fetch-suggestions="querySearchAsyncById" @select="handleSelect"></el-autocomplete>
                 </el-form-item>
                 <el-form-item prop="supplierName" label="供应商名称" v-if="form.type==3">
-                    <el-input class="inp" v-model="form.supplierName" placeholder="请输入供应商名称"></el-input>
+                    <el-autocomplete class="inp" placeholder="请输入供应商名称" v-model="form.supplierName" :fetch-suggestions="querySearchAsyncByName" @select="handleSelect"></el-autocomplete>
                 </el-form-item>
                 <el-form-item prop="joinWarehouseType" label="加盟仓类型" v-if="form.type==2">
                     <el-select v-model="form.joinWarehouseType" placeholder="请选择加盟仓类型" class="inp">
@@ -113,6 +113,7 @@
             return {
                 nav: ['云仓仓库管理', '仓库管理', '新建仓库'],
                 id: '',
+                keyword: '',
                 form: {
                     type: '',
                     supplierCode: '',
@@ -186,12 +187,54 @@
             this.getInfo();
         },
         methods: {
+            querySearchAsyncById(queryString, cb) {
+                if (queryString == '') {
+                    return;
+                }
+                request.findSupplierLike({ 'keyword': this.form.supplierId }).then(res => {
+                    const tmpArr = [];
+                    res.data.forEach((v, k) => {
+                        const o = {};
+                        o.value = `${v.supplierName} 供应商ID：${v.supplierId}`;
+                        o.supplierId = v.supplierId;
+                        o.supplierName = v.supplierName;
+                        tmpArr.push(o);
+                    });
+                    cb(tmpArr);
+                });
+            },
+            querySearchAsyncByName(queryString, cb) {
+                if (queryString == '') {
+                    return;
+                }
+                request.findSupplierLike({ 'keyword': this.form.supplierName }).then(res => {
+                    const tmpArr = [];
+                    res.data.forEach((v, k) => {
+                        const o = {};
+                        o.value = `${v.supplierName} 供应商ID：${v.supplierId}`;
+                        o.supplierId = v.supplierId;
+                        o.supplierName = v.supplierName;
+                        tmpArr.push(o);
+                    });
+                    cb(tmpArr);
+                });
+            },
+            handleSelect(item) {
+                this.$set(this.form, 'supplierId', item.supplierId);
+                this.$set(this.form, 'supplierName', item.supplierName);
+            },
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (!valid) return;
                     const data = this[formName];
                     if (this.type == 2) {
                         data.id = this.id;
+                    }
+                    if (!this.address) {
+                        return this.$message.warning('请选择仓库省市区');
+                    }
+                    if (this.form.returnWarehouseAddress && !this.returnWarehouseAddress) {
+                        return this.$message.warning('请选择退货仓仓库省市区');
                     }
                     data.sendGoods = data.sendGoods == 1;
                     data.returnGoods = data.returnGoods == 1;
@@ -245,6 +288,9 @@
                     const reginArr = [];
                     reginArr.push(res.data.addressProvinceCode, res.data.addressCityCode, res.data.addressDistrictCode);
                     this.address = reginArr;
+                    const reginArr2 = [];
+                    reginArr2.push(res.data.returnProvinceCode, res.data.returnCityCode, res.data.returnDistrictCode);
+                    this.returnWarehouseAddress = reginArr2;
                 }).catch(err => {
                     console.log(err);
                 });
