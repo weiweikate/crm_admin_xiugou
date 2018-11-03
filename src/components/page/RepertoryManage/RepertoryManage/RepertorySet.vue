@@ -198,6 +198,7 @@
                         o.value = `${v.supplierName} 供应商ID：${v.supplierId}`;
                         o.supplierId = v.supplierId;
                         o.supplierName = v.supplierName;
+                        o.supplierCode = v.supplierCode;
                         tmpArr.push(o);
                     });
                     cb(tmpArr);
@@ -214,6 +215,7 @@
                         o.value = `${v.supplierName} 供应商ID：${v.supplierId}`;
                         o.supplierId = v.supplierId;
                         o.supplierName = v.supplierName;
+                        o.supplierCode = v.supplierCode;
                         tmpArr.push(o);
                     });
                     cb(tmpArr);
@@ -222,6 +224,7 @@
             handleSelect(item) {
                 this.$set(this.form, 'supplierId', item.supplierId);
                 this.$set(this.form, 'supplierName', item.supplierName);
+                this.$set(this.form, 'supplierCode', item.supplierCode);
             },
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
