@@ -8,7 +8,7 @@
                 <el-date-picker
                     class="inp"
                     v-model="form.date"
-                    type="date"
+                    type="datetime"
                     placeholder="请选择日期">
                 </el-date-picker>
             </el-form-item>
@@ -18,13 +18,16 @@
             </el-form-item>
             <el-form-item label="用户层级">
                 <el-checkbox v-model="checkedAll" @change="handleCheckAllChange">全选</el-checkbox>
-                <el-button style="margin-left: 10px" :disabled="form.checkedUsers.length === 0" size="mini" type="primary" @click="queryUser">查询</el-button>
-                <el-checkbox-group v-loading="loading" class="check-group" v-model="form.checkedUsers" @change="handleCheckedUser">
-                    <el-checkbox v-for="(v, k) in userLevel" :key="k" :label="v.name">{{v.name}}</el-checkbox>
+                <el-button style="margin-left: 10px" :disabled="form.checkedUsers.length === 0" size="mini" type="primary" :loading="loading" @click="queryUser">查询</el-button>
+                <el-checkbox-group class="check-group" v-model="form.checkedUsers" @change="handleCheckedUser">
+                    <el-checkbox v-for="(v, k) in userLevel" :key="k" :label="v.id">{{v.name}}</el-checkbox>
                 </el-checkbox-group>
-                <div class="total">
-                    <p>全部：{{totalNum}}人</p>
-                    <span class="item" v-for="(v, k) in userLevel" :key="k">{{v.name}}：{{v.count || 0}}人</span>
+                <div class="total" v-if="userCount.length != 0">
+                    <p>全部：{{totalNum || 0}}人</p>
+                    <span class="item" v-for="(v, k) in userCount" :key="k">{{v.levelName}}：{{v.userCount || 0}}人</span>
+                </div>
+                <div class="total" v-else>
+                    暂无数据
                 </div>
                 <p style="color: red">
                     预计：{{form.money||0}}（秀值）*{{totalNum||0}}（人数）= {{totalMoney}}（元)
@@ -39,6 +42,7 @@
 
 <script>
     import request from '@/http/http';
+    import utils from '@/utils/index';
     export default {
         data() {
             return {
@@ -50,17 +54,27 @@
                     checkedUsers: []
                 },
                 selectedUser: '',
+                userCount: [],
                 checkedAll: false,
                 loading: false,
-                userLevel: []
+                isSubmitForm: true,
+                userLevel: [
+                    { name: 'V0', id: '0' },
+                    { name: 'V1', id: '1' },
+                    { name: 'V2', id: '2' },
+                    { name: 'V3', id: '3' },
+                    { name: 'V4', id: '4' },
+                    { name: 'V5', id: '5' },
+                    { name: 'V6', id: '6' }
+                ]
             };
         },
         computed: {
             totalNum() {
                 let total = 0;
-                if (this.userLevel.length !== 0) {
-                    this.userLevel.forEach(v => {
-                        total += v.count;
+                if (this.userCount.length !== 0) {
+                    this.userCount.forEach(v => {
+                        total += v.userCount;
                     });
                 }
                 return total;
@@ -70,7 +84,6 @@
             }
         },
         created() {
-            this.getUserLevel();
             this.form.date = new Date();
         },
         methods: {
@@ -79,33 +92,36 @@
                 this.form.checkedUsers = [];
                 if (val && this.userLevel.length !== 0) {
                     this.userLevel.forEach(v => {
-                        this.form.checkedUsers.push(v.name);
+                        this.form.checkedUsers.push(v.id);
                     });
                 }
             },
             handleCheckedUser(val) {
                 this.checkedAll = val.length === this.userLevel.length;
             },
-            // 获取会员层级
-            getUserLevel() {
-                this.loading = true;
-                request.queryLevelGroupUserCount({}).then(res => {
-                    this.loading = false;
-                    this.userLevel = res.data;
-                }).catch(err => {
-                    this.loading = false;
-                    console.log(err);
-                });
-            },
             // 获取查询结果
             queryUser() {
-                let data = {
-                    idList: this.form.checkedUsers.join(',')
-                }
+                const data = {
+                    idList: this.form.checkedUsers.join(','),
+                    closingTime: this.form.date ? utils.formatTime(this.form.date) : '',
+                    signDays: this.form.signUp === '' ? 0 : this.form.signUp
+                };
+                this.loading = true;
                 request.queryUserCountByLevelId(data).then(res => {
-                    this.selectedUser = data.idList;
-                    console.log(res);
+                    this.loading = false;
+                    this.userCount = res.data;
+                    if (this.userCount.length !== 0) {
+                        const arr = [];
+                        this.userCount.forEach(v => {
+                            arr.push(v.levelName);
+                        });
+                        this.selectedUser = arr.join(',');
+                    } else {
+                        this.selectedUser = '';
+                    }
+                    this.isSubmitForm = false;
                 }).catch(err => {
+                    this.loading = false;
                     console.log(err);
                 });
             }

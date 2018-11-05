@@ -81,6 +81,7 @@
         },
         deactivated() {
             this.id = '';
+            this.active = '1'
             this.form = {
                 name: '',
                 source: '',
@@ -413,7 +414,9 @@
                     this.nav[2] = '编辑利润分配模板';
                     this.url = 'updateProfitTemplateById';
                     this.form.id = this.id;
+                    this.pageLoading = true;
                     request.queryProfitTemplateById({ id: this.id }).then(res => {
+                        this.pageLoading = false;
                         this.form.name = res.data.name;
                         this.form.source = res.data.name;
                         this.form.valueRate = Number(res.data.valueRate);
@@ -449,6 +452,8 @@
                                 }
                                 this.$set(this.$refs['showValue'].userLevel, k1, this.$refs['showValue'].userLevel[k1]);
                             });
+                        });
+                        res.data.showPeasList.forEach((v, k) => {
                             this.$refs['showBean'].userLevel.forEach((v1, k1) => {
                                 if (v.type == 'X') {
                                     if (v.shareType == 1) {
@@ -479,6 +484,7 @@
                             });
                         });
                     }).catch(err => {
+                        this.pageLoading = false;
                         console.log(err);
                     });
                 }

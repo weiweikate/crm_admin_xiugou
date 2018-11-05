@@ -59,7 +59,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="产品重量">
-                    <el-input-number :controls="false" style="width:300px" :min="0" v-model="form.weight" placeholder="请输入产品重量"></el-input-number>
+                    <el-input-number :controls="false" style="width:300px" :min="0" v-model="form.weight" placeholder="请输入产品重量"></el-input-number>(公斤)
                 </el-form-item>
                 <el-form-item label="产品参数">
                     <div class="product-param">
