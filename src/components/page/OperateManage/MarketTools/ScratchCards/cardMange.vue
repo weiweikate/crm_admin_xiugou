@@ -48,8 +48,8 @@
                         </el-table-column>
                         <el-table-column prop="id" label="操作" align="center">
                             <template slot-scope="scope">
-                                <el-button type="danger" v-if="scope.row.status==1" @click="updateStatus(scope.row,2)">启用</el-button>
-                                <el-button type="danger" v-else-if="scope.row.status==2" @click="updateStatus(scope.row,1)">停用</el-button>
+                                <el-button type="danger" v-if="scope.row.status==1" @click="updateStatus(scope.row,2,scope.$index)">停用</el-button>
+                                <el-button type="danger" v-else-if="scope.row.status==2" @click="updateStatus(scope.row,1,scope.$index)">启用</el-button>
                                 <el-button type="danger" v-else @click="deleteSelectedCoupon(scope.$index, scope.row.type)">删除</el-button>
                             </template>
                         </el-table-column>
@@ -170,6 +170,7 @@
                         data.id = this.id;
                     }
                     try {
+                        this.totalRatio = 0;
                         this.tableData.forEach((v, k) => {
                             const isInt = /^0|[1-9]\d*$/; const isDouble = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
                             if (!isInt.test(v.totalNum) || v.totalNum.length > 12) {
@@ -182,12 +183,17 @@
                             if (!isDouble.test(v.winRate)) {
                                 throw '中奖概率保留2位小数';
                             }
+                            if (v.status != 2) {
+                                this.totalRatio += v.winRate || 0;
+                            }
+                            if (this.totalRatio > 100) {
+                                throw '中奖概率不能大于100';
+                            }
                         });
                     } catch (error) {
                         this.$message.warning(error);
                         return;
                     }
-
                     data.scratchCardPrize = this.tableData;
                     this.btnLoading = true;
                     request[this.url](data).then(res => {
@@ -247,8 +253,8 @@
                         this.totalRatio += v.winRate || 0;
                     }
                     if (this.totalRatio > 100) {
-                        this.totalRatio -= v.winRate;
-                        v.winRate = 0;
+                        // this.totalRatio -= v.winRate;
+                        // v.winRate = 0;
                         this.$message.warning('中奖概率不能大于100');
                     }
                 });
@@ -343,8 +349,16 @@
                 this.$router.push('/scratchCardsList');
             },
             // 停用启用
-            updateStatus(row, num) {
+            updateStatus(row, num, index) {
+                if (row.status == 2) {
+                    const temp = this.totalRatio + row.winRate;
+                    if (temp > 100) {
+                        return this.$message.warning('中奖概率不能大于100');
+                    }
+                }
                 row.status = num;
+                this.computedRatio();
+                this.$set(this.tableData, index, row);
             }
         }
     };
