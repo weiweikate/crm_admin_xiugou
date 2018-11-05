@@ -288,7 +288,6 @@ export default {
                 };
                 data.details.push(obj);
             });
-            console.log(data);
             request.addProfitTpl(data).then(res => {
                 console.log(res);
             }).catch(err => {

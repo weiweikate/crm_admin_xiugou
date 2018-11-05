@@ -8,12 +8,12 @@
                 <el-table-column prop='name' label="利润分配模板名称" align="center"></el-table-column>
                 <el-table-column prop='enableTime' label="启用时间" align="center">
                     <template slot-scope="scope" v-if='scope.row.enableTime'>
-                        {{scope.row.enableTime | formatDate}}
+                        {{'暂时没有'}}
                     </template>
                 </el-table-column>
                 <el-table-column prop='stopTime' label="停用时间" align="center">
                     <template slot-scope="scope" v-if='scope.row.stopTime'>
-                        {{scope.row.stopTime | formatDate}}
+                        {{'暂时没有'}}
                     </template>
                 </el-table-column>
                 <el-table-column prop='status' label="状态" align="center">

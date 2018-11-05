@@ -143,7 +143,7 @@ export default {
             userLevel: [],
             tableData: [],
             rechargeDia: false,
-            rechargeType: 'single' // 充值类型
+            rechargeType: 'single' // 充值类型 1： 单人 2：批量
         };
     },
     created() {
@@ -194,7 +194,8 @@ export default {
                     userCode: this.$refs['single'].form.phone,
                     payCount: this.$refs['single'].form.money,
                     userNum: 1,
-                    remark: this.$refs['single'].form.tip
+                    remark: this.$refs['single'].form.tip,
+                    userLevel: this.$refs['single'].msg.levelName
                 };
                 if (data.userCode == '' || data.payCount == '') {
                     return this.$message.warning('请输入完整参数！');
@@ -220,14 +221,14 @@ export default {
                     userNum: this.$refs['batch'].totalNum,
                     userLevel: this.$refs['batch'].selectedUser
                 };
-                if (data.payCount == '' || data.closingTime == '' || data.signDays == '' || data.userLevel == '') {
-                    return this.$message.warning('请输入完整参数！');
-                }
+                if (data.payCount == '' || data.closingTime == '' || data.signDays == '' || data.userLevel == '') return this.$message.warning('请输入完整参数！');
+                if (data.userLevel === '') return this.$message.warning('请查询用户层级！');
                 this.loading = true;
                 request.addRecord(data).then(res => {
                     this.loading = false;
                     this.$message.success(res.msg);
                     this.handleClose();
+                    this.getList(this.page.currentPage)
                 }).catch(err => {
                     this.loading = false;
                     this.$message.warning(err);
@@ -237,11 +238,15 @@ export default {
         handleClose() {
             this.$refs['batch'].form = {
                 phone: '',
-                date: '',
+                date: new Date(),
                 tip: '',
                 signUp: '',
                 checkedUsers: []
             };
+            this.$refs['batch'].isSubmitForm = true;
+            this.$refs['batch'].userCount = [];
+            this.$refs['batch'].selectedUser = '';
+            this.$refs['batch'].checkedAll = false;
             this.checkedAll = false;
             this.$refs['single'].form = {
                 phone: '',
@@ -265,14 +270,14 @@ export default {
         },
         // 审核
         auditUser(row, status) {
-            let data = {
+            const data = {
                 id: row.id,
                 status: status
-            }
+            };
             row.loading = true;
             request.updateRecordAudit(data).then(res => {
                 row.loading = false;
-                this.getList(this.page.currentPage)
+                this.getList(this.page.currentPage);
                 this.$message.success(res.msg);
             }).catch(err => {
                 row.loading = false;

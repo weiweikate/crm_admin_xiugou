@@ -8,8 +8,8 @@ const path = require('path');
 // const baseURL = 'http://172.16.10.12';
 // const baseURL = 'http://172.16.10.42';
 // const baseURL = 'http://172.16.10.29';
-// const baseURL = 'http://172.16.10.19';
-const baseURL = 'http://172.16.10.111';
+const baseURL = 'http://172.16.10.19';
+// const baseURL = 'http://172.16.10.111';
 // const baseURL = 'http://testadmin.sharegoodsmall.com';
 // const baseURL = 'http://devadmin.sharegoodsmall.com';
 
@@ -35,7 +35,7 @@ module.exports = {
         host: '0.0.0.0', // can be overwritten by process.env.HOST
 
         port: 8090, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-        autoOpenBrowser: false,
+        autoOpenBrowser: true,
         errorOverlay: true,
         notifyOnErrors: true,
         poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
