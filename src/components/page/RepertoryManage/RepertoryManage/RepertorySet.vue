@@ -295,6 +295,8 @@
                     returnWarehouseAddress: '',
                     remark: ''
                 };
+                this.address = '';
+                this.returnWarehouseAddress = '';
             },
             getDetail() {
                 const data = {

@@ -367,20 +367,13 @@
                     data.showBegintime = this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss') : '';
                     data.showEndtime = this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss') : '';
                 }
+
                 if (this.pageType != 12 && (this.pageType == 6 && this.form.linkType != 6)) {
                     if (!this.productName) {
                         this.$message.warning('请输入有效ID');
                         return;
                     }
                 }
-                // if (this.form.linkType == 6) {
-                //     if (this.form.linkType == 6) {
-                //         const reg = /^((https|http|ftp|rtsp|mms){0,1}(:\/\/){0,1})www\.(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$/;
-                //         if (!reg.test(this.form.linkTypeCode)) {
-                //             return this.$message.warning('请输入有效网址');
-                //         }
-                //     }
-                // }
                 if (this.pageType != 10 && this.pageType != 12) {
                     if (!this.form.rank) {
                         this.$message.warning('请输入排序');

@@ -31,6 +31,7 @@
             </el-table-column>
             <el-table-column prop="" label="状态" align="center">
                 <template slot-scope="scope">
+                    <template v-if='scope.row.status == 0'>未推广</template>
                     <template v-if='scope.row.status == 1'>正常</template>
                     <template v-if='scope.row.status == 3'>已取消</template>
                     <template v-if='scope.row.status == 2'>已结束</template>

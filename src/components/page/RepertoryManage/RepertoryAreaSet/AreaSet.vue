@@ -2,7 +2,7 @@
     <div class="repertory-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
-            <el-table :data="tableData" border>
+            <el-table :data="tableData" v-loading="tableLoading" border>
                 <el-table-column prop="addressName" label="省" align="center"></el-table-column>
                 <el-table-column prop="name" label="发货仓">
                     <template slot-scope="scope">
@@ -93,6 +93,7 @@ export default {
         return {
             nav: ['云仓仓库管理', '区域设置'],
             tableData: [],
+            tableLoading: false,
             form: {},
             formMask: {},
             mask: false,
@@ -113,12 +114,15 @@ export default {
     methods: {
         // 获取数据
         getList() {
+            this.tableLoading = true;
             request.areaWarehouseList({}).then(res => {
                 this.tableData = [];
                 if (!res.data) return;
                 this.tableData = res.data;
+                this.tableLoading = false;
             }).catch(error => {
                 console.log(error);
+                this.tableLoading = false;
             });
         },
         // 新增仓库
@@ -166,13 +170,16 @@ export default {
             this.btnLoading = true;
             request.addAreaOption(data).then(res => {
                 this.$message.success(res.msg);
+                this.getList();
                 this.mask = false;
-                if (!this.allData) {
-                    this.allData = [];
-                    this.$set(this.allData, 0, data);
-                } else {
-                    this.allData.push(data);
-                }
+                // if (!this.allData) {
+                //     this.allData = [];
+                //     this.allData.push(data);
+                //     this.$set(this.allData, 0, this.allData[0]);
+                //     this.$set(this.tableData[this.tableIndex], 'sendList', this.tableData[this.tableIndex].sendList);
+                // } else {
+                //     this.allData.push(data);
+                // }
                 this.btnLoading = false;
             }).catch(err => {
                 console.log(err);
