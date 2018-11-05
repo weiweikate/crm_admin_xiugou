@@ -318,7 +318,7 @@
                 }
                 this.form.contactUserName = localStorage.getItem('ms_username');
                 this.form.contactPhone = localStorage.getItem('ms_userPhone');
-                this.form.contactUserNameId = localStorage.getItem('ms_userID');
+                this.form.contactUserId = localStorage.getItem('ms_userID');
             },
             resetValue() {
                 this.form = {
@@ -380,7 +380,7 @@
                         o.code = v.code;
                         o.name = v.name;
                         o.type = v.type;
-                        o.receiveWarehouseAddress = v.receiveWarehouseAddress;
+                        o.receiveWarehouseAddress = v.address;
                         o.id = v.id;
                         tmpArr.push(o);
                     });

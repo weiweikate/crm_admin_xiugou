@@ -8,10 +8,10 @@
                 </el-form-item>
                 <el-form-item prop="type" label="入库类别">
                     <el-select v-model="form.type" placeholder="请选择入库类别">
-                        <el-option value="">全部</el-option>
-                        <el-option value="1">采购入库</el-option>
-                        <el-option value="2">盘盈入库</el-option>
-                        <el-option value="3">调拨入库</el-option>
+                        <el-option value="" label="全部"></el-option>
+                        <el-option value="1" label="采购入库"></el-option>
+                        <el-option value="2" label="盘盈入库"></el-option>
+                        <el-option value="3" label="调拨入库"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="date" label="创建时间">
@@ -44,12 +44,12 @@
                 </el-form-item>
                 <el-form-item prop="status" label="状态">
                     <el-select v-model="form.status" placeholder="请选择">
-                        <el-option value="">全部</el-option>
-                        <el-option value="1">未推送</el-option>
-                        <el-option value="2">待入库</el-option>
-                        <el-option value="3">已入库</el-option>
-                        <el-option value="4">已取消</el-option>
-                        <el-option value="5">已可售</el-option>
+                        <el-option value="" label="全部"></el-option>
+                        <el-option value="1" label="未推送"></el-option>
+                        <el-option value="2" label="待入库"></el-option>
+                        <el-option value="3" label="已入库"></el-option>
+                        <el-option value="4" label="已取消"></el-option>
+                        <el-option value="5" label="已可售"></el-option>
                     </el-select>
                 </el-form-item>
 
@@ -64,7 +64,7 @@
            <el-button type="primary" style="margin-bottom: 20px" @click="$router.push({path:'repertoryReportSet',query:{type:'add'}})">新建入库单</el-button>
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
-                <el-table-column prop="id" label="入库单编号" align="center"></el-table-column>
+                <el-table-column prop="code" label="入库单编号" align="center"></el-table-column>
                 <el-table-column prop="type" label="入库类别" align="center">
                     <template slot-scope="scope">
                         <template v-if="scope.row.type==1">采购入库</template>
@@ -141,7 +141,18 @@ export default {
         return {
             nav: ['云仓仓库管理', '仓库单', '入库单'],
             tableData: [],
-            form: {},
+            form: {
+                date: [],
+                code: '',
+                contactPhone: '',
+                deliverWarehouseCode: '',
+                deliverWarehouseName: '',
+                goodsSenderName: '',
+                receiveWarehouseCode: '',
+                receiveWarehouseName: '',
+                status: '',
+                type: ''
+            },
             formMask: {},
             title: '启用仓库',
             mask: false,
@@ -165,14 +176,14 @@ export default {
                 receiveWarehouseName: this.form.receiveWarehouseName,
                 status: this.form.status,
                 type: this.form.type,
-                startTime: this.form.date
-                    ? moment(this.form.date[0]).format('YYYY-MM-DD')
+                startTime: this.form.date[0]
+                    ? moment(this.form.date[0]).format('YYYY-MM-DD 00:00:00')
                     : '',
-                endTime: this.form.date
-                    ? moment(this.form.date[1]).format('YYYY-MM-DD')
+                endTime: this.form.date[1]
+                    ? moment(this.form.date[1]).format('YYYY-MM-DD 23:59:59')
                     : '',
                 page: val,
-                size: this.page.pageSize
+                pageSize: this.page.pageSize
             };
             this.page.currentPage = val;
             request.getNoteList(data).then(res => {
@@ -203,7 +214,7 @@ export default {
         // 重置表单
         resetForm(formName) {
             this.$refs[formName].resetFields();
-            this.form.date = '';
+            this.form.date = [];
             this.getList(this.page.currentPage);
         },
         // 停用启用

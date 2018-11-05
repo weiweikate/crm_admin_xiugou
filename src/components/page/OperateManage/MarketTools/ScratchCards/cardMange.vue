@@ -43,7 +43,7 @@
                         </el-table-column>
                         <el-table-column prop="winRate" label="中奖概率" align="center" min-width="100">
                             <template slot-scope="scope">
-                                <el-input-number @blur="computedRatio" :min="0" :controls="false" v-model="scope.row.winRate"></el-input-number>%
+                                <el-input-number @blur="computedRatio()" :min="0" :controls="false" v-model="scope.row.winRate"></el-input-number>%
                             </template>
                         </el-table-column>
                         <el-table-column prop="id" label="操作" align="center">
@@ -231,8 +231,8 @@
                 request.findScratchCardById(data).then(res => {
                     this.form = res.data;
                     this.tableData = res.data.scratchCardPrize;
+                    this.totalRatio = res.data.totalProbability;
                     this.tableData.forEach((v, k) => {
-                        this.totalRatio += v.winRate;
                         this.selectedCoupon.push(v);
                     });
                 }).catch(err => {
@@ -243,7 +243,9 @@
             computedRatio() {
                 this.totalRatio = 0;
                 this.tableData.forEach((v, k) => {
-                    this.totalRatio += v.winRate || 0;
+                    if (v.status != 2) {
+                        this.totalRatio += v.winRate || 0;
+                    }
                     if (this.totalRatio > 100) {
                         this.totalRatio -= v.winRate;
                         v.winRate = 0;

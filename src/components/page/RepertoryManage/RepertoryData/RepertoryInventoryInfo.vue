@@ -5,19 +5,16 @@
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="name" label="产品名称" align="center"></el-table-column>
-                <el-table-column prop="id" label="商品编码" align="center"></el-table-column>
-                <el-table-column prop="code" label="颜色" align="center"></el-table-column>
-                <el-table-column prop="type" label="版本" align="center"></el-table-column>
-                <el-table-column prop="supplierId" label="规格" align="center"></el-table-column>
-                <el-table-column prop="supplierId" label="类型" align="center"></el-table-column>
+                <el-table-column prop="skuCode" label="商品编码" align="center"></el-table-column>
+                <el-table-column prop="specifyValues" label="规格" align="center"></el-table-column>
                 <el-table-column label="仓库总库存数" align="center">
-                    <template slot-scope="scope">{{scope.row.num}}件</template>
+                    <template slot-scope="scope">{{scope.row.totalCount}}件</template>
                 </el-table-column>
                 <el-table-column label="仓库剩余库存" align="center">
-                    <template slot-scope="scope">{{scope.row.num}}件</template>
+                    <template slot-scope="scope">{{scope.row.remainderCount}}件</template>
                 </el-table-column>
                 <el-table-column label="冻结库存" align="center">
-                    <template slot-scope="scope">{{scope.row.num}}件</template>
+                    <template slot-scope="scope">{{scope.row.blockCount}}件</template>
                 </el-table-column>
             </el-table>
             <div class="block">

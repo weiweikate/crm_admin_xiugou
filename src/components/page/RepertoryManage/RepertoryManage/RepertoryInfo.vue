@@ -77,7 +77,7 @@
                         <span>供应商名称：</span>
                         <span>{{detail.supplierName}}</span>
                     </div>
-                    <div class="item" v-if="!detail.returnGoods">
+                    <div class="item" v-if="!detail.returnGoods&&detail.type!=3">
                         <span>加盟仓类型：</span>
                         <span v-if="detail.joinWarehouseType==1">百世汇通</span>
                         <span v-if="detail.joinWarehouseType==2">顺丰</span>

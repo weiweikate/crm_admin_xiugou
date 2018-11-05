@@ -86,27 +86,27 @@
     export default {
         components: { vBreadcrumb, region },
         data() {
-            var ismanagerPhone = (rule, value, callreturnGoods) => {
+            var ismanagerPhone = (rule, value, callback) => {
                 if (!value) {
-                    return callreturnGoods(new Error('请输入仓库负责人手机号'));
+                    return callback(new Error('请输入仓库负责人手机号'));
                 } else {
                     const reg = /^1[3-8]\d{9}$/;
                     if (!reg.test(value)) {
-                        callreturnGoods(new Error('请输入正确的手机号格式'));
+                        callback(new Error('请输入正确的手机号格式'));
                     } else {
-                        callreturnGoods();
+                        callback();
                     }
                 }
             };
-            var isMobile = (rule, value, callreturnGoods) => {
+            var isMobile = (rule, value, callback) => {
                 if (!value) {
-                    return callreturnGoods(new Error('请输入退货仓联系方式'));
+                    return callback(new Error('请输入退货仓联系方式'));
                 } else {
                     const reg = /^((0\d{2,3}-?\d{7,8})|(1[3-8]\d{9}))$/;
                     if (!reg.test(value)) {
-                        callreturnGoods(new Error('请输入正确的联系方式'));
+                        callback(new Error('请输入正确的联系方式'));
                     } else {
-                        callreturnGoods();
+                        callback();
                     }
                 }
             };
@@ -191,11 +191,11 @@
                 if (queryString == '') {
                     return;
                 }
-                request.findSupplierLike({ 'keyword': this.form.supplierId }).then(res => {
+                request.findSupplierLike({ 'keyword': this.form.supplierCode }).then(res => {
                     const tmpArr = [];
                     res.data.forEach((v, k) => {
                         const o = {};
-                        o.value = `${v.supplierName} 供应商ID：${v.supplierId}`;
+                        o.value = `${v.supplierName} 供应商ID：${v.supplierCode}`;
                         o.supplierId = v.supplierId;
                         o.supplierName = v.supplierName;
                         o.supplierCode = v.supplierCode;
@@ -212,7 +212,7 @@
                     const tmpArr = [];
                     res.data.forEach((v, k) => {
                         const o = {};
-                        o.value = `${v.supplierName} 供应商ID：${v.supplierId}`;
+                        o.value = `${v.supplierName} 供应商ID：${v.supplierCode}`;
                         o.supplierId = v.supplierId;
                         o.supplierName = v.supplierName;
                         o.supplierCode = v.supplierCode;
@@ -241,6 +241,17 @@
                     }
                     data.sendGoods = data.sendGoods == 1;
                     data.returnGoods = data.returnGoods == 1;
+                    if (!data.returnGoods) {
+                        data.returnManager = '';
+                        data.returnContact = '';
+                        data.returnProvinceCode = '';
+                        data.returnCityCode = '';
+                        data.returnDistrictCode = '';
+                        data.returnProvinceName = '';
+                        data.returnCityName = '';
+                        data.returnDistrictName = '';
+                        data.returnWarehouseAddress = '';
+                    }
                     this.btnLoading = true;
                     request.addOrUpdateRepertory(data).then(res => {
                         this.$message.success(res.msg);
@@ -275,6 +286,12 @@
                     returnManager: '',
                     returnContact: '',
                     address: '',
+                    addressProvinceCode: '',
+                    addressCityCode: '',
+                    addressDistrictCode: '',
+                    returnProvinceCode: '',
+                    returnCityCode: '',
+                    returnDistrictCode: '',
                     returnWarehouseAddress: '',
                     remark: ''
                 };
@@ -291,9 +308,11 @@
                     const reginArr = [];
                     reginArr.push(res.data.addressProvinceCode, res.data.addressCityCode, res.data.addressDistrictCode);
                     this.address = reginArr;
-                    const reginArr2 = [];
-                    reginArr2.push(res.data.returnProvinceCode, res.data.returnCityCode, res.data.returnDistrictCode);
-                    this.returnWarehouseAddress = reginArr2;
+                    if (res.data.ruturnGoods) {
+                        const reginArr2 = [];
+                        reginArr2.push(res.data.returnProvinceCode, res.data.returnCityCode, res.data.returnDistrictCode);
+                        this.returnWarehouseAddress = reginArr2;
+                    }
                 }).catch(err => {
                     console.log(err);
                 });

@@ -14,9 +14,9 @@
                 </el-form-item>
                 <el-form-item prop="status" label="仓库状态">
                     <el-select v-model="form.status" placeholder="请选择仓库状态">
-                        <el-option value="">全部</el-option>
-                        <el-option value="1" label="启用">启用</el-option>
-                        <el-option value="2" label="停用">停用</el-option>
+                        <el-option value="" label="全部"></el-option>
+                        <el-option value="1" label="启用"></el-option>
+                        <el-option value="2" label="停用"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="date" label="仓库创建时间">
@@ -31,10 +31,10 @@
                 </el-form-item>
                 <el-form-item prop="type" label="仓库类别">
                     <el-select v-model="form.type" placeholder="请选择仓库类别">
-                        <el-option value="">全部</el-option>
-                        <el-option value="1" label="自建仓">自建仓</el-option>
-                        <el-option value="2" label="加盟仓">加盟仓</el-option>
-                        <el-option value="3" label="供应商仓">供应商仓</el-option>
+                        <el-option value="" label="全部"></el-option>
+                        <el-option value="1" label="自建仓"></el-option>
+                        <el-option value="2" label="加盟仓"></el-option>
+                        <el-option value="3" label="供应商仓"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="">
@@ -160,7 +160,14 @@ export default {
         return {
             nav: ['云仓仓库管理', '仓库管理'],
             tableData: [],
-            form: {},
+            form: {
+                date: [],
+                status: '',
+                warehouseName: '',
+                warehouseCode: '',
+                supplierName: '',
+                type: ''
+            },
             formMask: {},
             title: '启用仓库',
             mask: false,
@@ -174,33 +181,31 @@ export default {
     methods: {
         // 获取数据
         getList(val) {
+            console.log(this.form);
             const data = {
                 warehouseName: this.form.warehouseName,
                 supplierName: this.form.supplierName,
                 warehouseCode: this.form.warehouseCode,
                 status: this.form.status,
                 type: this.form.type,
-                startTime: this.form.date
+                startTime: this.form.date[0]
                     ? moment(this.form.date[0]).format('YYYY-MM-DD 00:00:00')
                     : '',
-                endTime: this.form.date
+                endTime: this.form.date[1]
                     ? moment(this.form.date[1]).format('YYYY-MM-DD 23:59:59')
                     : '',
                 page: val,
                 pageSize: this.page.pageSize
             };
             this.page.currentPage = val;
-            request
-                .queryRepertoryList(data)
-                .then(res => {
-                    this.tableData = [];
-                    if (!res.data) return;
-                    this.tableData = res.data.data;
-                    this.page.totalPage = res.data.totalNum;
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+            request.queryRepertoryList(data).then(res => {
+                this.tableData = [];
+                if (!res.data) return;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
+            }).catch(error => {
+                console.log(error);
+            });
         },
         // 查看详情
         showInfo(row) {
@@ -221,7 +226,7 @@ export default {
         // 重置表单
         resetForm(formName) {
             this.$refs[formName].resetFields();
-            this.form.date = '';
+            this.form.date = [];
             this.getList(this.page.currentPage);
         },
         // 停用启用

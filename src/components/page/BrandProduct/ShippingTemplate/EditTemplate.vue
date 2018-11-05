@@ -356,7 +356,7 @@
                                 }
                             }
                             list.push(temp);
-                            that.tableData.forEach(function(v, k) {
+                            that.tableData.forEach((v, k) => {
                                 const tableTemp = {
                                     freightTemplateInfoDetailList: v.freightTemplateInfoDetailList,
                                     startUnit: v.startUnit,

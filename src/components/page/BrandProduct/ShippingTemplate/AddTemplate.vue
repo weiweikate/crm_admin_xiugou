@@ -239,7 +239,6 @@
             this.title1 = '首公斤数(kg)';
             this.title2 = '续公斤数(kg)';
             this.checked = false;
-            console.log(this.freightFreePrice);
         },
         methods: {
 
@@ -278,7 +277,6 @@
                     if (!valid) {
                         return;
                     } else {
-
                         console.log(this.form);
                         const data = that.form;
                         if (!that.form.provinceCode || !that.form.cityCode || !that.form.areaCode) {
@@ -322,7 +320,7 @@
                                 }
                             }
                             list.push(temp);
-                            that.tableData.forEach(function(v, k) {
+                            that.tableData.forEach((v, k) => {
                                 const tableTemp = {
                                     freightTemplateInfoDetailList: v.freightTemplateInfoDetailList,
                                     startUnit: v.startUnit,

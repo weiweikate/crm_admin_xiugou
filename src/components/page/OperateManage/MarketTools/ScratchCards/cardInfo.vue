@@ -48,7 +48,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <p>总中奖概率：{{totalRatio}}%</p>
+                    <p>总中奖概率：{{form.totalProbability}}%</p>
                 </el-form-item>
                 <el-form-item prop="tip" label="未中奖提示语:">
                     <span>{{form.loseHint}}</span>
