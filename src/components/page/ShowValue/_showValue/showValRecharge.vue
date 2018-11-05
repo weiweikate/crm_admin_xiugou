@@ -205,6 +205,7 @@ export default {
                     this.loading = false;
                     this.$message.success(res.msg);
                     this.handleClose();
+                    this.getList(this.page.currentPage)
                 }).catch(err => {
                     this.loading = false;
                     this.$message.warning(err);

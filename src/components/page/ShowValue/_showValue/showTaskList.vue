@@ -71,7 +71,6 @@
             getList(val) {
                 this.form.status = this.status;
                 this.form.page = val;
-                this.form.name = this.form.name.split('-').join(',');
                 const data = {
                     ...this.form,
                     pageSize: this.page.pageSize
@@ -86,7 +85,6 @@
                             if (nameArr[1] == -1) {
                                 nameArr[1] = '无限';
                             }
-                            v.name = nameArr.join('-');
                             this.tableData.push(v);
                         });
                     }

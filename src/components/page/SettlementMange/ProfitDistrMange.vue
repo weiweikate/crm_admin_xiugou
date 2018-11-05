@@ -3,60 +3,76 @@
         <v-breadcrumb :nav="['结算管理','利润分配设置']"></v-breadcrumb>
         <el-card :body-style="{ padding: '30px' }">
             <el-button type="primary" style="margin-bottom:10px" @click="createTpl">创建利润模板</el-button>
-            <el-table :data="tableData" border>
+            <el-table :data="tableData" border stripe v-loading="tabLoading">
                 <el-table-column type="index" :index="handleIndex" label="编号" align="center"></el-table-column>
                 <el-table-column prop='name' label="利润分配模板名称" align="center"></el-table-column>
-                <el-table-column prop='enableTime' label="启用时间" align="center">
-                    <template slot-scope="scope" v-if='scope.row.enableTime'>
-                        {{'暂时没有'}}
+                <el-table-column prop='startTime' label="启用时间" align="center">
+                    <template slot-scope="scope" v-if='scope.row.startTime'>
+                        {{scope.row.startTime | formatDateAll}}
                     </template>
                 </el-table-column>
-                <el-table-column prop='stopTime' label="停用时间" align="center">
-                    <template slot-scope="scope" v-if='scope.row.stopTime'>
-                        {{'暂时没有'}}
+                <el-table-column prop='endTime' label="停用时间" align="center">
+                    <template slot-scope="scope" v-if='scope.row.endTime'>
+                        {{scope.row.endTime | formatDateAll}}
                     </template>
                 </el-table-column>
                 <el-table-column prop='status' label="状态" align="center">
                     <template slot-scope="scope">
-                        <template v-if='scope.row.status==1'>启用中</template>
-                        <template v-else-if='scope.row.status==2'>已停用</template>
-                        <template v-else-if='scope.row.status==3'>已删除</template>
+                        <template v-if='scope.row.status==1'>待启用</template>
+                        <template v-else-if='scope.row.status==0'>已停用</template>
+                        <template v-else-if='scope.row.status==2'>启用中</template>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button @click="changeStatus(scope.row,1)" v-if='scope.row.status == 2 && scope.row.type == 2' type="primary">启用</el-button>
-                        <el-button @click="editTpl(scope.row)" v-if='scope.row.status != 3' type="warning">编辑</el-button>
-                        <el-button @click="changeStatus(scope.row,3)" v-if='scope.row.status == 2 && scope.row.type == 2' type="danger">删除</el-button>
-                        <el-button @click="changeStatus(scope.row,2)" v-if='scope.row.status == 1 && scope.row.type == 2' type="danger">停用</el-button>
+                        <!--<el-button @click="changeStatus(scope.row,1)" v-if='scope.row.status != 2 && scope.row.type == 2' type="primary">启 用</el-button>-->
+                        <el-button @click="copyTpl(scope.row)" type="warning">复 制</el-button>
+                        <el-button @click="delItem(scope.$index,scope.row.id)" v-if='scope.row.status == 2 && scope.row.type == 2' type="danger">停 用</el-button>
+                        <!--<el-button @click="changeStatus(scope.row,2)" v-if='scope.row.status == 2 && scope.row.type == 2' type="danger">停 用</el-button>-->
                     </template>
                 </el-table-column>
             </el-table>
         </el-card>
+        <!--删除弹窗-->
+        <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
     </div>
 </template>
 
 <script>
-import * as api from '@/api/SettlementMange/index.js';
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import deleteToast from '@/components/common/DeleteToast';
+import request from '@/http/http';
 export default {
-    components: { vBreadcrumb },
+    components: { vBreadcrumb, deleteToast },
 
     data() {
         return {
-            tableData: []
+            tableData: [],
+            tabLoading: false,
+            isShowDelToast: false,
+            delId: '',
+            delUrl: '',
+            delUri: ''
         };
     },
 
     activated() {
-        this.getPageList();
+        this.getList();
     },
 
     methods: {
         //   获取列表信息
-        getPageList() {
-            this.$axios.post(api.querySettlementConfigList, {}).then(res => {
+        getList() {
+            const data = {
+                pageSize: 100000
+            };
+            this.tabLoading = true;
+            request.querySettleTplList(data).then(res => {
+                this.tabLoading = false;
                 this.tableData = res.data.data;
+            }).catch(err => {
+                this.tabLoading = false;
+                console.log(err);
             });
         },
         //  处理编号
@@ -68,20 +84,24 @@ export default {
             this.$router.push({ name: 'profitTpl' });
         },
         // 编辑利润模板
-        editTpl(row) {
-            sessionStorage.setItem('profitTplId', row.id);
-            this.$router.push({ name: 'profitTpl', query: { profitTplId: row.id }});
+        copyTpl(row) {
+            let msg = {
+                id: row.id,
+                value: '2' // 1：编辑 2：复制
+            }
+            sessionStorage.setItem('settleProfitMsg', JSON.stringify(msg));
+            this.$router.push({ name: 'profitTpl', query: { settleProfitMsg: JSON.stringify(msg) }});
         },
-        // 修改状态
-        changeStatus(row, status) {
-        // status: 1:启用 2：停用 3：删除
-            const data = {};
-            data.id = row.id;
-            data.status = status;
-            this.$axios.post(api.updateSettlementConfigStatus, data).then(res => {
-                this.$message.success(res.data.msg);
-                this.getPageList();
-            });
+        // 删除
+        delItem(index, id) {
+            this.delId = id;
+            this.delUrl = 'disableSettleProFitById';
+            this.isShowDelToast = true;
+        },
+        // 删除弹窗
+        deleteToast(msg) {
+            this.isShowDelToast = msg;
+            this.getList(this.page.currentPage);
         }
     }
 };

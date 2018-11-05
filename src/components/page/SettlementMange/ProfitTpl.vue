@@ -84,6 +84,7 @@ export default {
             btnLoading: false,
             pageLoading: false,
             type: '2', // 模版类型：1.通用模版，2.普通模版
+            val: '', // 1：编辑 2：复制
             tplId: '', // 模版id
             url: '', // 请求接口
             tplName: '', // 模板名称
@@ -122,19 +123,15 @@ export default {
     },
 
     activated() {
-        this.tplId = this.$route.query.profitTplId || sessionStorage.getItem('profitTplId');
-        if (this.tplId) {
+        if (this.$route.query.settleProfitMsg) {
+            const msg = JSON.parse(this.$route.query.settleProfitMsg) || JSON.parse(sessionStorage.getItem('settleProfitMsg'));
+            this.tplId = msg.id;
+            this.val = msg.value;
             this.getData();
-            this.url = api.updateSettlementConfig;
-        } else {
-            this.url = 'addProfitTpl';
         }
-        this.cleanData();
     },
     deactivated() {
-        this.tplId = '';
-        this.url = '';
-        sessionStorage.removeItem('profitTplId');
+        this.cleanData();
     },
 
     methods: {
@@ -292,6 +289,7 @@ export default {
             });
             request.addProfitTpl(data).then(res => {
                 this.$message.success(res.msg);
+                this.$router.replace('profitDistrMange');
             }).catch(err => {
                 console.log(err);
             });
@@ -330,6 +328,10 @@ export default {
             this.tplName = '';
             this.shopMoney = '';
             this.personMoney = '';
+            this.tplId = '';
+            this.val = '';
+            this.url = '';
+            sessionStorage.removeItem('settleProfitMsg');
             this.checkX = false; // 拼店X
             this.formX = [
                 { disable: false, val: 1, label: '店主', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
@@ -363,147 +365,33 @@ export default {
         // 获取数据
         getData() {
             this.pageLoading = true;
-            this.$axios.post(api.findSettlementConfigById, { id: this.tplId }).then(res => {
-                this.tplName = res.data.data.name; // 模板名称
-                this.shopMoney = res.data.data.xratio * 100; // 品牌店铺奖励金
-                this.personMoney = res.data.data.yratio * 100; // 品牌个人奖励金
-                this.startTime = res.data.data.enableTime; // 开启时间
-                this.stopTime = res.data.data.stopTime; // 停止时间
-                // hadJoin判断
-                switch (Number(res.data.data.hadJoin)) {
-                    case 1:
-                        this.checkX = true;
-                        break;
-                    case 2:
-                        this.checkY = true;
-                        break;
-                    case 4:
-                        this.checkZ = true;
-                        break;
-                    case 3:
-                        this.checkX = true;
-                        this.checkY = true;
-                        break;
-                    case 5:
-                        this.checkX = true;
-                        this.checkZ = true;
-                        break;
-                    case 6:
-                        this.checkY = true;
-                        this.checkZ = true;
-                        break;
-                    case 7:
-                        this.checkX = true;
-                        this.checkY = true;
-                        this.checkZ = true;
-                        break;
-                }
-                if (res.data.data.hadJoin == 1) {
-                    this.checkX = true;
-                }
-                // X值
-                this.formX[0].value[0].value = Math.round(res.data.data.xshopownerOne * 100);
-                this.formX[0].value[1].value = Math.round(res.data.data.xshopownerTwo * 100);
-                this.formX[0].value[2].value = Math.round(res.data.data.xshopownerThree * 100);
-                this.formX[1].value = Math.round(res.data.data.xclerk * 100);
-                this.formX[2].value = Math.round(res.data.data.xup * 100);
-                this.formX[3].value = Math.round(res.data.data.xsuper * 100);
-                this.formX[4].value = Math.round(res.data.data.xhelpWork * 100);
-                this.formX[5].value = Math.round(res.data.data.xself * 100);
-                this.formX[6].value = Math.round(res.data.data.xotherOne * 100);
-                this.formX[7].value = Math.round(res.data.data.xotherTwo * 100);
-                this.formX[8].value = Math.round(res.data.data.xotherThree * 100);
-                // Y值
-                this.formY[0].value[0].value = Math.round(res.data.data.yshopownerOne * 100);
-                this.formY[0].value[1].value = Math.round(res.data.data.yshopownerTwo * 100);
-                this.formY[0].value[2].value = Math.round(res.data.data.yshopownerThree * 100);
-                this.formY[1].value = Math.round(res.data.data.yclerk * 100);
-                this.formY[2].value = Math.round(res.data.data.yup * 100);
-                this.formY[3].value = Math.round(res.data.data.ysuper * 100);
-                this.formY[4].value = Math.round(res.data.data.yhelpWork * 100);
-                this.formY[5].value = Math.round(res.data.data.yself * 100);
-                this.formY[6].value = Math.round(res.data.data.yotherOne * 100);
-                this.formY[7].value = Math.round(res.data.data.yotherTwo * 100);
-                this.formY[8].value = Math.round(res.data.data.yotherThree * 100);
-                // Z值
-                this.formZ[0].value[0].value = Math.round(res.data.data.zshopownerOne * 100);
-                this.formZ[0].value[1].value = Math.round(res.data.data.zshopownerTwo * 100);
-                this.formZ[0].value[2].value = Math.round(res.data.data.zshopownerThree * 100);
-                this.formZ[1].value = Math.round(res.data.data.zclerk * 100);
-                this.formZ[2].value = Math.round(res.data.data.zup * 100);
-                this.formZ[3].value = Math.round(res.data.data.zsuper * 100);
-                this.formZ[4].value = Math.round(res.data.data.zhelpWork * 100);
-                this.formZ[5].value = Math.round(res.data.data.zself * 100);
-                this.formZ[6].value = Math.round(res.data.data.zotherOne * 100);
-                this.formZ[7].value = Math.round(res.data.data.zotherTwo * 100);
-                this.formZ[8].value = Math.round(res.data.data.zotherThree * 100);
-                // 复选框判断
-                this.formX.forEach((v, k) => {
-                    if (k == 0) {
-                        let flag = 0;
-                        v.value.forEach((v1, k1) => {
-                            if (v1.value != 0) {
-                                flag++;
-                            }
-                        });
-                        if (flag == 0) {
-                            v.disable = false;
-                        } else {
-                            v.disable = true;
-                        }
-                    } else {
-                        if (v.value != 0) {
-                            v.disable = true;
-                        } else {
-                            v.disable = false;
-                        }
-                    }
-                });
-                this.formY.forEach((v, k) => {
-                    if (k == 0) {
-                        let flag = 0;
-                        v.value.forEach((v1, k1) => {
-                            if (v1.value != 0) {
-                                flag++;
-                            }
-                        });
-                        if (flag == 0) {
-                            v.disable = false;
-                        } else {
-                            v.disable = true;
-                        }
-                    } else {
-                        if (v.value != 0) {
-                            v.disable = true;
-                        } else {
-                            v.disable = false;
-                        }
-                    }
-                });
-                this.formZ.forEach((v, k) => {
-                    if (k == 0) {
-                        let flag = 0;
-                        v.value.forEach((v1, k1) => {
-                            if (v1.value != 0) {
-                                flag++;
-                            }
-                        });
-                        if (flag == 0) {
-                            v.disable = false;
-                        } else {
-                            v.disable = true;
-                        }
-                    } else {
-                        if (v.value != 0) {
-                            v.disable = true;
-                        } else {
-                            v.disable = false;
-                        }
-                    }
-                });
+            request.querySettleProFitById({ id: this.tplId }).then(res => {
                 this.pageLoading = false;
+                this.tplName = res.data.name;
+                this.shopMoney = res.data.storeRate;
+                this.personMoney = res.data.personalRate;
+                this.startTime = res.data.startTime;
+                this.stopTime = res.data.endTime;
+                res.data.details.forEach(v => {
+                    const name = `form${v.type}`;
+                    this[name][0].value[0].value = v.storeStartOne;
+                    this[name][0].value[1].value = v.storeStartTwo;
+                    this[name][0].value[2].value = v.otherThree;
+                    this[name][1].value[0].value = v.v0;
+                    this[name][1].value[1].value = v.v1;
+                    this[name][1].value[2].value = v.v2;
+                    this[name][1].value[3].value = v.v3;
+                    this[name][1].value[4].value = v.v4;
+                    this[name][1].value[5].value = v.v5;
+                    this[name][1].value[6].value = v.v6;
+                    this[name][2].value = v.assistance;
+                    this[name][3].value = v.otherOne;
+                    this[name][4].value = v.otherTwo;
+                    this[name][5].value = v.otherThree;
+                });
             }).catch(err => {
                 this.pageLoading = false;
+                console.log(err);
             });
         }
     }

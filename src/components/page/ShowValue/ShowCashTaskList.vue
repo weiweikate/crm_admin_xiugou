@@ -54,10 +54,8 @@
                         <el-option label="分享点击" value="1"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="minMoney" label="任务激活金额">
-                    <el-input-number :controls="false" :min="0" class="inp" v-model="form.minMoney"></el-input-number>
-                    <span>-</span>
-                    <el-input-number :controls="false" :min="0" class="inp" v-model="form.maxMoney"></el-input-number>
+                <el-form-item prop="minMoney" label="任务名称">
+                    <el-input class="inp" v-model="form.name"></el-input>
                 </el-form-item>
                 <el-form-item prop="minActualMoney" label="实际秀值金额">
                     <el-input class="inp" v-model="form.minActualMoney"></el-input>
@@ -138,8 +136,7 @@
             this.getList(1);
             this.form = {
                 type: '',
-                maxMoney: '',
-                minMoney: '',
+                name: '',
                 minActualMoney: '',
                 maxActualMoney: '',
                 firstMoney: '',
@@ -152,7 +149,6 @@
         methods: {
             // 表单校验
             valFom() {
-                this.form.name = `${this.form.minMoney},${this.form.maxMoney}`;
                 this.form.maxActualMoney = this.form.maxActualMoney == '' ? '-1' : this.form.maxActualMoney;
                 if (this.form.minActualMoney > 0) {
                     for (const item in this.form) {
@@ -187,9 +183,6 @@
             // 编辑
             getInfo(row) {
                 row.type = row.type.toString();
-                const nameArr = row.name.split('-');
-                row.minMoney = nameArr[0];
-                row.maxMoney = nameArr[1];
                 row.maxActualMoney = row.maxActualMoney == -1 ? '' : row.maxActualMoney;
                 this.form = row;
                 this.form.id = row.id;
@@ -218,7 +211,6 @@
                             if (nameArr[1] == -1) {
                                 nameArr[1] = '无限';
                             }
-                            v.name = nameArr.join('-');
                             this.tableData.push(v);
                         });
                     }
