@@ -56,3 +56,6 @@ export const storePayRecordList = '/admin/storePayRecord/list';
 //********************************************************************************************************************************************************
 export const queryFlatAccountByType = ['/settle/dealFlow/queryByType', { methods: 'post' }]; // 平台账户收益明细
 export const addProfitTpl = ['/settle/template/add', { methods: 'post' }]; //添加结算模版
+export const querySettleTplList = ['/settle/template/queryList', { methods: 'post' }]; //查询结算模版列表
+export const querySettleProFitById = ['/settle/template/queryDetail', { methods: 'get' }]; //查询结算模版详情
+export const disableSettleProFitById = ['/settle/template/disable', { methods: 'get' }]; //停用模板

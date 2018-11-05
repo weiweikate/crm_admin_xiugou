@@ -95,7 +95,7 @@
         },
 
         activated() {
-            this.id = this.$route.query.promotionOrderId || sessionStorage.getItem('promotionOrderId');
+            this.id = this.$route.query.promotionOrderInfoId || sessionStorage.getItem('promotionOrderInfoId');
             this.getDetail();
         },
 

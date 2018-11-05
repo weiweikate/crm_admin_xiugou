@@ -77,7 +77,6 @@ export default {
             request.userTaskNameQuery({}).then(res => {
                 this.taskTypeArr = [];
                 res.data.forEach(v => {
-                    v = v.split(',').join('-');
                     this.taskTypeArr.push(v);
                 });
             }).catch(err => {
