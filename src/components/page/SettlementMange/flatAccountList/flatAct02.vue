@@ -16,7 +16,7 @@
           </el-form>
       </el-card>
       <el-card style='margin-top:20px' :body-style="{ padding: '30px' }">
-        <el-table v-loading="loading" :data="table" border stripe>
+        <el-table v-loading="loading" :data="tableData" border stripe>
           <el-table-column type="index" :index='handleIndex' label="编号" align="center"></el-table-column>
           <el-table-column prop='orderNum' label="订单号" align="center"></el-table-column>
           <el-table-column prop='settleTime' label="时间" align="center">
@@ -73,7 +73,7 @@ export default {
                 time: []
             },
             flag: '', // 5.店主 6.店员 7.直接上级 9. 间接上级 10.用户账户
-            table: [] // 表格信息
+            tableData: [] // 表格信息
         };
     },
 

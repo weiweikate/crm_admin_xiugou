@@ -16,7 +16,7 @@
         </el-form>
       </el-card>
       <el-card style='margin-top:20px' :body-style="{ padding: '30px' }">
-        <el-table v-loading="loading" :data="table" border stripe>
+        <el-table v-loading="loading" :data="tableData" border stripe>
           <el-table-column type="index" :index='handleIndex' label="编号" align="center"></el-table-column>
           <el-table-column prop='orderNum' label="订单号" align="center"></el-table-column>
           <el-table-column prop='settleTime' label="时间" align="center">
@@ -67,7 +67,7 @@ export default {
             },
             loading: false,
             flag: '', // 1.无主 2.助业金 8.其他1 3. 其他2 4.其他3
-            table: [] // 表格信息
+            tableData: [] // 表格信息
         };
     },
 

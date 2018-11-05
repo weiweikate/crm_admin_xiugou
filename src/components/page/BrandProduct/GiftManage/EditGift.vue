@@ -509,6 +509,7 @@
                 if (this.limit.notSupportRetGoods) {
                     this.form.restrictions += 16;
                 }
+                this.form.paramValueList = [];
                 this.productParam.forEach(v => {
                     this.form.paramValueList.push({ paramId: v.id, paramValue: v.value });
                 });
@@ -817,12 +818,12 @@
             // 获取产品参数
             getProductParam(secId) {
                 this.productParam = [];
-                this.form.paramValueList = [];
                 request.queryProductCategoryParamList({ id: secId }).then(res => {
                     res.data.forEach((v, k) => {
                         v.value = '';
                         this.productParam.push(v);
                     });
+                    console.log(this.productParam);
                 }).catch(err => {
                     console.log(err);
                 });
