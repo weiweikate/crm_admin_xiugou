@@ -1,7 +1,7 @@
 <template>
     <div class="tab-content">
         <el-table v-loading="tableLoading" border :data="tableData">
-            <el-table-column prop="packageId" align="center" label="编号" min-width="100"></el-table-column>
+            <el-table-column type="index" align="center" label="编号" min-width="100"></el-table-column>
             <el-table-column prop="packageName" label="套餐名称" align="center"></el-table-column>
             <el-table-column prop="nickname" label="推广人" align="center"></el-table-column>
             <el-table-column label="开始时间" align="center">
