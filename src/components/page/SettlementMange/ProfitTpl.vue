@@ -83,6 +83,7 @@ export default {
         return {
             btnLoading: false,
             pageLoading: false,
+            type: '2', // 模版类型：1.通用模版，2.普通模版
             tplId: '', // 模版id
             url: '', // 请求接口
             tplName: '', // 模板名称
@@ -264,6 +265,7 @@ export default {
                 personalRate: this.personMoney,
                 startTime: this.startTime == undefined ? '' : utils.formatTime(this.startTime),
                 endTime: this.stopTime == undefined ? '' : utils.formatTime(this.stopTime),
+                type: this.type,
                 details: []
             };
             const nameArr = ['X', 'Y', 'Z'];
@@ -289,7 +291,7 @@ export default {
                 data.details.push(obj);
             });
             request.addProfitTpl(data).then(res => {
-                console.log(res);
+                this.$message.success(res.msg);
             }).catch(err => {
                 console.log(err);
             });

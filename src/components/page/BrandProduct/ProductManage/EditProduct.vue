@@ -667,6 +667,7 @@
             // 获取产品参数
             async getProductParam(secId) {
                 this.productParam = [];
+                this.form.productParamValueVOList = [];
                 await request.queryProductCategoryParamList({ id: secId }).then(res => {
                     res.data.forEach((v, k) => {
                         v.value = '';

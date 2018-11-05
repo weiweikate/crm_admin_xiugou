@@ -9,3 +9,7 @@ export const queryUserCountByLevelId = ['/user/showValueRecord/queryUserCountByL
 export const updateRecordAudit = ['/user/showValueRecord/updateRecord', { methods: 'get' }]; // 通过/审核
 export const queryRecordPageList = ['/user/showValueRecord/queryRecordPageList', { methods: 'post' }]; // 查询充值记录列表
 export const addShowValBeanTemplate = ['/showValueTemplate/addTemplate', { methods: 'post' }]; // 添加模板
+export const queryProfitTemplatePageList = ['/showValueTemplate/queryTemplatePageList', { methods: 'post' }]; //查询模板列表
+export const queryProfitTemplateById = ['/showValueTemplate/findTemplateById', { methods: 'get' }]; //根据ID查询模板详情
+export const updateProfitTemplateById = ['/showValueTemplate/updateTemplate', { methods: 'post' }]; //修改模板
+export const deleteProfitTemplate = ['/showValueTemplate/deleteTemplate', { methods: 'get' }]; //删除模板
