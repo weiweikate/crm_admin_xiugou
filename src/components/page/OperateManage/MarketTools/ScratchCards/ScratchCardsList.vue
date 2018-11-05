@@ -18,7 +18,7 @@
                 <el-form-item prop="name" label="刮刮卡名称">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
-                <el-form-item prop="updateName" label="修改人">
+                <el-form-item prop="updateUser" label="修改人">
                     <el-select v-model="form.updateUser">
                         <el-option label="全部" value=""></el-option>
                         <el-option v-for="(v, k) in createUserArr" :key="k" :label="v.name" :value="v.id"></el-option>

@@ -4,15 +4,15 @@
     "license": "MIT",
     "description": "deploy files",
     "scripts": {
-        "deploy:dashboard": "node bin/release.js --dist=dist --server=/home/mr/packages/majinhui/dist",
+        "deploy:dashboard": "node bin/release.js --dist=dist --server=/home/mr/packages/majinhui/dist"
     },
     "dependencies": {
-    
+
     },
     "devDependencies": {
         "scp2": "0.5.0",
         "yargs": "11.0.0"
-    
+
     },
     "engines": {
         "node": ">= 4.0.0",

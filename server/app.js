@@ -8,21 +8,21 @@ const port = normalizePort(process.env.PORT || '8989');
 const proxy_url = require('./config').proxy;
 // 秀购
 app.use('/gateway', proxy(proxy_url, {
-    proxyReqPathResolver: function (req) {
-        let path = require('url').parse(req.url).path;
+    proxyReqPathResolver: function(req) {
+        const path = require('url').parse(req.url).path;
         console.log('proxy', path);
         return '/gateway' + path;
     }
 }));
 // 秀购后台
 app.use('/admin', proxy(proxy_url, {
-    proxyReqPathResolver: function (req) {
-        let path = require('url').parse(req.url).path;
-        console.log('proxy', path,proxy_url);
+    proxyReqPathResolver: function(req) {
+        const path = require('url').parse(req.url).path;
+        console.log('proxy', path, proxy_url);
         return '/admin' + path;
     }
 }));
-/*app.get('/', function (req, res) {
+/* app.get('/', function (req, res) {
     res.send('hello');
 });*/
 /*
@@ -38,13 +38,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '..', 'dist')));
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
-var server = app.listen(port, function () {
+var server = app.listen(port, function() {
     var host = server.address().address;
     var port = server.address().port;
 
@@ -115,16 +115,16 @@ function onListening() {
 
 // todo 未捕捉的异常处理
 const uncaughtExceptionList = [];
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', function(err) {
     console.log('uncaughtException', '未捕捉的异常处理', err);
     uncaughtExceptionList.push(1);
     if (uncaughtExceptionList.length >= 10) {
-        setTimeout(function () {
+        setTimeout(function() {
             process.exit(0);
         }, 200);
     }
 });
-process.on('exit', function () {
+process.on('exit', function() {
     console.log('exit', '您的服务挂掉了');
 });
 

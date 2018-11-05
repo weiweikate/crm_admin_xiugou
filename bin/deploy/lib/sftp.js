@@ -1,12 +1,16 @@
-var fs = require('fs'),
-    path = require('path'),
-    Client = require('scp2').Client,
-    async = require('async'),
-    events = require('events'),
-    util = require('util');
+var fs = require('fs');
+
+var path = require('path');
+
+var Client = require('scp2').Client;
+
+var async = require('async');
+
+var events = require('events');
+
+var util = require('util');
 
 function SftpUpload(options) {
-
     var defaultOptions = {
         port: 22,
         username: '',
@@ -28,15 +32,16 @@ function SftpUpload(options) {
     }
 
     return this;
-};
+}
 
 util.inherits(SftpUpload, events.EventEmitter);
 
-SftpUpload.prototype.addFiles = function (files, baseDir, uploads) {
+SftpUpload.prototype.addFiles = function(files, baseDir, uploads) {
     var self = this;
-    files.forEach(function (file) {
-        var currentFile = path.resolve(baseDir, file),
-            stats = fs.statSync(currentFile);
+    files.forEach(function(file) {
+        var currentFile = path.resolve(baseDir, file);
+
+        var stats = fs.statSync(currentFile);
 
         if (stats.isFile()) {
             uploads.push(currentFile);
@@ -49,27 +54,32 @@ SftpUpload.prototype.addFiles = function (files, baseDir, uploads) {
     });
 };
 
-SftpUpload.prototype.uploadFiles = function (files, opt) {
-    var fns = [],
-        client = new Client(opt),
-        totalFiles = files.length,
-        pendingFiles = 0,
-        self = this;
+SftpUpload.prototype.uploadFiles = function(files, opt) {
+    var fns = [];
 
-    client.on('connect', function () {
+    var client = new Client(opt);
+
+    var totalFiles = files.length;
+
+    var pendingFiles = 0;
+
+    var self = this;
+
+    client.on('connect', function() {
         self.emit('connect');
     });
 
-    client.on('error', function (err) {
+    client.on('error', function(err) {
         self.emit('error', err);
     });
 
-    files.forEach(function (file) {
+    files.forEach(function(file) {
         fns.push(
-            function (cb) {
-                var localFile = path.relative(opt.path, file),
-                    remoteFile = path.join(opt.remoteDir, localFile);
-                client.upload(file, remoteFile, function (err) {
+            function(cb) {
+                var localFile = path.relative(opt.path, file);
+
+                var remoteFile = path.join(opt.remoteDir, localFile);
+                client.upload(file, remoteFile, function(err) {
                     pendingFiles += 1;
                     self.emit('uploading', {
                         file: file,
@@ -83,7 +93,7 @@ SftpUpload.prototype.uploadFiles = function (files, opt) {
         );
     });
 
-    async.series(fns, function (err, cb) {
+    async.series(fns, function(err, cb) {
         if (err) {
             self.emit('error', err);
         }
@@ -92,10 +102,12 @@ SftpUpload.prototype.uploadFiles = function (files, opt) {
     });
 };
 
-SftpUpload.prototype.upload = function () {
-    var self = this,
-        opt = self.defaults,
-        files = fs.readdirSync(opt.path);
+SftpUpload.prototype.upload = function() {
+    var self = this;
+
+    var opt = self.defaults;
+
+    var files = fs.readdirSync(opt.path);
     this.addFiles(files, opt.path, self.uploads);
     this.uploadFiles(self.uploads, opt);
     return this;

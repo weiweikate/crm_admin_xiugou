@@ -3,16 +3,17 @@ var Sftp = require('./lib/sftp');
 function upload(opts) {
     var opts = opts || {};
     var options = {
-            host: opts.host,
-            username: opts.username,
-            path: opts.path,
-            remoteDir: opts.remoteDir,
-            password: opts.password
-        },
-        sftp = new Sftp(options);
+        host: opts.host,
+        username: opts.username,
+        path: opts.path,
+        remoteDir: opts.remoteDir,
+        password: opts.password
+    };
+
+    var sftp = new Sftp(options);
     console.log(`本地目录:${options.path}`);
     console.log(`上传到远程目录:${options.remoteDir}`);
-    var startTime = null, endTime = null, usedTime = null;
+    var startTime = null; var endTime = null; var usedTime = null;
     sftp.on('error', function(err) {
         throw err;
     }).on('connect', function() {

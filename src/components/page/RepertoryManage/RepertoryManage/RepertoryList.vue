@@ -181,7 +181,6 @@ export default {
     methods: {
         // 获取数据
         getList(val) {
-            console.log(this.form);
             const data = {
                 warehouseName: this.form.warehouseName,
                 supplierName: this.form.supplierName,
