@@ -212,6 +212,7 @@
                     // this.status = 1;
                     this.nav[3] = '新建刮刮卡';
                     this.url = 'addScratchCard';
+                    this.resetValue();
                 } else {
                     // this.status = 2;
                     this.nav[3] = '编辑刮刮卡';
@@ -240,9 +241,14 @@
                     this.totalRatio = res.data.totalProbability;
                     this.tableData.forEach((v, k) => {
                         this.selectedCoupon.push(v);
+                        this.tableData.forEach((v, k) => {
+                            if (v.type == 1) {
+                                this.selectedCoupon.push(v);
+                            }
+                        });
+                    }).catch(err => {
+                        console.log(err);
                     });
-                }).catch(err => {
-                    console.log(err);
                 });
             },
             // 计算总概率
@@ -327,6 +333,16 @@
                 if (this.form1.awardName == '' || this.form1.giftValue == '') {
                     return this.$message.warning('输入的数值不能为空');
                 }
+                // const temp = {};
+                if (this.form1.awardName == '' || this.giftValue == '') {
+                    return this.$message.warning('输入的数值不能为空');
+                }
+                // this.tableData.push({
+                //     awardName: this.form1.awardName,
+                //     giftValue: this.form1.giftValue,
+                //     type: 2,
+                //     stockNum: -1
+                // };
                 const temp = {
                     awardName: this.form1.awardName,
                     giftValue: this.form1.giftValue,
