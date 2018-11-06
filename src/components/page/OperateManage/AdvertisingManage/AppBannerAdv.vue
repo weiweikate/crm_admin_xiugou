@@ -353,9 +353,6 @@
             },
             // 添加编辑
             dealAdv() {
-                if (this.pageType == 3) {
-                    this.form.linkType = 8;
-                }
                 const data = this.form;
                 let url = 'addAdvertisement';
                 if (this.id) {
@@ -368,6 +365,7 @@
                     data.showEndtime = this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss') : '';
                 }
 
+                // 不同页面参数不一致
                 if (this.pageType != 12 && (this.pageType == 6 && this.form.linkType != 6)) {
                     if (!this.productName) {
                         this.$message.warning('请输入有效ID');
@@ -380,6 +378,10 @@
                         return;
                     }
                 }
+                if (this.pageType == 3) {
+                    this.form.linkType = 8;
+                }
+
                 this.btnLoading = true;
                 data.date = [];
                 request[url](data).then(res => {
@@ -394,7 +396,7 @@
                     this.closeDia();
                 });
             },
-            // 关闭弹窗
+            // 关闭弹窗，表单值复原
             closeDia() {
                 this.form = {
                     imgUrl: '',
@@ -419,6 +421,7 @@
                 this.isShowDel = msg;
                 this.getList(1);
             },
+            // 清空
             clearData(id) {
                 this.isShowClear = true;
                 this.delId = id;

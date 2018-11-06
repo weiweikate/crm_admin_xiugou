@@ -62,12 +62,14 @@
                         title: '降价拍',
                         content: '价格随时间下降的促销活动',
                         page: '/depreciate'
-                    }, {
-                        img: 'static/img/package.png',
-                        title: '优惠套餐',
-                        content: '创建商品套餐让顾客购买',
-                        page: '/packageList'
-                    }, {
+                    },
+                    // {
+                    //     img: 'static/img/package.png',
+                    //     title: '优惠套餐',
+                    //     content: '创建商品套餐让顾客购买',
+                    //     page: '/packageList'
+                    // },
+                    {
                         img: 'static/img/package.png',
                         title: '刮刮卡',
                         content: '创建商品套餐让顾客购买',

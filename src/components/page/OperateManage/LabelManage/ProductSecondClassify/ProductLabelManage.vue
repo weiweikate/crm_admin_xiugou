@@ -31,7 +31,8 @@
                         <template slot-scope="scope">
                             <el-button type="primary" size="small" :disabled="scope.row.deleteStatus" @click="addItem(scope.row)">添加</el-button>
                             <el-button type="success" size="small" :disabled="scope.row.deleteStatus" @click="clearItem(scope.row)">清空</el-button>
-                            <el-button :type="!scope.row.deleteStatus?'danger':'warning'" size="small" @click="delItem(scope.row)"><span v-if="!scope.row.deleteStatus">删除</span><span v-else @click="deleteSure(scope.$index)">确定</span></el-button>
+                            <el-button v-if="!scope.row.deleteStatus" type="danger" size="small" @click="delItem(scope.row)">删除</el-button>
+                            <el-button v-else type="warning" size="small" @click="deleteSure(scope.$index)">确定</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -229,6 +230,7 @@ export default {
                 tagIds: this.tableData[index].deleteLabelIds,
                 secCategoryId: this.secCategoryId
             };
+            if (!data.tagIds.length) return;
             request.removeTags(data).then(res => {
                 this.$message.success(res.msg);
                 this.getList();

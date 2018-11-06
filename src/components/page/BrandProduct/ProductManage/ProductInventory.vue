@@ -15,6 +15,19 @@
               <el-button :loading="btnLoading" :type="scope.row.btnStyle" @click="saveMsg(scope.row)">保存</el-button>
             </template>
           </el-table-column>
+          <!--<el-table-column  label="单位" align="center" :render-header="renderHeader">-->
+            <!--<template slot-scope="scope">-->
+              <!--<span>{{unitName}}</span>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+          <!--<el-table-column prop=""  label="云仓同步库存" align="center"></el-table-column>-->
+          <!--<el-table-column prop=""  label="可售库存" align="center"></el-table-column>-->
+          <!--<el-table-column label="操作" align="center">-->
+            <!--<template slot-scope="scope">-->
+              <!--<el-button type="primary" @click="editInventory(scope.row)">编辑</el-button>-->
+              <!--<el-button type="primary" @click="watchInventory(scope.row)">查看</el-button>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
         </el-table>
       </el-card>
 
@@ -172,6 +185,14 @@ export default {
         // 恢复按钮样式
         changeBtnStyle(row) {
             row.btnStyle = 'primary';
+        },
+        // 编辑库存
+        editInventory(row) {
+            this.$router.push('/editInventory');
+        },
+        // 查看库存
+        watchInventory(row) {
+            this.$router.push('/inventoryInfo');
         }
     }
 };

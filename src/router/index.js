@@ -468,6 +468,18 @@ export default new Router({
                     component: resolve => require(['../components/page/BrandProduct/ProductManage/ProductInventory.vue'], resolve),
                     meta: { title: '产品库存管理', url: '/admin/price/queryProductStockList' }
                 },
+                {
+                    name: 'editInventory',
+                    path: '/editInventory',
+                    component: resolve => require(['../components/page/BrandProduct/ProductManage/EditInventory.vue'], resolve),
+                    meta: { title: '库存编辑', url: '/editInventory' }
+                },
+                {
+                    name: 'inventoryInfo',
+                    path: '/inventoryInfo',
+                    component: resolve => require(['../components/page/BrandProduct/ProductManage/InventoryInfo.vue'], resolve),
+                    meta: { title: '库存详情', url: '/inventoryInfo' }
+                },
 
                 // 服务管理
                 {

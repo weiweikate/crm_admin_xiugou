@@ -4,6 +4,11 @@
         <el-card :body-style="{ padding: '20px 45px' }">
             <el-table :data="tableData" border>
                 <el-table-column prop="spec" label="规格" align="center"></el-table-column>
+                <!--<el-table-column label="唯一识别码" align="center">-->
+                    <!--<template slot-scope="scope">-->
+                        <!--<el-input v-model="scope.row.originalPrice"></el-input>-->
+                    <!--</template>-->
+                <!--</el-table-column>-->
                 <el-table-column label="原价" align="center">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.originalPrice"></el-input>

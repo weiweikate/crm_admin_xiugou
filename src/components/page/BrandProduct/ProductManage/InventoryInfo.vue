@@ -1,0 +1,108 @@
+<template>
+    <div class="inventory-list">
+        <v-breadcrumb :nav='nav'></v-breadcrumb>
+        <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
+            <table class="table-area">
+                <tr>
+                    <td>fdfdsf</td>
+                    <td>4343</td>
+                    <td>dfsda</td>
+                    <td>dfsda</td>
+                </tr>
+            </table>
+            <el-table :data="tableData" border>
+                <el-table-column prop="code" label="仓库编码" align="center"></el-table-column>
+                <el-table-column prop="name" label="仓库名称" align="center"></el-table-column>
+                <el-table-column prop="id" label="仓库ID" align="center"></el-table-column>
+                <el-table-column prop="type" label="仓库类型" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.type==1">自建仓</template>
+                        <template v-if="scope.row.type==2">加盟仓</template>
+                        <template v-if="scope.row.type==3">供应商仓</template>
+                    </template>
+                </el-table-column>
+                <el-table-column label="仓库库存" align="center"></el-table-column>
+                <el-table-column label="可售库存" align="center"></el-table-column>
+            </el-table>
+        </el-card>
+
+    </div>
+</template>
+
+<script>
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import request from '@/http/http.js';
+
+    export default {
+        components: { vBreadcrumb },
+
+        data() {
+            return {
+                nav: ['品牌产品管理', '产品管理', '产品库存管理', '库存查看'],
+                tableData: []
+            };
+        },
+        activated() {
+            this.getList();
+        },
+        methods: {
+            // 获取数据
+            getList() {
+                request.queryRepertoryList({}).then(res => {
+                    this.tableData = [];
+                    if (!res.data) return;
+                    this.tableData = res.data.data;
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
+        }
+    };
+</script>
+<style lang='less' scoped>
+    .inventory-list {
+        .table-area{
+            font-size:12px;
+            width: 100%;
+            color:#606266;
+            border: 1px solid #ebeef5;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            line-height: 23px;
+            td {
+                border: 1px solid #ebeef5;
+                padding: 8px;
+                text-align: center;
+            }
+        }
+        .block {
+            margin: 10px 0;
+        }
+        .color-blue {
+            color: #33b4ff;
+            cursor: pointer;
+        }
+        /*弹窗样式*/
+        /deep/.el-dialog {
+            width: 530px;
+            border-radius: 10px;
+            .el-dialog__header {
+                border-bottom: 1px solid #eee;
+                padding: 20px 20px 10px;
+            }
+            .el-dialog__title {
+                color: #ff6868;
+            }
+            .el-input {
+                display: inline;
+            }
+            .el-input__inner {
+                width: 360px;
+            }
+            .el-dialog__footer {
+                margin-right: 30px;
+            }
+        }
+
+    }
+</style>
