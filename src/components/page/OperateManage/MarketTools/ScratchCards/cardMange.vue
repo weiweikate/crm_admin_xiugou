@@ -67,22 +67,22 @@
         </el-card>
         <el-dialog title="优惠券列表" :visible.sync="isShowCouponList" width="500px">
             <el-tabs v-model="couponType" v-loading="couponLoading" @tab-click="handleClick">
-                <el-tab-pane label="满减券" name="1">
+                <el-tab-pane label="满减券" name="1" style="max-height: 500px;overflow-y: auto">
+                    <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px;" :key="k">
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.awardName}} </span>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane label="折扣券" name="3" style="max-height: 500px;overflow-y: auto">
                     <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
                         <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.awardName}} </span>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="折扣券" name="3">
+                <el-tab-pane label="抵扣券" name="4" style="max-height: 500px;overflow-y: auto">
                     <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
                         <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.awardName}} </span>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="抵扣券" name="4">
-                    <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
-                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.awardName}} </span>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane label="抵价券" name="2">
+                <el-tab-pane label="抵价券" name="2" style="max-height: 500px;overflow-y: auto">
                     <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
                         <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.awardName}} </span>
                     </div>
