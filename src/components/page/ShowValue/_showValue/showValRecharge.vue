@@ -197,7 +197,7 @@ export default {
                     remark: this.$refs['single'].form.tip,
                     userLevel: this.$refs['single'].msg.levelName
                 };
-                if (data.userCode == '' || data.payCount == '') {
+                if (data.userCode == '') {
                     return this.$message.warning('请输入完整参数！');
                 }
                 this.loading = true;
@@ -222,7 +222,7 @@ export default {
                     userNum: this.$refs['batch'].totalNum,
                     userLevel: this.$refs['batch'].selectedUser
                 };
-                if (data.payCount == '' || data.closingTime == '' || data.signDays == '' || data.userLevel == '') return this.$message.warning('请输入完整参数！');
+                if (data.closingTime == '' || data.userLevel == '') return this.$message.warning('请输入完整参数！');
                 if (data.userLevel === '') return this.$message.warning('请查询用户层级！');
                 this.loading = true;
                 request.addRecord(data).then(res => {
@@ -242,6 +242,7 @@ export default {
                 date: new Date(),
                 tip: '',
                 signUp: '',
+                money: 0,
                 checkedUsers: []
             };
             this.$refs['batch'].isSubmitForm = true;
@@ -251,7 +252,7 @@ export default {
             this.checkedAll = false;
             this.$refs['single'].form = {
                 phone: '',
-                money: '',
+                money: 0,
                 tip: ''
             };
             this.$refs['single'].msg = {};

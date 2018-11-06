@@ -477,8 +477,15 @@
                 //     this.$message.warning('请添加产品标签');
                 //     return false;
                 // }
-                if (this.productParam.length == 0) {
-                    this.$message.warning('请输入产品参数');
+                if (this.productParam.length !== 0) {
+                    for (let i = 0; i < this.productParam.length; i++) {
+                        if (this.productParam[i].value == '') {
+                            this.$message.warning('请输入产品参数');
+                            return false;
+                        }
+                    }
+                } else {
+                    this.$message.warning('请添加产品参数');
                     return false;
                 }
                 if (this.chectedUser.length == 0) {
