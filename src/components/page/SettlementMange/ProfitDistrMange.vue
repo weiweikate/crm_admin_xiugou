@@ -6,6 +6,11 @@
             <el-table :data="tableData" border stripe v-loading="tabLoading">
                 <el-table-column type="index" :index="handleIndex" label="编号" align="center"></el-table-column>
                 <el-table-column prop='name' label="利润分配模板名称" align="center"></el-table-column>
+                <el-table-column prop='type' label="利润分配模板类型" align="center">
+                    <template slot-scope="scope" v-if='scope.row.type'>
+                        {{scope.row.type == '1'? '通用模版':'普通模版'}}
+                    </template>
+                </el-table-column>
                 <el-table-column prop='startTime' label="启用时间" align="center">
                     <template slot-scope="scope" v-if='scope.row.startTime'>
                         {{scope.row.startTime | formatDateAll}}
@@ -32,6 +37,17 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <div class="block">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :page-size="page.pageSize"
+                    :current-page="page.currentPage"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </div>
         </el-card>
         <!--删除弹窗-->
         <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
@@ -41,8 +57,10 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import deleteToast from '@/components/common/DeleteToast';
+import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http';
 export default {
+    mixins: [myMixinTable],
     components: { vBreadcrumb, deleteToast },
 
     data() {
@@ -57,19 +75,22 @@ export default {
     },
 
     activated() {
-        this.getList();
+        this.getList(1);
     },
 
     methods: {
         //   获取列表信息
-        getList() {
+        getList(val) {
             const data = {
-                pageSize: 100000
+                pageSize: this.page.pageSize,
+                page: val
             };
             this.tabLoading = true;
             request.querySettleTplList(data).then(res => {
                 this.tabLoading = false;
                 this.tableData = res.data.data;
+                this.page.currentPage = res.data.currentPage;
+                this.page.totalPage = res.data.totalNum;
             }).catch(err => {
                 this.tabLoading = false;
                 console.log(err);
@@ -85,10 +106,10 @@ export default {
         },
         // 编辑利润模板
         copyTpl(row) {
-            let msg = {
+            const msg = {
                 id: row.id,
                 value: '2' // 1：编辑 2：复制
-            }
+            };
             sessionStorage.setItem('settleProfitMsg', JSON.stringify(msg));
             this.$router.push({ name: 'profitTpl', query: { settleProfitMsg: JSON.stringify(msg) }});
         },

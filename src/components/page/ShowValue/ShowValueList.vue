@@ -6,8 +6,16 @@
             <el-table v-loading="loading" :data="tableData" border stripe>
                 <el-table-column prop="id" label="编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="秀值分配模板名称" align="center"></el-table-column>
-                <el-table-column prop="id" label="启用时间" align="center"></el-table-column>
-                <el-table-column prop="id" label="停用时间" align="center"></el-table-column>
+                <el-table-column prop="activeTime" label="启用时间" align="center">
+                    <template slot-scope="scope" v-if="scope.row.activeTime">
+                        {{scope.row.activeTime | formatDateAll}}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="stopTime" label="启用时间" align="center">
+                    <template slot-scope="scope" v-if="scope.row.stopTime">
+                        {{scope.row.stopTime | formatDateAll}}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="status" label="状态" align="center">
                     <template slot-scope="scope">
                         <span v-if="scope.row.status == 1">待启用</span>
@@ -17,9 +25,10 @@
                 </el-table-column>
                 <el-table-column prop="id" label="操作" align="center" min-width="150px">
                     <template slot-scope="scope">
-                        <!--<el-button type="primary">开启</el-button>-->
-                        <el-button type="warning" @click="editTpl(scope.row)">编辑</el-button>
-                        <el-button v-if="scope.row.status == 0" @click="delItem(scope.$index,scope.row.id)" type="danger">删除</el-button>
+                        <el-button v-if="scope.row.status == '0'" @click="operateTpl(scope.row, '2')" type="primary">开启</el-button>
+                        <el-button v-else-if="scope.row.status == 2"  @click="operateTpl(scope.row, '0')" type="primary">取消启用</el-button>
+                        <el-button v-if="scope.row.status == '0'" type="warning" @click="editTpl(scope.row)">编辑</el-button>
+                        <el-button v-if="scope.row.status == '0'" @click="delItem(scope.$index,scope.row.id)" type="danger">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -59,6 +68,14 @@
                     this.tableData = res.data.data || [];
                 }).catch(err => {
                     this.loading = false;
+                    console.log(err);
+                });
+            },
+            operateTpl(row, status) {
+                request.updateProfitTemplateStatus({ id: row.id, status: status }).then(res => {
+                    this.$message.success(res.msg);
+                    this.getList();
+                }).catch(err => {
                     console.log(err);
                 });
             },

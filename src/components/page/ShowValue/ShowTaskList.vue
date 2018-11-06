@@ -29,7 +29,7 @@
                     <tpl ref="ing" status="1"></tpl>
                 </el-tab-pane>
                 <el-tab-pane label="任务结束" name="end">
-                    <tpl ref="end" status="2"></tpl>
+                    <tpl ref="end" status="-1"></tpl>
                 </el-tab-pane>
             </el-tabs>
         </el-card>

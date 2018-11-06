@@ -1,5 +1,5 @@
 export const userTaskQuery = ['/shareJobs/userJobs/queryList', { methods: 'post' }]; // 用户任务分页查询
-export const userTaskNameQuery = ['/shareJobs/queryList', { methods: 'get' }]; // 用户任务名称查询
+export const userTaskNameQuery = ['/shareJobs/queryJobsNames', { methods: 'get' }]; // 用户任务名称查询
 export const deleteTaskJobs = ['/shareJobs/deleteJobs', { methods: 'get' }]; // 删除任务
 export const saveJobs = ['/shareJobs/saveJobs', { methods: 'post' }]; // 添加/修改任务 通过id区分添加或修改
 export const shareTaskQuery = ['/shareJobs/queryList', { methods: 'post' }]; // 秀值任务分页查询
@@ -13,3 +13,4 @@ export const queryProfitTemplatePageList = ['/showValueTemplate/queryTemplatePag
 export const queryProfitTemplateById = ['/showValueTemplate/findTemplateById', { methods: 'get' }]; //根据ID查询模板详情
 export const updateProfitTemplateById = ['/showValueTemplate/updateTemplate', { methods: 'post' }]; //修改模板
 export const deleteProfitTemplate = ['/showValueTemplate/deleteTemplate', { methods: 'get' }]; //删除模板
+export const updateProfitTemplateStatus = ['/showValueTemplate/updateStatus', { methods: 'post' }]; //启用/停用

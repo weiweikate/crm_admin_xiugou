@@ -16,7 +16,7 @@
                 <img class="img-title" src="@/assets/images/icon_project01@2x.png" alt="">
                 <span class="project-title">秀值占比</span>
                 <div class="my-inp">
-                    设置：X= <el-input-number :controls="false" :min="0" :max="100" @input="computedShowBean" v-model="form.valueRate" placeholder="请输入数值"></el-input-number> %
+                    设置：X= <el-input-number :controls="false" :min="0" :max="100" @input="computedShowBean" @blur="toFixed" v-model="form.valueRate" placeholder="请输入数值"></el-input-number> %
                 </div>
             </div>
             <div class="option">
@@ -68,7 +68,7 @@
                     endTime: ''
                 },
                 data: {}, // 表单数据
-                profitParm: [{ label: '其他1', value: '1' }],
+                profitParm: [{ label: '其他1', value: 1 }],
                 active: '1',
                 isSetTime: true,
                 pageLoading: false,
@@ -81,7 +81,8 @@
         },
         deactivated() {
             this.id = '';
-            this.active = '1'
+            this.active = '1';
+            this.isSetTime = true;
             this.form = {
                 name: '',
                 source: '',
@@ -89,7 +90,7 @@
                 showPeas: '',
                 startTime: '',
                 endTime: ''
-            }
+            };
             this.$refs['showValue'].userLevel = [
                 { name: 'v0', level: '1', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
                 { name: 'v1', level: '2', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
@@ -205,8 +206,8 @@
                     }
                 }
                 if (this.isSetTime) {
-                    this.form.startTime = this.form.startTime === '' ? '' : moment(this.form.startTime).format('YYYY-MM-DD HH:mm:ss');
-                    this.form.endTime = this.form.endTime === '' ? '' : moment(this.form.endTime).format('YYYY-MM-DD HH:mm:ss');
+                    this.form.activeTime = this.form.startTime === '' ? '' : moment(this.form.startTime).format('YYYY-MM-DD HH:mm:ss');
+                    this.form.stopTime = this.form.endTime === '' ? '' : moment(this.form.endTime).format('YYYY-MM-DD HH:mm:ss');
                 }
                 this.data = {
                     ...this.form,
@@ -418,11 +419,11 @@
                     request.queryProfitTemplateById({ id: this.id }).then(res => {
                         this.pageLoading = false;
                         this.form.name = res.data.name;
-                        this.form.source = res.data.name;
+                        this.form.source = res.data.source;
                         this.form.valueRate = Number(res.data.valueRate);
-                        this.isSetTime = !!res.data.startTime;
-                        this.form.startTime = res.data.startTime || '';
-                        this.form.endTime = res.data.endTime || '';
+                        this.isSetTime = !res.data.startTime;
+                        this.form.startTime = res.data.activeTime || '';
+                        this.form.endTime = res.data.stopTime || '';
                         res.data.showValueList.forEach((v, k) => {
                             this.$refs['showValue'].userLevel.forEach((v1, k1) => {
                                 if (v.type == 'X') {
@@ -489,9 +490,14 @@
                     });
                 }
             },
+            // 保留小数
+            toFixed() {
+                this.form.valueRate = this.form.valueRate ? this.form.valueRate : 0;
+                this.form.valueRate = this.form.valueRate.toFixed(2);
+            },
             // 计算秀豆占比
             computedShowBean(val) {
-                this.form.showPeas = 100 - val;
+                this.form.showPeas = (100 - val).toFixed(2);
             },
             // 切换秀值秀豆
             toggleShowModle(val) {

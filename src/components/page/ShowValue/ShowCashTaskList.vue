@@ -44,14 +44,14 @@
             </div>
         </el-card>
         <el-dialog
-            title="秀值充值"
+            title="请填写任务信息"
             :visible.sync="taskToast"
             width="650px"
             :before-close="handleClose">
             <el-form :model="form" ref="form" label-width="120px">
                 <el-form-item prop="type" label="请选择任务类型">
                     <el-select v-model="form.type" class="item">
-                        <el-option label="分享点击" value="1"></el-option>
+                        <el-option label="点击分享" value="1"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="minMoney" label="任务名称">

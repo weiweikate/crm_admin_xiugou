@@ -47,14 +47,19 @@ export default {
             if (queryString === '') return;
             request.queryUserByCode({ code: queryString }).then(res => {
                 const arr = [];
-                arr.push({ name: res.data.code, value: res.data.code });
+                res.data.forEach(v => {
+                    v.name = v.code;
+                    v.value = v.code;
+                    arr.push(v);
+                });
                 this.msg = res.data;
                 cb(arr);
             }).catch(err => {
                 console.log(err);
             });
         },
-        selectUser() {
+        selectUser(val) {
+            this.msg = val;
             this.showMsg = true;
         },
         // 保留两位小数
