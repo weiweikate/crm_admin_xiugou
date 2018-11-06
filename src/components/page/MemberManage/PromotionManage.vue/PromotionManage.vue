@@ -74,6 +74,11 @@
                 </el-form-item>
                 <el-form-item>
                     <el-checkbox label="购买升级礼包" value="4" v-model="checked[4]"></el-checkbox>
+                    <template v-for="(item,k) in giftIds">
+                        <el-input :class="k>0?'gift-inp':''" v-model="giftIds[k]" :key="k" :disabled="!checked[4]" placeholder="请输入礼包ID" auto-complete="off"></el-input>
+                        <i v-if="k>0" @click="deleteGift(k)" class="el-icon-close"></i>
+                    </template>
+                    <div class="color-blue" @click="addGift">添加</div>
                 </el-form-item>
             </el-form>
             <!--设置直接邀请条件-->
@@ -212,7 +217,8 @@
                 id: '',
                 row: '',
                 isAjax: false,
-                status: ''
+                status: '',
+                giftIds: ['']// 礼包ids
             };
         },
         activated() {
@@ -221,6 +227,14 @@
             this.getDetail();
         },
         methods: {
+            // 删除礼包Id
+            deleteGift(index) {
+                this.giftIds.splice(index, 1);
+            },
+            // 添加礼包id
+            addGift() {
+                this.giftIds.push('');
+            },
             // 获取详情
             getDetail() {
                 const data = {
@@ -436,6 +450,21 @@
 </script>
 <style lang='less'>
     .promotion-manage {
+        .color-blue{
+            cursor: pointer;
+            color: #33b4ff;
+            float: right;
+            margin-right: 55px;
+        }
+        .gift-inp{
+            margin-left:145px;
+            .el-input__inner{
+                margin-top: 10px;
+            }
+        }
+        .el-icon-close{
+            cursor: pointer;
+        }
         .wrap {
             margin: 0 75px;
             overflow: hidden;

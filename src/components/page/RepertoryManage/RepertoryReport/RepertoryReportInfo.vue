@@ -5,7 +5,7 @@
             <table class="table-area">
                 <tr>
                     <td>采购单</td>
-                    <td colspan="8">{{detail.id}}</td>
+                    <td colspan="8">{{detail.code}}</td>
                 </tr>
                 <tr>
                     <td>入库类型</td>
@@ -59,10 +59,10 @@
                 <el-table-column prop="specifyValues" label="规格" align="center"></el-table-column>
                 <el-table-column prop="estimateCount" label="预计入库数量" align="center"></el-table-column>
                 <el-table-column label="实际入库数量" align="center">
-                    <template slot-scope="scope">{{scope.row.estimateCount||'/'}}</template>
+                    <template slot-scope="scope">{{scope.row.realCount||'/'}}</template>
                 </el-table-column>
             </el-table>
-            <div class="block">合计 <span style="margin: 0 20px">采购数量：10000</span> 实际入库数量：100000</div>
+            <div class="block">合计 <span style="margin: 0 20px">采购数量：{{estimateTotal}}</span> 实际入库数量：{{realTotal}}</div>
             <div style="margin-top: 40px">
                 <el-button type="primary" @click="back">返回列表</el-button>
             </div>
@@ -86,7 +86,9 @@ export default {
             nav: ['云仓仓库管理', '仓库单', '入库单详情'],
             tableData: [],
             detail: {},
-            id: ''
+            id: '',
+            estimateTotal: 0,
+            realTotal: 0
         };
     },
     activated() {
@@ -103,9 +105,13 @@ export default {
                 if (!res.data) return;
                 this.detail = res.data;
                 this.tableData = [];
+                this.estimateTotal = 0;
+                this.realTotal = 0;
                 res.data.spuList.forEach((v, k) => {
                     v.skuList.forEach((v1, k1) => {
                         this.tableData.push(v1);
+                        this.estimateTotal += v1.estimateCount || 0;
+                        this.realTotal += v1.realCount || 0;
                     });
                 });
             }).catch(error => {

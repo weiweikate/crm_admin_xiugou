@@ -105,7 +105,7 @@ export default {
       font-size: 14px;
     }
     .input-sty {
-      width: 100px;
+      width: 110px;
       margin-bottom: 20px;
     }
     .point {
