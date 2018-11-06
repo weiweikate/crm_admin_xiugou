@@ -34,7 +34,7 @@
         mixins: [myMixinTable],
         data() {
             return {
-                tableData: [{ id: 1 }]
+                tableData: []
             };
         }
     };

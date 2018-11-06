@@ -2,7 +2,7 @@
     <div class="batch-recharge">
         <el-form :model="form" style="margin: 0 auto" label-width="120px">
             <el-form-item label="充值秀值数">
-                <el-input-number :controls="false" :min="0" v-model="form.money" class="inp" placeholder="请输入充值金额"></el-input-number>
+                <el-input-number :controls="false" :min="0" v-model="form.money" @blur="toFixed" class="inp" placeholder="请输入充值金额"></el-input-number>
             </el-form-item>
             <el-form-item label="截至时间">
                 <el-date-picker
@@ -47,10 +47,10 @@
         data() {
             return {
                 form: {
-                    money: '',
+                    money: 0,
                     date: '',
                     tip: '',
-                    signUp: '',
+                    signUp: 0,
                     checkedUsers: []
                 },
                 selectedUser: '',
@@ -98,6 +98,11 @@
             },
             handleCheckedUser(val) {
                 this.checkedAll = val.length === this.userLevel.length;
+            },
+            // 保留两位小数
+            toFixed() {
+                this.form.money = this.form.money === undefined ? 0 : this.form.money;
+                this.form.money = this.form.money.toFixed(2);
             },
             // 获取查询结果
             queryUser() {

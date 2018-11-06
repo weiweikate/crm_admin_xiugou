@@ -18,7 +18,7 @@
                 </div>
             </el-form-item>
             <el-form-item label="充值秀值数">
-                <el-input-number :controls="false" :precision="2" :step="0.01" :min="0" :max="9999999999.99" v-model="form.money" class="inp" placeholder="请输入充值金额"></el-input-number>
+                <el-input-number :controls="false" :min="0" :max="9999999999.99" v-model="form.money" @blur="toFixed" class="inp" placeholder="请输入充值金额"></el-input-number>
             </el-form-item>
             <el-form-item label="备注">
                 <el-input v-model="form.tip" :maxlength="180" type="textarea" class="inp" placeholder="请输入备注0-180字"></el-input>
@@ -35,8 +35,8 @@ export default {
             showMsg: false,
             form: {
                 phone: '',
-                money: 0,
-                tip: ''
+                tip: '',
+                money: 0
             },
             msg: {}
         };
@@ -46,16 +46,21 @@ export default {
         querySearchAsync(queryString, cb) {
             if (queryString === '') return;
             request.queryUserByCode({ code: queryString }).then(res => {
-                let arr = [];
-                arr.push({name: res.data.code, value: res.data.code});
+                const arr = [];
+                arr.push({ name: res.data.code, value: res.data.code });
                 this.msg = res.data;
-                cb(arr)
+                cb(arr);
             }).catch(err => {
                 console.log(err);
             });
         },
         selectUser() {
             this.showMsg = true;
+        },
+        // 保留两位小数
+        toFixed() {
+            this.form.money = this.form.money === undefined ? 0 : this.form.money;
+            this.form.money = this.form.money.toFixed(2);
         }
     }
 };
