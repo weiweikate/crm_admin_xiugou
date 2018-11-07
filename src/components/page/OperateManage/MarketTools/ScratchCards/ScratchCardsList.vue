@@ -41,9 +41,9 @@
                 <el-table-column prop="numItems" label="奖项数" align="center"></el-table-column>
                 <el-table-column prop="sumTotalNum" label="奖品发放数" align="center"></el-table-column>
                 <el-table-column prop="residualQuantity" label="剩余数量" align="center"></el-table-column>
-                <el-table-column prop="id" label="当前活动使用数" align="center">
+                <el-table-column prop="totalActivity" label="当前活动使用数" align="center">
                     <template slot-scope="scope">
-                        <el-tag style="cursor: pointer" @click="showUse(scope.row)">{{scope.row.id}}</el-tag>
+                        <el-tag style="cursor: pointer" @click="showUse(scope.row)">{{scope.row.totalActivity}}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="状态" align="center">
@@ -137,6 +137,7 @@
                     updateEndTime: this.form.updateTime ? utils.formatTime(this.form.updateTime[1], 1) : ''
                 };
                 this.page.currentPage = val;
+                this.tableData = [];
                 request.queryScratchCardList(data).then(res => {
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
@@ -160,7 +161,8 @@
                 this.$router.push({ name: 'cardMange', query: { cardId: id }});
             },
             showUse(row) {
-                this.$router.push({ name: 'activityUse', query: { activityUseId: row.id }});
+                sessionStorage.setItem('activityUseId', row.code);
+                this.$router.push({ name: 'activityUse', query: { activityUseId: row.code }});
             },
             // 详情
             toDetail(id) {

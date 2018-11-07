@@ -110,7 +110,7 @@
                 index: 0,
                 form: {
                     title: '',
-                    type: 100, //   1:公告   2：通知
+                    type: 100, //   100:公告   200：通知
                     content: '', //   内容
                     date: '',
                     provinces: [],
@@ -134,7 +134,7 @@
                 notRegist: false, // 未注册用户
                 newRegist: false, // 新注册用户
                 isShowArea: false,
-                chooseData: [],
+                chooseData: []
             };
         },
         created() {
@@ -147,7 +147,7 @@
             formData() {
                 this.form = {
                     title: '',
-                    type: 100, //   1:公告   2：通知
+                    type: 100, //   100:公告   200：通知
                     content: '', //   内容
                     date: '',
                     provinces: [],
@@ -155,6 +155,7 @@
                 };
                 this.isIndeterminate = false;
                 this.checkAll = false;
+                this.index = 0;
             },
             // 取消
             cancel() {

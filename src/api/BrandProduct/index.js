@@ -154,6 +154,7 @@ export const updateBatchProductStatus = '/product/product/updateBatchProductStat
 export const updateProductPrice = '/product/productSpecPrice/updateProductPrice'; // 保存产品价格
 export const queryProductSpecPriceList = ['/product/productSpecPrice/queryProductSpecPriceList', { methods: 'get' }]; // 查询产品价格列表
 export const queryProductSpecStockList = ['/product/productSpecStock/queryProductSpecStockList', { methods: 'get' }]; // 查询产品库存列表
+export const queryProductSpecStockDetailsList = '/product/productSpecStock/queryProductSpecStockDetailsList'; // 查询产品的仓库存库列表
 export const addProductSpecStock = ['/product/productSpecStock/addProductSpecStock', { methods: 'post' }]; // 添加产品库存
 export const updateProductSpecStock = ['/product/productSpecStock/updateProductSpecStock', { methods: 'post' }]; // 修改产品库存
 export const findProductDetailsById = ['/product/product/findProductDetailsById', { methods: 'get' }]; // 查看产品详情

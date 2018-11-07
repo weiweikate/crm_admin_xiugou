@@ -3,11 +3,16 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card>
             <el-table :data="tableDate" border stripe>
-                <el-table-column prop="id" label="活动名称" align="center"></el-table-column>
-                <el-table-column prop="id" label="活动类型" align="center"></el-table-column>
-                <el-table-column prop="id" label="使用数量" align="center"></el-table-column>
-                <el-table-column prop="id" label="绑定时间" align="center"></el-table-column>
-                <el-table-column prop="id" label="操作" align="center" width="320px">
+                <el-table-column prop="name" label="活动名称" align="center"></el-table-column>
+                <el-table-column prop="type" label="活动类型" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.type==1">分享任务</template>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="num" label="使用数量" align="center"></el-table-column>
+                <el-table-column label="绑定时间" align="center"></el-table-column>
+                    <template slot-scope="scope">{{scope.row.bindingTime|formatDateAll}}</template>
+                <el-table-column label="操作" align="center" width="320px">
                     <template slot-scope="scope">
                         <el-button type="success">查 看</el-button>
                     </template>
@@ -31,22 +36,36 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import { myMixinTable } from '@/JS/commom';
+    import request from '@/http/http.js';
+
     export default {
         mixins: [myMixinTable],
         components: { vBreadcrumb },
         data() {
             return {
-                id: '',
+                code: '',
                 nav: ['运营管理', '营销工具管理', '刮刮卡', '当前活动使用'],
-                tableDate: [{ id: 1 }]
+                tableDate: []
             };
         },
         activated() {
-            this.id = this.$route.query.activityUseId;
+            this.code = this.$route.query.activityUseId || sessionStorage.getItem('activityUseId');
         },
         methods: {
             getList(val) {
-
+                const data = {
+                    page: val,
+                    pageSize: this.page.pageSize,
+                    code: this.code
+                };
+                this.page.currentPage = val;
+                this.tableData = [];
+                request.queryScratchCardList(data).then(res => {
+                    this.tableData = res.data.data;
+                    this.page.totalPage = res.data.totalNum;
+                }).catch(err => {
+                    console.log(err);
+                });
             }
         }
     };

@@ -15,7 +15,7 @@
                 </template>
                 <el-table-column label="唯一识别码" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.originalPrice"></el-input>
+                        <el-input :disabled="scope.row.skuCode?true:false" v-model="scope.row.skuCode"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="原价" align="center">
@@ -73,6 +73,11 @@
                         <el-input v-model="scope.row.settlementPrice"></el-input>
                     </template>
                 </el-table-column>
+                <el-table-column label="库存单位" align="center" :render-header="renderHeader">
+                    <template slot-scope="scope">
+                        <span>{{unitName}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button :loading="btnLoading" :type="scope.row.btnStyle" @click="saveMsg(scope.row)">保存
@@ -100,8 +105,33 @@
                 btnLoading: false,
                 productId: '',
                 tableData: [],
-                headData: []// 规格表头
+                unit: '包',
+                unitArr: [
+                    { label: '包', value: '包' },
+                    { label: '箱', value: '箱' },
+                    { label: '件', value: '件' },
+                    { label: '条', value: '条' },
+                    { label: '盒', value: '盒' },
+                    { label: 'KG', value: 'KG' },
+                    { label: '吨', value: '吨' },
+                    { label: '平米', value: '平米' },
+                    { label: '立方', value: '立方' }
+                ],
+                headData: [], // 规格表头
+                btnStyle: 'primary'
             };
+        },
+
+        computed: {
+            unitName() {
+                let u = '';
+                this.unitArr.forEach((v, k) => {
+                    if (v.value == this.unit) {
+                        u = v.label;
+                    }
+                });
+                return u;
+            }
         },
 
         activated() {
@@ -116,6 +146,7 @@
                 request.queryProductSpecPriceList({ productId: this.productId }).then(res => {
                     res.data.forEach((v, k) => {
                         v.btnStyle = 'primary';
+                        this.unit = v.stockUnit;
                         this.tableData.push(v);
                         this.headData = [];
                         if (!v.specType || !v.spec) return;
@@ -151,6 +182,7 @@
                     this.$message.warning('参数填写有误,请输入正确的参数');
                     return;
                 }
+                row.stockUnit = this.unit;
                 this.btnLoading = true;
 
                 request.updateProductPrice(row).then(res => {
@@ -161,6 +193,49 @@
                     this.btnLoading = false;
                     console.log(err);
                 });
+            },
+            // 表头下拉框改变
+            tableHeadChange(value) {
+                this.unit = value;
+            },
+            // 表头处理
+            renderHeader(h, { column, $index }) {
+                return [
+                    h(
+                        'div',
+                        {
+                            style: {
+                                margin: '8px -20px 0 0'
+                            }
+                        },
+                        ['库存单位']
+                    ),
+                    h(
+                        'el-select',
+                        {
+                            style: {
+                                display: 'block',
+                                width: '120px',
+                                'margin-top': '8px'
+                            },
+                            attrs: {
+                                value: this.unit,
+                                placeholder: ''
+                            },
+                            on: {
+                                change: this.tableHeadChange
+                            }
+                        },
+                        this.unitArr.map((v, k) => {
+                            return h('el-option', {
+                                attrs: {
+                                    label: v.label,
+                                    value: v.value
+                                }
+                            });
+                        })
+                    )
+                ];
             }
         }
     };

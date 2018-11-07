@@ -323,6 +323,8 @@ export const addScratchCard = '/scratch/scratchCard/addScratchCard';
 export const findScratchCardById = ['/scratch/scratchCard/findById', { methods: 'get' }];
 // 列表
 export const queryScratchCardList = '/scratch/scratchCard/queryList';
+// 列表
+export const queryByCodeList = '/scratch/scratchCard/queryByCodeList';
 // 修改状态
 export const updateScratchCardById = ['/scratch/scratchCard/updateById', { methods: 'get' }];
 // 修改

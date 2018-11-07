@@ -3,11 +3,11 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
             <el-form :model="form" ref="form" inline label-width="100px">
-                <el-form-item prop="warehouseName" label="仓库名称">
-                    <el-input v-model="form.warehouseName" placeholder="请输入仓库名称"></el-input>
+                <el-form-item prop="name" label="仓库名称">
+                    <el-input v-model="form.name" placeholder="请输入仓库名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="warehouseCode" label="仓库编码">
-                    <el-input v-model="form.warehouseCode" placeholder="请输入仓库编码"></el-input>
+                <el-form-item prop="code" label="仓库编码">
+                    <el-input v-model="form.code" placeholder="请输入仓库编码"></el-input>
                 </el-form-item>
                 <el-form-item prop="type" label="仓库类型">
                     <el-select v-model="form.type" placeholder="请选择仓库类型">
@@ -26,10 +26,15 @@
         <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
             <table class="table-area">
                 <tr>
-                    <td>fdfdsf</td>
-                    <td>4343</td>
-                    <td>dfsda</td>
-                    <td>dfsda</td>
+                    <td style="width: 40%;text-align: left">
+                        <div class="product-img">
+                            <img :src="productInfo.imgUrl">
+                        </div>
+                        <p class="product-name">{{productInfo.name}}</p>
+                        <p class="product-id">产品ID：{{productInfo.prodCode}}</p>
+                    </td>
+                    <td v-for="(v,k) in productInfo.specValues" :key="k">{{v}}</td>
+                    <td>{{productInfo.stockUnit}}</td>
                 </tr>
             </table>
             <el-table :data="tableData" border>
@@ -44,34 +49,34 @@
                 </el-table-column>
                 <el-table-column label="仓库库存" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.type!=3">{{scope.row.addressCityCode}}</template>
+                        <template v-if="scope.row.type!=3">{{scope.row.warehouseStock}}</template>
                         <template v-else>
-                            <el-input-number v-model="scope.row.addressCityCode" :min="0"></el-input-number>
+                            <el-input-number v-model="scope.row.warehouseStock" :min="0"></el-input-number>
                         </template>
                     </template>
                 </el-table-column>
                 <el-table-column label="可售库存" align="center">
                     <template slot-scope="scope">
-                        <el-input-number v-model="scope.row.productCount" :min="0" :max="scope.row.addressCityCode"></el-input-number>
+                        <el-input-number v-model="scope.row.stock" :min="0" :max="scope.row.warehouseStock"></el-input-number>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button @click="openOrClose(scope.row,0)" type="primary" v-if="scope.row.status==1">关闭</el-button>
-                        <el-button @click="openOrClose(scope.row,1)" type="primary" v-if="scope.row.status==2">开启</el-button>
-                        <el-button @click="openOrClose(scope.row,2)" type="success" v-if="scope.row.status==2">保存</el-button>
+                        <el-button @click="openOrClose(scope.row,0,scope.$index)" type="primary" v-if="scope.row.status==1">关闭</el-button>
+                        <el-button @click="openOrClose(scope.row,1,scope.$index)" type="primary" v-if="scope.row.status==0">开启</el-button>
+                        <el-button @click="saveMsg" v-loading="btnLoading" type="success">保存</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <div style="margin-top: 20px">
                 <el-button @click="$router.push({path:'/productInventory'})" type="primary">取消</el-button>
-                <el-button type="success">保存</el-button>
+                <el-button type="success" @click="saveMsg">保存</el-button>
             </div>
         </el-card>
         <el-dialog :title="title[index]" :visible.sync="mask">
             <div style="text-align: center;font-size: 20px">{{info[index]}}</div>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="sure('formMask')">确 认</el-button>
+                <el-button type="primary" v-loading="btnLoading" @click="saveMsg">确 认</el-button>
                 <el-button @click="mask=false">取 消</el-button>
             </div>
         </el-dialog>
@@ -81,50 +86,57 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import moment from 'moment';
-import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 
 export default {
     components: { vBreadcrumb },
 
-    mixins: [myMixinTable],
-
     data() {
         return {
             nav: ['品牌产品管理', '产品管理', '产品库存管理', '库存编辑'],
+            productInfo: {
+                specValues: []
+            },
             tableData: [],
             form: {
                 date: [],
                 status: '',
-                warehouseName: '',
-                warehouseCode: '',
+                name: '',
+                code: '',
                 supplierName: '',
                 type: ''
             },
             index: '',
             title: ['关闭', '开启'],
             info: ['确定要关闭可售库存', '确定要开启可售库存'],
-            mask: false
+            mask: false,
+            id: '',
+            row: {},
+            btnLoading: false
         };
     },
     activated() {
-        this.getList(this.page.currentPage);
+        this.id = this.$route.query.editInventoryId || sessionStorage.getItem('editInventoryId');
+        this.getList();
     },
     methods: {
         // 获取数据
-        getList(val) {
+        getList() {
             const data = {
-                warehouseName: this.form.warehouseName,
-                warehouseCode: this.form.warehouseCode,
-                type: this.form.type,
-                page: val,
-                pageSize: this.page.pageSize
+                priceId: this.id,
+                name: this.form.name,
+                code: this.form.code,
+                type: this.form.type
             };
-            this.page.currentPage = val;
-            request.queryRepertoryList(data).then(res => {
+            request.queryProductSpecStockDetailsList(data).then(res => {
                 this.tableData = [];
+                this.productInfo = {
+                    specValues: []
+                };
                 if (!res.data) return;
-                this.tableData = res.data.data;
+                this.productInfo = res.data.productExt;
+                this.productInfo.specValues = res.data.productExt.spec.split('-');
+                this.tableData = res.data.list;
             }).catch(error => {
                 console.log(error);
             });
@@ -133,21 +145,34 @@ export default {
         resetForm(formName) {
             this.$refs[formName].resetFields();
             this.form.date = [];
-            this.getList(this.page.currentPage);
+            this.getList();
         },
         // 停用启用
         openOrClose(row, num) {
             this.mask = true;
             this.index = num;
+            this.row = row;
+            this.row.status = 1 - row.status;
         },
-        sure(formName) {
-            this.mask = false;
+        // 保存表单信息
+        saveMsg() {
             const data = {};
+            data.productSpecStockVOList = [];
+            this.tableData.forEach((v, k) => {
+                const temp = {
+                    id: v.id,
+                    type: v.type,
+                    status: v.status,
+                    stock: v.stock,
+                    warehouseStock: v.warehouseStock
+                };
+                data.productSpecStockVOList.push(temp);
+            });
             this.btnLoading = true;
-            request.startOrStopRepertory(data).then(res => {
+            request.updateProductSpecStock(data).then(res => {
                 this.$message.success(res.msg);
                 this.mask = false;
-                this.getList(this.page.currentPage);
+                this.getList();
                 this.btnLoading = false;
             });
         }
@@ -168,6 +193,31 @@ export default {
             border: 1px solid #ebeef5;
             padding: 8px;
             text-align: center;
+        }
+        .product-img {
+            display: inline-block;
+            float: left;
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+            img {
+                width: 60px;
+                height: 60px;
+                margin: 10px;
+            }
+        }
+        .product-name {
+            float: left;
+            width: 65%;
+            height: auto;
+            margin: 5px 0 0 20px;
+        }
+        .product-id {
+            float: left;
+            width: 65%;
+            height: auto;
+            margin: 20px 0 0 20px;
         }
     }
     .block {

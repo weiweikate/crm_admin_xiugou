@@ -75,7 +75,7 @@
                 <el-form-item>
                     <el-checkbox label="购买升级礼包" value="4" v-model="checked[4]"></el-checkbox>
                     <template v-for="(item,k) in form.userLevelPackageList">
-                        <el-input :class="k>0?'gift-inp':''" v-model="item.packageId" :key="k" :disabled="!checked[4]" placeholder="请输入礼包ID" auto-complete="off"></el-input>
+                        <el-input :class="k>0?'gift-inp':''" v-model="item.packageCode" :key="k" :disabled="!checked[4]" placeholder="请输入礼包ID" auto-complete="off"></el-input>
                         <i v-if="k>0" @click="deleteGift(k)" class="el-icon-close"></i>
                     </template>
                     <div class="color-blue" @click="addGift">添加</div>
@@ -214,7 +214,7 @@
                 index: 0,
                 checked: [false, false, false, false, false],
                 form: {
-                    userLevelPackageList: [{ packageId: '' }]// 礼包ids
+                    userLevelPackageList: [{ packageCode: '' }]// 礼包ids
                 },
                 id: '',
                 row: '',
@@ -234,7 +234,7 @@
             },
             // 添加礼包id
             addGift() {
-                this.form.userLevelPackageList.push({ packageId: '' });
+                this.form.userLevelPackageList.push({ packageCode: '' });
             },
             // 获取详情
             getDetail() {
@@ -245,7 +245,7 @@
                     this.form = res.data;
                     this.status = res.data.level;
                     if (!res.data.userLevelPackageList || !res.data.userLevelPackageList.length) {
-                        this.form.userLevelPackageList = [{ packageId: '' }];
+                        this.form.userLevelPackageList = [{ packageCode: '' }];
                     }
                     this.convert(this.form.upgradeCondition);
                 }).catch((err) => {
@@ -320,7 +320,7 @@
                     if (this.checked[4]) {
                         data.upgradeCondBuyGift = 1;
                         data.userLevelPackageList.forEach((v, k) => {
-                            if (v.packageId == '') {
+                            if (v.packageCode == '') {
                                 this.$message.warning('请输入礼包ID');
                                 this.isAjax = false;
                             }

@@ -4,10 +4,15 @@
         <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
             <table class="table-area">
                 <tr>
-                    <td>fdfdsf</td>
-                    <td>4343</td>
-                    <td>dfsda</td>
-                    <td>dfsda</td>
+                    <td style="width: 40%;text-align: left">
+                        <div class="product-img">
+                            <img :src="productInfo.imgUrl">
+                        </div>
+                        <p class="product-name">{{productInfo.name}}</p>
+                        <p class="product-id">产品ID：{{productInfo.prodCode}}</p>
+                    </td>
+                    <td v-for="(v,k) in productInfo.specValues" :key="k">{{v}}</td>
+                    <td>{{productInfo.stockUnit}}</td>
                 </tr>
             </table>
             <el-table :data="tableData" border>
@@ -21,8 +26,8 @@
                         <template v-if="scope.row.type==3">供应商仓</template>
                     </template>
                 </el-table-column>
-                <el-table-column label="仓库库存" align="center"></el-table-column>
-                <el-table-column label="可售库存" align="center"></el-table-column>
+                <el-table-column prop="warehouseStock" label="仓库库存" align="center"></el-table-column>
+                <el-table-column prop="stock" label="可售库存" align="center"></el-table-column>
             </el-table>
             <div style="margin-top: 20px">
                 <el-button @click="$router.push({path:'/productInventory'})" type="primary">返回</el-button>
