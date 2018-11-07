@@ -18,9 +18,10 @@
                     <td>{{detail.createTime|formatDateAll}}</td>
                     <td>状态</td>
                     <td colspan="2">
-                        <template v-if="detail.type==1">采购入库</template>
-                        <template v-if="detail.type==2">盘盈入库</template>
-                        <template v-if="detail.type==3">调拨入库</template>
+                        <template v-if="detail.status==1">未推送</template>
+                        <template v-if="detail.status==2">待入库</template>
+                        <template v-if="detail.status==3">已可售</template>
+                        <template v-if="detail.status==4">已取消</template>
                     </td>
                     <td>出库方</td>
                     <td>{{detail.deliverWarehouseName}}</td>

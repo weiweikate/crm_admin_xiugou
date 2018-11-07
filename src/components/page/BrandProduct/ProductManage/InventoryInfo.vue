@@ -24,6 +24,9 @@
                 <el-table-column label="仓库库存" align="center"></el-table-column>
                 <el-table-column label="可售库存" align="center"></el-table-column>
             </el-table>
+            <div style="margin-top: 20px">
+                <el-button @click="$router.push({path:'/productInventory'})" type="primary">返回</el-button>
+            </div>
         </el-card>
 
     </div>

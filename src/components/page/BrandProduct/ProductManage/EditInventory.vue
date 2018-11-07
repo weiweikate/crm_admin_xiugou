@@ -63,6 +63,10 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <div style="margin-top: 20px">
+                <el-button @click="$router.push({path:'/productInventory'})" type="primary">取消</el-button>
+                <el-button type="success">保存</el-button>
+            </div>
         </el-card>
         <el-dialog :title="title[index]" :visible.sync="mask">
             <div style="text-align: center;font-size: 20px">{{info[index]}}</div>

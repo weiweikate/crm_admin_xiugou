@@ -3,12 +3,21 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 45px' }">
             <el-table :data="tableData" border>
-                <el-table-column prop="spec" label="规格" align="center"></el-table-column>
-                <!--<el-table-column label="唯一识别码" align="center">-->
-                    <!--<template slot-scope="scope">-->
-                        <!--<el-input v-model="scope.row.originalPrice"></el-input>-->
-                    <!--</template>-->
-                <!--</el-table-column>-->
+                <!--<el-table-column prop="spec" label="规格" align="center"></el-table-column>-->
+                <template v-for='(v,k) in headData'>
+                    <el-table-column
+                        :show-overflow-tooltip="true"
+                        :prop="v.value"
+                        :label="v.name"
+                        :key="k"
+                        align="center">
+                    </el-table-column>
+                </template>
+                <el-table-column label="唯一识别码" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.originalPrice"></el-input>
+                    </template>
+                </el-table-column>
                 <el-table-column label="原价" align="center">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.originalPrice"></el-input>
@@ -90,7 +99,8 @@
                 nav: ['品牌产品管理', '产品管理', '价格管理'],
                 btnLoading: false,
                 productId: '',
-                tableData: []
+                tableData: [],
+                headData: []// 规格表头
             };
         },
 
@@ -107,6 +117,18 @@
                     res.data.forEach((v, k) => {
                         v.btnStyle = 'primary';
                         this.tableData.push(v);
+                        this.headData = [];
+                        if (!v.specType || !v.spec) return;
+                        const specs = v.specType.split('-');
+                        const specValues = v.spec.split('-');
+                        specs.forEach((v1, k1) => {
+                            const temp = {
+                                value: v1,
+                                name: v1
+                            };
+                            this.headData.push(temp);
+                            this.tableData[k][v1] = specValues[k1];
+                        });
                     });
                 }).catch(err => {
                     console.log(err);

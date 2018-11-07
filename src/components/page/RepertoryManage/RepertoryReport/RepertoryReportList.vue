@@ -47,9 +47,8 @@
                         <el-option value="" label="全部"></el-option>
                         <el-option value="1" label="未推送"></el-option>
                         <el-option value="2" label="待入库"></el-option>
-                        <el-option value="3" label="已入库"></el-option>
+                        <el-option value="3" label="已可售"></el-option>
                         <el-option value="4" label="已取消"></el-option>
-                        <el-option value="5" label="已可售"></el-option>
                     </el-select>
                 </el-form-item>
 
@@ -89,9 +88,8 @@
                     <template slot-scope="scope">
                         <template v-if="scope.row.status==1">未推送</template>
                         <template v-if="scope.row.status==2">待入库</template>
-                        <template v-if="scope.row.status==3">已入库</template>
+                        <template v-if="scope.row.status==3">已可售</template>
                         <template v-if="scope.row.status==4">已取消</template>
-                        <template v-if="scope.row.status==5">已可售</template>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" min-width="150">

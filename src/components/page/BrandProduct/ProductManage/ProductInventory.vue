@@ -3,8 +3,17 @@
     <v-breadcrumb :nav='nav'></v-breadcrumb>
       <el-card :body-style="{ padding: '20px 45px' }">
         <el-table :data="tableData" border>
-          <el-table-column prop="spec" label="规格" align="center"></el-table-column>
-          <el-table-column  label="总库存" align="center" :render-header="renderHeader">
+          <!--<el-table-column prop="spec" label="规格" align="center"></el-table-column>-->
+            <template v-for='(v,k) in headData'>
+                <el-table-column
+                    :show-overflow-tooltip="true"
+                    :prop="v.value"
+                    :label="v.name"
+                    :key="k"
+                    align="center">
+                </el-table-column>
+            </template>
+          <el-table-column label="总库存" align="center" :render-header="renderHeader">
             <template slot-scope="scope">
               <el-input style="width:150px" @change="changeBtnStyle(scope.row)" v-model="scope.row.stock"></el-input>
               <span>{{unitName}}</span>
@@ -62,7 +71,8 @@ export default {
                 { label: '平米', value: '平米' },
                 { label: '立方', value: '立方' }
             ],
-            tableData: []
+            tableData: [],
+            headData:[]
         };
     },
 
@@ -100,6 +110,18 @@ export default {
                     }
                     v.btnStyle = 'primary';
                     this.tableData.push(v);
+                    this.headData = [];
+                    if (!v.specType || !v.spec) return;
+                    const specs = v.specType.split('-');
+                    const specValues = v.spec.split('-');
+                    specs.forEach((v1, k1) => {
+                        const temp = {
+                            value: v1,
+                            name: v1
+                        };
+                        this.headData.push(temp);
+                        this.tableData[k][v1] = specValues[k1];
+                    });
                 });
             }).catch(err => {
                 console.log(err);
