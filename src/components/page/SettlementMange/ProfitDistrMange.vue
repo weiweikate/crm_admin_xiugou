@@ -17,8 +17,9 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop='endTime' label="停用时间" align="center">
-                    <template slot-scope="scope" v-if='scope.row.endTime'>
-                        {{scope.row.endTime | formatDateAll}}
+                    <template slot-scope="scope">
+                        <span v-if='scope.row.type == 1'>{{'/'}}</span>
+                        <span v-else-if='scope.row.endTime'>{{scope.row.endTime | formatDateAll}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop='status' label="状态" align="center">
@@ -32,7 +33,7 @@
                     <template slot-scope="scope">
                         <!--<el-button @click="changeStatus(scope.row,1)" v-if='scope.row.status != 2 && scope.row.type == 2' type="primary">启 用</el-button>-->
                         <el-button @click="copyTpl(scope.row)" type="warning">复 制</el-button>
-                        <el-button @click="delItem(scope.$index,scope.row.id)" v-if='scope.row.status == 2 && scope.row.type == 2' type="danger">停 用</el-button>
+                        <el-button @click="delItem(scope.$index,scope.row.id)" v-if='(scope.row.status == 1 && scope.row.type == 1) || ((scope.row.status == 1 || scope.row.status == 2) && scope.row.type == 2)' type="danger">取消启用</el-button>
                         <!--<el-button @click="changeStatus(scope.row,2)" v-if='scope.row.status == 2 && scope.row.type == 2' type="danger">停 用</el-button>-->
                     </template>
                 </el-table-column>
@@ -50,7 +51,7 @@
             </div>
         </el-card>
         <!--删除弹窗-->
-        <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
+        <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' tip="取消启用" v-if="isShowDelToast"></delete-toast>
     </div>
 </template>
 

@@ -161,6 +161,8 @@
                 content: '',
                 generalize: ''
             }
+            this.coverImgSize = '';
+            this.imageSize = '';
             this.id = '';
             sessionStorage.removeItem('foundId');
             this.linkPosition = [];
@@ -266,6 +268,8 @@
                         this.form.title = res.data.title;
                         this.form.content = res.data.content;
                         this.form.generalize = res.data.generalize.toString();
+                        this.imageSize = res.data.imgSize;
+                        this.coverImgSize = res.data.coverImgSize;
                         if (res.data.discoverArticleProductList) {
                             res.data.discoverArticleProductList.forEach(v => {
                                 this.linkPosition.push({ id: v.code, name: v.name, type: v.type.toString() });

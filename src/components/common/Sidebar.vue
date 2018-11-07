@@ -279,10 +279,6 @@
                                 title: '保证金缴纳记录'
                             },
                             {
-                                index: 'cloudWarHouseMange',
-                                title: '云仓结算管理'
-                            },
-                            {
                                 index: 'flatAccountInfo',
                                 title: '平台账户收入明细'
                             },

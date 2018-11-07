@@ -3,9 +3,9 @@
         <div class="box">
             <div class="mask-title"><icon class="ico" ico='icon-jinggao'/>  温馨提示</div>
             <div class="mask-content">
-               <span class="del-tip">是否确认删除</span>
+               <span class="del-tip">是否确认{{title}}</span>
                <div class="del-btn-group">
-                    <el-button :loading="btnLoading" @click="closeToask(true)" class="del-btn" type="danger">确认删除</el-button>
+                    <el-button :loading="btnLoading" @click="closeToask(true)" class="del-btn" type="danger">确认{{title}}</el-button>
                     <el-button @click="closeToask(false)">取消</el-button>
                </div>
             </div>
@@ -17,6 +17,7 @@ import icon from './ico';
 import request from '@/http/http.js';
 export default {
     props: {
+        tip: '',
         id: {
             require: true
         },
@@ -28,6 +29,11 @@ export default {
     },
     components: {
         icon
+    },
+    computed: {
+        title() {
+            return this.tip === undefined ? '删除' : this.tip;
+        }
     },
     data() {
         return {
@@ -51,7 +57,7 @@ export default {
                 request[url](data).then(res => {
                     that.btnLoading = false;
                     if (res.code === 10000) {
-                        this.$message.success('删除成功');
+                        this.$message.success(`${this.title}成功`);
                     } else {
                         this.$message.success(res.msg);
                     }

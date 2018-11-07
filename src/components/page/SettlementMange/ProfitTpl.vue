@@ -24,48 +24,53 @@
                     <p>X值分配比例设置</p>
                     <el-checkbox style="margin:20px 0" v-model="checkX">仅上级拼店分配</el-checkbox>
                     <div v-for='(v,k) in formX' :key="k+'X'" style="overflow:hidden;line-height:30px">
-                        <el-checkbox :label="k" class="smallItem" v-model="v.disable" @change="checked=>changeStatus(checked,'X',k)" >{{v.label}}</el-checkbox>
+                        <el-checkbox :disabled="k == 0 && !checkX" :label="k" class="smallItem" v-model="v.disable" @change="checked=>changeStatus(checked,'X',k)" >{{v.label}}</el-checkbox>
                         <el-input-number :controls='false' :min="0" :max="100" v-if='k > 1' :disabled="!v.disable" style="width:140px;float:right" size="mini" v-model="v.value"></el-input-number>
                         <p v-else v-for='(v1,k1) in v.value' style="float: right;margin-bottom: 10px">
                             <span v-if='k == 1' style="font-size: 14px;color: #606266" >{{`v${k1}用户：`}}</span>
                             <el-input-number :controls='false' :min="0" :max="100" :key="k1" :disabled="!v.disable" style="width:140px" v-model="v1.value"></el-input-number>
                         </p>
                     </div>
+                    <p>结算时间：周期结算</p>
                 </div>
                 <div class="item">
                     <p>Y值分配比例设置</p>
                     <el-checkbox style="margin:20px 0" v-model="checkY">仅上级拼店分配</el-checkbox>
                     <div v-for='(v,k) in formY' :key="k+'Y'" style="overflow:hidden;line-height:30px">
-                        <el-checkbox :label="k" class="smallItem" v-model="v.disable" @change="checked=>changeStatus(checked,'Y',k)" >{{v.label}}</el-checkbox>
+                        <el-checkbox :disabled="k == 0 && !checkY" :label="k" class="smallItem" v-model="v.disable" @change="checked=>changeStatus(checked,'Y',k)" >{{v.label}}</el-checkbox>
                         <el-input-number :controls='false' :min="0" :max="100" v-if='k > 1' :disabled="!v.disable" style="width:140px;float:right" size="mini" v-model="v.value"></el-input-number>
                         <p v-else v-for='(v1,k1) in v.value' style="float: right;margin-bottom: 10px">
                             <span v-if='k == 1' style="font-size: 14px;color: #606266" >{{`v${k1}用户：`}}</span>
                             <el-input-number :controls='false' :min="0" :max="100" :key="k1" :disabled="!v.disable" style="width:140px" v-model="v1.value"></el-input-number>
                         </p>
                     </div>
+                    <p>结算时间：即时结算</p>
                 </div>
                 <div class="item">
                     <p>Z值分配比例设置</p>
                     <el-checkbox style="margin:20px 0" v-model="checkZ">仅上级拼店分配</el-checkbox>
                     <div v-for='(v,k) in formZ' :key="k+'Z'" style="overflow:hidden;line-height:30px">
-                        <el-checkbox :label="k" class="smallItem" v-model="v.disable" @change="checked=>changeStatus(checked,'Z',k)" >{{v.label}}</el-checkbox>
+                        <el-checkbox :disabled="k == 0 && !checkZ" :label="k" class="smallItem" v-model="v.disable" @change="checked=>changeStatus(checked,'Z',k)" >{{v.label}}</el-checkbox>
                         <el-input-number :controls='false' :min="0" :max="100" v-if='k > 1' :disabled="!v.disable" style="width:140px;float:right" size="mini" v-model="v.value"></el-input-number>
                         <p v-else v-for='(v1,k1) in v.value' style="float: right;margin-bottom: 10px">
                             <span v-if='k == 1' style="font-size: 14px;color: #606266" >{{`v${k1}用户：`}}</span>
                             <el-input-number :controls='false' :min="0" :max="100" :key="k1" :disabled="!v.disable" style="width:140px" v-model="v1.value"></el-input-number>
                         </p>
                     </div>
+                    <p>结算时间：即时结算</p>
                 </div>
             </div>
             <el-row>
-                <span>设置开启时间</span>
-                <el-date-picker v-model="startTime" placeholder="请选择开启时间"></el-date-picker>
-                <span>设置关闭时间</span>
-                <el-date-picker v-model="stopTime" placeholder="请选择关闭时间"></el-date-picker>
+                <el-checkbox v-model="isSetTime" @change="changeStartTime"></el-checkbox>
+                <span>设置开启时间：</span>
+                <el-date-picker :disabled="!isSetTime" type="datetime" v-model="startTime" placeholder="请选择开启时间"></el-date-picker>
+                <span style="margin-left: 10px;">设置关闭时间：</span>
+                <el-date-picker v-if="type == 2" :disabled="!isSetTime" type="datetime" v-model="stopTime" placeholder="请选择关闭时间"></el-date-picker>
+                <span v-else>无限</span>
             </el-row>
             <el-row style="margin-top:20px">
                 <el-button :loading="btnLoading" @click="beforeSubmit" type="primary">确认保存</el-button>
-                <el-button>取消</el-button>
+                <el-button @click="$router.replace('profitDistrMange')">取消</el-button>
             </el-row>
         </el-card>
     </div>
@@ -92,7 +97,7 @@ export default {
             personMoney: '', // 个人奖励金
             checkX: false, // 拼店X
             formX: [
-                { disable: false, label: '店主', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
+                { disable: false, label: '店主(存入店主账户)', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
                 { disable: false, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, label: '助业金', value: 0 }, // 助业金
                 { disable: false, label: '其他1', value: 0 }, // 其他
@@ -101,7 +106,7 @@ export default {
             ],
             checkY: false, // 拼店Y
             formY: [
-                { disable: false, label: '店主', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
+                { disable: false, label: '店主(存入店主账户)', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
                 { disable: false, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, label: '助业金', value: 0 }, // 助业金
                 { disable: false, label: '其他1', value: 0 }, // 其他
@@ -110,13 +115,14 @@ export default {
             ],
             checkZ: false, // 拼店Z
             formZ: [
-                { disable: false, label: '店主', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
+                { disable: false, label: '店主(存入店主账户)', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
                 { disable: false, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, label: '助业金', value: 0 }, // 助业金
                 { disable: false, label: '其他1', value: 0 }, // 其他
                 { disable: false, label: '其他2', value: 0 }, // 其他
                 { disable: false, label: '其他3', value: 0 } // 其他
             ],
+            isSetTime: true,
             startTime: '', // 开启时间
             stopTime: '' // 关闭时间
         };
@@ -321,6 +327,7 @@ export default {
         changeStartTime(val) {
             if (!val) {
                 this.startTime = '';
+                this.stopTime = '';
             }
         },
         // 清空数据
@@ -331,10 +338,12 @@ export default {
             this.tplId = '';
             this.val = '';
             this.url = '';
+            this.type = '2';
+            this.isSetTime = true;
             sessionStorage.removeItem('settleProfitMsg');
             this.checkX = false; // 拼店X
             this.formX = [
-                { disable: false, val: 1, label: '店主', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
+                { disable: false, val: 1, label: '店主(存入店主账户)', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
                 { disable: false, val: 2, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, val: 16, label: '助业金', value: 0 }, // 助业金
                 { disable: false, val: 64, label: '其他1', value: 0 }, // 其他
@@ -343,7 +352,7 @@ export default {
             ];
             this.checkY = false; // 拼店Y
             this.formY = [
-                { disable: false, val: 1, label: '店主', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
+                { disable: false, val: 1, label: '店主(存入店主账户)', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
                 { disable: false, val: 2, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, val: 16, label: '助业金', value: 0 }, // 助业金
                 { disable: false, val: 64, label: '其他1', value: 0 }, // 其他
@@ -352,7 +361,7 @@ export default {
             ];
             this.checkZ = false; // 拼店Z
             this.formZ = [
-                { disable: false, val: 1, label: '店主', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
+                { disable: false, val: 1, label: '店主(存入店主账户)', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
                 { disable: false, val: 2, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, val: 16, label: '助业金', value: 0 }, // 助业金
                 { disable: false, val: 64, label: '其他1', value: 0 }, // 其他
@@ -366,6 +375,7 @@ export default {
         getData() {
             this.pageLoading = true;
             request.querySettleProFitById({ id: this.tplId }).then(res => {
+                this.type = res.data.type;
                 this.pageLoading = false;
                 this.tplName = res.data.name;
                 this.shopMoney = res.data.storeRate;
