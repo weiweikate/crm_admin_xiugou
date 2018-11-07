@@ -122,10 +122,6 @@
                             {
                                 index: 'shippingTemplate',
                                 title: '运费模板'
-                            },
-                            {
-                                index: 'giftManage',
-                                title: '产品礼包管理'
                             }
                         ]
                     },

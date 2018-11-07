@@ -28,6 +28,7 @@
                         <el-input-number :controls='false' :min="0" :max="100" v-if='k > 1' :disabled="!v.disable" style="width:140px;float:right" size="mini" v-model="v.value"></el-input-number>
                         <p v-else v-for='(v1,k1) in v.value' style="float: right;margin-bottom: 10px">
                             <span v-if='k == 1' style="font-size: 14px;color: #606266" >{{`v${k1}用户：`}}</span>
+                            <span v-if='k == 0' style="font-size: 14px;color: #606266" >{{`${k1+1}星：`}}</span>
                             <el-input-number :controls='false' :min="0" :max="100" :key="k1" :disabled="!v.disable" style="width:140px" v-model="v1.value"></el-input-number>
                         </p>
                     </div>
@@ -41,6 +42,7 @@
                         <el-input-number :controls='false' :min="0" :max="100" v-if='k > 1' :disabled="!v.disable" style="width:140px;float:right" size="mini" v-model="v.value"></el-input-number>
                         <p v-else v-for='(v1,k1) in v.value' style="float: right;margin-bottom: 10px">
                             <span v-if='k == 1' style="font-size: 14px;color: #606266" >{{`v${k1}用户：`}}</span>
+                            <span v-if='k == 0' style="font-size: 14px;color: #606266" >{{`${k1+1}星：`}}</span>
                             <el-input-number :controls='false' :min="0" :max="100" :key="k1" :disabled="!v.disable" style="width:140px" v-model="v1.value"></el-input-number>
                         </p>
                     </div>
@@ -54,6 +56,7 @@
                         <el-input-number :controls='false' :min="0" :max="100" v-if='k > 1' :disabled="!v.disable" style="width:140px;float:right" size="mini" v-model="v.value"></el-input-number>
                         <p v-else v-for='(v1,k1) in v.value' style="float: right;margin-bottom: 10px">
                             <span v-if='k == 1' style="font-size: 14px;color: #606266" >{{`v${k1}用户：`}}</span>
+                            <span v-if='k == 0' style="font-size: 14px;color: #606266" >{{`${k1+1}星：`}}</span>
                             <el-input-number :controls='false' :min="0" :max="100" :key="k1" :disabled="!v.disable" style="width:140px" v-model="v1.value"></el-input-number>
                         </p>
                     </div>
@@ -107,7 +110,7 @@ export default {
             checkY: false, // 拼店Y
             formY: [
                 { disable: false, label: '店主(存入店主账户)', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
-                { disable: false, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
+                { disable: false, label: '直接上级（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, label: '助业金', value: 0 }, // 助业金
                 { disable: false, label: '其他1', value: 0 }, // 其他
                 { disable: false, label: '其他2', value: 0 }, // 其他
@@ -116,7 +119,7 @@ export default {
             checkZ: false, // 拼店Z
             formZ: [
                 { disable: false, label: '店主(存入店主账户)', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
-                { disable: false, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
+                { disable: false, label: '直接上级（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, label: '助业金', value: 0 }, // 助业金
                 { disable: false, label: '其他1', value: 0 }, // 其他
                 { disable: false, label: '其他2', value: 0 }, // 其他
@@ -186,7 +189,7 @@ export default {
                 for (let i = 0; i < this.formY[1].value.length; i++) {
                     if (i !== this.formY[1].value.length - 1) {
                         if (this.formY[1].value[i].value > this.formY[1].value[i + 1].value) {
-                            this.$message.warning('请输入正确的Y值比例分配设置下的店员设置');
+                            this.$message.warning('请输入正确的Y值比例分配设置下的直接上级设置');
                             return;
                         }
                     }
@@ -196,7 +199,7 @@ export default {
                 for (let i = 0; i < this.formZ[1].value.length; i++) {
                     if (i !== this.formZ[1].value.length - 1) {
                         if (this.formZ[1].value[i].value > this.formZ[1].value[i + 1].value) {
-                            this.$message.warning('请输入正确的Z值比例分配设置下的店员设置');
+                            this.$message.warning('请输入正确的Z值比例分配设置下的直接上级设置');
                             return;
                         }
                     }
@@ -353,7 +356,7 @@ export default {
             this.checkY = false; // 拼店Y
             this.formY = [
                 { disable: false, val: 1, label: '店主(存入店主账户)', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
-                { disable: false, val: 2, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
+                { disable: false, val: 2, label: '直接上级（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, val: 16, label: '助业金', value: 0 }, // 助业金
                 { disable: false, val: 64, label: '其他1', value: 0 }, // 其他
                 { disable: false, val: 128, label: '其他2', value: 0 }, // 其他
@@ -362,7 +365,7 @@ export default {
             this.checkZ = false; // 拼店Z
             this.formZ = [
                 { disable: false, val: 1, label: '店主(存入店主账户)', value: [{ value: 0 }, { value: 0 }, { value: 0 }] }, // 店主
-                { disable: false, val: 2, label: '店员（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
+                { disable: false, val: 2, label: '直接上级（等级分润）', value: [{ value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }, { value: 0 }] }, // 店员
                 { disable: false, val: 16, label: '助业金', value: 0 }, // 助业金
                 { disable: false, val: 64, label: '其他1', value: 0 }, // 其他
                 { disable: false, val: 128, label: '其他2', value: 0 }, // 其他

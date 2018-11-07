@@ -15,7 +15,7 @@
                         </div>
                         <div class="form-item">
                             <el-form-item label="昵称">
-                                <el-input v-model="dealer.nickname" placeholder="请输入昵称" size="medium"></el-input>
+                                <el-input :maxlength="16" v-model="dealer.nickname" placeholder="请输入昵称" size="medium"></el-input>
                             </el-form-item>
                             <el-form-item label="微信名称">
                                 <div :title="dealer.wechatName">{{dealer.wechatName}}</div>
@@ -67,7 +67,7 @@
     import icon from '@/components/common/ico';
     import region from '@/components/common/Region';
     import request from '@/http/http';
-    import * as api from '@/api/api'
+    import * as api from '@/api/api';
     export default {
         components: {
             icon, region
@@ -90,7 +90,6 @@
             };
         },
         created() {
-            console.log(this.dealer);
             this.uploadImg = api.uploadImg;
             const reginArr = [];
             if (this.dealer.provinceId) {
@@ -165,6 +164,12 @@
                     } else {
                         data.areaId = '';
                     }
+                }
+                if (data.provinceId == '' || data.cityId == '' || data.areaId == '') {
+                    return this.$message.warning('请输入完整的地址信息');
+                }
+                if (this.dealer.nickname.length < 3 || !this.dealer.nickname) {
+                    return this.$message.warning('请输入2~16位昵称');
                 }
                 if (that.phone === false || that.idCard === false) {
                     return false;

@@ -74,6 +74,7 @@
   flex-wrap: wrap;
 }
 .top-card .left-wrap .left-content {
+  cursor: pointer;
   float: left;
   position: relative;
   width: 46%;
@@ -87,6 +88,7 @@
   background-color: #eee;
 }
 .top-card .left-wrap .left-content .ico-wrap {
+  cursor: pointer;
   position: absolute;
   top: 45px;
   left: 60px;
@@ -94,6 +96,10 @@
   height: 68px;
   background-color: #ff6868;
   border-radius: 10px;
+  text-align: center;
+  line-height: 68px;
+  color: #fff;
+  font-size: 34px;
 }
 .top-card .left-wrap .left-content .l-title {
   width: 120px;
@@ -158,3 +164,4 @@
 .clearfix:after {
   clear: both;
 }
+/*# sourceMappingURL=dashboard.css.map */

@@ -1,19 +1,18 @@
 'use strict';
 
 const path = require('path');
-const baseURL = 'http://172.16.10.12';
-// const baseURL = 'http://172.16.10.88';
-// const baseURL = 'http://172.16.10.100';
-// const baseURL = 'http://172.16.10.41';
-// const baseURL = 'http://172.16.10.42';
-// const baseURL = 'http://172.16.10.29';
-// const baseURL = 'http://172.16.10.19';
+
+const baseURL = 'http://172.16.10.12:8190';
+// const baseURL = 'http://172.16.10.88:8190';
+// const baseURL = 'http://172.16.10.100:8190';
+// const baseURL = 'http://172.16.10.41:8190';
+// const baseURL = 'http://172.16.10.42:8190';
+// const baseURL = 'http://172.16.10.29:8190';
+// const baseURL = 'http://172.16.10.19:8190';
 // const baseURL = 'http://testadmin.sharegoodsmall.com';
 // const baseURL = 'http://devadmin.sharegoodsmall.com';
+// const baseURL = 'https://www.easy-mock.com/mock/5be2b23cee1b3d272cafccfa/crm';
 
-// 测试地址不需要端口号
-const url_1 = baseURL + ':8190';
-// const url_1 = baseURL;
 module.exports = {
     dev: {
         // Paths
@@ -21,10 +20,10 @@ module.exports = {
         assetsPublicPath: '/',
         proxyTable: {
             '/admin': {
-                target: url_1,
+                target: baseURL,
                 changeOrigin: true,
                 pathRewrite: {
-                    '^/admin': url_1 + '/admin'
+                    '^/admin': baseURL + '/admin'
                 }
             }
         },

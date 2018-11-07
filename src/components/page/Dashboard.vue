@@ -30,7 +30,7 @@
                             <div class="ocontent">{{info.bonusCount}}</div>
                         </div>
                         <div class="top-card-content">
-                            <div class="otitle"><icon class="icon" ico='icon-yubeifeiyong'/>今日订单数</div>
+                            <div class="otitle"><icon class="icon" ico='icon-74wodedingdan'/>今日订单数</div>
                             <div class="ocontent">{{info.orderNum}}</div>
                         </div>
                     </div>
@@ -65,13 +65,13 @@
                         </router-link>
                         <router-link to="/addBrand" tag="div">
                             <div class="right-content">
-                                <div class="r-ico-wrap"><icon ico='icon-chanpin1' /></div>
+                                <div class="r-ico-wrap"><icon ico='icon-pinpai' /></div>
                                 <span class="r-content">添加品牌</span>
                             </div>
                         </router-link>
                         <router-link to="/addGift" tag="div">
                             <div class="right-content">
-                                <div class="r-ico-wrap"><icon ico='icon-chanpin1' /></div>
+                                <div class="r-ico-wrap"><icon ico='icon-libao' /></div>
                                 <span class="r-content">发布礼包</span>
                             </div>
                         </router-link>
@@ -89,19 +89,19 @@
                         </router-link>
                         <router-link to="/memberManage" tag="div">
                             <div class="right-content">
-                                <div class="r-ico-wrap"><icon ico='icon-huiyuantianjiakehu' /></div>
+                                <div class="r-ico-wrap"><icon ico='icon-sousuo' /></div>
                                 <span class="r-content">会员搜索</span>
                             </div>
                         </router-link>
-                        <router-link to="" tag="div">
+                        <router-link to="/realNameAuthentication" tag="div">
                             <div class="right-content">
-                                <div class="r-ico-wrap"><icon ico='icon-chanpin1' /></div>
+                                <div class="r-ico-wrap"><icon ico='icon-shouquanfuwu' /></div>
                                 <span class="r-content">实名认证查看</span>
                             </div>
                         </router-link>
                         <router-link to="/addSupplier" tag="div">
                             <div class="right-content">
-                                <div class="r-ico-wrap"><icon ico='icon-chanpin1' /></div>
+                                <div class="r-ico-wrap"><icon ico='icon-huiyuanzhanghaoguanli' /></div>
                                 <span class="r-content">添加供应商</span>
                             </div>
                         </router-link>
@@ -113,31 +113,31 @@
                         </router-link>
                         <router-link to="/advertisingManage" tag="div">
                             <div class="right-content">
-                                <div class="r-ico-wrap"><icon ico='icon-chanpin1' /></div>
+                                <div class="r-ico-wrap"><icon ico='icon-fenlei' /></div>
                                 <span class="r-content">广告位管理</span>
                             </div>
                         </router-link>
-                        <router-link to="" tag="div">
+                        <router-link to="/advertisingManage" tag="div">
                             <div class="right-content">
-                                <div class="r-ico-wrap"><icon ico='icon-chanpin1' /></div>
+                                <div class="r-ico-wrap"><icon ico='icon-fenlei' /></div>
                                 <span class="r-content">推荐位管理</span>
                             </div>
                         </router-link>
                         <router-link to="/sensitiveLibrary" tag="div">
                             <div class="right-content">
-                                <div class="r-ico-wrap"><icon ico='icon-chanpin1' /></div>
+                                <div class="r-ico-wrap"><icon ico='icon-yduipaibanleixingliebiao' /></div>
                                 <span class="r-content">敏感词库管理</span>
                             </div>
                         </router-link>
                         <router-link to="/addManger" tag="div">
                             <div class="right-content">
-                                <div class="r-ico-wrap"><icon ico='icon-huiyuan' /></div>
+                                <div class="r-ico-wrap"><icon ico='icon-zhucedengluyonghuming' /></div>
                                 <span class="r-content">创建管理员账号</span>
                             </div>
                         </router-link>
                         <router-link to="/accountRecharge" tag="div">
                             <div class="right-content">
-                                <div class="r-ico-wrap"><icon ico='icon-chanpin1' /></div>
+                                <div class="r-ico-wrap"><icon ico='icon-zhanghuchongzhi-xiugai' /></div>
                                 <span class="r-content">账户充值</span>
                             </div>
                         </router-link>
@@ -151,66 +151,66 @@
                         <span>待处理模块</span>
                     </div>
                     <div class="left-wrap">
-                        <div class='left-content'>
-                            <div class="ico-wrap"><img src="../../assets/images/icon-1.png" alt=""></div>
+                        <router-link tag="div" to="/orderList" class='left-content'>
+                            <div class="ico-wrap"><icon ico='icon-daifahuo' /></div>
                             <span class='l-title'>待发货订单</span>
                             <span class="l-content">{{info.unSendOrderNum}}</span>
-                        </div>
-                        <div class='left-content'>
-                            <div class="ico-wrap"><img src="../../assets/images/icon-1.png" alt=""></div>
+                        </router-link>
+                        <router-link tag="div" to="/feedBack" class='left-content'>
+                            <div class="ico-wrap"><icon ico='icon-wentifankui' /></div>
                             <span class='l-title'>待反馈问题</span>
                             <span class="l-content">{{info.unanswered}}</span>
-                        </div>
-                        <div class='left-content'>
-                            <div class="ico-wrap"><img src="../../assets/images/icon-1.png" alt=""></div>
+                        </router-link>
+                        <router-link tag="div" to="/withdrawalAudit" class='left-content'>
+                            <div class="ico-wrap"><icon ico='icon-tixian' /></div>
                             <span class='l-title'>提现审核</span>
                             <span class="l-content">{{info.pending}}</span>
-                        </div>
-                        <div class='left-content'>
-                            <div class="ico-wrap"><img src="../../assets/images/icon-1.png" alt=""></div>
+                        </router-link>
+                        <router-link tag="div" to="/showValReCharge" class='left-content'>
+                            <div class="ico-wrap"><icon ico='icon-zhanghuchongzhi-xiugai' /></div>
                             <span class='l-title'>账户充值审核</span>
                             <span class="l-content">{{info.accountChange}}</span>
-                        </div>
-                        <div class='left-content'>
-                            <div class="ico-wrap"><img src="../../assets/images/icon-1.png" alt=""></div>
+                        </router-link>
+                        <router-link tag="div" to="/productList" class='left-content'>
+                            <div class="ico-wrap"><icon ico='icon-shangpin' /></div>
                             <span class='l-title'>产品审核</span>
                             <span class="l-content">{{info.productCheck}}</span>
-                        </div>
-                        <div class='left-content'>
-                            <div class="ico-wrap"><img src="../../assets/images/icon-1.png" alt=""></div>
+                        </router-link>
+                        <router-link tag="div" to="/giftManage" class='left-content'>
+                            <div class="ico-wrap"><icon ico='icon-libao' /></div>
                             <span class='l-title'>礼包审核</span>
                             <span class="l-content">{{info.packageCheck}}</span>
-                        </div>
-                        <div class='left-content'>
-                            <div class="ico-wrap"><img src="../../assets/images/icon-1.png" alt=""></div>
+                        </router-link>
+                        <router-link tag="div" to="/giftManage" class='left-content'>
+                            <div class="ico-wrap"><icon ico='icon-zhanghuchongzhi-xiugai' /></div>
                             <span class='l-title'>优惠套餐审核</span>
                             <span class="l-content">{{info.discountPackageCheck}}</span>
-                        </div>
-                        <div class='left-content'>
-                            <div class="ico-wrap"><img src="../../assets/images/icon-1.png" alt=""></div>
+                        </router-link>
+                        <router-link tag="div" to="/orderList" class='left-content'>
+                            <div class="ico-wrap"><icon ico='icon-tuikuan' /></div>
                             <span class='l-title'>退款审核</span>
                             <span class="l-content">{{info.refund}}</span>
-                        </div>
-                        <div class='left-content'>
-                            <div class="ico-wrap"><img src="../../assets/images/icon-1.png" alt=""></div>
+                        </router-link>
+                        <router-link tag="div" to="/orderList" class='left-content'>
+                            <div class="ico-wrap"><icon ico='icon-dulituihuodingdan' /></div>
                             <span class='l-title'>退货退款审核</span>
                             <span class="l-content">{{info.refunds}}</span>
-                        </div>
-                        <div class='left-content'>
-                            <div class="ico-wrap"><img src="../../assets/images/icon-1.png" alt=""></div>
+                        </router-link>
+                        <router-link tag="div" to="/orderList" class='left-content'>
+                            <div class="ico-wrap"><icon ico='icon-tuihuanhuodingdan' /></div>
                             <span class='l-title'>换货审核</span>
                             <span class="l-content">{{info.exchange}}</span>
-                        </div>
-                        <div class='left-content'>
-                            <div class="ico-wrap"><img src="../../assets/images/icon-1.png" alt=""></div>
+                        </router-link>
+                        <router-link tag="div" to="/orderList" class='left-content'>
+                            <div class="ico-wrap"><icon ico='icon-chaxun' /></div>
                             <span class='l-title'>退货退款确认</span>
                             <span class="l-content">{{info.refundsCheck}}</span>
-                        </div>
-                        <div class='left-content'>
-                            <div class="ico-wrap"><img src="../../assets/images/icon-1.png" alt=""></div>
+                        </router-link>
+                        <router-link tag="div" to="/orderList" class='left-content'>
+                            <div class="ico-wrap"><icon ico='icon-dingdan' /></div>
                             <span class='l-title'>换货确认</span>
                             <span class="l-content">{{info.exchangeCheck}}</span>
-                        </div>
+                        </router-link>
                     </div>
                 </el-card>
             </el-col>
