@@ -74,8 +74,8 @@
                 </el-form-item>
                 <el-form-item>
                     <el-checkbox label="购买升级礼包" value="4" v-model="checked[4]"></el-checkbox>
-                    <template v-for="(item,k) in giftIds">
-                        <el-input :class="k>0?'gift-inp':''" v-model="giftIds[k]" :key="k" :disabled="!checked[4]" placeholder="请输入礼包ID" auto-complete="off"></el-input>
+                    <template v-for="(item,k) in form.userLevelPackageList">
+                        <el-input :class="k>0?'gift-inp':''" v-model="item.packageId" :key="k" :disabled="!checked[4]" placeholder="请输入礼包ID" auto-complete="off"></el-input>
                         <i v-if="k>0" @click="deleteGift(k)" class="el-icon-close"></i>
                     </template>
                     <div class="color-blue" @click="addGift">添加</div>
@@ -213,12 +213,13 @@
                 title: ['设置升级经验值', '设置必要条件', '设置直接邀请条件', '设置间接邀请条件', '设置个人交易额条件', '设置直接交易额条件', '设置间接交易额条件', '设置连续交易额条件', '设置连续交易额频次条件', '设置一次性交易条件', '代币充值'],
                 index: 0,
                 checked: [false, false, false, false, false],
-                form: {},
+                form: {
+                    userLevelPackageList: [{ packageId: '' }]// 礼包ids
+                },
                 id: '',
                 row: '',
                 isAjax: false,
-                status: '',
-                giftIds: ['']// 礼包ids
+                status: ''
             };
         },
         activated() {
@@ -229,11 +230,11 @@
         methods: {
             // 删除礼包Id
             deleteGift(index) {
-                this.giftIds.splice(index, 1);
+                this.form.userLevelPackageList.splice(index, 1);
             },
             // 添加礼包id
             addGift() {
-                this.giftIds.push('');
+                this.form.userLevelPackageList.push({ packageId: '' });
             },
             // 获取详情
             getDetail() {
@@ -243,6 +244,9 @@
                 request.findUserLevelUpgradeDemotionById(data).then((res) => {
                     this.form = res.data;
                     this.status = res.data.level;
+                    if (!res.data.userLevelPackageList || !res.data.userLevelPackageList.length) {
+                        this.form.userLevelPackageList = [{ packageId: '' }];
+                    }
                     this.convert(this.form.upgradeCondition);
                 }).catch((err) => {
                     console.log(err);
@@ -312,12 +316,19 @@
                     if (this.checked[3]) {
                         flag4 = this.isEmpty(data.upgradeCondGroupSales, false);
                     }
+                    this.setIsAjax(flag1 && flag2 && flag3 && flag4);
                     if (this.checked[4]) {
                         data.upgradeCondBuyGift = 1;
+                        data.userLevelPackageList.forEach((v, k) => {
+                            if (v.packageId == '') {
+                                this.$message.warning('请输入礼包ID');
+                                this.isAjax = false;
+                            }
+                        });
                     } else {
                         data.upgradeCondBuyGift = 0;
+                        data.userLevelPackageList = [];
                     }
-                    this.setIsAjax(flag1 && flag2 && flag3 && flag4);
                 } else if (index === 2) {
                     flag1 = this.isEmpty(data.upgradeDirectPerExp, false);
                     this.setIsAjax(flag1);
