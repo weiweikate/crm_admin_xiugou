@@ -54,7 +54,7 @@
                         <el-option label="点击分享" value="1"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="minMoney" label="任务名称">
+                <el-form-item prop="name" label="任务名称">
                     <el-input class="inp" v-model="form.name"></el-input>
                 </el-form-item>
                 <el-form-item prop="minActualMoney" label="实际秀值金额">
@@ -81,8 +81,6 @@
                     <el-input type="textarea" v-model="form.remarks" class="item"></el-input>
                 </el-form-item>
                 <el-form-item prop="maxActualMoney" v-show="false" label="">
-                </el-form-item>
-                <el-form-item prop="maxMoney" v-show="false" label="">
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -118,7 +116,6 @@
                 form: {
                     type: '',
                     maxMoney: '',
-                    minMoney: '',
                     minActualMoney: '',
                     maxActualMoney: '',
                     firstMoney: '',
@@ -152,7 +149,7 @@
                 this.form.maxActualMoney = this.form.maxActualMoney == '' ? '-1' : this.form.maxActualMoney;
                 if (this.form.minActualMoney > 0) {
                     for (const item in this.form) {
-                        if (item === 'maxActualMoney' || item === 'remarks' || item === 'id') {
+                        if (item === 'maxActualMoney' || item === 'remarks') {
                             continue;
                         }
                         if (this.form[item] == '') {
@@ -189,9 +186,16 @@
                 this.taskToast = true;
             },
             handleClose() {
-                for (const item in this.form) {
-                    this.form[item] = '';
-                }
+                this.form = {
+                    type: '',
+                    minActualMoney: '',
+                    maxActualMoney: '',
+                    firstMoney: '',
+                    afterMoney: '',
+                    scratchCode: '',
+                    highHits: '',
+                    remarks: ''
+                };
                 this.taskToast = false;
                 this.getList(this.page.currentPage);
             },

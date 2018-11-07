@@ -7,13 +7,13 @@ const path = require('path');
 // const baseURL = 'http://172.16.10.41';
 // const baseURL = 'http://172.16.10.42';
 // const baseURL = 'http://172.16.10.29';
-const baseURL = 'http://172.16.10.19';
-// const baseURL = 'http://testadmin.sharegoodsmall.com';
+// const baseURL = 'http://172.16.10.19';
+const baseURL = 'http://testadmin.sharegoodsmall.com';
 // const baseURL = 'http://devadmin.sharegoodsmall.com';
 
 // 测试地址不需要端口号
-const url_1 = baseURL + ':8190';
-// const url_1 = baseURL;
+// const url_1 = baseURL + ':8190';
+const url_1 = baseURL;
 module.exports = {
     dev: {
         // Paths
@@ -33,7 +33,7 @@ module.exports = {
         host: '0.0.0.0', // can be overwritten by process.env.HOST
 
         port: 8090, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-        autoOpenBrowser: true,
+        autoOpenBrowser: false,
         errorOverlay: true,
         notifyOnErrors: true,
         poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-

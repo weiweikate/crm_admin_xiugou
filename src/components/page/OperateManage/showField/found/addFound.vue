@@ -161,6 +161,8 @@
                 content: '',
                 generalize: ''
             }
+            this.id = '';
+            sessionStorage.removeItem('foundId');
             this.linkPosition = [];
             this.fileList2 = [];
             this.fileList1 = [];
@@ -240,7 +242,6 @@
             },
             // 获取信息
             async getInfo() {
-                this.form = { generalize: '' };
                 this.linkPosition = [];
                 this.fileList1 = [];
                 this.fileList2 = [];
@@ -250,7 +251,7 @@
                 await request.queryArticalPublishCUserList({}).then(res => {
                     this.userList = res.data;
                 });
-                if (this.id === null) {
+                if (this.id === null || this.id === '') {
                     this.nav[3] = '新建发布者';
                     this.url = 'addDiscoverArticle';
                 } else {

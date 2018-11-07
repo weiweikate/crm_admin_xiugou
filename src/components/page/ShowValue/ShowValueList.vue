@@ -11,7 +11,7 @@
                         {{scope.row.activeTime | formatDateAll}}
                     </template>
                 </el-table-column>
-                <el-table-column prop="stopTime" label="启用时间" align="center">
+                <el-table-column prop="stopTime" label="停用时间" align="center">
                     <template slot-scope="scope" v-if="scope.row.stopTime">
                         {{scope.row.stopTime | formatDateAll}}
                     </template>

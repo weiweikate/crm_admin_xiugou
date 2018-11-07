@@ -18,5 +18,5 @@ Vue.config.errorHandler = function(err, vm, info) {
     console.log(`异常列号：${column}`);
     console.log(`异常堆栈信息：${stack}`);
     console.log(`-------------------------------------------------------------------------`);
-    Notification.warning('js报错')
+    // Notification.warning('js报错')
 };
