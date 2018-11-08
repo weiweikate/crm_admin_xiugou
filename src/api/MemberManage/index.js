@@ -21,6 +21,8 @@ export const getuserCertificationById = ['/user/userCertification/getById', { me
 export const rejectCertificationById = ['/user/userCertification/reject', { methods: 'post' }]; // 实名认证驳回
 
 // 会员层级
+// 根据礼包code查询是否存在礼包，进行参数校验
+export const findByCode = ['/operator/activityPackage/findByCode', { methods: 'get' }];
 // 查询层级list
 export const getLevelList = ['/user/Level/getLevelList', { methods: 'get' }];
 // 查询层级信息

@@ -75,7 +75,7 @@
                 <el-form-item>
                     <el-checkbox label="购买升级礼包" value="4" v-model="checked[4]"></el-checkbox>
                     <template v-for="(item,k) in form.userLevelPackageList">
-                        <el-input :class="k>0?'gift-inp':''" v-model="item.packageCode" :key="k" :disabled="!checked[4]" placeholder="请输入礼包ID" auto-complete="off"></el-input>
+                        <el-input :class="k>0?'gift-inp':''" v-model="item.packageCode" :key="k" :disabled="!checked[4]" @change="checkCode(item.packageCode,k)" placeholder="请输入礼包ID" auto-complete="off"></el-input>
                         <i v-if="k>0" @click="deleteGift(k)" class="el-icon-close"></i>
                     </template>
                     <div class="color-blue" @click="addGift">添加</div>
@@ -454,6 +454,20 @@
                 } else {
                     that.isAjax = false;
                 }
+            },
+            checkCode(code, index) {
+                const data = {
+                    packageCode: code
+                };
+                request.findByCode(data).then(res => {
+                    if (!res.data) {
+                        this.$message.warning('礼包不存在，请重新输入');
+                        this.form.userLevelPackageList[index] = { packageCode: '' };
+                        this.$set(this.form.userLevelPackageList, index, this.form.userLevelPackageList[index]);
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
             }
         }
     };
