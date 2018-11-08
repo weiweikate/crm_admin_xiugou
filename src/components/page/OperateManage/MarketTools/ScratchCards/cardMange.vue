@@ -163,22 +163,21 @@
                 this.$refs[formName].validate((valid) => {
                     if (!valid) return;
                     const data = this.form;
-                    if (this.status == 2) {
-                        this.tableData.forEach((v, k) => {
-                            v.totalNum = v.addNum || 0;
-                        });
-                        data.id = this.id;
-                    }
                     try {
                         this.totalRatio = 0;
                         this.tableData.forEach((v, k) => {
-                            const isInt = /^0|[1-9]\d*$/; const isDouble = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
+                            const isNum = /^0|[1-9]\d*$/;
+                            const isInt = /^[1-9]\d*$/;
+                            const isDouble = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
                             if (!isInt.test(v.totalNum) || v.totalNum.length > 12) {
-                                throw '发放数为1-12位数字';
+                                throw '发放数为1-12位正整数';
                             } else {
                                 if (v.stockNum != -1 && v.totalNum > v.stockNum) {
                                     throw '发放数不能大于库存';
                                 }
+                            }
+                            if (v.addNum && (!isNum.test(v.addNum) || v.addNum.length > 12)) {
+                                throw '增加发放数为1-12位数字';
                             }
                             if (!isDouble.test(v.winRate)) {
                                 throw '中奖概率保留2位小数';
@@ -193,6 +192,12 @@
                     } catch (error) {
                         this.$message.warning(error);
                         return;
+                    }
+                    if (this.status == 2) {
+                        this.tableData.forEach((v, k) => {
+                            v.totalNum = v.addNum || 0;
+                        });
+                        data.id = this.id;
                     }
                     data.scratchCardPrize = this.tableData;
                     this.btnLoading = true;
@@ -246,9 +251,9 @@
                                 this.selectedCoupon.push(v);
                             }
                         });
-                    }).catch(err => {
-                        console.log(err);
                     });
+                }).catch(err => {
+                    console.log(err);
                 });
             },
             // 计算总概率

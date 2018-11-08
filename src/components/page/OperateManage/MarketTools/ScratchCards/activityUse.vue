@@ -2,7 +2,7 @@
     <div class="scratch-cards">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card>
-            <el-table :data="tableDate" border stripe>
+            <el-table :data="tableData" border stripe>
                 <el-table-column prop="name" label="活动名称" align="center"></el-table-column>
                 <el-table-column prop="type" label="活动类型" align="center">
                     <template slot-scope="scope">
@@ -13,7 +13,7 @@
                 <el-table-column label="绑定时间" align="center">
                     <template slot-scope="scope">{{scope.row.bindingTime|formatDateAll}}</template>
                 </el-table-column>
-                <el-table-column label="操作" align="center" width="320px">
+                <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button type="success" @click="watchActivity(scope.row.id)">查 看</el-button>
                     </template>
@@ -46,7 +46,7 @@
             return {
                 code: '',
                 nav: ['运营管理', '营销工具管理', '刮刮卡', '当前活动使用'],
-                tableDate: []
+                tableData: []
             };
         },
         activated() {
@@ -71,7 +71,7 @@
             },
             watchActivity(id) {
                 sessionStorage.setItem('activityCode', id);
-                this.$router.push({ name: '/showCashTaskList', query: { activityCode: id }});
+                this.$router.push({ name: 'showCashTaskList', query: { activityCode: id }});
             }
         }
     };
