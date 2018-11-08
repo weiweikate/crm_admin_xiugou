@@ -175,7 +175,7 @@
                                     throw '发放数不能大于库存';
                                 }
                             }
-                            if (v.addNum && (!isNum.test(v.addNum) || v.addNum.length > 12)) {
+                            if (v.addNum && (!isInt.test(v.addNum) || v.addNum.length > 12)) {
                                 throw '增加发放数为1-12位数字';
                             } else {
                                 if (v.stockNum != -1 && (v.addNum + v.totalNum) > v.stockNum) {
