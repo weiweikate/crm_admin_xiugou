@@ -124,12 +124,14 @@
                     highHits: '',
                     remarks: ''
                 },
+                code: '', // 刮刮卡id
                 delId: '',
                 delUrl: '',
                 delUri: ''
             };
         },
         activated() {
+            this.code = this.$route.query.activityCode || '';
             this.getList(1);
             this.form = {
                 type: '',
@@ -142,6 +144,9 @@
                 highHits: '',
                 remarks: ''
             };
+        },
+        deactivated() {
+            this.code = '';
         },
         methods: {
             // 表单校验
