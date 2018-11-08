@@ -67,7 +67,7 @@
         components: { vBreadcrumb, deleteToast },
         data() {
             return {
-                nav: ['运营管理', '发现管理', '发布者管理'],
+                nav: ['运营管理', '秀场管理', '发布者管理'],
                 tableData: [],
                 loading: false,
                 form: {},

@@ -30,17 +30,17 @@
         },
         data() {
             return {
-                nav: ['运营管理', '发现管理'],
+                nav: ['运营管理', '秀场管理'],
                 list: [
                     {
                         img: 'static/img/show_list.png',
-                        title: '发现列表',
-                        content: '所有发布的发现',
+                        title: '秀场列表',
+                        content: '所有发布的秀场',
                         page: '/foundList'
                     }, {
                         img: 'static/img/show_item.png',
-                        title: '发现分类管理',
-                        content: '发现分类设置',
+                        title: '秀场分类管理',
+                        content: '秀场分类设置',
                         page: '/foundCategory'
                     }]
             };

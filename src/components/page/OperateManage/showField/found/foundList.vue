@@ -97,7 +97,7 @@
         components: { vBreadcrumb, deleteToast },
         data() {
             return {
-                nav: ['运营管理', '发现管理', '发现列表'],
+                nav: ['运营管理', '秀场管理'],
                 tableData: [],
                 tabLoading: false,
                 form: {
