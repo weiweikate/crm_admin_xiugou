@@ -179,8 +179,12 @@
                             if (v.addNum && (!isNum.test(v.addNum) || v.addNum.length > 12)) {
                                 throw '增加发放数为1-12位数字';
                             }
-                            if (!isDouble.test(v.winRate)) {
-                                throw '中奖概率保留2位小数';
+                            if (!v.winRate && !isDouble.test(v.winRate)) {
+                                if (!v.winRate) {
+                                    throw '请输入中奖概率';
+                                } else {
+                                    throw '中奖概率保留2位小数';
+                                }
                             }
                             if (v.status != 2) {
                                 this.totalRatio += v.winRate || 0;
