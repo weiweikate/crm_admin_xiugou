@@ -117,7 +117,7 @@
         <el-dialog title="温馨提示" :visible.sync="mask">
             <div class="tip">{{tips[index]}}</div>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="sure">确 认</el-button>
+                <el-button type="primary" :loading="btnLoading" @click="sure">确 认</el-button>
                 <el-button @click="mask=false">取 消</el-button>
             </div>
         </el-dialog>
@@ -155,7 +155,10 @@ export default {
             title: '启用仓库',
             mask: false,
             tips: ['确认推送入库单？', '确认取消图库单？'],
-            index: ''
+            index: '',
+            url: '',
+            id: '',
+            btnLoading: false
         };
     },
     activated() {
@@ -215,15 +218,31 @@ export default {
             this.form.date = [];
             this.getList(this.page.currentPage);
         },
-        // 停用启用
+        // 推送取消
         sendOrCancel(row, num) {
             this.mask = true;
-            // this.id = row.id;
+            this.id = row.id;
             // this.status = row.status;
             this.index = num;
         },
         sure() {
             this.mask = false;
+            this.url = this.index == 0 ? 'syncAsnInfo' : 'cancelNoteById';
+            const data = {};
+            if (this.index == 0) {
+                data.noteId = this.id;
+            } else {
+                data.id = this.id;
+            }
+            this.btnLoading = true;
+            request[this.url](data).then(res => {
+                this.$message.success(res.msg);
+                this.getList(this.page.currentPage);
+                this.btnLoading = false;
+            }).catch(err => {
+                console.log(err);
+                this.btnLoading = false;
+            });
         }
     }
 };

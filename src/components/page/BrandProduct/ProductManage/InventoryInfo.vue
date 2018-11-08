@@ -1,5 +1,5 @@
 <template>
-    <div class="inventory-list">
+    <div class="inventoryInfo-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
             <table class="table-area">
@@ -47,19 +47,32 @@
         data() {
             return {
                 nav: ['品牌产品管理', '产品管理', '产品库存管理', '库存查看'],
-                tableData: []
+                tableData: [],
+                productInfo: {
+                    specValues: []
+                },
+                id: ''
             };
         },
         activated() {
+            this.id = this.$route.query.inventoryInfoId || sessionStorage.getItem('inventoryInfoId');
             this.getList();
         },
         methods: {
             // 获取数据
             getList() {
-                request.queryRepertoryList({}).then(res => {
+                const data = {
+                    priceId: this.id
+                };
+                request.queryProductSpecStockDetailsList(data).then(res => {
                     this.tableData = [];
+                    this.productInfo = {
+                        specValues: []
+                    };
                     if (!res.data) return;
-                    this.tableData = res.data.data;
+                    this.productInfo = res.data.productExt;
+                    this.productInfo.specValues = res.data.productExt.spec.split('-');
+                    this.tableData = res.data.list;
                 }).catch(error => {
                     console.log(error);
                 });
@@ -68,7 +81,7 @@
     };
 </script>
 <style lang='less' scoped>
-    .inventory-list {
+    .inventoryInfo-list {
         .table-area{
             font-size:12px;
             width: 100%;
@@ -81,6 +94,31 @@
                 border: 1px solid #ebeef5;
                 padding: 8px;
                 text-align: center;
+            }
+            .product-img {
+                display: inline-block;
+                float: left;
+                width: 80px;
+                height: 80px;
+                border: 1px solid #ddd;
+                overflow: hidden;
+                img {
+                    width: 60px;
+                    height: 60px;
+                    margin: 10px;
+                }
+            }
+            .product-name {
+                float: left;
+                width: 65%;
+                height: auto;
+                margin: 5px 0 0 20px;
+            }
+            .product-id {
+                float: left;
+                width: 65%;
+                height: auto;
+                margin: 20px 0 0 20px;
             }
         }
         .block {

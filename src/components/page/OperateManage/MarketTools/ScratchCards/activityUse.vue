@@ -10,11 +10,12 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="num" label="使用数量" align="center"></el-table-column>
-                <el-table-column label="绑定时间" align="center"></el-table-column>
+                <el-table-column label="绑定时间" align="center">
                     <template slot-scope="scope">{{scope.row.bindingTime|formatDateAll}}</template>
+                </el-table-column>
                 <el-table-column label="操作" align="center" width="320px">
                     <template slot-scope="scope">
-                        <el-button type="success">查 看</el-button>
+                        <el-button type="success" @click="watchActivity(scope.row.id)">查 看</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -50,6 +51,7 @@
         },
         activated() {
             this.code = this.$route.query.activityUseId || sessionStorage.getItem('activityUseId');
+            this.getList(this.page.currentPage);
         },
         methods: {
             getList(val) {
@@ -60,12 +62,16 @@
                 };
                 this.page.currentPage = val;
                 this.tableData = [];
-                request.queryScratchCardList(data).then(res => {
+                request.queryByCodeList(data).then(res => {
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+            watchActivity(id) {
+                sessionStorage.setItem('activityCode', id);
+                this.$router.push({ name: '/showCashTaskList', query: { activityCode: id }});
             }
         }
     };

@@ -15,7 +15,7 @@
                 </template>
                 <el-table-column label="唯一识别码" align="center">
                     <template slot-scope="scope">
-                        <el-input :disabled="scope.row.skuCode?true:false" v-model="scope.row.skuCode"></el-input>
+                        <el-input :disabled="scope.row.isDisabled" v-model="scope.row.skuCode"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="原价" align="center">
@@ -147,6 +147,7 @@
                     res.data.forEach((v, k) => {
                         v.btnStyle = 'primary';
                         this.unit = v.stockUnit;
+                        v.isDisabled = !!v.skuCode;
                         this.tableData.push(v);
                         this.headData = [];
                         if (!v.specType || !v.spec) return;
@@ -205,7 +206,7 @@
                         'div',
                         {
                             style: {
-                                margin: '8px -20px 0 0'
+                                // margin: '8px -20px 0 0'
                             }
                         },
                         ['库存单位']
@@ -215,7 +216,7 @@
                         {
                             style: {
                                 display: 'block',
-                                width: '120px',
+                                width: '100px',
                                 'margin-top': '8px'
                             },
                             attrs: {

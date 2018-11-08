@@ -33,6 +33,10 @@ export const batchUpdateDetails = '/goods/batchUpdateDetails';
 export const getNoteList = '/goods/getNoteList';
 // 启用停用
 export const getNoteById = ['/goods/getNoteById', { methods: 'get' }];
+// 推送入库单
+export const syncAsnInfo = ['/goods/syncAsnInfo', { methods: 'get' }];
+// 取消入库单
+export const cancelNoteById = ['/goods/cancelNoteById', { methods: 'get' }];
 
 // 根据id获取SKU
 export const getSKUById = '/goods/getSKUById';

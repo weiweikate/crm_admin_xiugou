@@ -43,7 +43,7 @@
                 <el-table-column prop="residualQuantity" label="剩余数量" align="center"></el-table-column>
                 <el-table-column prop="totalActivity" label="当前活动使用数" align="center">
                     <template slot-scope="scope">
-                        <el-tag style="cursor: pointer" @click="showUse(scope.row)">{{scope.row.totalActivity}}</el-tag>
+                        <el-button type="primary" size="mini" style="cursor: pointer" @click="showUse(scope.row)">{{scope.row.totalActivity}}</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column label="状态" align="center">

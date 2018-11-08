@@ -70,7 +70,7 @@
                         page: '/giftManage'
                     },
                     {
-                        img: 'static/img/package.png',
+                        img: 'static/img/scratchCard.png',
                         title: '刮刮卡',
                         content: '创建商品套餐让顾客购买',
                         page: '/scratchCardsList'

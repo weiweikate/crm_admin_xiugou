@@ -3,6 +3,8 @@
 const path = require('path');
 
 const baseURL = 'http://172.16.10.12:8190';
+// const baseURL = 'http://172.16.10.56:8190';
+// const baseURL = 'http://172.16.10.111:8190';
 // const baseURL = 'http://172.16.10.88:8190';
 // const baseURL = 'http://172.16.10.100:8190';
 // const baseURL = 'http://172.16.10.41:8190';
