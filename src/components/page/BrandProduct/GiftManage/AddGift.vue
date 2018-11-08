@@ -194,7 +194,7 @@
             </el-form>
         </el-card>
         <el-dialog title="优惠券列表" :visible.sync="isShowCouponList" width="30%">
-            <el-tabs v-model="couponTypecouponType" v-loading="couponLoading" @tab-click="handleClick">
+            <el-tabs v-model="couponTypecouponType" v-loading="couponLoading" @tab-click="handleClick" style="height: 500px;overflow: auto">
                 <el-tab-pane label="满减券" name="1">
                     <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
                         <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}} </span>
@@ -773,8 +773,10 @@
             // 显示优惠券列表
             showAddCouList() {
                 this.isShowCouponList = true;
+                this.couponTypecouponType = '1';
                 this.handleClick({ name: '1' });
                 this.tmpCouponList = [];
+                this.tmpCouponList.push(...this.selectedCoupon)
             },
             // 选择优惠券类型
             handleClick(tab) {
@@ -810,10 +812,10 @@
             //  选择优惠券
             selectCoupon(coupon) {
                 coupon.selected = true;
-                const tmp = [];
-                tmp.push(...this.selectedCoupon, ...this.tmpCouponList);
-                for (let i = 0; i < tmp.length; i++) {
-                    if (tmp[i].id == coupon.id) {
+                for (let i = 0; i < this.tmpCouponList.length; i++) {
+                    if (this.tmpCouponList[i].id == coupon.id) {
+                        coupon.selected = false;
+                        this.tmpCouponList.splice(i, 1)
                         return;
                     }
                 }
@@ -822,6 +824,7 @@
             // 确定添加优惠券
             confirmCoupon() {
                 this.isShowCouponList = false;
+                this.selectedCoupon = [];
                 this.selectedCoupon.push(...this.tmpCouponList);
             },
             // 修改礼包状态
@@ -953,13 +956,13 @@
             white-space: nowrap;
         }
         .active-selected{
-            background-color: skyblue;
+            background-color: #33b4ff;
             color: #fff;
-            border: 1px solid skyblue;
+            border: 1px solid #33b4ff;;
         }
         .delete-coupon{
             cursor: pointer;
-            color: skyblue;
+            color: #33b4ff;;
             float: left;
         }
         .tag-list {
