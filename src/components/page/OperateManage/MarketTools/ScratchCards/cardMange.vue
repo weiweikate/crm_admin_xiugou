@@ -168,7 +168,7 @@
                             const isNum = /^0|[1-9]\d*$/;
                             const isInt = /^[1-9]\d*$/;
                             const isDouble = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
-                            if (v.status && (!isInt.test(v.totalNum) || v.totalNum.length > 12)) {
+                            if (this.status == 1 && (!isInt.test(v.totalNum) || v.totalNum.length > 12)) {
                                 throw '发放数为1-12位正整数';
                             } else {
                                 if (v.stockNum != -1 && v.totalNum > v.stockNum) {
@@ -177,6 +177,10 @@
                             }
                             if (v.addNum && (!isNum.test(v.addNum) || v.addNum.length > 12)) {
                                 throw '增加发放数为1-12位数字';
+                            } else {
+                                if (v.stockNum != -1 && (v.addNum + v.totalNum) > v.stockNum) {
+                                    throw '发放数不能大于库存';
+                                }
                             }
                             if (!v.winRate && !isDouble.test(v.winRate)) {
                                 if (!v.winRate) {
