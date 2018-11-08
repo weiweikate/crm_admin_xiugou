@@ -38,12 +38,12 @@
                         </el-table-column>
                         <el-table-column v-if="status == 2" prop="addNum" label="增加发放数" align="center">
                             <template slot-scope="scope">
-                                <el-input-number :min="0" :controls="false" v-model="scope.row.addNum"></el-input-number>
+                                <el-input-number :min="1" :disabled="scope.row.status==2" :controls="false" v-model="scope.row.addNum"></el-input-number>
                             </template>
                         </el-table-column>
                         <el-table-column prop="winRate" label="中奖概率" align="center" min-width="100">
                             <template slot-scope="scope">
-                                <el-input-number @blur="computedRatio()" :min="0" :controls="false" v-model="scope.row.winRate"></el-input-number>%
+                                <el-input-number @blur="computedRatio()" :disabled="scope.row.status==2" :min="0" :controls="false" v-model="scope.row.winRate"></el-input-number>%
                             </template>
                         </el-table-column>
                         <el-table-column prop="id" label="操作" align="center">
@@ -175,7 +175,7 @@
                                     throw '发放数不能大于库存';
                                 }
                             }
-                            if (v.addNum && (!isInt.test(v.addNum) || v.addNum.length > 12)) {
+                            if (v.addNum === 0 && (!isInt.test(v.addNum) || v.addNum.length > 12)) {
                                 throw '增加发放数为1-12位数字';
                             } else {
                                 if (v.stockNum != -1 && (v.addNum + v.totalNum) > v.stockNum) {
