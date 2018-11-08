@@ -59,7 +59,7 @@
                         <!--<img v-if='detail.headUrl == ""' src="../../../../assets/images/avatar.jpg" alt="">-->
                         <!--<img v-else :src="detail.headUrl" alt="">-->
                     <!--</el-upload>-->
-                    <img v-if='detail.headUrl == ""' src="../../../../assets/images/avatar.jpg" alt="">
+                    <img v-if='!detail.headUrl' src="../../../../assets/images/avatar.jpg" alt="">
                     <img v-else :src="detail.headUrl" alt="">
                 <p style="font-size:14px">店铺头像</p>
                 <p style="margin-top:10px">

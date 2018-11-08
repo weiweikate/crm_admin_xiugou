@@ -24,7 +24,7 @@
                         </el-table-column>
                         <el-table-column prop="totalNum" label="奖品发放数" align="center">
                             <template slot-scope="scope">
-                                <el-input-number v-if="status==1" :min="0" :controls="false" v-model="scope.row.totalNum"></el-input-number>
+                                <el-input-number v-if="status==1" :min="1" :controls="false" v-model="scope.row.totalNum"></el-input-number>
                                 <span v-else>{{scope.row.totalNum||0}}</span>
                             </template>
                         </el-table-column>

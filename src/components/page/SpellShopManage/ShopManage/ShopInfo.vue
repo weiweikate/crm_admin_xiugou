@@ -12,7 +12,7 @@
                     </div>
                     <div class="shop-right">
                         <p class="shop-msg">
-                            <span>创建时间：{{detail.createTime|formatDate}}</span>
+                            <span>创建时间：{{detail.createTime|formatDateAll}}</span>
                         </p>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                         <!--<img v-if='avatar == ""' src="../../../../assets/images/avatar.jpg" alt="">-->
                         <!--<img v-else :src="detail.headUrl" alt="">-->
                     <!--</el-upload>-->
-                    <img v-if='detail.headUrl == ""' src="../../../../assets/images/avatar.jpg" alt="">
+                    <img v-if='!detail.headUrl' src="../../../../assets/images/avatar.jpg" alt="">
                     <img v-else :src="detail.headUrl" alt="">
                     <p style="margin-top:10px">
                         <el-button @click="spellShopAcc" type="primary">拼店账户</el-button>
@@ -79,7 +79,7 @@
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>店铺拼店分红总额：￥{{detail.totalTradeVolume+detail.tradeVolume}}</span>
+                            <span>店铺拼店分红总额：￥{{detail.totalTradeBalance||0+detail.tradeBalance||0}}</span>
                         </p>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>店铺分红次数：{{detail.bonusCount}}次</span>
+                            <span>店铺分红次数：{{detail.bonusCount||0}}次</span>
                             <span style="margin-left:20px" @click="shareBoneMsg" class="font-href">查看详情</span>
                         </p>
                     </div>
@@ -123,7 +123,7 @@
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>最快拼店记录：{{detail.quickBonusBeginTime|formatDate}}-{{detail.quickBonusEndTime|formatDate}}</span>
+                            <span>最快拼店记录：{{detail.quickBonusBeginTime|formatDateAll}}-{{detail.quickBonusEndTime|formatDateAll}}</span>
                         </p>
                     </div>
                 </div>

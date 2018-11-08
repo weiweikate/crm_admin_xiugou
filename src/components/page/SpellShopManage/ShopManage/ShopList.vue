@@ -62,9 +62,21 @@
                         <template>{{scope.row.createTime|formatDateAll}}</template>
                     </template>
                 </el-table-column>
-                <el-table-column prop="totalTradeVolume" label="交易总额" align="center"></el-table-column>
-                <el-table-column prop="bonusCount" label="分红次数" align="center"></el-table-column>
-                <el-table-column prop="tradeVolume" label="现交易额" align="center"></el-table-column>
+                <el-table-column prop="totalTradeBalance" label="交易总额" align="center">
+                    <template slot-scope="scope">
+                        <template>{{scope.row.totalTradeBalance||0}}</template>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="bonusCount" label="分红次数" align="center">
+                    <template slot-scope="scope">
+                        <template>{{scope.row.bonusCount||0}}</template>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="tradeBalance" label="现交易额" align="center">
+                    <template slot-scope="scope">
+                        <template>{{scope.row.tradeBalance||0}}</template>
+                    </template>
+                </el-table-column>
                 <el-table-column label="状态" align="center">
                     <template slot-scope="scope">
                         <template v-if="scope.row.status==0">关闭</template>
@@ -143,10 +155,10 @@ export default {
                 maxMoney: this.form.maxTradeMoney,
                 minMoney: this.form.minTradeMoney,
                 startTime: this.form.date
-                    ? moment(this.form.date[0]).format('YYYY-MM-DD')
+                    ? moment(this.form.date[0]).format('YYYY-MM-DD 00:00:00')
                     : '',
                 endTime: this.form.date
-                    ? moment(this.form.date[1]).format('YYYY-MM-DD')
+                    ? moment(this.form.date[1]).format('YYYY-MM-DD 00:00:00')
                     : '',
                 page: val,
                 size: this.page.pageSize

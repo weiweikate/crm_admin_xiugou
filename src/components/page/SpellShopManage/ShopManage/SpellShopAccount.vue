@@ -8,7 +8,7 @@
                 <span>拼店账户（元）</span>
             </p>
             <p class="spell-shop-content" style="font-size: 22px;">拼店额：￥58000/￥60000</p>
-            <p class="spell-shop-content">分红金：￥60000</p>
+            <!--<p class="spell-shop-content">分红金：￥60000</p>-->
             <p class="spell-shop-content">交易利润：￥6800</p>
             <p class="btn" @click="showInfo">账户明细</p>
         </div>
@@ -76,7 +76,7 @@ export default {
             height: 40px;
             border: 2px solid #fff;
             border-radius: 10px;
-            margin: 0 auto;
+            margin: 40px auto 0;
             text-align: center;
             line-height: 40px;
             cursor: pointer;

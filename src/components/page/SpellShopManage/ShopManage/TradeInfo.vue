@@ -7,15 +7,15 @@
               <el-input v-model="form.name" placeholder="请输入买家名称"></el-input>
           </el-form-item>
           <el-form-item prop="first" label="交易品类">
-              <el-select v-model="form.first" placeholder="">
+              <el-select v-model="form.first" placeholder="" @change="getClassify(2)">
                 <el-option label="全部" value=""></el-option>
-                <el-option label="一级" value="1"></el-option>
+                <el-option v-for="(v,k) in first" :key="k" :label="v.name" :value="v.id"></el-option>
               </el-select>
           </el-form-item>
           <el-form-item prop="second" label="">
               <el-select v-model="form.second" placeholder="">
                 <el-option label="全部" value=""></el-option>
-                <el-option label="二级" value="2"></el-option>
+                  <el-option v-for="(v,k) in second" :key="k" :label="v.name" :value="v.id"></el-option>
               </el-select>
           </el-form-item>
           <el-form-item prop="beginTime" label="购买时间">
@@ -55,8 +55,12 @@
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http.js';
+
 export default {
     components: { vBreadcrumb },
+    mixins: [myMixinTable],
 
     data() {
         return {
@@ -68,27 +72,50 @@ export default {
                 beginTime: '',
                 endTime: ''
             },
-            tableData: [{ id: '1' }],
-            page: {
-                currentPage: 1,
-                totalPage: 0
-            }
+            tableData: [],
+            first: [],
+            second: []
         };
     },
-
+    activated() {
+        this.getClassify(1);
+    },
     methods: {
-    // 提交表单
+        // 提交表单
         submitForm() {
 
         },
-        // 分页
-        handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
-        },
-        handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
-            this.page.currentPage = val;
-            this.submitForm(val);
+        // 获取一级二级类目
+        getClassify(num) {
+            let data = {};
+            if (num == 1) {
+                data = {
+                    page: 1,
+                    pageSize: 10000,
+                    level: 1,
+                    fatherId: 0
+                };
+            } else {
+                data = {
+                    page: 1,
+                    pageSize: 10000,
+                    level: 2,
+                    fatherId: this.form.first
+                };
+                this.second = [];
+                this.form.second = '';
+            }
+            request.queryProductCategoryList(data).then(res => {
+                if (num == 1) {
+                    this.first = [];
+                    this.first = res.data.data;
+                } else {
+                    this.second = [];
+                    this.second = res.data.data;
+                }
+            }).catch(error => {
+                console.log(error);
+            });
         }
     }
 };
