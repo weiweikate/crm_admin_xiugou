@@ -18,12 +18,13 @@
                 </el-form-item>
                 <el-form-item prop="generalize" label="推广入口">
                     <el-radio-group v-model="form.generalize">
+                        <el-radio label="">最新</el-radio>
                         <el-radio label="1">精选</el-radio>
                         <el-radio label="2">热门</el-radio>
                         <el-radio label="3">推荐</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="上传封面图片" v-if="form.generalize == 1 || form.generalize == 2">
+                <el-form-item label="上传封面图片">
                     <el-upload
                         :action="upload"
                         :on-success="uploadSuccess1"
@@ -33,7 +34,7 @@
                         :file-list="fileList1"
                         list-type="picture-card">
                         <el-button size="small" type="primary">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">图片尺寸{{form.generalize == 1? '650px*325px':'560px*280px'}}</div>
+                        <div slot="tip" class="el-upload__tip">图片尺寸（{{imgSuggestSize}}）</div>
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="上传图片">
@@ -46,7 +47,7 @@
                         :file-list="fileList2"
                         list-type="picture-card">
                         <el-button size="small" type="primary">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">最多可上传6张（图片尺寸建议750px*750px）</div>
+                        <div slot="tip" class="el-upload__tip">最多可上传6张（750px*750px）</div>
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="文章内容">
@@ -147,6 +148,16 @@
         computed: {
             upload() {
                 return api.uploadImg;
+            },
+            imgSuggestSize() {
+                const type = this.form.generalize;
+                if (type == 1) {
+                    return '650px*325px';
+                } else if (type == 2) {
+                    return '560*280px';
+                } else {
+                    return '335px*335px、335px*446px、335px*251px';
+                }
             }
         },
         activated() {
@@ -183,9 +194,20 @@
                     const _URL = window.URL || window.webkitURL;
                     const image = new Image();
                     image.onload = function() {
-                        if ((image.width == 650 && image.height == 325 && that.form.generalize == 1) || (image.width == 560 && image.height == 280 && that.form.generalize == 2)) {
+                        const width = image.width;
+                        const height = image.height;
+                        const type = that.form.generalize;
+                        if ((width == 650 && height == 325 && type == 1) || (width == 560 && height == 280 && type == 2)) {
                             that.coverImgSize = `${image.width}*${image.height}`;
                             resolve();
+                        } else if (type == '' || type == '3') {
+                            if ((width == 335 && height == 335) || (width == 335 && height == 446) || (width == 335 && height == 251)) {
+                                that.coverImgSize = `${image.width}*${image.height}`;
+                                resolve();
+                            } else {
+                                console.log(`${image.width}*${image.height}`);
+                                reject();
+                            }
                         } else {
                             console.log(`${image.width}*${image.height}`);
                             reject();
@@ -209,7 +231,7 @@
                     const _URL = window.URL || window.webkitURL;
                     const image = new Image();
                     image.onload = function() {
-                        if (image.width <= 750 && image.height <= 750) {
+                        if (image.width == 750 && image.height == 750) {
                             that.imageSize = `${image.width}*${image.height}`;
                             resolve();
                         } else {
@@ -267,7 +289,7 @@
                         this.form.categoryId = res.data.categoryId;
                         this.form.title = res.data.title;
                         this.form.content = res.data.content;
-                        this.form.generalize = res.data.generalize.toString();
+                        this.form.generalize = res.data.generalize == 4 ? '' : res.data.generalize.toString();
                         this.imageSize = res.data.imgSize;
                         this.coverImgSize = res.data.coverImgSize;
                         if (res.data.discoverArticleProductList) {
@@ -362,6 +384,11 @@
                         const typeArr = [];
                         if (this.fileList1.length !== 0) {
                             if ((this.form.generalize == 1 && this.coverImgSize !== '650*325') || (this.form.generalize == 2 && this.coverImgSize !== '560*280')) return this.$message.warning('封面图尺寸不符');
+                            if (this.form.generalize == '' || this.form.generalize == '3') {
+                                if (this.coverImgSize != '335*335' && this.coverImgSize != '335*446' && this.coverImgSize != '335*251') {
+                                    return this.$message.warning('封面图尺寸不符');
+                                }
+                            }
                             this.fileList1.forEach(v => {
                                 imgArr1.push(v.url);
                             });

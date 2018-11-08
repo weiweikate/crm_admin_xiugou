@@ -181,7 +181,7 @@
                         subs: [
                             {
                                 index: 'showHome',
-                                title: '发现管理'
+                                title: '秀场管理'
                             },
                             {
                                 index: 'discountCoupon',
