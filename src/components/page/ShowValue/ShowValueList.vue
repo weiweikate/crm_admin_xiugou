@@ -25,10 +25,10 @@
                 </el-table-column>
                 <el-table-column prop="id" label="操作" align="center" min-width="150px">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.status == '0'" @click="operateTpl(scope.row, '2')" type="primary">开启</el-button>
-                        <el-button v-else-if="scope.row.status == 2"  @click="operateTpl(scope.row, '0')" type="primary">取消启用</el-button>
-                        <el-button v-if="scope.row.status == '0'" type="warning" @click="editTpl(scope.row)">编辑</el-button>
-                        <el-button v-if="scope.row.status == '0'" @click="delItem(scope.$index,scope.row.id)" type="danger">删除</el-button>
+                        <el-button v-if="scope.row.status == '0' && scope.row.defuaultTemplate == '0'" @click="operateTpl(scope.row, '2')" type="primary">开启</el-button>
+                        <el-button v-else-if="scope.row.status == 2 && scope.row.defuaultTemplate == '0'"  @click="operateTpl(scope.row, '0')" type="primary">取消启用</el-button>
+                        <el-button v-if="scope.row.status == '0' && scope.row.defuaultTemplate == '0'" type="warning" @click="editTpl(scope.row)">编辑</el-button>
+                        <el-button v-if="scope.row.status == '0' && scope.row.defuaultTemplate == '0'" @click="delItem(scope.$index,scope.row.id)" type="danger">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
