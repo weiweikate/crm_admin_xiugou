@@ -39,7 +39,7 @@
         components: { vBreadcrumb },
         data() {
             return {
-                nav: ['运营管理', '发现管理', '分类管理', '新建发布者'],
+                nav: ['运营管理', '秀场管理', '分类管理', '新建发布者'],
                 id: '',
                 url: 'addDiscoverCategory',
                 btnLoading: false,

@@ -251,11 +251,6 @@
                     this.tableData.forEach((v, k) => {
                         v.selected = true;
                         this.selectedCoupon.push(v);
-                        // this.tableData.forEach((v, k) => {
-                        //     if (v.type == 1) {
-                        //         this.selectedCoupon.push(v);
-                        //     }
-                        // });
                     });
                 }).catch(err => {
                     console.log(err);
@@ -280,6 +275,7 @@
                 this.isShowCouponList = true;
                 this.handleClick({ name: '1' });
                 this.tmpCouponList = [];
+                this.tmpCouponList.push(...this.selectedCoupon);
             },
             // 选择优惠券类型
             handleClick(tab) {
@@ -317,10 +313,9 @@
             },
             //  选择优惠券
             selectCoupon(coupon) {
-                const tmp = [];
-                tmp.push(...this.selectedCoupon, ...this.tmpCouponList);
-                for (let i = 0; i < tmp.length; i++) {
-                    if (tmp[i].awardId == coupon.awardId) {
+                coupon.selected = true;
+                for (let i = 0; i < this.tmpCouponList.length; i++) {
+                    if (this.tmpCouponList[i].awardId == coupon.awardId) {
                         coupon.selected = false;
                         this.tmpCouponList.splice(i, 1);
                         return;
