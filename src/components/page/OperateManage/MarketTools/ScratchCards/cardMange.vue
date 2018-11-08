@@ -9,7 +9,7 @@
                 <el-form-item prop="prize" label="刮刮卡奖品:">
                     <el-button type="primary" @click="showAddCouList">+ 添加优惠券</el-button>
                     <el-button type="primary" @click="isShowShowBeanList = true">+ 添加秀豆奖品</el-button>
-                    <el-table :data="tableData" border stripe class="mt10">
+                    <el-table :data="selectedCoupon" border stripe class="mt10">
                         <el-table-column type="index" label="编号" align="center"></el-table-column>
                         <el-table-column prop="awardName" label="奖品名称" align="center"></el-table-column>
                         <el-table-column prop="giftValue" label="赠送值" align="center">
@@ -129,7 +129,6 @@
                     giftValue: '',
                     stockNum: -1
                 },
-                tableData: [],
                 status: '', // 1.添加 2.编辑
                 rules: {
                     name: [
@@ -165,11 +164,11 @@
                     const data = this.form;
                     try {
                         this.totalRatio = 0;
-                        this.tableData.forEach((v, k) => {
+                        this.selectedCoupon.forEach((v, k) => {
                             const isNum = /^0|[1-9]\d*$/;
                             const isInt = /^[1-9]\d*$/;
                             const isDouble = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
-                            if (!isInt.test(v.totalNum) || v.totalNum.length > 12) {
+                            if (v.status && (!isInt.test(v.totalNum) || v.totalNum.length > 12)) {
                                 throw '发放数为1-12位正整数';
                             } else {
                                 if (v.stockNum != -1 && v.totalNum > v.stockNum) {
@@ -198,12 +197,12 @@
                         return;
                     }
                     if (this.status == 2) {
-                        this.tableData.forEach((v, k) => {
+                        this.selectedCoupon.forEach((v, k) => {
                             v.totalNum = v.addNum || 0;
                         });
                         data.id = this.id;
                     }
-                    data.scratchCardPrize = this.tableData;
+                    data.scratchCardPrize = this.selectedCoupon;
                     this.btnLoading = true;
                     request[this.url](data).then(res => {
                         this.$message.success(res.msg);
@@ -236,7 +235,6 @@
                     loseHint: ''
                 };
                 this.totalRatio = 0;
-                this.tableData = [];
                 this.selectedCoupon = [];
                 this.tempChooseList = [];
             },
@@ -246,9 +244,8 @@
                 };
                 request.findScratchCardById(data).then(res => {
                     this.form = res.data;
-                    this.tableData = res.data.scratchCardPrize;
                     this.totalRatio = res.data.totalProbability;
-                    this.tableData.forEach((v, k) => {
+                    res.data.scratchCardPrize.forEach((v, k) => {
                         v.selected = true;
                         this.selectedCoupon.push(v);
                     });
@@ -259,7 +256,7 @@
             // 计算总概率
             computedRatio() {
                 this.totalRatio = 0;
-                this.tableData.forEach((v, k) => {
+                this.selectedCoupon.forEach((v, k) => {
                     if (v.status != 2) {
                         this.totalRatio += v.winRate || 0;
                     }
@@ -273,6 +270,7 @@
             // 显示优惠券列表
             showAddCouList() {
                 this.isShowCouponList = true;
+                this.couponType = '1';
                 this.handleClick({ name: '1' });
                 this.tmpCouponList = [];
                 this.tmpCouponList.push(...this.selectedCoupon);
@@ -309,7 +307,6 @@
             // 删除
             deleteSelectedCoupon(index, status) {
                 this.selectedCoupon.splice(index, 1);
-                this.tableData.splice(index, 1);
             },
             //  选择优惠券
             selectCoupon(coupon) {
@@ -326,9 +323,8 @@
             // 确定添加优惠券
             confirmCoupon() {
                 this.isShowCouponList = false;
-                this.tableData = [];
+                this.selectedCoupon = [];
                 this.selectedCoupon.push(...this.tmpCouponList);
-                this.tableData.push(...this.selectedCoupon);
             },
             // 添加秀豆
             addBean() {
@@ -339,23 +335,15 @@
                 if (this.form1.awardName == '' || this.form1.giftValue == '') {
                     return this.$message.warning('输入的数值不能为空');
                 }
-                // const temp = {};
                 if (this.form1.awardName == '' || this.giftValue == '') {
                     return this.$message.warning('输入的数值不能为空');
                 }
-                // this.tableData.push({
-                //     awardName: this.form1.awardName,
-                //     giftValue: this.form1.giftValue,
-                //     type: 2,
-                //     stockNum: -1
-                // };
                 const temp = {
                     awardName: this.form1.awardName,
                     giftValue: this.form1.giftValue,
                     type: 2,
                     stockNum: -1
                 };
-                this.tableData.push(temp);
                 this.selectedCoupon.push(temp);
                 this.beforeClose();
             },
@@ -380,7 +368,7 @@
                 }
                 row.status = num;
                 this.computedRatio();
-                this.$set(this.tableData, index, row);
+                this.$set(this.selectedCoupon, index, row);
             }
         }
     };
