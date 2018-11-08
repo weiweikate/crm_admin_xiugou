@@ -249,12 +249,13 @@
                     this.tableData = res.data.scratchCardPrize;
                     this.totalRatio = res.data.totalProbability;
                     this.tableData.forEach((v, k) => {
+                        v.selected = true;
                         this.selectedCoupon.push(v);
-                        this.tableData.forEach((v, k) => {
-                            if (v.type == 1) {
-                                this.selectedCoupon.push(v);
-                            }
-                        });
+                        // this.tableData.forEach((v, k) => {
+                        //     if (v.type == 1) {
+                        //         this.selectedCoupon.push(v);
+                        //     }
+                        // });
                     });
                 }).catch(err => {
                     console.log(err);
@@ -316,11 +317,12 @@
             },
             //  选择优惠券
             selectCoupon(coupon) {
-                coupon.selected = true;
                 const tmp = [];
                 tmp.push(...this.selectedCoupon, ...this.tmpCouponList);
                 for (let i = 0; i < tmp.length; i++) {
                     if (tmp[i].awardId == coupon.awardId) {
+                        coupon.selected = false;
+                        this.tmpCouponList.splice(i, 1);
                         return;
                     }
                 }
