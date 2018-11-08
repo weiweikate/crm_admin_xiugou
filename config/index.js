@@ -11,7 +11,7 @@ const baseURL = 'http://172.16.10.88:8190';
 // const baseURL = 'http://172.16.10.42:8190';
 // const baseURL = 'http://172.16.10.29:8190';
 // const baseURL = 'http://172.16.10.19:8190';
-// const baseURL = 'http://testadmin.sharegoodsmall.com';
+const baseURL = 'http://testadmin.sharegoodsmall.com';
 // const baseURL = 'http://devadmin.sharegoodsmall.com';
 // const baseURL = 'https://www.easy-mock.com/mock/5be2b23cee1b3d272cafccfa/crm';
 
