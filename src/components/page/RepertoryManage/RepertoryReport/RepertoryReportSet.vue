@@ -163,10 +163,18 @@
                     }
                 }
             };
+            var isMobile2 = (rule, value, callback) => {
+                if (value) {
+                    const reg = /^((0\d{2,3}-?\d{7,8})|(1[3-8]\d{9}))$/;
+                    if (!reg.test(value)) {
+                        callback(new Error('请输入正确的联系方式'));
+                    } else {
+                        callback();
+                    }
+                }
+            };
             var isCode = (rule, value, callback) => {
-                if (!value) {
-                    return callback(new Error('请输入出库仓库编码'));
-                } else {
+                if (value) {
                     const reg = /^[0-9]*$/;
                     if (!reg.test(value)) {
                         callback(new Error('请输入数字'));
@@ -206,7 +214,6 @@
                         { required: true, message: '请输入出库方名称', trigger: 'blur' }
                     ],
                     deliverWarehouseCode: [
-                        { required: true, message: '请输入出库仓库编码', trigger: 'blur' },
                         { validator: isCode, trigger: 'blur' }
                     ],
                     receiveWarehouseName: [
@@ -226,7 +233,7 @@
                         { validator: isPhone, trigger: 'blur' }
                     ],
                     goodsSenderPhone: [
-                        { validator: isMobile, trigger: 'blur' }
+                        { validator: isMobile2, trigger: 'blur' }
                     ]
                 },
                 btnLoading: false,
