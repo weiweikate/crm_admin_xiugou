@@ -847,7 +847,7 @@
             // 显示优惠券列表
             showAddCouList() {
                 this.isShowCouponList = true;
-                this.couponTypecouponType = '1';
+                this.couponType = '1';
                 this.handleClick({ name: '1' });
                 this.tmpCouponList = [];
                 this.tmpCouponList.push(...this.selectedCoupon)

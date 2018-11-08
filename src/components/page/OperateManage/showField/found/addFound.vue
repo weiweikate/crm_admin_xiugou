@@ -16,7 +16,14 @@
                 <el-form-item prop="title" label="标题">
                     <el-input style="width: 210px" v-model="form.title"></el-input>
                 </el-form-item>
-                <el-form-item label="上传封面图片">
+                <el-form-item prop="generalize" label="推广入口">
+                    <el-radio-group v-model="form.generalize">
+                        <el-radio label="1">精选</el-radio>
+                        <el-radio label="2">热门</el-radio>
+                        <el-radio label="3">推荐</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="上传封面图片" v-if="form.generalize == 1 || form.generalize == 2">
                     <el-upload
                         :action="upload"
                         :on-success="uploadSuccess1"
@@ -26,7 +33,7 @@
                         :file-list="fileList1"
                         list-type="picture-card">
                         <el-button size="small" type="primary">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">图片尺寸（336px*336px 336px446px 336px*250px）</div>
+                        <div slot="tip" class="el-upload__tip">图片尺寸{{form.generalize == 1? '650px*325px':'560px*280px'}}</div>
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="上传图片">
@@ -49,13 +56,6 @@
                                style="display:none">
                         <el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">点击上传</el-button>
                     </el-upload>
-                </el-form-item>
-                <el-form-item prop="generalize" label="推广入口">
-                    <el-radio-group v-model="form.generalize">
-                        <el-radio label="1">精选</el-radio>
-                        <el-radio label="2">热门</el-radio>
-                        <el-radio label="3">推荐</el-radio>
-                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="商品推广">
                     <p class="link-position" v-for="(v, k) in linkPosition" :key="k">
@@ -160,7 +160,7 @@
                 title: '',
                 content: '',
                 generalize: ''
-            }
+            };
             this.coverImgSize = '';
             this.imageSize = '';
             this.id = '';
@@ -183,7 +183,7 @@
                     const _URL = window.URL || window.webkitURL;
                     const image = new Image();
                     image.onload = function() {
-                        if ((image.width == 336 && image.height == 336) || (image.width == 336 && image.height == 446) || (image.width == 336 && image.height == 250)) {
+                        if ((image.width == 650 && image.height == 325 && that.form.generalize == 1) || (image.width == 560 && image.height == 280 && that.form.generalize == 2)) {
                             that.coverImgSize = `${image.width}*${image.height}`;
                             resolve();
                         } else {
@@ -361,6 +361,7 @@
                         const codeArr = [];
                         const typeArr = [];
                         if (this.fileList1.length !== 0) {
+                            if ((this.form.generalize == 1 && this.coverImgSize !== '650*325') || (this.form.generalize == 2 && this.coverImgSize !== '560*280')) return this.$message.warning('封面图尺寸不符');
                             this.fileList1.forEach(v => {
                                 imgArr1.push(v.url);
                             });
@@ -385,6 +386,7 @@
                             imgSize: this.imageSize,
                             coverImgSize: this.coverImgSize
                         };
+                        if (this.form.generalize == 3)data.coverImg = '';
                         this.btnloading = true;
                         request[this.url](data).then(res => {
                             this.btnloading = false;
