@@ -27,7 +27,7 @@
                     <draggable style="display:inline-block" v-model="imgArr" :move="getdata" @update="datadragEnd">
                         <transition-group>
                             <div class="img-wrap" v-for="(v,k) in imgArr" :key="k">
-                                <div class="delImg" @click="deleteImg(v)">
+                                <div class="delImg" @click="deleteImg(v, k)">
                                     <icon ico='icon-shanchu'></icon>
                                 </div>
                                 <img class="uImg" :src="v.originalImg">
@@ -513,16 +513,7 @@
                 this.$message.success('上传成功');
             },
             // 删除图片
-            deleteImg(img) {
-                let index = -1;
-                this.imgArr.forEach((v, k) => {
-                    if (v.originUrl == img.originUrl) {
-                        index = k;
-                    }
-                });
-                if (index == -1) {
-                    return;
-                }
+            deleteImg(img, index) {
                 this.imgArr.splice(index, 1);
                 if (this.imgArr.length < 5) {
                     this.isUseUpload = false;
@@ -776,7 +767,7 @@
                 this.couponTypecouponType = '1';
                 this.handleClick({ name: '1' });
                 this.tmpCouponList = [];
-                this.tmpCouponList.push(...this.selectedCoupon)
+                this.tmpCouponList.push(...this.selectedCoupon);
             },
             // 选择优惠券类型
             handleClick(tab) {
@@ -815,7 +806,7 @@
                 for (let i = 0; i < this.tmpCouponList.length; i++) {
                     if (this.tmpCouponList[i].id == coupon.id) {
                         coupon.selected = false;
-                        this.tmpCouponList.splice(i, 1)
+                        this.tmpCouponList.splice(i, 1);
                         return;
                     }
                 }
