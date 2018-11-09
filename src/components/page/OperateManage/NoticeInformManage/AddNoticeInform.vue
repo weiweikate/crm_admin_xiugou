@@ -151,10 +151,13 @@
                     content: '', //   内容
                     date: '',
                     provinces: [],
-                    effectDay: ''// 有效天数
+                    effectDay: '', // 有效天数
+                    userLevel: ''
                 };
                 this.isIndeterminate = false;
                 this.checkAll = false;
+                this.notRegist = false;
+                this.newRegist = false;
                 this.index = 0;
             },
             // 取消
@@ -235,15 +238,15 @@
                             params.startTime = moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss');
                             params.endTime = moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss');
                         }
-                        if (!params.userLevel) {
-                            this.$message.warning('请选择推送人群');
-                            return;
-                        }
                         if (this.newRegist) {
                             params.userLevel += 'new' + ',';
                         }
                         if (this.notRegist) {
                             params.userLevel += 'no' + ',';
+                        }
+                        if (!params.userLevel) {
+                            this.$message.warning('请选择推送人群');
+                            return;
                         }
                         params.userLevel = params.userLevel.slice(0, -1);
                         this.btnLoading = true;
@@ -432,9 +435,9 @@
         }
         .detail-content,.el-textarea__inner{
            width: 350px;
-           height: 200px;
+           height: 250px;
            resize: none;
-           overflow: hidden;
+           overflow-y: auto;
         }
         .content-area{
             position: relative;

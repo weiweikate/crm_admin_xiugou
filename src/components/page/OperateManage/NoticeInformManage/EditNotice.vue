@@ -103,6 +103,7 @@
                     content: '', //   内容
                     date: '',
                     provinces: [],
+                    userLevel: '',
                     effectDay: ''// 有效天数
                 },
                 count: 0, // 详情长度
@@ -144,17 +145,18 @@
                 request.queryNoticeById(data).then(res => {
                     this.form = res.data;
                     this.form.date = [];
+                    res.data.userLevel = res.data.userLevel.replace(',,', ',');
+                    const arr = res.data.userLevel.split(',');
+                    console.log(arr);
+                    this.count = res.data.content.length;
                     this.form.date[0] = res.data.startTime ? moment(res.data.startTime).format('YYYY-MM-DD HH:mm:ss') : '';
                     this.form.date[1] = res.data.endTime ? moment(res.data.endTime).format('YYYY-MM-DD HH:mm:ss') : '';
                     request.getUserLevelList({}).then(resData => {
                         let count = 0;
-                        const arr = res.data.userLevel.split(',');
                         for (const i in resData.data) {
                             const name = resData.data[i].name;
-                            // if (this.users.indexOf(name) == -1) {
-                            //     this.users.push(name);
-                            // }
                             this.users = resData.data;
+                            this.form.userLevel = '';
                             for (const j in arr) {
                                 if (arr[j] == resData.data[i].id) {
                                     count++;
@@ -170,6 +172,7 @@
                                 }
                             }
                         }
+
                         if (count == resData.data.length) {
                             this.checkAll = true;
                             this.isIndeterminate = false;
@@ -247,32 +250,35 @@
                             params.startTime = moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss');
                             params.endTime = moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss');
                         }
+                        if (this.newRegist) {
+                            params.userLevel += ',' + 'new' + ',';
+                        }
+                        if (this.notRegist) {
+                            params.userLevel += ',' + 'no' + ',';
+                        }
                         if (!params.userLevel) {
                             this.$message.warning('请选择推送人群');
                             return;
                         }
-                        if (this.newRegist && params.userLevel.indexOf('new') == -1) {
-                            params.userLevel += ',' + 'new' + ',';
-                        }
-                        if (this.notRegist && params.userLevel.indexOf('no') == -1) {
-                            params.userLevel += ',' + 'no' + ',';
-                        }
                         params.id = this.id;
-                        if (params.userLevel.lastIndexOf(',') == params.userLevel.length - 1) {
-                            params.userLevel = params.userLevel.slice(0, -1);
-                        }
-                        if (!this.newRegist || !this.notRegist) {
-                            params.userLevel = params.userLevel.split(',');
-                            for (const i in params.userLevel) {
-                                if (params.userLevel[i] == 'new' && !this.newRegist) {
-                                    params.userLevel.splice(i, 1);
-                                }
-                                if (params.userLevel[i] == 'no' && !this.notRegist) {
-                                    params.userLevel.splice(i, 1);
-                                }
-                            }
-                            params.userLevel = params.userLevel.join(',');
-                        }
+                        params.userLevel = params.userLevel.replace(',,', ',');
+                        params.userLevel = params.userLevel.slice(0, -1);
+                        // if (params.userLevel.lastIndexOf(',') == params.userLevel.length - 1) {
+                        //     params.userLevel = params.userLevel.slice(0, -1);
+                        // }
+                        // if (!this.newRegist || !this.notRegist) {
+                        //     params.userLevel = params.userLevel.split(',');
+                        //     for (const i in params.userLevel) {
+                        //         if (params.userLevel[i] == 'new' && !this.newRegist) {
+                        //             params.userLevel.splice(i, 1);
+                        //         }
+                        //         if (params.userLevel[i] == 'no' && !this.notRegist) {
+                        //             params.userLevel.splice(i, 1);
+                        //         }
+                        //     }
+                        //     params.userLevel = params.userLevel.join(',');
+                        // }
+                        // params.userLevel = params.userLevel.replace(',,', ',');
                         this.btnLoading = true;
                         request.saveNotice(params).then(res => {
                             this.$message.success(res.msg);
@@ -461,9 +467,9 @@
         }
         .detail-content,.el-textarea__inner{
            width: 350px;
-           height: 200px;
+           height: 250px;
            resize: none;
-           overflow: hidden;
+           overflow-y: auto;
         }
         .content-area{
             position: relative;
