@@ -233,6 +233,16 @@
                     if (this.type == 2) {
                         data.id = this.id;
                     }
+                    if (this.form.type == 1) {
+                        data.supplierCode = '';
+                        data.supplierName = '';
+                        data.joinWarehouseType = '';
+                    } else if (this.form.type == 2) {
+                        data.supplierCode = '';
+                        data.supplierName = '';
+                    } else {
+                        data.joinWarehouseType = '';
+                    }
                     if (!this.address) {
                         return this.$message.warning('请选择仓库省市区');
                     }
@@ -305,6 +315,9 @@
                 request.queryRepertoryById(data).then(res => {
                     this.form = res.data;
                     this.form.type = res.data.type.toString();
+                    if (this.form.type == 2) {
+                        this.form.joinWarehouseType = res.data.joinWarehouseType.toString();
+                    }
                     this.form.sendGoods = res.data.sendGoods ? 1 : 2;
                     this.form.returnGoods = res.data.returnGoods ? 1 : 2;
                     const reginArr = [];
