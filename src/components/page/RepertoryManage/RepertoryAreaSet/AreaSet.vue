@@ -139,7 +139,7 @@ export default {
             if (queryString == '') {
                 return;
             }
-            request.findWarehouseLike({ 'keyword': this.formMask.code }).then(res => {
+            request.findWarehouseLike({ 'keyword': this.formMask.code, type: this.type }).then(res => {
                 const tmpArr = [];
                 res.data.forEach((v, k) => {
                     const o = {};

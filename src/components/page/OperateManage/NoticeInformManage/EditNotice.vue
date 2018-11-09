@@ -146,7 +146,6 @@
                     this.form = res.data;
                     this.form.date = [];
                     const arr = res.data.userLevel.split(',');
-                    console.log(arr);
                     this.count = res.data.content.length;
                     this.form.date[0] = res.data.startTime ? moment(res.data.startTime).format('YYYY-MM-DD HH:mm:ss') : '';
                     this.form.date[1] = res.data.endTime ? moment(res.data.endTime).format('YYYY-MM-DD HH:mm:ss') : '';

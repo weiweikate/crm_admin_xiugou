@@ -29,25 +29,25 @@
                     </div>
                 </div>
                 <div class="shop-wrap">
-                    <div class="shop-left">
-                        <p class="shop-msg">
-                            <span>保证金：￥{{detail.deposit||0}}</span>
-                        </p>
-                    </div>
+                    <!--<div class="shop-left">-->
+                        <!--<p class="shop-msg">-->
+                            <!--<span>保证金：￥{{detail.deposit||0}}</span>-->
+                        <!--</p>-->
+                    <!--</div>-->
                     <div class="shop-right">
                         <p class="shop-msg">
                             <span>店铺经验：{{detail.experience||0}}</span>
                         </p>
                     </div>
+                    <div class="shop-left">
+                    <p class="shop-msg">
+                        <span>店长：<span @click="showShopLeader(detail.userId)" class="font-href">{{detail.storeUserName}}</span></span>
+                        <span class="inf">实名认证</span>
+                        <!--<span @click="shopTransfer" class="font-href">店铺转让</span>-->
+                    </p>
+                </div>
                 </div>
                 <div class="shop-wrap">
-                    <div class="shop-left">
-                        <p class="shop-msg">
-                            <span>店长：<span @click="showShopLeader(detail.userId)" class="font-href">{{detail.storeUserName}}</span></span>
-                            <span class="inf">实名认证</span>
-                            <!--<span @click="shopTransfer" class="font-href">店铺转让</span>-->
-                        </p>
-                    </div>
                     <div class="shop-right">
                         <p class="shop-msg">
                             <span>店铺成员数：{{detail.storeUserNum||0}}/{{detail.maxUser}}</span>
@@ -120,13 +120,13 @@
                         </p>
                     </div>
                 </div>
-                <div class="shop-wrap">
-                    <div class="shop-left">
-                        <p class="shop-msg">
-                            <span>最快拼店记录：{{detail.quickBonusBeginTime|formatDateAll}}-{{detail.quickBonusEndTime|formatDateAll}}</span>
-                        </p>
-                    </div>
-                </div>
+                <!--<div class="shop-wrap">-->
+                    <!--<div class="shop-left">-->
+                        <!--<p class="shop-msg">-->
+                            <!--<span>最快拼店记录：{{detail.quickBonusBeginTime|formatDateAll}}-{{detail.quickBonusEndTime|formatDateAll}}</span>-->
+                        <!--</p>-->
+                    <!--</div>-->
+                <!--</div>-->
             </div>
             <hr style="border:none;height:1px;background-color:#e2e2e2"/>
             <div class="shop-box">
