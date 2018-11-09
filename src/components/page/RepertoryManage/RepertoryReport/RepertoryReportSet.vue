@@ -363,6 +363,7 @@
                 this.chooseLists = [];
                 request.getNoteById(data).then(res => {
                     this.form = res.data;
+                    this.form.type = this.form.type.toString();
                     if (res.data.spuList.length) {
                         res.data.spuList.forEach((v, k) => {
                             v.skuList.forEach((v1, k1) => {
