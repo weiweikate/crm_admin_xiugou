@@ -145,7 +145,6 @@
                 request.queryNoticeById(data).then(res => {
                     this.form = res.data;
                     this.form.date = [];
-                    res.data.userLevel = res.data.userLevel.replace(',,', ',');
                     const arr = res.data.userLevel.split(',');
                     console.log(arr);
                     this.count = res.data.content.length;
@@ -153,15 +152,16 @@
                     this.form.date[1] = res.data.endTime ? moment(res.data.endTime).format('YYYY-MM-DD HH:mm:ss') : '';
                     request.getUserLevelList({}).then(resData => {
                         let count = 0;
+                        this.form.userLevel = '';
                         for (const i in resData.data) {
                             const name = resData.data[i].name;
                             this.users = resData.data;
-                            this.form.userLevel = '';
                             for (const j in arr) {
                                 if (arr[j] == resData.data[i].id) {
                                     count++;
                                     if (this.checkedUsers.indexOf(name) == -1) {
                                         this.checkedUsers.push(resData.data[i]);
+                                        this.form.userLevel += resData.data[i].id + ',';
                                     }
                                 }
                                 if (arr[j] === 'new') {
@@ -172,12 +172,14 @@
                                 }
                             }
                         }
-
                         if (count == resData.data.length) {
                             this.checkAll = true;
                             this.isIndeterminate = false;
                         } else {
                             this.isIndeterminate = true;
+                        }
+                        if (count == 0) {
+                            this.isIndeterminate = false;
                         }
                     }).catch(err => {
                         console.log(err);
@@ -198,6 +200,8 @@
                 };
                 this.isIndeterminate = false;
                 this.checkAll = false;
+                this.notRegist = false;
+                this.newRegist = false;
             },
             // 取消
             cancel() {
@@ -250,11 +254,22 @@
                             params.startTime = moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss');
                             params.endTime = moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss');
                         }
-                        if (this.newRegist) {
+                        if (params.userLevel) {
+                            if (params.userLevel[params.userLevel.length - 1] == ',') {
+                                params.userLevel = params.userLevel.slice(0, -1);
+                            }
+                        }
+                        if (this.newRegist && params.userLevel.indexOf('new') == -1) {
                             params.userLevel += ',' + 'new' + ',';
                         }
-                        if (this.notRegist) {
+                        if (this.notRegist && params.userLevel.indexOf('no') == -1) {
                             params.userLevel += ',' + 'no' + ',';
+                        }
+                        if (params.userLevel.indexOf('new') != -1 && !this.newRegist) {
+                            params.userLevel = params.userLevel.replace('new', '');
+                        }
+                        if (params.userLevel.indexOf('no') != -1 && !this.notRegist) {
+                            params.userLevel = params.userLevel.replace('no', '');
                         }
                         if (!params.userLevel) {
                             this.$message.warning('请选择推送人群');
@@ -262,23 +277,12 @@
                         }
                         params.id = this.id;
                         params.userLevel = params.userLevel.replace(',,', ',');
-                        params.userLevel = params.userLevel.slice(0, -1);
-                        // if (params.userLevel.lastIndexOf(',') == params.userLevel.length - 1) {
-                        //     params.userLevel = params.userLevel.slice(0, -1);
-                        // }
-                        // if (!this.newRegist || !this.notRegist) {
-                        //     params.userLevel = params.userLevel.split(',');
-                        //     for (const i in params.userLevel) {
-                        //         if (params.userLevel[i] == 'new' && !this.newRegist) {
-                        //             params.userLevel.splice(i, 1);
-                        //         }
-                        //         if (params.userLevel[i] == 'no' && !this.notRegist) {
-                        //             params.userLevel.splice(i, 1);
-                        //         }
-                        //     }
-                        //     params.userLevel = params.userLevel.join(',');
-                        // }
-                        // params.userLevel = params.userLevel.replace(',,', ',');
+                        if (params.userLevel[params.userLevel.length - 1] == ',') {
+                            params.userLevel = params.userLevel.slice(0, -1);
+                        }
+                        if (params.userLevel[0] == ',') {
+                            params.userLevel = params.userLevel.slice(1);
+                        }
                         this.btnLoading = true;
                         request.saveNotice(params).then(res => {
                             this.$message.success(res.msg);
