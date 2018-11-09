@@ -317,6 +317,8 @@
                     this.form.type = res.data.type.toString();
                     if (this.form.type == 2) {
                         this.form.joinWarehouseType = res.data.joinWarehouseType.toString();
+                    } else {
+                        this.form.joinWarehouseType = '';
                     }
                     this.form.sendGoods = res.data.sendGoods ? 1 : 2;
                     this.form.returnGoods = res.data.returnGoods ? 1 : 2;
