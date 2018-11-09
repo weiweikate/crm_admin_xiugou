@@ -378,6 +378,7 @@
                 if (this.limit.notSupportRetGoods) {
                     this.form.restrictions += 16;
                 }
+                this.form.productParamValueVOList = [];
                 this.productParam.forEach(v => {
                     this.form.productParamValueVOList.push({ paramId: v.id, paramValue: v.value });
                 });

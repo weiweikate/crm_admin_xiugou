@@ -476,7 +476,6 @@
                     data.userLevelList.push({ userLevelId: v });
                 });
                 this.btnLoading = true;
-                console.log(data);
                 request.addActivityPackage(data).then(res => {
                     console.log(res);
                     this.btnLoading = false;
