@@ -292,7 +292,7 @@
                     if (this.status == 2) {
                         data.id = this.id;
                     }
-                    if (this.chooseLists[0].skuList.length===0) {
+                    if (!this.chooseLists.length || this.chooseLists[0].skuList.length === 0) {
                         return this.$message.warning('请添加产品');
                     }
                     data.spuList = [];
@@ -411,19 +411,30 @@
             save() {
                 this.chooseLists[this.isIndex].skuList = [];
                 let flag = true;
+                let count = 0;
                 this.chooseData.forEach((v, k) => {
                     if (v.estimateCount) {
                         if (!/^[1-9]*[1-9][0-9]*$/.test(v.estimateCount)) {
                             this.$message.warning('数量请输入正整数');
                             flag = false;
                         } else {
+                            ++count;
                             this.chooseLists[this.isIndex].skuList.push(v);
                             this.chooseLists[this.isIndex].prodCode = v.prodCode;
                             this.chooseLists[this.isIndex].productId = v.productId;
+                            this.productIds[this.isIndex] = this.productId;
                         }
                     }
-                    this.productIds[this.isIndex] = this.productId;
                 });
+                if (count == 0) {
+                    this.chooseLists.splice(this.isIndex, 1);
+                    this.productIds.splice(this.isIndex, 1);
+                }
+                if (!this.chooseLists.length) {
+                    this.chooseLists = [{ prodCode: '', productId: '', skuList: [] }];
+                    this.isIndex = 0;
+                    this.productIds = [];
+                }
                 if (flag) {
                     this.mask = false;
                 }
@@ -493,6 +504,12 @@
                 this.chooseLists[index].skuList.splice(cIndex, 1);
                 if (!this.chooseLists[index].skuList.length) {
                     this.chooseLists.splice(index, 1);
+                    this.productIds.splice(index, 1);
+                }
+                if (!this.chooseLists.length) {
+                    this.chooseLists = [{ prodCode: '', productId: '', skuList: [] }];
+                    this.isIndex = 0;
+                    this.productIds = [];
                 }
             }
         }
