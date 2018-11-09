@@ -34,11 +34,11 @@
             </el-row><br/>
             <el-row>
                 <el-col :span="6">
-                    <div @click="goPage('9')" class="card them1">间接上级（推广提成）账户收支明细</div>
+                    <div @click="goPage('9')" class="card them1">秀值（推广提成）收支明细细</div>
                 </el-col>
-                <el-col :span="6">
-                    <div @click="goPage('10')" class="card them2">用户账户（自己）账户收支明细</div>
-                </el-col>
+                <!--<el-col :span="6">-->
+                    <!--<div @click="goPage('10')" class="card them2">用户账户（自己）账户收支明细</div>-->
+                <!--</el-col>-->
             </el-row>
         </el-card>
 
@@ -64,49 +64,61 @@ export default {
                 case '1':
                     url = 'flatAct01';
                     flag = 1;
+                    sessionStorage.setItem('accountInfoFlag', flag);
                     break;
                 case '2':
                     url = 'flatAct01';
                     flag = 2;
+                    sessionStorage.setItem('accountInfoFlag', flag);
                     break;
                 case '8':
                     url = 'flatAct01';
                     flag = 8;
+                    sessionStorage.setItem('accountInfoFlag', flag);
                     break;
                 case '3':
                     url = 'flatAct01';
                     flag = 3;
+                    sessionStorage.setItem('accountInfoFlag', flag);
                     break;
                 case '4':
                     url = 'flatAct01';
                     flag = 4;
+                    sessionStorage.setItem('accountInfoFlag', flag);
                     break;
                 case '5':
                     url = 'flatAct02';
                     flag1 = 5;
+                    sessionStorage.setItem('accountInfoFlag1', flag1);
                     break;
                 case '6':
                     url = 'flatAct02';
                     flag1 = 6;
+                    sessionStorage.setItem('accountInfoFlag1', flag1);
                     break;
                 case '7':
                     url = 'flatAct02';
                     flag1 = 7;
+                    sessionStorage.setItem('accountInfoFlag1', flag1);
                     break;
                 case '9':
                     url = 'flatAct02';
                     flag1 = 4;
+                    sessionStorage.setItem('accountInfoFlag1', flag1);
                     break;
                 case '10':
                     url = 'flatAct02';
                     flag1 = 5;
+                    sessionStorage.setItem('accountInfoFlag1', flag1);
                     break;
                 default:
                     break;
             }
-            sessionStorage.setItem('flag1', flag1);
-            sessionStorage.setItem('flag', flag);
-            this.$router.push({ name: url, query: { flag: flag, flag1: flag1 }});
+            if (url === 'flatAct01') {
+                this.$router.push({ name: url, query: { accountInfoFlag: flag}});
+            } else {
+                this.$router.push({ name: url, query: { accountInfoFlag1: flag1 }});
+            }
         }
     }
 };

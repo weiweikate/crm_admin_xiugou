@@ -72,7 +72,7 @@ export default {
     },
 
     activated() {
-        this.flag = this.$route.query.flag || sessionStorage.getItem('flag');
+        this.flag = this.$route.query.accountInfoFlag || sessionStorage.getItem('accountInfoFlag');
         // 置空
         this.form.orderNum = '';
         this.form.time = [];

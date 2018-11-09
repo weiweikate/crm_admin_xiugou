@@ -78,7 +78,7 @@ export default {
     },
 
     activated() {
-        this.flag = this.$route.query.flag1 || sessionStorage.getItem('flag1');
+        this.flag = this.$route.query.accountInfoFlag1 || sessionStorage.getItem('accountInfoFlag1');
         switch (this.flag.toString()) {
             case '5':
                 this.title = '店主账户收入明细';
