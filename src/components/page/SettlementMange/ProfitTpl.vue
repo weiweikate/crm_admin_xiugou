@@ -389,7 +389,7 @@ export default {
                     const name = `form${v.type}`;
                     this[name][0].value[0].value = v.storeStartOne;
                     this[name][0].value[1].value = v.storeStartTwo;
-                    this[name][0].value[2].value = v.otherThree;
+                    this[name][0].value[2].value = v.storeStartThree;
                     this[name][1].value[0].value = v.v0;
                     this[name][1].value[1].value = v.v1;
                     this[name][1].value[2].value = v.v2;

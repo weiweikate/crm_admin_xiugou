@@ -386,6 +386,7 @@
                             if ((this.form.generalize == 1 && this.coverImgSize !== '650*325') || (this.form.generalize == 2 && this.coverImgSize !== '560*280')) return this.$message.warning('封面图尺寸不符');
                             if (this.form.generalize == '' || this.form.generalize == '3') {
                                 if (this.coverImgSize != '335*335' && this.coverImgSize != '335*446' && this.coverImgSize != '335*251') {
+                                    console.log(this.coverImgSize);
                                     return this.$message.warning('封面图尺寸不符');
                                 }
                             }
@@ -413,7 +414,6 @@
                             imgSize: this.imageSize,
                             coverImgSize: this.coverImgSize
                         };
-                        if (this.form.generalize == 3)data.coverImg = '';
                         this.btnloading = true;
                         request[this.url](data).then(res => {
                             this.btnloading = false;

@@ -109,7 +109,6 @@
                         }
                         this.btnLoading = true;
                         request[url](data).then(res => {
-                            console.log(res);
                             localStorage.setItem('ms_username', res.data.name);
                             localStorage.setItem('ms_userID', res.data.id);
                             localStorage.setItem('ms_userPhone', res.data.telephone);
