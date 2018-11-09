@@ -171,6 +171,8 @@
                     } else {
                         callback();
                     }
+                } else {
+                    callback();
                 }
             };
             var isCode = (rule, value, callback) => {
@@ -181,6 +183,8 @@
                     } else {
                         callback();
                     }
+                } else {
+                    callback();
                 }
             };
             return {
@@ -213,9 +217,9 @@
                     deliverWarehouseName: [
                         { required: true, message: '请输入出库方名称', trigger: 'blur' }
                     ],
-                    deliverWarehouseCode: [
-                        { validator: isCode, trigger: 'blur' }
-                    ],
+                    // deliverWarehouseCode: [
+                    //     { validator: isCode, trigger: 'blur' }
+                    // ],
                     receiveWarehouseName: [
                         { required: true, message: '请输入入库方名称或编码', trigger: 'blur' }
                     ],
@@ -288,7 +292,7 @@
                     if (this.status == 2) {
                         data.id = this.id;
                     }
-                    if (!this.chooseLists.length) {
+                    if (this.chooseLists[0].skuList.length===0) {
                         return this.$message.warning('请添加产品');
                     }
                     data.spuList = [];
@@ -359,13 +363,17 @@
                 this.chooseLists = [];
                 request.getNoteById(data).then(res => {
                     this.form = res.data;
-                    res.data.spuList.forEach((v, k) => {
-                        v.skuList.forEach((v1, k1) => {
-                            v1.id = v1.productSpecPriceId;
+                    if (res.data.spuList.length) {
+                        res.data.spuList.forEach((v, k) => {
+                            v.skuList.forEach((v1, k1) => {
+                                v1.id = v1.productSpecPriceId;
+                            });
+                            this.productIds.push(v.productId);
+                            this.chooseLists.push(v);
                         });
-                        this.productIds.push(v.productId);
-                        this.chooseLists.push(v);
-                    });
+                    } else {
+                        this.chooseLists = [{ prodCode: '', productId: '', skuList: [] }];
+                    }
                 }).catch(err => {
                     console.log(err);
                 });
