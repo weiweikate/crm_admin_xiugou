@@ -95,8 +95,8 @@ export default {
         getList(val) {
             const data = {
                 name: this.form.name,
-                beginTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
-                endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : '',
+                beginTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD 00:00:00') : '',
+                endTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD 00:00:00') : '',
                 page: val,
                 size: this.page.pageSize,
                 status: 3

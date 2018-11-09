@@ -158,7 +158,8 @@
                 this.checkAll = false;
                 this.notRegist = false;
                 this.newRegist = false;
-                this.index = 0;
+                this.index = this.$route.query.isNotice || sessionStorage.getItem('isNotice');
+                this.form.type = this.index == 0 ? 100 : 200;
             },
             // 取消
             cancel() {

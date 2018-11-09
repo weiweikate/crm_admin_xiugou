@@ -298,7 +298,8 @@ export default {
         },
         // 发布通知/公告
         addInf() {
-            this.$router.push('/addNoticeInform');
+            sessionStorage.setItem('isNotice', this.index);
+            this.$router.push({ path: '/addNoticeInform', query: { isNotice: this.index }});
         },
         // 重置表单
         resetForm(formName) {

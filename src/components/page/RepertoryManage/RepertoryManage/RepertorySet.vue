@@ -310,7 +310,7 @@
                     const reginArr = [];
                     reginArr.push(res.data.addressProvinceCode, res.data.addressCityCode, res.data.addressDistrictCode);
                     this.address = reginArr;
-                    if (res.data.ruturnGoods) {
+                    if (this.form.returnGoods == 1) {
                         const reginArr2 = [];
                         reginArr2.push(res.data.returnProvinceCode, res.data.returnCityCode, res.data.returnDistrictCode);
                         this.returnWarehouseAddress = reginArr2;
