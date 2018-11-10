@@ -1006,7 +1006,7 @@
             color: #222222;
             .item {
                 font-size: 14px;
-                height: 30px;
+                /*height: 30px;*/
                 line-height: 30px;
             }
             .img {
