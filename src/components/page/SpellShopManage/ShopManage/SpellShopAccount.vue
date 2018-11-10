@@ -33,8 +33,8 @@ export default {
     },
     activated() {
         this.id = this.$route.query.recruitShopId || sessionStorage.getItem('recruitShopId');
-        this.bonusNeedMoney = this.$route.query.bonusNeedMoney || sessionStorage.getItem('bonusNeedMoney');
-        this.totalTradeBalance = this.$route.query.totalTradeBalance || sessionStorage.getItem('totalTradeBalance');
+        this.bonusNeedMoney = this.$route.query.bonusNeedMoney || sessionStorage.getItem('bonusNeedMoney') || 0;
+        this.totalTradeBalance = this.$route.query.totalTradeBalance || sessionStorage.getItem('totalTradeBalance') || 0;
         this.getSpellINfo();
     },
     methods: {
