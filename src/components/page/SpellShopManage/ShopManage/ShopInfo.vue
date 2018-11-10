@@ -201,9 +201,9 @@
             // 拼店账户
             spellShopAcc() {
                 sessionStorage.setItem('recruitShopId', this.shopId);
-                sessionStorage.setItem('bonusNeedMoney', this.detail.bonusNeedMoney);
-                sessionStorage.setItem('totalTradeBalance', this.detail.totalTradeBalance);
-                this.$router.push({ name: 'spellShopAccount', query: { 'recruitShopId': this.shopId, 'bonusNeedMoney': this.detail.bonusNeedMoney, 'totalTradeBalance': this.detail.totalTradeBalance }});
+                sessionStorage.setItem('bonusNeedMoney', this.detail.bonusNeedMoney || 0);
+                sessionStorage.setItem('totalTradeBalance', this.detail.totalTradeBalance || 0);
+                this.$router.push({ name: 'spellShopAccount', query: { 'recruitShopId': this.shopId, 'bonusNeedMoney': this.detail.bonusNeedMoney || 0, 'totalTradeBalance': this.detail.totalTradeBalance || 0 }});
             },
             // 成员管理
             memberManage() {
