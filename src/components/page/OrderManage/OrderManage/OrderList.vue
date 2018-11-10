@@ -56,7 +56,8 @@
         </el-card>
         <el-card style='margin-top:20px;minHeight:90vh;overflow-x: auto;min-width: 1336px' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
-                <el-button type="primary">批量导出</el-button>
+                <!--<el-button type="primary">批量导出</el-button>-->
+                <el-button type="primary" @click="sendOut">一键推送</el-button>
                 <el-button type="warning" @click="orderBtn('today')">今日订单</el-button>
                 <el-button type="warning" @click="orderBtn('yesterday')">昨日订单</el-button>
                 <el-button type="warning" @click="orderBtn('threeMonths')">最近三个月订单</el-button>
@@ -223,6 +224,14 @@ export default {
                 this.form.threeMonths = 'yes';
             }
             this.getList(1);
+        },
+        sendOut() {
+            const ids = this.$refs[this.activeName].ids;
+            if (!ids.length) {
+                return this.$message.warning('请选择订单');
+            } else {
+                this.$refs[this.activeName].pushCloud();
+            }
         }
     }
 };

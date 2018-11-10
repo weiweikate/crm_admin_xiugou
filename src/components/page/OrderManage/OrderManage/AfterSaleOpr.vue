@@ -76,7 +76,6 @@
                             </div>
                             <div v-if="status==5">
                                 <div class="recode-item">
-                                <el-button @click="orderSendOut">云仓发货</el-button>
                                 </div>
                                     <div class="tips" style="margin-top: 10px">
                                         <span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span
@@ -130,7 +129,6 @@
                                     <!--&lt;!&ndash;<el-button type="warning" @click="reGoodsClick(3)">产品报损</el-button>&ndash;&gt;-->
                                 <!--</div>-->
                             <!--</div>-->
-                            <!--<el-button type="danger" style="margin-top:10px" @click="orderSendOut">云仓发货</el-button>-->
                         </div>
                         <div class="info-other">
                             <div class="recode-item" v-if="status==6">
@@ -900,20 +898,6 @@
                 } else {
                     return num;
                 }
-            },
-            // 云仓发货
-            orderSendOut() {
-                const data = {
-                    id: this.returnProductId,
-                    expressName: '中通快递',
-                    expressNo: '221286279559'
-                };
-                request.sendOut(data).then(res => {
-                    this.$message.success(res.msg);
-                    this.getInfo();
-                }).catch(err => {
-                    console.log(err);
-                });
             },
             // 产品报损数据字典
             async getDictionaryData() {

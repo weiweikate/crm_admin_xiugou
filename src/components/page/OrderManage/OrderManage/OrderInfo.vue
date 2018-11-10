@@ -529,7 +529,13 @@
             },
             // 云仓发货
             orderSendOut() {
-                request.orderSendOut({ expressName: '申通', 'expressNo': 28123152342345, id: this.orderId }).then(res => {
+                const data = {
+                    pushCloudStorehouseVO: {
+                        ids: []
+                    }
+                };
+                data.pushCloudStorehouseVO.ids.push(this.orderId);
+                request.orderSendOut(data).then(res => {
                     this.$message.success(res.msg);
                     this.getInfo();
                 }).catch(err => {

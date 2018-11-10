@@ -12,7 +12,7 @@
         </div>
         <div v-for="(v,k) in tableData" :key="k" class="tab-wrap">
             <div class="tab-content-title">
-                <el-checkbox @change="orderCheckBox(v)"></el-checkbox>
+                <el-checkbox @change="orderCheckBox(v)" v-model="v.checked"></el-checkbox>
                 <span>订单号：{{v.orderNum}}</span>
                 <span style="margin-left:30px">创建时间：{{v.createTime|formatDateAll}}</span>
                 <div class="operate-btn-group">
@@ -126,7 +126,8 @@
                 // returnType状态
                 returnTypeArr: ['退款', '退货', '换货'],
                 // 售后状态
-                afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭']
+                afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭'],
+                ids: []
             };
         },
         methods: {
@@ -181,7 +182,17 @@
             },
             // 推送云仓
             pushCloud(row) {
-                request.orderSendOut({ expressName: '申通', 'expressNo': 28123152342345, id: row.id }).then(res => {
+                const data = {
+                    pushCloudStorehouseVO: {
+                        ids: []
+                    }
+                };
+                if (row) {
+                    data.pushCloudStorehouseVO.ids.push(row.id);
+                } else {
+                    data.pushCloudStorehouseVO.ids = this.ids;
+                }
+                request.orderSendOut(data).then(res => {
                     this.$message.success(res.msg);
                     this.getList(this.page.currentPage);
                 }).catch(err => {
@@ -195,7 +206,15 @@
             },
             // 订单多选框
             orderCheckBox(row) {
-                console.log(row);
+                if (row.checked) {
+                    this.ids.push(row.id);
+                } else {
+                    this.ids.forEach((v, k) => {
+                        if (v == row.id) {
+                            this.ids.splice(k, 1);
+                        }
+                    });
+                }
             },
             // 更改订单状态（单个）
             changeStatus(row, status) {

@@ -80,7 +80,8 @@ export const queryOrderPageList = '/order/queryPage';
 // 订单详情
 export const orderDetail = '/order/lookDetail';
 // 订单发货
-export const orderSendOut = '/order/sendOut';
+// export const orderSendOut = '/order/sendOut';
+export const orderSendOut = '/order/pushCloudStorehouse';
 export const orderSign = '/order/sign';
 
 // 售后
