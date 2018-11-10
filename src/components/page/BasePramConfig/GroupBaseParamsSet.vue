@@ -58,8 +58,13 @@
                 };
                 this.bodyLoading = true;
                 request.queryConfig(data).then(res => {
-                    this.storeStartNum = res.data[0].value;
-                    this.storeDeposit = res.data[1].value;
+                    res.data.forEach(v => {
+                        if (v.code == 'store_start_num') {
+                            this.storeStartNum = v.value;
+                        } else if (v.code == 'store_deposit') {
+                            this.storeDeposit = v.value;
+                        }
+                    });
                     this.bodyLoading = false;
                 }).catch(err => {
                     console.log(err);

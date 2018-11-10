@@ -58,8 +58,13 @@
                 };
                 request.queryConfig(data).then(res => {
                     this.pageLoading = false;
-                    this.num1 = res.data[0].value;
-                    this.num2 = res.data[1].value;
+                    res.data.forEach(v => {
+                        if (v.code == 'time_first_relation') {
+                            this.num1 = v.value;
+                        } else if (v.code == 'time_second_relation') {
+                            this.num2 = v.value;
+                        }
+                    });
                     this.bodyLoading = false;
                 }).catch(err => {
                     this.pageLoading = false;

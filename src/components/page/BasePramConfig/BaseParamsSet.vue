@@ -54,10 +54,17 @@ export default {
             };
             this.bodyLoading = true;
             request.queryConfig(data).then(res => {
-                this.orderCancleTime = res.data[0].value;
-                this.toBeConfirmTime = res.data[2].value;
-                this.returnDownTime = res.data[3].value;
-                this.payOvertime = res.data[1].value;
+                res.data.forEach(v => {
+                    if (v.code == 'time_order_cancel') {
+                        this.orderCancleTime = v.value;
+                    } else if (v.code == 'time_goods_confirm') {
+                        this.toBeConfirmTime = v.value;
+                    } else if (v.code == 'time_express_send') {
+                        this.returnDownTime = v.value;
+                    } else if (v.code == 'pay_overtime') {
+                        this.payOvertime = v.value;
+                    }
+                });
                 this.bodyLoading = false;
             }).catch(err => {
                 this.bodyLoading = false;
