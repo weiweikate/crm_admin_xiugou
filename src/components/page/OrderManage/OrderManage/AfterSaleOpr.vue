@@ -139,7 +139,7 @@
                                 <span>{{returnProduct.adminName}}</span><span>同意换货</span><span>{{returnProduct.backsendTime|formatDateAll}}</span>
                             </div>
                             <div class="recode-item" v-if="returnProduct.expressNo">
-                                <span>{{returnProduct.adminName}}</span><span>提交物流信息</span><span>{{returnProduct.sendTime|formatDateAll}}</span>
+                                <span>{{returnProduct.buyerName}}</span><span>提交物流信息</span><span>{{returnProduct.sendTime|formatDateAll}}</span>
                             </div>
                             <div class="recode-item">
                                 <span>{{returnProduct.adminName}}</span>
@@ -275,10 +275,10 @@
                         </div>
                         <div class="info-other">
                             <div class="recode-item" v-if="status==6&&returnProduct.orderReturnAmounts">
-                                <span>{{returnProduct.buyerName}}</span><span>商家确认退款</span><span>{{returnAmountsRecord.refundTime|formatDateAll}}</span>
+                                <span>{{returnProduct.adminName}}</span><span>商家确认退款</span><span>{{returnAmountsRecord.refundTime|formatDateAll}}</span>
                             </div>
                             <div class="recode-item" v-if="status==3&&returnProduct.agreeTime">
-                                <span>{{returnProduct.buyerName}}</span><span>商家拒绝退款</span><span>{{returnProduct.refuseTime|formatDateAll}}</span>
+                                <span>{{returnProduct.adminName}}</span><span>商家拒绝退款</span><span>{{returnProduct.refuseTime|formatDateAll}}</span>
                             </div>
                             <div class="recode-item" v-if="returnProduct.expressNo">
                                 <span>{{returnProduct.buyerName}}</span><span>提交物流信息</span><span>{{returnProduct.sendTime|formatDateAll}}</span>
