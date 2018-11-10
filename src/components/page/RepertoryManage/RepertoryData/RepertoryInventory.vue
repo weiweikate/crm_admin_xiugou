@@ -26,18 +26,18 @@
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="name" label="产品名称" align="center"></el-table-column>
-                <el-table-column prop="id" label="产品ID" align="center"></el-table-column>
-                <el-table-column prop="prodCode" label="产品类目" align="center"></el-table-column>
+                <el-table-column prop="prodCode" label="产品ID" align="center"></el-table-column>
+                <el-table-column prop="productCategory" label="产品类目" align="center"></el-table-column>
                 <el-table-column prop="supplierName" label="供应商名称" align="center"></el-table-column>
                 <el-table-column prop="supplierCode" label="供应商ID" align="center"></el-table-column>
                 <el-table-column label="仓库总库存数" align="center">
-                    <template slot-scope="scope">{{scope.row.num}}件</template>
+                    <template slot-scope="scope">{{scope.row.totalCount||0}}件</template>
                 </el-table-column>
                 <el-table-column label="仓库剩余库存" align="center">
-                    <template slot-scope="scope">{{scope.row.num}}件</template>
+                    <template slot-scope="scope">{{scope.row.remainderCount||0}}件</template>
                 </el-table-column>
                 <el-table-column label="冻结库存" align="center">
-                    <template slot-scope="scope">{{scope.row.num}}件</template>
+                    <template slot-scope="scope">{{scope.row.blockCount||0}}件</template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
@@ -83,8 +83,8 @@ export default {
     },
     activated() {
         this.warehouseId = this.$route.query.repertotyId || sessionStorage.getItem('repertotyId');
-        this.getList(this.page.currentPage);
         this.getDetail();
+        this.getList(this.page.currentPage);
     },
     methods: {
         // 获取数据

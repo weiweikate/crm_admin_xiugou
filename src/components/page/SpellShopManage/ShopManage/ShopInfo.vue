@@ -65,9 +65,9 @@
                     <p style="margin-top:10px">
                         <el-button @click="spellShopAcc" type="primary">拼店账户</el-button>
                     </p>
-                    <p style="margin-top:10px">
-                        <el-button @click="memberManage" type="primary">成员管理</el-button>
-                    </p>
+                    <!--<p style="margin-top:10px">-->
+                        <!--<el-button @click="memberManage" type="primary">成员管理</el-button>-->
+                    <!--</p>-->
                     <p style="margin-top:10px">
                         <el-button @click="shopAnnouncement" type="primary">店铺公告管理</el-button>
                     </p>
@@ -102,7 +102,7 @@
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>店铺分红总金额：￥{{detail.totalTradeVolume||0}}</span>
+                            <span>店铺分红总金额：￥{{detail.totalTradeBalance||0}}</span>
                         </p>
                     </div>
                 </div>
@@ -133,7 +133,7 @@
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>拼店金额目标：￥{{detail.groupMoney}}</span>
+                            <span>拼店金额目标：￥{{detail.bonusNeedMoney}}</span>
                         </p>
                     </div>
                 </div>
@@ -201,7 +201,9 @@
             // 拼店账户
             spellShopAcc() {
                 sessionStorage.setItem('recruitShopId', this.shopId);
-                this.$router.push({ name: 'spellShopAccount', query: { 'recruitShopId': this.shopId }});
+                sessionStorage.setItem('bonusNeedMoney', this.detail.bonusNeedMoney);
+                sessionStorage.setItem('totalTradeBalance', this.detail.totalTradeBalance);
+                this.$router.push({ name: 'spellShopAccount', query: { 'recruitShopId': this.shopId, 'bonusNeedMoney': this.detail.bonusNeedMoney, 'totalTradeBalance': this.detail.totalTradeBalance }});
             },
             // 成员管理
             memberManage() {

@@ -7,10 +7,10 @@
                 <img src="../../../../assets/images/spell-shop-ico.png" class="title-ico">
                 <span>拼店账户（元）</span>
             </p>
-            <p class="spell-shop-content" style="font-size: 22px;">拼店额：￥58000/￥60000</p>
+            <p class="spell-shop-content" style="font-size: 22px;">拼店额：￥{{totalTradeBalance||0}}/￥{{bonusNeedMoney}}</p>
             <!--<p class="spell-shop-content">分红金：￥60000</p>-->
-            <p class="spell-shop-content">交易利润：￥6800</p>
-            <p class="btn" @click="showInfo">账户明细</p>
+            <p class="spell-shop-content">交易利润：￥{{totalTradeBalance||0}}</p>
+            <!--<p class="btn" @click="showInfo">账户明细</p>-->
         </div>
     </el-card>
   </div>
@@ -26,11 +26,15 @@ export default {
     data() {
         return {
             nav: ['拼店管理', '店铺管理', '店铺详情', '拼店账户'],
-            id: ''
+            id: '',
+            bonusNeedMoney: '',
+            totalTradeBalance: ''
         };
     },
     activated() {
         this.id = this.$route.query.recruitShopId || sessionStorage.getItem('recruitShopId');
+        this.bonusNeedMoney = this.$route.query.bonusNeedMoney || sessionStorage.getItem('bonusNeedMoney');
+        this.totalTradeBalance = this.$route.query.totalTradeBalance || sessionStorage.getItem('totalTradeBalance');
         this.getSpellINfo();
     },
     methods: {

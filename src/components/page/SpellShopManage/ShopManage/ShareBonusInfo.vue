@@ -6,30 +6,30 @@
           <el-table-column type="index" label="编号" align="center"></el-table-column>
           <el-table-column label="时间" align="center">
               <template slot-scope="scope">
-                  <template>{{scope.row.createTime|formatDate}}</template>
+                  <template>{{scope.row.createTime|formatDateAll}}</template>
               </template>
           </el-table-column>
           <el-table-column prop="totalBonus" label="分红总额" align="center"></el-table-column>
           <el-table-column prop="storeManageBonus" label="店长分红" align="center"></el-table-column>
           <el-table-column prop="storeUserBonus" label="店员分红金" align="center"></el-table-column>
           <el-table-column prop="countUser" label="参与分红人数" align="center"></el-table-column>
-          <el-table-column label="操作" align="center">
-              <template slot-scope="scope">
+          <!--<el-table-column label="操作" align="center">-->
+              <!--<template slot-scope="scope">-->
                 <!--<el-button @click="ShareBonusComposition" type="primary">分红组成</el-button>-->
-                <el-button @click="ShareBonusMemberVal" type="warning">成员贡献值</el-button>
-              </template>
-          </el-table-column>
+                <!--<el-button @click="ShareBonusMemberVal" type="warning">成员贡献值</el-button>-->
+              <!--</template>-->
+          <!--</el-table-column>-->
         </el-table>
-        <div class="block">
-            <el-pagination
-                background
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="page.currentPage"
-                layout="total, prev, pager, next, jumper"
-                :total="page.totalPage">
-            </el-pagination>
-        </div>
+        <!--<div class="block">-->
+            <!--<el-pagination-->
+                <!--background-->
+                <!--@size-change="handleSizeChange"-->
+                <!--@current-change="handleCurrentChange"-->
+                <!--:current-page="page.currentPage"-->
+                <!--layout="total, prev, pager, next, jumper"-->
+                <!--:total="page.totalPage">-->
+            <!--</el-pagination>-->
+        <!--</div>-->
     </el-card>
 
   </div>
@@ -68,13 +68,16 @@ export default {
         // 获取数据
         getList(val) {
             const data = {
+                storeId: this.shopId,
                 page: val,
                 pageSize: this.page.pageSize
             };
+            this.page.currentPage = val;
             request.getStoreBonusPageList(data).then(res => {
                 this.tableData = [];
-                this.tableData = res.data.data;
-                this.page.totalPage = res.data.totalNum;
+                this.tableData = res.data;
+                // this.tableData = res.data.data;
+                // this.page.totalPage = res.data.totalNum;
             }).catch(error => {
                 console.log(error);
             });
