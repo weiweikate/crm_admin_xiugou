@@ -530,11 +530,9 @@
             // 云仓发货
             orderSendOut() {
                 const data = {
-                    pushCloudStorehouseVO: {
-                        ids: []
-                    }
+                    ids: []
                 };
-                data.pushCloudStorehouseVO.ids.push(this.orderId);
+                data.ids.push(this.orderId);
                 request.orderSendOut(data).then(res => {
                     this.$message.success(res.msg);
                     this.getInfo();
