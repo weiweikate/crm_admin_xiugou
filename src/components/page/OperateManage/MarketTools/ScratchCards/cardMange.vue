@@ -175,7 +175,7 @@
                                     throw '发放数不能大于库存';
                                 }
                             }
-                            if (!v.status && !v.addNum) {
+                            if (!v.status == 2 && !v.addNum) {
                                 throw '请为新增的奖品添加发放数';
                             }
                             if (v.addNum === 0 && (!isInt.test(v.addNum) || v.addNum.length > 12)) {
