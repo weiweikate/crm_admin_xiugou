@@ -79,8 +79,13 @@ export default {
             };
             request.queryConfig(data).then(res => {
                 this.pageLoading = false;
-                this.charge = res.data[0].value;
-                this.minBalance = res.data[1].value;
+                res.data.forEach(v => {
+                    if (v.code == 'service_charge') {
+                        this.charge = v.value;
+                    } else if (v.code == 'min_balance') {
+                        this.minBalance = v.value;
+                    }
+                });
                 this.bodyLoading = false;
             }).catch(err => {
                 this.pageLoading = false;

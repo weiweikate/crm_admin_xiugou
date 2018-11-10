@@ -61,9 +61,15 @@
                 };
                 request.queryConfig(data).then(res => {
                     this.pageLoading = false;
-                    this.num1 = res.data[0].value;
-                    this.num2 = res.data[1].value;
-                    this.num3 = res.data[2].value;
+                    res.data.forEach(v => {
+                        if (v.code == 'less_than_stock_insufficient') {
+                            this.num1 = v.value;
+                        } else if (v.code == 'less_than_stock_tension') {
+                            this.num2 = v.value;
+                        } else if (v.code == 'less_than_stock_zero') {
+                            this.num3 = v.value;
+                        }
+                    });
                     this.bodyLoading = false;
                 }).catch(err => {
                     this.pageLoading = false;
@@ -103,8 +109,8 @@
                         }
                     ]
                 };
-                let reg = /^\d+$/;
-                if(reg.test(this.num1) && reg.test(this.num2) && reg.test(this.num3)){
+                const reg = /^\d+$/;
+                if (reg.test(this.num1) && reg.test(this.num2) && reg.test(this.num3)) {
                     this.btnLoading = true;
                     request.addOrModifyList(data).then(res => {
                         this.$message.success(res.msg);
@@ -113,8 +119,8 @@
                         console.log(err);
                         this.btnLoading = false;
                     });
-                }else{
-                    this.$message.warning('请输入正整数!')
+                } else {
+                    this.$message.warning('请输入正整数!');
                 }
             },
             // 取消
