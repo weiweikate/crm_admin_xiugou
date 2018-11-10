@@ -183,14 +183,12 @@
             // 推送云仓
             pushCloud(row) {
                 const data = {
-                    pushCloudStorehouseVO: {
-                        ids: []
-                    }
+                    ids: []
                 };
                 if (row) {
-                    data.pushCloudStorehouseVO.ids.push(row.id);
+                    data.ids.push(row.id);
                 } else {
-                    data.pushCloudStorehouseVO.ids = this.ids;
+                    data.ids = this.ids;
                 }
                 request.orderSendOut(data).then(res => {
                     this.$message.success(res.msg);
