@@ -85,7 +85,7 @@
                     <span v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5'
                           class="content-con">发货时间：{{ orderMsg.sendTime | formatDateAll }}</span>
                     <span v-if='orderStatus == 6 || orderStatus == 7 || orderStatus == 8' class="content-con">取消时间：{{ orderMsg.cancleTime | formatDateAll }}</span>
-                    <span v-if='orderStatus != 1 && orderStatus != 2 ' class="content-con">支付交易号：{{ orderMsg.outTradeNo }}</span>
+                    <span v-if='orderStatus != 1 && orderStatus != 2 ' class="content-con">支付交易号：{{ orderMsg.tradeNo }}</span>
                     <span v-if='orderStatus == 4 || orderStatus == 5' class="content-con">确认时间：{{orderMsg.deliveryTime | formatDateAll}}</span>
                 </p>
                 <el-table border :data="tableData" :span-method="spanMethod">
@@ -337,10 +337,10 @@
                     this.orderMsg.orderNum = res.data.orderNum;
                     this.orderMsg.createTime = res.data.createTime; // 创建时间
                     this.orderMsg.payTime = res.data.payTime; // 第三方支付时间
-                    this.orderMsg.deliveryTime = res.data.deliveryTime; // 确认时间
+                    this.orderMsg.deliveryTime = res.data.finishTime; // 确认时间
                     this.orderMsg.sendTime = res.data.sendTime; // 发货时间
                     // this.order.cancleTime = res.data.sendTime; // 取消时间
-                    this.orderMsg.tradeNo = res.data.tradeNo;
+                    this.orderMsg.tradeNo = res.data.outTradeNo;
                     // this.orderFreePayTime = res.data.createTime; // 倒计时
                     this.orderMsg.expressName = res.data.expressName; // 物流公司名称
                     this.orderMsg.expressNo = res.data.expressNo; // 物流单号
