@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-        vendor: ['vue/dist/vue.common.js','vue-router', 'babel-polyfill','axios']
+        vendor: ['vue/dist/vue.esm.js','vue-router', 'babel-polyfill','axios','echarts','element-ui','vue-quill-editor']
     },
     output: {
         path: path.join(__dirname, '../dist'),
