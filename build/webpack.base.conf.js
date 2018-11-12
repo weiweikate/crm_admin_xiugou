@@ -3,6 +3,7 @@ const path = require('path');
 const utils = require('./utils');
 const config = require('../config');
 const vueLoaderConfig = require('./vue-loader.conf');
+const webpack = require('webpack');
 
 function resolve(dir) {
     return path.join(__dirname, '..', dir);
@@ -71,6 +72,11 @@ module.exports = {
             }
         ]
     },
+    plugins: [
+        new webpack.DllReferencePlugin({
+            manifest: require(path.join(__dirname, '../dist/vendor-manifest.json'))
+        })
+    ],
     node: {
         // prevent webpack from injecting useless setImmediate polyfill because Vue
         // source contains it (although only uses it if it's native).
