@@ -1,3 +1,5 @@
 export default {
-    memberMangeToInfo: ''
+    pageInfo: {
+        memberMangeToInfo: ''
+    }
 }

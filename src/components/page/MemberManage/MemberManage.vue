@@ -170,7 +170,8 @@ export default {
         };
     },
     created() {
-        console.log(this.$store.state);
+        this.$store.commit('setPageParam', {name: 'memberInfo', msg: {name: 'Mary'}})
+        console.log(this.$store.getters.getageParam('memberInfo'));
     },
     activated() {
         this.getList(this.page.currentPage);

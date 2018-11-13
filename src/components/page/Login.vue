@@ -152,7 +152,7 @@
                     }
                 }, 1000);
                 const data = { phone: this.form2.phone, templateCode: 'ADMIN_LOGIN_CODE' };
-                request.getCode(data).then(res => {
+                request.getLoginCode(data).then(res => {
                     this.$message.success(res.msg);
                 });
             },

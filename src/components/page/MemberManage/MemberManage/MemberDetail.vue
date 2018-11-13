@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-breadcrumb :nav="['经销商会员管理','会员管理','会员详情']"></v-breadcrumb>
-        <div class="container">
+        <div class="container" v-loading="loading">
             <div class="basic-inf-area line">
                 <div class="left">
                     <div class="title">
@@ -205,10 +205,12 @@
                 };
                 this.loading = true;
                 request.findDealerById(data).then(res => {
+                    this.loading = false;
                     this.dealer = res.data;
                     this.record = res.data.levelChangeList;
                     this.storeId = res.data.storeId;
                 }).catch(err => {
+                    this.loading = false;
                     console.log(err);
                 });
             },

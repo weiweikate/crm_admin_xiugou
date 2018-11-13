@@ -9,7 +9,7 @@
                 <p>身份证号：{{detail.myCardNum}}</p>
                 <span class='title'>图片</span>
                 <div class="info">
-                    <div class="card" v-for="(v,k) in img" :key="k">
+                    <div v-if="v" class="card" v-for="(v,k) in img" :key="k">
                         <img :src="v" alt="">
                     </div>
                 </div>

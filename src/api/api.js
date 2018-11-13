@@ -1,18 +1,3 @@
-// 登陆接口
-export const LOGIN = ['https://www.easy-mock.com/mock/5b8cdef7b4f2405353a03f5c/mr-h5/getUserToken', { methods: 'post' }];
-
-// //获取产品分类列表
-// export const getProductList='/mock/5aeac1c6c186102e067af3f3/test/getBrandProductList';
-// //获取产品二级分类列表
-// export const getSecondProductList='/mock/5aeac1c6c186102e067af3f3/test/getSecondProductList';
-
-// //获取层级管理列表
-// export const getLevelList='/mock/5aeac1c6c186102e067af3f3/test/getLevelList';
-// //获取会员管理列表
-// export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
-
-// -----------------------------------------------------正式接口--------------------------------------
-// 首页数据
 export const indexData = '/admin/index/indexData';
 // 物流信息
 export const findExpress = '/admin/express/find';
@@ -21,7 +6,9 @@ export const findExpress = '/admin/express/find';
 
 // 首页
 // 修改密码短信验证
-export const sendUpdatePwdCode = '/admin/phoneCode/sendMessage';
+export const sendUpdatePwdCode = '/sms/sendUpdateMessage';
+// 发送登陆短信
+export const sendLoginCode = '/sms/sendLoginMessage';
 // 修改密码
 //
 // 授权管理
@@ -242,7 +229,8 @@ export const uploadImg = '/admin/common/upload/oss'; // 上传图片
 export const addImg = '/common/upload/oss'; // 上传图片
 export const queryConfig = ['/config/sysconfig/queryConfig', { methods: 'get' }]; // 查询系统配置
 export const getAllProductCategory = ['/product/productCategory/queryList', { methods: 'post' }]; // 获取所有三级类目
-export const getCode = ['/adminUser/sendMessage', { methods: 'get' }]; // 获取短信验证码
+export const getLoginCode = ['/sms/sendLoginMessage', { methods: 'get' }]; // 获取登录短信验证码
+export const getCode = ['/sms/sendUpdateMessage', { methods: 'get' }]; // 获取修改密码短信验证码
 export const homeData = ['/user/home', { methods: 'get' }]; // 首页数据列表
 export const addOrModifyList = '/config/sysconfig/addOrModifyList'; // 批量新增系统配置
 export const findAdminUserbyId = ['/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息
