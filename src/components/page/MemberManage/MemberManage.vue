@@ -169,6 +169,9 @@ export default {
             btnTxt: ''
         };
     },
+    created() {
+        console.log(this.$store.state);
+    },
     activated() {
         this.getList(this.page.currentPage);
         this.getLevelList();

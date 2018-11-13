@@ -4,6 +4,7 @@ import App from './App';
 import router from './router';
 import axios from './api/index.js';
 import ElementUI from 'element-ui';
+import vuex from './store/index';
 import vueQuillEditor from 'vue-quill-editor'; // 引入富文本工具
 import echarts from 'echarts';
 import '@/JS/filter.js'; // 全局过滤器
@@ -20,6 +21,7 @@ Vue.use(Vue => {
     Vue.prototype.$axios = axios;
 });
 Vue.prototype.$echarts = echarts;
+Vue.prototype.$store = vuex;
 
 // 使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
@@ -34,5 +36,6 @@ router.beforeEach((to, from, next) => {
 });
 new Vue({
     router,
+    vuex,
     render: h => h(App)
 }).$mount('#app');
