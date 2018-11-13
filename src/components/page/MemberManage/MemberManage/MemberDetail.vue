@@ -59,7 +59,7 @@
                     <!--</div>-->
                     <div>
                         <el-button type="primary" @click="realName"
-                                   style="margin-left: 0">实名信息{{dealer.myCardNum?'(已实名)':''}}
+                                   style="margin-left: 0">实名信息{{dealer.realnameStatus == '1'?'(已实名)':''}}
                         </el-button>
                     </div>
                     <div>
