@@ -57,6 +57,10 @@
 
     export default {
         components: {},
+        // index:运费模板表格编辑索引值，非必传
+        // chooseData：选中的所有数据，必传，若为单行，与preData值相同
+        // preData：当前行选中的数据，必传，若为单行，与chooseData值相同
+        // isSingleLine：是否是单行（运费模版表格是多行，其他是单行），非必传
         props: ['index', 'chooseData', 'preData', 'isSingleLine'],
         data() {
             return {
