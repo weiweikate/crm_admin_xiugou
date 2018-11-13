@@ -62,7 +62,7 @@
             </div>
         </div>
         <!--选择区域-->
-        <choose-area @getArea='chooseAreaToast' :chooseData="chooseData" :preData="chooseData" :isNotice="true" v-if="isShowArea"></choose-area>
+        <choose-area @getArea='chooseAreaToast' :chooseData="chooseData" :preData="chooseData" :isSingleLine="true" v-if="isShowArea"></choose-area>
     </div>
 
 </template>

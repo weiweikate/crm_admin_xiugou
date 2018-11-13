@@ -55,19 +55,19 @@ export default new Router({
                 {
                     name: 'brandProductClassify',
                     path: '/brandProductClassify',
-                    component: resolve => require(['../components/page/BrandProduct/BrandProductClassify.vue'], resolve),
+                    component: resolve => require(['../components/page/BrandProduct/BrandProductClassify/BrandProductClassify.vue'], resolve),
                     meta: { title: '产品品牌分类管理', url: '/admin/productCategory/queryProductCategoryPageList_1' }
                 },
                 {
                     name: 'secondClassify',
                     path: '/secondClassify',
-                    component: resolve => require(['../components/page/BrandProduct/SecondClassify.vue'], resolve),
+                    component: resolve => require(['../components/page/BrandProduct/BrandProductClassify/SecondClassify.vue'], resolve),
                     meta: { title: '二级类目', url: '/admin/productCategory/queryProductCategoryPageList_2' }
                 },
                 {
                     name: 'thirdClassify',
                     path: '/thirdClassify',
-                    component: resolve => require(['../components/page/BrandProduct/ThirdClassify.vue'], resolve),
+                    component: resolve => require(['../components/page/BrandProduct/BrandProductClassify/ThirdClassify.vue'], resolve),
                     meta: { title: '三级类目', url: '/admin/productCategory/queryProductCategoryPageList_2' }
                 },
                 {
@@ -79,13 +79,13 @@ export default new Router({
                 {
                     name: 'productDetailParam',
                     path: '/productDetailParam',
-                    component: resolve => require(['../components/page/BrandProduct/ProductDetailParam.vue'], resolve),
+                    component: resolve => require(['../components/page/BrandProduct/BrandProductClassify/ProductDetailParam.vue'], resolve),
                     meta: { title: '产品详细参数', url: '/admin/productCategory/queryProductCategoryPageList_2' }
                 },
                 {
                     name: 'brandManage',
                     path: '/brandManage',
-                    component: resolve => require(['../components/page/BrandProduct/BrandManage.vue'], resolve),
+                    component: resolve => require(['../components/page/BrandProduct/BrandManage/BrandManage.vue'], resolve),
                     meta: { title: '品牌管理', url: '/admin/brand/queryBrandPageList' }
                 },
                 {
@@ -103,7 +103,7 @@ export default new Router({
                 {
                     name: 'shippingTemplate',
                     path: '/shippingTemplate',
-                    component: resolve => require(['../components/page/BrandProduct/ShippingTemplate.vue'], resolve),
+                    component: resolve => require(['../components/page/BrandProduct/ShippingTemplate/ShippingTemplate.vue'], resolve),
                     meta: { title: '运费模板', url: '/admin/freightTemplate/queryFreightTemplateList' }
                 },
                 {

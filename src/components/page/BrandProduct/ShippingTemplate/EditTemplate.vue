@@ -98,6 +98,12 @@
                             </el-table>
                             <div><span class="color-blue" @click="addSetting">增加制定省市运费设置</span></div>
                         </el-form-item>
+                        <el-form-item label="不配送区域" prop="pushCountry" class="region-area">
+                            <div style="margin-left: 112px">
+                                <div v-for="(v,k) in form.unSupportArea" :key="k">{{v.provinceName}}:{{v.cityNames}}</div>
+                                <el-button type="primary" @click="chooseArea">选择区域</el-button>
+                            </div>
+                        </el-form-item>
                         <el-form-item label="是否启用">
                             <el-radio-group v-model="form.status">
                                 <el-radio label="1">启用</el-radio>
@@ -105,13 +111,6 @@
                             </el-radio-group>
                         </el-form-item>
                     </div>
-
-                    <!--<el-form-item prop="status" label="是否启用">-->
-                    <!--<el-radio-group v-model="form.defaultTrue">-->
-                    <!--<el-radio label="1">启用</el-radio>-->
-                    <!--<el-radio label="2">停用</el-radio>-->
-                    <!--</el-radio-group>-->
-                    <!--</el-form-item>-->
                     <div class="submit-btn">
                         <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">确认保存</el-button>
                         <el-button @click="cancel">取消</el-button>
@@ -122,6 +121,8 @@
         <!--选择区域-->
         <choose-area @getArea='chooseAreaToast' :index="tableIndex" :chooseData="chooseData" :preData="preData"
                      v-if="isShowArea"></choose-area>
+        <!--选择不配送区域-->
+        <choose-area @getArea='chooseUnSupportArea' :chooseData="unSupportAreaData" :preData="unSupportAreaData" :isSingleLine="true" v-if="unSupportMask"></choose-area>
         <!--平台承担运费弹窗-->
         <div class="mask" v-if="showTips">
             <div class="box">
@@ -191,7 +192,8 @@
                     provinceCode: '',
                     cityCode: '',
                     areaCode: '',
-                    status: '1'
+                    status: '1',
+                    unSupportArea: []
                 },
                 checked: false,
                 freightFreePrice: '',
@@ -213,7 +215,9 @@
                 title2: '续公斤数(kg)',
                 tips: '应输入0.00至999.99的数字，小数保留两位',
                 id: '',
-                rows: 0
+                rows: 0,
+                unSupportAreaData: [], // 不配送区域
+                unSupportMask: false
             };
         },
         activated() {
@@ -284,28 +288,6 @@
                 this.form.areaCode = this.address[2];
                 console.log(this.address);
             },
-            // checkUnit
-            // checkUnit(val, num) {
-            //     const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
-            //     if (val && (!reg.test(val) || val > 999.99)) {
-            //         this.$message.warning('请输入合法数据');
-            //         switch (num) {
-            //             case 1:
-            //                 this.startUnit = '';
-            //                 break;
-            //             case 2:
-            //                 this.startPrice = '';
-            //                 break;
-            //             case 3:
-            //                 this.nextUnit = '';
-            //                 break;
-            //             case 4:
-            //                 this.nextPirce = '';
-            //                 break;
-            //         }
-            //     }
-            // },
-            // 确认保存
             submitForm(formName) {
                 const that = this;
                 that.$refs[formName].validate((valid) => {
@@ -506,6 +488,36 @@
                         return true;
                     } else {
                         return false;
+                    }
+                }
+            },
+            // 选择区域
+            chooseArea() {
+                this.unSupportMask = true;
+                for (const i in this.form.unSupportArea) {
+                    this.form.unSupportArea[i].includeAreaName = this.form.unSupportArea[i].provinceName + ':' + this.form.unSupportArea[i].cityNames;
+                    this.form.unSupportArea[i].includeArea = this.form.unSupportArea[i].provinceCode + ':' + this.form.unSupportArea[i].cityCodes;
+                }
+                this.chooseData = this.form.unSupportArea;
+            },
+            // 选择区域
+            chooseUnSupportArea(getArea) {
+                this.isShowArea = false;
+                if (getArea) {
+                    this.form.unSupportArea = [];
+                    let includeAreaName = ''; let includeArea = '';
+                    for (const i in getArea) {
+                        includeAreaName += getArea[i].provinceName + ':' + getArea[i].cityNames + ',';
+                        includeArea += getArea[i].provinceCode + ':' + getArea[i].cityCodes + ',';
+                        const tempItem = {
+                            provinceCode: getArea[i].provinceCode,
+                            cityCodes: getArea[i].cityCodes,
+                            provinceName: getArea[i].provinceName,
+                            cityNames: getArea[i].cityNames,
+                            includeAreaName: includeAreaName.slice(0, -1),
+                            includeArea: includeArea.slice(0, -1)
+                        };
+                        this.form.unSupportArea.push(tempItem);
                     }
                 }
             }

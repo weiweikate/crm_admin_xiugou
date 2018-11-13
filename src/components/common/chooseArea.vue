@@ -57,7 +57,7 @@
 
     export default {
         components: {},
-        props: ['index', 'chooseData', 'preData', 'isNotice'],
+        props: ['index', 'chooseData', 'preData', 'isSingleLine'],
         data() {
             return {
                 area: [], // 封装所有数据的大容器
@@ -91,7 +91,7 @@
             if (this.preData) {
                 this.getAllData(this.preData);
             }
-            if (this.isNotice) {
+            if (this.isSingleLine) {
                 this.preChooseData = this.allChooseData;
                 this.preChooseProvinceIds = this.allChooseProvinceIds;
                 this.preCityIds = this.allCityIds;
