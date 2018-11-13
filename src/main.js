@@ -16,6 +16,28 @@ Vue.use(vueQuillEditor);
 import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
 // import '../static/css/theme-green/index.css';       // 浅绿色主题
 import '../src/assets/css/commom.css'; // 公用css 样式
+// 图片浏览工具
+import Viewer from 'v-viewer';
+import 'viewerjs/dist/viewer.css';
+Vue.use(Viewer);
+Viewer.setDefaults({
+    Options: {
+        'inline': true,
+        'button': true,
+        'navbar': true,
+        'title': true,
+        'toolbar': true,
+        'tooltip': true,
+        'movable': true,
+        'zoomable': true,
+        'rotatable': true,
+        'scalable': true,
+        'transition': true,
+        'fullscreen': true,
+        'keyboard': true,
+        'url': 'data-source'
+    }
+});
 Vue.use(ElementUI, { size: 'small' });
 Vue.use(Vue => {
     Vue.prototype.$axios = axios;

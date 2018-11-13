@@ -311,9 +311,9 @@
                     this.getProgressStu(this.orderStatus.toString());
                     this.orderMsg.starIndex = res.data.star || 1;
                     this.orderMsg.star =
-                        res.data.star == null
+                        res.data.adminStars == null
                             ? ''
-                            : this.markArr[res.data.star - 1].label;
+                            : this.markArr[res.data.adminStars - 1].label;
                     this.orderMsg.adminRemark = res.data.adminRemark;
                     this.orderMsg.dealerName = res.data.dealerName;
                     this.orderMsg.dealerPhone = res.data.dealerPhone;
@@ -547,8 +547,8 @@
                 data.adminStars = status == 1 ? v.value : this.orderMsg.starIndex;
                 data.adminRemark = this.orderMsg.adminRemark;
                 request.orderSign(data).then(res => {
-                    this.$message.success(res.mag);
-                    this.orderMsg.star = this.markArr[Number(data.star) - 1].label;
+                    this.$message.success(res.msg);
+                    this.orderMsg.star = this.markArr[Number(data.adminStars) - 1].label;
                     this.isShowPop = false;
                 }).catch(err => {
                     console.log(err);

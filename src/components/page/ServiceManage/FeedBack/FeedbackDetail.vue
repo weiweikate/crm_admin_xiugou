@@ -28,7 +28,9 @@
                     </div>
                     <div class="detail-title">图片：</div>
                     <div>
-                        <img v-for="(item,index) in detail.imgList" :key="index" :src="item" alt="">
+                        <viewer :images="detail.imgList">
+                             <img v-for="(item,index) in detail.imgList" :key="index" :src="item" alt="">
+                        </viewer>
                     </div>
                     <div class="detail-title">回复：</div>
                     <div>
@@ -191,7 +193,8 @@
             width: 100px;
             height: 100px;
             border-radius: 5px;
-            border: solid 2px #cacaca;
+            border: solid 1px #eee;
+            margin-right: 10px;
         }
         .el-textarea {
             width: 440px;

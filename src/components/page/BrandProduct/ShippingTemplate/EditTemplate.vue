@@ -98,12 +98,12 @@
                             </el-table>
                             <div><span class="color-blue" @click="addSetting">增加制定省市运费设置</span></div>
                         </el-form-item>
-                        <el-form-item class="address-item" label="不支持配送" prop="pushCountry">
-                            <div style="margin-left: 112px">
-                                <div v-for="(v,k) in form.unSupportAreas" :key="k">{{v.provinceName}}:{{v.cityNames}}</div>
-                                <el-button type="primary" @click="chooseArea">选择区域</el-button>
-                            </div>
-                        </el-form-item>
+                        <!--<el-form-item class="address-item" label="不支持配送" prop="pushCountry">-->
+                            <!--<div style="margin-left: 112px">-->
+                                <!--<div v-for="(v,k) in form.unSupportAreas" :key="k">{{v.provinceName}}:{{v.cityNames}}</div>-->
+                                <!--<el-button type="primary" @click="chooseArea">选择区域</el-button>-->
+                            <!--</div>-->
+                        <!--</el-form-item>-->
                         <el-form-item label="是否启用">
                             <el-radio-group v-model="form.status">
                                 <el-radio label="1">启用</el-radio>

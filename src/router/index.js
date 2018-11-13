@@ -812,7 +812,7 @@ export default new Router({
                 {
                     name: 'advertisingManage',
                     path: '/advertisingManage',
-                    component: resolve => require(['../components/page/OperateManage/AdvertisingManage.vue'], resolve),
+                    component: resolve => require(['../components/page/OperateManage/AdvertisingManage/AdvertisingManage.vue'], resolve),
                     meta: { title: '广告位管理', url: '/advertisingManage' }
                 },
                 {
