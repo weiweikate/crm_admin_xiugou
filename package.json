@@ -10,7 +10,8 @@
         "build:dll": "webpack --config build/webpack.dll.conf.js",
         "deploy:test": "node bin/release.js --dist=dist --server=/home/mr/packages/wuchengji/dist",
         "deploy:dev": "node bin/dev.js --dist=dist --server=/ftp/ops/nginx1/dist",
-        "server": "node server/app.js"
+        "server": "node server/app.js",
+        "install2": "yarn"
     },
     "dependencies": {
         "area-data": "5.0.6",
@@ -22,6 +23,7 @@
         "echarts": "4.1.0",
         "element-ui": "2.3.3",
         "eslint-plugin-html": "4.0.5",
+        "express-http-proxy": "^1.5.0",
         "git-repo-info": "^2.0.0",
         "js-md5": "0.7.3",
         "less": "3.0.4",
@@ -38,6 +40,7 @@
         "vue-router": "3.0.1",
         "vue-schart": "0.1.4",
         "vuedraggable": "2.16.0",
+        "vuex": "^3.0.1",
         "xss": "1.0.3"
     },
     "devDependencies": {

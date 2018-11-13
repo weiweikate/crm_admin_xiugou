@@ -75,7 +75,7 @@ module.exports = {
     },
     plugins: [
         new webpack.DllReferencePlugin({
-            manifest: require(path.join(__dirname, '../dist/vendor-manifest.json'))
+            manifest: require(path.join(__dirname, '../dll/vendor-manifest.json'))
         })
     ],
     node: {
