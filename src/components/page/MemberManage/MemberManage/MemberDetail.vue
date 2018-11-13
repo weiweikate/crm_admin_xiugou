@@ -52,11 +52,11 @@
                         <!--<el-button type="primary" @click="btnClicked('/operateLog')" style="margin-left: 0">用户操作日志-->
                         <!--</el-button>-->
                     <!--</div>-->
-                    <!--<div>-->
-                        <!--<el-button type="primary" @click="btnClicked('/memberAccount')"-->
-                                   <!--style="margin-left: 0">他的账户-->
-                        <!--</el-button>-->
-                    <!--</div>-->
+                    <div>
+                        <el-button type="primary" @click="btnClicked('/memberAccount')"
+                                   style="margin-left: 0">他的账户
+                        </el-button>
+                    </div>
                     <div>
                         <el-button type="primary" @click="realName"
                                    style="margin-left: 0">实名信息{{dealer.realnameStatus == '1'?'(已实名)':''}}

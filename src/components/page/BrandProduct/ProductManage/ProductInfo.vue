@@ -54,7 +54,7 @@ export default {
                 this.productImg = [];
                 this.productDetail = res.data.infoValue;
                 this.name = res.data.name;
-                this.productItem = res.data.firstCategoryName + '-' + res.data.secCategoryName;
+                this.productItem = `${res.data.firstCategoryName || ''} - ${res.data.secCategoryName || ''} - ${res.data.thirdCategoryName || ''}`;
                 this.productBrand = res.data.brandName;
                 this.productDetail = res.data.content;
                 res.data.imgFileList.forEach((v, k) => {

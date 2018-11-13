@@ -104,7 +104,11 @@
             // 查看秀值账户
             showShareAccount(row) {
                 if (row.userId) {
-                    this.$router.push({ name: 'showValueAccount', query: { id: row.userId }});
+                    const memberInfo = {};
+                    memberInfo.memberId = row.userId;
+                    memberInfo.nickname = row.accountInfo.realname || '';
+                    sessionStorage.setItem('memberAccMsg', memberInfo);
+                    this.$router.push({ name: 'showValueAccount', query: { memberAccMsg: memberInfo }});
                 }
             }
         }

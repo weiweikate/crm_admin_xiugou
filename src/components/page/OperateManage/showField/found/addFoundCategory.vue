@@ -22,7 +22,7 @@
                 </el-form-item>
                 <el-form-item label="">
                     <el-button :loading="btnLoading" type="primary" @click="submitForm">保 存</el-button>
-                    <el-button>取 消</el-button>
+                    <el-button @click="$router.push('foundCategory')">取 消</el-button>
                 </el-form-item>
             </el-form>
         </el-card>

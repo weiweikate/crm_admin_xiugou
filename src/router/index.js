@@ -346,7 +346,7 @@ export default new Router({
                     name: 'tokenAccountBalance',
                     path: '/tokenAccountBalance',
                     component: resolve => require(['../components/page/MemberManage/UserAccount/TokenAccountBalance.vue'], resolve),
-                    meta: { title: '代币账户收支明细', url: '/admin/detailTokencoin/queryDetailTokencoinList' }
+                    meta: { title: '秀豆账户收支明细', url: '/admin/detailTokencoin/queryDetailTokencoinList' }
                 },
                 {
                     name: 'shareAccountBalance',

@@ -131,16 +131,14 @@
                     </el-table-column>
                     <el-table-column prop="id" label="支付详情" align="center">
                         <template slot-scope="scope">
-                            代币支付:{{scope.row.tokenCoin}}枚<br/>
                             余额支付:{{scope.row.balance | handleMoney}}<br/>
-                            积分抵扣:{{scope.row.userScore}}<br/>
+                            1元券抵扣:{{scope.row.tokenCoin}}<br/>
                             优惠券抵扣:{{scope.row.couponPrice | handleMoney}}<br/>
-                            <template v-if='(scope.row.type & 1) != 0'>平台支付</template>
-                            <template v-else-if='(scope.row.type & 2) != 0'>微信小程序 </template>
-                            <template v-else-if='(scope.row.type & 4) != 0'>APP支付 </template>
-                            <template v-else-if='(scope.row.type & 8) != 0'>支付宝 </template>
-                            <template v-else-if='(scope.row.type & 16) != 0'>银联 </template>
-                            {{scope.row.amounts | handleMoney}}
+                            <template v-if='(scope.row.type & 1) != 0'>平台支付{{scope.row.amounts | handleMoney}}</template>
+                            <template v-else-if='(scope.row.type & 2) != 0'>微信小程序{{scope.row.amounts | handleMoney}} </template>
+                            <template v-else-if='(scope.row.type & 4) != 0'>APP支付{{scope.row.amounts | handleMoney}} </template>
+                            <template v-else-if='(scope.row.type & 8) != 0'>支付宝{{scope.row.amounts | handleMoney}} </template>
+                            <template v-else-if='(scope.row.type & 16) != 0'>银联{{scope.row.amounts | handleMoney}} </template>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" align="center">

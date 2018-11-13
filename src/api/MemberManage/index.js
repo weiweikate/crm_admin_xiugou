@@ -59,3 +59,15 @@ export const updateUserLevelUpBuyById = '/user/Level/updateUserLevelUpBuyById';
 export const updateUserLevelUpPerSalesById = '/user/Level/updateUserLevelUpPerSalesById';
 // 代币充值
 export const updateUserLevelUpTokenCoinBuyById = '/user/Level/updateUserLevelUpTokenCoinBuyById';
+// 他的账户
+export const memberAccountListInfo = ['/user/account/findByUserId', { methods: 'get' }];
+// 现金账户收入明细列表
+export const queryMemCashList = ['/user/account/queryCashList', { methods: 'post' }];
+// 秀豆账户收入明细列表
+export const queryMemBeanList = ['/user/account/showPeasDetail', { methods: 'post' }];
+// 秀值账户收入明细列表
+export const queryMemshowValueList = ['/user/account/showValueDetail', { methods: 'post' }];
+// 银行卡详情
+export const queryCardByUserId = ['/user/account/queryByUserId', { methods: 'get' }];
+// 删除银行卡
+export const deleteAccountCardById = ['/user/account/deleteById', { methods: 'get' }];

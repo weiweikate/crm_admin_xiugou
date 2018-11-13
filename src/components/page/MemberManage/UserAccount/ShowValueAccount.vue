@@ -1,16 +1,37 @@
 <template>
-    <div class="showvalue-account">
+    <div>
         <breadcrumb :nav='nav'></breadcrumb>
         <el-card>
-            <p class="mb10">{{name}}的现金账户明细</p>
-            <el-table border :data="tableData">
-                <el-table-column type="index" label="编号" align="center"></el-table-column>
-                <el-table-column label="类型" align="center" ></el-table-column>
-                <el-table-column prop="balance" label="金额（元）" align="center" width="200"></el-table-column>
-                <el-table-column label="说明" align="center"></el-table-column>
+            <p class="title">{{name}}的秀值账户明细</p>
+            <el-table border :data="tableData" v-loading="tableLoading">
+                <el-table-column prop="serialNo" label="流水号" align="center" min-width="180"></el-table-column>
+                <el-table-column label="收入/支出" align="center" width="200">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.biType==1">收入</template>
+                        <template v-else >支出</template>
+                    </template>
+                </el-table-column>
+                <el-table-column label="金额（元）" align="center" width="200">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.biType==1">{{`+${scope.row.balance || 0}`}}</template>
+                        <template v-else >{{`-${scope.row.balance || 0}`}}</template>
+                    </template>
+                </el-table-column>
+                <el-table-column label="类型" align="center" width="200">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.useType==1">用户收益</template>
+                        <template v-else-if="scope.row.useType==2">提现</template>
+                        <template v-else-if="scope.row.useType==3">消费支出</template>
+                        <template v-else-if="scope.row.useType==4">店主分红</template>
+                        <template v-else-if="scope.row.useType==5">店员分红</template>
+                        <template v-else-if="scope.row.useType==6">销售提成</template>
+                        <template v-else-if="scope.row.useType==7">现金红包</template>
+                        <template v-else-if="scope.row.useType==8">任务奖励</template>
+                    </template>
+                </el-table-column>
                 <el-table-column label="时间" align="center" min-width="180">
-                    <template slot-scope="scope" v-if='scope.row.create_time'>
-                        {{scope.row.create_time|formatDate}}
+                    <template slot-scope="scope" v-if='scope.row.createTime'>
+                        {{scope.row.createTime|formatDateAll}}
                     </template>
                 </el-table-column>
             </el-table>
@@ -30,7 +51,9 @@
 </template>
 <script>
     import breadcrumb from '@/components/common/Breadcrumb';
+    import request from '@/http/http';
     import { myMixinTable } from '@/JS/commom';
+
     export default {
         mixins: [myMixinTable],
         components: {
@@ -38,27 +61,52 @@
         },
         data() {
             return {
-                nav: ['会员管理', '秀值账户收支明细'],
+                nav: ['会员管理', '经销商会员管理', '会员详情', '会员账户管理', '秀值账户明细'],
                 tableData: [],
-                name: '杨二盟',
+                page: {
+                    currentPage: 1,
+                    totalPage: 0
+                },
+                name: '',
                 tableLoading: false
             };
         },
         activated() {
-            this.id = this.$route.query.memberId || JSON.parse(sessionStorage.getItem('memberId'));
-            this.getList(this.page.currentPage);
+            console.log(this.$route.query.memberAccMsg);
+            this.id = this.$route.query.memberAccMsg.memberId || sessionStorage.getItem('memberAccMsg').memberId;
+            this.name = this.$route.query.memberAccMsg.nickname || sessionStorage.getItem('memberAccMsg').nickname;
+            this.getList();
         },
         methods: {
             // 获取数据
-            getList(val) {
-
+            getList() {
+                const data = {
+                    userId: this.id,
+                    page: this.page.currentPage,
+                    pageSize: this.page.pageSize
+                };
+                this.tableLoading = true;
+                request.queryMemshowValueList(data).then(res => {
+                    this.tableLoading = false;
+                    this.tableData = res.data.data;
+                    this.page.currentPage = res.data.currentPage;
+                    this.page.totalPage = res.data.totalNum;
+                }).catch(err => {
+                    this.tableLoading = false;
+                    console.log(err);
+                });
             }
         }
     };
 </script>
-<style lang="less" scoped>
-    .showvalue-account{
+<style scoped>
+    .title {
+        margin-bottom: 20px;
+    }
 
+    .block {
+        margin: 10px 0;
+        float: right;
     }
 </style>
 

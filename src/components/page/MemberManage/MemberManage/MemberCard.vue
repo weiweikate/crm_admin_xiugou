@@ -1,26 +1,26 @@
 <template>
     <div>
         <v-breadcrumb :nav="['经销商会员管理','会员管理','会员详情','TA的账户']"></v-breadcrumb>
-        <div class="accountInfod">
+        <div class="accountInfod" v-loading="tableLoading">
             <ul class="card-box">
                 <li v-for="(item,index) in card" :key="index" :style="{backgroundImage: 'url('+  (test || defaultCard) +')'}" >
                     <div class="userCard">
                         <div class="cardName">
-                           {{item.bank_name}}
+                           {{item.bankName}}
                         </div>
                         <div class="cardType">
-                            {{item.cardType}}
+                            {{item.cardType == 1? '储蓄卡': '信用卡'}}
                         </div>
                     </div>
-                    <div class="card-num">
+                    <div class="card-num" v-if="item.cardNo">
+                        <span>{{item.cardNo.slice(0,4)}}</span>
                         <span>****</span>
                         <span>****</span>
-                        <span>****</span>
-                        <span>{{item.Num }}</span>
+                        <span>{{item.cardNo.slice(-4)}}</span>
                     </div>
                     <div class="delete">
-                        <div>持卡人：{{item.name}}</div>
-                        <div class="spanBtn" @click="dismiss(item.id,index)">删除</div>
+                        <div>持卡人：{{item.account}}</div>
+                        <div class="spanBtn" @click="dismiss(item.id)">删除</div>
                     </div>
                 </li>
             </ul>
@@ -34,65 +34,55 @@
 
 
 <script>
-    import vBreadcrumb from '../../../common/Breadcrumb.vue';
-    import icon from '../../../common/ico.vue';
-    import deleteToast from "../../../common/DeleteToast";
-    import { findBindBankInfoBydealerId, deleteBindBankInfo } from '../../../../api/api.js';
-    import * as pApi from '../../../../privilegeList/index.js';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import icon from '@/components/common/ico.vue';
+    import deleteToast from '@/components/common/DeleteToast';
+    import request from '@/http/http';
 
     export default {
         components: {
-            icon, vBreadcrumb,deleteToast
+            icon, vBreadcrumb, deleteToast
         },
         activated() {
-            this.id = this.$route.query.memberId || JSON.parse(sessionStorage.getItem("memberId"));
-            this.getFindBindBankInfoBydealerId(this.id)
+            this.id = this.$route.query.memberAccMsg.memberId || sessionStorage.getItem('memberAccMsg').memberId;
+            this.getFindBindBankInfoBydealerId();
         },
         data() {
             return {
-                // 权限控制
-                test:'',
-                defaultCard:require('../../../../assets/images/userCard-default.png'),
-                card:[],
+                test: '',
+                tableLoading: '',
+                defaultCard: require('../../../../assets/images/userCard-default.png'),
+                card: [],
                 delId: '',
                 delUrl: '',
-                delUri:'',
-                isShowDelToast: false,
-            }
+                delUri: '',
+                isShowDelToast: false
+            };
         },
         methods: {
-            getFindBindBankInfoBydealerId(id){
-                this.$axios.post(findBindBankInfoBydealerId, {dealerId:id,status:1})
-                    .then(res => {
-                    if (res.data.code == 200) {
-                        let datas = res.data.data
-                        datas.forEach((item) =>{
-                            item.cardType =  item.card_type == 1 ? '储蓄卡':'信用卡'
-                            let length = item.card_no.length;
-                            item.Num = item.card_no.substring(length-3,length);
-                            item.name =item.account?item.account.length>1? item.account.slice(0,1)+'*'+ item.account.slice(2) : item.account:'';    
-                        })
-                        this.card = datas
-                    } else {
-                        this.$message.warning(res.data.msg);
-                    }
-                }).catch(err => {
+            getFindBindBankInfoBydealerId() {
+                this.tableLoading = true;
+                request.queryCardByUserId({id: this.id}).then(res=>{
+                    this.tableLoading = false;
+                    this.card = res.data;
+                }).catch(err=>{
+                    this.tableLoading = false;
                     console.log(err);
                 })
             },
-            dismiss(id,index){
+            dismiss(id) {
                 this.delId = id;
-                this.delUrl = deleteBindBankInfo;
-                this.delUri = pApi.queryDealerAccount;
+                this.delUrl = 'deleteAccountCardById';
+                this.delUri = '';
                 this.isShowDelToast = true;
             },
             // 删除弹窗
             deleteToast(msg) {
                 this.isShowDelToast = msg;
-                this.getFindBindBankInfoBydealerId(this.id)
-            },
+                this.getFindBindBankInfoBydealerId();
+            }
         }
-    }
+    };
 </script>
 
 

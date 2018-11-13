@@ -3,34 +3,42 @@
         <breadcrumb :nav='nav'></breadcrumb>
         <el-card>
             <p class="title">{{name}}的现金账户明细</p>
-            <el-table border :data="tableData">
-                <el-table-column prop="serial_no" label="流水号" align="center" min-width="180"></el-table-column>
-                <el-table-column label="状态" align="center" width="200">
+            <el-table border :data="tableData" v-loading="tableLoading">
+                <el-table-column prop="serialNo" label="流水号" align="center" min-width="180"></el-table-column>
+                <el-table-column label="收入/支出" align="center" width="200">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.status==1">有效</template>
-                        <template v-if="scope.row.status==2">冻结</template>
-                        <template v-if="scope.row.status==3">删除</template>
+                        <template v-if="scope.row.biType==1">收入</template>
+                        <template v-else >支出</template>
                     </template>
                 </el-table-column>
-                <el-table-column prop="balance" label="金额（元）" align="center" width="200"></el-table-column>
+                <el-table-column prop="balance" label="金额（元）" align="center" width="200">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.biType==1">{{`+${scope.row.balance || 0}`}}</template>
+                        <template v-else >{{`-${scope.row.balance || 0}`}}</template>
+                    </template>
+                </el-table-column>
                 <el-table-column label="类型" align="center" width="200">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.use_type==1">店主分红</template>
-                        <template v-if="scope.row.use_type==2">提现</template>
-                        <template v-if="scope.row.use_type==3">分红点兑换</template>
-                        <template v-if="scope.row.use_type==4">交易提成</template>
-                        <template v-if="scope.row.use_type==5">消费</template>
+                        <template v-if="scope.row.useType==1">用户收益</template>
+                        <template v-else-if="scope.row.useType==2">提现</template>
+                        <template v-else-if="scope.row.useType==3">消费支出</template>
+                        <template v-else-if="scope.row.useType==4">店主分红</template>
+                        <template v-else-if="scope.row.useType==5">店员分红</template>
+                        <template v-else-if="scope.row.useType==6">销售提成</template>
+                        <template v-else-if="scope.row.useType==7">现金红包</template>
+                        <template v-else-if="scope.row.useType==8">任务奖励</template>
                     </template>
                 </el-table-column>
                 <el-table-column label="时间" align="center" min-width="180">
-                    <template slot-scope="scope" v-if='scope.row.create_time'>
-                        {{scope.row.create_time|formatDate}}
+                    <template slot-scope="scope" v-if='scope.row.createTime'>
+                        {{scope.row.createTime|formatDateAll}}
                     </template>
                 </el-table-column>
             </el-table>
             <div class="block">
                 <el-pagination
                     background
+                    :page-size="page.pageSize"
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="page.currentPage"
@@ -42,70 +50,53 @@
     </div>
 </template>
 <script>
-    import breadcrumb from '../../../common/Breadcrumb'
-    import * as api from '../../../../api/api.js';
-    import * as pApi from '../../../../privilegeList/index.js';
+    import breadcrumb from '@/components/common/Breadcrumb';
+    import request from '@/http/http';
+    import { myMixinTable } from '@/JS/commom';
 
     export default {
+        mixins: [myMixinTable],
         components: {
             breadcrumb
         },
         data() {
             return {
-                nav: ["会员管理", "经销商会员管理", "会员详情", "TA的账户", "现金账户明细"],
+                nav: ['会员管理', '经销商会员管理', '会员详情', '会员账户管理', '现金账户明细'],
                 tableData: [],
                 page: {
                     currentPage: 1,
                     totalPage: 0
                 },
-                name: '杨二盟',
-                tableLoading: false,
-            }
+                name: '',
+                tableLoading: false
+            };
         },
         activated() {
-            this.id =
-                this.$route.query.memberId ||
-                JSON.parse(sessionStorage.getItem("memberId"));
-            this.getList(this.page.currentPage);
+            this.id = this.$route.query.memberAccMsg.memberId || sessionStorage.getItem('memberAccMsg').memberId;
+            this.name = this.$route.query.memberAccMsg.nickname || sessionStorage.getItem('memberAccMsg').nickname;
+            this.getList();
         },
         methods: {
             // 获取数据
-            getList(val) {
-                let that = this;
-                let data = {
-                    page: val,
-                    dealerId: that.id,
-                    url:pApi.queryDealerAccount
+            getList() {
+                const data = {
+                    userId: this.id,
+                    page: this.page.currentPage,
+                    pageSize: this.page.pageSize
                 };
-                that.tableLoading = true;
-                that.$axios
-                    .post(api.queryDetailBalanceList, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.tableLoading = false;
-                            that.tableData = res.data.data.data;
-                            that.page.totalPage = res.data.data.resultCount;
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.tableLoading = false;
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        that.tableLoading = false;
-                    })
-            },
-            //分页
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
-            },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
-                this.page.currentPage = val;
-                this.getList(val)
-            },
+                this.tableLoading = true;
+                request.queryMemCashList(data).then(res => {
+                    this.tableLoading = false;
+                    this.tableData = res.data.data;
+                    this.page.currentPage = res.data.currentPage;
+                    this.page.totalPage = res.data.totalNum;
+                }).catch(err => {
+                    this.tableLoading = false;
+                    console.log(err);
+                });
+            }
         }
-    }
+    };
 </script>
 <style scoped>
     .title {

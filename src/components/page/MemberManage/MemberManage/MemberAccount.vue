@@ -6,29 +6,24 @@
                 <li class="Account">
                     <div class="card-title">
                         <icon class="ico" ico='icon-ffffff'/>
-                        现金账户 （元）
+                        现金账户（元）
                     </div>
                     <div class="card-content">
                         <div class="card-amout">
-                            可提现：{{accountInfo.available_balance}}
-                        </div>
-                        <div class="frozen">
-                            冻结中：{{accountInfo.blocked_balances}}
+                            可提现：{{accountInfo.cash || 0}}
                         </div>
                     </div>
-                    <span class="spanBtn" @click="btnClicked(1)">收支明细</span>
+                    <span class="spanBtn spanFirBtn" @click="$router.push('/showValReCharge')">账户充值</span>
+                    <span class="spanBtn spanFirBtn" @click="btnClicked(1)">收支明细</span>
                 </li>
                 <li class="userToken">
                     <div class="card-title">
                         <icon class="ico" ico='icon-jinbiqian'/>
-                        代币账户（币）
+                        秀豆账户（分）
                     </div>
                     <div class="card-content">
                         <div class="card-amout">
-                            代币数：{{accountInfo.token_coin}}
-                        </div>
-                        <div class="frozen">
-                            冻结中：{{accountInfo.blocked_coin}}
+                            代币数：{{accountInfo.bean || 0}}
                         </div>
                     </div>
                     <span class="spanBtn" @click="btnClicked(2)">收支明细</span>
@@ -36,26 +31,14 @@
                 <li class="UserBonus">
                     <div class="card-title">
                         <icon class="ico" ico='icon-xianjindai'/>
-                        收益账户（元）
+                        收益账户
                     </div>
                     <div class="card-content">
                         <div class="card-amout">
-                            收益数：{{accountInfo.bonus_point || 0}}
+                            收益账户
                         </div>
                     </div>
                     <span class="spanBtn"  @click="btnClicked(3)">收支明细</span>
-                </li>
-                <li class="userIntegral">
-                    <div class="card-title">
-                        <icon class="ico" ico='icon-youhuiquan'/>
-                        积分账户（分）
-                    </div>
-                    <div class="card-content">
-                        <div class="card-amout">
-                            积分数：{{accountInfo.user_score}}
-                        </div>
-                    </div>
-                    <span class="spanBtn" @click="btnClicked(4)">收支明细</span>
                 </li>
                 <li class="userCard">
                     <div class="card-title">
@@ -64,7 +47,7 @@
                     </div>
                     <div class="card-content">
                         <div class="card-amout">
-                            已绑定银行卡：{{accountInfo.count}}
+                            已绑定银行卡：{{accountInfo.bank || 0}}
                         </div>
                     </div>
                     <span class="spanBtn"  @click="btnClicked(5)">查看详情</span>
@@ -76,10 +59,22 @@
                     </div>
                     <div class="card-content">
                         <div class="card-amout">
-                            可提现：{{accountInfo.count  || 0}}
+                            可提现：{{accountInfo.withdrawal || 0}}
                         </div>
                     </div>
                     <span class="spanBtn"  @click="btnClicked(6)">查看详情</span>
+                </li>
+                <li class="Account">
+                    <div class="card-title">
+                        <icon class="ico" ico='icon-ffffff'/>
+                        秀值账户（元）
+                    </div>
+                    <div class="card-content">
+                        <div class="card-amout">
+                            秀值账户
+                        </div>
+                    </div>
+                    <span class="spanBtn" @click="btnClicked(4)">收支明细</span>
                 </li>
             </ul>
 
@@ -89,75 +84,65 @@
 
 
 <script>
-    import vBreadcrumb from '../../../common/Breadcrumb.vue';
-    import icon from '../../../common/ico.vue';
-    import * as api from '../../../../api/api.js';
-    import * as pApi from '../../../../privilegeList/index.js';
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import icon from '@/components/common/ico.vue';
+    import request from '@/http/http';
     export default {
         components: {
             icon, vBreadcrumb
         },
-        data: function () {
+        data() {
             return {
-                id:'',
-                accountInfo:''
-            }
+                id: '',
+                pageLoading: false,
+                accountInfo: {}
+            };
         },
         activated() {
             this.id =
                 this.$route.query.memberId ||
-                JSON.parse(sessionStorage.getItem("memberId"));
-            this.getQueryDealerAccount(this.id)
+                JSON.parse(sessionStorage.getItem('memberId'));
+            this.getQueryDealerAccount();
         },
         methods: {
             btnClicked(id) {
-                let that=this;
-                let memberInfo = {};
+                const that = this;
+                const memberInfo = {};
                 memberInfo.memberId = that.id;
-                memberInfo.nickname = that.accountInfo.nickname;
-                sessionStorage.setItem('memberId', that.id);
-                switch(id) {
+                memberInfo.nickname = that.accountInfo.name;
+                switch (id) {
                     case 1:
-                        this.$router.push({path:'/cashAccountBalance',query:{'memberId':that.id}});
+                        this.$router.push({ path: '/cashAccountBalance', query: { 'memberAccMsg': memberInfo }});
                         break;
                     case 2:
-                        this.$router.push({path:'/tokenAccountBalance',query:{'memberId':that.id}});
+                        this.$router.push({ path: '/tokenAccountBalance', query: { 'memberAccMsg': memberInfo }});
                         break;
                     case 3:
-                        sessionStorage.setItem('memberInfo',memberInfo);
-                        this.$router.push({path:'/shareAccountBalance',query:{'memberInfo':memberInfo}});
+                        this.$router.push({ path: '/shareAccountBalance', query: { 'memberAccMsg': memberInfo }});
                         break;
                     case 4:
-                        this.$router.push({path:'/integralAccountBalance',query:{'memberId':that.id}});
+                        this.$router.push({ path: '/showValueAccount', query: { 'memberAccMsg': memberInfo }});
                         break;
                     case 5:
-                        this.$router.push({path:'/MemberCard',query:{'memberId':that.id}});
+                        this.$router.push({ path: '/MemberCard', query: { 'memberAccMsg': memberInfo }});
                         break;
                     case 6:
-                        sessionStorage.setItem('memberInfo',memberInfo);
-                        this.$router.push({path:'/withDrawAccount',query:{'memberInfo':memberInfo}});
+                        this.$router.push({ path: '/withDrawAccount', query: { 'memberAccMsg': memberInfo }});
                         break;
                     default:
                 }
             },
-            getQueryDealerAccount(id){
-                let data={
-                    url:pApi.queryDealerAccount,
-                    id:id
-                };
-                this.$axios.post(api.queryDealerAccount, data)
-                    .then(res => {
-                       if (res.data.code == 200) {
-                        this.accountInfo = res.data.data
-                       } else {
-                           this.$message.warning(res.data.msg);
-                       }
+            getQueryDealerAccount() {
+                this.pageLoading = true;
+                request.memberAccountListInfo({id: this.id}).then(res => {
+                    this.pageLoading = false;
+                    this.accountInfo = res.data;
                 }).catch(err => {
-                    console.log(err);
-                })
+                    this.pageLoading = false;
+                });
             }
         }
-    }
+    };
 </script>
 
 
@@ -238,6 +223,11 @@
                 text-align: center;
                 line-height: 40px;
                 cursor: pointer;
+            }
+            .spanFirBtn {
+                height:30px;
+                line-height: 30px;
+                margin-top: 10px;
             }
         }
     }
