@@ -176,7 +176,9 @@
                                 <div class="item">换货说明：{{returnProduct.remark}}</div>
                                 <div class="item">图片：</div>
                                 <div>
-                                    <img v-for="item in imgList" :src="item.smallImg" alt="" class="img">
+                                    <viewer :images="imgList">
+                                         <img v-for="item in imgList" :src="item.smallImg" alt="" class="img">
+                                    </viewer>
                                 </div>
                             </div>
                         </div>
@@ -317,7 +319,9 @@
                                 <div class="item">退货说明：{{returnProduct.remark}}</div>
                                 <div class="item">图片：</div>
                                 <div>
-                                    <img v-for="item in imgList" :src="item.smallImg" alt="" class="img">
+                                    <viewer :images="imgList">
+                                         <img v-for="item in imgList" :src="item.smallImg" alt="" class="img">
+                                    </viewer>
                                 </div>
                             </div>
                         </div>
@@ -413,7 +417,9 @@
                                 <div class="item">买家说明：{{returnProduct.remark}}</div>
                                 <div class="item">图片：</div>
                                 <div>
-                                    <img v-for="item in imgList" :src="item.smallImg" alt="" class="img">
+                                    <viewer :images="imgList">
+                                        <img v-for="item in imgList" :src="item.smallImg" alt="" class="img">
+                                    </viewer>
                                 </div>
                             </div>
                         </div>

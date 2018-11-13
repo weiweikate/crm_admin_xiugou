@@ -36,7 +36,7 @@
                     <el-input v-model="form.name" placeholder="请输入等级名称"></el-input>
                 </el-form-item>
                 <el-form-item prop="level" label="层级">
-                    <el-input v-model="form.level" placeholder="6级（自动获取、可修改、但是不可重复）"></el-input>
+                    <el-input v-model="form.level" disabled="" placeholder="6级（自动获取、可修改、但是不可重复）"></el-input>
                 </el-form-item>
                 <el-form-item prop="autoUpgrade" label="自动晋级">
                     <el-radio v-model="form.autoUpgrade" label="1">是</el-radio>
@@ -152,6 +152,11 @@
                 if (!data.groupMoney) {
                     this.$message.warning('请输入拼店金额!');
                     return;
+                } else {
+                    const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
+                    if (!reg.test(data.groupMoney)) {
+                        return this.$message.warning('拼店金额保留2位小数');
+                    }
                 }
                 this.isShowAddShopLevel = false;
                 let url = '';
