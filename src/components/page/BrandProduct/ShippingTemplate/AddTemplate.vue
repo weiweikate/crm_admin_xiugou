@@ -98,9 +98,9 @@
                             </el-table>
                             <div><span class="color-blue" @click="addSetting()">增加制定省市运费设置</span></div>
                         </el-form-item>
-                        <el-form-item label="不配送区域" prop="pushCountry" class="region-area">
+                        <el-form-item class="address-item" label="不支持配送" prop="pushCountry">
                             <div style="margin-left: 112px">
-                                <div v-for="(v,k) in form.unSupportArea" :key="k">{{v.provinceName}}:{{v.cityNames}}</div>
+                                <div v-for="(v,k) in form.unSupportAreas" :key="k">{{v.provinceName}}:{{v.cityNames}}</div>
                                 <el-button type="primary" @click="chooseArea">选择区域</el-button>
                             </div>
                         </el-form-item>
@@ -122,7 +122,7 @@
         <choose-area @getArea='chooseAreaToast' :index="tableIndex" :chooseData="chooseData" :preData="preData"
                      v-if="isShowArea"></choose-area>
         <!--选择不配送区域-->
-        <choose-area @getArea='chooseUnSupportArea' :chooseData="unSupportAreaData" :preData="unSupportAreaData" :isSingleLine="true" v-if="unSupportMask"></choose-area>
+        <choose-area @getArea='chooseUnSupportArea' :chooseData="unSupportAreasData" :preData="unSupportAreasData" :isSingleLine="true" v-if="unSupportMask"></choose-area>
         <!--平台承担运费弹窗-->
         <div class="mask" v-if="showTips">
             <div class="box">
@@ -194,7 +194,7 @@
                     cityCode: '',
                     areaCode: '',
                     status: '1',
-                    unSupportArea: []
+                    unSupportAreas: []
                 },
                 checked: false,
                 freightFreePrice: '',
@@ -216,7 +216,7 @@
                 title2: '续公斤数(kg)',
                 tips: '应输入0.00至999.99的数字，小数保留两位',
                 rows: 0,
-                unSupportAreaData: [], // 不配送区域
+                unSupportAreasData: [], // 不配送区域
                 unSupportMask: false
             };
         },
@@ -230,7 +230,7 @@
             this.form.cityCode = '';
             this.form.areaCode = '';
             this.form.status = '1';
-            this.form.unSupportArea = [];
+            this.form.unSupportAreas = [];
             this.tableData = [];
             this.rows = 0;
             this.freightFreePrice = '';
@@ -458,13 +458,13 @@
             // 选择区域
             chooseArea() {
                 this.unSupportMask = true;
-                this.chooseData = this.form.unSupportArea;
+                this.chooseData = this.form.unSupportAreas;
             },
             // 选择区域
             chooseUnSupportArea(getArea) {
-                this.isShowArea = false;
+                this.unSupportMask = false;
                 if (getArea) {
-                    this.form.unSupportArea = [];
+                    this.form.unSupportAreas = [];
                     let includeAreaName = ''; let includeArea = '';
                     for (const i in getArea) {
                         includeAreaName += getArea[i].provinceName + ':' + getArea[i].cityNames + ',';
@@ -477,7 +477,7 @@
                             includeAreaName: includeAreaName.slice(0, -1),
                             includeArea: includeArea.slice(0, -1)
                         };
-                        this.form.unSupportArea.push(tempItem);
+                        this.form.unSupportAreas.push(tempItem);
                     }
                 }
             }
