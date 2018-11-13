@@ -54,7 +54,7 @@
                 <el-table-column prop="storeUserName" label="店长" align="center"></el-table-column>
                 <el-table-column label="成员数" align="center">
                     <template slot-scope="scope">
-                        <template><span @click="toUserList(scope.row)" class="color-blue">{{scope.row.storeUserNum}}</span></template>
+                        <template><span @click="toUserList(scope.row)" class="color-blue">{{scope.row.storeUserNum||0}}</span></template>
                     </template>
                 </el-table-column>
                 <el-table-column label="创建时间" align="center">
