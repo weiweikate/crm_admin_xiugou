@@ -642,8 +642,8 @@ export const asyncRouterMap = [
             // 会员管理
 
             {
-                name: 'LevelInfo',
-                path: '/LevelInfo',
+                name: 'levelInfo',
+                path: '/levelInfo',
                 component: resolve => require(['../components/page/MemberManage/LevelManage/LevelInfo.vue'], resolve),
                 meta: { title: '层级信息' }
             },
@@ -656,14 +656,14 @@ export const asyncRouterMap = [
                 meta: { title: '下级代理' }
             },
             {
-                name: 'MemberAccount',
-                path: '/MemberAccount',
+                name: 'memberAccount',
+                path: '/memberAccount',
                 component: resolve => require(['../components/page/MemberManage/MemberManage/MemberAccount.vue'], resolve),
                 meta: { title: '会员账户' }
             },
             {
-                name: 'MemberCard',
-                path: '/MemberCard',
+                name: 'memberCard',
+                path: '/memberCard',
                 component: resolve => require(['../components/page/MemberManage/MemberManage/MemberCard.vue'], resolve),
                 meta: { title: '会员银行卡' }
             },

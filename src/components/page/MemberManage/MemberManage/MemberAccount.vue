@@ -99,7 +99,7 @@
             };
         },
         activated() {
-            this.id = this.$utils.getParam.call(this, 'memberInfoAccount');
+            this.id = this.$route.query.memberInfoAccount;
             this.getQueryDealerAccount();
         },
         methods: {

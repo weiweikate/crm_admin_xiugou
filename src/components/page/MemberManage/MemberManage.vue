@@ -207,11 +207,11 @@ export default {
         },
         // 跳到下级列表
         toLower(id) {
-            this.$utils.setParam.call(this, '/lowerMemberManage', 'memberToLowListPage', id);
+            this.$router.push({name: 'lowerMemberManage', query: {memberToLowListPage: id}});
         },
         // 详情
         detailItem(index, row) {
-            this.$utils.setParam.call(this, '/memberDetail', 'memberToInfo', row.id);
+            this.$router.push({name: 'memberDetail', query: {memberToInfo: row.id}});
         },
         // 关闭,开启
         updateStatusItem(index, id, num) {

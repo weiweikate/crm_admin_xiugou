@@ -139,7 +139,7 @@
             this.lower.totalCount = '';
             this.lower.checked = false;
             this.checked = false;
-            this.id = this.$utils.getParam.call(this, 'memberTreeInfo');
+            this.id = this.$route.query.memberTreeInfo;
             this.getDetail();
         },
         methods: {

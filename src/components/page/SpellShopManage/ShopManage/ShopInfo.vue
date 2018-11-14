@@ -163,7 +163,7 @@
         },
 
         activated() {
-            this.shopId = this.$utils.getParam.call(this, 'shopInfo');
+            this.shopId = this.$route.query.shopInfo;
             this.getInfo();
         },
 

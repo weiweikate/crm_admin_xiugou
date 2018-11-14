@@ -39,12 +39,12 @@
                         <img class="img" v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('/lowerMemberManage', 'memberToLowListPage')">
+                        <el-button type="primary" @click="btnClicked('lowerMemberManage', 'memberToLowListPage')">
                             下级代理({{dealer.junior || 0}})
                         </el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('/memberTree', 'memberTreeInfo')"
+                        <el-button type="primary" @click="btnClicked('memberTree', 'memberTreeInfo')"
                                    style="margin-left: 0">查看会员树状图
                         </el-button>
                     </div>
@@ -53,17 +53,17 @@
                         <!--</el-button>-->
                     <!--</div>-->
                     <div>
-                        <el-button type="primary" @click="btnClicked('/memberAccount', 'memberInfoAccount')"
-                                   style="margin-left: 0">他的账户
-                        </el-button>
+                        <!--<el-button type="primary" @click="btnClicked('memberAccount', 'memberInfoAccount')"-->
+                                   <!--style="margin-left: 0">他的账户-->
+                        <!--</el-button>-->
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('/realNameInfo', 'memberInfoRealName')"
+                        <el-button type="primary" @click="btnClicked('realNameInfo', 'memberInfoRealName')"
                                    style="margin-left: 0">实名信息{{dealer.realnameStatus == '1'?'(已实名)':''}}
                         </el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('/shopInfo', 'shopInfo')"
+                        <el-button type="primary" @click="btnClicked('shopInfo', 'shopInfo')"
                                    style="margin-left: 0">店铺信息
                         </el-button>
                     </div>
@@ -179,7 +179,7 @@
             };
         },
         activated() {
-            this.id = this.$utils.getParam.call(this, 'memberToInfo');
+            this.id = this.$route.query.memberToInfo;
             this.getDetail();
         },
         methods: {
@@ -227,7 +227,7 @@
             },
             // 页面跳转
             btnClicked(page, paramName) {
-                this.$utils.setParam.call(this, page, paramName, this.id);
+                this.$router.push({name: page, query: {[paramName]: this.id}});
             }
         }
     };

@@ -35,7 +35,7 @@
             };
         },
         activated() {
-            this.msg = this.$utils.getParam.call(this, 'joinManageLinkPage');
+            this.msg = this.$route.query.joinManageLinkPage;
             this.getCode();
         },
         methods: {

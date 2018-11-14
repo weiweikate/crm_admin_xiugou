@@ -107,7 +107,7 @@
             };
         },
         activated() {
-            this.id = this.$utils.getParam.call(this, 'supplierEditInfo');
+            this.id = this.$route.query.supplierEditInfo;
             this.address = '';
             this.getBrandList();
         },

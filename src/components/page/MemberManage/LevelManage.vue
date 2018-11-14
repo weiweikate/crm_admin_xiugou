@@ -298,11 +298,11 @@
 
             // 晋级设置
             upSet(index, row) {
-                this.$utils.setParam.call(this, '/promotionManage', 'levelMangeToUp', row.id);
+                this.$router.push({name: 'promotionManage', query: {levelMangeToUp: row.id}});
             },
             // 降级设置
             downSet(index, row) {
-                this.$utils.setParam.call(this, '/degradeManage', 'levelMangeToLower', row.id);
+                this.$router.push({name: 'degradeManage', query: {levelMangeToLower: row.id}});
             },
             // //价格阶层
             // priceLevel(index,row){
@@ -328,7 +328,7 @@
             },
             // 层级信息页面
             toLevelInfo(index, row) {
-                this.$utils.setParam.call(this, '/levelInfo', 'levelMangeInfo', row.id);
+                this.$router.push({name: 'levelInfo', query: {levelMangeInfo: row.id}});
             }
         }
     };

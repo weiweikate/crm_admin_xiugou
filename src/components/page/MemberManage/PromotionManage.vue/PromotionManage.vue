@@ -223,7 +223,7 @@
             };
         },
         activated() {
-            this.id = this.$utils.getParam.call(this, 'levelMangeToUp');
+            this.id = this.$route.query.levelMangeToUp;
             this.checked = [false, false, false, false, false];
             this.getDetail();
         },

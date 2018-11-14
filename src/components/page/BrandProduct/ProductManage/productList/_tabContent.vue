@@ -138,7 +138,7 @@
                     <el-button @click="batchOperate('0')" type="primary" size="mini">确定</el-button>
                     <el-button size="mini" type="text" @click="isShowPop = false">取消</el-button>
                 </div>
-                <el-button slot="reference" @click="isShowPop = true">删除</el-button>
+                <!--<el-button slot="reference" @click="isShowPop = true">删除</el-button>-->
             </el-popover>
             <el-button @click="batchOperate('5')">下架</el-button>
         </div>

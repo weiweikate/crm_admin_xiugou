@@ -60,7 +60,7 @@
             };
         },
         activated() {
-            this.id = this.$utils.getParam.call(this, 'levelMangeToLower');
+            this.id = this.$route.query.levelMangeToLower;
             this.checked = [false, false, false, false, false];
             this.getDetail();
         },

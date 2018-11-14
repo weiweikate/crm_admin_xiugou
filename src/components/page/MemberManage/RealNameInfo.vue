@@ -36,20 +36,19 @@ export default {
         };
     },
     activated() {
-        this.id = this.$utils.getParam.call(this, 'memberInfoRealName');
-        this.getUserId();
+        this.id = this.$route.query.memberInfoRealName;
         this.getDetail();
     },
     methods: {
         getDetail() {
-            const that = this;
-            that.img = [];
+            this.img = [];
             const data = {
-                id: that.id
+                id: this.id
             };
             request.findDealerById(data).then(res => {
-                that.detail = res.data;
-                that.img.push(res.data.frontPhoto, res.data.backPhoto);
+                this.detail = res.data;
+                this.img = [];
+                this.img.push(res.data.frontPhoto, res.data.backPhoto);
             }).catch(err => {
                 console.log(err);
             });

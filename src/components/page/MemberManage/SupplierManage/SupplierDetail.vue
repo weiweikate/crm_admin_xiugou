@@ -78,7 +78,7 @@
             };
         },
         activated() {
-            this.id = this.$utils.getParam.call(this, 'supplierInfo');
+            this.id = this.$route.query.supplierInfo;
             this.getDetail();
         },
         methods: {

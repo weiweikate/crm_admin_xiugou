@@ -176,11 +176,11 @@
             },
             // 详情
             detailItem(index, row) {
-                this.$utils.setParam.call(this, '/supplierDetail', 'supplierInfo', row.id);
+                this.$router.push({name: 'supplierDetail', query: {supplierInfo: row.id}});
             },
             // 编辑
             editItem(index, row) {
-                this.$utils.setParam.call(this, '/editSupplier', 'supplierEditInfo', row.id);
+                this.$router.push({name: 'editSupplier', query: {supplierEditInfo: row.id}});
             },
             // 关闭,开启
             updateStatusItem(index, id, num) {

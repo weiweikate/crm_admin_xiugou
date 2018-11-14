@@ -72,7 +72,7 @@
         created() {
         },
         activated() {
-            this.id = this.$utils.getParam.call(this, 'levelMangeInfo');
+            this.id = this.$route.query.levelMangeInfo;
             this.uploadImg = api.uploadImg;
             this.getDetail();
         },

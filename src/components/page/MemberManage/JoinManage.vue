@@ -93,11 +93,11 @@ export default {
         },
         // 详情
         detailItem(row) {
-            this.$utils.setParam.call(this, '/inviteDetail', 'joinManageInfo', row);
+            this.$router.push({name: 'inviteDetail', query: {joinManageInfo: row}});
         },
         // 查看邀请
         watchItem(row) {
-            this.$utils.setParam.call(this, '/inviteLink', 'joinManageLinkPage', row);
+            this.$router.push({name: 'inviteLink', query: {joinManageLinkPage: row}});
         },
         // 发起邀请
         sendInvite() {

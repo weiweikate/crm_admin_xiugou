@@ -72,7 +72,7 @@
             };
         },
         activated() {
-            this.msg = this.$utils.getParam.call(this, 'joinManageInfo');
+            this.msg = this.$route.query.joinManageInfo;
             this.getDetail();
         },
         methods: {
