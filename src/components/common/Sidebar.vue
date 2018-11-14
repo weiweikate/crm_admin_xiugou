@@ -70,84 +70,8 @@
                 this.collapse = msg;
                 this.isShowLogo = !msg;
             });
-            this.addRoutes();
-
         },
         methods: {
-            // 判断手机号是否有权限获取侧边栏
-            addRoutes() {
-                //TODO
-                const phoneArr = ['18258147420', '15869000373', '13735533492', '17601056863', '18667159736'];
-                const phone = localStorage.getItem('ms_userPhone') || '';
-                const siderArr = [{
-                    icon: 'icon-suyuan',
-                    index: '12',
-                    title: '秀值模块',
-                    subs: [
-                        {
-                            index: 'taskHome',
-                            title: '现金分享任务管理'
-                        },
-                        {
-                            index: 'showValueList',
-                            title: '秀值分配设置'
-                        },
-                        {
-                            index: 'showValueParamSet',
-                            title: '秀值参数设置'
-                        },
-                        {
-                            index: 'showValReCharge',
-                            title: '秀值账户充值'
-                        }
-                    ]
-                }, {
-                    icon: 'icon-shezhi',
-                    index: '2',
-                    title: '结算管理',
-                    subs: [
-                        {
-                            index: 'withdrawalAudit',
-                            title: '提现申请审核'
-                        },
-                        {
-                            index: 'refundMange',
-                            title: '退款记录'
-                        },
-                        {
-                            index: 'returnGoodsMange',
-                            title: '退货记录'
-                        },
-                        {
-                            index: 'exchangeMange',
-                            title: '换货记录'
-                        },
-                        {
-                            index: 'supplierSettMange',
-                            title: '供应商结算管理'
-                        },
-                        {
-                            index: 'depositPayment',
-                            title: '保证金缴纳记录'
-                        },
-                        {
-                            index: 'flatAccountInfo',
-                            title: '平台账户收入明细'
-                        },
-                        {
-                            index: 'soFar',
-                            title: '收益金比例设置'
-                        },
-                        {
-                            index: 'profitDistrMange',
-                            title: '利润分配设置'
-                        }
-                    ]
-                }];
-                if (phoneArr.includes(phone)) {
-                    this.items.push(...siderArr);
-                }
-            }
         }
     };
 </script>

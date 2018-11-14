@@ -348,7 +348,7 @@ export const asyncRouterMap = [
         path: '/showValue',
         component: Layout,
         name: 'showValue',
-        meta: { title: '秀值模块', icon: 'icon-shezhi' },
+        meta: { title: '秀值模块', icon: 'icon-shezhi', roles: ['admin'] },
         children: [
             {
                 name: 'taskHome',
@@ -380,7 +380,7 @@ export const asyncRouterMap = [
         path: '/settlement',
         component: Layout,
         name: 'settlement',
-        meta: { title: '结算管理', icon: 'icon-shezhi' },
+        meta: { title: '结算管理', icon: 'icon-shezhi', roles: ['admin'] },
         children: [
             {
                 name: 'withdrawalAudit',
