@@ -35,7 +35,7 @@ export const asyncRouterMap = [
                 name: 'joinManage',
                 path: '/joinManage',
                 component: resolve => require(['../components/page/MemberManage/JoinManage.vue'], resolve),
-                meta: { title: '会员加盟管理' }
+                meta: { title: '会员邀请管理' }
             },
             {
                 name: 'memberManage',
@@ -105,7 +105,7 @@ export const asyncRouterMap = [
                 name: 'shopList',
                 path: '/shopList',
                 component: resolve => require(['../components/page/SpellShopManage/ShopManage/ShopList.vue'], resolve),
-                meta: { title: '店铺列表' }
+                meta: { title: '店铺管理' }
             },
             {
                 name: 'recruitShopManage',
@@ -163,16 +163,16 @@ export const asyncRouterMap = [
         ]
     },
     {
-        path: '/yunwei',
+        path: '/yunying',
         component: Layout,
-        name: 'yunwei',
-        meta: { title: '运维管理', icon: 'icon-yunying' },
+        name: 'yunying',
+        meta: { title: '运营管理', icon: 'icon-yunying' },
         children: [
             {
                 name: 'showHome',
                 path: '/showHome',
                 component: resolve => require(['../components/page/OperateManage/showField/showHome.vue'], resolve),
-                meta: { title: '秀场' }
+                meta: { title: '秀场管理' }
             },
             {
                 name: 'discountCoupon',
@@ -184,7 +184,7 @@ export const asyncRouterMap = [
                 name: 'noticeInformManage',
                 path: '/noticeInformManage',
                 component: resolve => require(['../components/page/OperateManage/NoticeInformManage/NoticeInformManage.vue'], resolve),
-                meta: { title: '公告通知管理' }
+                meta: { title: '公告/通知管理' }
             },
             {
                 name: 'topicManage',
@@ -199,16 +199,22 @@ export const asyncRouterMap = [
                 meta: { title: '敏感词库' }
             },
             {
+                name: 'advertisingManage',
+                path: '/advertisingManage',
+                component: resolve => require(['../components/page/OperateManage/AdvertisingManage/AdvertisingManage.vue'], resolve),
+                meta: { title: '广告位管理' }
+            },
+            {
                 name: 'keyWords',
                 path: '/keyWords',
                 component: resolve => require(['../components/page/OperateManage/AdvertisingManage/KeyWords.vue'], resolve),
-                meta: { title: '搜索热门搜索关键词' }
+                meta: { title: '热门搜索关键词' }
             },
             {
                 name: 'allKeyWords',
                 path: '/allKeyWords',
                 component: resolve => require(['../components/page/OperateManage/AllKeyWords.vue'], resolve),
-                meta: { title: '搜索关键词' }
+                meta: { title: '搜索关键词看板' }
             },
             {
                 name: 'helpCenter',
@@ -246,7 +252,7 @@ export const asyncRouterMap = [
         path: '/setting',
         component: Layout,
         name: 'setting',
-        meta: { title: '基础设置', icon: 'icon-huiyuanzhanghaoguanli' },
+        meta: { title: '基础参数设置', icon: 'icon-huiyuanzhanghaoguanli' },
         children: [
             {
                 name: 'baseParamsSet',
@@ -282,7 +288,7 @@ export const asyncRouterMap = [
                 name: 'withdrawalCharge',
                 path: '/withdrawalCharge',
                 component: resolve => require(['../components/page/BasePramConfig/WithdrawalCharge.vue'], resolve),
-                meta: { title: '提现手续费设置' }
+                meta: { title: '提现设置' }
             },
             {
                 name: 'userAssociatedParam',
@@ -302,7 +308,7 @@ export const asyncRouterMap = [
                 name: 'manageList',
                 path: '/manageList',
                 component: resolve => require(['../components/page/Permission/ManageList.vue'], resolve),
-                meta: { title: '账号管理' }
+                meta: { title: '管理员账号管理' }
             },
             {
                 name: 'versionIteration',
@@ -334,8 +340,102 @@ export const asyncRouterMap = [
                 name: 'repertoryReportList',
                 path: '/repertoryReportList',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryReport/RepertoryReportList.vue'], resolve),
-                meta: { title: '入库单' }
+                meta: { title: '仓库单' }
             },
+        ]
+    },
+    {
+        path: '/showValue',
+        component: Layout,
+        name: 'showValue',
+        meta: { title: '秀值模块', icon: 'icon-shezhi' },
+        children: [
+            {
+                name: 'taskHome',
+                path: '/taskHome',
+                component: resolve => require(['../components/page/ShowValue/TaskHome.vue'], resolve),
+                meta: { title: '现金分享任务管理' }
+            },
+            {
+                name: 'showValueList',
+                path: '/showValueList',
+                component: resolve => require(['../components/page/ShowValue/ShowValueList.vue'], resolve),
+                meta: { title: '秀值分配设置' }
+            },
+            {
+                name: 'showValueParamSet',
+                path: '/showValueParamSet',
+                component: resolve => require(['../components/page/ShowValue/ShowValueParamSet.vue'], resolve),
+                meta: { title: '秀值参数设置' }
+            },
+            {
+                name: 'showValReCharge',
+                path: '/showValReCharge',
+                component: resolve => require(['../components/page/ShowValue/ShowValReCharge.vue'], resolve),
+                meta: { title: '秀值账户充值' }
+            }
+        ]
+    },
+    {
+        path: '/settlement',
+        component: Layout,
+        name: 'settlement',
+        meta: { title: '结算管理', icon: 'icon-shezhi' },
+        children: [
+            {
+                name: 'withdrawalAudit',
+                path: '/withdrawalAudit',
+                component: resolve => require(['../components/page/SettlementMange/WithdrawalAudit.vue'], resolve),
+                meta: { title: '提现申请审核' }
+            },
+            {
+                name: 'refundMange',
+                path: '/refundMange',
+                component: resolve => require(['../components/page/SettlementMange/RefundMange.vue'], resolve),
+                meta: { title: '退款记录' }
+            },
+            {
+                name: 'returnGoodsMange',
+                path: '/returnGoodsMange',
+                component: resolve => require(['../components/page/SettlementMange/ReturnGoodsMange.vue'], resolve),
+                meta: { title: '退货记录' }
+            },
+            {
+                name: 'exchangeMange',
+                path: '/exchangeMange',
+                component: resolve => require(['../components/page/SettlementMange/ExchangeMange.vue'], resolve),
+                meta: { title: '换货记录' }
+            },
+            {
+                name: 'supplierSettMange',
+                path: '/supplierSettMange',
+                component: resolve => require(['../components/page/SettlementMange/supplierSettMange.vue'], resolve),
+                meta: { title: '供应商结算管理' }
+            },
+            {
+                name: 'flatAccountInfo',
+                path: '/flatAccountInfo',
+                component: resolve => require(['../components/page/SettlementMange/FlatAccountInfo.vue'], resolve),
+                meta: { title: '平台账户收入明细' }
+            },
+            {
+                name: 'depositPayment',
+                path: '/depositPayment',
+                component: resolve => require(['../components/page/SettlementMange/DepositPayment.vue'], resolve),
+                meta: { title: '保证金缴纳记录' }
+            },
+            {
+                name: 'soFar',
+                path: '/soFar',
+                component: resolve => require(['../components/page/SettlementMange/SoFar.vue'], resolve),
+                meta: { title: '收益金比例设置' }
+            },
+            {
+                name: 'profitDistrMange',
+                path: '/profitDistrMange',
+                component: resolve => require(['../components/page/SettlementMange/ProfitDistrMange.vue'], resolve),
+                meta: { title: '利润分配设置' }
+            }
         ]
     },
     {
@@ -1219,43 +1319,6 @@ export const asyncRouterMap = [
                 component: resolve => require(['../components/page/OrderManage/GiftOrderManage/GiftOrderInfo.vue'], resolve),
                 meta: { title: '礼包订单详情' }
             },
-            // 结算管理
-            {
-                name: 'withdrawalAudit',
-                path: '/withdrawalAudit',
-                component: resolve => require(['../components/page/SettlementMange/WithdrawalAudit.vue'], resolve),
-                meta: { title: '提现审核' }
-            },
-            {
-                name: 'refundMange',
-                path: '/refundMange',
-                component: resolve => require(['../components/page/SettlementMange/RefundMange.vue'], resolve),
-                meta: { title: '退款记录' }
-            },
-            {
-                name: 'returnGoodsMange',
-                path: '/returnGoodsMange',
-                component: resolve => require(['../components/page/SettlementMange/ReturnGoodsMange.vue'], resolve),
-                meta: { title: '退货记录' }
-            },
-            {
-                name: 'exchangeMange',
-                path: '/exchangeMange',
-                component: resolve => require(['../components/page/SettlementMange/ExchangeMange.vue'], resolve),
-                meta: { title: '换货记录' }
-            },
-            {
-                name: 'supplierSettMange',
-                path: '/supplierSettMange',
-                component: resolve => require(['../components/page/SettlementMange/supplierSettMange.vue'], resolve),
-                meta: { title: '供应商结算管理' }
-            },
-            {
-                name: 'depositPayment',
-                path: '/depositPayment',
-                component: resolve => require(['../components/page/SettlementMange/DepositPayment.vue'], resolve),
-                meta: { title: '保证金缴纳记录' }
-            },
             {
                 name: 'cloudWarHouseMange',
                 path: '/cloudWarHouseMange',
@@ -1267,12 +1330,6 @@ export const asyncRouterMap = [
                 path: '/invoiceInfo',
                 component: resolve => require(['../components/page/SettlementMange/InvoiceInfo.vue'], resolve),
                 meta: { title: '发货单' }
-            },
-            {
-                name: 'flatAccountInfo',
-                path: '/flatAccountInfo',
-                component: resolve => require(['../components/page/SettlementMange/FlatAccountInfo.vue'], resolve),
-                meta: { title: '平台账户收入明细' }
             },
             {
                 name: 'flatAct01',
@@ -1287,52 +1344,16 @@ export const asyncRouterMap = [
                 meta: { title: '资金收入明细' }
             },
             {
-                name: 'soFar',
-                path: '/soFar',
-                component: resolve => require(['../components/page/SettlementMange/SoFar.vue'], resolve),
-                meta: { title: '收益金比例设置' }
-            },
-            {
-                name: 'profitDistrMange',
-                path: '/profitDistrMange',
-                component: resolve => require(['../components/page/SettlementMange/ProfitDistrMange.vue'], resolve),
-                meta: { title: '利润分配设置' }
-            },
-            {
                 name: 'profitTpl',
                 path: '/profitTpl',
                 component: resolve => require(['../components/page/SettlementMange/ProfitTpl.vue'], resolve),
                 meta: { title: '利润分配模板' }
             },
             {
-                name: 'showValueList',
-                path: '/showValueList',
-                component: resolve => require(['../components/page/ShowValue/ShowValueList.vue'], resolve),
-                meta: { title: '秀值分配设置' }
-            },
-            {
                 name: 'showValueSet',
                 path: '/showValueSet',
                 component: resolve => require(['../components/page/ShowValue/ShowValueSet.vue'], resolve),
                 meta: { title: '新建利润分配模板' }
-            },
-            {
-                name: 'showValueParamSet',
-                path: '/showValueParamSet',
-                component: resolve => require(['../components/page/ShowValue/ShowValueParamSet.vue'], resolve),
-                meta: { title: '秀值参数设置' }
-            },
-            {
-                name: 'showValReCharge',
-                path: '/showValReCharge',
-                component: resolve => require(['../components/page/ShowValue/ShowValReCharge.vue'], resolve),
-                meta: { title: '秀值账户充值' }
-            },
-            {
-                name: 'taskHome',
-                path: '/taskHome',
-                component: resolve => require(['../components/page/ShowValue/TaskHome.vue'], resolve),
-                meta: { title: '现金分享任务管理' }
             },
             {
                 name: 'showTaskList',
