@@ -36,7 +36,7 @@ export default {
         };
     },
     activated() {
-        this.id = this.$route.query.memberId || sessionStorage.getItem('memberId');
+        this.id = this.$utils.getParam.call(this, 'memberInfoRealName');
         this.getUserId();
         this.getDetail();
     },

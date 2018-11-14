@@ -128,8 +128,7 @@
             },
             // 实名认证页面
             realName(row) {
-                sessionStorage.setItem('memberId', row.userId);
-                this.$router.push({ name: 'realNameInfo', query: { 'memberId': row.userId }});
+                this.$utils.setParam.call(this, '/realNameInfo', 'memberInfoRealName', row.userId);
             },
             // 驳回审核
             async refuseAudit(row) {

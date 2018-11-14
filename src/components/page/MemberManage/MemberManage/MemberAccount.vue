@@ -99,9 +99,7 @@
             };
         },
         activated() {
-            this.id =
-                this.$route.query.memberId ||
-                JSON.parse(sessionStorage.getItem('memberId'));
+            this.id = this.$utils.getParam.call(this, 'memberInfoAccount');
             this.getQueryDealerAccount();
         },
         methods: {

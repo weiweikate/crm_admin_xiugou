@@ -39,12 +39,12 @@
                         <img class="img" v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
                     <div>
-                        <el-button type="primary" @click="toLower">
+                        <el-button type="primary" @click="btnClicked('/lowerMemberManage', 'memberToLowListPage')">
                             下级代理({{dealer.junior || 0}})
                         </el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('/memberTree')"
+                        <el-button type="primary" @click="btnClicked('/memberTree', 'memberTreeInfo')"
                                    style="margin-left: 0">查看会员树状图
                         </el-button>
                     </div>
@@ -53,17 +53,17 @@
                         <!--</el-button>-->
                     <!--</div>-->
                     <div>
-                        <el-button type="primary" @click="btnClicked('/memberAccount')"
+                        <el-button type="primary" @click="btnClicked('/memberAccount', 'memberInfoAccount')"
                                    style="margin-left: 0">他的账户
                         </el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="realName"
+                        <el-button type="primary" @click="btnClicked('/realNameInfo', 'memberInfoRealName')"
                                    style="margin-left: 0">实名信息{{dealer.realnameStatus == '1'?'(已实名)':''}}
                         </el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="shopMsg"
+                        <el-button type="primary" @click="btnClicked('/shopInfo', 'shopInfo')"
                                    style="margin-left: 0">店铺信息
                         </el-button>
                     </div>
@@ -179,8 +179,7 @@
             };
         },
         activated() {
-            this.id =
-                this.$route.query.id || sessionStorage.getItem('memberDetail');
+            this.id = this.$utils.getParam.call(this, 'memberToInfo');
             this.getDetail();
         },
         methods: {
@@ -227,31 +226,8 @@
                 this.isShowEditAuthor = true;
             },
             // 页面跳转
-            btnClicked(page) {
-                const id = this.id;
-                sessionStorage.setItem('memberId', id);
-                this.$router.push({ path: page, query: { 'memberId': id }});
-            },
-            // 跳到下级列表
-            toLower() {
-                sessionStorage.setItem('memberId', this.id);
-                this.$router.push({ path: '/lowerMemberManage' });
-            },
-            // 跳转到店铺详情
-            shopInfo() {
-                sessionStorage.setItem('shopInfoId', this.storeId);
-                sessionStorage.setItem('status', 1);
-                this.$router.push({ name: 'shopInfo', query: { 'shopInfoId': this.storeId, status: 1 }});
-            },
-            // 跳转到店铺信息
-            shopMsg() {
-                sessionStorage.setItem('showMsg', this.storeId);
-                this.$router.push({ name: 'showMsg', query: { 'showMsg': this.storeId }});
-            },
-            // 实名认证页面
-            realName() {
-                sessionStorage.setItem('memberId', this.id);
-                this.$router.push({ name: 'realNameInfo', query: { 'memberId': this.id }});
+            btnClicked(page, paramName) {
+                this.$utils.setParam.call(this, page, paramName, this.id);
             }
         }
     };

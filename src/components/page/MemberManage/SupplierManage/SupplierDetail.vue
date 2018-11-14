@@ -78,8 +78,7 @@
             };
         },
         activated() {
-            this.id =
-                this.$route.query.id || sessionStorage.getItem('supplierDetail');
+            this.id = this.$utils.getParam.call(this, 'supplierInfo');
             this.getDetail();
         },
         methods: {
@@ -100,11 +99,6 @@
             // 返回列表
             backToList() {
                 this.$router.push('/supplierManage');
-            },
-            // 跳到用户详情页面
-            toUserDetail(item) {
-                localStorage.setItem('memberDetail', item.id);
-                this.$router.push({ path: '/memberDetail', query: { id: item.id }});
             },
             // 跳到产品列表页
             toProductList(item, num) {

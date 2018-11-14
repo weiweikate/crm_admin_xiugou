@@ -175,13 +175,11 @@
             },
             // 详情
             detailItem(index, row) {
-                sessionStorage.setItem('supplierDetail', row.id);
-                this.$router.push({ path: '/supplierDetail', query: { id: row.id }});
+                this.$utils.setParam.call(this, '/supplierDetail', 'supplierInfo', row.id);
             },
             // 编辑
             editItem(index, row) {
-                sessionStorage.setItem('supplierDetail', row.id);
-                this.$router.push({ path: '/editSupplier', query: { id: row.id }});
+                this.$utils.setParam.call(this, '/editSupplier', 'supplierEditInfo', row.id);
             },
             // 关闭,开启
             updateStatusItem(index, id, num) {

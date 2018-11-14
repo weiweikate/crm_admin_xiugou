@@ -169,10 +169,6 @@ export default {
             btnTxt: ''
         };
     },
-    created() {
-        this.$store.commit('setPageParam', {name: 'memberInfo', msg: {name: 'Mary'}})
-        console.log(this.$store.getters.getageParam('memberInfo'));
-    },
     activated() {
         this.getList(this.page.currentPage);
         this.getLevelList();
@@ -211,13 +207,11 @@ export default {
         },
         // 跳到下级列表
         toLower(id) {
-            sessionStorage.setItem('memberId', id);
-            this.$router.push({ path: '/lowerMemberManage' });
+            this.$utils.setParam.call(this, '/lowerMemberManage', 'memberToLowListPage', id);
         },
         // 详情
         detailItem(index, row) {
-            sessionStorage.setItem('memberDetail', row.id);
-            this.$router.push({ path: '/memberDetail', query: { id: row.id }});
+            this.$utils.setParam.call(this, '/memberDetail', 'memberToInfo', row.id);
         },
         // 关闭,开启
         updateStatusItem(index, id, num) {

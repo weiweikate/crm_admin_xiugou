@@ -93,15 +93,11 @@ export default {
         },
         // 详情
         detailItem(row) {
-            const msg = JSON.stringify(row);
-            sessionStorage.setItem('inviteDetail', msg);
-            this.$router.push({ path: '/inviteDetail', query: { inviteDetail: msg }});
+            this.$utils.setParam.call(this, '/inviteDetail', 'joinManageInfo', row);
         },
         // 查看邀请
         watchItem(row) {
-            const msg = JSON.stringify(row);
-            sessionStorage.setItem('inviteLink', msg);
-            this.$router.push({ path: '/inviteLink', query: { inviteLink: msg }});
+            this.$utils.setParam.call(this, '/inviteLink', 'joinManageLinkPage', row);
         },
         // 发起邀请
         sendInvite() {

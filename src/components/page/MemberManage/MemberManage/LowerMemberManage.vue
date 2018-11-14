@@ -163,7 +163,7 @@
             };
         },
         activated() {
-            this.form.upUserid = JSON.parse(sessionStorage.getItem('memberId'));
+            this.form.upUserid = this.$utils.getParam.call(this, 'memberToLowListPage');
             this.getList(this.page.currentPage);
             this.getLevelList();
         },
@@ -205,8 +205,7 @@
             },
             // 详情
             detailItem(index, row) {
-                localStorage.setItem('memberDetail', row.id);
-                this.$router.push({ path: '/memberDetail', query: { id: row.id }});
+                this.$utils.setParam.call(this, '/memberDetail', 'memberToInfo', row.id);
             },
             // 关闭,开启
             updateStatusItem(index, id, num) {

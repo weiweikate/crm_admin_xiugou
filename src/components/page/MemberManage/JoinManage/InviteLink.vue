@@ -35,9 +35,7 @@
             };
         },
         activated() {
-            this.msg =
-                JSON.parse(this.$route.query.inviteLink) ||
-                JSON.parse(sessionStorage.getItem('inviteLink'));
+            this.msg = this.$utils.getParam.call(this, 'joinManageLinkPage');
             this.getCode();
         },
         methods: {

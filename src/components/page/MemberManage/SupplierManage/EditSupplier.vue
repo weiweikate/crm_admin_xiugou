@@ -107,11 +107,9 @@
             };
         },
         activated() {
-            const that = this;
-            that.id =
-                that.$route.query.id || sessionStorage.getItem('supplierDetail');
+            this.id = this.$utils.getParam.call(this, 'supplierEditInfo');
             this.address = '';
-            that.getBrandList();
+            this.getBrandList();
         },
         methods: {
             // 获取详情

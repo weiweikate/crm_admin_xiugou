@@ -72,15 +72,12 @@
             };
         },
         activated() {
-            this.msg =
-                JSON.parse(this.$route.query.inviteDetail) ||
-                JSON.parse(sessionStorage.getItem('inviteDetail'));
+            this.msg = this.$utils.getParam.call(this, 'joinManageInfo');
             this.getDetail();
         },
         methods: {
             // 获取详情
             getDetail() {
-                console.log(this.msg);
                 // const that = this;
                 // const data = {
                 //     id: that.id

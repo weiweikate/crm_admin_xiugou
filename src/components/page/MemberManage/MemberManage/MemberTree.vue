@@ -139,9 +139,7 @@
             this.lower.totalCount = '';
             this.lower.checked = false;
             this.checked = false;
-            this.id =
-                this.$route.query.memberId ||
-                JSON.parse(sessionStorage.getItem('memberId'));
+            this.id = this.$utils.getParam.call(this, 'memberTreeInfo');
             this.getDetail();
         },
         methods: {
