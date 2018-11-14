@@ -532,7 +532,11 @@
             },
             // 云仓发货
             orderSendOut() {
-                request.orderSendOut({ expressName: '申通', 'expressNo': 28123152342345, id: this.orderId }).then(res => {
+                const data = {
+                    ids: []
+                };
+                data.ids.push(this.orderId);
+                request.orderSendOut(data).then(res => {
                     this.$message.success(res.msg);
                     this.getInfo();
                 }).catch(err => {
@@ -546,8 +550,8 @@
                 data.adminStars = status == 1 ? v.value : this.orderMsg.starIndex;
                 data.adminRemark = this.orderMsg.adminRemark;
                 request.orderSign(data).then(res => {
-                    this.$message.success(res.mag);
-                    this.orderMsg.star = this.markArr[Number(data.star) - 1].label;
+                    this.$message.success(res.msg);
+                    this.orderMsg.star = this.markArr[Number(data.adminStars) - 1].label;
                     this.isShowPop = false;
                 }).catch(err => {
                     console.log(err);

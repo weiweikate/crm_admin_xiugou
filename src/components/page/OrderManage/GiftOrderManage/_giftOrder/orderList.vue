@@ -180,7 +180,11 @@
             },
             // 推送云仓
             pushCloud(row) {
-                request.orderSendOut({ expressName: '申通', 'expressNo': 28123152342345, id: row.id }).then(res => {
+                const data = {
+                    ids: []
+                };
+                data.ids.push(row.id);
+                request.orderSendOut(data).then(res => {
                     this.$message.success(res.msg);
                     this.getList(this.page.currentPage);
                 }).catch(err => {
