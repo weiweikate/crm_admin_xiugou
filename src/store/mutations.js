@@ -3,9 +3,5 @@ export default {
     SET_PAGE_PARAM(state, {name, query}) {
         state.pageInfo[name] = query;
         sessionStorage.setItem('pageMsg', JSON.stringify(state.pageInfo));
-    },
-    // 拉取本地缓存的页面信息
-    GET_LOCAL_PAGE_INFO(state) {
-        state.pageInfo = JSON.parse(sessionStorage.getItem('pageMsg'));
     }
 };

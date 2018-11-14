@@ -133,9 +133,7 @@ const setParam = function(path = '/404', paramName = 'pageDefParam', param = '-1
  * @returns {string | *} 参数值
  */
 const getParam = function(paramName = 'pageDefParam') {
-    // 先拉取本地存储的参数
-    this.$store.commit('GET_LOCAL_PAGE_INFO');
-    return this.$route.query[paramName] || this.$store.state.pageInfo[paramName];
+    return this.$route.query[paramName] || this.$store.getters.getPageParam(paramName);
 };
 
 module.exports.encryptData = encryptData;

@@ -302,8 +302,7 @@
             },
             // 降级设置
             downSet(index, row) {
-                sessionStorage.setItem('memberId', row.id);
-                this.$router.push({ path: '/degradeManage', query: { memberId: row.id }});
+                this.$utils.setParam.call(this, '/degradeManage', 'levelMangeToLower', row.id);
             },
             // //价格阶层
             // priceLevel(index,row){
@@ -329,8 +328,7 @@
             },
             // 层级信息页面
             toLevelInfo(index, row) {
-                sessionStorage.setItem('memberId', row.id);
-                this.$router.push({ path: '/levelInfo', query: { memberId: row.id }});
+                this.$utils.setParam.call(this, '/levelInfo', 'levelMangeInfo', row.id);
             }
         }
     };
