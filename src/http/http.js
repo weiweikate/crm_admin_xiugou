@@ -10,7 +10,8 @@ import * as api_8 from '@/api/BasePramConfig/index.js';
 import * as api_9 from '@/api/ShowValue/index.js';
 import * as api_10 from '@/api/RepertoryManage/index.js';
 import qs from 'qs';
-import { Message } from 'element-ui';
+import { Message,MessageBox } from 'element-ui';
+import store from '../stores'
 
 const api = {};
 Object.assign(api, api_1, api_2, api_3, api_4, api_5, api_6, api_7, api_8, api_9,api_10);
@@ -42,15 +43,19 @@ try {
                 .then(res => {
                     // 错误信息拦截
                     if (res.code === 10009) {
-                        sessionStorage.clear();
-                        localStorage.clear();
-                        Message.warning({
-                            duration: 1000,
-                            message: res.msg
+                        MessageBox.confirm(
+                            '你已被登出，可以取消继续留在该页面，或者重新登录',
+                            '确定登出',
+                            {
+                                confirmButtonText: '重新登录',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }
+                        ).then(() => {
+                            store.dispatch('FedLogOut').then(() => {
+                                location.reload() // 为了重新实例化vue-router对象 避免bug
+                            });
                         });
-                        setTimeout(function() {
-                            location.reload();
-                        }, 1000);
                         return Promise.reject(res.msg);
                     }
                     if (res.code !== 10000) {

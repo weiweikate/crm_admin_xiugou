@@ -31,7 +31,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item prop="refundStatus" label="退款状态">
-                    <el-select v-model="form.refundStatus" placeholder="请选择">
+                    <el-select v-model="form.refundStatus" placeholder="请选择" @change="changeStatus(1)">
                       <el-option label="暂不选择" value=""></el-option>
                         <el-option v-for="(v,k) in refundStatusArr" :label="v.type" :value="v.id" :key="k">{{v.type}}</el-option>
                     </el-select>
@@ -43,7 +43,7 @@
                     <!--</el-select>-->
                 <!--</el-form-item>-->
                 <el-form-item prop="closeReason" label="关闭状态">
-                    <el-select v-model="form.closeReason" placeholder="请选择">
+                    <el-select v-model="form.closeReason" placeholder="请选择" @change="changeStatus(2)">
                         <el-option label="暂不选择" value=""></el-option>
                         <el-option v-for="(v,k) in closeReasonArr" :label="v.type" :value="v.id" :key="k">{{v.type}}</el-option>
                     </el-select>
@@ -185,10 +185,25 @@ export default {
             Object.assign(data, this.form);
             data.startTime = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : '';
             data.endTime = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : '';
+            if (this.form.closeReason) {
+                this.activeName = '6';
+            }
+            if (this.form.refundStatus) {
+                this.activeName = '9';
+            }
             data.status = this.activeName === 'all' ? '' : this.activeName;
             this.$refs[this.activeName].page.currentPage = 1;
             this.$refs[this.activeName].data = data;
             this.$refs[this.activeName].getList();
+        },
+        // 退款状态。关闭状态切换清值
+        // 1 退款状态  2关闭状态
+        changeStatus(num) {
+            if (num == 1) {
+                this.form.closeReason = '';
+            } else {
+                this.form.refundStatus = '';
+            }
         },
         //  重置表单
         resetForm(formName) {
@@ -201,6 +216,7 @@ export default {
         },
         //  点击tab选项卡
         handleClick(tab) {
+            this.resetForm('form');
             this.activeName = tab.name;
             this.getList();
         },
