@@ -16,6 +16,7 @@ Vue.use(vueQuillEditor);
 import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
 // import '../static/css/theme-green/index.css';       // 浅绿色主题
 import '../src/assets/css/commom.css'; // 公用css 样式
+import utils from '@/utils/index.js'; // 公共方法
 // 图片浏览工具
 import Viewer from 'v-viewer';
 import 'viewerjs/dist/viewer.css';
@@ -44,6 +45,7 @@ Vue.use(Vue => {
 });
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$store = vuex;
+Vue.prototype.$utils = utils;
 
 // 使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {

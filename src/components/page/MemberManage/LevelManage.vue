@@ -212,8 +212,6 @@
                 id: ''
             };
         },
-        created() {
-        },
         activated() {
             this.getList();
         },
@@ -300,8 +298,7 @@
 
             // 晋级设置
             upSet(index, row) {
-                sessionStorage.setItem('memberId', row.id);
-                this.$router.push({ path: '/promotionManage', query: { memberId: row.id }});
+                this.$utils.setParam.call(this, '/promotionManage', 'levelMangeToUp', row.id);
             },
             // 降级设置
             downSet(index, row) {

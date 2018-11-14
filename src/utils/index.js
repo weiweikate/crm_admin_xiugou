@@ -117,6 +117,26 @@ const formatTime = function(value, status) {
     }
     return value == '' ? '' : moment(value).format('YYYY-MM-DD HH:mm:ss');
 };
+/**
+ * 页面跳转缓存参数
+ * @param path 页面跳转路径
+ * @param paramName 参数名称
+ * @param param 参数
+ */
+const setParam = function(path = '/404', paramName = 'pageDefParam', param = '-1') {
+    this.$store.commit('SET_PAGE_PARAM', { name: paramName, query: param });
+    this.$router.push({ path: path, query: { paramName: param }});
+};
+/**
+ * 页面跳转获取缓存参数
+ * @param paramName 参数名称
+ * @returns {string | *} 参数值
+ */
+const getParam = function(paramName = 'pageDefParam') {
+    // 先拉取本地存储的参数
+    this.$store.commit('GET_LOCAL_PAGE_INFO');
+    return this.$route.query[paramName] || this.$store.state.pageInfo[paramName];
+};
 
 module.exports.encryptData = encryptData;
 module.exports.cleanFormData = cleanFormData;
@@ -124,3 +144,5 @@ module.exports.handleCity = handleCity;
 module.exports.handleCityIndex = handleCityIndex;
 module.exports.pc = permissionControl;
 module.exports.formatTime = formatTime;
+module.exports.setParam = setParam;
+module.exports.getParam = getParam;
