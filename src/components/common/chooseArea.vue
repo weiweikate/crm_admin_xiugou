@@ -84,7 +84,6 @@
                 preChooseProvinceIds: [],
                 preCityIds: [],
                 preCityNames: [],
-
                 loading: false
             };
         },
@@ -169,6 +168,7 @@
             getProvinceListGroupByDistrict() {
                 const that = this;
                 const data = {};
+                this.loading = true;
                 request.getProvinceListGroupByDistrict(data).then(res => {
                     const arr = ['', '华东', '华南', '华中', '华北', '西北', '西南', '东北', '港澳台', '海外'];
                     for (const i in res.data) {
@@ -233,8 +233,10 @@
                             that.areaCheckedAll(i);
                         }
                     }
+                    this.loading = false;
                 }).catch(error => {
                     console.log(error);
+                    this.loading = false;
                 });
             },
             // 获取省对应的市

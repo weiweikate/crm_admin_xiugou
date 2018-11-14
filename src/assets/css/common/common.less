@@ -22,3 +22,30 @@
 @spacing-big:30px;
 
 
+//浮动
+.fl{
+    float: left;
+}
+.fr{
+    float: right;
+}
+.clear{
+    clear: both;
+    content: '';
+    zoom: 1;
+    &:after{
+        clear:both;
+        content:'';
+        display:block;
+        width: 0;
+        height: 0;
+        visibility:hidden;
+    }
+}
+
+//溢出隐藏
+.ellipsis{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
