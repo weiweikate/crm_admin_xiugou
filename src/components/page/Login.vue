@@ -60,6 +60,7 @@
         },
         data() {
             return {
+                redirect: undefined,
                 version: process.env.version,
                 loginType: 'first',
                 btnLoading: false,
@@ -86,6 +87,14 @@
                 }
             };
         },
+        watch: {
+            $route: {
+                handler: function (route) {
+                    this.redirect = route.query && route.query.redirect;
+                },
+                immediate: true
+            }
+        },
         methods: {
             // 提交表单
             submitForm(formName) {
@@ -98,7 +107,7 @@
                         } else {
                             url = 'loginByCode';
                         }
-                        if (this[formName].phone.length != 11) {
+                        if (this[formName].phone.length !== 11) {
                             this.$message.warning('账号长度不符');
                             return;
                         }
@@ -108,7 +117,14 @@
                             return;
                         }
                         this.btnLoading = true;
-                        request[url](data).then(res => {
+                        data._url = url;
+                        this.$store.dispatch('Login', data).then(() => {
+                            this.btnLoading = false;
+                            this.$router.push({ path: this.redirect || '/' });
+                        }).catch(() => {
+                            this.btnLoading = false;
+                        });
+                        /*request[url](data).then(res => {
                             localStorage.setItem('ms_username', res.data.name);
                             localStorage.setItem('ms_userID', res.data.id);
                             localStorage.setItem('ms_userPhone', res.data.telephone);
@@ -118,7 +134,7 @@
                         }).catch(err => {
                             this.btnLoading = false;
                             console.log(err);
-                        });
+                        });*/
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -162,13 +178,8 @@
             // 获取权限列表
             getUserPriList(id) {
                 request.findAdminUserbyId({ id: id }).then(res => {
-                    const privilegeList = [];
-                    res.data.adminUserPrivilegeList.forEach((v, k) => {
-                        privilegeList.push(v.url);
-                    });
-                    localStorage.setItem('privilegeList', JSON.stringify(privilegeList));
                     this.$message.success('登录成功！');
-                    this.$router.push('/dashboard');
+                    this.$router.push({ path: this.redirect || '/dashboard' });
                     this.btnLoading = false;
                 }).catch(err => {
                     this.btnLoading = false;
