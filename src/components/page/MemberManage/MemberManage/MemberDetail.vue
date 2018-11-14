@@ -52,11 +52,11 @@
                         <!--<el-button type="primary" @click="btnClicked('/operateLog')" style="margin-left: 0">用户操作日志-->
                         <!--</el-button>-->
                     <!--</div>-->
-                    <div>
+                    <!--<div>-->
                         <!--<el-button type="primary" @click="btnClicked('memberAccount', 'memberInfoAccount')"-->
                                    <!--style="margin-left: 0">他的账户-->
                         <!--</el-button>-->
-                    </div>
+                    <!--</div>-->
                     <div>
                         <el-button type="primary" @click="btnClicked('realNameInfo', 'memberInfoRealName')"
                                    style="margin-left: 0">实名信息{{dealer.realnameStatus == '1'?'(已实名)':''}}
@@ -140,9 +140,9 @@
             </div>
         </div>
         <!--基础信息修改弹窗-->
-        <edit-basic @msg='basicToast' :dealer='dealer' :id="id" v-if="isShowEditBasic"></edit-basic>
+        <edit-basic @msg='basicToast' :dealer='dealer' :id="id" v-show="isShowEditBasic"></edit-basic>
         <!--授权信息修改弹窗-->
-        <edit-author @msg='authorToast' :dealer='dealer' :id="id" v-if="isShowEditAuthor"></edit-author>
+        <edit-author @msg='authorToast' :dealer='dealer' :id="id" v-show="isShowEditAuthor"></edit-author>
     </div>
 </template>
 
