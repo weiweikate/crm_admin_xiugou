@@ -7,7 +7,7 @@
                  background-color="#222d32"
                  text-color="#b1b1b1" active-text-color="#fff" router>
             <template v-for="item in permission_routers">
-                <div v-if="!item.hidden">
+                <template v-if="!item.hidden">
                     <template v-if="item.children && item.children.length>1">
                         <el-submenu :index="item.name" :key="item.name">
                             <template slot="title">
@@ -32,7 +32,7 @@
                             <span style="margin-left:6px" slot="title">{{ item.meta.title }}</span>
                         </el-menu-item>
                     </template>
-                </div>
+                </template>
             </template>
         </el-menu>
     </div>
@@ -178,6 +178,7 @@
         background-color: rgba(255, 255, 255, 0.2) !important;
     }
     .search-area {
+        width: 200px;
         height: 150px;
         text-align: center;
         .logo-img {

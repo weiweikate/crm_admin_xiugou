@@ -154,7 +154,7 @@ export const asyncRouterMap = [
                 meta: { title: '问题反馈' }
             },
             {
-                hidden:true,
+                hidden: true,
                 name: 'feedDetail',
                 path: '/feedDetail',
                 component: resolve => require(['../components/page/ServiceManage/FeedBack/FeedbackDetail.vue'], resolve),
@@ -339,7 +339,7 @@ export const asyncRouterMap = [
         ]
     },
     {
-        hidden:true,
+        hidden: true,
         path: '/others',
         component: Layout,
         name: 'others',
@@ -468,7 +468,7 @@ export const asyncRouterMap = [
                 name: 'giftInfo',
                 path: '/giftInfo',
                 component: resolve => require(['../components/page/BrandProduct/GiftManage/GiftInfo.vue'], resolve),
-                meta: { title: '礼包详情'}
+                meta: { title: '礼包详情' }
             },
             {
                 name: 'discountAdd',
@@ -487,7 +487,7 @@ export const asyncRouterMap = [
                 name: 'demotionShop',
                 path: '/demotionShop',
                 component: resolve => require(['../components/page/SpellShopManage/ShopLevel/DemotionShop.vue'], resolve),
-                meta: { title: '店铺降级设置'}
+                meta: { title: '店铺降级设置' }
             },
 
             {
@@ -545,7 +545,7 @@ export const asyncRouterMap = [
                 name: 'LevelInfo',
                 path: '/LevelInfo',
                 component: resolve => require(['../components/page/MemberManage/LevelManage/LevelInfo.vue'], resolve),
-                meta: { title: '层级信息'}
+                meta: { title: '层级信息' }
             },
 
 
@@ -571,7 +571,7 @@ export const asyncRouterMap = [
                 name: 'memberDetail',
                 path: '/memberDetail',
                 component: resolve => require(['../components/page/MemberManage/MemberManage/MemberDetail.vue'], resolve),
-                meta: { title: '会员详情'}
+                meta: { title: '会员详情' }
             },
             {
                 name: 'memberTree',
@@ -583,7 +583,7 @@ export const asyncRouterMap = [
                 name: 'showMsg',
                 path: '/showMsg',
                 component: resolve => require(['../components/page/MemberManage/MemberManage/showMsg.vue'], resolve),
-                meta: { title: '店铺信息'}
+                meta: { title: '店铺信息' }
             },
             {
                 name: 'sendInvite',
@@ -625,7 +625,7 @@ export const asyncRouterMap = [
                 name: 'shareAccountBalance',
                 path: '/shareAccountBalance',
                 component: resolve => require(['../components/page/MemberManage/UserAccount/ShareAccountBalance.vue'], resolve),
-                meta: { title: '分红账户收支明细'}
+                meta: { title: '分红账户收支明细' }
             },
             {
                 name: 'integralAccountBalance',
@@ -637,7 +637,7 @@ export const asyncRouterMap = [
                 name: 'withDrawAccount',
                 path: '/withDrawAccount',
                 component: resolve => require(['../components/page/MemberManage/UserAccount/WithDrawAccount.vue'], resolve),
-                meta: { title: '待提现账户'}
+                meta: { title: '待提现账户' }
             },
             {
                 name: 'accountRecharge',
@@ -675,7 +675,7 @@ export const asyncRouterMap = [
                 name: 'editSupplier',
                 path: '/editSupplier',
                 component: resolve => require(['../components/page/MemberManage/SupplierManage/EditSupplier.vue'], resolve),
-                meta: { title: '编辑供应商'}
+                meta: { title: '编辑供应商' }
             },
             {
                 name: 'promotionManage',
@@ -712,7 +712,7 @@ export const asyncRouterMap = [
                 name: 'productInfo',
                 path: '/productInfo',
                 component: resolve => require(['../components/page/BrandProduct/ProductManage/ProductInfo.vue'], resolve),
-                meta: { title: '产品详情'}
+                meta: { title: '产品详情' }
             },
             {
                 name: 'priceManage',
@@ -736,7 +736,7 @@ export const asyncRouterMap = [
                 name: 'inventoryInfo',
                 path: '/inventoryInfo',
                 component: resolve => require(['../components/page/BrandProduct/ProductManage/InventoryInfo.vue'], resolve),
-                meta: { title: '库存详情'}
+                meta: { title: '库存详情' }
             },
 
             // 服务管理
@@ -759,8 +759,6 @@ export const asyncRouterMap = [
                 component: resolve => require(['../components/page/OperateManage/NoticeInformManage/EditNotice.vue'], resolve),
                 meta: { title: '编辑公告' }
             },
-
-
             // 溯源管理
             {
                 name: 'rootsCodeMange',
@@ -784,7 +782,7 @@ export const asyncRouterMap = [
                 name: 'rootsCodeParams',
                 path: '/rootsCodeParams',
                 component: resolve => require(['../components/page/RootsMange/RootsCodeParams.vue'], resolve),
-                meta: { title: '防伪码参数设置'}
+                meta: { title: '防伪码参数设置' }
             },
             // 权限管理
 
@@ -816,7 +814,7 @@ export const asyncRouterMap = [
                 name: 'addJobsPermission',
                 path: '/addJobsPermission',
                 component: resolve => require(['../components/page/Permission/AddJobsPermission.vue'], resolve),
-                meta: { title: '添加岗位权限'}
+                meta: { title: '添加岗位权限' }
             },
             {
                 name: 'editJobsPermission',
@@ -834,7 +832,7 @@ export const asyncRouterMap = [
                 name: 'editMangerMsg',
                 path: '/editMangerMsg',
                 component: resolve => require(['../components/page/Permission/EditMangerMsg.vue'], resolve),
-                meta: { title: '管理员基础信息修改'}
+                meta: { title: '管理员基础信息修改' }
             },
             {
                 name: 'organizeMange',
@@ -855,7 +853,7 @@ export const asyncRouterMap = [
                 name: 'foundCategory',
                 path: '/foundCategory',
                 component: resolve => require(['../components/page/OperateManage/showField/found/foundCategory.vue'], resolve),
-                meta: { title: '分类列表'}
+                meta: { title: '分类列表' }
             },
             {
                 name: 'addFoundCategory',
@@ -1436,7 +1434,7 @@ export const constantRouterMap = [
         component: Layout,
         redirect: '/dashboard',
         name: 'dashboard',
-        meta: { title: '系统首页' ,icon: 'icon-shouye'},
+        meta: { title: '系统首页', icon: 'icon-shouye' },
         children: [
             {
                 path: '/dashboard',
@@ -1446,7 +1444,7 @@ export const constantRouterMap = [
             }
         ]
     }
-].concat(asyncRouterMap);
+];
 
 export default new Router({
     // mode: 'history', //后端支持可开
