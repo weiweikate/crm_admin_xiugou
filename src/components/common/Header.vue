@@ -26,7 +26,7 @@
                     <span class="btn-bell-badge" v-if="message"></span>
                 </div>
                 <!-- 用户头像 -->
-                <div v-if="face" class="user-avator"><img :src="face"></div>
+                <div v-if="user.face" class="user-avator"><img :src="user.face"></div>
                 <div v-else class="user-avator"><img src="../../assets/images/avatar.jpg"></div>
                 <!-- 用户名下拉菜单 -->
                 <el-dropdown class="user-name" trigger="click" @command="handleCommand">
@@ -48,6 +48,7 @@ import bus from '../common/bus';
 import vTags from './Tags.vue';
 import messageTip from '@/components/page/Dashboard/messageTip';
 import request from '@/http/http.js';
+import { mapGetters } from 'vuex';
 export default {
     components: {
         vTags,
@@ -59,31 +60,28 @@ export default {
             collapse: false,
             fullscreen: false,
             showMsg: false,
-            face: '',
-            name: '请登陆',
             message: 0
         };
     },
     computed: {
+        ...mapGetters([
+            'user',
+        ]),
         username() {
-            const username = localStorage.getItem('ms_username');
-            return username || this.name;
+            const username = this.user.name;
+            return username;
         }
     },
     created() {
-        this.id = localStorage.getItem('ms_userID');
         this.getNoReadNum();
-        request.findAdminUserbyId({ id: this.id }).then(res => {
-            this.face = res.data.face;
-        });
     },
     methods: {
     // 用户名下拉菜单选择事件
         handleCommand(command) {
             if (command === 'loginout') {
-                localStorage.clear();
-                sessionStorage.clear();
-                this.$router.push('/login');
+                this.$store.dispatch('FedLogOut').then(()=>{
+                    this.$router.push('/login');
+                });
             } else if (command === 'editMangerMsg') {
                 sessionStorage.setItem('editMangerMsg', 'admin');
                 this.$router.push({
@@ -143,7 +141,7 @@ export default {
         },
         // 获取消息
         async getMsg() {
-            if (this.message == 0) return;
+            if (this.message === 0) return;
             await this.$refs.msg.getAllMsg();
             this.showMsg = true;
         }

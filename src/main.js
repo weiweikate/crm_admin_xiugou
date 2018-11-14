@@ -12,6 +12,8 @@ import '@/JS/errorLog.js'; // 错误捕获
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
+import '@/permission'; // permission control
+import store from '@/stores';
 Vue.use(vueQuillEditor);
 import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
 // import '../static/css/theme-green/index.css';       // 浅绿色主题
@@ -44,11 +46,10 @@ Vue.use(Vue => {
     Vue.prototype.$axios = axios;
 });
 Vue.prototype.$echarts = echarts;
-Vue.prototype.$store = vuex;
 Vue.prototype.$utils = utils;
 
 // 使用钩子函数对路由进行权限跳转
-router.beforeEach((to, from, next) => {
+/*router.beforeEach((to, from, next) => {
     const role = localStorage.getItem('ms_username');
     if (!role && to.path !== '/login') {
         localStorage.clear();
@@ -57,9 +58,9 @@ router.beforeEach((to, from, next) => {
     } else {
         next();
     }
-});
+});*/
 new Vue({
     router,
-    vuex,
+    store,
     render: h => h(App)
 }).$mount('#app');
