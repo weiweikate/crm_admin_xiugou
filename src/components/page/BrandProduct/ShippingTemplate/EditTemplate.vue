@@ -255,7 +255,7 @@
                     that.form.provinceCode = freightTemplate.provinceCode;
                     that.form.cityCode = freightTemplate.cityCode;
                     that.form.areaCode = freightTemplate.areaCode;
-                    that.form.unSupportAreas = freightTemplate.unSupportAreas;
+                    that.form.unSupportAreas = freightTemplate.unSupportAreas || [];
                     that.isShowExpress = freightTemplate.freightType != 2;
                     if (freightTemplate.freightType != 2) {
                         that.freightFreePrice = freightTemplate.freightFreePrice;

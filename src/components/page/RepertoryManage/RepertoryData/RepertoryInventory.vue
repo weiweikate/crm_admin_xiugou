@@ -116,7 +116,7 @@ export default {
             sessionStorage.setItem('repertoryInventoryInfoId', row.id);
             sessionStorage.setItem('warehouseId', this.warehouseId);
             this.$router.push({
-                productName: 'repertoryInventoryInfo',
+                path: 'repertoryInventoryInfo',
                 query: { repertoryInventoryInfoId: row.id, warehouseId: this.warehouseId }
             });
         },
