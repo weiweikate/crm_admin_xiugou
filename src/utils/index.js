@@ -125,7 +125,9 @@ const formatTime = function(value, status) {
  */
 const setParam = function(path = '/404', paramName = 'pageDefParam', param = '-1') {
     this.$store.commit('SET_PAGE_PARAM', { name: paramName, query: param });
-    this.$router.push({ path: path, query: { paramName: param }});
+    let obj = {};
+    obj[paramName] = param;
+    this.$router.push({ path: path, query: obj});
 };
 /**
  * 页面跳转获取缓存参数

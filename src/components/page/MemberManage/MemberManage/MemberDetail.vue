@@ -157,7 +157,7 @@
         components: {
             icon, vBreadcrumb, editBasic, editAuthor
         },
-        data: function() {
+        data() {
             return {
                 dealer: {},
                 dynamicTags: [],

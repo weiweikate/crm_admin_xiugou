@@ -2,9 +2,12 @@
     <div class="tags" v-if="showTags">
         <ul>
             <li @click="checkout(tagsList)" class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index">
-                <router-link :to="item.path" class="tags-li-title">
+                <!--<router-link :to="item.path" class="tags-li-title">-->
+                    <!--{{item.title}}-->
+                <!--</router-link>-->
+                <span class="tags-li-title" @click="$router.push({name: item.name,query: item.query })">
                     {{item.title}}
-                </router-link>
+                </span>
                 <span class="tags-li-icon" @click="closeTags(index)"><i class="el-icon-close"></i></span>
             </li>
         </ul>
@@ -60,19 +63,30 @@
             },
             // 设置标签
             setTags(route) {
-                const that = this;
-                const isExist = this.tagsList.some(item => {
+                let index = 0;
+                const isExist = this.tagsList.some((item, key) => {
+                    index = key;
                     return item.path === route.path;
                 });
-                !isExist && this.tagsList.push({
-                    title: route.meta.title,
-                    path: route.path
-                });
+                if (!isExist) {
+                    this.tagsList.push({
+                        title: route.meta.title,
+                        name: route.name,
+                        path: route.path,
+                        query: route.query
+                    });
+                } else {
+                    if (Object.keys(route.query).length !== 0) {
+                        this.tagsList[index].query = route.query;
+                    }
+                }
                 if (!isExist && this.tagsList.length > 11) {
                     this.showOthers = true;
                     this.extraLst.push({
                         title: route.meta.title,
-                        path: route.path
+                        name: route.name,
+                        path: route.path,
+                        query: route.query
                     });
                 }
             },
@@ -100,8 +114,8 @@
             }
         },
         watch: {
-            $route(newValue, oldValue) {
-                this.setTags(newValue);
+            $route(to, from) {
+                this.setTags(to);
             }
         },
         created() {
@@ -136,24 +150,24 @@
         cursor: pointer;
         height: 23px;
         line-height: 23px;
-        border: 1px solid #e9eaec;
-        background: #fff;
+        background-color: #f56c6c;
+        border-color: #f56c6c;
         padding: 0 5px 0 12px;
         vertical-align: middle;
-        color: #666;
+        color: #fff;
         -webkit-transition: all .3s ease-in;
         -moz-transition: all .3s ease-in;
         transition: all .3s ease-in;
     }
 
-    .tags-li:not(.active):hover {
-        background: #f8f8f8;
-    }
+    /*.tags-li:not(.active):hover {*/
+        /*background: #f8f8f8;*/
+    /*}*/
 
     .tags-li.active {
-        color: #fff;
-        background-color: #f56c6c;
-        border-color: #f56c6c;
+        color: #ff6868;
+        border: 1px solid #e9eaec;
+        background: #fff;
     }
 
     .tags-li-title {
@@ -163,11 +177,11 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         margin-right: 5px;
-        color: #666;
+        color: #fff;
     }
 
     .tags-li.active .tags-li-title {
-        color: #fff;
+        color: #ff6868;
     }
 
     .tags-close-box {
