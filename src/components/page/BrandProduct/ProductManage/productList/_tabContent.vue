@@ -322,6 +322,7 @@ export default {
             const tmp = [];
             tmp.push(row.sec_category_id);
             tmp.push(row.id);
+            tmp.push(row.checkStatus);
             sessionStorage.setItem('productSpecifications', JSON.stringify(tmp));
             this.$router.push({
                 name: 'productSpecifications',
