@@ -178,6 +178,10 @@
                 record: []
             };
         },
+        created() {
+            this.id = this.$route.query.memberToInfo;
+            this.getDetail();
+        },
         activated() {
             this.id = this.$route.query.memberToInfo;
             this.getDetail();
@@ -227,7 +231,7 @@
             },
             // 页面跳转
             btnClicked(page, paramName) {
-                this.$router.push({name: page, query: {[paramName]: this.id}});
+                this.$router.push({ name: page, query: { [paramName]: this.id }});
             }
         }
     };
