@@ -12,7 +12,7 @@
                 <el-form-item prop="bonusCount" label="分红次数">
                     <el-input v-model="form.bonusCount" placeholder="请输入分红次数"></el-input>
                 </el-form-item>
-                <el-form-item prop="storeStar" label="店铺等级">
+                <el-form-item prop="storeStarId" label="店铺等级">
                     <el-select v-model="form.storeStarId" placeholder="请选择店铺等级">
                         <el-option value="">全部</el-option>
                         <el-option

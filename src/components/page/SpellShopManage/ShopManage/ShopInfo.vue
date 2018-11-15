@@ -163,7 +163,7 @@
         },
 
         activated() {
-            this.shopId = this.$route.query.shopInfo;
+            this.shopId = this.$route.query.shopInfoId || sessionStorage.getItem('shopInfoId');
             this.getInfo();
         },
 
