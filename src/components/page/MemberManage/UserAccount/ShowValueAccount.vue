@@ -1,6 +1,22 @@
 <template>
     <div>
         <breadcrumb :nav='nav'></breadcrumb>
+        <el-card style="margin-bottom: 10px">
+            <el-form ref="form" inline :model="form" label-width="120px">
+                <el-form-item prop="no" label="编号">
+                    <el-input v-model="form.no"></el-input>
+                </el-form-item>
+                <el-form-item prop="no" label="订单号">
+                    <el-input v-model="form.orderNum"></el-input>
+                </el-form-item>
+                <el-form-item prop="time" label="完成时间">
+                    <el-date-picker type="datetimerange" v-model="form.time" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
+                </el-form-item>
+                <el-form-item prop="no" label=" ">
+                    <el-button type="primary" @click="getList(1)">搜 索</el-button>
+                </el-form-item>
+            </el-form>
+        </el-card>
         <el-card>
             <p class="title">{{name}}的秀值账户明细</p>
             <el-table border :data="tableData" v-loading="tableLoading">
@@ -63,6 +79,11 @@
             return {
                 nav: ['会员管理', '经销商会员管理', '会员详情', '会员账户管理', '秀值账户明细'],
                 tableData: [],
+                form: {
+                    no: '',
+                    orderNum: '',
+                    time: ''
+                },
                 page: {
                     currentPage: 1,
                     totalPage: 0
@@ -72,18 +93,20 @@
             };
         },
         activated() {
-            console.log(this.$route.query.memberAccMsg);
             this.id = this.$route.query.memberAccMsg.memberId || sessionStorage.getItem('memberAccMsg').memberId;
             this.name = this.$route.query.memberAccMsg.nickname || sessionStorage.getItem('memberAccMsg').nickname;
             this.getList();
         },
         methods: {
             // 获取数据
-            getList() {
+            getList(val) {
+                if (!this.form.time) this.form.time = [];
                 const data = {
                     userId: this.id,
-                    page: this.page.currentPage,
-                    pageSize: this.page.pageSize
+                    page: val,
+                    pageSize: this.page.pageSize,
+                    beginTime: this.form.time.length === 0 ? '' : this.$utils.formatTime(this.form.time[0]),
+                    endTime: this.form.time.length === 0 ? '' : this.$utils.formatTime(this.form.time[1])
                 };
                 this.tableLoading = true;
                 request.queryMemshowValueList(data).then(res => {
