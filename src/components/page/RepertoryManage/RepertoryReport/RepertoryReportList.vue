@@ -226,7 +226,6 @@ export default {
             this.index = num;
         },
         sure() {
-            this.mask = false;
             this.url = this.index == 0 ? 'syncAsnInfo' : 'cancelNoteById';
             const data = {};
             if (this.index == 0) {
@@ -239,9 +238,11 @@ export default {
                 this.$message.success(res.msg);
                 this.getList(this.page.currentPage);
                 this.btnLoading = false;
+                this.mask = false;
             }).catch(err => {
                 console.log(err);
                 this.btnLoading = false;
+                this.mask = false;
             });
         }
     }
