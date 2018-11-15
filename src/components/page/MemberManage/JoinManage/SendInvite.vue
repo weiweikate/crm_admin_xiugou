@@ -61,10 +61,16 @@
     import vChoosearea from '@/components/common/chooseBrand.vue';
     import moment from 'moment';
     import request from '@/http/http';
+    import { mapGetters } from 'vuex';
 
     export default {
         components: {
             vBreadcrumb, icon, vChoosearea
+        },
+        computed: {
+            ...mapGetters([
+                'user'
+            ])
         },
         data() {
             return {
@@ -138,7 +144,7 @@
                 data.levelId = that.form.levelId.toString();
                 data.inviteType = that.form.inviteType;
                 data.invalidType = that.form.invalidType;
-                data.adminId = localStorage.getItem('ms_userID');
+                data.adminId = this.user.id;
                 if (that.form.invalidType == '1') {
                     data.clickTimes = that.form.clickTimes;
                 } else {

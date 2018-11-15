@@ -73,8 +73,7 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import icon from '@/components/common/ico.vue';
-    import moment from 'moment';
-    import utils from '@/utils/index.js';
+    import { mapGetters } from 'vuex';
     import { queryDictonary } from '@/JS/commom';
     import request from '@/http/http.js';
 
@@ -83,6 +82,11 @@
             vBreadcrumb, icon
         },
         mixins: [queryDictonary],
+        computed: {
+            ...mapGetters([
+                'user'
+            ])
+        },
         data() {
             return {
 
@@ -107,8 +111,8 @@
                 this.$route.query.id ||
                 JSON.parse(sessionStorage.getItem('feedDetail').id);
             this.getDetail();
-            this.username = localStorage.getItem('ms_username');
-            this.userId = localStorage.getItem('ms_userID');
+            this.username = this.user.name;
+            this.userId = this.user.id;
         },
         methods: {
             // 获取详情

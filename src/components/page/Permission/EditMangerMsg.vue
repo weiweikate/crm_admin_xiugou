@@ -65,10 +65,16 @@ import breadcrumb from '@/components/common/Breadcrumb';
 import icon from '@/components/common/ico';
 import * as api from '@/api/api.js';
 import request from '@/http/http';
+import { mapGetters } from 'vuex';
 export default {
     components: {
         breadcrumb,
         icon
+    },
+    computed: {
+        ...mapGetters([
+            'user'
+        ])
     },
     data() {
         return {
@@ -99,7 +105,7 @@ export default {
     },
     activated() {
         this.uploadImg = api.uploadImg;
-        this.id = localStorage.getItem('ms_userID');
+        this.id = this.user.id;
         request.findAdminUserbyId({ id: this.id }).then(res => {
             this.name = res.data.name;
             this.telephone = res.data.telephone;

@@ -226,6 +226,7 @@ import breadcrumb from '../common/Breadcrumb';
 import actAccountPwd from './Dashboard/actAccountPwd';
 import actAccountCode from './Dashboard/actAccountCode';
 import request from '@/http/http.js';
+import { mapGetters } from 'vuex';
 
 export default {
     components: {
@@ -233,6 +234,11 @@ export default {
         breadcrumb,
         actAccountPwd,
         actAccountCode
+    },
+    computed: {
+        ...mapGetters([
+            'user'
+        ])
     },
     data() {
         return {
@@ -245,7 +251,7 @@ export default {
         };
     },
     created() {
-        if (localStorage.getItem('ms_hadFirstLogin') == 1) {
+        if (this.user.hadFirstLogin == 1) {
             this.isShowActAccCode = true;
         }
     },

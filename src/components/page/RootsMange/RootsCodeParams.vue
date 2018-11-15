@@ -111,10 +111,16 @@
     import * as api from "../../../api/api.js";
     import * as pApi from '../../../privilegeList/index.js';
     import utils from '../../../utils/index.js'
+    import { mapGetters } from 'vuex';
 
     export default {
         components: {
             breadcrumb
+        },
+        computed: {
+            ...mapGetters([
+                'user'
+            ])
         },
         data() {
             return {
@@ -166,7 +172,7 @@
             this.height = winHeight;
             this.getList();
             this.pControl();
-            this.showPhone = localStorage.getItem('ms_userPhone').substring(0, 3) + '****' + localStorage.getItem('ms_userPhone').substring(7);
+            this.showPhone = this.user.telephone.substring(0, 3) + '****' + this.user.telephone.substring(7);
         },
         methods: {
             // 权限控制

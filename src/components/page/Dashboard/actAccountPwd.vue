@@ -23,9 +23,15 @@
 <script>
 import icon from '../../common/ico';
 import request from '@/http/http.js';
+import { mapGetters } from 'vuex';
 export default {
     components: {
         icon
+    },
+    computed: {
+        ...mapGetters([
+            'user'
+        ])
     },
     data() {
         return {
@@ -56,7 +62,7 @@ export default {
                         return;
                     }
                     const data = {};
-                    data.phone = localStorage.getItem('ms_phone');
+                    data.phone = this.user.telephone;
                     data.password = this.form.repeatPwd;
                     request.loginUpdatePassword(data).then(res => {
                         if (res.code === 10000) {
