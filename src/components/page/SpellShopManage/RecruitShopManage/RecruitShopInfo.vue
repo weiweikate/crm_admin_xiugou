@@ -119,8 +119,8 @@ export default {
         },
         // 查看店长
         showShopLeader(id) {
-            localStorage.setItem('memberDetail', id);
-            this.$router.push({ path: '/memberDetail', query: { id: id }});
+            localStorage.setItem('memberToInfo', id);
+            this.$router.push({ path: '/memberDetail', query: { memberToInfo: id }});
         }
     }
 };
