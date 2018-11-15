@@ -261,19 +261,10 @@
                     if (!valid) {
                         return;
                     } else {
-                        console.log(this.form);
                         const data = that.form;
                         if (!that.form.provinceCode || !that.form.cityCode || !that.form.areaCode) {
                             that.$message.warning('请选择省市区！');
                             return;
-                        }
-                        if (that.checked) {
-                            if (!that.freightFreePrice) {
-                                that.$message.warning('请输入满包邮金额！');
-                                return;
-                            }
-                            data.freightFreePrice = that.freightFreePrice;
-                            data.freightType = 3;
                         }
                         const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
                         let flag = true;
@@ -331,6 +322,14 @@
                             data.freightFreePrice = '';
                         }
                         if (!flag || !flag1) return;
+                        if (that.checked) {
+                            if (!that.freightFreePrice) {
+                                that.$message.warning('请输入满包邮金额！');
+                                return;
+                            }
+                            data.freightFreePrice = that.freightFreePrice;
+                            data.freightType = 3;
+                        }
                         this.btnLoading = true;
                         request.addFreightTemplate(data).then(res => {
                             that.$message.success(res.msg);
