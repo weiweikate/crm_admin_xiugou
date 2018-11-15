@@ -237,7 +237,6 @@ export default {
             this.title = num == 1 ? '停用仓库' : '启用仓库';
         },
         sure(formName) {
-            this.mask = false;
             const data = {};
             data.verifyCode = this.formMask.verifyCode;
             data.warehouseId = this.formMask.id;
