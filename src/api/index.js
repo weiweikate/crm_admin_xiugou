@@ -6,7 +6,7 @@ import qs from 'qs';
 
 axios.defaults.baseURL = process.env.API_ROOT;
 
-axios.defaults.timeout = 20000;
+axios.defaults.timeout = 200000;
 
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 

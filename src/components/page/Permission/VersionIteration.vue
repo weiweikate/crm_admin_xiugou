@@ -21,8 +21,10 @@
                             :action="upUrl"
                             :show-file-list="false"
                             :before-upload="beforeUpload"
+                            :on-error = 'uploadError'
+                            :on-progress = 'onProgress'
                             :on-success="uploadSuccess">
-                          <el-button :loading="uploadLoading" type="primary">上传apk</el-button>
+                          <el-button :loading="uploadLoading" type="primary">{{uploadLoading?percent:'上传apk'}}</el-button>
                         </el-upload>
                     </el-form-item>
                     <el-form-item label="是否强制更新">
@@ -73,7 +75,8 @@
                 title: '新增版本',
                 type: '', // 1：安卓 2：IOS
                 url: '',
-                btnLoading: false
+                btnLoading: false,
+                percent: 0 // 上传进度
             };
         },
         computed: {
@@ -94,6 +97,13 @@
                 this.form.url = res.data;
                 this.uploadLoading = false;
             },
+            uploadError(err) {
+                this.$message.warning('上传失败');
+                this.uploadLoading = false;
+            },
+            onProgress(event, file, fileList) {
+                this.percent = `${Math.round(event.percent)}%`;
+            },
             showDeleteToast(row) {
                 // 显示删除弹框
                 this.delId = row.id;
@@ -111,7 +121,7 @@
                     this.title = '编辑版本信息';
                     this.url = 'updateVersionRecord';
                     this.isShowAddQues = !this.isShowAddQues;
-                    row.forceUpdate = row.forceUpdate.toString()
+                    row.forceUpdate = row.forceUpdate.toString();
                     this.form = row;
                 } else {
                     this.form.type = this.activeName === 'IOS' ? 2 : 1;
