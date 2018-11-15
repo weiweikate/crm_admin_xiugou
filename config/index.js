@@ -2,16 +2,16 @@
 
 const path = require('path');
 
-// const baseURL = 'http://172.16.10.12:8190';
-// const baseURL = 'http://172.16.10.56:8190';
-// const baseURL = 'http://172.16.10.111:8190';
-// const baseURL = 'http://172.16.10.88:8190';
-// const baseURL = 'http://172.16.10.100:8190';
-// const baseURL = 'http://172.16.10.41:8190';
-// const baseURL = 'http://172.16.10.42:8190';
+// const baseURL = 'http://172.16.10.12:4080';
+// const baseURL = 'http://172.16.10.56:4080';
+const baseURL = 'http://172.16.10.111:4080';
+// const baseURL = 'http://172.16.10.88:4080';
+// const baseURL = 'http://172.16.10.100:4080';
+// const baseURL = 'http://172.16.10.41:4080';
+// const baseURL = 'http://172.16.10.11:4080';
 // const baseURL = 'http://172.16.10.29:4080';
 // const baseURL = 'http://172.16.10.19:4080';
-const baseURL = 'http://testadmin.sharegoodsmall.com';
+// const baseURL = 'http://testadmin.sharegoodsmall.com';
 // const baseURL = 'https://www.easy-mock.com/mock/5be2b23cee1b3d272cafccfa/crm';
 
 module.exports = {

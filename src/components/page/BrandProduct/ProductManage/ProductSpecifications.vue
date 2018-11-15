@@ -27,7 +27,7 @@
                     <el-button @click="addType">添加类型</el-button>
                 </div>
             </div>
-            <el-button v-show="checkStatus == '0'" @click="createList" type="primary" style="margin:10px 0 50px 0">生成列表</el-button>
+            <el-button :disabled="checkStatus != '0'" @click="createList" type="primary" style="margin:10px 0 50px 0">生成列表</el-button>
             <p style="margin:0 0 18px 10px">规格表</p>
             <el-table :data="tableData" border>
                 <el-table-column prop="specValues" label="规格" align="center"></el-table-column>
