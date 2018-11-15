@@ -129,14 +129,9 @@
                     <el-table-column prop="id" label="支付详情" align="center">
                         <template slot-scope="scope">
                             余额支付:{{scope.row.balance | handleMoney}}<br/>
-                            1元券抵扣:{{scope.row.tokenCoin}}<br/>
+                            1元券抵扣:{{scope.row.tokenCoin  | handleMoney}}<br/>
                             优惠券抵扣:{{scope.row.couponPrice | handleMoney}}<br/>
-                            <template v-if='(scope.row.type & 1) != 0'>平台支付</template>
-                            <template v-else-if='(scope.row.type & 2) != 0'>微信小程序 </template>
-                            <template v-else-if='(scope.row.type & 4) != 0'>APP支付 </template>
-                            <template v-else-if='(scope.row.type & 8) != 0'>支付宝 </template>
-                            <template v-else-if='(scope.row.type & 16) != 0'>银联 </template>
-                            {{scope.row.amounts | handleMoney}}
+                            {{scope.row.type}}:{{scope.row.amounts | handleMoney}}
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" align="center">
@@ -354,17 +349,29 @@
                         if ((!v.finishTime && v.status > 1 && v.status < 6) || present < v.finishTime || v.returnProductId && (v.returnProductStatus == 7 || v.returnProductStatus == 8)) {
                             v.isBusinessRefund = true;
                         }
-                        v.tokenCoin =
-                            res.data.tokenCoin == null ? '0' : res.data.tokenCoin;
-                        v.balance =
-                            res.data.balance == null ? '0' : res.data.balance;
-                        v.userScore =
-                            res.data.userScore == null ? '0' : res.data.userScore;
-                        v.type = res.data.payType;
-                        v.amounts =
-                            res.data.amounts == null ? '0' : res.data.amounts;
-                        v.couponPrice =
-                            res.data.couponPrice == null ? '0' : res.data.couponPrice;
+                        v.tokenCoin = res.data.orderPayRecord.tokenCoin == null ? '0' : res.data.orderPayRecord.tokenCoin;
+                        v.balance = res.data.orderPayRecord.balance == null ? '0' : res.data.orderPayRecord.balance;
+                        v.userScore = res.data.orderPayRecord.userScore == null ? '0' : res.data.orderPayRecord.userScore;
+                        let tmpType = '';
+                        if ((res.data.orderPayRecord.type & 1) != 0) {
+                            tmpType += `纯平台+`;
+                        }
+                        if ((res.data.orderPayRecord.type & 2) != 0) {
+                            tmpType += `微信(小程序)+`;
+                        }
+                        if ((res.data.orderPayRecord.type & 4) != 0) {
+                            tmpType += `微信(APP)+`;
+                        }
+                        if ((res.data.orderPayRecord.type & 8) != 0) {
+                            tmpType += `支付宝+`;
+                        }
+                        if ((res.data.orderPayRecord.type & 16) != 0) {
+                            tmpType += `银联+`;
+                        }
+                        if (tmpType !== '') tmpType = tmpType.slice(0, -1);
+                        v.type = tmpType;
+                        v.amounts = res.data.amounts == null ? '0' : res.data.amounts;
+                        v.couponPrice = res.data.couponPrice == null ? '0' : res.data.couponPrice;
                         this.tableData.push(v);
                     });
                     // 待支付剩余时间
