@@ -26,6 +26,7 @@ const user = {
             state.roles = roles;
         },
         SET_USER: (state, user) => {
+            console.log('SET_USER',user)
             state.user = user;
         }
     },
@@ -36,7 +37,6 @@ const user = {
             return new Promise((resolve, reject) => {
                 login(userInfo).then(response => {
                     const data = response.data || {};
-                    console.log(999, data, data[TokenKey]);
                     setToken(data[TokenKey]);
                     commit('SET_TOKEN', data[TokenKey]);
                     resolve();
@@ -83,6 +83,7 @@ const user = {
         FedLogOut({ commit }) {
             return new Promise(resolve => {
                 commit('SET_TOKEN', '');
+                commit('SET_ROLES', []);
                 removeToken();
                 resolve();
             });

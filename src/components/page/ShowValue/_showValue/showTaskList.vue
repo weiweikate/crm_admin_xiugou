@@ -98,7 +98,7 @@
             // 查看分享任务人
             showUser(row) {
                 if (row.userId) {
-                    this.$router.push({ name: 'memberDetail', query: { id: row.userId }});
+                    this.$router.push({name: 'memberDetail', query: {memberToInfo: row.userId}});
                 }
             },
             // 查看秀值账户
@@ -106,7 +106,7 @@
                 if (row.userId) {
                     const memberInfo = {};
                     memberInfo.memberId = row.userId;
-                    memberInfo.nickname = row.accountInfo.realname || '';
+                    memberInfo.nickname = row.realname || '';
                     sessionStorage.setItem('memberAccMsg', memberInfo);
                     this.$router.push({ name: 'showValueAccount', query: { memberAccMsg: memberInfo }});
                 }

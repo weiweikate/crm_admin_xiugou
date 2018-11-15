@@ -671,7 +671,7 @@ export const asyncRouterMap = [
                 name: 'memberDetail',
                 path: '/memberDetail',
                 component: resolve => require(['../components/page/MemberManage/MemberManage/MemberDetail.vue'], resolve),
-                meta: { title: '会员详情' }
+                meta: { title: '会员详情', keepAlive: true }
             },
             {
                 name: 'memberTree',

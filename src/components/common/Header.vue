@@ -65,7 +65,7 @@ export default {
     },
     computed: {
         ...mapGetters([
-            'user',
+            'user'
         ]),
         username() {
             const username = this.user.name;
@@ -74,6 +74,7 @@ export default {
     },
     created() {
         this.getNoReadNum();
+        console.log(this.user.name);
     },
     methods: {
     // 用户名下拉菜单选择事件
