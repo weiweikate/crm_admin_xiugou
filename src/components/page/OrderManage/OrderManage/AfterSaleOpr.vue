@@ -631,17 +631,6 @@
                     this.opr = this.returnProduct.type;
                     this.status = this.returnProduct.status;
                     this.id = this.returnProduct.id;
-                    const tmpType = '';
-                    // if ((res.data.payType & 1) != 0) {
-                    //     tmpType += `三方支付`;
-                    // }
-                    // if ((res.data.payType & 2) != 0) {
-                    //     tmpType += `+余额支付`;
-                    // }
-                    // if ((res.data.payType & 4) != 0) {
-                    //     tmpType += `+1元券支付`;
-                    // }
-                    this.payType = this.getType(res.data.payType);
                     this.getProgressStu(this.status);
                     if (this.status == 2 && this.returnProduct.outTime) {
                         this.getDistanceTime(this.returnProduct.outTime);
@@ -652,29 +641,17 @@
             },
             getType(value) {
                 let result = '';
-                switch (value) {
-                    case 1:
-                        result = '三方支付';
-                        break;
-                    case 2:
-                        result = '余额支付';
-                        break;
-                    case 3:
-                        result = '余额支付+三方支付';
-                        break;
-                    case 4:
-                        result = '1元券支付';
-                        break;
-                    case 5:
-                        result = '三方支付+1元券支付';
-                        break;
-                    case 6:
-                        result = '余额支付+1元券支付';
-                        break;
-                    case 7:
-                        result = '余额支付+三方支付+1元券支付';
-                        break;
+                if ((value & 1) != 0) {
+                    result += '三方支付+';
                 }
+                if ((value & 2) != 0) {
+                    result += '余额支付+';
+                }
+                if ((value & 4) != 0) {
+                    result += '1元券支付+';
+                }
+                if (result != '') result = result.slice(0, -1);
+                console.log(result)
                 return result;
             },
             changeMoney(num, pre) {
@@ -692,34 +669,6 @@
                 }
             },
             // 判断进度条状态,s状态  num1买家退货单号  num2卖家单号
-            // getProgressStu(status, type) {
-            // if (status == 1) {
-            //     this.boolFirst = true;
-            //     this.boolSec = true;
-            //     if (num1) {
-            //         this.boolThr = true;
-            //     } else {
-            //         this.boolThr = false;
-            //     }
-            //     if (num2) {
-            //         this.boolFor = true;
-            //         this.boolFif = true;
-            //     } else {
-            //         this.boolFor = false;
-            //         this.boolFif = false;
-            //     }
-            // } else {
-            //     this.boolFirst = true;
-            //     this.boolSec = true;
-            //     this.boolThr = true;
-            //     this.boolFor = true;
-            //     if (type == 1) {
-            //         if (s > 3) {
-            //             this.boolFif = true;
-            //         }
-            //     }
-            // }
-            // },
             getProgressStu(status) {
                 switch (status) {
                     case 1:
@@ -794,6 +743,7 @@
                 };
                 request.makeSureRefund(data).then(res => {
                     this.refundForm = res.data;
+                    this.payType = this.getType(res.data.payType);
                     this.value.push(this.refundForm.returnBalance, this.refundForm.returnAmounts, this.refundForm.returnTokenCoin);
                 }).catch(err => {
                     console.log(err);

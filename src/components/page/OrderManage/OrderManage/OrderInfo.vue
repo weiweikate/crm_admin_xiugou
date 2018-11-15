@@ -590,16 +590,6 @@
                 };
                 request.businessRefund(data).then(res => {
                     this.refundForm = res.data;
-                    const tmpType = '';
-                    // if ((res.data.payType & 1) != 0) {
-                    //     tmpType += `三方支付`;
-                    // }
-                    // if ((res.data.payType & 2) != 0) {
-                    //     tmpType += `余额支付`;
-                    // }
-                    // if ((res.data.payType & 4) != 0) {
-                    //     tmpType += `1元券支付`;
-                    // }
                     this.payType = this.getType(res.data.payType);
                     this.value.push(this.refundForm.returnBalance, this.refundForm.returnAmounts, this.refundForm.returnTokenCoin);
                 }).catch(err => {
@@ -608,29 +598,16 @@
             },
             getType(value) {
                 let result = '';
-                switch (value) {
-                    case 1:
-                        result = '三方支付';
-                        break;
-                    case 2:
-                        result = '余额支付';
-                        break;
-                    case 3:
-                        result = '余额支付+三方支付';
-                        break;
-                    case 4:
-                        result = '1元券支付';
-                        break;
-                    case 5:
-                        result = '三方支付+1元券支付';
-                        break;
-                    case 6:
-                        result = '余额支付+1元券支付';
-                        break;
-                    case 7:
-                        result = '余额支付+三方支付+1元券支付';
-                        break;
+                if ((value & 1) != 0) {
+                    result += '三方支付+';
                 }
+                if ((value & 2) != 0) {
+                    result += '余额支付+';
+                }
+                if ((value & 4) != 0) {
+                    result += '1元券支付+';
+                }
+                if (result != '') result = result.slice(0, -1);
                 return result;
             },
             // 商家退款
