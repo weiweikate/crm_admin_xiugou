@@ -35,7 +35,7 @@
                             <el-radio label="2">平台承担运费</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item class="address-item" label="是否满包邮" v-if="form.freightType==1||checked">
+                    <el-form-item class="address-item" label="是否满包邮" v-if="form.freightType==1">
                         <el-checkbox v-model="checked">满
                             <el-input class="small-inp" :disabled="!checked" v-model="freightFreePrice"></el-input>
                             元包邮</el-checkbox>
@@ -221,11 +221,14 @@
             };
         },
         activated() {
-            const that = this;
-            that.id = that.$route.query.templateId || sessionStorage.getItem('templateId');
-            that.tableData = [];
-            that.rows = 0;
-            that.getDetail();
+            this.id = this.$route.query.templateId || sessionStorage.getItem('templateId');
+            this.tableData = [];
+            this.startUnit = '';
+            this.startPrice = '';
+            this.nextUnit = '';
+            this.nextPirce = '';
+            this.rows = 0;
+            this.getDetail();
         },
         methods: {
             // 获取详情
@@ -247,6 +250,8 @@
                     that.checked = freightTemplate.freightType == 3;
                     if (that.checked) {
                         that.form.freightType = '1';
+                    } else {
+                        that.freightFreePrice = '';
                     }
                     // that.detailData = res.data.data.userProduct;
                     const reginArr = [];

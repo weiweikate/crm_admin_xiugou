@@ -35,7 +35,7 @@
                             <el-radio label="2">平台承担运费</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item class="address-item" label="是否满包邮" v-if="form.freightType==1||checked">
+                    <el-form-item class="address-item" label="是否满包邮" v-if="form.freightType==1">
                         <el-checkbox v-model="checked">满
                             <el-input class="small-inp" :disabled="!checked" v-model="freightFreePrice"></el-input>
                             元包邮</el-checkbox>
@@ -96,7 +96,7 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
-                            <div><span class="color-blue" @click="addSetting()">增加制定省市运费设置</span></div>
+                            <div><span class="color-blue" @click="addSetting">增加制定省市运费设置</span></div>
                         </el-form-item>
                         <el-form-item class="address-item" label="不支持配送" prop="pushCountry">
                             <div style="margin-left: 112px">
