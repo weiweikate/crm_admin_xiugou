@@ -134,6 +134,7 @@
     import request from '@/http/http';
     import region from '@/components/common/Region.vue';
     import { myMixinTable } from '@/JS/commom';
+    import { mapGetters } from 'vuex';
 
     export default {
         components: { vBreadcrumb, region },
@@ -252,6 +253,11 @@
                 headData: []// 规格表头
             };
         },
+        computed: {
+            ...mapGetters([
+                'user'
+            ])
+        },
         activated() {
             this.id = this.$route.query.reportId || sessionStorage.getItem('reportId');
             this.type = this.$route.query.type == 'add' ? 1 : 2;
@@ -327,9 +333,9 @@
                     this.nav[2] = '编辑入库单';
                     this.getDetail();
                 }
-                this.form.contactUserName = localStorage.getItem('ms_username');
-                this.form.contactPhone = localStorage.getItem('ms_userPhone');
-                this.form.contactUserId = localStorage.getItem('ms_userID');
+                this.form.contactUserName = this.user.name;
+                this.form.contactPhone = this.user.telephone;
+                this.form.contactUserId = this.user.id;
             },
             resetValue() {
                 this.form = {

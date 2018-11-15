@@ -126,10 +126,10 @@
         <el-dialog :title="title" :visible.sync="mask">
             <el-form v-model="formMask">
                 <el-form-item label="管理员手机" v-if="code">
-                    <span>{{formMask.phone}}</span>
+                    <span>{{userPhone}}</span>
                 </el-form-item>
                 <el-form-item  v-else>
-                    <span>已向手机号{{formMask.phone}}发送验证码，请注意查收</span>
+                    <span>已向手机号{{userPhone}}发送验证码，请注意查收</span>
                 </el-form-item>
                 <el-form-item>
                     <el-input v-model="formMask.verifyCode" placeholder="请输入验证码" auto-complete="off"></el-input>
@@ -150,6 +150,7 @@ import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
+import { mapGetters } from 'vuex';
 
 export default {
     components: { vBreadcrumb },
@@ -174,6 +175,15 @@ export default {
             codeTime: 0,
             code: true
         };
+    },
+    computed: {
+        ...mapGetters([
+            'user'
+        ]),
+        userPhone() {
+            const userPhone = this.user.telephone;
+            return userPhone;
+        }
     },
     activated() {
         this.getList(this.page.currentPage);
@@ -231,7 +241,6 @@ export default {
         // 停用启用
         openOrClose(row, num) {
             this.mask = true;
-            this.formMask.phone = localStorage.getItem('ms_userPhone');
             this.formMask.id = row.id;
             this.formMask.status = row.status;
             this.title = num == 1 ? '停用仓库' : '启用仓库';
