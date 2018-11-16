@@ -31,12 +31,12 @@
                         <template slot-scope="scope">
                             <template v-if="scope.row.status==0">待审核</template>
                             <template v-if="scope.row.status==1">已通过</template>
-                            <template v-if="scope.row.status==2">未通过</template>
+                            <template v-if="scope.row.status==2">已驳回</template>
                         </template>
                     </el-table-column>
                     <el-table-column  label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button @click="realName(scope.row)" type="primary">详细信息</el-button>
+                            <el-button v-if="scope.row.status!=2" @click="realName(scope.row)" type="primary">详细信息</el-button>
                             <el-button v-if="scope.row.status==1" @click="refuseAudit(scope.row)" type="danger">驳回认证</el-button>
                         </template>
                     </el-table-column>

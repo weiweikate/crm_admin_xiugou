@@ -160,9 +160,10 @@
                 const data = that.form;
                 data.page = val;
                 data.pageSize = this.page.pageSize;
-                data.provinceId = this.address[0] == '0' ? '' : this.address[0];
-                data.cityId = this.address[1];
-                data.areaId = this.address[2];
+                // 沈耀鑫要求改成Code
+                data.provinceCode = this.address[0] == '0' ? '' : this.address[0];
+                data.cityCode = this.address[1];
+                data.areaCode = this.address[2];
                 that.tableLoading = true;
                 request.queryProductSupplierList(data).then(res => {
                     that.tableLoading = false;

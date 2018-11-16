@@ -1,34 +1,33 @@
 <template>
   <div>
-      <el-button @click="geInfo" type="success">demo</el-button>
-      <region @regionMsg='getRegion' :regionMsg='address'></region>
+      <el-upload
+          action="/admin/common/upload/oss"
+          :show-file-list="false"
+          :before-upload="file=>beforeUploadImage(file, imgList1)"
+          :on-progress="(event, file)=>onProgressImage(event, file, imgList1)"
+          :on-error="(res, file) =>onErrorImage(res, file,imgList1)"
+          :on-success="(res, file) =>onSuccessImage(res, file,imgList1)">
+          <!--<img v-if="imageUrl" :src="imageUrl" class="avatar">-->
+          <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+      </el-upload>
+      <el-button type="primary" @click="getImg">button</el-button>
   </div>
 </template>
 
 <script>
-import request from '@/http/http.js';
-import region from '@/components/common/Region';
+import { uploadImage } from '@/JS/commom';
 export default {
-    components: {region},
-
+    mixins: [uploadImage],
     data() {
         return {
-            address: []
+            imgList1: 'imgList1',
+            imgList1Size: ['335*251', '750*750'],
+            imgList2: 'imgList2'
         };
     },
-
     methods: {
-        geInfo() {
-            request.LOGIN({ name: 'asdasd' }).then(res => {
-                console.log(res);
-            }).catch(err => {
-                console.log(err);
-            });
-        },
-        // 获取省市区
-        getRegion(msg) {
-            this.address = msg;
-            console.log(this.address);
+        getImg() {
+            console.log(this.imageInfoMix);
         }
     }
 };
