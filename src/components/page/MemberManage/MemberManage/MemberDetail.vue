@@ -102,8 +102,8 @@
                         <h3>拼店信息</h3>
                     </div>
                     <div class="item-row">
-                        <div class="item" style="cursor: pointer;color: #20a0ff" @click="shopInfo" v-if="dealer.roleType == 1">参与店铺：{{dealer.storeName}}</div>
-                        <div class="item" style="cursor: pointer;color: #20a0ff" @click="shopInfo" v-if="dealer.roleType == 0">开设店铺：{{dealer.storeName}}</div>
+                        <div class="item" style="cursor: pointer;color: #20a0ff" v-if="dealer.roleType == 1">参与店铺：{{dealer.storeName}}</div>
+                        <div class="item" style="cursor: pointer;color: #20a0ff" v-if="dealer.roleType == 0">开设店铺：{{dealer.storeName}}</div>
                     </div>
                 </div>
                 <div class="clearfix"></div>
