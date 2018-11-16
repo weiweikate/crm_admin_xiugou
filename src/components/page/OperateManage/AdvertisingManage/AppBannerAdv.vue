@@ -70,12 +70,13 @@
             <el-form v-model="form" label-width="100px">
                 <el-form-item label="选择banner图" class="icon-area" v-if="pageType!=8">
                     <el-input readonly v-model="form.imgUrl" placeholder="上传图片" auto-complete="off"></el-input>
-                    <el-upload class="icon-uploader"
-                               :action="uploadImg"
-                               :on-success="handleAvatarSuccess"
-                               :before-upload="beforeAvatarUpload">
-                        <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
-                    </el-upload>
+                    <!--<el-upload class="icon-uploader"-->
+                               <!--:action="uploadImg"-->
+                               <!--:on-success="handleAvatarSuccess"-->
+                               <!--:before-upload="beforeAvatarUpload">-->
+                        <!--<el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>-->
+                    <!--</el-upload>-->
+                    <upload @img="imgBanner"></upload>
                 </el-form-item>
                 <div class="inf-area" v-if="pageType!=8">
                     <img :src="form.imgUrl" alt="" class="banner-img">
@@ -154,15 +155,17 @@
     import deletetoast from '@/components/common/DeleteToast';
     import * as api from '@/api/api.js';
     import moment from 'moment';
-    import { myMixinTable, queryDictonary, beforeAvatarUpload } from '@/JS/commom';
+    import { myMixinTable, queryDictonary } from '@/JS/commom';
     import request from '@/http/http.js';
+    import upload from '@/components/common/upload';
 
     export default {
         components: {
             vBreadcrumb,
-            deletetoast
+            deletetoast,
+            upload
         },
-        mixins: [myMixinTable, queryDictonary, beforeAvatarUpload],
+        mixins: [myMixinTable, queryDictonary],
 
         data() {
             return {
@@ -335,6 +338,8 @@
                 this.id = row.id;
                 this.mask = true;
                 this.form.imgUrl = row.imgUrl;
+                this.form.width = row.width;
+                this.form.height = row.height;
                 this.form.linkType = row.linkType;
                 this.form.linkTypeCode = row.linkTypeCode;
                 this.form.remark = row.remark;
@@ -360,6 +365,12 @@
                     url = 'updateAdvertisement';
                 }
                 data.type = this.pageType;
+                if (this.pageType != 8) {
+                    if (!this.form.imgUrl) {
+                        this.$message.warning('请上传图片');
+                        return;
+                    }
+                }
                 if (this.form.date && this.form.date.length) {
                     data.showBegintime = this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD HH:mm:ss') : '';
                     data.showEndtime = this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss') : '';
@@ -445,6 +456,11 @@
                 } else {
                     this.isShowClear = false;
                 }
+            },
+            imgBanner(imgUrl) {
+                this.form.imgUrl = imgUrl[0];
+                this.form.width = imgUrl[1];
+                this.form.height = imgUrl[2];
             }
         }
     };
@@ -490,9 +506,6 @@
             margin: 0;
             color: #fff;
             font-size: 14px;
-        }
-        .el-upload-list {
-            display: none;
         }
         .img {
             width: 200px;
@@ -542,7 +555,7 @@
         }
         .icon-uploader {
             float: right;
-            margin-right: 31px;
+            margin-right: 31px !important;
             height: 33px;
         }
         .icon-uploader .el-button--small {
