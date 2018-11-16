@@ -1298,7 +1298,7 @@ export const asyncRouterMap = [
                 name: 'orderInfo',
                 path: '/orderInfo',
                 component: resolve => require(['../components/page/OrderManage/OrderManage/OrderInfo.vue'], resolve),
-                meta: { title: '订单详情' }
+                meta: { title: '订单详情', keepAlive: true }
             },
             {
                 name: 'afterSaleOpr',
@@ -1317,7 +1317,7 @@ export const asyncRouterMap = [
                 name: 'giftOrderInfo',
                 path: '/giftOrderInfo',
                 component: resolve => require(['../components/page/OrderManage/GiftOrderManage/GiftOrderInfo.vue'], resolve),
-                meta: { title: '礼包订单详情' }
+                meta: { title: '礼包订单详情', keepAlive: true }
             },
             {
                 name: 'cloudWarHouseMange',

@@ -120,7 +120,7 @@
             },
             // 取消
             cancel() {
-                this.getInfo();
+                this.$router.push('signInManage');
             }
         }
     };

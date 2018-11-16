@@ -134,7 +134,7 @@
                             余额支付:{{scope.row.balance | handleMoney}}<br/>
                             1元券抵扣:{{scope.row.tokenCoin  | handleMoney}}<br/>
                             优惠券抵扣:{{scope.row.couponPrice | handleMoney}}<br/>
-                            {{scope.row.type}}:{{scope.row.amounts | handleMoney}}
+                            <span v-if="scope.row.type != ''">{{scope.row.type}}:{{scope.row.amounts | handleMoney}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" align="center">
@@ -283,7 +283,7 @@
             };
         },
 
-        activated() {
+        created() {
             // 获取订单信息
             this.orderId =
                 this.$route.query.giftOrderInfoId || sessionStorage.getItem('giftOrderInfoId');
@@ -291,7 +291,7 @@
             this.getDictionaryData();
         },
 
-        deactivated() {
+        destroyed() {
             clearInterval(this.freeTimer);
             clearInterval(this.confirmTimer);
         },
@@ -340,6 +340,7 @@
                     this.orderMsg.expressNo = res.data.expressNo; // 物流单号
                     this.tableData = [];
                     // this.pickedUp = res.data.pickedUp;
+                    res.data.orderPayRecord = res.data.orderPayRecord ? res.data.orderPayRecord : {};
                     for (let i = 0; i < res.data.orderProductList.length; i++) {
                         res.data.orderProductList[i].orderProductPriceList.forEach((v, k) => {
                             v.totalPrice = res.data.totalPrice;
@@ -349,9 +350,9 @@
                             if ((!v.finishTime && v.status > 1 && v.status < 6) || present < v.finishTime || v.returnProductId && (v.returnProductStatus == 7 || v.returnProductStatus == 8)) {
                                 v.isBusinessRefund = true;
                             }
-                            v.tokenCoin = res.data.orderPayRecord.tokenCoin == null ? '0' : res.data.orderPayRecord.tokenCoin;
-                            v.balance = res.data.orderPayRecord.balance == null ? '0' : res.data.orderPayRecord.balance;
-                            v.userScore = res.data.orderPayRecord.userScore == null ? '0' : res.data.orderPayRecord.userScore;
+                            v.tokenCoin = res.data.orderPayRecord.tokenCoin ? res.data.orderPayRecord.tokenCoin : '0';
+                            v.balance = res.data.orderPayRecord.balance ? res.data.orderPayRecord.balance : '0';
+                            v.userScore = res.data.orderPayRecord.userScore ? res.data.orderPayRecord.userScore : '0';
                             let tmpType = '';
                             if ((res.data.orderPayRecord.type & 1) != 0) {
                                 tmpType += `纯平台+`;
@@ -370,10 +371,8 @@
                             }
                             if (tmpType !== '') tmpType = tmpType.slice(0, -1);
                             v.type = tmpType;
-                            v.amounts =
-                                res.data.amounts == null ? '0' : res.data.amounts;
-                            v.couponPrice =
-                                res.data.couponPrice == null ? '0' : res.data.couponPrice;
+                            v.amounts = res.data.amounts ? res.data.amounts : '0';
+                            v.couponPrice = res.data.couponPrice ? res.data.couponPrice : '0';
                             v.dealerName =
                                 res.data.dealerName == null ? '/' : res.data.dealerName;
                             v.dealerPhone =
