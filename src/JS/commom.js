@@ -22,8 +22,8 @@ const myMixinTable = {
             console.log(`每页 ${val} 条`);
         },
         handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
             this.page.currentPage = val;
+            console.log(`当前页: ${this.page.currentPage}`);
             this.getList(val);
         },
         getTbaleHeight() {
