@@ -105,7 +105,7 @@
                             </div>
                         </el-form-item>
                         <el-form-item label="是否启用">
-                            <el-radio-group v-model="form.status">
+                            <el-radio-group v-model="form.status" :disabled="form.num!=0">
                                 <el-radio label="1">启用</el-radio>
                                 <el-radio label="2">关闭</el-radio>
                             </el-radio-group>
@@ -242,6 +242,7 @@
                     that.loading = false;
                     const freightTemplate = res.data;
                     that.form.name = freightTemplate.name;
+                    that.form.num = freightTemplate.num;
                     that.form.country = freightTemplate.country.toString();
                     that.form.calcType = freightTemplate.calcType ? freightTemplate.calcType.toString() : '1';
                     that.form.freightType = freightTemplate.freightType.toString();
