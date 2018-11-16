@@ -4,13 +4,14 @@
         <el-form :model="bannerForm" label-width="130px">
           <el-form-item prop="img" label="添加banner" >
               <el-input class="my-inp" v-model="bannerForm.imgUrl" disabled placeholder="请上传图片"></el-input>
-              <el-upload class="icon-uploader"
-                          :action="uploadImg"
-                          :show-file-list="false"
-                          :on-success="handleAvatarSuccess"
-                          :before-upload="beforeAvatarUpload">
-                  <el-button style="width:100px;height:32px" size="small" type="primary">上传</el-button>
-              </el-upload>
+              <!--<el-upload class="icon-uploader"-->
+                          <!--:action="uploadImg"-->
+                          <!--:show-file-list="false"-->
+                          <!--:on-success="handleAvatarSuccess"-->
+                          <!--:before-upload="beforeAvatarUpload">-->
+                  <!--<el-button style="width:100px;height:32px" size="small" type="primary">上传</el-button>-->
+              <!--</el-upload>-->
+              <upload @img="imgBanner"></upload>
               <span style="color:#fe8080"><br/>建议图片750px*350px</span>
           </el-form-item>
           <el-form-item label=" " >
@@ -53,13 +54,14 @@
               <div class="del-area">
                   <span @click="delBanner(k)" class="del-btn">x</span>
             <el-input class="my-inp" v-model="v.bannerImg" disabled placeholder="请上传图片"></el-input>
-            <el-upload class="icon-uploader"
-                    :action="uploadImg"
-                    :show-file-list="false"
-                    :on-success="res=>uploadBanner(res,k)"
-                    :before-upload="beforeAvatarUpload">
-                <el-button style="width:100px;height:32px" size="small" type="primary">上传</el-button>
-            </el-upload>
+            <!--<el-upload class="icon-uploader"-->
+                    <!--:action="uploadImg"-->
+                    <!--:show-file-list="false"-->
+                    <!--:on-success="res=>uploadBanner(res,k)"-->
+                    <!--:before-upload="beforeAvatarUpload">-->
+                <!--<el-button style="width:100px;height:32px" size="small" type="primary">上传</el-button>-->
+            <!--</el-upload>-->
+                  <upload @img="imgUrl=>img(imgUrl,k)"></upload>
             <span style="color:#fe8080"><br/>建议图片750px*350px</span>
               </div>
           </el-form-item>
@@ -99,10 +101,12 @@
 <script>
 import * as api from '@/api/api.js';
 import request from '@/http/http.js';
-import { beforeAvatarUpload } from '@/JS/commom';
+// import { beforeAvatarUpload } from '@/JS/commom';
+import upload from '@/components/common/upload';
+
 export default {
-    components: {},
-    mixins: [beforeAvatarUpload],
+    components: { upload },
+    // mixins: [beforeAvatarUpload],
     props: ['name', 'tplData'],
 
     watch: {
@@ -122,7 +126,9 @@ export default {
             // banner
             bannerForm: {
                 imgUrl: '',
-                remark: ''
+                remark: '',
+                width: '',
+                height: ''
             },
             // 产品类型
             prodTypeList: [
@@ -137,7 +143,7 @@ export default {
                 navName: '',
                 topicBannerProducts: [{ prodCode: '', productType: 99 }],
                 type: '',
-                topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+                topicNavbarBannerList: [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }]
             }
         };
     },
@@ -150,11 +156,13 @@ export default {
             navName: '',
             topicBannerProducts: [{ prodCode: '', productType: 99 }],
             type: '',
-            topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+            topicNavbarBannerList: [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }]
         };
         if (this.tplData != 'add') {
             this.bannerForm.imgUrl = this.tplData.imgUrl;
             this.bannerForm.remark = this.tplData.remark;
+            this.bannerForm.width = this.tplData.width;
+            this.bannerForm.height = this.tplData.height;
             this.topicNavbarList = this.tplData.topicNavbarList[0];
             this.id = this.tplData.id;
         }
@@ -163,7 +171,7 @@ export default {
                 navName: '',
                 type: '',
                 topicBannerProducts: [{ prodCode: '', productType: 99 }],
-                topicNavbarBannerList: [{ bannerImg: '', topicBannerProductList: [] }]
+                topicNavbarBannerList: [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }]
             };
         }
     },
@@ -228,6 +236,8 @@ export default {
             data.name = this.pName;
             data.imgUrl = this.bannerForm.imgUrl;
             data.remark = this.bannerForm.remark;
+            data.width = this.bannerForm.width;
+            data.height = this.bannerForm.height;
             const temp = [];
             temp.push(this.topicNavbarList);
             data.topicNavbarList = temp;
@@ -244,7 +254,7 @@ export default {
         },
         // 添加banner
         addBanner() {
-            this.topicNavbarList.topicNavbarBannerList == undefined || null ? this.topicNavbarList.topicNavbarBannerList = [{ bannerImg: '', topicBannerProductList: [] }] : this.topicNavbarList.topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [] });
+            this.topicNavbarList.topicNavbarBannerList == undefined || null ? this.topicNavbarList.topicNavbarBannerList = [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }] : this.topicNavbarList.topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [] });
         },
         // 添加banner图产品
         addBannerProduct(index) {
@@ -272,6 +282,17 @@ export default {
         // 取消
         cancel() {
             this.$router.push('/topicManage');
+        },
+        imgBanner(imgUrl) {
+            this.bannerForm.imgUrl = imgUrl[0];
+            this.bannerForm.width = imgUrl[1];
+            this.bannerForm.height = imgUrl[2];
+        },
+        img(imgUrl, sIndex) {
+            this.topicNavbarList.topicNavbarBannerList[sIndex].bannerImg = imgUrl[0];
+            this.topicNavbarList.topicNavbarBannerList[sIndex].width = imgUrl[1];
+            this.topicNavbarList.topicNavbarBannerList[sIndex].height = imgUrl[2];
+            this.$set(this.topicNavbarList.topicNavbarBannerList, sIndex, this.topicNavbarList.topicNavbarBannerList[sIndex]);
         }
     }
 };

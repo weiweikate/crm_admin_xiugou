@@ -12,7 +12,7 @@ const path = require('path');
 // const baseURL = 'http://172.16.10.29:4080';
 // const baseURL = 'http://172.16.10.19:4080';
 const baseURL = 'http://testadmin.sharegoodsmall.com';
-// const baseURL = 'https://www.easy-mock.com/mock/5be2b23cee1b3d272cafccfa/crm';
+// -const baseURL = 'https://www.easy-mock.com/mock/5be2b23cee1b3d272cafccfa/crm';
 
 module.exports = {
     dev: {
