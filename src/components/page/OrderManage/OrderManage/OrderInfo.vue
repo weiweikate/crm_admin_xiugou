@@ -122,16 +122,28 @@
                     </el-table-column>
                     <el-table-column label="实收款" align="center">
                         <template slot-scope="scope">
-                            实收款:{{scope.row.totalPrice+scope.row.freightPrice | handleMoney}}<br/>
-                            （含运费:{{scope.row.freightPrice | handleMoney}}）
+                            <div v-if="orderStatus == 8">
+                                /
+                            </div>
+                            <div v-else>
+                                实收款:{{scope.row.totalPrice+scope.row.freightPrice | handleMoney}}<br/>
+                                （含运费:{{scope.row.freightPrice | handleMoney}}）
+                            </div>
+                            <!--实收款:{{scope.row.totalPrice+scope.row.freightPrice | handleMoney}}<br/>-->
+                            <!--（含运费:{{scope.row.freightPrice | handleMoney}}）-->
                         </template>
                     </el-table-column>
                     <el-table-column prop="id" label="支付详情" align="center">
                         <template slot-scope="scope">
-                            余额支付:{{scope.row.balance | handleMoney}}<br/>
-                            1元券抵扣:{{scope.row.tokenCoin  | handleMoney}}<br/>
-                            优惠券抵扣:{{scope.row.couponPrice | handleMoney}}<br/>
-                            <span v-if="scope.row.type != ''">{{scope.row.type}}:{{scope.row.amounts | handleMoney}}</span>
+                            <div v-if="orderStatus == 8">
+                                /
+                            </div>
+                            <div v-else>
+                                余额支付:{{scope.row.balance | handleMoney}}<br/>
+                                1元券抵扣:{{scope.row.tokenCoin  | handleMoney}}<br/>
+                                优惠券抵扣:{{scope.row.couponPrice | handleMoney}}<br/>
+                                <span v-if="scope.row.type != ''">{{scope.row.type}}:{{scope.row.amounts | handleMoney}}</span>
+                            </div>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" align="center">

@@ -33,7 +33,7 @@
                     </div>
                 </el-form-item>
                 <el-form-item>
-                    <el-button @click="getList(1)" type="primary">查询</el-button>
+                    <el-button @click="handleCurrentChange(1)" type="primary">查询</el-button>
                     <el-button type="primary">导出</el-button>
                     <!--<el-button @click="resetForm('form')">重置</el-button>-->
                 </el-form-item>
@@ -190,7 +190,6 @@ export default {
                 that.tableData = [];
                 that.tableData = res.data.data;
                 that.page.totalPage = res.data.totalNum;
-                that.page.currentPage = res.data.currentPage;
             }).catch(err => {
                 that.tableLoading = false;
                 console.log(err);
