@@ -10,6 +10,7 @@
           <!--<img v-if="imageUrl" :src="imageUrl" class="avatar">-->
           <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
       </el-upload>
+      <el-button type="primary" @click="getImg">button</el-button>
   </div>
 </template>
 
@@ -25,6 +26,9 @@ export default {
         };
     },
     methods: {
+        getImg() {
+            console.log(this.imageInfoMix);
+        }
     }
 };
 
