@@ -176,22 +176,21 @@ export default {
     methods: {
         // 获取列表
         getList(val) {
-            const that = this;
-            const data = that.form;
+            let data = {
+                ...this.form
+            }
             data.page = val;
-            data.pageSize = this.page.pageSize;
-            data.levelId = that.exportForm.levelId;
             data.provinceId = this.address[0] == '0' ? '' : this.address[0];
             data.cityId = this.address[1];
             data.areaId = this.address[2];
-            that.tableLoading = true;
+            this.tableLoading = true;
             request.queryUserPageList(data).then(res => {
-                that.tableLoading = false;
-                that.tableData = [];
-                that.tableData = res.data.data;
-                that.page.totalPage = res.data.totalNum;
+                this.tableLoading = false;
+                this.tableData = [];
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
             }).catch(err => {
-                that.tableLoading = false;
+                this.tableLoading = false;
                 console.log(err);
             });
         },

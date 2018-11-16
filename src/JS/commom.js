@@ -76,4 +76,122 @@ const beforeAvatarUpload = {
         }
     }
 };
-export { getUserId, myMixinTable, queryDictonary, beforeAvatarUpload };
+// 上传图片
+const uploadImage = {
+    data() {
+        return {
+            imageInfoMix: {}
+        };
+    },
+    methods: {
+        /**
+         * 上传之前
+         * @param file 文件
+         * @param name 保存图片的字段
+         * @param size 尺寸限制 e.g. ['100*100','200*200']
+         * @returns {Promise<any | never>}
+         */
+        beforeUploadImage(file, name, size) {
+            const that = this;
+            if (!this.imageInfoMix[name] && !(this.imageInfoMix[name] instanceof Array)) {
+                this.imageInfoMix[name] = [];
+            }
+            return new Promise(function(resolve, reject) {
+                if (file.type.split('/')[0] != 'image') {
+                    reject('请上传图片!');
+                }
+                const _URL = window.URL || window.webkitURL;
+                const image = new Image();
+                image.onload = function() {
+                    const realWidth = image.width;
+                    const realHeight = image.height;
+                    const realSize = `${realWidth}*${realHeight}`;
+                    if (size) {
+                        if (size.includes(realSize)) {
+                            that.imageInfoMix[name].push({
+                                uid: file.uid,
+                                width: realWidth,
+                                height: realHeight,
+                                size: `${Math.ceil(file.size / 1024)}kb`,
+                                url: '',
+                                uploading: true
+                            });
+                            resolve();
+                        } else {
+                            reject(`${file.name}上传图片尺寸不符合!`);
+                        }
+                    } else {
+                        that.imageInfoMix[name].push({
+                            uid: file.uid,
+                            width: realWidth,
+                            height: realHeight,
+                            size: `${Math.ceil(file.size / 1024)}kb`,
+                            url: '',
+                            upload: false
+                        });
+                        resolve();
+                    }
+                };
+                image.src = _URL.createObjectURL(file);
+            }).then(() => {
+                return file;
+            }, (err) => {
+                console.log(err);
+                this.$notify.warning(err);
+                return Promise.reject();
+            }
+            );
+        },
+        /**
+         * 正在上传
+         * @param file 文件
+         * @param name 保存图片的字段
+         * @param event 上传事件
+         * @returns {Promise<any | never>}
+         */
+        onProgressImage(event, file, name) {
+            console.log('正在上传');
+            const list = this.imageInfoMix[name];
+            list.forEach(v => {
+                if (v.uid === file.uid) {
+                    this.$notify.warning(`${file.name}正在上传(${event.percent}%)`);
+                }
+            });
+        },
+        /**
+         * 上传成功
+         * @param file 文件
+         * @param name 保存图片的字段
+         * @param res 接口返回值
+         * @returns {Promise<any | never>}
+         */
+        onSuccessImage(res, file, name) {
+            const list = this.imageInfoMix[name];
+            list.forEach(v => {
+                if (v.uid === file.uid) {
+                    v.url = res.data;
+                    v.upload = true;
+                    this.$notify.success(`${file.name}上传成功`);
+                }
+            });
+        },
+        /**
+         * 上传失败
+         * @param file 文件
+         * @param name 保存图片的字段
+         * @param res 接口返回值
+         * @returns {Promise<any | never>}
+         */
+        onErrorImage(res, file, name) {
+            const list = this.imageInfoMix[name];
+            list.forEach(v => {
+                if (v.uid === file.uid) {
+                    v.url = res.data;
+                    v.upload = false;
+                    this.$notify.error(`${file.name}上传失败`);
+                }
+            });
+        }
+    }
+};
+export { getUserId, myMixinTable, queryDictonary, beforeAvatarUpload, uploadImage };
