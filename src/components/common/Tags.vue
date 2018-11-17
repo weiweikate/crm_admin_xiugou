@@ -44,7 +44,8 @@
                 const delItem = this.tagsList.splice(index, 1)[0];
                 const item = this.tagsList[index] ? this.tagsList[index] : this.tagsList[index - 1];
                 if (item) {
-                    delItem.path === this.$route.path && this.$router.push(item.path);
+                    console.log(item.path, item.query);
+                    this.$router.push({ name: item.name, query: item.query }) && delItem.path === this.$route.path;
                 } else {
                     this.$router.push('/dashboard');
                 }
