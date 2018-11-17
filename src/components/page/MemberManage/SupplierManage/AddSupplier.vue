@@ -119,7 +119,7 @@
             },
             // 供应商地址选择
             supplierArea() {
-                this.areaDisabled = this.form.country === 1;
+                this.areaDisabled = this.form.country === '1';
             },
             checkPhone() {
                 const that = this;
