@@ -63,7 +63,7 @@
                         </el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('shopInfo', 'shopInfo')"
+                        <el-button type="primary" @click="$router.push('showMsg')"
                                    style="margin-left: 0">店铺信息
                         </el-button>
                     </div>
@@ -102,8 +102,8 @@
                         <h3>拼店信息</h3>
                     </div>
                     <div class="item-row">
-                        <div class="item" style="cursor: pointer;color: #20a0ff" v-if="dealer.roleType == 1">参与店铺：{{dealer.storeName}}</div>
-                        <div class="item" style="cursor: pointer;color: #20a0ff" v-if="dealer.roleType == 0">开设店铺：{{dealer.storeName}}</div>
+                        <div class="item" @click="shopInfo(dealer.storeId)" style="cursor: pointer;color: #20a0ff" v-if="dealer.roleType == 1">参与店铺：{{dealer.storeName}}</div>
+                        <div class="item" @click="shopInfo(dealer.storeId)" style="cursor: pointer;color: #20a0ff" v-if="dealer.roleType == 0">开设店铺：{{dealer.storeName}}</div>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -229,6 +229,10 @@
             // 修改授权信息
             updateAuthorInf() {
                 this.isShowEditAuthor = true;
+            },
+            // 开设店铺信息
+            shopInfo(storeId) {
+                this.$router.push({ name: 'shopInfo', query: { shopInfoId: storeId }});
             },
             // 页面跳转
             btnClicked(page, paramName) {
