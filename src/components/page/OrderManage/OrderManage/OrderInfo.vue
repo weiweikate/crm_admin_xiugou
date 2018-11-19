@@ -43,7 +43,6 @@
                 <div style="clear: both;"></div>
                 <div style="margin-left: 130px;margin-top: 10px">
                     <el-button type="primary" @click="changeColor">保存</el-button>
-                    <el-button type="success" @click="cancel">取消</el-button>
                 </div>
                 <!-- <span class="star" :style="{color:orderMsg.star}">★</span>
                 <span class="tip">备注：</span>
@@ -295,8 +294,7 @@
                 // returnType状态
                 returnTypeArr: ['退款', '退货', '换货'],
                 // 售后状态
-                afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭'],
-                remark: []
+                afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭']
             };
         },
 
@@ -344,8 +342,6 @@
                     }${res.data.storehouseCity}${res.data.storehouseArea}${
                         res.data.storehouseAddress
                     }`;
-                    this.remark[0] = res.data.adminStars;
-                    this.remark[1] = res.data.adminRemark;
                     this.orderMsg.orderNum = res.data.orderNum;
                     this.orderMsg.createTime = res.data.createTime; // 创建时间
                     this.orderMsg.payTime = res.data.payTime; // 第三方支付时间
@@ -578,11 +574,6 @@
                 }).catch(err => {
                     console.log(err);
                 });
-            },
-            // 取消
-            cancel() {
-                this.orderMsg.star = this.remark[0];
-                this.orderMsg.adminRemark = this.remark[1];
             },
             // 产品报损数据字典
             async getDictionaryData() {
