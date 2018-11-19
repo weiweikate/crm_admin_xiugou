@@ -33,8 +33,8 @@
                         <img v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
                     <div class="tree-detail-area">
-                        <div>用户名：{{dealerAndUp.nickname}}</div>
-                        <div>用户ID：{{dealerAndUp.id}}<span>授权号：{{dealerAndUp.code}}</span></div>
+                        <div>用户名：{{upUser.nickname}}</div>
+                        <div>用户ID：{{upUser.id}}<span>授权号：{{upUser.code}}</span></div>
                     </div>
                     <div class="clearfix"></div>
                 </div>
