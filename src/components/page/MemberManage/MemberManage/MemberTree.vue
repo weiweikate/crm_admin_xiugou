@@ -192,7 +192,7 @@
             // 跳到详情页
             toDetail(id) {
                 localStorage.setItem('memberDetail', id);
-                this.$router.push({ path: '/memberDetail', query: { id: id }});
+                this.$router.push({ path: '/memberDetail', query: { memberToInfo: id }});
             }
         }
     };

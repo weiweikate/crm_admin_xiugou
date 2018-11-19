@@ -107,7 +107,7 @@
             // 跳到用户详情页面
             toUserDetail(item) {
                 localStorage.setItem('memberDetail', item.id);
-                this.$router.push({ path: '/memberDetail', query: { id: item.id }});
+                this.$router.push({ path: '/memberDetail', query: { memberToInfo: item.id }});
             }
         }
     };
