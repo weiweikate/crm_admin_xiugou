@@ -73,8 +73,8 @@
             },
             //   提交表单
             submitForm() {
-                const int = /^(0|[1-9]\d*)$/;
-                const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
+                const int = /^([1-9]\d*)$/;
+                const reg = /^([1-9]\d*)([.]{1}[1-9]{1,2})?$/;
                 if (!int.test(this.storeStartNum) || !reg.test(this.storeDeposit)) {
                     this.$message.warning('请输入合法数据!');
                     return;
