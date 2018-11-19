@@ -39,7 +39,11 @@
                     <span slot="reference" style="cursor:pointer"><span class="star" :style="{color:orderMsg.star}">★</span></span>
                     <span v-for="(v,k) in markArr" :key="k" @click="changeColor(1,v)" :style="{color:v.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
                 </el-popover>
-                <el-input v-model="orderMsg.adminRemark" type="textarea" @blur="changeColor()" placeholder="请输入备注" :rows="5" style="width:50%;float:right;margin-right:42%"></el-input>
+                <el-input v-model="orderMsg.adminRemark" type="textarea" placeholder="请输入备注" :rows="5" style="width:50%;float:right;margin-right:42%"></el-input>
+                <div style="clear: both;"></div>
+                <div style="margin-left: 130px;margin-top: 10px">
+                    <el-button type="primary" @click="changeColor">保存</el-button>
+                </div>
                 <!-- <span class="star" :style="{color:orderMsg.star}">★</span>
                 <span class="tip">备注：</span>
                 <div class="tip-content">{{orderMsg.adminRemark}}</div> -->
