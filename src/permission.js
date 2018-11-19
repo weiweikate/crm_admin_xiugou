@@ -19,7 +19,7 @@ router.beforeEach((to, from, next) => {
             next({ path: '/' });
             NProgress.done(); // if current page is dashboard will not trigger	afterEach hook, so manually handle it
         } else {
-            console.log('判断用户权限',store.getters.roles);
+            console.log('判断用户权限', store.getters.roles);
             if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
                 console.log('重新拉取用户信息')
                 store.dispatch('GetInfo').then(res => { // 拉取user_info

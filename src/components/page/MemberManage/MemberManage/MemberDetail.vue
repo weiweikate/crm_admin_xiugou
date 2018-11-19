@@ -203,7 +203,6 @@
             },
             // 获取详情
             getDetail() {
-                // todo  缺少开设店铺字段
                 const data = {
                     id: this.id
                 };
