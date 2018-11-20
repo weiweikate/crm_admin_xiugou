@@ -163,8 +163,9 @@
                 </el-upload>
                 <div class="pro-title">礼包可购买角色设置</div>
                 <el-form-item>
+                    <el-checkbox  v-model="checkedAllUser" @change="selectedAlLevel">全选</el-checkbox>
                     <el-checkbox-group v-model="chectedUser">
-                        <el-checkbox v-for="(v,k) in userLevel" :label="v.id" :key="k">{{v.name}}</el-checkbox>
+                        <el-checkbox @change="selectSingleUser" v-for="(v,k) in userLevel" :label="v.id" :key="k">{{v.name}}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <div class="tag-btn-group">
@@ -245,6 +246,7 @@
                 nav: ['品牌产品管理', '礼包管理', '新建礼包'],
                 isUseUpload: false,
                 showSaleTime: false,
+                checkedAllUser: false,
                 uploadImg: '',
                 imgArr: [],
                 itemList: [],
@@ -372,6 +374,7 @@
             this.gifts.isSetBuTime = false;
             this.gifts.isSetExp = false;
             this.setBuyTime = [];
+            this.checkedAllUser = false;
             this.limit = {
                 notSupportCoupon: false, // 不支持优惠券
                 notSupportScore: false, // 不支持积分抵扣
@@ -760,6 +763,23 @@
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+            // 全选用户层级
+            selectedAlLevel(val) {
+                this.chectedUser = [];
+                if (val) {
+                    this.userLevel.forEach(v => {
+                        this.chectedUser.push(v.id);
+                    });
+                }
+            },
+            // 单选用户层级
+            selectSingleUser() {
+                if (this.chectedUser.length === this.userLevel.length) {
+                    this.checkedAllUser = true;
+                } else {
+                    this.checkedAllUser = false;
+                }
             },
             // 显示优惠券列表
             showAddCouList() {
