@@ -57,14 +57,14 @@
                 </el-table-column>
                 <el-table-column label="可售库存" align="center">
                     <template slot-scope="scope">
-                        <el-input-number v-model="scope.row.stock" :min="0" :max="scope.row.warehouseStock"></el-input-number>
+                        <el-input-number v-model="scope.row.stock" :disabled="scope.row.status==0" :min="0" :max="scope.row.warehouseStock"></el-input-number>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button @click="openOrClose(scope.row,0,scope.$index)" type="primary" v-if="scope.row.status==1">关闭</el-button>
                         <el-button @click="openOrClose(scope.row,1,scope.$index)" type="primary" v-if="scope.row.status==0">开启</el-button>
-                        <el-button @click="saveMsg" v-loading="btnLoading" type="success">保存</el-button>
+                        <el-button @click="saveMsg" v-loading="btnLoading" type="success" v-if="scope.row.status!=0">保存</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -152,7 +152,6 @@ export default {
             this.mask = true;
             this.index = num;
             this.row = row;
-            this.row.status = 1 - row.status;
         },
         // 保存表单信息
         saveMsg() {
@@ -162,7 +161,7 @@ export default {
                 const temp = {
                     id: v.id,
                     type: v.type,
-                    status: v.status,
+                    status: 1 - v.status,
                     stock: v.stock,
                     warehouseStock: v.warehouseStock
                 };
@@ -172,6 +171,7 @@ export default {
             request.updateProductSpecStock(data).then(res => {
                 this.$message.success(res.msg);
                 this.mask = false;
+                this.row.status = 1 - this.row.status;
                 this.getList();
                 this.btnLoading = false;
             });

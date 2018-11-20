@@ -187,7 +187,7 @@ export default {
             request.updatePromotionPackageStockAndStatus(data).then(res => {
                 this.$message.success(res.msg);
                 this.addMask = false;
-                this.getList(1);
+                this.getList(this.page.currentPage);
                 this.btnLoading = false;
             }).catch(error => {
                 console.log(error);
@@ -209,7 +209,7 @@ export default {
             request.updatePromotionPackageStockAndStatus(data).then(res => {
                 this.$message.success(res.msg);
                 this.showMask = false;
-                this.getList(1);
+                this.getList(this.page.currentPage);
                 this.btnLoading = false;
             }).catch(error => {
                 console.log(error);
@@ -229,7 +229,7 @@ export default {
         // 重置表单
         resetForm(formName) {
             this.$refs[formName].resetFields();
-            this.getList(1);
+            this.getList(this.page.currentPage);
         }
     },
     filters: {
