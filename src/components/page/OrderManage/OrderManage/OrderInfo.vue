@@ -439,22 +439,22 @@
                         this.boolFor = true;
                         break;
                     case '6':
-                        this.boolFirst = true;
-                        this.boolsec = true;
-                        this.boolThr = true;
-                        this.boolFor = true;
+                        this.boolFirst = false;
+                        this.boolsec = false;
+                        this.boolThr = false;
+                        this.boolFor = false;
                         break;
                     case '7':
-                        this.boolFirst = true;
-                        this.boolsec = true;
-                        this.boolThr = true;
-                        this.boolFor = true;
+                        this.boolFirst = false;
+                        this.boolsec = false;
+                        this.boolThr = false;
+                        this.boolFor = false;
                         break;
                     case '8':
-                        this.boolFirst = true;
-                        this.boolsec = true;
-                        this.boolThr = true;
-                        this.boolFor = true;
+                        this.boolFirst = false;
+                        this.boolsec = false;
+                        this.boolThr = false;
+                        this.boolFor = false;
                         break;
                 }
             },

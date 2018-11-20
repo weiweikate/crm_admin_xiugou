@@ -339,7 +339,7 @@
                 this.$refs[formName].resetFields();
                 this.form.startDate = '';
                 this.form.releaseDate = '';
-                this.getList(1);
+                this.getList(this.page.currentPage);
             },
             // 新建秒杀
             addSecKill() {

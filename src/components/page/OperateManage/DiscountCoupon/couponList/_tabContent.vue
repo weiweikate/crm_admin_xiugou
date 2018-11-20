@@ -227,7 +227,7 @@ export default {
             request.addCouponStock(data).then(res => {
                 this.$message.success(res.msg);
                 this.addMask = false;
-                this.getList(1);
+                this.getList(this.page.currentPage);
                 this.btnLoading = false;
             }).catch(error => {
                 console.log(error);
@@ -241,7 +241,7 @@ export default {
             };
             request.deleteCouponById(data).then(res => {
                 this.$message.success(res.msg);
-                this.getList(1);
+                this.getList(this.page.currentPage);
             }).catch(error => {
                 console.log(error);
                 this.tableLoading = false;
