@@ -86,8 +86,8 @@
                     </transition>
                     <el-button @click="defSaleTime">自定义</el-button>
                 </el-form-item>
-                <el-form-item label="交易默认周期">
-                    <el-select v-model="form.dealDays" filterable allow-create default-first-option placeholder="交易默认周期">
+                <el-form-item label="交易默认时间">
+                    <el-select v-model="form.dealDays" filterable allow-create default-first-option placeholder="请选择订单默认完成时间">
                         <el-option label="7天" value="7"></el-option>
                         <el-option label="10天" value="10"></el-option>
                         <el-option label="15天" value="15"></el-option>
@@ -581,6 +581,7 @@
                     this.$message.warning('请输入正确的标签');
                     return;
                 }
+                if (this.selectedTagArr.length === 20) return this.$message.warning('最多添加二十个标签');
                 let tmp = false;
                 this.tagArr.forEach((v, k) => {
                     if (this.tagName == v.label) {
