@@ -148,7 +148,7 @@
             //   重置表单
             resetForm(formName) {
                 this.$refs[formName].resetFields();
-                this.getList(1);
+                this.getList(this.page.currentPage);
             },
             showTip(code, val) {
                 // 1: 开启 2：暂停 3：删除

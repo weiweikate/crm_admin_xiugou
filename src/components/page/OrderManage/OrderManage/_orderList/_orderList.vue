@@ -43,14 +43,14 @@
                 <div class="center">
                     <div class="status"
                          :style="{height:120*v.orderProductList.length+v.orderProductList.length-1+'px',lineHeight:120*v.orderProductList.length+v.orderProductList.length-1+'px'}">
-                        <template v-if='v.status == 1'>待支付</template>
-                        <template v-if='v.status == 2'>待发货</template>
-                        <template v-if='v.status == 3'>待确认</template>
-                        <template v-if='v.status == 4'>确认收货</template>
-                        <template v-if='v.status == 5'>已完成</template>
-                        <template v-if='v.status == 6'>已关闭(退款关闭)</template>
-                        <template v-if='v.status == 7'>已关闭(用户关闭)</template>
-                        <template v-if='v.status == 8'>已关闭(超时关闭)</template>
+                            <template v-if='v.status == 1'>待支付</template>
+                            <template v-if='v.status == 2'>待发货</template>
+                            <template v-if='v.status == 3'>待确认</template>
+                            <template v-if='v.status == 4'>确认收货</template>
+                            <template v-if='v.status == 5'>已完成</template>
+                            <template v-if='v.status == 6'>已关闭(退款关闭)</template>
+                            <template v-if='v.status == 7'>已关闭(用户关闭)</template>
+                            <template v-if='v.status == 8'>已关闭(超时关闭)</template>
                     </div>
                     <div class="collection"
                          :style="{height:120*v.orderProductList.length+v.orderProductList.length-1+'px',paddingTop:120*v.orderProductList.length/2-30+'px'}">
