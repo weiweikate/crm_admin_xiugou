@@ -148,6 +148,11 @@
                 if (!data.maxUser) {
                     this.$message.warning('请输入店铺人数!');
                     return;
+                } else {
+                    const reg = /^[1-9]\d*$/;
+                    if (!reg.test(data.maxUser)) {
+                        return this.$message.warning('店铺人数应为正整数');
+                    }
                 }
                 if (!data.groupMoney) {
                     this.$message.warning('请输入拼店金额!');
