@@ -224,7 +224,7 @@
                 data.ids = this.multipleSelection;
                 if (!data.ids.length) {
                     this.isShowPop = false;
-                    return this.$message.warning('请选择要删除的优惠券');
+                    return this.$message.warning('请选择要失效的优惠券');
                 }
                 request.bathVaildCoupon(data).then(res => {
                     this.$message.success(res.msg);
