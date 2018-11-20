@@ -47,7 +47,7 @@ export default {
                 console.log(err);
             });
         },
-        //  跳转
+        //  跳转全部消息
         goPageAllMsg() {
             this.$router.push('message');
         }
@@ -71,6 +71,7 @@ export default {
         background-color: #fff;
         padding: 30px 40px;
         width: 615px;
+        border-radius: 10px;
         .message-content{
             cursor: pointer;
             font-size: 14px;

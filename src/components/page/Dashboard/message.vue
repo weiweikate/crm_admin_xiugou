@@ -43,7 +43,7 @@
                 </el-table-column>
                 <el-table-column prop="id" label="操作" align="center" width="150">
                     <template slot-scope="scope">
-                        <el-button type="primary">{{scope.row.buttonName}}</el-button>
+                        <el-button @click="showMsgInfo(scope.row)" type="primary">{{scope.row.buttonName}}</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -118,6 +118,24 @@
                     this.loading = false;
                     console.log(err);
                 });
+            },
+            // 跳转查看页面
+            showMsgInfo(row) {
+                console.log(row);
+                const type = row.messageType.toString();
+                const id = row.bizData;
+                switch (type) {
+                    case '1': this.$router.push({ name: 'joinManage', query: { inviteName: id }}); break; // 会员邀请
+                    case '2': this.$router.push(''); break; // 会员充值
+                    case '3': this.$router.push({ path: '/productList', query: { 'prodCode': id } }); break; // 产品管理
+                    case '4': this.$router.push(''); break; // 产品库存
+                    case '5': this.$router.push({ name: 'shopInfo', query: { shopInfoId: id, status: 1 }}); break; // 店铺举报
+                    case '6': this.$router.push('/discountCoupon'); break; // 优惠券库存
+                    case '7': this.$router.push({ name: 'giftManage', query: { prodCode: id }}); break; // 礼包管理
+                    case '8': this.$router.push(''); break; // 礼包库存
+                    case '9': this.$router.push(''); break; // 广告位过期
+                    default: this.$message.warning('无跳转页面类型');
+                }
             },
             // 全选操作
             handleSelectionChange(val) {

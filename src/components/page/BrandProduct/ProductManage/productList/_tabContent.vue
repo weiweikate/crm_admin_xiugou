@@ -194,6 +194,7 @@ export default {
 
     activated() {
         this.brandId = this.$route.query.brandId || sessionStorage.getItem('brandId');
+        this.form.prodCode = this.$route.query.prodCode;
         this.supplierId = this.$route.query.supplierId || sessionStorage.getItem('supplierId');
         this.firstCategoryId = this.$route.query.firstCategoryId || sessionStorage.getItem('firstCategoryId');
         this.secCategoryId = this.$route.query.secCategoryId || sessionStorage.getItem('secCategoryId');
