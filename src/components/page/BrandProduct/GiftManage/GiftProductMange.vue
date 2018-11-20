@@ -1,6 +1,6 @@
 <template>
     <div class="gift-product-mange">
-        <v-breadcrumb :nav="['品牌产品管理','礼包管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['运营管理','营销管理', '产品礼包管理', '产品管理']"></v-breadcrumb>
         <el-card v-loading="bodyLoading" :body-style="{ padding: '50px' }">
             <el-autocomplete style='width:600px' v-model="keyWords" :fetch-suggestions="querySearchAsync" placeholder="请输入产品名称模糊搜索" @select="handleSelect"></el-autocomplete>
             <el-button type="primary" >搜索</el-button>

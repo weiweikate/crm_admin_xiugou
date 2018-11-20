@@ -36,7 +36,7 @@
 
         data() {
             return {
-                nav: ['品牌产品管理', '产品礼包设置'],
+                nav: ['运营管理 ', '营销管理', '产品礼包管理'],
                 activeName: 'allGift'
             };
         },

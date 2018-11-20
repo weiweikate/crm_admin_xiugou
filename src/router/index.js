@@ -568,7 +568,7 @@ export const asyncRouterMap = [
                 name: 'giftInfo',
                 path: '/giftInfo',
                 component: resolve => require(['../components/page/BrandProduct/GiftManage/GiftInfo.vue'], resolve),
-                meta: { title: '礼包详情' }
+                meta: { title: '礼包详情', keepAlive: true }
             },
             {
                 name: 'discountAdd',

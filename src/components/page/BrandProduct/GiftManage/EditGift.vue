@@ -243,7 +243,7 @@
         mixins: [beforeAvatarUpload],
         data() {
             return {
-                nav: ['品牌产品管理', '礼包管理', '新建礼包'],
+                nav: ['运营管理', '营销管理', '产品礼包管理', '编辑礼包'],
                 id: '',
                 isUseUpload: false,
                 showSaleTime: false,
