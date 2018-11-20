@@ -100,12 +100,12 @@
                 </div>
                 <div class="operate-table">
                     <el-popover placement="top" width="160" v-model="isShowPop">
-                        <p>确定删除吗？</p>
+                        <p>确定失效吗？</p>
                         <div style="text-align: right; margin: 0">
                             <el-button @click="batchOperate" type="primary" size="mini">确定</el-button>
                             <el-button size="mini" type="text" @click="isShowPop = false">取消</el-button>
                         </div>
-                        <el-button slot="reference" @click="isShowPop = true">删除</el-button>
+                        <el-button slot="reference" @click="isShowPop = true">失效</el-button>
                     </el-popover>
                     <a ref="exportData" @click="downloadCouponData">
                         <el-button type="primary">导出全部</el-button>
