@@ -476,14 +476,18 @@
                     this.$message.warning('请添加产品图片');
                     return false;
                 }
+                if (this.form.weight > 9999999999999999 || this.form.weight <= 0) {
+                    this.$message.warning('请输入正确的产品重量!');
+                    return false;
+                }
                 // else if (this.selectedTagArr.length == 0) {
                 //     this.$message.warning('请添加产品标签');
                 //     return false;
                 // }
                 if (this.productParam.length !== 0) {
                     for (let i = 0; i < this.productParam.length; i++) {
-                        if (this.productParam[i].value == '') {
-                            this.$message.warning('请输入产品参数');
+                        if (this.productParam[i].value == '' || this.productParam[i].value.length > 16) {
+                            this.$message.warning('请输入正确的产品参数');
                             return false;
                         }
                     }
@@ -673,7 +677,7 @@
                             typeId = v.id;
                             tagName = k;
                         }
-                    })
+                    });
                     const data = {
                         name: this.tagName,
                         status: 1
@@ -779,7 +783,7 @@
                 if (this.form.secCategoryId === '') return;
                 this.tagTypeArr.forEach(v => {
                     v.selected = false;
-                })
+                });
                 this.tagTypeArr[key].selected = status;
                 this.tagLoading = true;
                 request.querySysTagLibraryList({ typeId: val, secCategoryId: this.form.secCategoryId }).then(res => {
@@ -811,7 +815,7 @@
                             id: v.id,
                             name: v.name,
                             isSelected: false
-                        })
+                        });
                     });
                 }).catch(err => {
                     console.log(err);
@@ -862,7 +866,7 @@
                 this.couponType = '1';
                 this.handleClick({ name: '1' });
                 this.tmpCouponList = [];
-                this.tmpCouponList.push(...this.selectedCoupon)
+                this.tmpCouponList.push(...this.selectedCoupon);
             },
             // 选择优惠券类型
             handleClick(tab) {
@@ -903,7 +907,7 @@
                 for (let i = 0; i < this.tmpCouponList.length; i++) {
                     if (this.tmpCouponList[i].id == coupon.id) {
                         coupon.selected = false;
-                        this.tmpCouponList.splice(i, 1)
+                        this.tmpCouponList.splice(i, 1);
                         return;
                     }
                 }
