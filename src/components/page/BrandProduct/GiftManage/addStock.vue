@@ -4,7 +4,16 @@
         <el-card v-loading="bodyLoading" :body-style="{ padding: '30px' }">
             <p>礼包名称：<el-input disabled class="my-inp" v-model="giftName"></el-input></p>
             <div class="manage-title">发放库存设置</div>
-            <v-remark :contents='remarkContent' style="margin-left:20px"></v-remark>
+            <div class="remark-area">
+                <span class="remark">备注：</span>
+                <el-popover
+                    placement="top-start"
+                    width="200"
+                    trigger="hover"
+                    :content="remarkContent">
+                    <i slot="reference" class="el-icon-question"></i>
+                </el-popover>
+            </div>
             <el-table :data="tableData" border :span-method="objectSpanMethod">
                 <el-table-column type="index" :index="indexMethod" label="产品序号" align="center"></el-table-column>
                 <el-table-column prop="productName" label="产品名称" align="center"></el-table-column>
@@ -33,7 +42,7 @@
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import vRemark from '@/components/common/marketTools/remark.vue'
+    import vRemark from '@/components/common/marketTools/remark.vue';
     import request from '@/http/http';
     export default {
         components: { vBreadcrumb, vRemark },
@@ -42,7 +51,7 @@
             return {
                 giftId: '', // 礼包id
                 giftName: '', // 礼包名称
-                remarkContent: ['当出现相同产品时，填写规格的发放数量之和请勿大于该规格现有库存'], // 备注
+                remarkContent: '当出现相同产品时，填写规格的发放数量之和请勿大于该规格现有库存', // 备注
                 // 表格信息
                 tableData: [],
                 bodyLoading: false,
@@ -50,7 +59,7 @@
                 topTableRow: [],
                 // 价格区间信息
                 priceInterval: [],
-                btnLoading:false
+                btnLoading: false
             };
         },
 
@@ -63,7 +72,7 @@
 
         methods: {
             // 获取规格列表
-            getList(){
+            getList() {
                 this.bodyLoading = true;
                 request.findActivityPackageProductAndSpecById({ packageId: this.giftId }).then(res => {
                     this.bodyLoading = false;
@@ -72,14 +81,14 @@
                     res.data.forEach((v, k) => {
                         const specIdArr = v.productPriceId.split(',');
                         const specValArr = v.specValues.split(',');
-                        const  idArr = v.packageSpecPriceId.split(',');
+                        const idArr = v.packageSpecPriceId.split(',');
                         const stockArr = v.stock.split(',');
                         const totalNumberArr = v.totalNumber.split(',');
-                        if(specIdArr.length == 0){
-                            this.topTableRow.push({startIndex: tmp, num: 1});
+                        if (specIdArr.length == 0) {
+                            this.topTableRow.push({ startIndex: tmp, num: 1 });
                             tmp += 1;
-                        }else{
-                            this.topTableRow.push({startIndex: tmp, num: specIdArr.length});
+                        } else {
+                            this.topTableRow.push({ startIndex: tmp, num: specIdArr.length });
                             tmp += specIdArr.length;
                         }
                         specIdArr.forEach((item, index) => {
@@ -105,34 +114,34 @@
                 });
             },
             // 保存数据
-            submitForm(){
-                let proArr = [];
-                this.tableData.forEach((v,k)=>{
-                    let obj = {
+            submitForm() {
+                const proArr = [];
+                this.tableData.forEach((v, k) => {
+                    const obj = {
                         id: v.id,
                         productPriceId: v.productPriceId,
                         totalNumber: v.addTotalNumber
-                    }
-                    proArr.push(obj)
-                })
-                let data = {
+                    };
+                    proArr.push(obj);
+                });
+                const data = {
                     specPriceList: proArr
-                }
+                };
                 this.btnloading = true;
-                request.updateActivityPackageSpecPriceStock(data).then(res=>{
+                request.updateActivityPackageSpecPriceStock(data).then(res => {
                     this.btnloading = false;
                     this.$message.success(res.msg);
                     this.$router.push('giftManage');
-                }).catch(err=>{
+                }).catch(err => {
                     this.btnloading = false;
                     console.log(err);
-                })
+                });
             },
             //  合并单元格
             objectSpanMethod({ row, column, rowIndex, columnIndex }) {
                 if (columnIndex === 0 || columnIndex === 1) {
-                    for(let i = 0;i<this.topTableRow.length;i++){
-                        if(rowIndex === this.topTableRow[i].startIndex){
+                    for (let i = 0; i < this.topTableRow.length; i++) {
+                        if (rowIndex === this.topTableRow[i].startIndex) {
                             return {
                                 rowspan: this.topTableRow[i].num,
                                 colspan: 1
@@ -146,10 +155,10 @@
                 }
             },
             // 序号
-            indexMethod(index){
-                for(let i = 0;i<this.topTableRow.length;i++){
-                    if(index == this.topTableRow[i].startIndex){
-                        return i+1;
+            indexMethod(index) {
+                for (let i = 0; i < this.topTableRow.length; i++) {
+                    if (index == this.topTableRow[i].startIndex) {
+                        return i + 1;
                     }
                 }
             },
@@ -162,6 +171,16 @@
 </script>
 <style lang='less' scoped>
     .price-of-inventory {
+        .remark-area {
+            margin-bottom: 5px;
+            .remark {
+                font-size: 14px;
+                color: #666;
+            }
+            i {
+                color: #ff6868;
+            }
+        }
         .my-inp {
             width: 215px;
         }

@@ -12,7 +12,7 @@
                     <el-date-picker v-model="form.time" start-placeholder="开始时间" end-placeholder="结束时间" type="datetimerange"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="">
-                    <el-button type="primary" @click="submitForm">查询</el-button>
+                    <el-button type="primary" @click="handleCurrentChange(1)">查询</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -97,10 +97,10 @@
             };
         },
         activated() {
-            this.submitForm();
+            this.getList();
         },
         methods: {
-            submitForm: function() {
+            getList() {
                 this.form.time = this.form.time ? this.form.time : [];
                 const data = {
                     page: this.page.currentPage,
@@ -132,14 +132,14 @@
             },
             // 批量已读
             changeStatus() {
-                if (this.multipleSelection.length === 0) return;
+                if (this.multipleSelection.length === 0) return this.$message.warning('请选择要标记已读的消息!');
                 const idArr = [];
                 this.multipleSelection.forEach(v => {
                     idArr.push(v.id);
                 });
                 request.readMessages({ ids: idArr.join(',') }).then(res => {
                     this.$message.success(res.msg);
-                    this.submitForm();
+                    this.getList(this.page.currentPage);
                 }).catch(err => {
                     console.log(err);
                 });

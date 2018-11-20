@@ -1,15 +1,21 @@
 <template>
   <div class="product-info">
       <v-breadcrumb :nav='nav'></v-breadcrumb>
-      <el-card :body-style="{ padding: '50px 65px' }">
+      <el-card :body-style="{ padding: '50px 65px' }" v-loading="loading">
           <el-form label-width="110px">
             <el-form-item label="产品名称：">{{name}}</el-form-item>
+              <el-form-item label="产品视频：">
+                  <video v-if="video" :src="video" controls="controls"></video>
+              </el-form-item>
             <el-form-item label="产品图片：">
                 <div class="img-wrap" v-for="(v,k) in productImg" :key="k">
                     <img :src="v" alt="">
                 </div>
             </el-form-item>
             <el-form-item label="产品分类：">{{productItem}}</el-form-item>
+              <el-form-item label="产品参数：">
+                  <p v-for="(v, k) in param" :key="k">{{v.param}}：{{v.paramValue}}</p>
+              </el-form-item>
             <el-form-item label="产品品牌：">{{productBrand}}</el-form-item>
             <el-form-item label="产品详情：">
               <div v-html='productDetail'></div>
@@ -34,6 +40,9 @@ export default {
     data() {
         return {
             nav: ['品牌产品管理', '产品管理', '产品详情'],
+            loading: false,
+            param: [],
+            video: [],
             productId: '',
             name: '',
             productImg: [],
@@ -50,7 +59,9 @@ export default {
 
     methods: {
         getList() {
+            this.loading = true;
             request.findProductDetailsById({ id: this.productId }).then(res => {
+                this.loading = false;
                 this.productImg = [];
                 this.productDetail = res.data.infoValue;
                 this.name = res.data.name;
@@ -60,7 +71,10 @@ export default {
                 res.data.imgFileList.forEach((v, k) => {
                     this.productImg.push(v.originalImg);
                 });
+                this.param = res.data.productParamValueVOList;
+                this.video = res.data.videoUrl;
             }).catch(err => {
+                this.loading = false;
                 console.log(err);
             });
         },

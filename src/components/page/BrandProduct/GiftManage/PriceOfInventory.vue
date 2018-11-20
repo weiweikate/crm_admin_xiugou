@@ -1,6 +1,6 @@
 <template>
     <div class="price-of-inventory">
-        <v-breadcrumb :nav="['品牌产品管理','礼包管理','价格库存管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['运营管理',' 营销管理 ','产品礼包管理','价格库存']"></v-breadcrumb>
         <el-card v-loading="bodyLoading" :body-style="{ padding: '30px' }">
             <p>礼包名称：<el-input disabled class="my-inp" v-model="giftName"></el-input></p>
             <div v-if="stockType == 2" class="manage-title">发放库存设置</div>

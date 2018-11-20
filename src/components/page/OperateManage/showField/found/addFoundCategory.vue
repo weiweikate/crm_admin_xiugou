@@ -74,8 +74,15 @@
             this.form = {};
         },
         methods: {
-            beforeAvatarUpload() {
+            beforeAvatarUpload(file) {
                 this.upLoading = true;
+                const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
+                const isLt3M = file.size / 1024 / 1024 < 3;
+                if (!isLt3M || !isJPG) {
+                    this.upLoading = false;
+                    this.$message.error('请上传3M以内jpg,jpeg,png格式的图片!');
+                }
+                return isJPG && isLt3M;
             },
             uploadError(err) {
                 this.upLoading = false;
