@@ -305,6 +305,19 @@ export const asyncRouterMap = [
         meta: { title: '权限管理', icon: 'icon-shezhi' },
         children: [
             {
+                name: 'organizeMange',
+                path: '/organizeMange',
+                component: resolve => require(['../components/page/Permission/OrganizeMange/OrganizeMange.vue'], resolve),
+                meta: { title: '组织结构管理' }
+            },
+            {
+                hidden: true,
+                name: 'jobsPermissionMange',
+                path: '/jobsPermissionMange',
+                component: resolve => require(['../components/page/Permission/OrganizeMange/JobsPermissionMange.vue'], resolve),
+                meta: { title: '岗位权限管理' }
+            },
+            {
                 name: 'manageList',
                 path: '/manageList',
                 component: resolve => require(['../components/page/Permission/ManageList.vue'], resolve),
@@ -905,12 +918,6 @@ export const asyncRouterMap = [
                 meta: { title: '操作日志' }
             },
             {
-                name: 'jobsPermissionMange',
-                path: '/jobsPermissionMange',
-                component: resolve => require(['../components/page/Permission/JobsPermissionMange.vue'], resolve),
-                meta: { title: '岗位权限管理' }
-            },
-            {
                 name: 'addJobsPermission',
                 path: '/addJobsPermission',
                 component: resolve => require(['../components/page/Permission/AddJobsPermission.vue'], resolve),
@@ -933,12 +940,6 @@ export const asyncRouterMap = [
                 path: '/editMangerMsg',
                 component: resolve => require(['../components/page/Permission/EditMangerMsg.vue'], resolve),
                 meta: { title: '管理员基础信息修改' }
-            },
-            {
-                name: 'organizeMange',
-                path: '/organizeMange',
-                component: resolve => require(['../components/page/Permission/OrganizeMange/OrganizeMange.vue'], resolve),
-                meta: { title: '组织结构管理' }
             },
 
             {

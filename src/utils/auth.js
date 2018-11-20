@@ -7,7 +7,7 @@ export function getToken() {
 }
 
 export function setToken(token) {
-    if (token) {
+    if (token || (token + '').length > 0) {
         return Cookies.set(TokenKey, token);
     } else {
         return Cookies.set(TokenKey, '');
