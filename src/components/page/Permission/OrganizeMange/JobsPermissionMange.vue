@@ -62,16 +62,15 @@
             };
         },
         activated() {
-            this.departmentId = this.$route.query.id;
-            this.getList(this.page.currentPage);
+            this.departmentId = this.$route.params.id;
+            this.getList();
         },
         methods: {
             //获取列表
-            getList(val) {
+            getList() {
                 let data = {};
-                data.id = this.departmentId;
                 this.tableLoading = true;
-                request.queryJobList(data)
+                request.queryJobList({ id: this.departmentId })
                     .then(res => {
                         this.tableLoading = false;
                         this.tableData = res.data.data;

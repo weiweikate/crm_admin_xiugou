@@ -313,7 +313,7 @@ export const asyncRouterMap = [
             {
                 hidden: true,
                 name: 'jobsPermissionMange',
-                path: '/jobsPermissionMange',
+                path: '/jobsPermissionMange/:id',
                 component: resolve => require(['../components/page/Permission/OrganizeMange/JobsPermissionMange.vue'], resolve),
                 meta: { title: '岗位权限管理' }
             },
