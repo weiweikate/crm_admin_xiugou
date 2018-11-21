@@ -61,3 +61,5 @@ export const disableSettleProFitById = ['/settle/template/disable', { methods: '
 export const storePayRecordList = ['/store/deposit/query', { methods: 'get' }];
 // 供应商结算列表
 export const querySupplierByProductId = ['/order/orderProduct/queryByProductId', { methods: 'post' }];
+//导出对账单
+export const exportStorePayRecordList = '/admin/order/orderProduct/export';

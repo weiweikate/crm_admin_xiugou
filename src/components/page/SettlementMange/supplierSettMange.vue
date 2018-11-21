@@ -15,7 +15,7 @@
         </el-form>
       </el-card>
       <el-card style='margin-top:20px' :body-style="{ padding: '30px' }">
-        <el-button style="margin-bottom:10px" type="primary">导出对账单</el-button>
+        <el-button style="margin-bottom:10px" type="primary" @click="exportRecord"><a style="color: #fff" :href="downLoadUrl">导出对账单</a></el-button>
         <el-table v-loading="loading" :data="tableData" :span-method="arraySpanMethod"  border>
           <el-table-column prop='supplierName' label="供应商" align="center"></el-table-column>
           <el-table-column prop='productName' label="产品名称" align="center"></el-table-column>
@@ -51,6 +51,7 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http';
+import * as api from '@/api/SettlementMange/index.js';
 export default {
     components: { vBreadcrumb },
 
@@ -67,6 +68,13 @@ export default {
             tableData: [],
             spanData: []
         };
+    },
+
+    computed: {
+        downLoadUrl() {
+            const url = `${api.exportStorePayRecordList}?name=${this.form.name || ''}&startTime=${this.$utils.formatTime(this.form.date, 2) || ''}`;
+            return url;
+        }
     },
 
     activated() {
