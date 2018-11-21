@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth'; // getToken from cookie
 
 NProgress.configure({ showSpinner: false });// NProgress Configuration
 
-const whiteList = ['/login'];// no redirect whitelist
+const whiteList = ['/login', '/404', '/403', '/500'];// no redirect whitelist
 
 router.beforeEach((to, from, next) => {
     console.log('beforeEach', to);
@@ -21,7 +21,7 @@ router.beforeEach((to, from, next) => {
         } else {
             console.log('判断用户权限', store.getters.roles);
             if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
-                console.log('重新拉取用户信息')
+                console.log('重新拉取用户信息');
                 store.dispatch('GetInfo').then(res => { // 拉取user_info
                     console.log('GetInfo roles', res.data.roles);
                     const roles = res.data.roles; // note: roles must be a array! such as: ['editor','develop']

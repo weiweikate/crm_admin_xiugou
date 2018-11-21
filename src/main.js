@@ -14,6 +14,7 @@ import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
 import '@/permission'; // permission control
 import store from '@/stores';
+
 Vue.use(vueQuillEditor);
 import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
 // import '../static/css/theme-green/index.css';       // 浅绿色主题
@@ -22,6 +23,7 @@ import utils from '@/utils/index.js'; // 公共方法
 // 图片浏览工具
 import Viewer from 'v-viewer';
 import 'viewerjs/dist/viewer.css';
+
 Vue.use(Viewer);
 Viewer.setDefaults({
     Options: {
@@ -48,17 +50,19 @@ Vue.use(Vue => {
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$utils = utils;
 
-// 使用钩子函数对路由进行权限跳转
-/*router.beforeEach((to, from, next) => {
-    const role = localStorage.getItem('ms_username');
-    if (!role && to.path !== '/login') {
-        localStorage.clear();
-        sessionStorage.clear();
-        next('/login');
-    } else {
-        next();
+/**权限指令**/
+Vue.directive('auth', {
+    bind: function (el, binding, vnode) {
+        // 获取按钮权限
+        let value = binding.value;
+        // 获取用户权限
+        let permission = vnode.context.$store.getters.roles || [];
+        if (!permission.includes(value)) {
+            el.parentNode.removeChild(el);
+        }
     }
-});*/
+});
+
 new Vue({
     router,
     store,

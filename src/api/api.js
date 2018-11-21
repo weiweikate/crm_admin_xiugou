@@ -56,13 +56,6 @@ export const getAllgetAllActivety = '/admin/securityCodeTemplate/getSecurityCode
 // 生成防伪码
 export const productionSecurityCode = '/securityCode/securityCodeRecord/productionSecurityCode';
 //
-// 权限管理
-// 添加部门
-export const addDepartment = '/admin/department/addDepartment';
-// 根据id查询部门
-export const findDepartmentById = '/admin/department/findDepartmentById';
-// 编辑部门
-export const updateDepartment = '/admin/department/updateDepartment';
 // 查看管理员操作日志
 export const getMangerLog = '/admin/logAdminuser/getPage';
 // 重置登陆密码
@@ -71,16 +64,6 @@ export const resetPassword = '/admin/adminUser/resetPassword';
 export const updateAdminUserStatus = '/admin/adminUser/updateAdminUserStatus';
 // 删除管理员账号
 export const deleteAdminUser = '/admin/adminUser/deleteUpdateAdminUser';
-// 岗位列表查询
-export const queryRolePageList = '/admin/role/queryRolePageList';
-// 添加岗位
-export const addRole = '/admin/role/addRole';
-// 根据id查询岗位
-export const findRoleById = '/admin/role/findRoleById';
-// 修改岗位
-export const updateRole = '/admin/role/updateRole';
-// 删除岗位
-export const deleteRole = '/admin/role/deleteUpdateRole';
 // 查询权限三级模块列表
 export const queryPrivilegeList = '/admin/privilege/queryPrivilegeList';
 // 添加权限
@@ -267,4 +250,18 @@ export const findFeedbackById = ['/userFeedback/findFeedbackDetailById', { metho
 export const updateFeedback = '/userFeedback/updateDetailById';
 // 券数据导出
 export const downloadCouponList = '/admin/user/coupon/downloadCouponList';
+// 添加岗位
+export const addRole = '/role/addRole';
+// 根据id查询岗位
+export const findRoleById = '/role/findRoleById';
+// 修改岗位
+export const updateRole = '/role/updateRole';
+// 删除岗位
+export const updateDeleteRole = '/role/updateDeleteRole';
+// 添加部门
+export const addDepartment = '/department/addDepartment';
+// 根据id查询部门
+export const findDepartmentById = '/department/findDepartmentById';
+// 编辑部门
+export const updateDepartment = '/department/updateDepartment';
 

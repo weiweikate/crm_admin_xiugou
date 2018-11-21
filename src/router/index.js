@@ -20,22 +20,144 @@ Vue.use(Router);
 
 export const asyncRouterMap = [
     {
+        path: '/dashboard',
+        component: Layout,
+        name: 'dashboard',
+        meta: { title: '系统首页', icon: 'icon-shouye' },
+        children: [
+            {
+                path: '/dashboard',
+                name: 'dashboard',
+                component: resolve => require(['../components/page/Dashboard.vue'], resolve),
+                meta: {
+                    title: '系统首页',
+                    icon: 'icon-shouye',
+                    children: [{
+                        title: '数据类模块',
+                        name: 'dashboard.data'
+                    }, {
+                        title: '会员层级分布图',
+                        name: 'dashboard.member'
+                    }, {
+                        title: '快捷操作模块',
+                        name: 'dashboard.shortcut',
+                        children: [
+                            {
+                                title: '发布产品',
+                                name: 'dashboard.shortcut.fbcp'
+                            },
+                            {
+                                title: '发布礼包',
+                                name: 'dashboard.shortcut.fblb'
+                            },
+                            {
+                                title: '会员邀请',
+                                name: 'dashboard.shortcut.hyyq'
+                            },
+                            {
+                                title: '实名认证查看',
+                                name: 'dashboard.shortcut.smrzck'
+                            },
+                            {
+                                title: '防伪码查询',
+                                name: 'dashboard.shortcut.fwmcx'
+                            },
+                            {
+                                title: '推荐位管理',
+                                name: 'dashboard.shortcut.tjwgl'
+                            },
+                            {
+                                title: '创建管理员账号',
+                                name: 'dashboard.shortcut.cjglyzh'
+                            },
+                            {
+                                title: '会员搜索',
+                                name: 'dashboard.shortcut.hyss'
+                            },
+                            {
+                                title: '添加供应商',
+                                name: 'dashboard.shortcut.tjgys'
+                            },
+                            {
+                                title: '广告位管理',
+                                name: 'dashboard.shortcut.ggwgl'
+                            },
+                            {
+                                title: '敏感词库管理',
+                                name: 'dashboard.shortcut.mgckgl'
+                            },
+                            {
+                                title: '账户充值',
+                                name: 'dashboard.shortcut.zhcz'
+                            }
+                        ]
+                    }]
+                }
+            }
+        ]
+    },
+    {
         path: '/vip',
         component: Layout,
         name: 'vip',
-        meta: { title: '会员管理', icon: 'icon-huiyuanzhanghaoguanli' },
+        meta: {
+            title: '会员管理',
+            icon: 'icon-huiyuanzhanghaoguanli'
+        },
         children: [
             {
                 name: 'levelManage',
                 path: '/levelManage',
                 component: resolve => require(['../components/page/MemberManage/LevelManage.vue'], resolve),
-                meta: { title: '会员层级管理' }
+                meta: {
+                    title: '会员层级管理',
+                    children: [
+                        {
+                            title: '晋升设置',
+                            name: 'vip.levelManage.jssz'
+                        },
+                        {
+                            title: '降级设置',
+                            name: 'vip.levelManage.jjsz'
+                        },
+                        {
+                            title: '编辑',
+                            name: 'vip.levelManage.bj'
+                        },
+                        {
+                            title: '层级信息',
+                            name: 'vip.levelManage.cjxx'
+                        }]
+                }
             },
             {
                 name: 'joinManage',
                 path: '/joinManage',
                 component: resolve => require(['../components/page/MemberManage/JoinManage.vue'], resolve),
-                meta: { title: '会员邀请管理' }
+                meta: {
+                    title: '会员邀请管理',
+                    children: [
+                        {
+                            title: '查询',
+                            name: 'vip.joinManage.cx'
+                        },
+                        {
+                            title: '重置',
+                            name: 'vip.joinManage.cz'
+                        },
+                        {
+                            title: '发起邀请',
+                            name: 'vip.joinManage.fqyq'
+                        },
+                        {
+                            title: '查看邀请',
+                            name: 'vip.joinManage.ckyq'
+                        },
+                        {
+                            title: '详情',
+                            name: 'vip.joinManage.xq'
+                        }]
+                }
             },
             {
                 name: 'memberManage',
@@ -311,6 +433,33 @@ export const asyncRouterMap = [
         name: 'quanxian',
         meta: { title: '权限管理', icon: 'icon-shezhi' },
         children: [
+            {
+                name: 'organizeMange',
+                path: '/organizeMange',
+                component: resolve => require(['../components/page/Permission/OrganizeMange/OrganizeMange.vue'], resolve),
+                meta: { title: '组织结构管理' }
+            },
+            {
+                hidden: true,
+                name: 'jobsPermissionMange',
+                path: '/jobsPermissionMange/:id',
+                component: resolve => require(['../components/page/Permission/OrganizeMange/JobsPermissionMange.vue'], resolve),
+                meta: { title: '岗位权限管理' }
+            },
+            {
+                hidden: true,
+                name: 'addJobsPermission',
+                path: '/addJobsPermission',
+                component: resolve => require(['../components/page/Permission/OrganizeMange/AddJobsPermission.vue'], resolve),
+                meta: { title: '添加岗位权限' }
+            },
+            {
+                hidden: true,
+                name: 'editJobsPermission',
+                path: '/editJobsPermission/:id',
+                component: resolve => require(['../components/page/Permission/AddJobsPermission.vue'], resolve),
+                meta: { title: '编辑岗位权限' }
+            },
             {
                 name: 'manageList',
                 path: '/manageList',
@@ -906,24 +1055,6 @@ export const asyncRouterMap = [
                 meta: { title: '操作日志' }
             },
             {
-                name: 'jobsPermissionMange',
-                path: '/jobsPermissionMange',
-                component: resolve => require(['../components/page/Permission/JobsPermissionMange.vue'], resolve),
-                meta: { title: '岗位权限管理' }
-            },
-            {
-                name: 'addJobsPermission',
-                path: '/addJobsPermission',
-                component: resolve => require(['../components/page/Permission/AddJobsPermission.vue'], resolve),
-                meta: { title: '添加岗位权限' }
-            },
-            {
-                name: 'editJobsPermission',
-                path: '/editJobsPermission',
-                component: resolve => require(['../components/page/Permission/EditJobsPermission.vue'], resolve),
-                meta: { title: '编辑岗位权限' }
-            },
-            {
                 name: 'setPermission',
                 path: '/setPermission',
                 component: resolve => require(['../components/page/Permission/SetPermission.vue'], resolve),
@@ -934,12 +1065,6 @@ export const asyncRouterMap = [
                 path: '/editMangerMsg',
                 component: resolve => require(['../components/page/Permission/EditMangerMsg.vue'], resolve),
                 meta: { title: '管理员基础信息修改' }
-            },
-            {
-                name: 'organizeMange',
-                path: '/organizeMange',
-                component: resolve => require(['../components/page/Permission/OrganizeMange/OrganizeMange.vue'], resolve),
-                meta: { title: '组织结构管理' }
             },
 
             {
@@ -1453,18 +1578,7 @@ export const constantRouterMap = [
 
     {
         path: '/',
-        component: Layout,
-        redirect: '/dashboard',
-        name: 'dashboard',
-        meta: { title: '系统首页', icon: 'icon-shouye' },
-        children: [
-            {
-                path: '/dashboard',
-                name: 'dashboard',
-                component: resolve => require(['../components/page/Dashboard.vue'], resolve),
-                meta: { title: '系统首页', icon: 'icon-shouye' }
-            }
-        ]
+        redirect: '/dashboard'
     }
 ];
 
