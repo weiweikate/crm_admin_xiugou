@@ -190,7 +190,9 @@
             // 判断封面图是否符合尺寸
             beforeUploadCoverImg(file) {
                 const that = this;
+                const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
                 return new Promise(function(resolve, reject) {
+                    if (!isJPG) reject('请上传图片');
                     const _URL = window.URL || window.webkitURL;
                     const image = new Image();
                     image.onload = function() {
@@ -218,8 +220,8 @@
                     () => {
                         return file;
                     },
-                    () => {
-                        this.$message.error('上传图片尺寸不符合!');
+                    (err = '上传图片尺寸不符合!') => {
+                        this.$message.error(err);
                         return Promise.reject();
                     }
                 );
@@ -227,7 +229,9 @@
             // 判断普通图片是否符合尺寸
             beforeUploadImg(file) {
                 const that = this;
+                const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
                 return new Promise(function(resolve, reject) {
+                    if (!isJPG) reject('请上传图片');
                     const _URL = window.URL || window.webkitURL;
                     const image = new Image();
                     image.onload = function() {
