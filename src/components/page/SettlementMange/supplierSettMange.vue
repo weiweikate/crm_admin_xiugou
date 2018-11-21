@@ -6,36 +6,36 @@
           <el-form-item prop="name" label="供应商名称">
               <el-input v-model="form.name" placeholder="请输入供应商名称"></el-input>
           </el-form-item>
-          <el-form-item prop="time" label="退款时间">
-              <el-date-picker v-model="form.time" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+          <el-form-item prop="year" label="月帐期">
+              <el-date-picker v-model="form.date" type="month" placeholder="选择时间"></el-date-picker>
           </el-form-item>
           <el-form-item label=" ">
-              <el-button type="primary" @click="getList(1)">查询</el-button>
-              <el-button @click="resetForm('form')">重置</el-button>
+              <el-button type="primary" @click="handleCurrentChange(1)">查询</el-button>
           </el-form-item>
         </el-form>
       </el-card>
       <el-card style='margin-top:20px' :body-style="{ padding: '30px' }">
         <el-button style="margin-bottom:10px" type="primary">导出对账单</el-button>
-        <el-table :data="tableData" :span-method="arraySpanMethod"  border>
-          <el-table-column prop='supName' label="供应商" align="center"></el-table-column>
-          <el-table-column prop='no' label="产品名称" align="center"></el-table-column>
-          <el-table-column prop='no' label="订单数" align="center"></el-table-column>
-          <el-table-column prop='no' label="交易量" align="center"></el-table-column>
-          <el-table-column prop='no' label="交易额" align="center">
+        <el-table v-loading="loading" :data="tableData" :span-method="arraySpanMethod"  border>
+          <el-table-column prop='supplierName' label="供应商" align="center"></el-table-column>
+          <el-table-column prop='productName' label="产品名称" align="center"></el-table-column>
+          <el-table-column prop='orderNum' label="订单数" align="center"></el-table-column>
+          <el-table-column prop='tradingVolume' label="交易量" align="center"></el-table-column>
+          <el-table-column prop='turnover' label="交易额" align="center">
               <template slot-scope="scope">
-                  <span style="color:red">{{scope.row.no | handleMoney}}</span>
+                  <span style="color:red">{{scope.row.turnover || 0 | handleMoney}}</span>
               </template>
           </el-table-column>
-          <el-table-column prop='no' label="总结算价" align="center">
+          <el-table-column prop='totalSettlement' label="总结算价" align="center">
               <template slot-scope="scope">
-                  <span style="color:red">{{scope.row.no | handleMoney}}</span>
+                  <span style="color:red">{{scope.row.totalSettlement || 0 | handleMoney}}</span>
               </template>
           </el-table-column>
         </el-table>
         <div class="block">
           <el-pagination
                   background
+                  :page-size="page.pageSize"
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange"
                   :current-page="page.currentPage"
@@ -50,6 +50,7 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http';
 export default {
     components: { vBreadcrumb },
 
@@ -60,47 +61,58 @@ export default {
             // 表单
             form: {
                 name: '',
-                time: []
+                date: ''
             },
+            loading: false,
             tableData: [],
-            spanData: [],
-            table: [
-                {
-                    'supName': '供应商A',
-                    'productList': [{ 'name': '产品1' }, { 'name': '产品2' }, { 'name': '产品3' }]
-                },
-                {
-                    'supName': '供应商B',
-                    'productList': [{ 'name': '产品2' }, { 'name': '产品3' }]
-                }
-            ] // 表格信息
+            spanData: []
         };
     },
 
     activated() {
-        this.getList();
+        this.handleCurrentChange(1);
     },
 
     methods: {
         // 查询表单
         getList(val) {
-            let t = 0;
-            this.table.forEach(v => {
-                const data = {
-                    supName: v.supName
-                };
-                if (v.productList.length !== 0) {
-                    this.spanData.push({ startIndex: t, num: v.productList.length });
-                    t += v.productList.length;
-                    v.productList.forEach(v => {
-                        data.productName = v.name;
-                        this.tableData.push(data);
-                    });
-                } else {
-                    this.spanData.push({ startIndex: t, num: 1 });
-                    t += 1;
-                    this.tableData.push(data);
-                }
+            const data = {
+                name: this.form.name,
+                startTime: this.$utils.formatTime(this.form.date, 2),
+                pageSize: this.page.pageSize,
+                page: val
+            };
+            this.loading = true;
+            request.querySupplierByProductId(data).then(res => {
+                this.loading = false;
+                const table = res.data.data || [];
+                this.tableData = [];
+                this.spanData = [];
+                this.page.totalPage = res.data.totalNum;
+                let t = 0;
+                table.forEach(v => {
+                    if (v.productList.length !== 0) {
+                        this.spanData.push({ startIndex: t, num: v.productList.length });
+                        t += v.productList.length;
+                        v.productList.forEach(v1 => {
+                            const item = {
+                                supplierName: v.supplierName,
+                                ...v1
+                            };
+                            this.tableData.push(item);
+                        });
+                    } else {
+                        const item = {
+                            supplierName: v.supplierName
+                        };
+                        this.spanData.push({ startIndex: t, num: 1 });
+                        t += 1;
+                        this.tableData.push(item);
+                    }
+                });
+            }).catch(err => {
+                this.loading = false;
+                console.log(err);
             });
         },
         // 查看详情
