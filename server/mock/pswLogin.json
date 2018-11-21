@@ -1,0 +1,2376 @@
+{
+    "code": 10000,
+    "data": {
+        "adminUserPrivilegeList": [
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加一级渠道类目",
+                "privilegeId": 3,
+                "updateTime": null,
+                "url": "/admin/permitChannel/addPermitChannel_1"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑一级渠道类目",
+                "privilegeId": 4,
+                "updateTime": null,
+                "url": "/admin/permitChannel/updatePermitChannel_1"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加二级渠道类目",
+                "privilegeId": 5,
+                "updateTime": null,
+                "url": "/admin/permitChannel/addPermitChannel_2"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑二级渠道类目",
+                "privilegeId": 6,
+                "updateTime": null,
+                "url": "/admin/permitChannel/updatePermitChannel_2"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除二级渠道类目",
+                "privilegeId": 7,
+                "updateTime": null,
+                "url": "/admin/permitChannel/updatePermitChannel_3"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除一级渠道类目",
+                "privilegeId": 43,
+                "updateTime": null,
+                "url": "/admin/permitChannel/updatePermitChannel_4"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看渠道类目管理列表",
+                "privilegeId": 79,
+                "updateTime": null,
+                "url": "/channelItemManage"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加防伪码模板",
+                "privilegeId": 10,
+                "updateTime": null,
+                "url": "/admin/securityCodeTemplate/add"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑防伪码模板",
+                "privilegeId": 11,
+                "updateTime": null,
+                "url": "/admin/securityCodeTemplate/updateById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除防伪码模板",
+                "privilegeId": 12,
+                "updateTime": null,
+                "url": "/admin/securityCodeTemplate/deleteById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "失效防伪码模板",
+                "privilegeId": 13,
+                "updateTime": null,
+                "url": "/admin/securityCodeTemplate/loseById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看防伪码模板列表",
+                "privilegeId": 80,
+                "updateTime": null,
+                "url": "/admin/securityCodeTemplate/getAll"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "获取防伪码管理列表",
+                "privilegeId": 90,
+                "updateTime": null,
+                "url": "/securityCode/securityCodeRecord/getRecordPage"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "获取防伪码参数设置列表",
+                "privilegeId": 91,
+                "updateTime": null,
+                "url": "/admin/categoryBrand/getAllCategoryBrand"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "生成防伪码",
+                "privilegeId": 98,
+                "updateTime": null,
+                "url": "/securityCode/securityCodeRecord/productionSecurityCode"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "导出防伪码",
+                "privilegeId": 99,
+                "updateTime": null,
+                "url": "/securityCode/securityCodeRecord/exportSecurityCode"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "修改防伪码状态",
+                "privilegeId": 100,
+                "updateTime": null,
+                "url": "/securityCode/securityCodeRecord/updateStatus"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "防伪码列表",
+                "privilegeId": 101,
+                "updateTime": null,
+                "url": "1"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "防伪码参数列表",
+                "privilegeId": 94,
+                "updateTime": null,
+                "url": "/admin/categoryBrand/getAllCategoryBrand"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加防伪码参数",
+                "privilegeId": 95,
+                "updateTime": null,
+                "url": "/admin/categoryBrand/addCategoryBrandCode"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "生成备码",
+                "privilegeId": 96,
+                "updateTime": null,
+                "url": "/securityCode/securityCode/productAllCode"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "失效",
+                "privilegeId": 97,
+                "updateTime": null,
+                "url": "/admin/categoryBrand/loseCategoryBrandCode"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "新建管理员",
+                "privilegeId": 16,
+                "updateTime": null,
+                "url": "/admin/adminUser/addAdminUser"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑管理员",
+                "privilegeId": 17,
+                "updateTime": null,
+                "url": "/admin/adminUser/updateAdminUser"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "密码重置",
+                "privilegeId": 18,
+                "updateTime": null,
+                "url": "/admin/adminUser/resetPassword"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看日志",
+                "privilegeId": 19,
+                "updateTime": null,
+                "url": "/admin/logAdminuser/getPage"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "账号开启关闭",
+                "privilegeId": 20,
+                "updateTime": null,
+                "url": "/admin/adminUser/updateAdminUserStatus"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "账号删除",
+                "privilegeId": 21,
+                "updateTime": null,
+                "url": "/admin/adminUser/deleteAdminUser"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "管理员账号管理列表",
+                "privilegeId": 75,
+                "updateTime": null,
+                "url": "/manageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加角色",
+                "privilegeId": 23,
+                "updateTime": null,
+                "url": "/admin/role/addRole"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑角色",
+                "privilegeId": 24,
+                "updateTime": null,
+                "url": "/admin/role/updateRole"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除角色",
+                "privilegeId": 25,
+                "updateTime": null,
+                "url": "/admin/role/deleteRole"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "岗位权限列表",
+                "privilegeId": 76,
+                "updateTime": null,
+                "url": "/jobsPermissionMange"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加部门",
+                "privilegeId": 166,
+                "updateTime": null,
+                "url": "/admin/department/addDepartment"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑部门",
+                "privilegeId": 167,
+                "updateTime": null,
+                "url": "/admin/department/updateDepartment"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "组织结构管理列表",
+                "privilegeId": 323,
+                "updateTime": null,
+                "url": "/admin/role/queryDepartmentList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "新增功能模块",
+                "privilegeId": 27,
+                "updateTime": null,
+                "url": "/admin/privilege/addFunctionModule"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加权限",
+                "privilegeId": 28,
+                "updateTime": null,
+                "url": "/admin/privilege/addPrivilege"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "权限管理列表",
+                "privilegeId": 77,
+                "updateTime": null,
+                "url": "/setPermission"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "修改头像",
+                "privilegeId": 38,
+                "updateTime": null,
+                "url": "/admin/adminUser/updateAdminUserFace"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "修改密码",
+                "privilegeId": 68,
+                "updateTime": null,
+                "url": "/admin/adminUser/updateAdminUserPassword"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "管理员基础信息修改",
+                "privilegeId": 78,
+                "updateTime": null,
+                "url": "/editMangerMsg"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "版本迭代管理权限",
+                "privilegeId": 325,
+                "updateTime": null,
+                "url": "/versionIteration"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加一级类目",
+                "privilegeId": 31,
+                "updateTime": null,
+                "url": "/admin/productCategory/addProductCategory"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑一级类目",
+                "privilegeId": 32,
+                "updateTime": null,
+                "url": "/admin/productCategory/updateProductCategory"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除一级类目",
+                "privilegeId": 33,
+                "updateTime": null,
+                "url": "/admin/productCategory/deleteProductCategory"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加二级类目",
+                "privilegeId": 34,
+                "updateTime": null,
+                "url": "/admin/productCategory/addProductCategory_2"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑二级类目",
+                "privilegeId": 35,
+                "updateTime": null,
+                "url": "/admin/productCategory/updateProductCategory_2"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除二级类目",
+                "privilegeId": 36,
+                "updateTime": null,
+                "url": "/admin/productCategory/deleteProductCategory_2"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看一级类目列表",
+                "privilegeId": 81,
+                "updateTime": null,
+                "url": "/admin/productCategory/queryProductCategoryPageList_1"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看二级类目列表",
+                "privilegeId": 82,
+                "updateTime": null,
+                "url": "/admin/productCategory/queryProductCategoryPageList_2"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加品牌",
+                "privilegeId": 40,
+                "updateTime": null,
+                "url": "/admin/brand/addBrand"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑品牌",
+                "privilegeId": 41,
+                "updateTime": null,
+                "url": "/admin/brand/updateBrand"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除品牌",
+                "privilegeId": 42,
+                "updateTime": null,
+                "url": "/admin/brand/deleteBrand"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看品牌管理列表",
+                "privilegeId": 83,
+                "updateTime": null,
+                "url": "/admin/brand/queryBrandPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "模版列表",
+                "privilegeId": 106,
+                "updateTime": null,
+                "url": "/admin/freightTemplate/queryFreightTemplateList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加模版",
+                "privilegeId": 107,
+                "updateTime": null,
+                "url": "/admin/freightTemplate/addFreightTemplate"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑模版",
+                "privilegeId": 108,
+                "updateTime": null,
+                "url": "/admin/freightTemplate/updateFreightTemplateById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除模版",
+                "privilegeId": 109,
+                "updateTime": null,
+                "url": "/admin/freightTemplate/deleteFreightTemplateById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "获取产品列表",
+                "privilegeId": 127,
+                "updateTime": null,
+                "url": "/admin/product/queryProductPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加产品",
+                "privilegeId": 128,
+                "updateTime": null,
+                "url": "/admin/product/addProduct"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "仓库管理",
+                "privilegeId": 129,
+                "updateTime": null,
+                "url": "/admin/price/queryProductStockList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "规格管理",
+                "privilegeId": 130,
+                "updateTime": null,
+                "url": "/admin/saleSpec/querySaleSpecList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "价格管理",
+                "privilegeId": 131,
+                "updateTime": null,
+                "url": "/admin/price/queryProductPriceSaleSpecList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑产品",
+                "privilegeId": 132,
+                "updateTime": null,
+                "url": "/admin/product/findProductAllDataById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "产品上架下架管理",
+                "privilegeId": 133,
+                "updateTime": null,
+                "url": "/admin/product/updateProductShelves"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "产品详情",
+                "privilegeId": 134,
+                "updateTime": null,
+                "url": "/admin/product/findProductById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "产品审核",
+                "privilegeId": 135,
+                "updateTime": null,
+                "url": "/admin/product/updateProductStatus"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "批量处理",
+                "privilegeId": 160,
+                "updateTime": null,
+                "url": "/admin/product/updateBatchProductStatus"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "产品礼包列表",
+                "privilegeId": 207,
+                "updateTime": null,
+                "url": "/admin/giftBag/queryGiftBagPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加礼包",
+                "privilegeId": 218,
+                "updateTime": null,
+                "url": "/admin/giftBag/addGiftBag"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑礼包",
+                "privilegeId": 219,
+                "updateTime": null,
+                "url": "/admin/giftBag/updateGiftBag"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "礼包价格库存管理",
+                "privilegeId": 220,
+                "updateTime": null,
+                "url": "/admin/giftBag/queryReferencePrice"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "礼包产品管理",
+                "privilegeId": 221,
+                "updateTime": null,
+                "url": "/admin/giftBag/findProductInfo"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "优惠券管理",
+                "privilegeId": 222,
+                "updateTime": null,
+                "url": "/admin/giftBag/couponControl"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "礼包详情",
+                "privilegeId": 223,
+                "updateTime": null,
+                "url": "/admin/giftBag/getGiftBagDetail"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "经验值设置",
+                "privilegeId": 224,
+                "updateTime": null,
+                "url": "/admin/giftBag/setExperience"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "礼包审核",
+                "privilegeId": 225,
+                "updateTime": null,
+                "url": "/admin/giftBag/checkGiftBag"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "礼包上下架",
+                "privilegeId": 226,
+                "updateTime": null,
+                "url": "/admin/giftBag/giftBagUpOrDown"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除礼包",
+                "privilegeId": 227,
+                "updateTime": null,
+                "url": "/admin/giftBag/batchDeleteGiftBag"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑层级",
+                "privilegeId": 48,
+                "updateTime": null,
+                "url": "/admin/dealerLevel/updateDealerLevel"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加层级",
+                "privilegeId": 49,
+                "updateTime": null,
+                "url": "/admin/dealerLevel/addDealerLevel"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除",
+                "privilegeId": 70,
+                "updateTime": null,
+                "url": "/admin/dealerLevel/deleteDealerLevelById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "层级列表",
+                "privilegeId": 84,
+                "updateTime": null,
+                "url": "/admin/dealerLevel/getList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "晋级设置",
+                "privilegeId": 161,
+                "updateTime": null,
+                "url": "/promotionManage"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "降级设置",
+                "privilegeId": 162,
+                "updateTime": null,
+                "url": "/degradeManage"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "发起邀请",
+                "privilegeId": 50,
+                "updateTime": null,
+                "url": "/admin/invite/addInvite"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看详情",
+                "privilegeId": 51,
+                "updateTime": null,
+                "url": "/admin/invite/findInviteInfo"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "加盟管理列表",
+                "privilegeId": 85,
+                "updateTime": null,
+                "url": "/admin/invite/queryInvitePageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看邀请",
+                "privilegeId": 289,
+                "updateTime": null,
+                "url": "/inviteLink"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看详情",
+                "privilegeId": 52,
+                "updateTime": null,
+                "url": "/admin/dealer/findDealerById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "导出",
+                "privilegeId": 53,
+                "updateTime": null,
+                "url": "/admin/dealer/exportDealerListExcel"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "开启用户",
+                "privilegeId": 54,
+                "updateTime": null,
+                "url": "/admin/dealer/openDealerById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "关闭用户",
+                "privilegeId": 55,
+                "updateTime": null,
+                "url": "/admin/dealer/stopDealerById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "修改会员基本信息",
+                "privilegeId": 56,
+                "updateTime": null,
+                "url": "/admin/dealer/updateDealerById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "修改会员授权信息",
+                "privilegeId": 57,
+                "updateTime": null,
+                "url": "/admin/dealer/updateDealerPermitById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看会员树状图",
+                "privilegeId": 67,
+                "updateTime": null,
+                "url": "/admin/dealer/findDealerTreeById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "会员列表",
+                "privilegeId": 86,
+                "updateTime": null,
+                "url": "/admin/dealer/queryDealerPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "他的账户",
+                "privilegeId": 163,
+                "updateTime": null,
+                "url": "/admin/dealer/queryDealerAccount"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "实名信息",
+                "privilegeId": 164,
+                "updateTime": null,
+                "url": "/admin/dealerRealName/findDealerRealNameInfo"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "现金账户收支明细",
+                "privilegeId": 290,
+                "updateTime": null,
+                "url": "/admin/detailBalance/queryDetailBalanceList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "代币账户收支明细",
+                "privilegeId": 291,
+                "updateTime": null,
+                "url": "/admin/detailTokencoin/queryDetailTokencoinList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "待提现账户明细",
+                "privilegeId": 292,
+                "updateTime": null,
+                "url": "/withDrawAccount"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "积分账户收支明细",
+                "privilegeId": 293,
+                "updateTime": null,
+                "url": "/admin/detailUserscore/queryDetailUserscorePageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "分红账户明细",
+                "privilegeId": 294,
+                "updateTime": null,
+                "url": "/admin/detailBonuspoint/queryDetailBonuspointList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看会员绑定的银行卡",
+                "privilegeId": 295,
+                "updateTime": null,
+                "url": "/admin/bindBankInfo/findBindBankInfoBydealerId"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "用户操作日志",
+                "privilegeId": 318,
+                "updateTime": null,
+                "url": "/operateLog"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "列表",
+                "privilegeId": 103,
+                "updateTime": null,
+                "url": "/admin/rechargeRecord/queryRechargeRecordPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "账户充值按钮",
+                "privilegeId": 165,
+                "updateTime": null,
+                "url": "/admin/rechargeRecord/addRechargeRecord"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "账户重置操作权限",
+                "privilegeId": 296,
+                "updateTime": null,
+                "url": "/admin/rechargeRecord/updateRechargeRecord"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "实名认证审核",
+                "privilegeId": 297,
+                "updateTime": null,
+                "url": "/admin/dealerRealName/queryDealerRealNamePageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "驳回审核",
+                "privilegeId": 301,
+                "updateTime": null,
+                "url": "/admin/dealerRealName/dismissAudit"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "供应商列表",
+                "privilegeId": 116,
+                "updateTime": null,
+                "url": "/admin/supplier/querySupplierPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加供应商",
+                "privilegeId": 117,
+                "updateTime": null,
+                "url": "/admin/supplier/addSupplier"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "停启用",
+                "privilegeId": 118,
+                "updateTime": null,
+                "url": "/admin/supplier/updateSupplierDeleteById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "供应商详情",
+                "privilegeId": 119,
+                "updateTime": null,
+                "url": "/admin/supplier/findSupplierById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑供应商",
+                "privilegeId": 174,
+                "updateTime": null,
+                "url": "/admin/supplier/updateSupplier"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "发布公告/通知",
+                "privilegeId": 63,
+                "updateTime": null,
+                "url": "/admin/notice/addNotice"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看详情",
+                "privilegeId": 64,
+                "updateTime": null,
+                "url": "/admin/notice/findNoticeDetailById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "再次推送",
+                "privilegeId": 65,
+                "updateTime": null,
+                "url": "/admin/notice/updateNoticeStatus_1"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "取消推送",
+                "privilegeId": 66,
+                "updateTime": null,
+                "url": "/admin/notice/updateNoticeStatus_2"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除",
+                "privilegeId": 69,
+                "updateTime": null,
+                "url": "/admin/notice/updateNoticeStatus_3"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "公告通知列表",
+                "privilegeId": 87,
+                "updateTime": null,
+                "url": "/admin/notice/queryNoticeList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "问题详情",
+                "privilegeId": 61,
+                "updateTime": null,
+                "url": "/admin/feedback/findFeedbackByid"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "修改问题类型",
+                "privilegeId": 62,
+                "updateTime": null,
+                "url": "/admin/feedback/updateFeedback"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "问题回复",
+                "privilegeId": 71,
+                "updateTime": null,
+                "url": "/admin/feedback/updateFeedback_2"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "问题反馈列表",
+                "privilegeId": 88,
+                "updateTime": null,
+                "url": "/admin/feedback/queryFeedbackList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "首页权限",
+                "privilegeId": 74,
+                "updateTime": null,
+                "url": "/dashboard"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "货币比例",
+                "privilegeId": 112,
+                "updateTime": null,
+                "url": "/admin/sysConfig/updateSysConfigByCurrency"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "基础信息设置权限",
+                "privilegeId": 114,
+                "updateTime": null,
+                "url": "/admin/sysConfig/updateSysConfigByTransaction"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加搜索关键词",
+                "privilegeId": 121,
+                "updateTime": null,
+                "url": "/admin/hotWord/addHotWord"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "热搜关键词列表",
+                "privilegeId": 122,
+                "updateTime": null,
+                "url": "/admin/hotWord/getHotWordsByPage"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "开启关闭关键词",
+                "privilegeId": 123,
+                "updateTime": null,
+                "url": "/admin/hotWord/updateHotWordsStatusById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑关键词",
+                "privilegeId": 124,
+                "updateTime": null,
+                "url": "/admin/hotWord/updateHotWordsById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除关键词",
+                "privilegeId": 125,
+                "updateTime": null,
+                "url": "/admin/hotWord/deleteHotWordsById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "帮助中心管理权限",
+                "privilegeId": 137,
+                "updateTime": null,
+                "url": "/admin/helpType/queryHelpTypePageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加问题类型",
+                "privilegeId": 138,
+                "updateTime": null,
+                "url": "/admin/helpType/addHelpType"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除问题类型",
+                "privilegeId": 139,
+                "updateTime": null,
+                "url": "/admin/helpType/deleteHelpType"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "问题列表",
+                "privilegeId": 140,
+                "updateTime": null,
+                "url": "/admin/helpQuestion/queryHelpQuestionPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加问题",
+                "privilegeId": 141,
+                "updateTime": null,
+                "url": "/admin/helpQuestion/addHelpQuestion"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看问题详情",
+                "privilegeId": 142,
+                "updateTime": null,
+                "url": "/admin/helpQuestion/findHelpQuestionById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑问题",
+                "privilegeId": 143,
+                "updateTime": null,
+                "url": "/admin/helpQuestion/updateHelpQuestion"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除问题",
+                "privilegeId": 144,
+                "updateTime": null,
+                "url": "/admin/helpQuestion/deleteHelpQuestion"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "推荐位列表",
+                "privilegeId": 170,
+                "updateTime": null,
+                "url": "/admin/featured/queryFeaturedList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加推荐位",
+                "privilegeId": 171,
+                "updateTime": null,
+                "url": "/admin/featured/addFeatured"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑推荐位",
+                "privilegeId": 172,
+                "updateTime": null,
+                "url": "/admin/featured/updateFeatured"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除推荐位",
+                "privilegeId": 173,
+                "updateTime": null,
+                "url": "/admin/featured/deleteFeatured"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "寄回地址列表",
+                "privilegeId": 194,
+                "updateTime": null,
+                "url": "/admin/returnAddress/queryReturnAddressList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加寄回点",
+                "privilegeId": 195,
+                "updateTime": null,
+                "url": "/admin/returnAddress/addReturnAddress"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "修改寄回点",
+                "privilegeId": 196,
+                "updateTime": null,
+                "url": "/admin/returnAddress/updateReturnAddress"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除寄回点",
+                "privilegeId": 197,
+                "updateTime": null,
+                "url": "/admin/returnAddress/deleteReturnAddress"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "关闭开启寄回点",
+                "privilegeId": 198,
+                "updateTime": null,
+                "url": "/admin/returnAddress/updateReturnAddress_1"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "提货地址列表",
+                "privilegeId": 200,
+                "updateTime": null,
+                "url": "/admin/storeHouse/queryStoreHouseList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加提货地址",
+                "privilegeId": 201,
+                "updateTime": null,
+                "url": "/admin/storeHouse/addStoreHouse"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "修改提货地址",
+                "privilegeId": 202,
+                "updateTime": null,
+                "url": "/admin/storeHouse/updateStoreHouse"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除提货地址",
+                "privilegeId": 203,
+                "updateTime": null,
+                "url": "/admin/storeHouse/updateStoreHouseDeleteById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "优惠券列表",
+                "privilegeId": 209,
+                "updateTime": null,
+                "url": "/admin/discountCoupon/getDiscountCouponPage"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加优惠券",
+                "privilegeId": 210,
+                "updateTime": null,
+                "url": "/admin/discountCoupon/addDiscountCoupon"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "修改优惠券",
+                "privilegeId": 211,
+                "updateTime": null,
+                "url": "/admin/discountCoupon/updateDiscountCouponById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "优惠券失效",
+                "privilegeId": 212,
+                "updateTime": null,
+                "url": "/admin/discountCoupon/loseDiscountCoupon"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加券库存",
+                "privilegeId": 213,
+                "updateTime": null,
+                "url": "/admin/discountCoupon/addRepertory"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "券库存",
+                "privilegeId": 214,
+                "updateTime": null,
+                "url": "/admin/discountCouponDealer/discountCouponDealerPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "优惠券详情",
+                "privilegeId": 215,
+                "updateTime": null,
+                "url": "/admin/discountCoupon/getDiscountCouponPageById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "优惠券模版",
+                "privilegeId": 307,
+                "updateTime": null,
+                "url": "/couponTemplate"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加广告位",
+                "privilegeId": 217,
+                "updateTime": null,
+                "url": "/admin/ad/addAd"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "广告位管理列表",
+                "privilegeId": 274,
+                "updateTime": null,
+                "url": "/advertisingManage"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "app首页Banner广告位",
+                "privilegeId": 275,
+                "updateTime": null,
+                "url": "/appBannerAdv"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "推荐位管理权限",
+                "privilegeId": 276,
+                "updateTime": null,
+                "url": "/featured"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "推荐产品管理",
+                "privilegeId": 277,
+                "updateTime": null,
+                "url": "/featuredManage"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "更新APP首页banner广告位",
+                "privilegeId": 319,
+                "updateTime": null,
+                "url": "/admin/ad/updateAd"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除APPbanner广告位",
+                "privilegeId": 320,
+                "updateTime": null,
+                "url": "/admin/ad/deleteAd"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "专题管理列表",
+                "privilegeId": 253,
+                "updateTime": null,
+                "url": "/admin/topic/list"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "操作专题模版",
+                "privilegeId": 254,
+                "updateTime": null,
+                "url": "/admin/topic/save"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "专题预览",
+                "privilegeId": 309,
+                "updateTime": null,
+                "url": "/topicPreview"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "降价拍列表",
+                "privilegeId": 256,
+                "updateTime": null,
+                "url": "/depreciate"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "营销工具管理页面",
+                "privilegeId": 257,
+                "updateTime": null,
+                "url": "/marketToolsManage"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "新增降价拍",
+                "privilegeId": 258,
+                "updateTime": null,
+                "url": "/admin/operActivityDepreciate/operatorAddDepreciate"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除降价拍",
+                "privilegeId": 259,
+                "updateTime": null,
+                "url": "/admin/operActivityDepreciate/operatorUpdateDepreciatelist_1"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "结束降价拍",
+                "privilegeId": 260,
+                "updateTime": null,
+                "url": "/admin/operActivityDepreciate/operatorUpdateDepreciatelist_2"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "减少降价拍库存",
+                "privilegeId": 261,
+                "updateTime": null,
+                "url": "/admin/operActivityDepreciate/operatorUpdateDepreciatelist_3"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "降价拍详情",
+                "privilegeId": 262,
+                "updateTime": null,
+                "url": "/admin/operActivityDepreciate/operatorfindById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "新建秒杀",
+                "privilegeId": 263,
+                "updateTime": null,
+                "url": "/admin/operActivitySeckill/addOperatorSeckill"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除秒杀",
+                "privilegeId": 264,
+                "updateTime": null,
+                "url": "/admin/operActivitySeckill/updateActiviySeckillStatus_1"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "结束秒杀",
+                "privilegeId": 265,
+                "updateTime": null,
+                "url": "/admin/operActivitySeckill/updateActiviySeckillStatus_2"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看秒杀",
+                "privilegeId": 266,
+                "updateTime": null,
+                "url": "/admin/operActivitySeckill/findActivitySeckillByActivityCode"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "新建套餐",
+                "privilegeId": 268,
+                "updateTime": null,
+                "url": "/admin/operActivityPackage/addOperActivityPackage"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "下架降价拍",
+                "privilegeId": 272,
+                "updateTime": null,
+                "url": "/admin/operActivityDepreciate/operatorUpdateDepreciatelist_4"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "下架秒杀",
+                "privilegeId": 273,
+                "updateTime": null,
+                "url": "/admin/operActivitySeckill/updateActiviySeckillStatus_3"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑套餐",
+                "privilegeId": 278,
+                "updateTime": null,
+                "url": "/admin/operActivityPackage/updateOperActivityPackage"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "套餐提交审核",
+                "privilegeId": 279,
+                "updateTime": null,
+                "url": "/admin/operActivityPackage/updateOperActivityPackageStatusById_1"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "套餐通过驳回审核",
+                "privilegeId": 280,
+                "updateTime": null,
+                "url": "/admin/operActivityPackage/updateOperActivityPackageStatusById_2"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "套餐上架",
+                "privilegeId": 281,
+                "updateTime": null,
+                "url": "/admin/operActivityPackage/updateOperActivityPackageStatusById_3"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "套餐下架",
+                "privilegeId": 282,
+                "updateTime": null,
+                "url": "/admin/operActivityPackage/updateOperActivityPackageStatusById_4"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "套餐产品管理",
+                "privilegeId": 283,
+                "updateTime": null,
+                "url": "/admin/operActivityPackageProduct/addPackageProduct"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "套餐价格库存设置",
+                "privilegeId": 284,
+                "updateTime": null,
+                "url": "/admin/operActivityPackage/updateOperActivityPackagePriceAndStock"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "套餐添加库存",
+                "privilegeId": 285,
+                "updateTime": null,
+                "url": "/admin/operActivityPackageSpecValue/updatePackageSpecValueStock"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "套餐详情",
+                "privilegeId": 286,
+                "updateTime": null,
+                "url": "/admin/operActivityPackage/findOperActivityPackageDetailsById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "套餐批量删除",
+                "privilegeId": 287,
+                "updateTime": null,
+                "url": "/admin/operActivityPackage/batchDeleteOperActivityPackage_1"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "套餐批量下架",
+                "privilegeId": 288,
+                "updateTime": null,
+                "url": "/admin/operActivityPackage/batchDeleteOperActivityPackage_2"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "优惠套餐列表",
+                "privilegeId": 298,
+                "updateTime": null,
+                "url": "/packageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "秒杀列表",
+                "privilegeId": 299,
+                "updateTime": null,
+                "url": "/secKill"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "奖品池列表",
+                "privilegeId": 300,
+                "updateTime": null,
+                "url": "/prizePoll"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "冻结库存活动列表",
+                "privilegeId": 303,
+                "updateTime": null,
+                "url": "/blockStockActivity"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "敏感词库列表",
+                "privilegeId": 269,
+                "updateTime": null,
+                "url": "/admin/badWord/queryBadWord"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除敏感词库",
+                "privilegeId": 270,
+                "updateTime": null,
+                "url": "/admin/badWord/deleteBadWord"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "添加敏感词库",
+                "privilegeId": 271,
+                "updateTime": null,
+                "url": "/admin/badWord/addBadWord"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "推荐位列表管理",
+                "privilegeId": 311,
+                "updateTime": null,
+                "url": "/recommendList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "拼店店铺举报权限",
+                "privilegeId": 326,
+                "updateTime": null,
+                "url": "/admin/storeReport/queryStoreReportPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "搜索关键词列表权限",
+                "privilegeId": 327,
+                "updateTime": null,
+                "url": "/admin/hotWord/getAllWordsByPage"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "拼店基础参数设置权限",
+                "privilegeId": 322,
+                "updateTime": null,
+                "url": "/admin/config/updateConfigByGroupstore"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "订单列表",
+                "privilegeId": 147,
+                "updateTime": null,
+                "url": "/orderManage"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "所有订单",
+                "privilegeId": 148,
+                "updateTime": null,
+                "url": "/admin/order/queryAllOrderPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "待支付订单",
+                "privilegeId": 149,
+                "updateTime": null,
+                "url": "/admin/order/queryUnPaidOrderPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "待发货订单",
+                "privilegeId": 150,
+                "updateTime": null,
+                "url": "/admin/order/queryUnSendOutOrderPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "待自提订单",
+                "privilegeId": 151,
+                "updateTime": null,
+                "url": "/admin/order/queryPickUpByCustomerOrderPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "待确认订单",
+                "privilegeId": 152,
+                "updateTime": null,
+                "url": "/admin/order/queryWaitReceivingOrderPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "已完成订单",
+                "privilegeId": 153,
+                "updateTime": null,
+                "url": "/admin/order/queryCompletedOrderPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "已关闭订单",
+                "privilegeId": 154,
+                "updateTime": null,
+                "url": "/admin/order/queryClosedOrderPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "待处理订单",
+                "privilegeId": 155,
+                "updateTime": null,
+                "url": "/admin/order/queryPendingOrderPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "订单详情",
+                "privilegeId": 156,
+                "updateTime": null,
+                "url": "/admin/order/getOrderDetail"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "标记",
+                "privilegeId": 157,
+                "updateTime": null,
+                "url": "/admin/order/orderSign"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "批量提货",
+                "privilegeId": 158,
+                "updateTime": null,
+                "url": "/admin/order/pickUpGoods"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "单个提货",
+                "privilegeId": 159,
+                "updateTime": null,
+                "url": "/admin/order/pickUpOrderProduct"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "云仓发货",
+                "privilegeId": 168,
+                "updateTime": null,
+                "url": "/admin/order/orderSendOut"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "同意退款",
+                "privilegeId": 204,
+                "updateTime": null,
+                "url": "/admin/returnProduct/confirmRefund"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "拒绝退款",
+                "privilegeId": 205,
+                "updateTime": null,
+                "url": "/admin/returnProduct/refusalRefund"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "售后操作",
+                "privilegeId": 302,
+                "updateTime": null,
+                "url": "/afterSaleOpr"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "同意换货",
+                "privilegeId": 304,
+                "updateTime": null,
+                "url": "/admin/returnProduct/agreeExchange"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "变更退货",
+                "privilegeId": 308,
+                "updateTime": null,
+                "url": "/admin/returnProduct/exchangeChangeReturn"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "获取礼包订单列表",
+                "privilegeId": 229,
+                "updateTime": null,
+                "url": "/admin/gbGiftBagOrder/queryAllGiftBagOrderPageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "礼包订单详情",
+                "privilegeId": 230,
+                "updateTime": null,
+                "url": "/admin/gbGiftBagOrder/getGiftBagOrderDetail"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "推送云仓（礼包订单）",
+                "privilegeId": 231,
+                "updateTime": null,
+                "url": "/admin/order/orderSendOutGift"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "等级列表",
+                "privilegeId": 179,
+                "updateTime": null,
+                "url": "/admin/storeStar/getAllStoreStar"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "新增等级",
+                "privilegeId": 180,
+                "updateTime": null,
+                "url": "/admin/storeStar/addStoreStar"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑等级",
+                "privilegeId": 181,
+                "updateTime": null,
+                "url": "/admin/storeStar/updateStoreStarById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除等级",
+                "privilegeId": 182,
+                "updateTime": null,
+                "url": "/admin/storeStar/deleteStoreStar"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "店铺晋级设置",
+                "privilegeId": 183,
+                "updateTime": null,
+                "url": "/promotionShop"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "店铺降级设置",
+                "privilegeId": 184,
+                "updateTime": null,
+                "url": "/demotionShop"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "店铺列表",
+                "privilegeId": 185,
+                "updateTime": null,
+                "url": "/admin/store/getStorePageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "店铺详情",
+                "privilegeId": 186,
+                "updateTime": null,
+                "url": "/admin/store/getStoreDetail"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "成员列表",
+                "privilegeId": 189,
+                "updateTime": null,
+                "url": "/admin/storeUser/getStoreMembers"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "店铺公告管理",
+                "privilegeId": 190,
+                "updateTime": null,
+                "url": "/admin/storeNotice/queryStoreNoticeList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "编辑公告",
+                "privilegeId": 191,
+                "updateTime": null,
+                "url": "/admin/storeNotice/updateStoreNotice"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "删除公告",
+                "privilegeId": 192,
+                "updateTime": null,
+                "url": "/admin/storeNotice/deleteStoreNotice"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "招募店铺列表",
+                "privilegeId": 187,
+                "updateTime": null,
+                "url": "/admin/store/getRecruitmentStorePageList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "招募店铺详情",
+                "privilegeId": 188,
+                "updateTime": null,
+                "url": "/admin/store/getRecruitmentStoreDetail"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "提现申请审核列表",
+                "privilegeId": 234,
+                "updateTime": null,
+                "url": "/admin/withdrawMoney/queryWithdrawMoneyList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "同意/驳回提现",
+                "privilegeId": 235,
+                "updateTime": null,
+                "url": "/admin/withdrawMoney/auditWithdrawMoney"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看打款记录",
+                "privilegeId": 236,
+                "updateTime": null,
+                "url": "/admin/withdrawMoney/queryWithdrawMoneyById"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看驳回理由",
+                "privilegeId": 237,
+                "updateTime": null,
+                "url": "/admin/withdrawMoney/queryRefusalReason"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "退款记录列表",
+                "privilegeId": 239,
+                "updateTime": null,
+                "url": "/admin/returnProduct/queryReturnMoneyList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "换货记录列表",
+                "privilegeId": 240,
+                "updateTime": null,
+                "url": "/admin/returnProduct/queryExchangeProductList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "退货记录列表",
+                "privilegeId": 241,
+                "updateTime": null,
+                "url": "/admin/returnProduct/queryReturnProductList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "平台账户收入明细列表",
+                "privilegeId": 243,
+                "updateTime": null,
+                "url": "/admin/settlementRecord/querySettlementRecordListByCalcType"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "设置收益金比例",
+                "privilegeId": 245,
+                "updateTime": null,
+                "url": "/admin/config/updateConfigBalanceInProfitRatio"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "查看提现手续费",
+                "privilegeId": 247,
+                "updateTime": null,
+                "url": "/admin/withdrawConfig/queryWithdrawConfig"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "设置提现手续费",
+                "privilegeId": 248,
+                "updateTime": null,
+                "url": "/admin/withdrawConfig/updateWithdrawConfig"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "获取利润分配模板列表",
+                "privilegeId": 250,
+                "updateTime": null,
+                "url": "/admin/settlementConfig/querySettlementConfigList"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "操作利润分配模板",
+                "privilegeId": 251,
+                "updateTime": null,
+                "url": "/admin/settlementConfig/operateSettlementConfig"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "保证金缴纳",
+                "privilegeId": 306,
+                "updateTime": null,
+                "url": "/depositPayment"
+            },
+            {
+                "adminId": 42,
+                "createTime": null,
+                "id": null,
+                "name": "供应商结算管理权限",
+                "privilegeId": 317,
+                "updateTime": null,
+                "url": "/supplierSettMange"
+            }
+        ],
+        "createAdmin": 8,
+        "createTime": 1542175167000,
+        "deptmentId": 3,
+        "deptmentName": null,
+        "face": "https://mr-test-sg.oss-cn-hangzhou.aliyuncs.com/sharegoods/c45b478ca7f44d94b4234a6fd7058b94.png",
+        "hadFirstLogin": 0,
+        "id": 42,
+        "immediateSuperior": 1,
+        "jobId": 6,
+        "jobName": null,
+        "lastLoginIp": null,
+        "name": "马金慧",
+        "remarks": null,
+        "sex": null,
+        "status": 1,
+        "telephone": "15715811438",
+        "updateAdmin": null,
+        "updateTime": 1542175397000,
+        "userAccount": null
+    },
+    "msg": "业务处理成功"
+}

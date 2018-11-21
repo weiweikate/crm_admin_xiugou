@@ -3,15 +3,15 @@
         <breadcrumb :nav='nav'></breadcrumb>
         <el-card>
             <el-button type='primary' @click="addRole">添加岗位</el-button>
-            <el-table v-loading="tableLoading" class="w-table" stripe :data="tableData" :height="height" border
+            <el-table v-loading="tableLoading" class="w-table" stripe :data="tableData" border
                       style="width: 100%">
                 <el-table-column prop="id" label="ID" width="180" align="center"></el-table-column>
-                <el-table-column prop="rname" label="角色名称" align="center"></el-table-column>
-                <el-table-column prop="dname" label="部门" align="center"></el-table-column>
+                <el-table-column prop="name" label="角色名称" align="center"></el-table-column>
+                <el-table-column prop="departmentName" label="部门" align="center"></el-table-column>
                 <el-table-column v-if="isShowOperate" label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button v-if="p.updateRole" type="warning" @click='editRole(scope.row)'>编辑</el-button>
-                        <el-button v-if="p.deleteRole" type="danger" @click="deleteRole(scope.row)">删除</el-button>
+                        <el-button type="warning" @click='editRole(scope.row)'>编辑</el-button>
+                        <el-button type="danger" @click="deleteRole(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -43,19 +43,13 @@
         mixins: [myMixinTable],
         data() {
             return {
-                // 权限控制
-                p: {
-                    addRole: false,
-                    updateRole: false,
-                    deleteRole: false,
-                },
                 isShowOperate: true,
 
                 nav: ['岗位管理', '岗位权限管理'],
                 tableLoading: false,
                 isShowDelToast: false,
                 departmentId: '',
-                delId: 66,
+                delId: '',
                 delUrl: 'http://api',
                 delUri: '',
                 tableData: [],
@@ -68,12 +62,11 @@
         methods: {
             //获取列表
             getList() {
-                let data = {};
                 this.tableLoading = true;
                 request.queryJobList({ id: this.departmentId })
                     .then(res => {
                         this.tableLoading = false;
-                        this.tableData = res.data.data;
+                        this.tableData = res.data;
                     })
                     .catch(err => {
                         this.$message.warning(err.msg);
@@ -83,7 +76,7 @@
 
             // 添加角色
             addRole() {
-                this.$router.push('addJobsPermission');
+                this.$router.push({ name: 'addJobsPermission' });
             },
 
             // 编辑角色
@@ -95,8 +88,6 @@
             // 删除模板
             deleteRole(row) {
                 this.delId = row.id;
-                this.delUrl = api.deleteRole;
-                this.delUri = pApi.deleteRole;
                 this.isShowDelToast = true;
             },
             deleteToast(msg) {

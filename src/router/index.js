@@ -318,6 +318,20 @@ export const asyncRouterMap = [
                 meta: { title: '岗位权限管理' }
             },
             {
+                hidden: true,
+                name: 'addJobsPermission',
+                path: '/addJobsPermission',
+                component: resolve => require(['../components/page/Permission/OrganizeMange/AddJobsPermission.vue'], resolve),
+                meta: { title: '添加岗位权限' }
+            },
+            {
+                hidden: true,
+                name: 'editJobsPermission',
+                path: '/editJobsPermission/:id',
+                component: resolve => require(['../components/page/Permission/AddJobsPermission.vue'], resolve),
+                meta: { title: '编辑岗位权限' }
+            },
+            {
                 name: 'manageList',
                 path: '/manageList',
                 component: resolve => require(['../components/page/Permission/ManageList.vue'], resolve),
@@ -916,18 +930,6 @@ export const asyncRouterMap = [
                 path: '/showMangeLog',
                 component: resolve => require(['../components/page/Permission/ShowMangeLog.vue'], resolve),
                 meta: { title: '操作日志' }
-            },
-            {
-                name: 'addJobsPermission',
-                path: '/addJobsPermission',
-                component: resolve => require(['../components/page/Permission/AddJobsPermission.vue'], resolve),
-                meta: { title: '添加岗位权限' }
-            },
-            {
-                name: 'editJobsPermission',
-                path: '/editJobsPermission',
-                component: resolve => require(['../components/page/Permission/EditJobsPermission.vue'], resolve),
-                meta: { title: '编辑岗位权限' }
             },
             {
                 name: 'setPermission',
