@@ -425,12 +425,12 @@ export const asyncRouterMap = [
                 component: resolve => require(['../components/page/SettlementMange/FlatAccountInfo.vue'], resolve),
                 meta: { title: '平台账户收入明细' }
             },
-            // {
-            //     name: 'depositPayment',
-            //     path: '/depositPayment',
-            //     component: resolve => require(['../components/page/SettlementMange/DepositPayment.vue'], resolve),
-            //     meta: { title: '保证金缴纳记录' }
-            // },
+            {
+                name: 'depositPayment',
+                path: '/depositPayment',
+                component: resolve => require(['../components/page/SettlementMange/DepositPayment.vue'], resolve),
+                meta: { title: '保证金缴纳记录' }
+            },
             // {
             //     name: 'soFar',
             //     path: '/soFar',

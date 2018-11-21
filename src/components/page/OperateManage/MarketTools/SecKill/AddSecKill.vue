@@ -36,6 +36,7 @@
                     <!--</el-date-picker>-->
                     <el-date-picker
                         v-model="form.activityTime"
+                        format="yyyy-MM-dd HH:mm"
                         type="datetimerange"
                         start-placeholder="开始时间"
                         end-placeholder="结束时间"
@@ -211,8 +212,8 @@
                         }
                         // 表单提交
                         const data = this.form;
-                        data.beginTime = moment(this.form.activityTime[0]).format('YYYY-MM-DD HH:mm:ss'); // 活动开始时间
-                        data.endTime = moment(this.form.activityTime[1]).format('YYYY-MM-DD HH:mm:ss'); // 活动开始时间
+                        data.beginTime = moment(this.form.activityTime[0]).format('YYYY-MM-DD HH:mm:00'); // 活动开始时间
+                        data.endTime = moment(this.form.activityTime[1]).format('YYYY-MM-DD HH:mm:00'); // 活动开始时间
                         // data.productCode = this.productDetail.productCode; // 产品编号
                         data.productId = this.productDetail.productId; // 产品ID
                         // data.productImg = this.productDetail.specImg; // 产品主图url

@@ -248,8 +248,8 @@
                     () => {
                         return file;
                     },
-                    () => {
-                        this.$message.error('上传图片尺寸不符合!');
+                    (err = '上传图片尺寸不符合!') => {
+                        this.$message.error(err);
                         return Promise.reject();
                     }
                 );

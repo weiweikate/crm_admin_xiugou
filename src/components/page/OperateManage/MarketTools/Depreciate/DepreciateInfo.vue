@@ -33,6 +33,7 @@
                 <el-form-item label="开始时间" prop="startTime">
                     <el-date-picker
                         type="datetime"
+                        format="yyyy-MM-dd HH:mm"
                         v-model="form.beginTime"
                         placeholder="选择开始时间" disabled>
                     </el-date-picker>
@@ -57,7 +58,7 @@
                     <span>分钟购买时间</span>
                 </el-form-item>
                 <el-form-item label="结束时间">
-                    <span>{{form.endTime|formatDateAll}}</span>
+                    <span>{{form.endTime|formatDateToMinute}}</span>
                 </el-form-item>
                 <el-form-item label="降价拍发放数量">
                     <el-input class="small" disabled v-model="form.totalNumber"></el-input>

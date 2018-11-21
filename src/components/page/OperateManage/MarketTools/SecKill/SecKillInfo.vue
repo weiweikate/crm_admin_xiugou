@@ -29,6 +29,7 @@
                 <el-form-item label="开始时间" prop="startTime">
                     <el-date-picker
                         type="datetime"
+                        format="yyyy-MM-dd HH:mm"
                         v-model="form.beginTime"
                         placeholder="选择开始时间" disabled>
                     </el-date-picker>
@@ -36,6 +37,7 @@
                 <el-form-item label="结束时间" prop="endTime">
                     <el-date-picker
                         type="datetime"
+                        format="yyyy-MM-dd HH:mm"
                         v-model="form.endTime"
                         placeholder="选择结束时间" disabled>
                     </el-date-picker>
