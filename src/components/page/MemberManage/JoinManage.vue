@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-breadcrumb :nav="['会员管理','会员加盟管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['会员管理','会员邀请管理']"></v-breadcrumb>
             <el-card style="margin:10px 0 20px">
                 <el-form ref="form" :inline="true" :model="form">
                     <el-form-item prop="initiator" label="发起人" label-width="120">
@@ -70,6 +70,7 @@ export default {
         };
     },
     activated() {
+        this.form.initiator = this.$route.query.inviteName || '';
         this.getList(this.page.currentPage);
     },
     methods: {

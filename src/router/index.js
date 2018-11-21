@@ -54,6 +54,13 @@ export const asyncRouterMap = [
                 path: '/supplierManage',
                 component: resolve => require(['../components/page/MemberManage/SupplierManage.vue'], resolve),
                 meta: { title: '供应商管理' }
+            },
+            {
+                hidden: true,
+                name: 'accountRecharge',
+                path: '/accountRecharge',
+                component: resolve => require(['../components/page/MemberManage/AccountRecharge.vue'], resolve),
+                meta: { title: '账户充值' }
             }
         ]
     },
@@ -568,7 +575,7 @@ export const asyncRouterMap = [
                 name: 'giftInfo',
                 path: '/giftInfo',
                 component: resolve => require(['../components/page/BrandProduct/GiftManage/GiftInfo.vue'], resolve),
-                meta: { title: '礼包详情' }
+                meta: { title: '礼包详情', keepAlive: true }
             },
             {
                 name: 'discountAdd',
@@ -738,12 +745,6 @@ export const asyncRouterMap = [
                 path: '/withDrawAccount',
                 component: resolve => require(['../components/page/MemberManage/UserAccount/WithDrawAccount.vue'], resolve),
                 meta: { title: '待提现账户' }
-            },
-            {
-                name: 'accountRecharge',
-                path: '/accountRecharge',
-                component: resolve => require(['../components/page/MemberManage/AccountRecharge.vue'], resolve),
-                meta: { title: '账户充值' }
             },
             {
                 name: 'realNameInfo',

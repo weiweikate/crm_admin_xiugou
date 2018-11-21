@@ -346,7 +346,7 @@
                     this.orderMsg.createTime = res.data.createTime; // 创建时间
                     this.orderMsg.payTime = res.data.payTime; // 第三方支付时间
                     this.orderMsg.sendTime = res.data.sendTime; // 发货时间
-                    // this.order.cancleTime = res.data.sendTime; // 取消时间
+                    this.orderMsg.cancleTime = res.data.cancelTime; // 取消时间
                     // this.orderFreePayTime = res.data.createTime; // 倒计时
                     this.orderMsg.expressName = res.data.expressName; // 物流公司名称
                     this.orderMsg.expressNo = res.data.expressNo; // 物流单号

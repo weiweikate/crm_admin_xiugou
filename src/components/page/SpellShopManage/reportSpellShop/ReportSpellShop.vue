@@ -85,7 +85,7 @@ export default {
         // 举报用户
         reportUser(row) {
             sessionStorage.setItem('memberDetail', row.userId);
-            this.$router.push({ name: 'memberDetail', query: { id: row.userId }});
+            this.$router.push({ name: 'memberDetail', query: { memberToInfo: row.userId }});
         },
         // 举报店铺
         reportShop(row) {

@@ -140,9 +140,9 @@
             </div>
         </div>
         <!--基础信息修改弹窗-->
-        <edit-basic @msg='basicToast' :dealer='dealer' :id="id" v-show="isShowEditBasic"></edit-basic>
+        <edit-basic @msg='basicToast' :dealer='dealer' :id="id" v-if="isShowEditBasic"></edit-basic>
         <!--授权信息修改弹窗-->
-        <edit-author @msg='authorToast' :dealer='dealer' :id="id" v-show="isShowEditAuthor"></edit-author>
+        <edit-author @msg='authorToast' :dealer='dealer' :id="id" v-if="isShowEditAuthor"></edit-author>
     </div>
 </template>
 
@@ -203,7 +203,6 @@
             },
             // 获取详情
             getDetail() {
-                // todo  缺少开设店铺字段
                 const data = {
                     id: this.id
                 };

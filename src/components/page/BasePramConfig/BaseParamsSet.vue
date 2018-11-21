@@ -6,8 +6,8 @@
           <div class="currency-wrap">
               <span class="currency-small-title">订单取消倒计时时间设置</span><br/>
               <el-input v-model="orderCancleTime" class="input-sty"></el-input><span class="point">分钟</span><br />
-              <span class="currency-small-title">支付超时退款时间设置</span><br/>
-              <el-input v-model="payOvertime" class="input-sty"></el-input><span class="point">分钟</span><br />
+              <!--<span class="currency-small-title">支付超时退款时间设置</span><br/>-->
+              <!--<el-input v-model="payOvertime" class="input-sty"></el-input><span class="point">分钟</span><br />-->
               <span class="currency-small-title">待确认收货时间设置</span><br/>
               <el-input v-model="toBeConfirmTime" class="input-sty"></el-input><span class="point">天</span><br />
               <!-- <span class="currency-small-title">默认用户退货发货时间</span><br/>
@@ -82,13 +82,13 @@ export default {
                         value_type: 1,
                         status: 1
                     },
-                    {
-                        code: 'pay_overtime',
-                        name: '支付超时退款时间',
-                        value: this.payOvertime,
-                        value_type: 1,
-                        status: 1
-                    },
+                    // {
+                    //     code: 'pay_overtime',
+                    //     name: '支付超时退款时间',
+                    //     value: this.payOvertime,
+                    //     value_type: 1,
+                    //     status: 1
+                    // },
                     {
                         code: 'time_goods_confirm',
                         name: '待确认收货时间',
@@ -106,7 +106,7 @@ export default {
                 ]
             };
             const reg = /^(0|[1-9]\d*)$/;
-            if (!reg.test(this.orderCancleTime) || !reg.test(this.payOvertime) || !reg.test(this.toBeConfirmTime) || !reg.test(this.returnDownTime)) {
+            if (!reg.test(this.orderCancleTime) || !reg.test(this.toBeConfirmTime) || !reg.test(this.returnDownTime)) {
                 this.$message.warning('请输入合法数据!');
                 return;
             }

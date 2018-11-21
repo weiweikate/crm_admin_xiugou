@@ -99,7 +99,7 @@
                 const data = {};
                 data.id = this.id;
                 data.levelId = this.info.levelId;
-                    data.upUserid = this.info.upUserid;
+                data.upUserid = this.info.upUserid;
                 data.updateType = 2;
                 this.btnLoading = true;
                 request.updateDealerById(data).then(res => {

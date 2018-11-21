@@ -463,6 +463,7 @@
                     this.$message.warning('请输入正确的标签');
                     return;
                 }
+                if (this.selectedTagArr.length === 20) return this.$message.warning('最多添加二十个标签');
                 let tmp = false;
                 this.tagArr.forEach((v, k) => {
                     if (this.tagName == v.label) {

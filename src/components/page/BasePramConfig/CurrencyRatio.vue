@@ -64,6 +64,11 @@ export default {
          * @date 2018/10/10
         */
         submitForm() {
+            const reg = /^\+?[1-9]\d*$/;
+            if (!reg.test(this.num)) {
+                this.$message.warning('请输入合法数据!');
+                return;
+            }
             const data = {
                 configVOS: [
                     {
