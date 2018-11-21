@@ -91,44 +91,6 @@
                                 <div class="tips" style="margin-top: 10px"><span>卖家已寄出</span><span>物流公司：{{returnProduct.ecExpressName}}</span><span>物流单号：{{returnProduct.ecExpressNo}}</span><span
                                     class="blue" @click="watchLogistics">查看物流</span></div>
                             </div>
-
-                            <!--<div class="title red"-->
-                                 <!--v-if="status==1&&(!returnProduct.ecExpressNo)&&(!returnProduct.expressNo)">-->
-                                <!--请等待买家退货还剩{{time}}-->
-                            <!--</div>-->
-                            <!--<div class="title red"-->
-                                 <!--v-if="status==1&&returnProduct.expressNo">买家已发货-->
-                            <!--</div>-->
-                            <!--<div class="title red"-->
-                                 <!--v-if="status==2">已同意换货-->
-                            <!--</div>-->
-                            <!--<div class="title red" v-if="status==4">换货完毕</div>-->
-                            <!--<div v-if="status==4">-->
-                                <!--<div class="tips">交易完成</div>-->
-                                <!--<div class="tips" style="margin-top: 30px" v-if="returnProduct.expressNo">-->
-                                    <!--<span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span-->
-                                    <!--class="blue" @click="watchLogistics">查看物流</span></div>-->
-                                <!--<div class="tips" style="margin-top: 10px" v-if="returnProduct.ecExpressNo">-->
-                                    <!--<span>商家已寄出</span><span>物流公司：{{returnProduct.ecExpressName}}</span><span>物流单号：{{returnProduct.ecExpressNo}}</span><span-->
-                                    <!--class="blue" @click="watchLogistics">查看物流</span></div>-->
-                            <!--</div>-->
-                            <!--<div v-else>-->
-                                <!--<div v-if="!returnProduct.expressNo&&!returnProduct.ecExpressNo">-->
-                                    <!--<div class="tips">提示：收到买家退货时，请验货后同意退款</div>-->
-                                    <!--<div class="tips" style="margin-left: 40px">如果买家再超时结束前未退货，退货申请将自动关闭</div>-->
-                                <!--</div>-->
-                                <!--<div class="tips" style="margin-top: 10px" v-if="returnProduct.expressNo">-->
-                                    <!--<span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span-->
-                                    <!--class="blue" @click="watchLogistics">查看物流</span></div>-->
-                                <!--<div class="tips" style="margin-top: 10px" v-if="returnProduct.ecExpressNo"><span>卖家已寄出</span><span>物流公司：{{returnProduct.ecExpressName}}</span><span>物流单号：{{returnProduct.ecExpressNo}}</span><span-->
-                                    <!--class="blue" @click="watchLogistics">查看物流</span></div>-->
-                                <!--<div style="margin-top: 30px"-->
-                                     <!--v-if="status==1&&returnProduct.expressNo">-->
-                                    <!--<el-button type="danger" @click="reGoodsClick(1)">已收货并同意换货</el-button>-->
-                                    <!--<el-button type="primary" @click="reGoodsClick(2)">变更退货</el-button>-->
-                                    <!--&lt;!&ndash;<el-button type="warning" @click="reGoodsClick(3)">产品报损</el-button>&ndash;&gt;-->
-                                <!--</div>-->
-                            <!--</div>-->
                         </div>
                         <div class="info-other">
                             <div class="recode-item" v-if="status==6">
