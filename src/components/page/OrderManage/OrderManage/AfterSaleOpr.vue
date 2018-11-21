@@ -447,17 +447,19 @@
             <el-form v-model="refundForm" label-width="110px">
                  <el-form-item label="买家支付方式：">{{payType}}</el-form-item>
                  <el-form-item label="退还余额">
-                        <el-input v-model="refundForm.returnBalance" @blur="changeMoney(0,refundForm.returnBalance)"
-                                  auto-complete="off" placeholder="请输入退还余额"></el-input>
+                        <el-input-number v-model="refundForm.returnBalance" :controls="false" auto-complete="off" placeholder="请输入退还余额"></el-input-number>
                         <span class="mar-left5">元</span>
+                        <span class="tips">最多可退{{value[0]}}元</span>
                  </el-form-item>
                  <el-form-item label="三方账户">
-                        <el-input auto-complete="off" v-model="refundForm.returnAmounts" placeholder="0" @blur="changeMoney(1,refundForm.returnAmounts)"></el-input>
+                        <el-input-number auto-complete="off" :controls="false" v-model="refundForm.returnAmounts" placeholder="0"></el-input-number>
                         <span class="mar-left5">元</span>
+                        <span class="tips">最多可退{{value[1]}}元</span>
                  </el-form-item>
                  <el-form-item label="退还1元现金券">
-                        <el-input auto-complete="off" v-model="refundForm.returnTokenCoin" placeholder="0" @blur="changeMoney(2,refundForm.returnTokenCoin)"></el-input>
+                        <el-input-number auto-complete="off" :controls="false" v-model="refundForm.returnTokenCoin" placeholder="0"></el-input-number>
                         <span class="mar-left5">张</span>
+                        <span class="tips">最多可退{{value[2]}}张</span>
                  </el-form-item>
                 <el-form-item label="支付交易号">{{refundForm.outTradeNo}}</el-form-item>
                 <el-form-item style="margin-left: -84px" v-if="opr!=1">
@@ -613,7 +615,7 @@
                     result += '1元券支付+';
                 }
                 if (result != '') result = result.slice(0, -1);
-                console.log(result)
+                console.log(result);
                 return result;
             },
             changeMoney(num, pre) {
@@ -722,7 +724,6 @@
             },
             // 已收货并同意换货提交
             submit(form) {
-                this.badDebtMask = false;
                 const data = {
                     returnProductId: this.returnProductId,
                     scrapReason: this[form].scrapReason,
@@ -733,6 +734,7 @@
                 }
                 request.agreeExchange(data).then(res => {
                     this.$message.success(res.msg);
+                    this.badDebtMask = false;
                     this.getInfo();
                 }).catch(err => {
                     console.log(err);
@@ -741,7 +743,12 @@
             // 是否同意退款提交
             refundSubmit(num, form) {
                 const data = this[form];
-                data.hadScrap = this[form].hadScrap ? 1 : 2;
+                if (data.returnBalance > this.value[0] || data.returnAmounts > this.value[1] || data.returnTokenCoin > this.value[2]) {
+                    return this.$message.warning('输入值有误！');
+                }
+                if (this.opr != 1) {
+                    data.hadScrap = this[form].hadScrap ? 1 : 2;
+                }
                 data.returnProductId = this.returnProductId;
                 let url;
                 if (num == 1) {
@@ -879,6 +886,10 @@
             font-size: 24px;
             height: 40px;
             line-height: 40px;
+        }
+        .tips{
+            color: #ff6868;
+            font-size: 12px;
         }
         .left {
             float: left;
@@ -1051,14 +1062,14 @@
                 width: 530px;
             }
             .el-dialog .el-input__inner {
-                width: 180px;
+                width: 135px;
             }
             .el-select .el-input__inner {
-                width: 180px;
+                width: 135px;
             }
 
             .icon-area .el-input__inner {
-                width: 180px;
+                width: 135px;
             }
             .el-dialog__footer {
                 text-align: center;
