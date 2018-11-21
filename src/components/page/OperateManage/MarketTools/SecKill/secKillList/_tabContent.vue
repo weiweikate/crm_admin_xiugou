@@ -15,6 +15,7 @@
                 <el-form-item prop="startDate" label="活动时间">
                     <el-date-picker
                         v-model="form.startDate"
+                        format="yyyy-MM-dd HH:mm"
                         type="datetimerange"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"
@@ -113,7 +114,7 @@
             </el-table-column>
             <el-table-column label="开始/结束时间" align="center" min-width="130">
                 <template slot-scope="scope">
-                    {{scope.row.beginTime|formatDateAll}}<br/>{{scope.row.endTime|formatDateAll}}
+                    {{scope.row.beginTime|formatDateToMinute}}<br/>{{scope.row.endTime|formatDateToMinute}}
                 </template>
             </el-table-column>
             <el-table-column label="关闭时间" align="center" min-width="120">
@@ -309,8 +310,8 @@
                 data.createUser = this.form.createUser;
                 data.productCode = this.form.productCode;
                 data.topicStatus = this.form.topicStatus;
-                data.beginStartTime = this.form.startDate ? moment(this.form.startDate[0]).format('YYYY-MM-DD HH:mm:ss') : '';
-                data.beginEndTime = this.form.startDate ? moment(this.form.startDate[1]).format('YYYY-MM-DD HH:mm:ss') : '';
+                data.beginStartTime = this.form.startDate ? moment(this.form.startDate[0]).format('YYYY-MM-DD HH:mm:00') : '';
+                data.beginEndTime = this.form.startDate ? moment(this.form.startDate[1]).format('YYYY-MM-DD HH:mm:00') : '';
                 data.createStartTime = this.form.releaseDate ? moment(this.form.releaseDate[0]).format('YYYY-MM-DD HH:mm:ss') : '';
                 data.createEndTime = this.form.releaseDate ? moment(this.form.releaseDate[1]).format('YYYY-MM-DD HH:mm:ss') : '';
                 data.page = val;
