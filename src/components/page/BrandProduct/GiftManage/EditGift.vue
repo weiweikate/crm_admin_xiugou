@@ -198,22 +198,22 @@
             <el-tabs v-model="couponType" v-loading="couponLoading" @tab-click="handleClick" style="height: 500px;overflow: auto">
                 <el-tab-pane label="满减券" name="1">
                     <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
-                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}}{{v.num==0?'(暂无库存)':''}}</span>
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected, 'disable-status':v.num==0}" @click="selectCoupon(v)">{{v.name}}{{v.num==0?'(暂无库存)':''}}</span>
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="折扣券" name="3">
                     <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
-                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}}{{v.num==0?'(暂无库存)':''}} </span>
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected, 'disable-status':v.num==0}" @click="selectCoupon(v)">{{v.name}}{{v.num==0?'(暂无库存)':''}} </span>
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="抵扣券" name="4">
                     <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
-                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}}{{v.num==0?'(暂无库存)':''}} </span>
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected, 'disable-status':v.num==0}" @click="selectCoupon(v)">{{v.name}}{{v.num==0?'(暂无库存)':''}} </span>
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="抵价券" name="2">
                     <div v-for="(v,k) in couponList" style="overflow: hidden; margin-bottom: 10px" :key="k">
-                        <span :class="{'selected-coupon':true,'active-selected':v.selected}" @click="selectCoupon(v)">{{v.name}}{{v.num==0?'(暂无库存)':''}} </span>
+                        <span :class="{'selected-coupon':true,'active-selected':v.selected, 'disable-status':v.num==0}" @click="selectCoupon(v)">{{v.name}}{{v.num==0?'(暂无库存)':''}} </span>
                     </div>
                 </el-tab-pane>
             </el-tabs>
@@ -1051,6 +1051,9 @@
             background-color: #33b4ff;
             color: #fff;
             border: 1px solid #33b4ff;
+        }
+        .disable-status{
+            color: #ccc;
         }
         .delete-coupon{
             cursor: pointer;
