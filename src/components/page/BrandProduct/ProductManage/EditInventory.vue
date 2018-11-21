@@ -37,7 +37,7 @@
                     <td>{{productInfo.stockUnit}}</td>
                 </tr>
             </table>
-            <el-table :data="tableData" border>
+            <el-table :data="tableData" border v-loading="tableLoading">
                 <el-table-column prop="code" label="仓库编码" align="center"></el-table-column>
                 <el-table-column prop="name" label="仓库名称" align="center"></el-table-column>
                 <el-table-column prop="type" label="仓库类型" align="center">
@@ -64,19 +64,19 @@
                     <template slot-scope="scope">
                         <el-button @click="openOrClose(scope.row,0,scope.$index)" type="primary" v-if="scope.row.status==1">关闭</el-button>
                         <el-button @click="openOrClose(scope.row,1,scope.$index)" type="primary" v-if="scope.row.status==0">开启</el-button>
-                        <el-button @click="saveMsg" v-loading="btnLoading" type="success" v-if="scope.row.status!=0">保存</el-button>
+                        <el-button @click="saveMsg(1)" :loading="btnLoading" type="success" v-if="scope.row.status!=0">保存</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <div style="margin-top: 20px">
                 <el-button @click="$router.push({path:'/productInventory'})" type="primary">取消</el-button>
-                <el-button type="success" @click="saveMsg">保存</el-button>
+                <el-button type="success" @click="saveMsg(1)">保存</el-button>
             </div>
         </el-card>
         <el-dialog :title="title[index]" :visible.sync="mask">
             <div style="text-align: center;font-size: 20px">{{info[index]}}</div>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" v-loading="btnLoading" @click="saveMsg">确 认</el-button>
+                <el-button type="primary" :loading="btnLoading" @click="saveMsg(2)">确 认</el-button>
                 <el-button @click="mask=false">取 消</el-button>
             </div>
         </el-dialog>
@@ -112,7 +112,8 @@ export default {
             mask: false,
             id: '',
             row: {},
-            btnLoading: false
+            btnLoading: false,
+            tableLoading: false
         };
     },
     activated() {
@@ -154,26 +155,32 @@ export default {
             this.row = row;
         },
         // 保存表单信息
-        saveMsg() {
+        saveMsg(num) {
             const data = {};
             data.productSpecStockVOList = [];
             this.tableData.forEach((v, k) => {
                 const temp = {
                     id: v.id,
                     type: v.type,
-                    status: 1 - v.status,
+                    status: num == 2 ? 1 - v.status : v.status,
                     stock: v.stock,
                     warehouseStock: v.warehouseStock
                 };
                 data.productSpecStockVOList.push(temp);
             });
-            this.btnLoading = true;
+            this.tableLoading = num == 1;
+            this.btnLoading = num == 2;
             request.updateProductSpecStock(data).then(res => {
                 this.$message.success(res.msg);
                 this.mask = false;
                 this.row.status = 1 - this.row.status;
                 this.getList();
+                this.tableLoading = false;
                 this.btnLoading = false;
+            }).catch(err => {
+                this.tableLoading = false;
+                this.btnLoading = false;
+                this.mask = false;
             });
         }
     }

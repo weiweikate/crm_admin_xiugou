@@ -618,20 +618,6 @@
                 console.log(result);
                 return result;
             },
-            changeMoney(num, pre) {
-                if (pre > this.value[num]) {
-                    if (num === 0) {
-                        this.$message.warning('超过最大可退还余额!');
-                        this.refundForm.returnBalance = this.value[0];
-                    } else if (num === 1) {
-                        this.$message.warning('超过最大可退还三方账户金额!');
-                        this.refundForm.returnAmounts = this.value[1];
-                    } else {
-                        this.$message.warning('超过最大可退还退还1元现金券!');
-                        this.refundForm.returnTokenCoin = this.value[2];
-                    }
-                }
-            },
             // 判断进度条状态,s状态  num1买家退货单号  num2卖家单号
             getProgressStu(status) {
                 switch (status) {
