@@ -41,6 +41,7 @@
             };
         },
         activated() {
+            this.$refs['allGift'].form.prodCode = this.$route.query.prodCode || '';
             this.$refs['allGift'].giftStatus = '';
             this.$refs['allGift'].getList(this.$refs['allGift'].page.currentPage);
         },

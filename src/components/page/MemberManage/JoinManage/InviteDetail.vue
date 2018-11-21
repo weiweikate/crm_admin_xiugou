@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-breadcrumb :nav="['经销商会员管理','经销商加盟管理','邀请详情']"></v-breadcrumb>
-        <div class="container" >
+        <div class="container" v-loading="loading" >
             <div class="basic-inf-area line">
                 <div class="item-row">
                     邀请层级：{{msg.levelName}}
@@ -32,11 +32,11 @@
                 <div v-if="list.length>0">
                     <div class="succ-item" v-for="item in list">
                         <div class="left">
-                            <img v-if="item.head_img" :src="item.head_img" alt="">
+                            <img v-if="item.headImg" :src="item.headImg" alt="">
                             <img v-else src="../../../../assets/images/logo.png" alt="">
                         </div>
                         <div class="center">
-                            <div>{{item.nickname}}</div>
+                            <div>{{item.realName}}</div>
                             <div>{{item.levelName}}</div>
                         </div>
                         <div class="right">
@@ -60,15 +60,18 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import icon from '@/components/common/ico.vue';
+    import request from '@/http/http';
     export default {
         components: {
             icon, vBreadcrumb
         },
         data: function() {
             return {
+                loading: false,
+                id: '',
                 detail: {},
                 msg: {},
-                list: ''
+                list: []
             };
         },
         activated() {
@@ -78,27 +81,14 @@
         methods: {
             // 获取详情
             getDetail() {
-                // const that = this;
-                // const data = {
-                //     id: that.id
-                // };
-                // that.$axios
-                //     .post(api.findInviteInfo, data)
-                //     .then(res => {
-                //         if (res.data.code == 200) {
-                //             that.loading = false;
-                //             that.detail = res.data.data.invite;
-                //             that.list = res.data.data.list;
-                //             console.log(that.list);
-                //         } else {
-                //             that.$message.warning(res.data.msg);
-                //             that.loading = false;
-                //         }
-                //     })
-                //     .catch(err => {
-                //         that.loading = false;
-                //         console.log(err);
-                //     });
+                this.loading = true;
+                request.queryInviteFlow({inviteCode: this.msg.code}).then(res => {
+                    this.loading = false;
+                    this.list = res.data;
+                }).catch(err => {
+                    this.loading = false;
+                    console.log(err);
+                });
             },
             // 返回列表
             backToList() {
@@ -106,7 +96,6 @@
             },
             // 跳到用户详情页面
             toUserDetail(item) {
-                localStorage.setItem('memberDetail', item.id);
                 this.$router.push({ path: '/memberDetail', query: { memberToInfo: item.id }});
             }
         }

@@ -70,6 +70,7 @@ export default {
         };
     },
     activated() {
+        this.form.initiator = this.$route.query.inviteName || '';
         this.getList(this.page.currentPage);
     },
     methods: {
