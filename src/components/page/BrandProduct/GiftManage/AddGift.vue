@@ -406,8 +406,12 @@
                     this.$message.warning('请添加产品图片');
                     return false;
                 }
-                if (this.form.weight > 9999999999999999 || this.form.weight <= 0) {
+                if (this.form.weight > 999999999 || this.form.weight <= 0) {
                     this.$message.warning('请输入正确的产品重量!');
+                    return false;
+                }
+                if (this.form.aferServiceDays > 999999999 || this.form.aferServiceDays <= 0) {
+                    this.$message.warning('请输入正确的售后周期!');
                     return false;
                 }
                 // else if (this.selectedTagArr.length == 0) {
