@@ -13,7 +13,6 @@
                             <template slot="title">
                                 <icon :ico="item.meta.icon"></icon>
                                 <span style="margin-left:6px" slot="title">{{ item.meta.title }}</span>
-                                <!-- <i :class="item.icon"></i><span slot="title">{{ item.title }}</span> -->
                             </template>
                             <el-menu-item v-for="(subItem,i) in item.children" :key="subItem.name" :index="subItem.name" v-if="!subItem.hidden">
                                 {{ subItem.meta.title }}
@@ -27,8 +26,8 @@
                         </el-menu-item>
                     </template>
                     <template v-else>
-                        <el-menu-item :index="item.name" :key="item.name" v-if="!item.hidden">
-                            <icon :ico="item.meta.icon"></icon>
+                        <el-menu-item :index="item.name" :key="item.name" v-if="!item.hidden && item.meta">
+                            <icon :ico="item.meta.icon" v-if="item.meta && item.meta.icon"></icon>
                             <span style="margin-left:6px" slot="title">{{ item.meta.title }}</span>
                         </el-menu-item>
                     </template>
