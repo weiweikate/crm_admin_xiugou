@@ -97,7 +97,7 @@
               <el-button v-if="scope.row.status == 2" @click="giftMange(scope.row,4)" style="margin-bottom:10px" type="success">通过审核</el-button>
               <el-button v-if="scope.row.status == 2" @click="giftMange(scope.row,3)" style="margin-bottom:10px" type="danger">驳回审核</el-button>
               <el-button v-if="scope.row.status == 4" @click="giftMange(scope.row,5)" style="margin-bottom:10px" type="success">礼包上架</el-button>
-              <el-button v-if="scope.row.status == 5" @click="giftMange(scope.row,6)" type="danger">礼包下架</el-button>
+              <el-button v-if="scope.row.status == 5" @click="(()=>{productDownMask = true;row = scope.row})" type="danger">礼包下架</el-button>
               <el-button v-if="scope.row.status == 1 || scope.row.status == 6  || scope.row.status == 3" @click="giftMange(scope.row,2)" type="danger">确认提交</el-button>
             </template>
           </el-table-column>
@@ -133,6 +133,14 @@
           </el-popover>
           <el-button @click="batchOperate(6)">下架</el-button>
       </div>
+        <!--下架产品-->
+        <el-dialog title="下架" :visible.sync="productDownMask" width="30%">
+            <p class="tac">是否下架当前选择产品?</p>
+            <span slot="footer">
+                <el-button type="primary" @click="giftMange(row,6)">确 定</el-button>
+                <el-button @click="productDownMask = false">取 消</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -149,6 +157,8 @@ export default {
 
     data() {
         return {
+            productDownMask: false,
+            row: {}, // 产品信息
             levelList: [], // 用户层级列表
             giftStatus: '', // 礼包状态
             form: {
@@ -201,6 +211,7 @@ export default {
         giftMange(row, status) {
             request.updateActivityPackageStatusById({ id: row.id, status: status }).then(res => {
                 this.$message.success(res.msg);
+                this.productDownMask = false;
                 this.getList(this.page.currentPage);
             }).catch(err => {
                 console.log(err);

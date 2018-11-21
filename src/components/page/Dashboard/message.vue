@@ -121,7 +121,6 @@
             },
             // 跳转查看页面
             showMsgInfo(row) {
-                console.log(row);
                 const type = row.messageType.toString();
                 const id = row.bizData;
                 switch (type) {

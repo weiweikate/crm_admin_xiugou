@@ -413,12 +413,6 @@ export const asyncRouterMap = [
             //     component: resolve => require(['../components/page/SettlementMange/ExchangeMange.vue'], resolve),
             //     meta: { title: '换货记录' }
             // },
-            // {
-            //     name: 'supplierSettMange',
-            //     path: '/supplierSettMange',
-            //     component: resolve => require(['../components/page/SettlementMange/supplierSettMange.vue'], resolve),
-            //     meta: { title: '供应商结算管理' }
-            // },
             {
                 name: 'flatAccountInfo',
                 path: '/flatAccountInfo',
@@ -437,6 +431,12 @@ export const asyncRouterMap = [
             //     component: resolve => require(['../components/page/SettlementMange/SoFar.vue'], resolve),
             //     meta: { title: '收益金比例设置' }
             // },
+            {
+                name: 'supplierSettMange',
+                path: '/supplierSettMange',
+                component: resolve => require(['../components/page/SettlementMange/supplierSettMange.vue'], resolve),
+                meta: { title: '供应商结算管理' }
+            },
             {
                 name: 'profitDistrMange',
                 path: '/profitDistrMange',
