@@ -59,3 +59,7 @@ export const querySettleProFitById = ['/settle/template/queryDetail', { methods:
 export const disableSettleProFitById = ['/settle/template/disable', { methods: 'get' }]; // 停用模板
 // 保证金缴纳记录
 export const storePayRecordList = ['/store/deposit/query', { methods: 'get' }];
+// 供应商结算列表
+export const querySupplierByProductId = ['/order/orderProduct/queryByProductId', { methods: 'post' }];
+//导出对账单
+export const exportStorePayRecordList = '/admin/order/orderProduct/export';

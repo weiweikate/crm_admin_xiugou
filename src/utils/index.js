@@ -114,6 +114,8 @@ const formatTime = function(value, status) {
     }
     if (status == 1) {
         return value == '' ? '' : moment(value).format('YYYY-MM-DD');
+    } else if (status == 2) {
+        return value == '' ? '' : moment(value).format('YYYY-MM');
     }
     return value == '' ? '' : moment(value).format('YYYY-MM-DD HH:mm:ss');
 };
@@ -125,9 +127,9 @@ const formatTime = function(value, status) {
  */
 const setParam = function(path = '/404', paramName = 'pageDefParam', param = '-1') {
     this.$store.commit('SET_PAGE_PARAM', { name: paramName, query: param });
-    let obj = {};
+    const obj = {};
     obj[paramName] = param;
-    this.$router.push({ path: path, query: obj});
+    this.$router.push({ path: path, query: obj });
 };
 /**
  * 页面跳转获取缓存参数
