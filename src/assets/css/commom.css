@@ -32,3 +32,15 @@
 .tac{
     text-align: center;
 }
+/*弹出窗样式修改*/
+.el-dialog {
+    width: 530px;
+    border-radius: 10px;
+}
+.el-dialog__header {
+    border-bottom: 1px solid #eee;
+    padding: 20px 20px 10px 50px;
+}
+.el-dialog__title {
+    color: #ff6868
+}

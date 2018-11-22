@@ -161,7 +161,7 @@ module.exports = {
                 ':': 'before'
             }
         }],
-        'padded-blocks': [2, 'never'],
+        'padded-blocks': [1, 'never'],
         'quotes': [2, 'single', {
             'avoidEscape': true,
             'allowTemplateLiterals': true
@@ -172,7 +172,7 @@ module.exports = {
             'after': true
         }],
         'space-before-blocks': [2, 'always'],
-        'space-before-function-paren': [2, 'never'],
+        'space-before-function-paren': [1, 'never'],
         'space-in-parens': [2, 'never'],
         'space-infix-ops': 2,
         'space-unary-ops': [2, {
