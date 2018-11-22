@@ -24,7 +24,7 @@
                         <el-tag>{{scope.row.totalNumber}}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="" label="套餐现有库存" align="center"></el-table-column>
+                <el-table-column prop="surplusNumber" label="套餐现有库存" align="center"></el-table-column>
                 <el-table-column label="新增发放数量" align="center">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.addTotalNumber"></el-input>
@@ -84,6 +84,7 @@
                         const idArr = v.packageSpecPriceId.split(',');
                         const stockArr = v.stock.split(',');
                         const totalNumberArr = v.totalNumber.split(',');
+                        const surplusNumberArr = v.surplusNumber.split(',');
                         if (specIdArr.length == 0) {
                             this.topTableRow.push({ startIndex: tmp, num: 1 });
                             tmp += 1;
@@ -103,6 +104,7 @@
                                 'specValues': specValArr[index],
                                 'stock': stockArr[index],
                                 'totalNumber': totalNumberArr[index],
+                                'surplusNumber': surplusNumberArr[index],
                                 'addTotalNumber': ''
                             };
                             this.tableData.push(obj);
