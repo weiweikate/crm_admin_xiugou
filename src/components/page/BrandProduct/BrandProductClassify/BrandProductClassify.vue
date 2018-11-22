@@ -2,8 +2,8 @@
     <div class="brand-product">
         <v-breadcrumb :nav="['品牌产品管理','产品品类分类管理']"></v-breadcrumb>
         <div class="table-block">
-            <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加一级类目</el-button>
-            <el-button type="success" style="margin-bottom: 20px" @click="hotClassifyManage">热门分类管理</el-button>
+            <el-button type="primary" style="margin-bottom: 20px" @click="addClassify" v-auth="'brand.brandProductClassify.tjyjlm'">添加一级类目</el-button>
+            <el-button type="success" style="margin-bottom: 20px" @click="hotClassifyManage" v-auth="'brand.brandProductClassify.tjrmfl'">热门分类管理</el-button>
             <template>
                 <el-table :data="tableData"  border style="width: 100%">
                     <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
@@ -28,10 +28,10 @@
                     </el-table-column>
                     <el-table-column label="操作" min-width="160" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" @click="toSecondClassify(scope.$index,scope.row)">
+                            <el-button type="primary" size="small" @click="toSecondClassify(scope.$index,scope.row)" v-auth="'brand.brandProductClassify.ejfl'">
                                 二级类目
                             </el-button>
-                            <el-button type="warning" size="small" @click="editItem(scope.$index,scope.row)">编辑
+                            <el-button type="warning" size="small" @click="editItem(scope.$index,scope.row)" v-auth="'brand.brandProductClassify.bj'">编辑
                             </el-button>
                             <!--<el-button type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除-->
                             <!--</el-button>-->

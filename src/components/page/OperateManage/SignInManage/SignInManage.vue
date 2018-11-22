@@ -5,7 +5,7 @@
             <div>
                 <div class="area">标签管理</div>
                 <div class="wrap">
-                    <div class="item" v-for="(item,index) in list" :key="index" @click="toPage(item.page)">
+                    <div class="item" v-auth="item.auth" v-for="(item,index) in list" :key="index" @click="toPage(item.page)">
                         <div class="left">
                             <img :src="item.img" alt="">
                         </div>
@@ -36,6 +36,7 @@
                         img: 'static/img/signInManage.png',
                         title: '签到管理设置',
                         content: '每日签到秀豆设置',
+                        auth: 'yunying.signInManage.qdglsz',
                         page: '/signInParamsSet'
                     }]
             };

@@ -2,13 +2,13 @@
     <div class="sensitive-library">
         <v-breadcrumb :nav="['运营管理','敏感词库']"></v-breadcrumb>
         <el-card :body-style="{ padding: '30px' }">
-            <el-button type="primary" @click="dialogVisible = true" style="margin-bottom:20px">添加敏感词</el-button>
+            <el-button type="primary" @click="dialogVisible = true" style="margin-bottom:20px" v-auth="'yunying.sensitiveLibrary.tjmgc'">添加敏感词</el-button>
             <el-table v-loading="tableLoading" :data="tableData" border>
                 <el-table-column type="index" :index="handleIndex" align="center" label="排序"></el-table-column>
                 <el-table-column prop="name" align="center" label="敏感词"></el-table-column>
                 <el-table-column align="center" label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="delItem(scope.row)" type="danger">删除</el-button>
+                        <el-button @click="delItem(scope.row)" type="danger" v-auth="'yunying.sensitiveLibrary.sc'">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>

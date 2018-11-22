@@ -14,7 +14,7 @@
                     </el-table-column>
                     <el-table-column  label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="danger" size="small" @click="setLabel(scope.row.id)">标签设置</el-button>
+                            <el-button type="danger" size="small" @click="setLabel(scope.row.id)" v-auth="'yunying.labelManage.bqsz'">标签设置</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
