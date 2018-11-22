@@ -25,8 +25,9 @@ router.beforeEach((to, from, next) => {
                 store.dispatch('GetInfo').then(res => { // 拉取user_info
                     console.log('GetInfo roles', res.data.roles);
                     const roles = res.data.roles; // note: roles must be a array! such as: ['editor','develop']
-                    store.dispatch('GenerateRoutes', { roles }).then(() => { // 根据roles权限生成可访问的路由表
-                        console.log('store.getters.addRouters', store.getters.addRouters);
+                    const _auth = res.data._auth;
+                    store.dispatch('GenerateRoutes', { roles, _auth }).then(() => { // 根据roles权限生成可访问的路由表
+                        console.log('store.getters.addRouters', store.getters.addRouters,store.getters.auth);
                         router.addRoutes(store.getters.addRouters); // 动态添加可访问路由表
                         next({ ...to, replace: true }); // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
                     });

@@ -56,8 +56,11 @@ Vue.directive('auth', {
         // 获取按钮权限
         let value = binding.value;
         // 获取用户权限
-        let permission = vnode.context.$store.getters.roles || [];
-        if (!permission.includes(value)) {
+        let getters = vnode.context.$store.getters;
+        let roles = getters.roles;
+        let auth = getters.auth;
+        // 假如不是超级管理员则判断用户用户权限
+        if (!roles.includes('admin') && !auth.includes(value)) {
             el.parentNode.removeChild(el);
         }
     }

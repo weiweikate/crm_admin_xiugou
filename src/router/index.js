@@ -431,7 +431,7 @@ export const asyncRouterMap = [
         path: '/quanxian',
         component: Layout,
         name: 'quanxian',
-        meta: { title: '权限管理', icon: 'icon-shezhi' },
+        meta: { title: '权限管理', icon: 'icon-shezhi', roles: ['admin'] },
         children: [
             {
                 name: 'organizeMange',
@@ -1588,3 +1588,15 @@ export default new Router({
     routes: constantRouterMap
 });
 
+let tmp = [];
+
+asyncRouterMap.forEach(item => {
+    tmp.push(item.name);
+    if (item.children) {
+        item.children.forEach(item => {
+            tmp.push(item.name);
+        });
+    }
+});
+
+export const authRouterList = tmp;
