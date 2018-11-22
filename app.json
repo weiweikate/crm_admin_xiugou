@@ -1,0 +1,62 @@
+{
+    "proxy": "qa",
+    "env": {
+        "qa": {
+            "name": "测试环境",
+            "host": "http://testadmin.sharegoodsmall.com"
+        },
+        "mock": {
+            "name": "开发mock环境",
+            "host": "http://localhost:9600"
+        },
+        "dev": {
+            "name": "开发环境",
+            "host": "http://devadmin.sharegoodsmall.com"
+        },
+        "prod": {
+            "name": "生产环境",
+            "host": "https://api.sharegoodsmall.com"
+        },
+        "wcj": {
+            "name": "吴承骏环境",
+            "host": "http://172.16.10.19:4080"
+        },
+        "jdw": {
+            "name": "蒋",
+            "host": "http://172.16.10.42:4080"
+        },
+        "zh": {
+            "name": "周",
+            "host": "http://172.16.10.29:4080"
+        },
+        "gd": {
+            "name": "高",
+            "host": "http://172.16.10.238:4080"
+        },
+        "syx": {
+            "name": "沈",
+            "host": "http://172.16.10.56:4080"
+        },
+        "zb": {
+            "name": "张",
+            "host": "http://172.16.10.41:4080"
+        },
+        "wu": {
+            "name": "吴",
+            "host": "http://172.16.10.19:8180"
+        },
+        "chen": {
+            "name": "陈",
+            "host": "http://172.16.10.88:4080"
+        },
+        "wang": {
+            "name": "王",
+            "host": "http://172.16.10.111:4080"
+        },
+        "yang": {
+            "name": "杨",
+            "host": "http://172.16.10.12:4080"
+        }
+    }
+}
+

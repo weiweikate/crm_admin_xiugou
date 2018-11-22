@@ -9,14 +9,12 @@ import * as api_7 from '@/api/SpellShopManage/index.js';
 import * as api_8 from '@/api/BasePramConfig/index.js';
 import * as api_9 from '@/api/ShowValue/index.js';
 import * as api_10 from '@/api/RepertoryManage/index.js';
-import qs from 'qs';
 import { Message,MessageBox } from 'element-ui';
 import store from '../stores'
 
 const api = {};
 Object.assign(api, api_1, api_2, api_3, api_4, api_5, api_6, api_7, api_8, api_9,api_10);
 
-const urlList = [];
 const request = {};
 try {
     Object.keys(api).forEach((v, k) => {
@@ -32,8 +30,6 @@ try {
         }
         // 接口方法
         request[v] = function(data = {}) {
-            // 添加公共权限url
-            if (data.url === undefined) data.uri = '/dashboard';
             if (methods === 'get') {
                 data = {
                     params: data
@@ -72,7 +68,7 @@ try {
                     return Promise.resolve(res);
                 })
                 .catch(err => {
-                    return err;
+                    return Promise.reject(err);
                 });
         };
     });

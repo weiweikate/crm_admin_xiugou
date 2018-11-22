@@ -1,0 +1,15 @@
+{
+    "pswLogin": [
+        "/admin/adminLogin/pswLogin",
+        {
+            "action": "登录",
+            "method": "post"
+        }
+    ],
+    "findAdminUserById": [
+        "/admin/adminUser/findAdminUserById",
+        {
+            "method": "get"
+        }
+    ]
+}

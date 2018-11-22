@@ -9,7 +9,8 @@ const user = {
         name: '',
         avatar: '',
         user: null,
-        roles: []
+        roles: [],
+        auth: []
     },
 
     mutations: {
@@ -25,8 +26,11 @@ const user = {
         SET_ROLES: (state, roles) => {
             state.roles = roles;
         },
+        SET_AUTH: (state, data) => {
+            state.auths = data;
+        },
         SET_USER: (state, user) => {
-            console.log('SET_USER', user)
+            console.log('SET_USER', user);
             state.user = user;
         }
     },
@@ -57,6 +61,7 @@ const user = {
                     } else {
                         reject('getInfo: roles must be a non-null array !');
                     }
+                    commit('SET_AUTH', data._auth);
                     commit('SET_USER', data);
                     resolve(response);
                 }).catch(error => {

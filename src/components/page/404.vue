@@ -1,56 +1,71 @@
 <template>
-  <div class="error-page">
-      <div class="error-code">权限<span>不够</span></div>
-      <div class="error-desc">啊哦~ 你所访问的页面不存在</div>
-      <div class="error-handle">
-          <router-link to="/dashboard">
-            <el-button type="primary" size="large">返回首页</el-button>
-          </router-link>
-          <el-button class="error-btn" type="primary" size="large" @click="goBack">返回上一页</el-button>
-      </div>
-  </div>
+    <div class="error-page">
+        <div class="error-bg">
+            <img src="../../assets/images/common/bg-404.png" alt="">
+        </div>
+        <div class="error-code">
+            <img src="../../assets/images/common/404.png" alt="">
+        </div>
+        <div class="error-desc">抱歉，您访问的页面不存在</div>
+        <div class="error-handle">
+            <router-link to="/dashboard">
+                <el-button type="primary" size="large">返回首页</el-button>
+            </router-link>
+            <el-button class="error-btn" type="primary" size="large" @click="goBack">返回上一页</el-button>
+        </div>
+    </div>
 </template>
 
 <script>
-export default {
-  methods: {
-      goBack(){
-          this.$router.go(-1);
-      }
-  }
-}
+    export default {
+        methods: {
+            goBack() {
+                this.$router.go(-1);
+            }
+        }
+    };
 </script>
 
 
-<style scoped>
-    .error-page{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
+<style lang="less">
+    .error-page {
+        padding: 50px;
         width: 100%;
         height: 100%;
         background: #f3f3f3;
-        box-sizing: border-box;
+        text-align: center;
     }
-    .error-code{
-        line-height: 1;
-        font-size: 160px;
-        font-weight: bolder;
-        color: #2d8cf0;
+
+    .error-bg {
+        margin-bottom: 20px;
+        img {
+            width: 500px;
+        }
     }
-    .error-code span{
+
+    .error-code {
+        margin-bottom: 20px;
+        img {
+            width: 150px;
+        }
+
+    }
+
+    .error-code span {
         color: #00a854;
     }
-    .error-desc{
+
+    .error-desc {
         font-size: 30px;
         color: #777;
     }
-    .error-handle{
+
+    .error-handle {
         margin-top: 30px;
         padding-bottom: 200px;
     }
-    .error-btn{
+
+    .error-btn {
         margin-left: 100px;
     }
 </style>

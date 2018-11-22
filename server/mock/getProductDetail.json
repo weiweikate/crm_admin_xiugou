@@ -1,0 +1,119 @@
+{
+    "code": 10000,
+    "msg": "业务处理成功",
+    "data": {
+        "product": {
+            "id": 115,
+            "name": "电动牙刷",
+            "videoUrl": "",
+            "imgUrl": "https://mr-test-sg.oss-cn-hangzhou.aliyuncs.com/sharegoods/O1CN011O04oI28bccxWpd_!!112361642.jpg",
+            "firstCategoryId": 115,
+            "secCategoryId": 118,
+            "thirdCategoryId": 119,
+            "brandId": 47,
+            "supplierId": 36,
+            "sendMode": 2,
+            "afterSaleServiceDays": 0,
+            "buyLimit": 10,
+            "leftBuyNum": null,
+            "beginTime": null,
+            "endTime": null,
+            "content": "测试",
+            "firstCategoryName": "数码",
+            "secCategoryName": "数码相机",
+            "thirdCategoryName": "单反相机",
+            "brandName": "苹果",
+            "supplierName": "苹果"
+        },
+        "productImgList": [
+            {
+                "sort": 1,
+                "originalImg": "https://mr-test-sg.oss-cn-hangzhou.aliyuncs.com/sharegoods/O1CN011O04oI28bccxWpd_!!112361642.jpg",
+                "smallImg": "https://mr-test-sg.oss-cn-hangzhou.aliyuncs.com/sharegoods/O1CN011O04oI28bccxWpd_!!112361642.jpg",
+                "width": null,
+                "height": null
+            },
+            {
+                "sort": 2,
+                "originalImg": "https://mr-test-sg.oss-cn-hangzhou.aliyuncs.com/sharegoods/O1CN011Y9pOvDD0STgVDz_!!3016253017.jpg",
+                "smallImg": "https://mr-test-sg.oss-cn-hangzhou.aliyuncs.com/sharegoods/O1CN011Y9pOvDD0STgVDz_!!3016253017.jpg",
+                "width": null,
+                "height": null
+            }
+        ],
+        "specMap": {
+            "颜色": [
+                {
+                    "id": 319,
+                    "specName": "颜色",
+                    "specValue": "黑色"
+                },
+                {
+                    "id": 320,
+                    "specName": "颜色",
+                    "specValue": "白色"
+                }
+            ],
+            "充电模式": [
+                {
+                    "id": 321,
+                    "specName": "充电模式",
+                    "specValue": "常规"
+                }
+            ]
+        },
+        "paramList": [
+            {
+                "id": 2451,
+                "paramValue": "3",
+                "paramName": "品牌"
+            },
+            {
+                "id": 2452,
+                "paramValue": "3",
+                "paramName": "像素"
+            },
+            {
+                "id": 2453,
+                "paramValue": "3",
+                "paramName": "套餐"
+            }
+        ],
+        "priceList": [
+            {
+                "id": 240,
+                "productId": 115,
+                "specIds": "319,321",
+                "spec": "黑色-常规",
+                "barCode": "",
+                "weight": 0.1,
+                "volume": 0.1,
+                "specImg": "https://mr-test-sg.oss-cn-hangzhou.aliyuncs.com/sharegoods/O1CN011O04oI28bccxWpd_!!112361642.jpg",
+                "originalPrice": 90,
+                "price": 90,
+                "stock": 111111,
+                "stockUnit": "箱"
+            },
+            {
+                "id": 241,
+                "productId": 115,
+                "specIds": "320,321",
+                "spec": "白色-常规",
+                "barCode": "",
+                "weight": 0.01,
+                "volume": 0.01,
+                "specImg": "https://mr-test-sg.oss-cn-hangzhou.aliyuncs.com/sharegoods/O1CN011Y9pOwZ4ZKcdQVc_!!3016253017.jpg",
+                "originalPrice": 100,
+                "price": 100,
+                "stock": 23,
+                "stockUnit": "箱"
+            }
+        ],
+        "originalPrice": 90,
+        "price": 90,
+        "priceType": 1,
+        "monthSaleTotal": 0,
+        "freight": 0,
+        "onSale": false
+    }
+}
