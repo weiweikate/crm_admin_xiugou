@@ -8,7 +8,7 @@
                 <div class="arrow-right">
                     >
                 </div>
-                <div class="operate">
+                <div class="operate" @click="showMsgInfo(v)">
                     <span>{{v.buttonName}}</span>
                 </div><br/>
                 <div class="time">
@@ -47,8 +47,47 @@ export default {
                 console.log(err);
             });
         },
-        //  跳转全部消息
+        // 跳转详情
+        showMsgInfo(row) {
+            request.readMessages({ ids: row.id }).then(res => {
+                this.$message.success(res.msg);
+                this.closeMask();
+                const type = row.messageType.toString();
+                const id = row.bizData;
+                const bizType = row.bizType;
+                if (bizType) {
+                    switch (bizType) {
+                        case '1': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 1, appBannerAdvPageType: 1}}); break; // APP首页banner广告位
+                        case '2': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 2, appBannerAdvPageType: 2}}); break; // APP首页推荐位
+                        case '3': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 1, appBannerAdvPageType: 3}}); break; // APP首页明星店铺推荐位
+                        case '4': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 1, appBannerAdvPageType: 4}}); break; // APP首页今日榜单广告位
+                        case '5': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 1, appBannerAdvPageType: 5}}); break; // APP首页精品推荐广告位
+                        case '6': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 2, appBannerAdvPageType: 6}}); break; // APP首页超值热卖广告位
+                        case '8': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 2, appBannerAdvPageType: 8}}); break; // APP首页为你推荐广告位
+                        case '9': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 1, appBannerAdvPageType: 9}}); break; // 拼店首页banner推荐位
+                        case '10': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 3, appBannerAdvPageType: 10}}); break; // 类目搜索banner广告位'
+                        default: this.$message.warning('无跳转页面类型');
+                    }
+                } else {
+                    switch (type) {
+                        case '1': this.$router.push({ name: 'joinManage', query: { inviteName: id }}); break; // 会员邀请
+                        case '2': this.$router.push(''); break; // 会员充值
+                        case '3': this.$router.push({ path: '/productList', query: { 'prodCode': id }}); break; // 产品管理
+                        case '4': this.$router.push('/productList'); break; // 产品库存
+                        case '5': this.$router.push('/reportSpellShop'); break; // 店铺举报
+                        case '6': this.$router.push('/discountCoupon'); break; // 优惠券库存
+                        case '7': this.$router.push({ name: 'giftManage', query: { prodCode: id }}); break; // 礼包管理
+                        case '8': this.$router.push('/giftManage'); break; // 礼包库存
+                        default: this.$message.warning('无跳转页面类型');
+                    }
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        // 跳转全部消息
         goPageAllMsg() {
+            this.closeMask();
             this.$router.push('message');
         }
     }

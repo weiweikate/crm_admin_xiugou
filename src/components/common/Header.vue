@@ -128,6 +128,7 @@ export default {
         getNoReadNum() {
             request.queryNewMessageCount({}).then(res => {
                 this.message = res.data || 0;
+                console.log(this.message);
             }).catch(err => {
                 console.log(err);
             });
@@ -138,7 +139,7 @@ export default {
                 }).catch(err => {
                     console.log(err);
                 });
-            }, 100000);
+            }, 5000);
         },
         // 获取消息
         async getMsg() {
