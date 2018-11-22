@@ -136,7 +136,7 @@
             // 跳转岗位权限
             redirect2Permisson(row) {
                 console.log(1,row.id,row)
-                this.$router.push({ name: 'jobsPermissionMange', params: { id: row.id } });
+                this.$router.push({ name: 'jobsPermissionMange', query: { id: row.id } });
             }
         }
     };

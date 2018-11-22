@@ -356,13 +356,6 @@ export const asyncRouterMap = [
                 meta: { title: '添加岗位权限' }
             },
             {
-                hidden: true,
-                name: 'editJobsPermission',
-                path: '/editJobsPermission/:id',
-                component: resolve => require(['../components/page/Permission/AddJobsPermission.vue'], resolve),
-                meta: { title: '编辑岗位权限' }
-            },
-            {
                 name: 'manageList',
                 path: '/manageList',
                 component: resolve => require(['../components/page/Permission/ManageList.vue'], resolve),

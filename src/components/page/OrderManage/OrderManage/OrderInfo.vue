@@ -179,17 +179,19 @@
             <el-form v-model="refundForm" label-width="110px">
                 <el-form-item label="买家支付方式：">{{payType}}</el-form-item>
                 <el-form-item label="退还余额">
-                    <el-input v-model="refundForm.returnBalance" @blur="changeMoney(0,refundForm.returnBalance)"
-                              auto-complete="off" placeholder="请输入退还余额"></el-input>
+                    <el-input v-model="refundForm.returnBalance" :controls="false" auto-complete="off" placeholder="请输入退还余额"></el-input>
                     <span class="mar-left5">元</span>
+                    <span class="tips">最多可退{{value[0]}}元</span>
                 </el-form-item>
                 <el-form-item label="三方账户">
-                    <el-input auto-complete="off" v-model="refundForm.returnAmounts" placeholder="0" @blur="changeMoney(1,refundForm.returnAmounts)"></el-input>
+                    <el-input auto-complete="off" v-model="refundForm.returnAmounts" :controls="false" placeholder="0"></el-input>
                     <span class="mar-left5">元</span>
+                    <span class="tips">最多可退{{value[1]}}元</span>
                 </el-form-item>
                 <el-form-item label="退还1元现金券">
-                    <el-input auto-complete="off" v-model="refundForm.returnTokenCoin" placeholder="0" @blur="changeMoney(2,refundForm.returnTokenCoin)"></el-input>
+                    <el-input auto-complete="off" v-model="refundForm.returnTokenCoin" :controls="false" placeholder="0"></el-input>
                     <span class="mar-left5">张</span>
+                    <span class="tips">最多可退{{value[2]}}张</span>
                 </el-form-item>
                 <el-form-item label="支付交易号">{{refundForm.outTradeNo}}</el-form-item>
                 <el-form-item style="margin-left: -84px">
@@ -580,20 +582,6 @@
                 await this.queryDictonary('CPBS');
                 this.reasonList = this.tmpAxiosData;
             },
-            changeMoney(num, pre) {
-                if (pre > this.value[num]) {
-                    if (num === 0) {
-                        this.$message.warning('超过最大可退还余额!');
-                        this.refundForm.returnBalance = this.value[0];
-                    } else if (num === 1) {
-                        this.$message.warning('超过最大可退还三方账户金额!');
-                        this.refundForm.returnAmounts = this.value[1];
-                    } else {
-                        this.$message.warning('超过最大可退还退还1元现金券!');
-                        this.refundForm.returnTokenCoin = this.value[2];
-                    }
-                }
-            },
             // 选择报损原因
             chooseBadReason() {
                 this.refundForm.scrapReason = this.refundForm.badReason;
@@ -634,6 +622,9 @@
             // 是否同意退款提交
             refundSubmit(form) {
                 const data = this[form];
+                if (data.returnBalance > this.value[0] || data.returnAmounts > this.value[1] || data.returnTokenCoin > this.value[2]) {
+                    return this.$message.warning('输入值有误！');
+                }
                 data.hadScrap = this[form].hadScrap ? 1 : 2;
                 data.orderProductId = this.productId;
                 request.doBusinessRefund(data).then(res => {

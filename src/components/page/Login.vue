@@ -89,7 +89,7 @@
         },
         watch: {
             $route: {
-                handler: function (route) {
+                handler: function(route) {
                     this.redirect = route.query && route.query.redirect;
                 },
                 immediate: true
@@ -124,7 +124,7 @@
                         }).catch(() => {
                             this.btnLoading = false;
                         });
-                        /*request[url](data).then(res => {
+                        /* request[url](data).then(res => {
                             localStorage.setItem('ms_username', res.data.name);
                             localStorage.setItem('ms_userID', res.data.id);
                             localStorage.setItem('ms_userPhone', res.data.telephone);
@@ -160,7 +160,7 @@
                 const that = this;
                 this.code = false;
                 this.codeTime = 60;
-                const timer = setInterval(function () {
+                const timer = setInterval(function() {
                     that.codeTime--;
                     if (that.codeTime <= 0) {
                         that.code = true;
