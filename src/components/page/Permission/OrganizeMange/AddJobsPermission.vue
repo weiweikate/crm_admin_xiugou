@@ -29,7 +29,7 @@
                 </el-form>
             </div>
 
-            <auth-list :source="authList"></auth-list>
+            <auth-list></auth-list>
         </el-card>
 
 
@@ -49,62 +49,94 @@
             return {
                 authList: [
                     {
-                        title:'首页',
-                        name: '首页',
-                        children: [{
-                            name: '模块1',
-                            title:'模块1'
-                        }, {
-                            name: '模块2',
-                            title:'模块2',
-                        }]
+                        title: '系统首页',
+                        name: 'dasnboard',
+                        children: [
+                            {
+                                title: '数据类模块',
+                                name: 'dashboard.data',
+                                children: []
+                            },
+                            {
+                                title: '快捷操作模块',
+                                name: 'dashboard.data',
+                                children: [
+                                    {
+                                        title: '发布产品',
+                                        name: 'dashboard.shortcut.fbcp'
+                                    },
+                                    {
+                                        title: '发布礼包',
+                                        name: 'dashboard.shortcut.fblb'
+                                    },
+                                    {
+                                        title: '会员邀请',
+                                        name: 'dashboard.shortcut.hyyq'
+                                    },
+                                    {
+                                        title: '实名认证查看',
+                                        name: 'dashboard.shortcut.smrzck'
+                                    },
+                                    {
+                                        title: '防伪码查询',
+                                        name: 'dashboard.shortcut.fwmcx'
+                                    },
+                                    {
+                                        title: '推荐位管理',
+                                        name: 'dashboard.shortcut.tjwgl'
+                                    },
+                                    {
+                                        title: '创建管理员账号',
+                                        name: 'dashboard.shortcut.cjglyzh'
+                                    },
+                                    {
+                                        title: '会员搜索',
+                                        name: 'dashboard.shortcut.hyss'
+                                    },
+                                    {
+                                        title: '添加供应商',
+                                        name: 'dashboard.shortcut.tjgys'
+                                    },
+                                    {
+                                        title: '广告位管理',
+                                        name: 'dashboard.shortcut.ggwgl'
+                                    },
+                                    {
+                                        title: '敏感词库管理',
+                                        name: 'dashboard.shortcut.mgckgl'
+                                    },
+                                    {
+                                        title: '账户充值',
+                                        name: 'dashboard.shortcut.zhcz'
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
-                        name: '会员管理',
-                        title:'会员管理',
-                        children: [{
-                            name: '会员1',
-                            title:'会员1',
+                        title: '会员管理',
+                        name: 'vip',
+                        children: {
+                            title: '会员层级管理',
+                            name: 'levelManage',
                             children: [
                                 {
-                                    title:'查看',
-                                    name: '查看'
+                                    title: '晋升设置',
+                                    name: 'vip.levelManage.jssz'
                                 },
                                 {
-                                    title:'删除',
-                                    name: '删除'
+                                    title: '降级设置',
+                                    name: 'vip.levelManage.jjsz'
                                 },
                                 {
-                                    title:'查看1',
-                                    name: '查看1'
+                                    title: '编辑',
+                                    name: 'vip.levelManage.bj'
                                 },
                                 {
-                                    title:'删除2',
-                                    name: '删除2'
-                                },
-                                {
-                                    title:'查看3',
-                                    name: '查看3'
-                                },
-                                {
-                                    title:'删除4',
-                                    name: '删除4'
-                                }
-                            ]
-                        }, {
-                            title:'会员2',
-                            name: '会员2',
-                            children: [
-                                {
-                                    title:'天剑',
-                                    name: '天剑'
-                                },
-                                {
-                                    title:'首页11',
-                                    name: 'sadsd'
-                                }
-                            ]
-                        }]
+                                    title: '层级信息',
+                                    name: 'vip.levelManage.cjxx'
+                                }]
+                        }
                     }
                 ],
                 departmentList: [],
@@ -123,16 +155,16 @@
                     }
                 },
 
-                headColor: ['#1c71fb', '#f7aa47', '#00c182', '#ff6769', '#917ee6', '#2cb2eb'],//待选颜色
+                headColor: ['#1c71fb', '#f7aa47', '#00c182', '#ff6769', '#917ee6', '#2cb2eb'], // 待选颜色
                 jobList: [],
-                selectPeople: [],//存储被选择的人员
-                isOpenItem: [],//控制每级面板的打开与折叠
-                isSelectAll: [],//控制每级面板的选中状态
+                selectPeople: [], // 存储被选择的人员
+                isOpenItem: [], // 控制每级面板的打开与折叠
+                isSelectAll: []// 控制每级面板的选中状态
             };
         },
         computed: {
             action() {
-                let id = this.$route.params.id;
+                const id = this.$route.params.id;
                 // 修改
                 if (id) {
                     request.findRoleById({ id }).then(res => {
@@ -162,30 +194,30 @@
             console.log('activated addJobsPermission');
             this.getDepartmentList();
             this.initData();
-            //this.getRoleList();
+            // this.getRoleList();
         },
         methods: {
-            checkItem(index) {//展开或折叠面板
+            checkItem(index) { // 展开或折叠面板
                 this.$set(this.isOpenItem[index], 'group', !this.isOpenItem[index].group);
             },
-            checkSecondItem(firstIndex, secondIndex) {//展开或折叠第二层面板
+            checkSecondItem(firstIndex, secondIndex) { // 展开或折叠第二层面板
                 this.$set(this.isOpenItem[firstIndex].child, secondIndex, !this.isOpenItem[firstIndex].child[secondIndex]);
             },
-            checkAll(index) {//第一层级的全选操作
-                this.$set(this.isSelectAll[index], 'group', !this.isSelectAll[index].group);//改变当前按钮的选中状态
+            checkAll(index) { // 第一层级的全选操作
+                this.$set(this.isSelectAll[index], 'group', !this.isSelectAll[index].group);// 改变当前按钮的选中状态
                 if (!this.jobList[index].member && !this.jobList[index].son) {
                     return;
                 }
-                if (!this.isSelectAll[index].group) {// 从全选 =》 全不选
-                    for (let key in this.isSelectAll[index].child) { // 移除所有第二层级子项的选中状态
+                if (!this.isSelectAll[index].group) { // 从全选 =》 全不选
+                    for (const key in this.isSelectAll[index].child) { // 移除所有第二层级子项的选中状态
                         this.$set(this.isSelectAll[index].child, key, false);
                     }
                     for (let i = 0, len = this.selectPeople.length; i < len; i++) {
-                        if (!this.selectPeople[i]) { //删除干净了
+                        if (!this.selectPeople[i]) { // 删除干净了
                             return;
                         }
-                        for (let k in this.jobList[index].son) {//循环删除有部门的人员（对应列表第三层级）
-                            for (let j in this.jobList[index].son[k].member) {
+                        for (const k in this.jobList[index].son) { // 循环删除有部门的人员（对应列表第三层级）
+                            for (const j in this.jobList[index].son[k].member) {
                                 if (this.selectPeople[i] && this.selectPeople[i].pid == this.jobList[index].son[k].member[j].pid) {
                                     this.selectPeople.splice(i, 1);
                                     i--;
@@ -193,7 +225,7 @@
                                 }
                             }
                         }
-                        for (let j in this.jobList[index].member) {//循环删除没有部门的人员（对应列表第二层级）
+                        for (const j in this.jobList[index].member) { // 循环删除没有部门的人员（对应列表第二层级）
                             if (this.selectPeople[i] && this.selectPeople[i].pid == this.jobList[index].member[j].pid) {
                                 this.selectPeople.splice(i, 1);
                                 i--;
@@ -201,19 +233,19 @@
                             }
                         }
                     }
-                } else {// 从全不选 =》 全选
-                    for (let key in this.isSelectAll[index].child) { // 给所有第二层级子项添加选中状态
+                } else { // 从全不选 =》 全选
+                    for (const key in this.isSelectAll[index].child) { // 给所有第二层级子项添加选中状态
                         this.$set(this.isSelectAll[index].child, key, true);
                     }
-                    for (let i in this.jobList[index].member) {//循环添加没有部门的人员（对应列表第二层级）
-                        if (this.selectPeople.includes(this.jobList[index].member[i])) { //如果已经存在，就不用再进行添加
+                    for (const i in this.jobList[index].member) { // 循环添加没有部门的人员（对应列表第二层级）
+                        if (this.selectPeople.includes(this.jobList[index].member[i])) { // 如果已经存在，就不用再进行添加
                             continue;
                         }
                         this.selectPeople.push(this.jobList[index].member[i]);
                     }
-                    for (let i in this.jobList[index].son) {//循环添加有部门的人员（对应列表第三层级）
-                        for (let j in this.jobList[index].son[i].member) {
-                            if (this.selectPeople.includes(this.jobList[index].son[i].member[j])) { //如果已经存在，就不用再进行添加
+                    for (const i in this.jobList[index].son) { // 循环添加有部门的人员（对应列表第三层级）
+                        for (const j in this.jobList[index].son[i].member) {
+                            if (this.selectPeople.includes(this.jobList[index].son[i].member[j])) { // 如果已经存在，就不用再进行添加
                                 continue;
                             }
                             this.selectPeople.push(this.jobList[index].son[i].member[j]);
@@ -221,19 +253,19 @@
                     }
                 }
             },
-            checkSecondAll(index, secondIndex) {//第二层级的全选操作
-                this.$set(this.isSelectAll[index].child, secondIndex, !this.isSelectAll[index].child[secondIndex]);//改变当前按钮的选中状态
-                let members = this.jobList[index].son[secondIndex].member;//当前选项的所有成员
+            checkSecondAll(index, secondIndex) { // 第二层级的全选操作
+                this.$set(this.isSelectAll[index].child, secondIndex, !this.isSelectAll[index].child[secondIndex]);// 改变当前按钮的选中状态
+                const members = this.jobList[index].son[secondIndex].member;// 当前选项的所有成员
                 if (!members) {
                     return;
                 }
-                if (!this.isSelectAll[index].child[secondIndex]) {// 从全选 =》 全不选
-                    this.$set(this.isSelectAll[index], 'group', false);//改变顶级按钮的选中状态为非选中状态
+                if (!this.isSelectAll[index].child[secondIndex]) { // 从全选 =》 全不选
+                    this.$set(this.isSelectAll[index], 'group', false);// 改变顶级按钮的选中状态为非选中状态
                     for (let i = 0, len = this.selectPeople.length; i < len; i++) {
-                        if (!this.selectPeople[i]) { //删除干净了
+                        if (!this.selectPeople[i]) { // 删除干净了
                             return;
                         }
-                        for (let j in members) {//循环删除当前部门的所有人员（对应列表第三层级）
+                        for (const j in members) { // 循环删除当前部门的所有人员（对应列表第三层级）
                             if (this.selectPeople[i].pid == members[j].pid) {
                                 this.selectPeople.splice(i, 1);
                                 i--;
@@ -241,9 +273,9 @@
                             }
                         }
                     }
-                } else {// 从全不选 =》 全选
-                    for (let j in members) {//循环添加当前部门的所有人员（对应列表第三层级）
-                        if (this.selectPeople.includes(members[j])) { //如果已经存在，就不用再进行添加
+                } else { // 从全不选 =》 全选
+                    for (const j in members) { // 循环添加当前部门的所有人员（对应列表第三层级）
+                        if (this.selectPeople.includes(members[j])) { // 如果已经存在，就不用再进行添加
                             continue;
                         }
                         this.selectPeople.push(members[j]);
@@ -251,66 +283,66 @@
                     this.setFirstLevelChecked(index);
                 }
             },
-            setHeadColor(data, headColor) {//设置头像背景颜色
-                let length = headColor.length;
-                for (let i in data) {
-                    //添加headColor属性
+            setHeadColor(data, headColor) { // 设置头像背景颜色
+                const length = headColor.length;
+                for (const i in data) {
+                    // 添加headColor属性
                     this.$set(data[i], 'headColor', headColor[Math.floor(Math.random() * length)]);
                 }
             },
             stateChanged(index, i, j) {
-                if (j !== undefined) { //如果有j值，代表第三层级数据
-                    if (this.selectPeople.includes(this.jobList[index].son[i].member[j])) {//点击之前为选中状态
-                        this.$set(this.isSelectAll[index].child, i, false);//改变父级按钮的选中状态为非选中状态
-                        this.$set(this.isSelectAll[index], 'group', false);//改变顶级按钮的选中状态为非选中状态
-                    } else {//点击之前为非选中状态
-                        //给父级添加选中状态
+                if (j !== undefined) { // 如果有j值，代表第三层级数据
+                    if (this.selectPeople.includes(this.jobList[index].son[i].member[j])) { // 点击之前为选中状态
+                        this.$set(this.isSelectAll[index].child, i, false);// 改变父级按钮的选中状态为非选中状态
+                        this.$set(this.isSelectAll[index], 'group', false);// 改变顶级按钮的选中状态为非选中状态
+                    } else { // 点击之前为非选中状态
+                        // 给父级添加选中状态
                         for (let k = 0; k < this.jobList[index].son[i].member.length; k++) {
-                            if (!this.selectPeople.includes(this.jobList[index].son[i].member[k]) && this.jobList[index].son[i].member[k] != this.jobList[index].son[i].member[j]) {//只要有其中一个未选中，就跳出循环，不给父级添加选中状态
+                            if (!this.selectPeople.includes(this.jobList[index].son[i].member[k]) && this.jobList[index].son[i].member[k] != this.jobList[index].son[i].member[j]) { // 只要有其中一个未选中，就跳出循环，不给父级添加选中状态
                                 return false;
                             }
                         }
-                        this.$set(this.isSelectAll[index].child, i, true);//改变父级按钮的选中状态为选中状态
-                        this.setFirstLevelChecked(index, this.jobList[index].son[i].member[j]);//给第一级添加选中状态
+                        this.$set(this.isSelectAll[index].child, i, true);// 改变父级按钮的选中状态为选中状态
+                        this.setFirstLevelChecked(index, this.jobList[index].son[i].member[j]);// 给第一级添加选中状态
                     }
-                } else {//没有j值，第二层级数据
-                    if (this.selectPeople.includes(this.jobList[index].member[i])) {//点击之前为选中状态
-                        this.$set(this.isSelectAll[index], 'group', false);//改变父级按钮的选中状态为非选中状态
-                    } else {//点击之前为非选中状态
-                        this.setFirstLevelChecked(index, this.jobList[index].member[i]);//给第一级添加选中状态
+                } else { // 没有j值，第二层级数据
+                    if (this.selectPeople.includes(this.jobList[index].member[i])) { // 点击之前为选中状态
+                        this.$set(this.isSelectAll[index], 'group', false);// 改变父级按钮的选中状态为非选中状态
+                    } else { // 点击之前为非选中状态
+                        this.setFirstLevelChecked(index, this.jobList[index].member[i]);// 给第一级添加选中状态
                     }
                 }
             },
-            setFirstLevelChecked(index, data) {//给第一级添加选中状态
-                for (let k in this.jobList[index].member) {
-                    if (!this.selectPeople.includes(this.jobList[index].member[k]) && data != this.jobList[index].member[k]) {//只要有其中一个未选中，就跳出循环，不给父级添加选中状态
+            setFirstLevelChecked(index, data) { // 给第一级添加选中状态
+                for (const k in this.jobList[index].member) {
+                    if (!this.selectPeople.includes(this.jobList[index].member[k]) && data != this.jobList[index].member[k]) { // 只要有其中一个未选中，就跳出循环，不给父级添加选中状态
                         return false;
                     }
                 }
-                for (let i in this.jobList[index].son) {//循环添加有部门的人员（对应列表第三层级）
-                    for (let j in this.jobList[index].son[i].member) {
-                        if (!this.selectPeople.includes(this.jobList[index].son[i].member[j]) && data != this.jobList[index].son[i].member[j]) { //如果已经存在，就不用再进行添加
+                for (const i in this.jobList[index].son) { // 循环添加有部门的人员（对应列表第三层级）
+                    for (const j in this.jobList[index].son[i].member) {
+                        if (!this.selectPeople.includes(this.jobList[index].son[i].member[j]) && data != this.jobList[index].son[i].member[j]) { // 如果已经存在，就不用再进行添加
                             return false;
                         }
                     }
                 }
-                this.$set(this.isSelectAll[index], 'group', true);//改变第一级按钮的选中状态为选中状态
+                this.$set(this.isSelectAll[index], 'group', true);// 改变第一级按钮的选中状态为选中状态
             },
-            initData() {//数据初始化
-                //设置头像背景颜色
-                let len = this.jobList.length;
+            initData() { // 数据初始化
+                // 设置头像背景颜色
+                const len = this.jobList.length;
                 for (let i = 0; i < len; i++) {
                     this.setHeadColor(this.jobList[i].member, this.headColor);
-                    //根据数据初始化全选按钮状态
+                    // 根据数据初始化全选按钮状态
                     this.isSelectAll.push([]);
                     this.$set(this.isSelectAll[i], 'group', false);
                     this.$set(this.isSelectAll[i], 'child', []);
-                    //根据数据初始化折叠面板折叠状态
+                    // 根据数据初始化折叠面板折叠状态
                     this.isOpenItem.push([]);
                     this.$set(this.isOpenItem[i], 'group', false);
                     this.$set(this.isOpenItem[i], 'child', []);
-                    //设置第二层级的状态
-                    for (let j in this.jobList[i].son) {
+                    // 设置第二层级的状态
+                    for (const j in this.jobList[i].son) {
                         this.isSelectAll[i].child.push(false);
                         this.isOpenItem[i].child.push(false);
                         this.setHeadColor(this.jobList[i].son[j].member, this.headColor);
@@ -319,12 +351,12 @@
             },
             // 提交表单
             submitForm(formName) {
-                let formData = this.form;
-                let action = this.action;
+                const formData = this.form;
+                const action = this.action;
                 console.log(formData);
                 this.$refs[formName].validate(valid => {
                     if (valid) {
-                        let data = Object.assign(formData, action.data);
+                        const data = Object.assign(formData, action.data);
                         request[action.method](data).then(res => {
                             console.log(res);
                         }).catch(err => {
@@ -344,19 +376,19 @@
 
             // 全选用户管理
             handleCheckAllChangeUser(val, k) {
-                let tmp = [];
-                this.userManList[k].value.forEach(function (v) {
-                    v.value.forEach(function (val) {
+                const tmp = [];
+                this.userManList[k].value.forEach(function(v) {
+                    v.value.forEach(function(val) {
                         tmp.push(val.id);
                     });
                 });
                 this.checkedUser[k] = val ? tmp : [];
             },
             handleCheckedUserChange(value, k) {
-                let itemTmp = [];
-                let checkedCount = value.length;
-                this.userManList[k].value.forEach(function (v) {
-                    v.value.forEach(function (val) {
+                const itemTmp = [];
+                const checkedCount = value.length;
+                this.userManList[k].value.forEach(function(v) {
+                    v.value.forEach(function(val) {
                         itemTmp.push(val.value);
                     });
                 });
@@ -366,8 +398,8 @@
 
             // 获取权限列表
             getRoleList() {
-                let data = {};
-                /*this.$axios
+                const data = {};
+                /* this.$axios
                     .post(api.getRoleList, data)
                     .then(res => {
                         this.userManList = res.data.data;
@@ -385,7 +417,7 @@
                 }).catch(err => {
                     this.$message.warning(err.msg);
                 });
-            },
+            }
         }
     };
 </script>
