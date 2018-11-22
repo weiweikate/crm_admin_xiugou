@@ -36,68 +36,62 @@
 
 <script>
     export default {
-        name:'AuthList',
-        data(){
+        name: 'AuthList',
+        data() {
             return {
-
-            }
+                list: []
+            };
         },
-        props:{
+        props: {
             source: {
                 type: Object,
                 default: {}
             },
         },
-        computed:{
-            list(){
-                return Object.assign({},this.source)
-            }
-        },
-        mounted(){
-            console.log(111,this.list)
-        },
-        methods: {
+        computed: {},
+        mounted() {
 
-        }
-    }
+        },
+        methods: {}
+    };
 </script>
 
 <style scoped lang="less">
-.auth-wrap {
-    padding: 10px;
-    ul , li{
-        list-style: none;
-    }
-    .auth-title.first {
-        color: #bbbbbb;
-        font-size: 16px;
-        padding-top: 15px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .auth-item.second {
-        overflow: hidden;
-        padding: 15px 0;
-
-        > .auth-title {
-            float: left;
-            width: 100px;
-            font-weight: bold;
+    .auth-wrap {
+        padding: 10px;
+        ul, li {
+            list-style: none;
         }
-        > .auth-content {
-            margin-left: 100px;
+        .auth-title.first {
+            color: #bbbbbb;
+            font-size: 16px;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
         }
-        .auth-item.third {
-            display: inline-block;
-            vertical-align: middle;
-            width: 100px;
-            margin: 0 15px 5px 0;
+
+        .auth-item.second {
+            overflow: hidden;
+            padding: 15px 0;
 
             > .auth-title {
-                color: #6f7180;
+                float: left;
+                width: 200px;
+                font-weight: bold;
+            }
+            > .auth-content {
+                margin-left: 200px;
+            }
+            .auth-item.third {
+                display: inline-block;
+                vertical-align: middle;
+                width: 200px;
+                margin: 0 15px 5px 0;
+
+                > .auth-title {
+                    color: #6f7180;
+                }
             }
         }
     }
-}
 </style>
