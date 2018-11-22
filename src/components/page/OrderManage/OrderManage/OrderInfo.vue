@@ -86,7 +86,7 @@
                     <span class="content-con">订单号：{{ orderMsg.orderNum }}</span>
                     <span class="content-con">创建时间：{{ orderMsg.createTime | formatDateAll }}</span>
                     <span class="content-con" v-if="orderMsg.payTime">平台支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
-                    <span v-if='orderStatus == 5' class="content-con">第三方支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
+                    <span v-if='orderStatus == 5' class="content-con">支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
                 </p>
                 <p class="info-content">
                     <span v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5'
@@ -439,22 +439,22 @@
                         this.boolFor = true;
                         break;
                     case '6':
-                        this.boolFirst = true;
-                        this.boolsec = true;
-                        this.boolThr = true;
-                        this.boolFor = true;
+                        this.boolFirst = false;
+                        this.boolsec = false;
+                        this.boolThr = false;
+                        this.boolFor = false;
                         break;
                     case '7':
-                        this.boolFirst = true;
-                        this.boolsec = true;
-                        this.boolThr = true;
-                        this.boolFor = true;
+                        this.boolFirst = false;
+                        this.boolsec = false;
+                        this.boolThr = false;
+                        this.boolFor = false;
                         break;
                     case '8':
-                        this.boolFirst = true;
-                        this.boolsec = true;
-                        this.boolThr = true;
-                        this.boolFor = true;
+                        this.boolFirst = false;
+                        this.boolsec = false;
+                        this.boolThr = false;
+                        this.boolFor = false;
                         break;
                 }
             },

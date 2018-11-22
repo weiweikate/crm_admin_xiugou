@@ -4,7 +4,7 @@
         <el-card style="margin:10px 0 20px">
             <el-form ref="form" inline :model="form">
                 <el-form-item prop="condition" label="会员搜索" label-width="120">
-                    <el-input style="width:200px" placeholder="可通过用户ID/授权码/昵称" v-model="form.condition"></el-input>
+                    <el-input style="width:200px" placeholder="可通过授权码/昵称" v-model="form.condition"></el-input>
                 </el-form-item>
                 <el-form-item prop="idcard" label="证件号" label-width="120">
                     <el-input style="width:200px" placeholder="请输入证件号" v-model="form.idcard"></el-input>

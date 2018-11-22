@@ -13,6 +13,12 @@ Vue.filter('formatDateAll', function(value) {
     }
     return moment(value).format('YYYY-MM-DD HH:mm:ss');
 });
+Vue.filter('formatDateToMinute', function(value) {
+    if (!value) {
+        return '';
+    }
+    return moment(value).format('YYYY-MM-DD HH:mm');
+});
 Vue.filter('handleMoney', function(val) {
     return `￥${val}`;
 });

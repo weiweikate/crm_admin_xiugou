@@ -397,13 +397,13 @@
                 data.date = [];
                 request[url](data).then(res => {
                     this.$message.success(res.msg);
-                    this.getList(1);
+                    this.getList(this.page.currentPage);
                     this.closeDia();
                     this.btnLoading = false;
                 }).catch(error => {
                     console.log(error);
                     this.btnLoading = false;
-                    this.getList(1);
+                    this.getList(this.page.currentPage);
                     this.closeDia();
                 });
             },
@@ -430,7 +430,7 @@
             },
             deleteToast(msg) {
                 this.isShowDel = msg;
-                this.getList(1);
+                this.getList(this.page.currentPage);
             },
             // 清空
             clearData(id) {
@@ -447,7 +447,7 @@
                     request[url](data).then(res => {
                         that.btnLoading = false;
                         this.$message.success(res.msg);
-                        this.getList(1);
+                        this.getList(this.page.currentPage);
                         this.isShowClear = false;
                     }).catch(err => {
                         that.tableLoading = false;

@@ -17,7 +17,7 @@ export const querySettlementTotalList = '/admin/settlementTotal/querySettlementT
 export const querySettlementRecordList = '/admin/settlementRecord/querySettlementRecordList';
 
 // 收益金比例设置
-export const updateConfigBalanceInProfitRatio = '/admin/config/updateConfigBalanceInProfitRatio'
+export const updateConfigBalanceInProfitRatio = '/admin/config/updateConfigBalanceInProfitRatio';
 
 // 查询系统配置
 export const findConfig = '/admin/config/findConfig';
@@ -51,11 +51,15 @@ export const updateSettlementConfig = '/admin/settlementConfig/updateSettlementC
 // 修改利润模版状态
 export const updateSettlementConfigStatus = '/admin/settlementConfig/updateSettlementConfigStatus';
 
-// 保证金缴纳记录
-export const storePayRecordList = '/admin/storePayRecord/list';
-//********************************************************************************************************************************************************
+//* *******************************************************************************************************************************************************
 export const queryFlatAccountByType = ['/settle/orderFlow/queryByType', { methods: 'post' }]; // 平台账户收益明细
-export const addProfitTpl = ['/settle/template/add', { methods: 'post' }]; //添加结算模版
-export const querySettleTplList = ['/settle/template/queryList', { methods: 'post' }]; //查询结算模版列表
-export const querySettleProFitById = ['/settle/template/queryDetail', { methods: 'get' }]; //查询结算模版详情
-export const disableSettleProFitById = ['/settle/template/disable', { methods: 'get' }]; //停用模板
+export const addProfitTpl = ['/settle/template/add', { methods: 'post' }]; // 添加结算模版
+export const querySettleTplList = ['/settle/template/queryList', { methods: 'post' }]; // 查询结算模版列表
+export const querySettleProFitById = ['/settle/template/queryDetail', { methods: 'get' }]; // 查询结算模版详情
+export const disableSettleProFitById = ['/settle/template/disable', { methods: 'get' }]; // 停用模板
+// 保证金缴纳记录
+export const storePayRecordList = ['/store/deposit/query', { methods: 'get' }];
+// 供应商结算列表
+export const querySupplierByProductId = ['/order/orderProduct/queryByProductId', { methods: 'post' }];
+//导出对账单
+export const exportStorePayRecordList = '/admin/order/orderProduct/export';

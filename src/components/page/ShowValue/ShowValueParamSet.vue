@@ -17,7 +17,7 @@
             <div style="clear: both"></div>
             <p class="tip">现金兑换秀豆规则</p>
             <div class="ratio-set">
-                <el-input-number :min="0" :controls="false" class="inp" v-model="bean"></el-input-number>
+                <el-input-number :min="0" :controls="false" disabled class="inp" v-model="bean"></el-input-number>
                 <span>秀豆 = </span>
             </div>
             <div class="ratio-set">

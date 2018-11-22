@@ -16,6 +16,7 @@
                 <el-form-item prop="startDate" label="起拍时间">
                     <el-date-picker
                         v-model="form.startDate"
+                        format="yyyy-MM-dd HH:mm"
                         type="datetimerange"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"
@@ -112,7 +113,7 @@
             </el-table-column>
             <el-table-column label="起拍/结束时间" align="center" min-width="120">
                 <template slot-scope="scope">
-                    {{scope.row.beginTime|formatDateAll}}<br/>{{scope.row.endTime|formatDateAll}}
+                    {{scope.row.beginTime|formatDateToMinute}}<br/>{{scope.row.endTime|formatDateToMinute}}
                 </template>
             </el-table-column>
             <el-table-column label="发布时间/发布人" align="center" min-width="120">
@@ -347,8 +348,8 @@
                 data.createUser = this.form.createUser;
                 data.productCode = this.form.productCode;
                 data.topicStatus = this.form.topicStatus;
-                data.startTime = this.form.startDate ? moment(this.form.startDate[0]).format('YYYY-MM-DD HH:mm:ss') : '';
-                data.startEndTime = this.form.startDate ? moment(this.form.startDate[1]).format('YYYY-MM-DD HH:mm:ss') : '';
+                data.startTime = this.form.startDate ? moment(this.form.startDate[0]).format('YYYY-MM-DD HH:mm:00') : '';
+                data.startEndTime = this.form.startDate ? moment(this.form.startDate[1]).format('YYYY-MM-DD HH:mm:00') : '';
                 data.releaseTimebegins = this.form.releaseDate ? moment(this.form.releaseDate[0]).format('YYYY-MM-DD') : '';
                 data.releaseTimeEnd = this.form.releaseDate ? moment(this.form.releaseDate[1]).format('YYYY-MM-DD') : '';
                 data.page = val;
@@ -377,7 +378,7 @@
                 this.$refs[formName].resetFields();
                 this.form.startDate = '';
                 this.form.releaseDate = '';
-                this.getList(1);
+                this.getList(this.page.currentPage);
             },
             // 新建降价拍
             addDepreciate() {

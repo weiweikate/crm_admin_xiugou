@@ -26,26 +26,26 @@
                 </el-form-item>
                 <el-form-item prop="startPrice" label="起拍价格" style="margin-top: 30px">
                     ￥
-                    <el-input v-model="form.startPrice" v-if="form.endTime" @input="calDurationTime(showDuration)"></el-input>
+                    <el-input v-model="form.startPrice" v-if="endTime" @input="calDurationTime(showDuration)"></el-input>
                     <el-input v-model="form.startPrice" v-else></el-input>
                 </el-form-item>
                 <el-form-item prop="floorPrice" label="最低价格">
                     ￥
-                    <el-input v-model="form.floorPrice" v-if="form.endTime" @blur="floorPrice" @input="calDurationTime(showDuration)"></el-input>
+                    <el-input v-model="form.floorPrice" v-if="endTime" @blur="floorPrice" @input="calDurationTime(showDuration)"></el-input>
                     <el-input v-model="form.floorPrice" v-else></el-input>
                 </el-form-item>
                 <el-form-item label="开始时间" prop="beginTime">
                     <el-date-picker
                         type="datetime"
                         v-model="beginTime"
-                        v-if="form.endTime"
-                        format="yyyy-MM-dd HH:mm:ss"
+                        v-if="endTime"
+                        format="yyyy-MM-dd HH:mm"
                         @input="calDurationTime(showDuration)"
                         placeholder="选择开始时间">
                     </el-date-picker>
                     <el-date-picker
                         type="datetime"
-                        format="yyyy-MM-dd HH:mm:ss"
+                        format="yyyy-MM-dd HH:mm"
                         v-else
                         v-model="beginTime"
                         placeholder="选择开始时间">
@@ -59,12 +59,12 @@
                 <div class="spec-item">
                     <el-form-item prop="intervalTime" label="降价幅度">
                         <span>每</span>
-                        <el-input class="small" v-model="form.intervalTime" v-if="form.endTime" @input="calDurationTime(showDuration)"></el-input>
+                        <el-input class="small" v-model="form.intervalTime" v-if="endTime" @input="calDurationTime(showDuration)"></el-input>
                         <el-input class="small" v-model="form.intervalTime" v-else></el-input>
                         <span>分钟下降</span> <span>￥</span>
                     </el-form-item>
                     <el-form-item prop="downPrice" class="item">
-                        <el-input class="small" v-model="form.downPrice" v-if="form.endTime" @input="calDurationTime(showDuration)"></el-input>
+                        <el-input class="small" v-model="form.downPrice" v-if="endTime" @input="calDurationTime(showDuration)"></el-input>
                         <el-input class="small" v-model="form.downPrice" v-else></el-input>
                     </el-form-item>
                 </div>
@@ -80,7 +80,7 @@
                     <span>分钟购买时间</span>
                 </el-form-item>
                 <el-form-item label="结束时间">
-                    <span v-if="form.endTime">{{form.endTime}}</span><span v-else>--</span>
+                    <span v-if="endTime">{{endTime}}</span><span v-else>--</span>
                 </el-form-item>
                 <el-form-item prop="totalNumber" label="降价拍发放数量">
                     <el-input class="small" v-model="form.totalNumber"></el-input>
@@ -214,13 +214,13 @@
                     intervalTime: '', // 降价幅度 分钟数
                     downPrice: '', // 降价幅度 金额
                     floorPriceTime: '', // 降到底价还允许购买的时间
-                    endTime: '', // 结束时间
                     startPrice: '', // 起拍价格
                     orderCloseTime: '', // 自动关闭订单时间
                     totalNumber: '', // 发放总数量
                     limitNumber: ''// 限购数量
                 },
                 beginTime: '', // 开始时间
+                endTime: '', // 结束时间
                 time: '', // 开始时间
                 showMask: false, // 选择商品弹窗
                 productDetail: {}, // 选择的商品的商品信息
@@ -287,7 +287,7 @@
                 const hour = Math.floor((time - day * 60 * 24) / 60);// 小时
                 const minutes = time - day * 60 * 24 - hour * 60;// 分钟
                 this.showDuration = status;
-                this.duration = day + '天' + ' ' + this.addZero(hour) + ':' + this.addZero(minutes) + ':00';
+                this.duration = day + '天' + ' ' + this.addZero(hour) + ':' + this.addZero(minutes);
                 this.calEndTime(this.beginTime, this.durationTime, this.form.floorPriceTime);
             },
 
@@ -304,7 +304,7 @@
             // 计算结束时间
             calEndTime(start, allTime, floorPriceTime) {
                 if (this.form.startPrice && this.form.floorPrice && this.form.intervalTime && this.form.downPrice && this.beginTime && this.form.floorPriceTime) {
-                    this.form.endTime = moment(new Date(start).getTime() + (Number(allTime) + Number(floorPriceTime)) * 60 * 1000).format('YYYY-MM-DD HH:mm:ss');
+                    this.endTime = moment(new Date(start).getTime() + (Number(allTime) + Number(floorPriceTime)) * 60 * 1000).format('YYYY-MM-DD HH:mm');
                 }
             },
             // 提交表单
@@ -324,7 +324,8 @@
                         const data = this.form;
                         if (!data.limitNumber) data.limitNumber = -1;
                         this.time = this.beginTime;
-                        data.beginTime = moment(this.time).format('YYYY-MM-DD HH:mm:ss'); // 活动开始时间
+                        data.beginTime = moment(this.time).format('YYYY-MM-DD HH:mm:00'); // 活动开始时间
+                        data.endTime = moment(this.endTime).format('YYYY-MM-DD HH:mm:00'); // 活动开始时间
                         // data.productCode = this.productDetail.productCode; // 产品编号
                         data.productId = this.productDetail.productId; // 产品ID
                         // data.productImg = this.productDetail.specImg; // 产品主图url

@@ -112,7 +112,7 @@
             },
             deleteToast(msg) {
                 this.isShowDel = msg;
-                this.getList(1);
+                this.getList(this.page.currentPage);
             },
             // 编辑
             editItem(row) {

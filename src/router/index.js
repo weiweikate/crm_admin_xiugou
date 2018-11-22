@@ -176,6 +176,13 @@ export const asyncRouterMap = [
                 path: '/supplierManage',
                 component: resolve => require(['../components/page/MemberManage/SupplierManage.vue'], resolve),
                 meta: { title: '供应商管理' }
+            },
+            {
+                hidden: true,
+                name: 'accountRecharge',
+                path: '/accountRecharge',
+                component: resolve => require(['../components/page/MemberManage/AccountRecharge.vue'], resolve),
+                meta: { title: '账户充值' }
             }
         ]
     },
@@ -555,30 +562,30 @@ export const asyncRouterMap = [
             //     component: resolve => require(['../components/page/SettlementMange/ExchangeMange.vue'], resolve),
             //     meta: { title: '换货记录' }
             // },
-            // {
-            //     name: 'supplierSettMange',
-            //     path: '/supplierSettMange',
-            //     component: resolve => require(['../components/page/SettlementMange/supplierSettMange.vue'], resolve),
-            //     meta: { title: '供应商结算管理' }
-            // },
             {
                 name: 'flatAccountInfo',
                 path: '/flatAccountInfo',
                 component: resolve => require(['../components/page/SettlementMange/FlatAccountInfo.vue'], resolve),
                 meta: { title: '平台账户收入明细' }
             },
-            // {
-            //     name: 'depositPayment',
-            //     path: '/depositPayment',
-            //     component: resolve => require(['../components/page/SettlementMange/DepositPayment.vue'], resolve),
-            //     meta: { title: '保证金缴纳记录' }
-            // },
+            {
+                name: 'depositPayment',
+                path: '/depositPayment',
+                component: resolve => require(['../components/page/SettlementMange/DepositPayment.vue'], resolve),
+                meta: { title: '保证金缴纳记录' }
+            },
             // {
             //     name: 'soFar',
             //     path: '/soFar',
             //     component: resolve => require(['../components/page/SettlementMange/SoFar.vue'], resolve),
             //     meta: { title: '收益金比例设置' }
             // },
+            {
+                name: 'supplierSettMange',
+                path: '/supplierSettMange',
+                component: resolve => require(['../components/page/SettlementMange/supplierSettMange.vue'], resolve),
+                meta: { title: '供应商结算管理' }
+            },
             {
                 name: 'profitDistrMange',
                 path: '/profitDistrMange',
@@ -717,7 +724,7 @@ export const asyncRouterMap = [
                 name: 'giftInfo',
                 path: '/giftInfo',
                 component: resolve => require(['../components/page/BrandProduct/GiftManage/GiftInfo.vue'], resolve),
-                meta: { title: '礼包详情' }
+                meta: { title: '礼包详情', keepAlive: true }
             },
             {
                 name: 'discountAdd',
@@ -887,12 +894,6 @@ export const asyncRouterMap = [
                 path: '/withDrawAccount',
                 component: resolve => require(['../components/page/MemberManage/UserAccount/WithDrawAccount.vue'], resolve),
                 meta: { title: '待提现账户' }
-            },
-            {
-                name: 'accountRecharge',
-                path: '/accountRecharge',
-                component: resolve => require(['../components/page/MemberManage/AccountRecharge.vue'], resolve),
-                meta: { title: '账户充值' }
             },
             {
                 name: 'realNameInfo',
