@@ -651,6 +651,10 @@
                     font-weight: 600;
                 }
             }
+            .tips{
+                color: #ff6868;
+                font-size: 12px;
+            }
         }
         .order-status {
             height: 55px;
