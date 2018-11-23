@@ -16,7 +16,7 @@
             </el-form>
         </el-card>
         <el-card style="margin-top: 10px">
-            <el-button type="primary" style="margin-bottom: 10px" @click="$router.push('addFoundCategory')">新建分类</el-button>
+            <el-button type="primary" style="margin-bottom: 10px" @click="$router.push('addFoundCategory')" v-auth="'yunying.showHome.xcflgl.xjfl'">新建分类</el-button>
             <el-table v-loading="loading" :data="tableData" border stripe @sort-change="sortChange">
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column label="图标" align="center">
@@ -33,10 +33,10 @@
                 </el-table-column>
                 <el-table-column prop="id" label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.status == 0" @click="changeStatus(scope.row,'1')" type="primary">开启</el-button>
-                        <el-button v-else @click="changeStatus(scope.row,'0')" type="primary">关闭</el-button>
-                        <el-button type="warning" @click="editFound(scope.row)">编辑</el-button>
-                        <el-button @click="delItem(scope.$index,scope.row.id)" type="danger">删除</el-button>
+                        <el-button v-if="scope.row.status == 0" @click="changeStatus(scope.row,'1')" type="primary" v-auth="'yunying.showHome.xcflgl.gl'">开启</el-button>
+                        <el-button v-else @click="changeStatus(scope.row,'0')" type="primary" v-auth="'yunying.showHome.xcflgl.gl'">关闭</el-button>
+                        <el-button type="warning" @click="editFound(scope.row)" v-auth="'yunying.showHome.xcflgl.bj'">编辑</el-button>
+                        <el-button @click="delItem(scope.$index,scope.row.id)" type="danger" v-auth="'yunying.showHome.xcflgl.sc'">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>

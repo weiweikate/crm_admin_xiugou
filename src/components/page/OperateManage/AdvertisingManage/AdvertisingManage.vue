@@ -4,40 +4,40 @@
         <div class="advertising">
             <div class="row">
                 <p class="adv-title">首页广告位管理</p>
-                <div class="item blue" @click="toPage(1,1)">
+                <div class="item blue" @click="toPage(1,1)" v-auth="'yunying.advertisingManage.ggwgl'">
                     APP首页banner广告位管理
                 </div>
-                <div class="item blue" @click="toPage(2,2)">
+                <div class="item blue" @click="toPage(2,2)" v-auth="'yunying.advertisingManage.sytjwgl'">
                     APP首页推荐位管理
                 </div>
-                <div class="item blue" @click="toPage(1,3)">
+                <div class="item blue" @click="toPage(1,3)" v-auth="'yunying.advertisingManage.mxdptjgl'">
                     APP首页明星店铺推荐位管理
                 </div>
-                <div class="item blue" @click="toPage(1,4)">
+                <div class="item blue" @click="toPage(1,4)" v-auth="'yunying.advertisingManage.jrbdggwgl'">
                     APP首页今日榜单广告位管理
                 </div>
-                <div class="item blue" @click="toPage(1,5)">
+                <div class="item blue" @click="toPage(1,5)" v-auth="'yunying.advertisingManage.jptjggwgl'">
                     APP首页精品推荐广告位管理
                 </div>
-                <div class="item blue" @click="toPage(2,6)">
+                <div class="item blue" @click="toPage(2,6)" v-auth="'yunying.advertisingManage.czrmztggwgl'">
                     APP首页超值热卖专题广告位管理
                 </div>
-                <div class="item blue" @click="toPage(2,8)">
+                <div class="item blue" @click="toPage(2,8)" v-auth="'yunying.advertisingManage.wntjggwgl'">
                     APP首页为你推荐广告位管理
                 </div>
             </div>
             <div class="row">
                 <p class="adv-title">拼店广告位管理</p>
-                <div class="item red" @click="toPage(1,9)">
+                <div class="item red" @click="toPage(1,9)" v-auth="'yunying.advertisingManage.pdsytjw'">
                     拼店首页banner推荐位
                 </div>
             </div>
             <div class="row">
                 <p class="adv-title">其他广告位管理</p>
-                <div class="item yellow" @click="toPage(3,10)">
+                <div class="item yellow" @click="toPage(3,10)" v-auth="'yunying.advertisingManage.lmssggwsz'">
                     类目搜索Banner广告位设置
                 </div>
-                <div class="item yellow" @click="toPage(1,11)">
+                <div class="item yellow" @click="toPage(1,11)" v-auth="'yunying.advertisingManage.xctjt'">
                     秀场banner推荐图
                 </div>
                 <!--<div class="item yellow" @click="toPage(4,12)">-->

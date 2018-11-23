@@ -21,7 +21,7 @@
             </el-form>
         </el-card>
         <el-card style="margin-top: 10px">
-            <el-button type="primary" style="margin-bottom: 10px" @click="$router.push('addFound')">新建发现文章</el-button>
+            <el-button type="primary" style="margin-bottom: 10px" @click="$router.push('addFound')" v-auth="'yunying.showHome.sclb.xjfxwz'">新建发现文章</el-button>
             <el-table v-loading="tabLoading" :data="tableData" border stripe @sort-change="sortChange">
                 <el-table-column prop="code" label="编号" align="center"></el-table-column>
                 <el-table-column prop="pureContent" label="内容" align="center">
@@ -63,9 +63,9 @@
                 </el-table-column>
                 <el-table-column prop="id" label="操作" align="center" min-width="150px">
                     <template slot-scope="scope">
-                        <el-button type="primary" @click="showInfo(scope.row)">查看</el-button>
-                        <el-button type="warning" @click="editFound(scope.row)">编辑</el-button>
-                        <el-button @click="delItem(scope.$index,scope.row.id)" type="danger">删除</el-button>
+                        <el-button type="primary" @click="showInfo(scope.row)" v-auth="'yunying.showHome.sclb.ck'">查看</el-button>
+                        <el-button type="warning" @click="editFound(scope.row)" v-auth="'yunying.showHome.sclb.bj'">编辑</el-button>
+                        <el-button @click="delItem(scope.$index,scope.row.id)" type="danger" v-auth="'yunying.showHome.sclb.sc'">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>

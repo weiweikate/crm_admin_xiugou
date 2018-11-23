@@ -15,9 +15,9 @@
                 <span>订单号：{{v.orderNum}}</span>
                 <span style="margin-left:30px">创建时间：{{v.createTime|formatDateAll}}</span>
                 <div class="operate-btn-group">
-                    <span v-if='v.status == 2' @click="pushCloud(v)">推送云仓</span>
-                    <span @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
-                    <el-popover placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
+                    <span v-if='v.status == 2' @click="pushCloud(v)" v-auth="'order.giftOrderList.tsyc'">推送云仓</span>
+                    <span @click="orderInfo(v)" style="margin:0 15px 0 15px" v-auth="'order.giftOrderList.ddxq'">订单详情</span>
+                    <el-popover v-auth="'order.giftOrderList.bj'" placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
                                         <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
                                                                                                      :style="{color:v.starColor}">★</span></span>
                         <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"

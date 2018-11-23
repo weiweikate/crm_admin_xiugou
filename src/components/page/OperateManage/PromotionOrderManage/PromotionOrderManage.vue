@@ -49,16 +49,19 @@
                     {
                         img: 'static/img/promotionOrderList.png',
                         title: '推广订单管理设置',
+                        auth: 'yunying.promotionOrderManage.tgddglsz',
                         content: '查看所有的推广订单',
                         page: '/promotionOrderList'
                     }, {
                         img: 'static/img/packageManage.png',
                         title: '套餐管理',
+                        auth: 'yunying.promotionOrderManage.tcgl',
                         content: '查看设置推广套餐',
                         page: '/packageManage'
                     }, {
                         img: 'static/img/redPackageSet.png',
                         title: '红包翻倍周期设置',
+                        auth: 'yunying.promotionOrderManage.hbfbzqsz',
                         content: '可以设置红包推荐概率',
                         page: '/RedPackageSet'
                     }]
