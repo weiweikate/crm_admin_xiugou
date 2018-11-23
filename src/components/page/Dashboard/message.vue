@@ -83,14 +83,13 @@
                 loading: false,
                 typeArr: [
                     { label: '全部', value: '' },
-                    { label: '产品礼包', value: '100' },
-                    { label: '商品库存', value: '200' },
-                    { label: '营销工具', value: '300' },
-                    { label: '奖品管理', value: '400' },
-                    { label: '广告位', value: '500' },
-                    { label: '店铺举报', value: '600' },
-                    { label: '会员邀请', value: '700' },
-                    { label: '订单管理', value: '800' }
+                    { label: '会员邀请管理', value: '100' },
+                    { label: '账户充值', value: '200' },
+                    { label: '产品管理', value: '300' },
+                    { label: '拼店店铺举报', value: '400' },
+                    { label: '优惠券设置', value: '500' },
+                    { label: '营销模块', value: '600' },
+                    { label: '广告位管理', value: '700' }
                 ],
                 tableData: [],
                 multipleSelection: []

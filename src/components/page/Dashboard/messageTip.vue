@@ -50,7 +50,6 @@ export default {
         // 跳转详情
         showMsgInfo(row) {
             request.readMessages({ ids: row.id }).then(res => {
-                this.$message.success(res.msg);
                 this.closeMask();
                 const type = row.messageType ? row.messageType.toString() : '';
                 const id = row.bizData;
