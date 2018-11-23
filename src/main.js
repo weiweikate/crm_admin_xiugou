@@ -56,21 +56,25 @@ Vue.prototype.$oprAuth = function (value) {
     const auth = getters.auth;
     // 假如不是超级管理员则判断用户用户权限
     if (!roles.includes('admin') && !auth.includes(value)) {
-        return false
+        return false;
     }
-    return true
+    return true;
 };
 /** 权限指令**/
 Vue.directive('auth', {
-    bind: function(el, binding, vnode) {
+    bind: function (el, binding, vnode) {
         // 获取按钮权限
         const value = binding.value;
         // 获取用户权限
         const getters = vnode.context.$store.getters;
         const roles = getters.roles;
         const auth = getters.auth;
+
         // 假如不是超级管理员则判断用户用户权限
-        if (!roles.includes('admin') && !auth.includes(value)) {
+        if (roles.includes('admin')) {
+            return;
+        }
+        if (!auth.includes(value)) {
             el.parentNode.removeChild(el);
         }
     }

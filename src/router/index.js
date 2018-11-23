@@ -333,34 +333,34 @@ export const asyncRouterMap = [
         path: '/quanxian',
         component: Layout,
         name: 'quanxian',
-        meta: { title: '权限管理', icon: 'icon-shezhi', roles: ['admin'] },
+        meta: { title: '权限管理', icon: 'icon-shezhi' },
         children: [
             {
                 name: 'organizeMange',
                 path: '/organizeMange',
                 component: resolve => require(['../components/page/Permission/OrganizeMange/OrganizeMange.vue'], resolve),
-                meta: { title: '组织结构管理' }
+                meta: { title: '组织结构管理', keepAlive: true }
             },
             {
                 hidden: true,
                 name: 'jobsPermissionMange',
                 path: '/jobsPermissionMange',
                 component: resolve => require(['../components/page/Permission/OrganizeMange/JobsPermissionMange.vue'], resolve),
-                meta: { title: '岗位权限管理' }
+                meta: { title: '岗位权限管理', keepAlive: true }
             },
             {
                 hidden: true,
                 name: 'addJobsPermission',
                 path: '/addJobsPermission',
                 component: resolve => require(['../components/page/Permission/OrganizeMange/AddJobsPermission.vue'], resolve),
-                meta: { title: '添加岗位权限' }
+                meta: { title: '添加岗位权限', keepAlive: true }
             },
             {
                 hidden: true,
                 name: 'editJobsPermission',
                 path: '/editJobsPermission',
                 component: resolve => require(['../components/page/Permission/OrganizeMange/AddJobsPermission.vue'], resolve),
-                meta: { title: '编辑岗位权限' }
+                meta: { title: '编辑岗位权限', keepAlive: true }
             },
             {
                 name: 'manageList',
@@ -942,13 +942,13 @@ export const asyncRouterMap = [
                 name: 'addManger',
                 path: '/addManger',
                 component: resolve => require(['../components/page/Permission/AddManger.vue'], resolve),
-                meta: { title: '添加管理员' }
+                meta: { title: '添加管理员', keepAlive: true }
             },
             {
                 name: 'editManger',
                 path: '/editManger',
-                component: resolve => require(['../components/page/Permission/EditManger.vue'], resolve),
-                meta: { title: '编辑管理员' }
+                component: resolve => require(['../components/page/Permission/AddManger.vue'], resolve),
+                meta: { title: '编辑管理员', keepAlive: true }
             },
             {
                 name: 'showMangeLog',

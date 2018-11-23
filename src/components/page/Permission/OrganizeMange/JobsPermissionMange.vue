@@ -26,7 +26,7 @@
                 </el-pagination>
             </div>-->
         </el-card>
-        <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
+        <delete-toast :id='delId' :url='delUrl'  @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
     </div>
 </template>
 <script>
@@ -34,6 +34,7 @@
     import deleteToast from '../../../common/DeleteToast';
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http.js';
+    import * as api from '@/api/api.js'
 
     export default {
         components: {
@@ -44,7 +45,6 @@
         data() {
             return {
                 isShowOperate: true,
-
                 nav: ['岗位管理', '岗位权限管理'],
                 tableLoading: false,
                 isShowDelToast: false,
@@ -52,10 +52,10 @@
                 delId: '',
                 delUrl: 'http://api',
                 delUri: '',
-                tableData: [],
+                tableData: []
             };
         },
-        activated() {
+        mounted() {
             this.departmentId = this.$route.query.id;
             this.getList();
         },
@@ -87,6 +87,7 @@
             // 删除模板
             deleteRole(row) {
                 this.delId = row.id;
+                this.delUrl = 'updateDeleteRole';
                 this.isShowDelToast = true;
             },
             deleteToast(msg) {

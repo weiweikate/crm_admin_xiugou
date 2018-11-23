@@ -64,10 +64,6 @@
         },
         computed: {},
         mounted() {
-            console.log('mounted addJobsPermission');
-        },
-        activated() {
-            console.log('activated addJobsPermission');
             this.getDepartmentList();
             this.initAction();
         },

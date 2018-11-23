@@ -69,7 +69,7 @@
                 tableData: []
             };
         },
-        activated() {
+        mounted() {
             this.getList();
         },
         methods: {

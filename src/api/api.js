@@ -257,7 +257,7 @@ export const findRoleById = ['/role/findRoleById', { methods: 'get' }];
 // 修改岗位
 export const updateRole = '/role/updateRole';
 // 删除岗位
-export const updateDeleteRole = '/role/updateDeleteRole';
+export const updateDeleteRole = ['/role/updateDeleteRole', { methods: 'get' }];
 // 添加部门
 export const addDepartment = '/department/addDepartment';
 // 根据id查询部门
