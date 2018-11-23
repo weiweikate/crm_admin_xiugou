@@ -56,7 +56,7 @@
             };
         },
         activated() {
-            this.departmentId = this.$route.params.id;
+            this.departmentId = this.$route.query.id;
             this.getList();
         },
         methods: {

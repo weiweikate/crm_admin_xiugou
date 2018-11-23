@@ -5,11 +5,9 @@
             <div class="add-box">
                 <el-form ref="form" :rules="rules" :model="form" label-width="100px">
                     <span class="add-box-title">基础信息</span>
+                    <input type="hidden" v-model="form.privilegeInfo">
                     <el-form-item prop="name" label="岗位名称">
                         <el-input style="width:220px" v-model="form.name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="auth">
-                        <el-input style="width:220px" v-model="form.privilegeInfo"></el-input>
                     </el-form-item>
                     <el-form-item prop="departmentId" label="所属部门">
                         <el-select v-model="form.departmentId" placeholder="请选择">
@@ -19,7 +17,7 @@
                     </el-form-item>
                     <hr width='90%' size='1' color='#ccc' class='add-box-sep'>
                     <span class="add-box-title">权限设置</span>
-                    <auth-list></auth-list>
+                    <auth-list @message="addAuthData"></auth-list>
                     <el-form-item class="sub-btn">
                         <el-button size="medium" type="primary" @click="submitForm('form')">提交</el-button>
                         <el-button size="medium" @click="goBack">取消</el-button>
@@ -197,136 +195,9 @@
             // this.getRoleList();
         },
         methods: {
-            checkItem(index) { // 展开或折叠面板
-                this.$set(this.isOpenItem[index], 'group', !this.isOpenItem[index].group);
-            },
-            checkSecondItem(firstIndex, secondIndex) { // 展开或折叠第二层面板
-                this.$set(this.isOpenItem[firstIndex].child, secondIndex, !this.isOpenItem[firstIndex].child[secondIndex]);
-            },
-            checkAll(index) { // 第一层级的全选操作
-                this.$set(this.isSelectAll[index], 'group', !this.isSelectAll[index].group);// 改变当前按钮的选中状态
-                if (!this.jobList[index].member && !this.jobList[index].son) {
-                    return;
-                }
-                if (!this.isSelectAll[index].group) { // 从全选 =》 全不选
-                    for (const key in this.isSelectAll[index].child) { // 移除所有第二层级子项的选中状态
-                        this.$set(this.isSelectAll[index].child, key, false);
-                    }
-                    for (let i = 0, len = this.selectPeople.length; i < len; i++) {
-                        if (!this.selectPeople[i]) { // 删除干净了
-                            return;
-                        }
-                        for (const k in this.jobList[index].son) { // 循环删除有部门的人员（对应列表第三层级）
-                            for (const j in this.jobList[index].son[k].member) {
-                                if (this.selectPeople[i] && this.selectPeople[i].pid == this.jobList[index].son[k].member[j].pid) {
-                                    this.selectPeople.splice(i, 1);
-                                    i--;
-                                    break;
-                                }
-                            }
-                        }
-                        for (const j in this.jobList[index].member) { // 循环删除没有部门的人员（对应列表第二层级）
-                            if (this.selectPeople[i] && this.selectPeople[i].pid == this.jobList[index].member[j].pid) {
-                                this.selectPeople.splice(i, 1);
-                                i--;
-                                break;
-                            }
-                        }
-                    }
-                } else { // 从全不选 =》 全选
-                    for (const key in this.isSelectAll[index].child) { // 给所有第二层级子项添加选中状态
-                        this.$set(this.isSelectAll[index].child, key, true);
-                    }
-                    for (const i in this.jobList[index].member) { // 循环添加没有部门的人员（对应列表第二层级）
-                        if (this.selectPeople.includes(this.jobList[index].member[i])) { // 如果已经存在，就不用再进行添加
-                            continue;
-                        }
-                        this.selectPeople.push(this.jobList[index].member[i]);
-                    }
-                    for (const i in this.jobList[index].son) { // 循环添加有部门的人员（对应列表第三层级）
-                        for (const j in this.jobList[index].son[i].member) {
-                            if (this.selectPeople.includes(this.jobList[index].son[i].member[j])) { // 如果已经存在，就不用再进行添加
-                                continue;
-                            }
-                            this.selectPeople.push(this.jobList[index].son[i].member[j]);
-                        }
-                    }
-                }
-            },
-            checkSecondAll(index, secondIndex) { // 第二层级的全选操作
-                this.$set(this.isSelectAll[index].child, secondIndex, !this.isSelectAll[index].child[secondIndex]);// 改变当前按钮的选中状态
-                const members = this.jobList[index].son[secondIndex].member;// 当前选项的所有成员
-                if (!members) {
-                    return;
-                }
-                if (!this.isSelectAll[index].child[secondIndex]) { // 从全选 =》 全不选
-                    this.$set(this.isSelectAll[index], 'group', false);// 改变顶级按钮的选中状态为非选中状态
-                    for (let i = 0, len = this.selectPeople.length; i < len; i++) {
-                        if (!this.selectPeople[i]) { // 删除干净了
-                            return;
-                        }
-                        for (const j in members) { // 循环删除当前部门的所有人员（对应列表第三层级）
-                            if (this.selectPeople[i].pid == members[j].pid) {
-                                this.selectPeople.splice(i, 1);
-                                i--;
-                                break;
-                            }
-                        }
-                    }
-                } else { // 从全不选 =》 全选
-                    for (const j in members) { // 循环添加当前部门的所有人员（对应列表第三层级）
-                        if (this.selectPeople.includes(members[j])) { // 如果已经存在，就不用再进行添加
-                            continue;
-                        }
-                        this.selectPeople.push(members[j]);
-                    }
-                    this.setFirstLevelChecked(index);
-                }
-            },
-            setHeadColor(data, headColor) { // 设置头像背景颜色
-                const length = headColor.length;
-                for (const i in data) {
-                    // 添加headColor属性
-                    this.$set(data[i], 'headColor', headColor[Math.floor(Math.random() * length)]);
-                }
-            },
-            stateChanged(index, i, j) {
-                if (j !== undefined) { // 如果有j值，代表第三层级数据
-                    if (this.selectPeople.includes(this.jobList[index].son[i].member[j])) { // 点击之前为选中状态
-                        this.$set(this.isSelectAll[index].child, i, false);// 改变父级按钮的选中状态为非选中状态
-                        this.$set(this.isSelectAll[index], 'group', false);// 改变顶级按钮的选中状态为非选中状态
-                    } else { // 点击之前为非选中状态
-                        // 给父级添加选中状态
-                        for (let k = 0; k < this.jobList[index].son[i].member.length; k++) {
-                            if (!this.selectPeople.includes(this.jobList[index].son[i].member[k]) && this.jobList[index].son[i].member[k] != this.jobList[index].son[i].member[j]) { // 只要有其中一个未选中，就跳出循环，不给父级添加选中状态
-                                return false;
-                            }
-                        }
-                        this.$set(this.isSelectAll[index].child, i, true);// 改变父级按钮的选中状态为选中状态
-                        this.setFirstLevelChecked(index, this.jobList[index].son[i].member[j]);// 给第一级添加选中状态
-                    }
-                } else { // 没有j值，第二层级数据
-                    if (this.selectPeople.includes(this.jobList[index].member[i])) { // 点击之前为选中状态
-                        this.$set(this.isSelectAll[index], 'group', false);// 改变父级按钮的选中状态为非选中状态
-                    } else { // 点击之前为非选中状态
-                        this.setFirstLevelChecked(index, this.jobList[index].member[i]);// 给第一级添加选中状态
-                    }
-                }
-            },
-            setFirstLevelChecked(index, data) { // 给第一级添加选中状态
-                for (const k in this.jobList[index].member) {
-                    if (!this.selectPeople.includes(this.jobList[index].member[k]) && data != this.jobList[index].member[k]) { // 只要有其中一个未选中，就跳出循环，不给父级添加选中状态
-                        return false;
-                    }
-                }
-                for (const i in this.jobList[index].son) { // 循环添加有部门的人员（对应列表第三层级）
-                    for (const j in this.jobList[index].son[i].member) {
-                        if (!this.selectPeople.includes(this.jobList[index].son[i].member[j]) && data != this.jobList[index].son[i].member[j]) { // 如果已经存在，就不用再进行添加
-                            return false;
-                        }
-                    }
-                }
-                this.$set(this.isSelectAll[index], 'group', true);// 改变第一级按钮的选中状态为选中状态
+            addAuthData(data){
+                console.log('addAuthData',data)
+                this.form.privilegeInfo = data.join(',');
             },
             initData() { // 数据初始化
                 // 设置头像背景颜色

@@ -3,13 +3,13 @@
         <ul class="auth-list">
             <li class="auth-item" v-for="(item,index) in list" :key="item.name">
                 <div class="auth-title first">
-                    <el-checkbox @change="checked=>editAuth(checked, null, item, item.children)" :label="item.title" :value="item.checked"></el-checkbox>
+                    <el-checkbox border size="medium" @change="checked=>editAuth(checked, null, item, item.children)" :label="item.title" :value="item.checked"></el-checkbox>
                 </div>
                 <div class="auth-content">
                     <ul class="auth-list">
                         <li class="auth-item second" v-for="(son,index) in item.children" :key="son.name">
                             <div class="auth-title">
-                                <el-checkbox @change="checked=>editAuth(checked, item, son, son.children)" :label="son.title" :value="son.checked"></el-checkbox>
+                                <el-checkbox @change="checked=>editAuth(checked, item, son, son.children)" :label="son.title + ' : '" :value="son.checked"></el-checkbox>
                             </div>
                             <div class="auth-content" style="">
                                 <ul class="auth-list">
@@ -99,6 +99,7 @@
                         });
                     }
                 });
+                this.$emit('message',this.hasAutgList);
             }
         }
     };
@@ -114,6 +115,8 @@
             padding-top: 15px;
             padding-bottom: 15px;
             border-bottom: 1px solid #ddd;
+
+
         }
 
         .auth-item.second {
