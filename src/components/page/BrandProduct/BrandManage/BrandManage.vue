@@ -20,7 +20,7 @@
             </el-form>
         </el-card>
         <div class="table-block">
-            <el-button type="primary" style="margin-bottom: 20px" @click="addBrand">添加品牌</el-button>
+            <el-button type="primary" style="margin-bottom: 20px" @click="addBrand" v-auth="'brand.brandManage.tjpp'">添加品牌</el-button>
             <template>
                 <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
                     <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
@@ -45,9 +45,9 @@
                     <el-table-column min-width="100" label="操作" align="center">
                         <template slot-scope="scope">
                             <!--<el-button type="primary" size="small" @click="toBrand(scope.$index,scope.row)">品牌页</el-button>-->
-                            <el-button type="warning" size="small" @click="editItem(scope.$index,scope.row.id)">编辑
+                            <el-button type="warning" size="small" @click="editItem(scope.$index,scope.row.id)" v-auth="'brand.brandManage.bj'">编辑
                             </el-button>
-                            <el-button type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除
+                            <el-button type="danger" size="small" @click="delItem(scope.$index,scope.row.id)" v-auth="'brand.brandManage.sc'">删除
                             </el-button>
                         </template>
                     </el-table-column>

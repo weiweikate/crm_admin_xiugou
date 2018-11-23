@@ -5,7 +5,7 @@
             <div>
                 <div class="area">秀场管理</div>
                 <div class="wrap">
-                    <div class="item" v-for="(item,index) in list" :key="index" @click="toPage(item.page)">
+                    <div class="item" v-auth="item.auth" v-for="(item,index) in list" :key="index" @click="toPage(item.page)">
                         <div class="left">
                             <img :src="item.img" alt="">
                         </div>
@@ -36,11 +36,13 @@
                         img: 'static/img/show_list.png',
                         title: '秀场列表',
                         content: '所有发布的秀场',
+                        auth: 'yunying.showHome.sclb',
                         page: '/foundList'
                     }, {
                         img: 'static/img/show_item.png',
                         title: '秀场分类管理',
                         content: '秀场分类设置',
+                        auth: 'yunying.showHome.xcflgl',
                         page: '/foundCategory'
                     }]
             };

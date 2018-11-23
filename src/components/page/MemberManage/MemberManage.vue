@@ -34,7 +34,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="handleCurrentChange(1)" type="primary">查询</el-button>
-                    <el-button type="primary">导出</el-button>
+                    <el-button type="primary" v-auth="'vip.memberManage.dc'">导出</el-button>
                     <!--<el-button @click="resetForm('form')">重置</el-button>-->
                 </el-form-item>
             </el-form>
@@ -71,8 +71,9 @@
                 <!--<el-table-column prop="style" label="渠道" width="100"></el-table-column>-->
                 <el-table-column label="下级" align="center">
                     <template slot-scope="scope">
-                        <span style="cursor: pointer;color:#ff6868"
+                        <span v-if="hasAuth" style="cursor: pointer;color:#ff6868"
                               @click="toLower(scope.row.id)">{{scope.row.junior}}</span>
+                        <span v-else>{{scope.row.junior}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="状态" align="center">
@@ -85,7 +86,7 @@
                 <el-table-column min-width="160" label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button type="primary"  size="small"
-                                   @click="detailItem(scope.$index,scope.row)">详情
+                                   @click="detailItem(scope.$index,scope.row)" v-auth="'vip.memberManage.xq'">详情
                         </el-button>
                         <!--<el-button type="danger" v-if="scope.row.status!=3" size="small"-->
                                    <!--@click="updateStatusItem(scope.$index,scope.row.id,1)">关闭-->
@@ -133,8 +134,6 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
 import region from '@/components/common/Region';
-import * as api from '@/api/api';
-import * as pApi from '@/privilegeList/index.js';
 import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http';
@@ -166,19 +165,21 @@ export default {
             id: '',
             info: '',
             type: '',
-            btnTxt: ''
+            btnTxt: '',
+            hasAuth: ''// 是否有查看下级的权限
         };
     },
     activated() {
         this.getList(this.page.currentPage);
         this.getLevelList();
+        this.hasAuth = this.$oprAuth('vip.memberManage.xjck');
     },
     methods: {
         // 获取列表
         getList(val) {
-            let data = {
+            const data = {
                 ...this.form
-            }
+            };
             data.page = val;
             data.provinceId = this.address[0] == '0' ? '' : this.address[0];
             data.cityId = this.address[1];
@@ -205,11 +206,11 @@ export default {
         },
         // 跳到下级列表
         toLower(id) {
-            this.$router.push({name: 'lowerMemberManage', query: {memberToLowListPage: id}});
+            this.$router.push({ name: 'lowerMemberManage', query: { memberToLowListPage: id }});
         },
         // 详情
         detailItem(index, row) {
-            this.$router.push({name: 'memberDetail', query: {memberToInfo: row.id}});
+            this.$router.push({ name: 'memberDetail', query: { memberToInfo: row.id }});
         },
         // 关闭,开启
         updateStatusItem(index, id, num) {
@@ -226,73 +227,73 @@ export default {
             }
             that.tipsMask = true;
         },
-        oprSure() {
-            const that = this;
-            const data = {
-                id: that.id
-            };
-            let url = '';
-            if (that.type == '关闭') {
-                url = api.stopDealerById;
-                data.url = pApi.stopDealerById;
-            } else {
-                url = api.openDealerById;
-                data.url = pApi.openDealerById;
-            }
-            that.btnLoading = true;
-            that.$axios
-                .post(url, data)
-                .then(res => {
-                    that.btnLoading = false;
-                    that.getList(that.page.currentPage);
-                    that.tipsMask = false;
-                })
-                .catch(err => {
-                    that.btnLoading = false;
-                    that.tipsMask = false;
-                });
-        },
+        // oprSure() {
+        //     const that = this;
+        //     const data = {
+        //         id: that.id
+        //     };
+        //     let url = '';
+        //     if (that.type == '关闭') {
+        //         url = api.stopDealerById;
+        //         data.url = pApi.stopDealerById;
+        //     } else {
+        //         url = api.openDealerById;
+        //         data.url = pApi.openDealerById;
+        //     }
+        //     that.btnLoading = true;
+        //     that.$axios
+        //         .post(url, data)
+        //         .then(res => {
+        //             that.btnLoading = false;
+        //             that.getList(that.page.currentPage);
+        //             that.tipsMask = false;
+        //         })
+        //         .catch(err => {
+        //             that.btnLoading = false;
+        //             that.tipsMask = false;
+        //         });
+        // },
         // 导出
-        exportData() {
-            const that = this;
-            const data = that.form;
-            data.page = that.page.currentPage;
-            data.levelId = that.exportForm.levelId;
-            data.url = pApi.exportDealerListExcel;
-            const addrss = that.address;
-            if (addrss && addrss[0]) {
-                data.provinceId = addrss[0];
-                if (addrss[1]) {
-                    data.cityId = addrss[1];
-                }
-                if (addrss[2]) {
-                    data.areaId = addrss[2];
-                }
-            } else {
-                data.provinceId = '';
-                data.cityId = '';
-                data.areaId = '';
-            }
-            that.$axios
-                .post(api.exportDealerListExcel, data, { responseType: 'blob' })
-                .then(res => {
-                    var data = res.data;
-                    if (!data) {
-                        return;
-                    }
-                    const url = window.URL.createObjectURL(new Blob([data]));
-                    const link = document.createElement('a');
-                    link.style.display = 'none';
-                    link.href = url;
-                    const time = moment(new Date()).format('YYYYMMDDHHmmss');
-                    link.setAttribute('download', '会员列表' + time + '.xlsx');
-                    document.body.appendChild(link);
-                    link.click();
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        },
+        // exportData() {
+        //     const that = this;
+        //     const data = that.form;
+        //     data.page = that.page.currentPage;
+        //     data.levelId = that.exportForm.levelId;
+        //     data.url = pApi.exportDealerListExcel;
+        //     const addrss = that.address;
+        //     if (addrss && addrss[0]) {
+        //         data.provinceId = addrss[0];
+        //         if (addrss[1]) {
+        //             data.cityId = addrss[1];
+        //         }
+        //         if (addrss[2]) {
+        //             data.areaId = addrss[2];
+        //         }
+        //     } else {
+        //         data.provinceId = '';
+        //         data.cityId = '';
+        //         data.areaId = '';
+        //     }
+        //     that.$axios
+        //         .post(api.exportDealerListExcel, data, { responseType: 'blob' })
+        //         .then(res => {
+        //             var data = res.data;
+        //             if (!data) {
+        //                 return;
+        //             }
+        //             const url = window.URL.createObjectURL(new Blob([data]));
+        //             const link = document.createElement('a');
+        //             link.style.display = 'none';
+        //             link.href = url;
+        //             const time = moment(new Date()).format('YYYYMMDDHHmmss');
+        //             link.setAttribute('download', '会员列表' + time + '.xlsx');
+        //             document.body.appendChild(link);
+        //             link.click();
+        //         })
+        //         .catch(err => {
+        //             console.log(err);
+        //         });
+        // },
         //   重置表单
         resetForm(formName) {
             this.address = [];
