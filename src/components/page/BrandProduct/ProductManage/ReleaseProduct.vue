@@ -301,10 +301,6 @@
                     return false;
                 }
                 const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
-                if (!reg.test(this.form.weight) || this.form.weight > 1000000000) {
-                    this.$message.error('重量不符合规则!');
-                    return false;
-                }
                 if (this.form.afterSaleServiceDays > 999999999 || this.form.afterSaleServiceDays < 0) {
                     this.$message.warning('请输入正确的售后周期!');
                     return false;
