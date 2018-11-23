@@ -33,7 +33,7 @@
             getTplList() {
                 request.findTopicTemplate({}).then(res => {
                     if (!res.data) return false;
-                    this.list = res.data.data;
+                    this.list = res.data;
                 }).catch(err => {
                     console.log(err);
                 });

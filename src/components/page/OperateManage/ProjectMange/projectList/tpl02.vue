@@ -119,6 +119,8 @@ export default {
         return {
             // 专题id
             id: '',
+            // 专题code
+            code: '',
             // 专题名称
             pName: '',
             // 上传图片
@@ -152,6 +154,7 @@ export default {
         this.uploadImg = api.uploadImg;
         this.pName = this.name;
         this.id = '';
+        this.code = '';
         this.topicNavbarList = {
             navName: '',
             topicBannerProducts: [{ prodCode: '', productType: 99 }],
@@ -165,6 +168,7 @@ export default {
             this.bannerForm.height = this.tplData.height;
             this.topicNavbarList = this.tplData.topicNavbarList[0];
             this.id = this.tplData.id;
+            this.code = this.tplData.code;
         }
         if (this.tplData.content == 'edit') {
             this.topicNavbarList = {
@@ -231,6 +235,7 @@ export default {
             const data = {};
             if (this.id != '') {
                 data.id = this.id.toString();
+                data.code = this.code;
             }
             data.templateId = 2;
             data.name = this.pName;

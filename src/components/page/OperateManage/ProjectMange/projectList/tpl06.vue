@@ -155,6 +155,8 @@
             return {
                 // 专题id
                 id: '',
+                // 专题code
+                code: '',
                 // 专题名称
                 pName: '',
                 // 上传图片
@@ -199,6 +201,7 @@
             this.uploadImg = api.uploadImg;
             this.pName = this.name;
             this.id = '';
+            this.code = '';
             this.topicNavbarList = [
                 {
                     navName: '',

@@ -14,7 +14,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="上级代理:" class="special">
-                        <el-input-number :precision="1" :controls="false" :step="1" v-model="info.upUserid" @blur="sureUpdate" size="medium"></el-input-number>
+                        <el-input v-model="info.upUserid" @blur="sureUpdate" size="medium"></el-input>
                         <span class="tip">请输入上级代理</span>
                     </el-form-item>
                 </el-form>
@@ -84,7 +84,7 @@
                             this.num = i;
                         }
                     }
-                    this.$set(this.info, 'levelId', this.info.levelId)
+                    this.$set(this.info, 'levelId', this.info.levelId);
                 }).catch(err => {
                     console.log(err);
                 });
@@ -95,6 +95,7 @@
             },
             // 提交表单
             submitForm() {
+                if (!(this.info.upUserid > 0)) return this.$message.warning('请输入正确的会员id');
                 this.closeToask();
                 const data = {};
                 data.id = this.id;

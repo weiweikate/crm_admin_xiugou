@@ -155,6 +155,8 @@
             return {
                 // 专题id
                 id: '',
+                // 专题code
+                code: '',
                 // 专题名称
                 pName: '',
                 // 上传图片
@@ -199,6 +201,7 @@
             this.uploadImg = api.uploadImg;
             this.pName = this.name;
             this.id = '';
+            this.code = '';
             this.topicNavbarList = [
                 {
                     navName: '',
@@ -227,6 +230,7 @@
                 }
                 this.navItem = this.tplData.topicNavbarList[0].type;
                 this.id = this.tplData.id;
+                this.code = this.tplData.code;
             }
             if (this.tplData.content == 'edit') {
                 this.topicNavbarList = [
@@ -311,6 +315,7 @@
                 const data = {};
                 if (this.id != '') {
                     data.id = this.id.toString();
+                    data.code = this.code;
                 }
                 data.templateId = 5;
                 data.name = this.pName;
