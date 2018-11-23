@@ -3,20 +3,24 @@
         <ul class="auth-list">
             <li class="auth-item" v-for="(item,index) in list" :key="item.name">
                 <div class="auth-title first">
-                    <el-checkbox border size="medium" @change="checked=>editAuth(checked, null, item, item.children)" :label="item.title" :value="item.checked"></el-checkbox>
+                    <el-checkbox border size="medium" @change="checked=>editAuth(checked, null, item, item.children)"
+                                 :label="item.title" :value="item.checked"></el-checkbox>
                 </div>
                 <div class="auth-content">
                     <ul class="auth-list">
                         <li class="auth-item second" v-for="(son,index) in item.children" :key="son.name">
                             <div class="auth-title">
-                                <el-checkbox @change="checked=>editAuth(checked, item, son, son.children)" :label="son.title + ' : '" :value="son.checked"></el-checkbox>
+                                <el-checkbox @change="checked=>editAuth(checked, item, son, son.children)"
+                                             :label="son.title + ' : '" :value="son.checked"></el-checkbox>
                             </div>
                             <div class="auth-content" style="">
                                 <ul class="auth-list">
                                     <li class="auth-item third" v-for="(grandson,index) in son.children"
                                         :key="grandson.name">
                                         <div class="auth-title">
-                                            <el-checkbox @change="checked=>editAuth(checked, son, grandson, null, item)" :label="grandson.title" :value="grandson.checked"></el-checkbox>
+                                            <el-checkbox @change="checked=>editAuth(checked, son, grandson, null, item)"
+                                                         :label="grandson.title"
+                                                         :value="grandson.checked"></el-checkbox>
                                         </div>
                                     </li>
                                 </ul>
@@ -32,20 +36,43 @@
 </template>
 <script>
     const defAuthlist = require('@/auth.json');
+
+    function changeStatus(auth, list) {
+        const res = [];
+        if (!list.length) {
+            return list;
+        }
+        list.forEach(item => {
+            if (auth.includes(item.name)) {
+                item.checked = true;
+            } else {
+                item.checked = false;
+            }
+            changeStatus(auth, item.children || []);
+        });
+
+        return res;
+    }
+
     export default {
         name: 'AuthList',
+        props: {
+            auth: ''
+        },
         data() {
             return {
-                list: [],
-                hasAutgList: []
+                list: []
             };
-        },
-        computed: {
         },
         mounted() {
             this.list = this.dealAuth(defAuthlist);
         },
         methods: {
+            // 手动更新权限check状态
+            updateStatus(auth) {
+                changeStatus(auth.split(','), this.list);
+                this.addAuth();
+            },
             // 渲染权限列表
             dealAuth(list) {
                 if (!list || list.length === 0) return list;
@@ -81,25 +108,49 @@
                     });
                 }
                 this.addAuth();
-                console.log(this.hasAutgList);
             },
             //  添加权限key值
             addAuth() {
-                this.hasAutgList = [];
+                let hasAuthMap = {};
+                let result = true;
                 this.list.forEach(first => {
-                    if (first.checked) this.hasAutgList.push(first.name);
+                    if (first.checked) {
+                        hasAuthMap[first.name] = 1;
+                    }
                     if (first.children && first.children.length !== 0) {
+                        result = first.children.some(item => {
+                            return item.checked === true;
+                        });
+                        // 如果二级有选中则添加一级权限
+                        if (result) {
+                            hasAuthMap[first.name] = 1;
+                        }
                         first.children.forEach(second => {
-                            if (second.checked) this.hasAutgList.push(second.name);
+                            if (second.checked) {
+                                hasAuthMap[second.name] = 1;
+                            }
                             if (second.children && second.children.length !== 0) {
+                                result = second.children.some(item => item.checked === true);
+                                // 如果三级有选中则添加二级权限添加一级权限
+                                if (result) {
+                                    hasAuthMap[second.name] = 1;
+                                    hasAuthMap[first.name] = 1;
+                                }
                                 second.children.forEach(third => {
-                                    if (third.checked) this.hasAutgList.push(third.name);
+                                    if (third.checked) {
+                                        hasAuthMap[third.name] = 1;
+                                    }
                                 });
                             }
+
                         });
                     }
                 });
-                this.$emit('message',this.hasAutgList);
+                let tmp = [];
+                for (let key in hasAuthMap) {
+                    tmp.push(key);
+                }
+                this.$emit('message', tmp.join(','));
             }
         }
     };
@@ -115,7 +166,6 @@
             padding-top: 15px;
             padding-bottom: 15px;
             border-bottom: 1px solid #ddd;
-
 
         }
 

@@ -81,8 +81,7 @@
 
             // 编辑角色
             editRole(row) {
-                sessionStorage.setItem('editJobsPermission', row.id);
-                this.$router.push({ name: 'editJobsPermission', params: { userId: row.id } });
+                this.$router.push({ name: 'editJobsPermission', query: { userId: row.id } });
             },
 
             // 删除模板

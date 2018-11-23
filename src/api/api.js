@@ -253,7 +253,7 @@ export const downloadCouponList = '/admin/user/coupon/downloadCouponList';
 // 添加岗位
 export const addRole = '/role/addRole';
 // 根据id查询岗位
-export const findRoleById = '/role/findRoleById';
+export const findRoleById = ['/role/findRoleById', { methods: 'get' }];
 // 修改岗位
 export const updateRole = '/role/updateRole';
 // 删除岗位
