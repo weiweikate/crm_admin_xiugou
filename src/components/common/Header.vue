@@ -143,7 +143,7 @@ export default {
         },
         // 获取消息
         async getMsg() {
-            if (this.message === 0) return;
+            // if (this.message === 0) return;
             await this.$refs.msg.getAllMsg();
             this.showMsg = true;
         }
