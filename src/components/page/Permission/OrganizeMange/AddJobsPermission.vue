@@ -19,7 +19,7 @@
                     </el-form-item>
                     <hr width='90%' size='1' color='#ccc' class='add-box-sep'>
                     <span class="add-box-title">权限设置</span>
-
+                    <auth-list></auth-list>
                     <el-form-item class="sub-btn">
                         <el-button size="medium" type="primary" @click="submitForm('form')">提交</el-button>
                         <el-button size="medium" @click="goBack">取消</el-button>
@@ -29,7 +29,7 @@
                 </el-form>
             </div>
 
-            <auth-list></auth-list>
+
         </el-card>
 
 

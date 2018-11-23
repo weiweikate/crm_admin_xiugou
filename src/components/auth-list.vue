@@ -31,7 +31,7 @@
     </div>
 </template>
 <script>
-    import defAuthlist from '@/utils/authList';
+    const defAuthlist = require('@/auth.json');
     export default {
         name: 'AuthList',
         data() {

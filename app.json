@@ -1,5 +1,5 @@
 {
-    "proxy": "dev",
+    "proxy": "qa",
     "env": {
         "qa": {
             "name": "测试环境",
