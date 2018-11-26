@@ -110,7 +110,7 @@ export const asyncRouterMap = [
                 name: 'productList',
                 path: '/productList',
                 component: resolve => require(['../components/page/BrandProduct/ProductManage/ProductList.vue'], resolve),
-                meta: { title: '产品管理' }
+                meta: { title: '产品管理', noKeepAlive: true }
             },
             {
                 name: 'shippingTemplate',
@@ -339,28 +339,28 @@ export const asyncRouterMap = [
                 name: 'organizeMange',
                 path: '/organizeMange',
                 component: resolve => require(['../components/page/Permission/OrganizeMange/OrganizeMange.vue'], resolve),
-                meta: { title: '组织结构管理', keepAlive: true }
+                meta: { title: '组织结构管理', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'jobsPermissionMange',
                 path: '/jobsPermissionMange',
                 component: resolve => require(['../components/page/Permission/OrganizeMange/JobsPermissionMange.vue'], resolve),
-                meta: { title: '岗位权限管理', keepAlive: true }
+                meta: { title: '岗位权限管理', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'addJobsPermission',
                 path: '/addJobsPermission',
                 component: resolve => require(['../components/page/Permission/OrganizeMange/AddJobsPermission.vue'], resolve),
-                meta: { title: '添加岗位权限', keepAlive: true }
+                meta: { title: '添加岗位权限', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'editJobsPermission',
                 path: '/editJobsPermission',
                 component: resolve => require(['../components/page/Permission/OrganizeMange/AddJobsPermission.vue'], resolve),
-                meta: { title: '编辑岗位权限', keepAlive: true }
+                meta: { title: '编辑岗位权限', noKeepAlive: true }
             },
             {
                 name: 'manageList',
@@ -440,12 +440,12 @@ export const asyncRouterMap = [
         name: 'settlement',
         meta: { title: '结算管理', icon: 'icon-shezhi', roles: ['admin'] },
         children: [
-            // {
-            //     name: 'withdrawalAudit',
-            //     path: '/withdrawalAudit',
-            //     component: resolve => require(['../components/page/SettlementMange/WithdrawalAudit.vue'], resolve),
-            //     meta: { title: '提现申请审核' }
-            // },
+            {
+                name: 'withdrawalAudit',
+                path: '/withdrawalAudit',
+                component: resolve => require(['../components/page/SettlementMange/WithdrawalAudit.vue'], resolve),
+                meta: { title: '提现申请审核' }
+            },
             // {
             //     name: 'refundMange',
             //     path: '/refundMange',
@@ -626,7 +626,7 @@ export const asyncRouterMap = [
                 name: 'giftInfo',
                 path: '/giftInfo',
                 component: resolve => require(['../components/page/BrandProduct/GiftManage/GiftInfo.vue'], resolve),
-                meta: { title: '礼包详情', keepAlive: true }
+                meta: { title: '礼包详情', noKeepAlive: true }
             },
             {
                 name: 'discountAdd',
@@ -729,7 +729,7 @@ export const asyncRouterMap = [
                 name: 'memberDetail',
                 path: '/memberDetail',
                 component: resolve => require(['../components/page/MemberManage/MemberManage/MemberDetail.vue'], resolve),
-                meta: { title: '会员详情', keepAlive: true }
+                meta: { title: '会员详情', noKeepAlive: true }
             },
             {
                 name: 'memberTree',
@@ -841,18 +841,18 @@ export const asyncRouterMap = [
                 component: resolve => require(['../components/page/MemberManage/DegradeManage.vue/DegradeManage.vue'], resolve),
                 meta: { title: '降级设置' }
             },
-
+            // 产品管理
             {
                 name: 'releaseProduct',
                 path: '/releaseProduct',
                 component: resolve => require(['../components/page/BrandProduct/ProductManage/ReleaseProduct.vue'], resolve),
-                meta: { title: '发布产品' }
+                meta: { title: '发布商品', noKeepAlive: true }
             },
             {
-                name: 'editProduct',
-                path: '/editProduct',
-                component: resolve => require(['../components/page/BrandProduct/ProductManage/EditProduct.vue'], resolve),
-                meta: { title: '编辑产品' }
+                name: 'editProductInfo',
+                path: '/editProductInfo',
+                component: resolve => require(['../components/page/BrandProduct/ProductManage/EditProductInfo.vue'], resolve),
+                meta: { title: '发布商品' }
             },
             {
                 name: 'productSpecifications',
@@ -942,13 +942,13 @@ export const asyncRouterMap = [
                 name: 'addManger',
                 path: '/addManger',
                 component: resolve => require(['../components/page/Permission/AddManger.vue'], resolve),
-                meta: { title: '添加管理员', keepAlive: true }
+                meta: { title: '添加管理员', noKeepAlive: true }
             },
             {
                 name: 'editManger',
                 path: '/editManger',
                 component: resolve => require(['../components/page/Permission/AddManger.vue'], resolve),
-                meta: { title: '编辑管理员', keepAlive: true }
+                meta: { title: '编辑管理员', noKeepAlive: true }
             },
             {
                 name: 'showMangeLog',
@@ -1326,7 +1326,7 @@ export const asyncRouterMap = [
                 name: 'orderInfo',
                 path: '/orderInfo',
                 component: resolve => require(['../components/page/OrderManage/OrderManage/OrderInfo.vue'], resolve),
-                meta: { title: '订单详情', keepAlive: true }
+                meta: { title: '订单详情', noKeepAlive: true }
             },
             {
                 name: 'afterSaleOpr',
@@ -1345,7 +1345,7 @@ export const asyncRouterMap = [
                 name: 'giftOrderInfo',
                 path: '/giftOrderInfo',
                 component: resolve => require(['../components/page/OrderManage/GiftOrderManage/GiftOrderInfo.vue'], resolve),
-                meta: { title: '礼包订单详情', keepAlive: true }
+                meta: { title: '礼包订单详情', noKeepAlive: true }
             },
             {
                 name: 'cloudWarHouseMange',
