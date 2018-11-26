@@ -447,7 +447,7 @@
                         }
                         if (this.form.type == 4) {
                             if (!that.productList.products) {
-                                this.$message.warning('请选择可用品类!');
+                                this.$message.warning('请选择可用产品!');
                                 return;
                             }
                             if (that.productList.firstCategoryIds instanceof Array) {
