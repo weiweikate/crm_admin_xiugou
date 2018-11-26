@@ -410,7 +410,7 @@
                     this.form.experience = res.data.experience;
                     this.gifts.isSetExp = res.data.experience !== '';
                     this.gifts.isSetBuyTime = res.data.couponList.length !== 0;
-                    this.form.dealDays = res.data.dealDays.toString();
+                    // this.form.dealDays = res.data.dealDays.toString();
                     this.form.type = res.data.type.toString();
                     this.form.firstCategoryId = Number(res.data.firstCategoryId);
                     this.proItemArr.push(this.form.firstCategoryId);

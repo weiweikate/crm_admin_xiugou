@@ -538,12 +538,12 @@ export const asyncRouterMap = [
         name: 'settlement',
         meta: { title: '结算管理', icon: 'icon-shezhi', roles: ['admin'] },
         children: [
-            // {
-            //     name: 'withdrawalAudit',
-            //     path: '/withdrawalAudit',
-            //     component: resolve => require(['../components/page/SettlementMange/WithdrawalAudit.vue'], resolve),
-            //     meta: { title: '提现申请审核' }
-            // },
+            {
+                name: 'withdrawalAudit',
+                path: '/withdrawalAudit',
+                component: resolve => require(['../components/page/SettlementMange/WithdrawalAudit.vue'], resolve),
+                meta: { title: '提现申请审核' }
+            },
             // {
             //     name: 'refundMange',
             //     path: '/refundMange',

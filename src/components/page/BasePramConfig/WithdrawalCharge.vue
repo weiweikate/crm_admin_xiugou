@@ -4,21 +4,21 @@
         <el-card :body-style="{ padding: '30px' }" v-loading="pageLoading">
             <div class="charge-title">提现手续费设置</div>
             <p class="with-charge-p">
-                <span>提现手续费比例</span>
-                <el-input-number :min="0" :controls="false" v-model="charge" style="width:150px" placeholder="请输入数值"></el-input-number> %
+                <el-checkbox v-model="isSelectWithCharge" @change="isSelectWithCharge?'':charge = '0'">提现手续费比例</el-checkbox>
+                <el-input :disabled="!isSelectWithCharge" v-model="charge" style="width:150px" placeholder="请输入数值"></el-input> %　
+                <span style="color: #ccc">注：填写数值0-100，只可填写数字</span>
             </p>
-            <!--<div class="charge-title">提现频率设置</div>-->
-            <p v-for="(value,key) in levelList" :key="key" class="with-charge-p">
-                <span>{{value.name}}用户</span>
-                <el-select v-model="value.times">
-                    <el-option v-for="(v,k) in dateList" :key="k" :label="v.label" :value='v.value'></el-option>
-                </el-select>
-                <span>　可提现　</span>
-                <el-input-number v-model="value.num" style="width:150px" placeholder="请输入数值"></el-input-number>　次
+            <div class="charge-title">提现设置</div>
+            <p class="with-charge-p">
+                <el-radio v-model="withSet" label="minBalance" >设置起始提现金额</el-radio>
+                <el-input v-model="minBalance" :disabled="withSet !== 'minBalance'" style="width:150px" placeholder="请输入数值"></el-input>　元　
+                <span style="color: #ccc">注：填写数值0-100，只可填写数字</span>
             </p>
             <p class="with-charge-p">
-                <span>设置提现金额　</span>
-                <el-input-number :min="0" :controls="false" v-model="minBalance" style="width:150px" placeholder="请输入数值"></el-input-number>　元
+                <el-radio v-model="withSet" label="charge" >提现金额低于</el-radio>
+                <el-input v-model="less" :disabled="withSet !== 'charge'" style="width:150px" placeholder="请输入数值"></el-input>　元，收取提现费用
+                <el-input v-model="withCharge" :disabled="withSet !== 'charge'" style="width:150px" placeholder="请输入数值"></el-input>　元　
+                <span style="color: #ccc">注：填写数值0-100，只可填写数字</span>
             </p>
             <p class="with-charge-p">
                 <el-button :loading="btnLoading" @click="submitForm" type="primary">确认保存</el-button>
@@ -38,7 +38,11 @@ export default {
             btnLoading: false,
             pageLoading: false,
             charge: '', // 提现手续费
+            isSelectWithCharge: false,
+            withSet: 'minBalance',
             minBalance: '', // 提现金额
+            less: '',
+            withCharge: '',
             // 日期类型
             dateList: [
                 { label: '不限制', value: '' },
@@ -53,18 +57,9 @@ export default {
 
     activated() {
         this.getList();
-        // this.getUserLevel();
     },
 
     methods: {
-        /**
-         * @Description: 获取经销商层级
-         * @author wuchengji
-         * @date 2018-9-7
-        */
-        getUserLevel() {
-
-        },
         /**
          * @Description: 数据回显
          * @param:
@@ -75,15 +70,29 @@ export default {
         getList() {
             this.pageLoading = true;
             const data = {
-                codes: 'service_charge,min_balance'
+                codes: 'service_charge,min_balance,when_less_than_balance,case_service_charge'
             };
             request.queryConfig(data).then(res => {
                 this.pageLoading = false;
                 res.data.forEach(v => {
                     if (v.code == 'service_charge') {
                         this.charge = v.value;
+                        this.isSelectWithCharge = v.status == 1;
                     } else if (v.code == 'min_balance') {
                         this.minBalance = v.value;
+                        if (v.status == 1) {
+                            this.withSet = 'minBalance';
+                        }
+                    } else if (v.code == 'when_less_than_balance') {
+                        this.less = v.value;
+                        if (v.status == 1) {
+                            this.withSet = 'charge';
+                        }
+                    } else if (v.code == 'case_service_charge') {
+                        if (v.status == 1) {
+                            this.withSet = 'charge';
+                        }
+                        this.withCharge = v.value;
                     }
                 });
                 this.bodyLoading = false;
@@ -100,6 +109,8 @@ export default {
          * @date 2018/10/10
         */
         submitForm() {
+            if (this.charge < 0 || this.charge > 100 || this.charge.length > 9) return this.$message.warning('请输入正确提现手续费比例');
+            if (this.minBalance < 0 || this.minBalance > 100 || this.minBalance.length > 9) return this.$message.warning('请输入正确起始提现金额');
             const data = {
                 configVOS: [
                     {
@@ -107,21 +118,31 @@ export default {
                         name: '手续费',
                         value: this.charge,
                         value_type: 1,
-                        status: 1
+                        status: this.isSelectWithCharge ? 1 : 0
                     },
                     {
                         code: 'min_balance',
                         name: '最低提现金额',
                         value: this.minBalance,
                         value_type: 1,
-                        status: 1
+                        status: this.withSet == 'minBalance' ? 1 : 0
+                    },
+                    {
+                        code: 'when_less_than_balance',
+                        name: '提现金额低于条件',
+                        value: this.less,
+                        value_type: 1,
+                        status: this.withSet == 'charge' ? 1 : 0
+                    },
+                    {
+                        code: 'case_service_charge',
+                        name: '提现金额低于条件',
+                        value: this.withCharge,
+                        value_type: 1,
+                        status: this.withSet == 'charge' ? 1 : 0
                     }
                 ]
             };
-            if (this.charge >= 9999999999999999 || this.minBalance >= 9999999999999999) {
-                this.$message.warning('最多输入16位数字');
-                return;
-            }
             this.btnLoading = true;
             request.addOrModifyList(data).then(res => {
                 this.$message.success(res.msg);
