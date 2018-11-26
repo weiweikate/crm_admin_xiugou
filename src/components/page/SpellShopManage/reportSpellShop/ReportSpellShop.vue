@@ -22,7 +22,7 @@
                 <el-table-column prop="content" label="举报内容" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button @click="reportShop(scope.row)" type="primary">详情</el-button>
+                        <el-button @click="reportShop(scope.row)" type="primary" v-auth="'pindian.reportSpellShop.ckxq'">详情</el-button>
                     </template>
                 </el-table-column>
             </el-table>

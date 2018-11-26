@@ -87,7 +87,7 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button @click="showInfo(scope.row)" type="primary">查看详情</el-button>
+                        <el-button @click="showInfo(scope.row)" type="primary" v-auth="'pindian.shopList.ckxq'">查看详情</el-button>
                     </template>
                 </el-table-column>
             </el-table>

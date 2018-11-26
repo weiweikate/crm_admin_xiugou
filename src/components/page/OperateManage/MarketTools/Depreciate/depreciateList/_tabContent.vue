@@ -1,6 +1,6 @@
 <template>
     <div class="tab-content">
-        <el-button @click="addDepreciate" class="add-product" type="primary">新建降价拍
+        <el-button @click="addDepreciate" class="add-product" type="primary" v-auth="'yunying.marketToolsManage.jjp.xjjjp'">新建降价拍
         </el-button>
         <div class="search-pane">
             <el-form :model="form" ref='form' inline label-width="100px">
@@ -140,17 +140,17 @@
             <el-table-column label="操作" align="center" min-width="100">
                 <template slot-scope="scope">
                     <el-button style="margin-bottom:10px" type="primary"
-                               @click="toDetail(scope.row)">查看
+                               @click="toDetail(scope.row)" v-auth="'yunying.marketToolsManage.jjp.ck'">查看
                     </el-button>
                     <el-button style="margin-bottom:10px" type="danger" @click="endOrDelete(1,scope.row)"
-                               v-if="scope.row.status == 1||scope.row.status == 2">
+                               v-if="scope.row.status == 1||scope.row.status == 2" v-auth="'yunying.marketToolsManage.jjp.js'">
                         结束
                     </el-button>
                     <el-button style="margin-bottom:10px" type="warning" @click="deInventory(scope.row)"
-                               v-if="scope.row.status == 2">减少数量
+                               v-if="scope.row.status == 2" v-auth="'yunying.marketToolsManage.jjp.jssl'">减少数量
                     </el-button>
                     <el-button style="margin-bottom:10px" type="danger" @click="endOrDelete(0,scope.row)"
-                               v-if="scope.row.status != 1&&scope.row.status != 2">
+                               v-if="scope.row.status != 1&&scope.row.status != 2" v-auth="'yunying.marketToolsManage.jjp.sc'">
                         删除
                     </el-button>
                     <!--<el-button style="margin-bottom:10px" type="warning" @click="endOrDelete(2,scope.row)"-->

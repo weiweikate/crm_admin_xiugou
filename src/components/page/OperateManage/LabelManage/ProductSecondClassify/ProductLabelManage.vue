@@ -29,9 +29,9 @@
                     </el-table-column>
                     <el-table-column  label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" :disabled="scope.row.deleteStatus" @click="addItem(scope.row)">添加</el-button>
-                            <el-button type="success" size="small" :disabled="scope.row.deleteStatus" @click="clearItem(scope.row)">清空</el-button>
-                            <el-button v-if="!scope.row.deleteStatus" type="danger" size="small" @click="delItem(scope.row)">删除</el-button>
+                            <el-button type="primary" size="small" :disabled="scope.row.deleteStatus" @click="addItem(scope.row)" v-auth="'yunying.labelManage.tj'">添加</el-button>
+                            <el-button type="success" size="small" :disabled="scope.row.deleteStatus" @click="clearItem(scope.row)" v-auth="'unying.labelManage.qk'">清空</el-button>
+                            <el-button v-if="!scope.row.deleteStatus" type="danger" size="small" @click="delItem(scope.row)" v-auth="'yunying.labelManage.sc'">删除</el-button>
                             <el-button v-else type="warning" size="small" @click="deleteSure(scope.$index)">确定</el-button>
                         </template>
                     </el-table-column>

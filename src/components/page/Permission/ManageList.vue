@@ -24,7 +24,7 @@
               <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
               <el-table-column prop="name" label="管理员姓名" align="center"></el-table-column>
               <el-table-column prop="telephone" label="手机号" align="center"></el-table-column>
-              <el-table-column prop="deptmentName" label="部门" align="center"></el-table-column>
+              <el-table-column prop="departmentName" label="部门" align="center"></el-table-column>
               <el-table-column prop="jobName" label="岗位" align="center"></el-table-column>
               <el-table-column prop="status" label="状态" align="center">
                 <template slot-scope="scope">
@@ -35,9 +35,9 @@
               <el-table-column label="操作" width="400" align="center">
                 <template slot-scope="scope">
                   <el-button  size="mini" type="primary" @click="editManger(scope.row)">编辑</el-button>
-                  <el-button v-if='scope.row.status == 1' size="mini" type="warning" @click="resetPwd(scope.row)">密码重置</el-button>
-                  <el-button size="mini" type="warning" @click="showLog(scope.row)">查看日志</el-button>
-                  <el-button v-if='scope.row.status == 0' @click="deleteUser(scope.row)" size="mini" type="danger"  >账号删除</el-button>
+                  <!--<el-button v-if='scope.row.status == 1' size="mini" type="warning" @click="resetPwd(scope.row)">密码重置</el-button>-->
+                  <!--<el-button size="mini" type="warning" @click="showLog(scope.row)">查看日志</el-button>-->
+                  <!--<el-button v-if='scope.row.status == 0' @click="deleteUser(scope.row)" size="mini" type="danger"  >账号删除</el-button>-->
                   <template >
                     <el-popover placement="top" width="160" v-model="scope.row.visible">
                       <p v-if='scope.row.status == 1'>确定关闭账号？</p>
@@ -47,8 +47,8 @@
                         <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 0' size="mini" type="primary" @click='accountMange(scope.row,1)' >确定</el-button>
                         <el-button size="mini" type="text" @click="scope.row.visible = false">取消</el-button>
                       </div>
-                      <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 1' size="mini" type="danger" >账号关闭</el-button>
-                      <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 0' size="mini" type="danger">账号开启</el-button>
+                      <!--<el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 1' size="mini" type="danger" >账号关闭</el-button>
+                      <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 0' size="mini" type="danger">账号开启</el-button>-->
                     </el-popover>
                   </template>
                 </template>
@@ -135,7 +135,7 @@ export default {
             data.page = val;
             data.pageSize = this.page.pageSize;
             data.name = this.form.name;
-            data.phone = this.form.phone;
+            data.telephone = this.form.phone;
             data.url = pApi.manageList;
             this.tableLoading = true;
             request.getMangerList(data).then(res => {

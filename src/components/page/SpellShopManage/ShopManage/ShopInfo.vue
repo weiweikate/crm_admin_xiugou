@@ -63,13 +63,13 @@
                     <img v-if='!detail.headUrl' src="../../../../assets/images/avatar.jpg" alt="">
                     <img v-else :src="detail.headUrl" alt="">
                     <p style="margin-top:10px">
-                        <el-button @click="spellShopAcc" type="primary">拼店账户</el-button>
+                        <el-button @click="spellShopAcc" type="primary" v-auth="'pindian.shopList.pdzh'">拼店账户</el-button>
                     </p>
                     <!--<p style="margin-top:10px">-->
                         <!--<el-button @click="memberManage" type="primary">成员管理</el-button>-->
                     <!--</p>-->
                     <p style="margin-top:10px">
-                        <el-button @click="shopAnnouncement" type="primary">店铺公告管理</el-button>
+                        <el-button @click="shopAnnouncement" type="primary" v-auth="'pindian.shopList.dpgggl'">店铺公告管理</el-button>
                     </p>
                 </div>
             </div>
@@ -95,7 +95,7 @@
                     <div class="shop-left">
                         <p class="shop-msg">
                             <span>店铺分红次数：{{detail.bonusCount||0}}次</span>
-                            <span style="margin-left:20px" @click="shareBoneMsg" class="font-href">查看详情</span>
+                            <span style="margin-left:20px" @click="shareBoneMsg" class="font-href" v-auth="'pindian.shopList.dpfhck'">查看详情</span>
                         </p>
                     </div>
                 </div>
