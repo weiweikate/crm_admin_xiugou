@@ -35,13 +35,13 @@
         </transition>
         <div class="table-block">
             <div style="margin: -20px 0 20px">
-                <div class="tab-item" :class="index==0?'checked':''" @click="change(0)">公告</div>
-                <div class="tab-item" :class="index==1?'checked':''" @click="change(1)" style="margin-left: -5px">通知
+                <div class="tab-item" :class="index==0?'checked':''" @click="change(0)" v-auth="'yunying.noticeInformManage.gg'">公告</div>
+                <div class="tab-item" :class="index==1?'checked':''" @click="change(1)" v-auth="'yunying.noticeInformManage.tz'" style="margin-left: -5px">通知
                 </div>
             </div>
             <el-form ref="exportForm" :inline="true" :model="form" class="search-area">
                 <el-form-item>
-                    <el-button @click="addInf" type="primary">发布公告/通知</el-button>
+                    <el-button @click="addInf" type="primary" v-auth="'yunying.noticeInformManage.fbggtz'">发布公告/通知</el-button>
                 </el-form-item>
             </el-form>
             <template>
@@ -82,18 +82,18 @@
                     </el-table-column>
                     <el-table-column label="操作" min-width="120">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" @click="detailItem(scope.$index,scope.row)">查看详情
+                            <el-button type="primary" size="small" @click="detailItem(scope.$index,scope.row)" v-auth="'yunying.noticeInformManage.ckxq'">查看详情
                             </el-button>
-                            <el-button type="success" v-if="index==0" size="small" @click="editItem(scope.row)">编辑
+                            <el-button type="success" v-if="index==0" size="small" @click="editItem(scope.row)" v-auth="'yunying.noticeInformManage.bj'">编辑
                             </el-button>
                             <!--<el-button type="warning" size="small" @click="upStatusItem(scope.row.id,2)"-->
                                        <!--v-if="scope.row.status==200">再次推送-->
                             <!--</el-button>-->
                             <el-button type="warning" size="small" @click="upStatusItem(scope.row.id,3)"
-                                       v-if="scope.row.status==100">取消推送
+                                       v-if="scope.row.status==100" v-auth="'yunying.noticeInformManage.qxts'">取消推送
                             </el-button>
                             <el-button type="warning" size="small" @click="upStatusItem(scope.row.id,4)"
-                                       v-if="scope.row.status==300" style="width: 80px"> 删除
+                                       v-if="scope.row.status==300" style="width: 80px" v-auth="'yunying.noticeInformManage.sc'"> 删除
                             </el-button>
                         </template>
                     </el-table-column>

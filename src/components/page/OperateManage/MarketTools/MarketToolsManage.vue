@@ -5,7 +5,7 @@
             <div>
                 <div class="area">营销工具</div>
                 <div class="wrap">
-                    <div class="item" v-for="(item,index) in list" :key="index" @click="toPage(item.page)">
+                    <div class="item" v-auth="item.auth" v-for="(item,index) in list" :key="index" @click="toPage(item.page)">
                         <div class="left">
                             <img :src="item.img" alt="">
                         </div>
@@ -55,23 +55,27 @@
                     {
                         img: 'static/img/secKill.png',
                         title: '秒杀',
+                        auth: 'yunying.marketToolsManage.ms',
                         content: '快速抢购引导顾客更多消费',
                         page: '/secKill'
                     }, {
                         img: 'static/img/depreciate.png',
                         title: '降价拍',
+                        auth: 'yunying.marketToolsManage.jjp',
                         content: '价格随时间下降的促销活动',
                         page: '/depreciate'
                     },
                     {
                         img: 'static/img/package.png',
                         title: '优惠套餐',
+                        auth: 'yunying.marketToolsManage.yhtc',
                         content: '创建商品套餐让顾客购买',
                         page: '/giftManage'
                     },
                     {
                         img: 'static/img/scratchCard.png',
                         title: '刮刮卡',
+                        auth: 'yunying.marketToolsManage.ggk',
                         content: '创建商品套餐让顾客购买',
                         page: '/scratchCardsList'
                     }]
