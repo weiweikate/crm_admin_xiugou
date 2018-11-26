@@ -267,7 +267,7 @@
                     secCategoryId: '',
                     thirdCategoryId: '',
                     brandId: '',
-                    dealDays: '',
+                    // dealDays: '',
                     supplierId: '',
                     experience: '',
                     stockType: '',
@@ -404,13 +404,13 @@
                         });
                     }
                     this.checkedAllUser = this.chectedUser.length === this.userLevel.length;
-                    this.form.stockType = res.data.stockType.toString();
+                    this.form.stockType = res.data.stockType?res.data.stockType.toString():'';
                     this.form.name = res.data.name;
                     this.form.weight = res.data.weight;
                     this.form.experience = res.data.experience;
                     this.gifts.isSetExp = res.data.experience !== '';
                     this.gifts.isSetBuyTime = res.data.couponList.length !== 0;
-                    this.form.dealDays = res.data.dealDays.toString();
+                    // this.form.dealDays = res.data.dealDays.toString();
                     this.form.type = res.data.type.toString();
                     this.form.firstCategoryId = Number(res.data.firstCategoryId);
                     this.proItemArr.push(this.form.firstCategoryId);
