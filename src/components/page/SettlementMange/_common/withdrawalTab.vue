@@ -59,14 +59,14 @@
         <!-- 打款记录 -->
         <el-dialog title="查看打款记录" :visible.sync="isShowRecord" center width="30%">
             <el-form :model="recordForm" label-width="130px" >
-                <el-form-item prop="no" label="提现编号:">{{recordForm.no}}</el-form-item>
-                <el-form-item prop="rePeople" label="申请人:">{{recordForm.rePeople}}</el-form-item>
-                <el-form-item prop="money" label="申请提现金额:"><span style="color:red">{{recordForm.money | handleMoney}}</span></el-form-item>
-                <el-form-item prop="beginTime" label="发起时间:">{{recordForm.beginTime}}</el-form-item>
-                <el-form-item prop="blank" label="银行:">{{recordForm.blank}}</el-form-item>
-                <el-form-item prop="card" label="提现卡号:">{{recordForm.card}}</el-form-item>
-                <el-form-item prop="operatePeople" label="操作人:">{{recordForm.operatePeople}}</el-form-item>
-                <el-form-item prop="confirmTime" label="确认时间:">{{recordForm.confirmTime}}</el-form-item>
+                <el-form-item prop="no" label="提现编号:">{{recordForm.withdrawNum}}</el-form-item>
+                <el-form-item prop="rePeople" label="申请人:">{{recordForm.userName}}</el-form-item>
+                <el-form-item prop="money" label="申请提现金额:"><span style="color:red">{{(recordForm.withdrawBalance || 0) | handleMoney}}</span></el-form-item>
+                <el-form-item prop="beginTime" label="发起时间:">{{recordForm.createTime?(recordForm.createTime | formatDateAll):''}}</el-form-item>
+                <el-form-item prop="blank" label="银行:">{{recordForm.bankName}}</el-form-item>
+                <el-form-item prop="card" label="提现卡号:">{{recordForm.cardNo}}</el-form-item>
+                <el-form-item prop="operatePeople" label="操作人:">{{recordForm.adminName}}</el-form-item>
+                <el-form-item prop="confirmTime" label="确认时间:">{{recordForm.updateTime?(recordForm.updateTime | formatDateAll):''}}</el-form-item>
             </el-form>
             <span slot="footer">
                 <el-button type="primary" @click="isShowRecord = false">确 定</el-button>
@@ -124,16 +124,7 @@ export default {
             isShowAuditDia: false,
             // 查看打款记录弹窗
             isShowRecord: false,
-            recordForm: {
-                no: '', // 提现编号
-                rePeople: '', // 申请人
-                money: '', // 申请提现金额
-                beginTime: '', // 发起时间
-                blank: '', // 银行
-                card: '', // 提现卡号
-                operatePeople: '', // 操作人
-                confirmTime: '' // 确认时间
-            },
+            recordForm: {},
             btnloading: false,
             // 驳回理由弹窗
             isShowRefuseReason: false,
@@ -208,12 +199,16 @@ export default {
         // 打款记录
         record(row) {
             this.isShowRecord = true;
-            console.log(row);
+            request.findUserWithdrawById({ id: row.id }).then(res => {
+                this.recordForm = res.data;
+            }).catch(err => {
+                console.log(err);
+            });
         },
         // 查看驳回理由
         showRefuseReason(row) {
             this.refReaBtnLoading = true;
-            request.findUserWithdrawById({id: row.id}).then(res => {
+            request.findUserWithdrawById({ id: row.id }).then(res => {
                 this.refuseReason = res.data.refusalReason;
                 this.isShowRefuseReason = true;
                 this.refReaBtnLoading = false;
