@@ -33,6 +33,9 @@
                 <el-button v-if="orderStatus == 2" @click='orderSendOut' class="cloud-delivery-btn"
                            type="danger">推送云仓
                 </el-button>
+                <el-button v-if="orderStatus == 2" @click='sendGoods' class="cloud-delivery-btn"
+                           type="primary">虚拟发货
+                </el-button>
                 <p class="preferential-info" @click='isShowPreferential = true'>优惠详情</p>
                 <span class="mark">标记</span>
                 <el-popover placement="bottom" width="150" v-model="isShowPop" trigger="hover">
@@ -210,7 +213,21 @@
                 <el-button type="primary" @click="refundSubmit('refundForm')">确认退款金额</el-button>
             </div>
         </el-dialog>
-
+        <!--虚拟发货-->
+        <el-dialog title="虚拟发货" :visible.sync="mask" class="send-mask">
+            <el-form :model="form">
+                <el-form-item label="物流单号">
+                    <el-input v-model="form.expressNo" placeholder="请输入物流单号"></el-input>
+                </el-form-item>
+                <el-form-item label="物流公司">
+                    <el-input v-model="form.expressName" placeholder="请输入物流公司"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" :loading="btnLoading" @click="sendSure('form')">确 认</el-button>
+                <el-button @click="mask=false">取 消</el-button>
+            </div>
+        </el-dialog>
 
     </div>
 
@@ -296,7 +313,13 @@
                 // returnType状态
                 returnTypeArr: ['退款', '退货', '换货'],
                 // 售后状态
-                afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭']
+                afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭'],
+                form: {
+                    expressName: '',
+                    expressNo: ''
+                },
+                mask: false,
+                btnLoading: false
             };
         },
 
@@ -561,6 +584,27 @@
                     this.getInfo();
                 }).catch(err => {
                     console.log(err);
+                });
+            },
+            // 虚拟发货
+            sendGoods() {
+                this.mask = true;
+            },
+            sendSure(formName) {
+                const data = this[formName];
+                data.id = this.orderId;
+                if (!data.expressName || !data.expressNo) {
+                    return this.$message.warning('请输入物流单号和物流公司');
+                }
+                this.btnLoading = true;
+                request.sendGoods(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.mask = false;
+                    this.btnLoading = false;
+                    this.getInfo();
+                }).catch(err => {
+                    console.log(err);
+                    this.btnLoading = false;
                 });
             },
             // 备注
@@ -856,5 +900,23 @@
                 margin-left: 5px;
             }
         }
+        /*弹窗样式*/
+        .send-mask{
+            .el-dialog {
+                width: 530px;
+                border-radius: 10px;
+                .el-dialog__header {
+                    border-bottom: 1px solid #eee;
+                    padding: 20px 20px 10px 50px;
+                }
+                .el-dialog__title {
+                    color: #ff6868;
+                }
+                .el-input,.el-input__inner {
+                    width: 360px;
+                }
+            }
+        }
+
     }
 </style>
