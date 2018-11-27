@@ -1,6 +1,6 @@
 <template>
     <div class="product-order-list" v-loading="pageLoading">
-        <el-table border>
+        <el-table border :data="tableData">
             <el-table-column label="售后单号" align="center"></el-table-column>
             <el-table-column label="仓库订单号" align="center"></el-table-column>
             <el-table-column label="商品名称" align="center"></el-table-column>
@@ -26,8 +26,8 @@
             <el-table-column label="创建时间" align="center"></el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
-                    <el-button v-if="scope.row.status==1||scope.row.status==3">去处理</el-button>
-                    <el-button v-else>查看</el-button>
+                    <el-button type="primary" @click="$router.push({path:'/afterSaleOrderInfo',query:{afterSaleOrderInfoId:scope.row.id}})" v-if="scope.row.status==1||scope.row.status==3">去处理</el-button>
+                    <el-button type="success" @click="$router.push({path:'/afterSaleOrderInfo',query:{afterSaleOrderInfoId:scope.row.id}})" v-else>查看</el-button>
                 </template>
             </el-table-column>
         </el-table>

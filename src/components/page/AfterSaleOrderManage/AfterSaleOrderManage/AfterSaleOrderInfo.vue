@@ -103,6 +103,9 @@
                     </div>
                 </div>
             </div>
+            <div class="">
+                <div class="title">仓库反馈</div>
+            </div>
             <div class="goods-info">
                 <div class="title">商品信息</div>
                 <el-table border :data="tableData">
@@ -121,6 +124,32 @@
                     <el-table-column prop="" label="一元券"></el-table-column>
                     <el-table-column prop="" label="实付金额"></el-table-column>
                 </el-table>
+            </div>
+            <div class="">
+                <div class="title">操作</div>
+                <el-form>
+                    <el-form-item label="售后审核结果">
+                        <el-radio-group>
+                            <el-radio label="1">审核通过</el-radio>
+                            <el-radio label="2">审核驳回</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="审核金额调整">
+                        <el-input></el-input><span>元，请在¥0.00~¥20.00区间内调整</span>
+                    </el-form-item>
+                    <el-form-item label="退货信息">
+                        <el-radio-group>
+                            <el-radio label="1">供应商退货地址</el-radio>
+                            <el-radio label="2">平台退货地址</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="售后审核说明">
+                        <el-input></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary">提交</el-button>
+                    </el-form-item>
+                </el-form>
             </div>
         </el-card>
     </div>
