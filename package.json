@@ -6,7 +6,7 @@
     "private": true,
     "scripts": {
         "mock":"node server/mock.js",
-        "dev": "cross-env proxy=wcj webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+        "dev": "cross-env proxy=zh webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
         "build": "node build/build.js",
         "build:dll": "webpack --config build/webpack.dll.conf.js",
         "deploy:test": "node bin/release.js --dist=dist --server=/home/mr/packages/wuchengji/dist",

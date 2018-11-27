@@ -155,8 +155,8 @@ export default {
             });
         },
         // 账户明细
-        accountMsg() {
-            this.$router.push('tradeInfo');
+        accountMsg(row) {
+            this.$router.push({ path: '/cashAccountBalance', query: { memberAccMsg: {memberId: row.id, nickname: row.userName || ''} }});
         },
         // 审核
         audit(row, status) {
