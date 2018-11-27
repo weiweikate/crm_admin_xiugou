@@ -1,5 +1,5 @@
 <template>
-    <div class="product-order-list" v-loading="pageLoading">
+    <div class="refund-order-list" v-loading="pageLoading">
         <el-table border>
             <el-table-column label="退款单号" align="center"></el-table-column>
             <el-table-column label="售后单号" align="center"></el-table-column>
@@ -30,6 +30,9 @@
                 :total="page.totalPage">
             </el-pagination>
         </div>
+        <el-dialog title="手工退款备注" :visible.sync="mask">
+
+        </el-dialog>
     </div>
 </template>
 
@@ -73,7 +76,8 @@
                 returnTypeArr: ['退款', '退货', '换货'],
                 // 售后状态
                 afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭'],
-                ids: []
+                ids: [],
+                mask:false
             };
         },
         methods: {
@@ -176,7 +180,7 @@
 </script>
 
 <style lang='less' scoped>
-    .product-order-list {
+    .refund-order-list {
         .order-list-table {
             font-size:12px;
             width: 100%;

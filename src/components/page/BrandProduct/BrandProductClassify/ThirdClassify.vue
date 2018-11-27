@@ -29,7 +29,7 @@
                     <el-table-column min-width="160" label="操作" align="center">
                         <template slot-scope="scope">
                             <!--<el-button type="primary" size="small" @click="toDetailParam(scope.row)">产品详细参数</el-button>-->
-                            <el-button type="primary" size="small" @click="$router.push({path:'/propertyList',query:{classifyId:scope.row.id}})">属性</el-button>
+                            <el-button type="primary" size="small" @click="property(scope.row.id)">属性</el-button>
                             <el-button type="warning" size="small" @click="editItem(scope.row)">编辑</el-button>
                             <!--<el-button type="danger" size="small" @click="delItem(scope.row.id)">删除</el-button>-->
                         </template>
@@ -118,6 +118,33 @@
         </el-dialog>
         <!--删除弹窗-->
         <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
+        <!--关联属性-->
+        <el-dialog title="关联属性" :visible.sync="propertyMask">
+            <div>对应分类：一级分类>二级分类>三级分类</div>
+            <el-button style="margin-top: 20px" @click="editProperty" type="danger">添加关联属性</el-button>
+            <table class="table-area">
+                <tr>
+                    <td>
+                        <i class="el-icon-close"></i>
+                        属性（自然属性）
+                    </td>
+                </tr>
+            </table>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="propertySure">确 认</el-button>
+                <el-button @click="propertyMask=false">取 消</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog title="关联属性" :visible.sync="editPropertyMask" width="540px">
+            <el-transfer :titles="['选择区域','选中预览']"
+                         v-model="propertyId"
+                         :data="propertyList">
+            </el-transfer>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="editSure">确 认</el-button>
+                <el-button @click="editPropertyMask=false">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -167,7 +194,11 @@ export default {
             delId: 66,
             delUrl: 'http://api',
             delUri: '',
-            uploadImg: ''
+            uploadImg: '',
+            propertyMask: false, // 关联属性弹窗
+            editPropertyMask: false, // 编辑关联属性弹窗
+            propertyId: [],
+            propertyList: []
         };
     },
     created() {
@@ -307,6 +338,20 @@ export default {
         toDetailParam(row) {
             sessionStorage.setItem('productDetailParam', JSON.stringify({ name: row.name, id: row.id, type: row.type, superiorName: row.superiorName, className: row.className }));
             this.$router.push({ path: '/productDetailParam', query: { name: row.name, id: row.id, type: row.type, superiorName: row.superiorName, className: row.className }});
+        },
+        // 属性
+        property(id) {
+            this.propertyMask = true;
+        },
+        propertySure() {
+
+        },
+        // 编辑关联属性
+        editProperty() {
+            this.editPropertyMask = true;
+        },
+        editSure() {
+
         }
     }
 };
@@ -382,6 +427,26 @@ export default {
         }
         .el-upload-list {
             display: none;
+        }
+        .table-area{
+            font-size:12px;
+            width: 100%;
+            color:#606266;
+            border: 1px solid #ebeef5;
+            border-collapse: collapse;
+            margin: 20px 0;
+            line-height: 23px;
+            i{
+                font-size: 20px;
+                color: #ff6868;
+                vertical-align: middle;
+                cursor: pointer;
+            }
+            td {
+                border: 1px solid #ebeef5;
+                padding: 8px;
+                text-align: left;
+            }
         }
     }
 </style>

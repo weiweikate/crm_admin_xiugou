@@ -25,6 +25,10 @@
                         <span>供应商名称</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
+                    <div class="item">
+                        <span>用户账号</span>
+                        <span>{{orderMsg.orderNum}}</span>
+                    </div>
                 </div>
                 <div class="item-wrap">
                     <div class="title">售后信息</div>
@@ -32,7 +36,7 @@
                         <span>售后类型</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
-                    <div class="item">
+                    <div class="item" v-if="orderMsg.status==1&&orderMsg.status==2">
                         <span>用户申请退款金额</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
@@ -54,57 +58,76 @@
                     </div>
                     <div class="item">
                         <span>图片信息</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>
+                            <viewer :images="orderMsg.imgList">
+                                <img v-for="(item,index) in orderMsg.imgList" :key="index" :src="item" alt="">
+                            </viewer>
+                        </span>
                     </div>
                 </div>
                 <div class="item-wrap">
                     <div class="title">协商记录</div>
+                    <!--售后关闭-->
+                    <div class="item" v-if="orderMsg.status==6">
+                        <span>用户申请退款金额</span>
+                        <span>{{orderMsg.orderNum}}</span>
+                    </div>
                     <div class="item">
                         <span>售后审核结果</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
-                    <!--待付款，交易完成-->
-                    <div class="item" v-if="orderMsg.status==1&&orderMsg.status==4&&orderMsg.status==5">
-                        <span>发票类型</span>
+                    <!--待商品寄回，售后完成-->
+                    <div class="item" v-if="orderMsg.status==2&&orderMsg.status==5">
+                        <span>审核金额调整</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
-                    <div class="item" v-if="orderMsg.status==1">
-                        <span>发票抬头</span>
+                    <div class="item" v-if="orderMsg.status>=2">
+                        <span>售后审核说明</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
-                    <div class="item" v-if="orderMsg.status==1">
-                        <span>发票内容</span>
+                    <!--待仓库确认，待平台处理-->
+                    <div class="item" v-if="orderMsg.status==2&&orderMsg.status==3&&orderMsg.status==4&&orderMsg.status==5">
+                        <span>退货信息</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
-                    <div class="item" v-if="orderMsg.status==1">
-                        <span>发票金额</span>
+                    <div class="item" v-if="orderMsg.status!=1">
+                        <span>售后审核者</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
-                    <!--交易完成-->
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>单位名称</span>
+                    <!--待仓库确认-->
+                    <div class="item" v-if="orderMsg.status==3&&orderMsg.status==4&&orderMsg.status==5">
+                        <span>回寄物流公司</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>纳税人识别号</span>
+                    <div class="item" v-if="orderMsg.status==3&&orderMsg.status==4&&orderMsg.status==5">
+                        <span>回寄物流单号</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>注册电话</span>
+                    <!--售后完成-->
+                    <div class="item" v-if="orderMsg.status==5&&orderMsg.status==6">
+                        <span>售后处理结果</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>开户银行</span>
+                    <div class="item" v-if="orderMsg.status==5&&orderMsg.status==6">
+                        <span>售后处理说明</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>银行账户</span>
+                    <div class="item" v-if="orderMsg.status==5&&orderMsg.status==6">
+                        <span>售后处理者</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
                 </div>
             </div>
             <div class="">
                 <div class="title">仓库反馈</div>
+                <div class="item">
+                    <span>退货仓反馈</span>
+                    <span></span>
+                </div>
+                <div class="item">
+                    <span>发货仓反馈</span>
+                    <span></span>
+                </div>
             </div>
             <div class="goods-info">
                 <div class="title">商品信息</div>
@@ -127,7 +150,8 @@
                     <el-table-column prop="" label="实付金额"></el-table-column>
                 </el-table>
             </div>
-            <div class="opr-area">
+            <!--待审核-->
+            <div class="opr-area" v-if="orderMsg.status==1">
                 <div class="title">操作</div>
                 <el-form :model="form">
                     <el-form-item label="售后审核结果">
@@ -141,22 +165,58 @@
                     </el-form-item>
                     <el-form-item label="退货信息" class="back-address">
                         <div class="address-area">
-                            <el-radio-group v-model="form.address">
-                                <el-radio label="1">供应商退货地址</el-radio>
-                                <el-radio label="2">平台退货地址</el-radio>
-                            </el-radio-group>
                             <div class="supplier-address">
+                                <el-radio label="1" v-model="form.address">供应商退货地址</el-radio>
                                 <div>陈奕迅 13333333333</div>
                                 <div>浙江省杭州市萧山区望京C3-6楼</div>
                             </div>
                             <div class="plat-address">
+                                <el-radio label="2" v-model="form.address">平台退货地址</el-radio>
                                 <div>陈奕迅 13333333333</div>
                                 <div>浙江省杭州市萧山区望京C3-6楼</div>
                             </div>
+                            <div class="tip">如需修改，请联系相关人员修改退货信息后再审核</div>
                         </div>
-                        <div class="tip">如需修改，请联系相关人员修改退货信息后再审核</div>
                     </el-form-item>
                     <el-form-item label="售后审核说明">
+                        <el-input v-model="form.remark"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary">提交</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <!--待平台处理-->
+            <div class="opr-area" v-if="orderMsg.status==2">
+                <div class="title">操作</div>
+                <el-form :model="form">
+                    <el-form-item label="售后处理结果">
+                        <el-radio-group v-model="form.result">
+                            <el-radio label="1">审核通过</el-radio>
+                            <el-radio label="2">审核驳回</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <!--退款-->
+                    <el-form-item label="处理金额调整" v-if="status==1">
+                        <el-input v-model="form.price"></el-input><span class="tip">元，请在¥0.00~¥20.00区间内调整</span>
+                    </el-form-item>
+                    <el-form-item label="售后类型">
+                        <el-radio-group v-model="form.type">
+                            <el-radio label="1">换货</el-radio>
+                            <el-radio label="2">退货退款</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="售后处理说明">
+                        <el-input v-model="form.remark"></el-input>
+                    </el-form-item>
+                    <!--换货-->
+                    <el-form-item label="换货物流公司" v-if="status==2">
+                        <el-select>
+                            <option value="" label="请选择"></option>
+                            <option v-for="(v,k) in logicList" :key="k" :value="v.id" :label="v.name"></option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="换货物流单号" v-if="status==2">
                         <el-input v-model="form.remark"></el-input>
                     </el-form-item>
                     <el-form-item>
@@ -190,7 +250,9 @@
                     price: '',
                     address: '',
                     remark: ''
-                }
+                },
+                status: 1,
+                logicList:[]
             };
         },
 
@@ -241,7 +303,7 @@
                     line-height: 30px;
                     span:first-child{
                         display: inline-block;
-                        width: 100px;
+                        width: 115px;
                     }
                     span:nth-child(2){
                         display: inline-block;
@@ -302,16 +364,17 @@
                 width: 360px;
             }
             .back-address{
-                position: relative;
                 .address-area{
-
+                    display: flex;
                 }
-                .supplier-address,.back-address{
-                    display: inline-block;
-
+                .supplier-address,.plat-address{
+                    div{
+                        margin-left: 25px;
+                    }
+                    margin-right: 50px;
                 }
                 .tip{
-                    position: absolute;
+                    margin-top: 30px;
                 }
             }
         }
