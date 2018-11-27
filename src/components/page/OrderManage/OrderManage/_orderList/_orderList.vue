@@ -16,6 +16,7 @@
                 <span>订单号：{{v.orderNum}}</span>
                 <span style="margin-left:30px">创建时间：{{v.createTime|formatDateAll}}</span>
                 <div class="operate-btn-group">
+                    <span v-if='v.status == 2' @click="sendGoods(v)">虚拟发货</span>
                     <span v-if='v.status == 2' @click="pushCloud(v)">推送云仓</span>
                     <span @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
                     <el-popover placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
@@ -191,6 +192,18 @@
                     data.ids = this.ids;
                 }
                 request.orderSendOut(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.getList(this.page.currentPage);
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            // 虚拟发货
+            sendGoods(row) {
+                const data = {
+                    id: row.id
+                };
+                request.sendGoods(data).then(res => {
                     this.$message.success(res.msg);
                     this.getList(this.page.currentPage);
                 }).catch(err => {
