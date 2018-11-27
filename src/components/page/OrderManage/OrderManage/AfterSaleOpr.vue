@@ -862,7 +862,7 @@
             // 云仓发货
             orderSendOut() {
                 const data = {
-                    id: this.returnProductId
+                    returnProductId: this.returnProductId
                 };
                 request.sendOut(data).then(res => {
                     this.$message.success(res.msg);

@@ -30,10 +30,10 @@
                 <span v-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
                 <span v-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
                 <br/>
-                <el-button v-if="orderStatus == 2" @click='orderSendOut' class="cloud-delivery-btn"
+                <el-button v-if="orderStatus == 2&&orderMsg.cloudHadSend==0" @click='orderSendOut' class="cloud-delivery-btn"
                            type="danger">推送云仓
                 </el-button>
-                <el-button v-if="orderStatus == 2" @click='sendGoods' class="cloud-delivery-btn"
+                <el-button v-if="orderStatus == 2&&orderMsg.cloudHadSend==0" @click='sendGoods' class="cloud-delivery-btn"
                            type="primary">虚拟发货
                 </el-button>
                 <p class="preferential-info" @click='isShowPreferential = true'>优惠详情</p>
