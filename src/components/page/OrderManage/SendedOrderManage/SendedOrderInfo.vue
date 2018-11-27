@@ -14,133 +14,31 @@
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
                     <div class="item">
-                        <span>支付方式</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <!--待付款，交易完成-->
-                    <div class="item" v-if="orderMsg.status==1&&orderMsg.status==4">
-                        <span>用户留言</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <!--已发货，交易完成-->
-                    <div class="item" v-if="orderMsg.status==3&&orderMsg.status==4">
-                        <span>平台备注</span>
+                        <span>发货单号</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
                     <div class="item">
-                        <span>下单时间</span>
+                        <span>供应商名称</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
-                    <!--已付款，已发货，交易关闭-->
-                    <div class="item" v-if="orderMsg.status!=1">
-                        <span>付款时间</span>
+                    <div class="item">
+                        <span>物流公司</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
-                    <!--已发货-->
-                    <div class="item" v-if="orderMsg.status==3&&orderMsg.status==4">
-                        <span>发货时间</span>
+                    <div class="item">
+                        <span>物流单号</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
-                    <!--交易完成-->
-                    <div class="item" v-if="orderMsg.status==4">
-                        <span>成交时间</span>
+                    <div class="item">
+                        <span>物流费用</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
-                    <!--交易关闭-->
-                    <div class="item" v-if="orderMsg.status==5">
-                        <span>关闭原因</span>
+                    <div class="item">
+                        <span>发货单创建时间</span>
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
                 </div>
-                <div class="item-wrap">
-                    <div class="title">订单支付信息</div>
-                    <div class="item">
-                        <span>商品总额</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>运费</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>应付金额</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>促销优惠</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>优惠券</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>一元券</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <!--已付款,已发货，交易完成，交易关闭-->
-                    <div class="item" v-if="orderMsg.status!=1">
-                        <span>余额支付</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status!=1">
-                        <span>第三方支付</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status!=1">
-                        <span>开票余额</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status!=1">
-                        <span>实付金额</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                </div>
-                <div class="item-wrap">
-                    <div class="title">订单发票信息</div>
-                    <div class="item">
-                        <span>开具发票</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <!--待付款，交易完成-->
-                    <div class="item" v-if="orderMsg.status==1&&orderMsg.status==4&&orderMsg.status==5">
-                        <span>发票类型</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status==1">
-                        <span>发票抬头</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status==1">
-                        <span>发票内容</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status==1">
-                        <span>发票金额</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <!--交易完成-->
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>单位名称</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>纳税人识别号</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>注册电话</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>开户银行</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>银行账户</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                </div>
+
                 <div class="item-wrap">
                     <div class="title">订单收货信息</div>
                     <div class="item">
@@ -167,52 +65,20 @@
             </div>
             <div class="goods-info">
                 <div class="title">商品信息</div>
-                <table border :data="tableData" class="table-area">
-                    <thead>
-                        <tr>
-                            <td rowspan="2">商品信息</td>
-                            <td rowspan="2">SKU编码</td>
-                            <td rowspan="2">供应商SKU编码</td>
-                            <td rowspan="2">应付单价</td>
-                            <td rowspan="2">实付单价</td>
-                            <td rowspan="2">数量</td>
-                            <td rowspan="2">实付金额</td>
-                            <td rowspan="2">发货仓库</td>
-                            <td colspan="3">物流信息</td>
-                            <td colspan="2">售后信息</td>
-                        </tr>
-                        <tr>
-                            <td>物流公司</td>
-                            <td>物流单号</td>
-                            <td>商品数量</td>
-                            <td>售后状态</td>
-                            <td>售后数量</td>
-                        </tr>
-                    </thead>
-                    <tbody v-for="(v,k) in tableData" :key="k">
-                        <tr v-for="(v1,k1) in v.rows" :key="k1">
-                            <td :rowspan="v.rows" v-if="k1==0" style="width: 400px">
-                               <div class="name">
-                                    <img :src="v.specImg" alt="">
-                                    <span class="pro-name">{{v.productName}}</span>
-                                    <span class="pro-spec">{{v.spec}}</span>
-                                </div>
-                            </td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.id}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.id}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.num}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                            <td>{{v.price}}</td>
-                            <td>{{v.price}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                            <td>{{v.price}}</td>
-                            <td>{{v.price}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <el-table :data="tableData" border>
+                    <el-table-column label="商品信息" align="center">
+                        <template slot-scope="scope">
+                            <div class="name">
+                                <img :src="v.specImg" alt="">
+                                <span class="pro-name">{{v.productName}}</span>
+                                <span class="pro-spec">{{v.spec}}</span>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="code" label="SKU编码" align="center"></el-table-column>
+                    <el-table-column prop="code" label="供应商SKU编码" align="center"></el-table-column>
+                    <el-table-column prop="num" label="发货数量" align="center"></el-table-column>
+                </el-table>
             </div>
         </el-card>
     </div>
@@ -229,7 +95,7 @@
         mixins: [queryDictonary],
         data() {
             return {
-                nav: ['订单管理', '订单详情'],
+                nav: ['订单管理', '发货单列表','发货单详情'],
                 detailUrl: '',
                 orderId: '',
                 boolFirst: false,

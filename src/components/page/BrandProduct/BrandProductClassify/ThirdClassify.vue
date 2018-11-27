@@ -28,7 +28,8 @@
                     </el-table-column>
                     <el-table-column min-width="160" label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" @click="toDetailParam(scope.row)">产品详细参数</el-button>
+                            <!--<el-button type="primary" size="small" @click="toDetailParam(scope.row)">产品详细参数</el-button>-->
+                            <el-button type="primary" size="small" @click="$router.push({path:'/propertyList',query:{classifyId:scope.row.id}})">属性</el-button>
                             <el-button type="warning" size="small" @click="editItem(scope.row)">编辑</el-button>
                             <!--<el-button type="danger" size="small" @click="delItem(scope.row.id)">删除</el-button>-->
                         </template>
