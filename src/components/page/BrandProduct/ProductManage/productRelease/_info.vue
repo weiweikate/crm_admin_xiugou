@@ -73,13 +73,42 @@
                 <span class="primary-text">|</span>
                 <span class="primary-text">刷新</span>
             </el-form-item>
-            <el-form-item prop="feightTpl" label="不支持配送区域">
+            <el-form-item label="不支持配送区域">
                 <div class="area-list" v-if="unSupportsssAreasData.length !== 0">
                     <el-tag type="primary" v-for="(v, k) in unSupportsssAreasData" :key="k">{{v}}</el-tag>
                 </div>
                 <el-button type="danger" @click="unSupportMask = true">添加区域</el-button>
             </el-form-item>
             <div class="pro-title">其他信息</div>
+            <el-form-item prop="upShelfTimeType" label="上架时间">
+                <el-radio-group @change="form.upShelfTime = ''" v-model="form.upShelfTimeType">
+                    <el-radio :label="1">立即上架</el-radio>
+                    <el-radio :label="2">定时上架</el-radio>
+                    <el-radio :label="3">放入仓库</el-radio>
+                </el-radio-group>
+                <el-date-picker v-if="form.upShelfTimeType == 2" v-model="form.upShelfTime" type="datetime" placeholder="请选择上架时间" style="margin-left: 10px"></el-date-picker>
+            </el-form-item>
+            <el-form-item prop="limitBuy" label="限购">
+                <el-checkbox-group @change="form.limitBuyNum = form.limitBuy.includes(1)?form.limitBuyNum:''" v-model="form.limitBuy">
+                    <el-checkbox :label="1">限制每人可购买数量</el-checkbox>
+                    <el-checkbox :label="2">不支持使用优惠卷</el-checkbox>
+                </el-checkbox-group>
+                <el-input-number :controls="false" :min="0" v-if="form.limitBuy.includes(1)" v-model="form.limitBuyNum"></el-input-number>
+            </el-form-item>
+            <el-form-item prop="flatService" label="平台服务">
+                <el-checkbox-group v-model="form.flatService">
+                    <el-checkbox :label="1">提供发票</el-checkbox>
+                    <el-checkbox :label="2">支持7天无理由退换</el-checkbox>
+                </el-checkbox-group>
+            </el-form-item>
+            <el-form-item prop="autoDownShelf" label="自动下架">
+                <el-radio-group v-model="form.autoDownShelf">
+                    <el-radio :label="1">是</el-radio>
+                    <el-radio :label="2">否 </el-radio>
+                </el-radio-group>
+                <span class="grey-text ml10"> 注：库存为0时是否自动下架</span>
+            </el-form-item>
+            <div class="pro-title">标签信息</div>
         </el-form>
         <!--区域选择-->
         <choose-area @getArea='chooseUnSupportArea' :chooseData="unSupportAreasData" :preData="unSupportAreasData" :isSingleLine="true" v-if="unSupportMask"></choose-area>
@@ -98,11 +127,19 @@
                 form: {
                     video: '',
                     delivery: '',
-                    feightTpl: ''
+                    feightTpl: '',
+                    upShelfTimeType: '',
+                    upShelfTime: '',
+                    limitBuy: [],
+                    limitBuyNum: 0,
+                    flatService: [],
+                    autoDownShelf: ''
                 },
                 rules: {
                     delivery: [{ required: true, message: '请选择是否发货', trigger: 'blur' }],
-                    feightTpl: [{ required: true, message: '请选择运费模板', trigger: 'blur' }]
+                    feightTpl: [{ required: true, message: '请选择运费模板', trigger: 'blur' }],
+                    upShelfTimeType: [{ required: true, message: '请选择上架时间', trigger: 'blur' }],
+                    autoDownShelf: [{ required: true, message: '请选择是否自动下架', trigger: 'blur' }]
                 },
                 unSupportMask: false,
                 unSupportAreasData: [], // 不配送区域
@@ -192,7 +229,7 @@
             // 选择区域
             chooseUnSupportArea(getArea) {
                 this.unSupportMask = false;
-                if (getArea.length === 0) return;
+                if (getArea.length === 0 || !getArea) return;
                 let str = '';
                 getArea.forEach(v => {
                     str += v.cityNames + ',';
