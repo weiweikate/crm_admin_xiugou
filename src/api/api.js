@@ -265,3 +265,10 @@ export const findDepartmentById = '/department/findDepartmentById';
 // 编辑部门
 export const updateDepartment = '/department/updateDepartment';
 
+// ERP接口
+export const updateERPstatus = ['/config/erp/change', { methods: 'get' }];
+export const updateERP = '/config/erp/save';
+export const addERP = '/config/erp/save';
+export const getERPList = ['/config/erp/query', { methods: 'get' }];
+export const getERP = ['/config/erp/get', { methods: 'get' }];
+

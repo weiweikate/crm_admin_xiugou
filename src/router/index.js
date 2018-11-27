@@ -595,6 +595,27 @@ export const asyncRouterMap = [
         ]
     },
     {
+        path: '/system',
+        component: Layout,
+        name: 'system',
+        meta: { title: '系统设置', icon: 'icon-shezhi' },
+        children: [
+            {
+                hidden: true,
+                name: 'placeholder',
+                path: '/placeholder',
+                component: resolve => require(['../components/page/Dashboard/message.vue'], resolve),
+                meta: { title: '占位' }
+            },
+            {
+                name: 'erp',
+                path: '/erp',
+                component: resolve => require(['../components/page/system/erp.vue'], resolve),
+                meta: { title: 'ERP管理', keepAlive: true }
+            }
+        ]
+    },
+    {
         hidden: true,
         path: '/others',
         component: Layout,
