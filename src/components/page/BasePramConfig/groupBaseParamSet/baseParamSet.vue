@@ -12,7 +12,7 @@
                 <span class="point">元</span><br/>
                 <span class="currency-small-title">结算周期</span><br/>
                 <span class="point">每月 </span>
-                <el-input-number :max="28" :min="0" :controls="false" v-model="settleCycle" class="input-sty"></el-input-number>
+                <el-input v-model="settleCycle" class="input-sty"></el-input>
                 <span class="point">日 </span>
                 <span class="point" style="color: #cccccc;">注：请输入1-28日的数值</span><br/>
                 <span class="currency-small-title">加入店铺后，允许退出店铺天数设置</span><br/>
@@ -68,7 +68,7 @@
             //   获取数据
             getInfo() {
                 const data = {
-                    codes: 'store_start_num,store_deposit'
+                    codes: 'store_start_num,store_deposit,quit_store_day,open_store_again_day'
                 };
                 this.bodyLoading = true;
                 request.queryConfig(data).then(res => {
@@ -77,6 +77,10 @@
                             this.storeStartNum = v.value;
                         } else if (v.code == 'store_deposit') {
                             this.storeDeposit = v.value;
+                        } else if (v.code == 'quit_store_day') {
+                            this.exitDays = v.value;
+                        } else if (v.code == 'open_store_again_day') {
+                            this.reStartShop = v.value;
                         }
                     });
                     this.bodyLoading = false;
@@ -89,7 +93,7 @@
             submitForm() {
                 const int = /^([1-9]\d*)$/;
                 const reg = /^([1-9]\d*)([.]{1}[1-9]{1,2})?$/;
-                if (!int.test(this.storeStartNum) || !reg.test(this.storeDeposit) || !reg.test(this.exitDays) || !reg.test(this.reStartShop) || !num.test(this.settleCycle)) {
+                if (!int.test(this.storeStartNum) || !reg.test(this.storeDeposit) || !reg.test(this.exitDays) || !reg.test(this.reStartShop) || !int.test(this.settleCycle) || this.settleCycle < 0 || this.settleCycle > 28) {
                     this.$message.warning('请输入合法数据!');
                     return;
                 }
@@ -109,6 +113,20 @@
                             code: 'store_deposit',
                             name: '拼店保证金',
                             value: this.storeDeposit,
+                            value_type: 1,
+                            status: 1
+                        },
+                        {
+                            code: 'quit_store_day',
+                            name: '加入店铺后允许退出天数',
+                            value: this.exitDays,
+                            value_type: 1,
+                            status: 1
+                        },
+                        {
+                            code: 'open_store_again_day',
+                            name: '店长店铺被清算，再次开店时间',
+                            value: this.reStartShop,
                             value_type: 1,
                             status: 1
                         }
