@@ -172,3 +172,14 @@ export const findActivityPackageProductAndSpecByIdAn = ['/operator/activityPacka
 export const updataActivityPackagePriceAndStock = ['/operator/activityPackage/updateActivityPackagePriceAndStock', { methods: 'post' }]; // 修改礼包价格库存
 export const updateActivityPackageSpecPriceStock = ['/operator/activityPackageSpecPrice/updateActivityPackageSpecPriceStock', { methods: 'post' }]; // 添加礼包库存
 export const queryCouponByType = ['/coupon/queryByType', { methods: 'get' }]; // 查询优惠券列表
+// 属性
+// 条件查询分类属性
+export const queryCategoryProperty = ['/product/categoryProperty/queryCategoryProperty', { methods: 'get' }];
+// 新增/编辑分类属性
+export const saveCategoryProperty = ['/product/categoryProperty/save'];
+// 删除分类属性
+export const deleteCategoryProperty = ['/product/categoryProperty/bathDelete'];
+// 查询三级类目下的属性
+export const queryPropertyByCategoryId = ['/product/categoryPropertyBrand/queryByCategoryId', { methods: 'get' }];
+// 绑定类目与属性
+export const bindCategoryProperty = ['/product/categoryPropertyBrand/bind'];
