@@ -10,10 +10,10 @@
         <el-card>
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
                 <el-tab-pane label="基础参数编辑" name="baseParam">
-                    <v-prod-param ref="baseParam"></v-prod-param>
+                    <v-prod-param @nextName="getNextName" ref="baseParam"></v-prod-param>
                 </el-tab-pane>
                 <el-tab-pane label="库存编辑" name="inventory">
-                    <v-inventory ref="inventory"></v-inventory>
+                    <v-inventory @nextName="getNextName" ref="inventory"></v-inventory>
                 </el-tab-pane>
                 <el-tab-pane label="商品详情编辑" name="info">
                     <v-info ref="info"></v-info>
@@ -49,6 +49,10 @@ export default {
     methods: {
         // 切换产品编辑信息
         handleClick(tab) {
+            this.activeName = tab.name;
+        },
+        // 获取下一步参数
+        getNextName(name) {
             this.activeName = name;
         }
     }

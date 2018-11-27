@@ -20,6 +20,9 @@
 .mb10{
     margin-bottom: 10px;
 }
+.fl{
+    float: left;
+}
 
 /*溢出隐藏*/
 .over-hidden{
@@ -34,6 +37,17 @@
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+}
+
+/*蓝色字体超链接*/
+.primary-text{
+    color: #33b4ff;
+    cursor: pointer;
+}
+/*灰色提示信息*/
+.grey-text {
+    color: #ccc;
+    font-size: 12px;
 }
 
 /*居中*/
