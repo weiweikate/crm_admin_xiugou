@@ -300,11 +300,8 @@
                     this.$message.warning('请添加产品图片');
                     return false;
                 }
-                if (this.form.weight > 999999999 || this.form.weight <= 0) {
-                    this.$message.warning('请输入正确的产品重量!');
-                    return false;
-                }
-                if (this.form.afterSaleServiceDays > 999999999 || this.form.afterSaleServiceDays <= 0) {
+                const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
+                if (this.form.afterSaleServiceDays > 999999999 || this.form.afterSaleServiceDays < 0) {
                     this.$message.warning('请输入正确的售后周期!');
                     return false;
                 }

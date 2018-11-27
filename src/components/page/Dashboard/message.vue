@@ -83,14 +83,13 @@
                 loading: false,
                 typeArr: [
                     { label: '全部', value: '' },
-                    { label: '产品礼包', value: '100' },
-                    { label: '商品库存', value: '200' },
-                    { label: '营销工具', value: '300' },
-                    { label: '奖品管理', value: '400' },
-                    { label: '广告位', value: '500' },
-                    { label: '店铺举报', value: '600' },
-                    { label: '会员邀请', value: '700' },
-                    { label: '订单管理', value: '800' }
+                    { label: '会员邀请管理', value: '100' },
+                    { label: '账户充值', value: '200' },
+                    { label: '产品管理', value: '300' },
+                    { label: '拼店店铺举报', value: '400' },
+                    { label: '优惠券设置', value: '500' },
+                    { label: '营销模块', value: '600' },
+                    { label: '广告位管理', value: '700' }
                 ],
                 tableData: [],
                 multipleSelection: []
@@ -121,35 +120,40 @@
             },
             // 跳转查看页面
             showMsgInfo(row) {
-                const type = row.messageType.toString();
-                const id = row.bizData;
-                const bizType = row.bizType;
-                if (bizType) {
-                    switch (bizType) {
-                        case '1': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 1, appBannerAdvPageType: 1}}); break; // APP首页banner广告位
-                        case '2': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 2, appBannerAdvPageType: 2}}); break; // APP首页推荐位
-                        case '3': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 1, appBannerAdvPageType: 3}}); break; // APP首页明星店铺推荐位
-                        case '4': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 1, appBannerAdvPageType: 4}}); break; // APP首页今日榜单广告位
-                        case '5': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 1, appBannerAdvPageType: 5}}); break; // APP首页精品推荐广告位
-                        case '6': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 2, appBannerAdvPageType: 6}}); break; // APP首页超值热卖广告位
-                        case '8': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 2, appBannerAdvPageType: 8}}); break; // APP首页为你推荐广告位
-                        case '9': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 1, appBannerAdvPageType: 9}}); break; // 拼店首页banner推荐位
-                        case '10': this.$router.push({name: 'appBannerAdv', query: {appBannerAdvStatus: 3, appBannerAdvPageType: 10}}); break; // 类目搜索banner广告位'
-                        default: this.$message.warning('无跳转页面类型');
+                request.readMessages({ ids: row.id }).then(res => {
+                    const type = row.messageType ? row.messageType.toString() : '';
+                    const id = row.bizData;
+                    const bizType = row.bizType ? row.bizType.toString() : '';
+                    console.log(bizType);
+                    if (bizType) {
+                        switch (bizType) {
+                            case '1': this.$router.push({ name: 'appBannerAdv', query: { appBannerAdvStatus: 1, appBannerAdvPageType: 1 }}); break; // APP首页banner广告位
+                            case '2': this.$router.push({ name: 'appBannerAdv', query: { appBannerAdvStatus: 2, appBannerAdvPageType: 2 }}); break; // APP首页推荐位
+                            case '3': this.$router.push({ name: 'appBannerAdv', query: { appBannerAdvStatus: 1, appBannerAdvPageType: 3 }}); break; // APP首页明星店铺推荐位
+                            case '4': this.$router.push({ name: 'appBannerAdv', query: { appBannerAdvStatus: 1, appBannerAdvPageType: 4 }}); break; // APP首页今日榜单广告位
+                            case '5': this.$router.push({ name: 'appBannerAdv', query: { appBannerAdvStatus: 1, appBannerAdvPageType: 5 }}); break; // APP首页精品推荐广告位
+                            case '6': this.$router.push({ name: 'appBannerAdv', query: { appBannerAdvStatus: 2, appBannerAdvPageType: 6 }}); break; // APP首页超值热卖广告位
+                            case '8': this.$router.push({ name: 'appBannerAdv', query: { appBannerAdvStatus: 2, appBannerAdvPageType: 8 }}); break; // APP首页为你推荐广告位
+                            case '9': this.$router.push({ name: 'appBannerAdv', query: { appBannerAdvStatus: 1, appBannerAdvPageType: 9 }}); break; // 拼店首页banner推荐位
+                            case '10': this.$router.push({ name: 'appBannerAdv', query: { appBannerAdvStatus: 3, appBannerAdvPageType: 10 }}); break; // 类目搜索banner广告位'
+                            default: this.$message.warning('无跳转页面类型');
+                        }
+                    } else {
+                        switch (type) {
+                            case '1': this.$router.push({ name: 'joinManage', query: { inviteName: id }}); break; // 会员邀请
+                            case '2': this.$router.push(''); break; // 会员充值
+                            case '3': this.$router.push({ path: '/productList', query: { 'prodCode': id }}); break; // 产品管理
+                            case '4': this.$router.push('/productList'); break; // 产品库存
+                            case '5': this.$router.push('/reportSpellShop'); break; // 店铺举报
+                            case '6': this.$router.push('/discountCoupon'); break; // 优惠券库存
+                            case '7': this.$router.push({ name: 'giftManage', query: { prodCode: id }}); break; // 礼包管理
+                            case '8': this.$router.push('/giftManage'); break; // 礼包库存
+                            default: this.$message.warning('无跳转页面类型');
+                        }
                     }
-                } else {
-                    switch (type) {
-                        case '1': this.$router.push({ name: 'joinManage', query: { inviteName: id }}); break; // 会员邀请
-                        case '2': this.$router.push(''); break; // 会员充值
-                        case '3': this.$router.push({ path: '/productList', query: { 'prodCode': id }}); break; // 产品管理
-                        case '4': this.$router.push('/productList'); break; // 产品库存
-                        case '5': this.$router.push('/reportSpellShop'); break; // 店铺举报
-                        case '6': this.$router.push('/discountCoupon'); break; // 优惠券库存
-                        case '7': this.$router.push({ name: 'giftManage', query: { prodCode: id }}); break; // 礼包管理
-                        case '8': this.$router.push('/giftManage'); break; // 礼包库存
-                        default: this.$message.warning('无跳转页面类型');
-                    }
-                }
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 全选操作
             handleSelectionChange(val) {

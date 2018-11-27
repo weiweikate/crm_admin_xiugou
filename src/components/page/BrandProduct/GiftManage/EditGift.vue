@@ -86,16 +86,6 @@
                     </transition>
                     <el-button @click="defSaleTime">自定义</el-button>
                 </el-form-item>
-                <el-form-item label="交易默认时间">
-                    <el-select v-model="form.dealDays" filterable allow-create default-first-option placeholder="请选择订单默认完成时间">
-                        <el-option label="7天" value="7"></el-option>
-                        <el-option label="10天" value="10"></el-option>
-                        <el-option label="15天" value="15"></el-option>
-                        <el-option label="20天" value="20"></el-option>
-                        <el-option label="25天" value="25"></el-option>
-                        <el-option label="30天" value="30"></el-option>
-                    </el-select>
-                </el-form-item>
                 <div class="pro-title">使用限制</div>
                 <el-form-item>
                     <el-checkbox disabled label="不支持优惠券" v-model="limit.notSupportCoupon"></el-checkbox>
@@ -478,7 +468,11 @@
                 }
                 const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
                 if (!reg.test(this.form.weight) || this.form.weight > 1000000000) {
-                    this.$message.error('重量或者售后周期长度不符合规则!');
+                    this.$message.error('重量不符合规则!');
+                    return false;
+                }
+                if (this.form.afterSaleServiceDays > 999999999 || this.form.afterSaleServiceDays < 0) {
+                    this.$message.warning('请输入正确的售后周期!');
                     return false;
                 }
                 // else if (this.selectedTagArr.length == 0) {
