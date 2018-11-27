@@ -16,8 +16,8 @@
                 <span>订单号：{{v.orderNum}}</span>
                 <span style="margin-left:30px">创建时间：{{v.createTime|formatDateAll}}</span>
                 <div class="operate-btn-group">
-                    <span v-if='v.status == 2' @click="sendGoods(v)">虚拟发货</span>
-                    <span v-if='v.status == 2' @click="pushCloud(v)">推送云仓</span>
+                    <span v-if='v.status == 2&&v.cloudHadSend==0' @click="sendGoods(v)">虚拟发货</span>
+                    <span v-if='v.status == 2&&v.cloudHadSend==0' @click="pushCloud(v)">推送云仓</span>
                     <span @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
                     <el-popover placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
                                         <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"

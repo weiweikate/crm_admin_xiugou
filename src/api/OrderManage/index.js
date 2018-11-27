@@ -106,5 +106,5 @@ export const refuse = '/order/returnProduct/refuse';
 // 云仓换货发货
 export const sendOut = '/order/returnProduct/sendOut';
 // 虚拟发货
-export const sendGoods = '/order/returnProduct/sendOut';
+export const sendGoods = '/order/sendOut';
 
