@@ -1,5 +1,5 @@
 <template>
-    <div class="order-info">
+    <div class="after-info">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '28px 50px' }">
             <div class="wrap">
@@ -111,11 +111,13 @@
                 <el-table border :data="tableData">
                     <el-table-column prop="" label="商品订单号"></el-table-column>
                     <el-table-column prop="" label="商品信息">
-                        <div class="name">
-                            <img :src="v.specImg" alt="">
-                            <span class="pro-name">{{v.productName}}</span>
-                            <span class="pro-spec">{{v.spec}}</span>
-                        </div>
+                        <template slot-scope="scope">
+                            <div class="name">
+                                <img :src="scope.row.specImg" alt="">
+                                <span class="pro-name">{{scope.row.productName}}</span>
+                                <span class="pro-spec">{{scope.row.spec}}</span>
+                            </div>
+                        </template>
                     </el-table-column>
                     <el-table-column prop="" label="SKU编码"></el-table-column>
                     <el-table-column prop="" label="供应商SKU编码"></el-table-column>
@@ -125,26 +127,37 @@
                     <el-table-column prop="" label="实付金额"></el-table-column>
                 </el-table>
             </div>
-            <div class="">
+            <div class="opr-area">
                 <div class="title">操作</div>
-                <el-form>
+                <el-form :model="form">
                     <el-form-item label="售后审核结果">
-                        <el-radio-group>
+                        <el-radio-group v-model="form.result">
                             <el-radio label="1">审核通过</el-radio>
                             <el-radio label="2">审核驳回</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="审核金额调整">
-                        <el-input></el-input><span>元，请在¥0.00~¥20.00区间内调整</span>
+                        <el-input v-model="form.price"></el-input><span class="tip">元，请在¥0.00~¥20.00区间内调整</span>
                     </el-form-item>
-                    <el-form-item label="退货信息">
-                        <el-radio-group>
-                            <el-radio label="1">供应商退货地址</el-radio>
-                            <el-radio label="2">平台退货地址</el-radio>
-                        </el-radio-group>
+                    <el-form-item label="退货信息" class="back-address">
+                        <div class="address-area">
+                            <el-radio-group v-model="form.address">
+                                <el-radio label="1">供应商退货地址</el-radio>
+                                <el-radio label="2">平台退货地址</el-radio>
+                            </el-radio-group>
+                            <div class="supplier-address">
+                                <div>陈奕迅 13333333333</div>
+                                <div>浙江省杭州市萧山区望京C3-6楼</div>
+                            </div>
+                            <div class="plat-address">
+                                <div>陈奕迅 13333333333</div>
+                                <div>浙江省杭州市萧山区望京C3-6楼</div>
+                            </div>
+                        </div>
+                        <div class="tip">如需修改，请联系相关人员修改退货信息后再审核</div>
                     </el-form-item>
                     <el-form-item label="售后审核说明">
-                        <el-input></el-input>
+                        <el-input v-model="form.remark"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary">提交</el-button>
@@ -157,7 +170,6 @@
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import utils from '@/utils/index.js';
     import { queryDictonary } from '@/JS/commom';
     import request from '@/http/http.js';
 
@@ -167,77 +179,24 @@
         data() {
             return {
                 nav: ['订单管理', '售后单管理', '售后单列表', '售后单详情'],
-                detailUrl: '',
                 orderId: '',
-                boolFirst: false,
-                boolsec: false,
-                boolThr: false,
-                boolFor: false,
-                isShowPop: false, // 订单标记颜色是否显示
-                isShowPreferential: false, // 优惠活动
-                isShowWarehouse: false, // 更换提货仓
                 orderStatus: '', // 总订单状态: 1:待支付 2:待发货 3:待收货 4:确认收货 5:已完成 6:退货关闭 7:用户关闭 8:超时关闭
-                // pickedUp: '', // 是否自提状态（1.正常 2.自提完成）
-                markArr: [
-                    { label: 'red', value: '1' },
-                    { label: 'skyblue', value: '2' },
-                    { label: 'lightgreen', value: '3' },
-                    { label: 'orange', value: '4' },
-                    { label: 'purple', value: '5' }
-                ],
                 tableData: [],
                 warehouseArr: [],
-                orderFreeTime: '',
-                orderFinishTime: '',
-                orderFreePayTime: '',
-                agreeMask: false,
-                productId: '',
-                refundForm: {
-                    returnBalance: '',
-                    returnAmounts: '',
-                    returnTokenCoin: '',
-                    outTradeNo: '',
-                    badReason: '',
-                    scrapReason: '',
-                    hadScrap: false // 是否选择产品报损
-                },
-                payType: '',
-                value: [],
-                // 报损原因
-                reasonList: [],
                 // 订单信息
-                orderMsg: {
-                    starIndex: '', // 标记颜色序号
-                    url: '', // 按钮状态(批量)
-                    sinUrl: '', // 按钮状态(单个)
-                    status: '', // 订单状态
-                    star: '', // 星级
-                    adminRemark: ``, // 备注
-                    nickName: '', // 昵称
-                    phone: '', // 联系方式
-                    receiver: '', // 收货人
-                    recevicePhone: '', // 收货人电话
-                    receiveAddress: '', // 收货地址
-                    buyerRemark: ``, // 卖家备注
-                    storehouseName: '', // 提货点
-                    orderNum: '', // 订单号
-                    createTime: '', // 订单创建时间
-                    payTime: '', // 第三方/平台支付时间
-                    deliveryTime: '', // 确认时间
-                    tradeNo: '', // 第三方支付交易号
-                    sendTime: '', // 发货时间
-                    cancleTime: '', // 取消时间
-                    expressName: '', // 物流公司名称
-                    expressNo: '', // 物流单号
-                    freeTimer: '', // 待支付倒计时
-                    confirmTimer: '' // 待确认倒计时
+                orderMsg: {},
+                form: {
+                    result: '',
+                    price: '',
+                    address: '',
+                    remark: ''
                 }
             };
         },
 
         created() {
             // 获取订单信息
-            this.orderId = this.$route.query.orderInfoId;
+            this.orderId = this.$route.query.afterSaleOrderInfoId;
             this.getInfo();
         },
         methods: {
@@ -268,7 +227,7 @@
     };
 </script>
 <style lang='less'>
-    .order-info {
+    .after-info {
         .title{
             margin-bottom: 10px;
         }
@@ -330,6 +289,29 @@
                     left: 115px;
                     bottom:5px;
                     width: 270px;
+                }
+            }
+        }
+        .opr-area{
+            margin-top: 20px;
+            .tip{
+                color: #8c939d;
+                margin-left: 10px;
+            }
+            .el-input,.el-input__inner{
+                width: 360px;
+            }
+            .back-address{
+                position: relative;
+                .address-area{
+
+                }
+                .supplier-address,.back-address{
+                    display: inline-block;
+
+                }
+                .tip{
+                    position: absolute;
                 }
             }
         }
