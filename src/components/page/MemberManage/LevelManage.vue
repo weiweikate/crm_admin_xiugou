@@ -33,14 +33,14 @@
                     </el-table-column>
                     <el-table-column min-width="350px" label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" @click="upSet(scope.$index,scope.row)">晋级设置</el-button>
-                            <el-button type="warning" size="small" @click="downSet(scope.$index,scope.row)">降级设置</el-button>
+                            <el-button type="primary" size="small" @click="upSet(scope.$index,scope.row)" v-auth="'vip.levelManage.jssz'">晋级设置</el-button>
+                            <el-button type="warning" size="small" @click="downSet(scope.$index,scope.row)" v-auth="'vip.levelManage.jjsz'">降级设置</el-button>
                             <!--<el-button type="primary" size="small" @click="priceLevel(scope.$index,scope.row)">价格阶层</el-button>-->
-                            <el-button type="success" size="small" @click="editItem(scope.$index,scope.row)">编辑
+                            <el-button type="success" size="small" @click="editItem(scope.$index,scope.row)" v-auth="'vip.levelManage.bj'">编辑
                             </el-button>
                             <!--<el-button type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除-->
                             <!--</el-button>-->
-                            <el-button type="danger" size="small" @click="toLevelInfo(scope.$index,scope.row)">层级信息
+                            <el-button type="danger" size="small" @click="toLevelInfo(scope.$index,scope.row)" v-auth="'vip.levelManage.cjxx'">层级信息
                             </el-button>
                         </template>
                     </el-table-column>

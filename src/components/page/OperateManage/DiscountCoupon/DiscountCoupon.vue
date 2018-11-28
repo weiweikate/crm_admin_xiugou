@@ -3,8 +3,8 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '30px 45px',minHeight:'80vh' }">
             <div class="add-coupon" >
-                <el-button @click="addCoupon" type="primary">添加优惠券</el-button>
-                <el-button @click="couponTemplate" type="success">优惠券模版</el-button>
+                <el-button @click="addCoupon" type="primary" v-auth="'yunying.discountCoupon.tjyhq'">添加优惠券</el-button>
+                <el-button @click="couponTemplate" type="success" v-auth="'yunying.discountCoupon.yhqmb'">优惠券模版</el-button>
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部券" name="allCoupon">

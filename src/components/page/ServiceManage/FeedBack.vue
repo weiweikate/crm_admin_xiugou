@@ -83,7 +83,7 @@
                     <el-table-column prop="adminName" label="处理人" align="center"></el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" @click="detailItem(scope.$index,scope.row)">查看详情
+                            <el-button type="primary" size="small" @click="detailItem(scope.$index,scope.row)" v-auth="'service.feedBack.ckxq'">查看详情
                             </el-button>
                         </template>
                     </el-table-column>

@@ -17,11 +17,11 @@ export function getInfo(token) {
             res.data.roles = ['user'];
         }
         // 兼容新老版本 如果不存在这个字段则赋予所有页面权限
-        if (!res.data.privateInfo) {
+        if (!res.data.privilegeInfo) {
             res.data._auth = authRouterList;
         } else {
-            if (typeof res.data.privateInfo === 'string') {
-                res.data._auth = res.data.privateInfo.split(',');
+            if (typeof res.data.privilegeInfo === 'string') {
+                res.data._auth = res.data.privilegeInfo.split(',');
             }
         }
 

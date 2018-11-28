@@ -5,7 +5,7 @@
             <div>
                 <div class="area">标签管理</div>
                 <div class="wrap">
-                    <div class="item" v-for="(item,index) in list" :key="index" @click="toPage(item.page)">
+                    <div class="item" v-auth="item.auth" v-for="(item,index) in list" :key="index" @click="toPage(item.page)">
                         <div class="left">
                             <img :src="item.img" alt="">
                         </div>
@@ -36,6 +36,7 @@
                         img: 'static/img/productLabel.png',
                         title: '产品标签类型设置',
                         content: '产品标签分组',
+                        auth: 'yunying.labelManage.cpbqlxsz',
                         page: '/productLabel'
                     }]
             };

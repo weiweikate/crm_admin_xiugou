@@ -1,6 +1,6 @@
 <template>
     <div class="tab-content">
-        <el-button @click="releaseProduct" class="add-product" type="primary">添加产品</el-button>
+        <el-button @click="releaseProduct" class="add-product" type="primary" v-auth="'brand.productList.tjcp'">添加产品</el-button>
         <div class="search-pane">
             <el-form :model="form" ref='form' inline label-width="100px">
                 <el-form-item prop="productName" label="产品名称">
@@ -85,14 +85,14 @@
             <el-table-column label="操作" min-width="220">
                 <template slot-scope="scope">
                     <div class="operate">
-                        <el-button @click="inventoryManage(scope.row)" type="primary">
+                        <el-button @click="inventoryManage(scope.row)" type="primary" v-auth="'brand.productList.kcgl'">
                             库存管理
                         </el-button>
-                        <el-button v-if='scope.row.status != 4' @click="specificationsManage(scope.row)" type="primary">
+                        <el-button v-if='scope.row.status != 4' @click="specificationsManage(scope.row)" type="primary" v-auth="'brand.productList.gggl'">
                             规格管理
                         </el-button>
                         <el-button v-if='scope.row.status != 4' @click="priceManage(scope.row)"
-                                   type="primary">价格管理
+                                   type="primary" v-auth="'brand.productList.jggl'">价格管理
                         </el-button>
                         <template
                             v-if='(scope.row.status == 1 || scope.row.status == 5) && name == "auditProduct"'>
@@ -101,20 +101,20 @@
                         </template>
                         <template v-else>
                             <el-button v-if='scope.row.status != 4'
-                                       @click="editProduct(scope.row)" type="success">编辑产品
+                                       @click="editProduct(scope.row)" type="success" v-auth="'brand.productList.bjcp'">编辑产品
                             </el-button>
                             <template >
                                 <el-button v-if='scope.row.status == 4' @click="productStatus(scope.row,'5')"
-                                           type="warning">产品下架
+                                           type="warning" v-auth="'brand.productList.xjcp'">产品下架
                                 </el-button>
                                 <el-button v-else-if="scope.row.status == 2 || scope.row.status == 5" @click="productStatus(scope.row,'4')"
-                                           type="warning">产品上架
+                                           type="warning" v-auth="'brand.productList.sjcp'">产品上架
                                 </el-button>
                             </template>
                         </template>
-                        <el-button @click="productInfo(scope.row)" type="primary">查看详情
+                        <el-button @click="productInfo(scope.row)" type="primary" v-auth="'brand.productList.ckxq'">查看详情
                         </el-button>
-                        <el-button v-if='scope.row.status == 3' @click="productStatus(scope.row,'1')" type="success">提交审核
+                        <el-button v-if='scope.row.status == 3' @click="productStatus(scope.row,'1')" type="success" v-auth="'brand.productList.shcp'">提交审核
                         </el-button>
                     </div>
                 </template>
