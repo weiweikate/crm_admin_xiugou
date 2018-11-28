@@ -55,3 +55,17 @@ npm run server
 ```
 
 > 
+
+# 组件
+
+## Clipboard 复制
+
+```bash
+import Clipboard from 'clipboard';
+
+<el-button @click="copy" :data-clipboard-text="modalData.secret" id="copy">复制</el-button>
+
+clipboard.on('success', () => {
+    this.$message.success('复制成功');
+});
+```

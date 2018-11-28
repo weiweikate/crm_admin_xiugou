@@ -75,11 +75,17 @@
                                 </div>
                             </div>
                             <div v-if="status==5">
-                                <div class="recode-item">
+                                <div class="recode-item"></div>
+                                <div class="tips" style="margin-top: 10px">
+                                    <span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span
+                                    class="blue" @click="watchLogistics">查看物流</span>
                                 </div>
-                                    <div class="tips" style="margin-top: 10px">
-                                        <span>买家已寄出</span><span>物流公司：{{returnProduct.expressName}}</span><span>物流单号：{{returnProduct.expressNo}}</span><span
-                                        class="blue" @click="watchLogistics">查看物流</span></div>
+                                <div style="margin-top: 30px">
+                                    <el-button type="danger" @click="orderSendOut">推送云仓
+                                    </el-button>
+                                    <el-button type="primary" @click="sendGoods">虚拟发货
+                                    </el-button>
+                                </div>
                             </div>
                             <div v-if="status==6">
                                 <div>
@@ -508,7 +514,22 @@
             </div>
         </el-dialog>
         <!--物流详情弹窗-->
-        <v-logistics v-if="isShowLogistics" @msg="logisticsMask"></v-logistics>
+        <!--<v-logistics v-if="isShowLogistics" @msg="logisticsMask"></v-logistics>-->
+        <!--虚拟发货-->
+        <el-dialog title="虚拟发货" :visible.sync="mask">
+            <el-form :model="sendForm">
+                <el-form-item label="物流单号">
+                    <el-input v-model="sendForm.expressNo" placeholder="请输入物流单号"></el-input>
+                </el-form-item>
+                <el-form-item label="物流公司">
+                    <el-input v-model="sendForm.expressName" placeholder="请输入物流公司"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" :loading="btnLoading" @click="sendSure('sendForm')">确 认</el-button>
+                <el-button @click="mask=false">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -573,7 +594,12 @@
                 id: '',
                 value: [],
                 // 报损原因
-                reasonList: []
+                reasonList: [],
+                sendForm: {
+                    expressName: '',
+                    expressNo: ''
+                },
+                mask: false
             };
         },
 
@@ -590,8 +616,8 @@
                     this.imgList = res.data.imgList;
                     if (res.data.orderReturnAmounts) {
                         this.returnAmountsRecord = res.data.orderReturnAmounts;
-                        this.orderId = res.data.orderReturnAmounts.orderId;
                     }
+                    this.orderId = res.data.orderProductId;
                     this.opr = this.returnProduct.type;
                     this.status = this.returnProduct.status;
                     this.id = this.returnProduct.id;
@@ -832,6 +858,39 @@
                 } else {
                     this.rejectMask = true;
                 }
+            },
+            // 云仓发货
+            orderSendOut() {
+                const data = {
+                    returnProductId: this.returnProductId
+                };
+                request.sendOut(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.getInfo();
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            // 虚拟发货
+            sendGoods() {
+                this.mask = true;
+            },
+            sendSure(formName) {
+                const data = this[formName];
+                data.id = this.returnProductId;
+                if (!data.expressName || !data.expressNo) {
+                    return this.$message.warning('请输入物流单号和物流公司');
+                }
+                this.btnLoading = true;
+                request.sendFictitiousOut(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.mask = false;
+                    this.btnLoading = false;
+                    this.getInfo();
+                }).catch(err => {
+                    console.log(err);
+                    this.btnLoading = false;
+                });
             }
         }
     };
