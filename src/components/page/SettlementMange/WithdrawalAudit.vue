@@ -93,6 +93,5 @@ export default {
 </script>
 <style lang='less' scoped>
 .witdrawal-audit{
-    .block{margin: 10px 0 20px 0}
 }
 </style>
