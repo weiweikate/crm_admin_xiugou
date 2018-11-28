@@ -25,6 +25,11 @@
                     <el-checkbox v-for="(v1, k1) in v.options" :key="`${k}--${k1}`" v-model="v1.value">{{v1.label}}</el-checkbox>
                 </div>
                 <div class="primary-text">
+                    <span @click="addAttrValue(k)">新建子属性</span>
+                </div>
+            </el-form-item>
+            <el-form-item label=" ">
+                <div class="primary-text">
                     <span>新建主属性</span>
                     <span>|</span>
                     <span>刷新</span>
@@ -95,6 +100,21 @@
             // 批量处理价格
             batchDealPrice() {
                 this.batchPrice = false;
+            },
+            // 添加属性值
+            addAttrValue(index) {
+                this.$prompt('请输入属性名', null, {
+                    showCancelButton: true
+                }).then(({ value }) => {
+                    const item = this.salesAttrArr[index];
+                    if (item.type == 1) {
+                        item.options.push({ label: value, value: false, imgUrl: '' });
+                    } else {
+                        item.options.push({ label: value, value: false });
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 下一步
             nextTip() {
