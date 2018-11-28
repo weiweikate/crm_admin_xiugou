@@ -14,8 +14,8 @@
             <el-table-column label="退款备注" align="center"></el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
-                    <el-button type="primary">手工退款</el-button>
-                    <el-button type="success">退款</el-button>
+                    <el-button type="primary" @click="refund(scope.row.id,1)">手工退款</el-button>
+                    <el-button type="success" @click="refund(scope.row.id,2)">退款</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -31,7 +31,14 @@
             </el-pagination>
         </div>
         <el-dialog title="手工退款备注" :visible.sync="mask">
-
+            <el-form>
+                <el-input type="textarea" placeholder="请输入手工退款账号等信息"></el-input>
+                <span>{{count}}/50</span>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="refundSure">确 认</el-button>
+                <el-button @click="mask=false">取 消</el-button>
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -77,7 +84,8 @@
                 // 售后状态
                 afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭'],
                 ids: [],
-                mask:false
+                mask: false,
+                count: 0
             };
         },
         methods: {
@@ -174,6 +182,17 @@
                         console.log(err);
                     });
                 }
+            },
+            refund(id, num) {
+                if (num == 1) {
+                    this.mask = true;
+                } else {
+
+                }
+            },
+            // 手工退款
+            refundSure() {
+
             }
         }
     };

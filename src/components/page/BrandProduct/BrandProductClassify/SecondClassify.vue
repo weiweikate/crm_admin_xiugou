@@ -43,46 +43,13 @@
         </div>
 
         <!--添加/编辑类目弹窗-->
-        <el-dialog :title="title" :visible.sync="addMask">
-            <el-form v-model="addForm">
-                <el-form-item label="类目名称" :label-width="formLabelWidth">
-                    <el-input v-model="addForm.name" auto-complete="off"></el-input>
-                    <span style="font-size: 12px;color: #aaa">（2-16位汉字字母组合）</span>
-                </el-form-item>
-                <el-form-item label="类目图标" :label-width="formLabelWidth" class="icon-area">
-                    <el-input readonly v-model="addForm.img" auto-complete="off"></el-input>
-                    <el-upload class="icon-uploader"
-                               :action="uploadImg"
-                               :before-upload="beforeAvatarUpload"
-                               :on-success="handleAvatarSuccess">
-                        <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
-                    </el-upload>
-                </el-form-item>
-                <el-form-item label="一级分类" :label-width="formLabelWidth">
-                    <el-input v-model="name" auto-complete="off" disabled=""></el-input>
-                </el-form-item>
-                <el-form-item label="是否启用" :label-width="formLabelWidth">
-                    <el-select v-model="addForm.status">
-                        <el-option label="是" value="1"></el-option>
-                        <el-option label="否" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item prop="name" label="APP排序" :label-width="formLabelWidth">
-                    <el-input v-model="addForm.sort" auto-complete="off"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="addOrEdit('addForm')">确 认</el-button>
-                <el-button @click="cancel">取 消</el-button>
-            </div>
-        </el-dialog>
         <el-dialog :title="title" :visible.sync="editMask">
-            <el-form v-model="form">
-                <el-form-item label="类目名称" :label-width="formLabelWidth">
+            <el-form v-model="form" label-width="100px">
+                <el-form-item label="类目名称"">
                     <el-input v-model="form.name" auto-complete="off"></el-input>
                     <span style="font-size: 12px;color: #aaa">（2-16位汉字字母组合）</span>
                 </el-form-item>
-                <el-form-item label="类目图标" :label-width="formLabelWidth" class="icon-area">
+                <el-form-item label="类目图标" class="icon-area">
                     <el-input readonly v-model="form.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
                                :action="uploadImg"
@@ -91,16 +58,16 @@
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
                 </el-form-item>
-                <el-form-item label="一级分类" :label-width="formLabelWidth">
+                <el-form-item label="一级分类">
                     <el-input v-model="name" auto-complete="off" disabled=""></el-input>
                 </el-form-item>
-                <el-form-item label="是否启用" :label-width="formLabelWidth">
+                <el-form-item label="是否启用">
                     <el-select v-model="form.status">
                         <el-option label="是" value="1"></el-option>
                         <el-option label="否" value="2"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="name" label="APP排序" :label-width="formLabelWidth">
+                <el-form-item prop="name" label="APP排序">
                     <el-input v-model="form.sort" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
@@ -137,16 +104,10 @@ export default {
             // 类目类型
             type: '',
             height: '',
-            addMask: false,
             editMask: false,
             isShowDelToast: false,
             formLabelWidth: '100px',
             form: {
-                name: '',
-                status: '1',
-                img: ''
-            },
-            addForm: {
                 name: '',
                 status: '1',
                 img: ''
@@ -197,11 +158,9 @@ export default {
         // 添加二级类目
         addClassify() {
             this.title = '添加二级类目';
-            this.addMask = true;
-            this.addForm.name = '';
-            this.addForm.img = '';
-            this.addForm.sort = '';
-            this.addForm.status = '1';
+            this.editMask = true;
+            utils.cleanFormData(this.form);
+            this.form.status = '1';
             this.itype = 'add';
         },
         // 编辑
@@ -247,11 +206,11 @@ export default {
             request[url](data).then(res => {
                 this.$message.success(res.msg);
                 this.btnLoading = false;
-                this.addMask = false;
                 this.editMask = false;
                 this.getList(this.page.currentPage);
             }).catch(error => {
                 console.log(error);
+                this.btnLoading = false;
             });
         },
         // 删除
@@ -267,15 +226,10 @@ export default {
         },
         // 上传图片
         handleAvatarSuccess(res, file) {
-            if (this.itype == 'add') {
-                this.addForm.img = res.data;
-            } else {
-                this.form.img = res.data;
-            }
+            this.form.img = res.data;
         },
         // 取消
         cancel() {
-            this.addMask = false;
             this.editMask = false;
             this.getList(this.page.currentPage);
         },

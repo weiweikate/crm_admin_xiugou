@@ -18,10 +18,10 @@
                         <el-option v-for="(v,k) in typeArr" :label="v.label" :value="v.value" :key="k"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="typeValue" label="属性值类型" label-width="120">
-                    <el-select v-model="form.typeValue" placeholder="全部">
+                <el-form-item prop="valueType" label="属性值类型" label-width="120">
+                    <el-select v-model="form.valueType" placeholder="全部">
                         <el-option label="全部" value=""></el-option>
-                        <el-option v-for="(v,k) in typeValueArr" :label="v.label" :value="v.value" :key="k"></el-option>
+                        <el-option v-for="(v,k) in valueTypeArr" :label="v.label" :value="v.value" :key="k"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="status" label="状态" label-width="120">
@@ -37,10 +37,10 @@
             </el-form>
         </el-card>
         <div class="table-block">
-            <el-button type="primary" style="margin-bottom: 20px" @click="mask=true">添加属性</el-button>
+            <el-button type="primary" style="margin-bottom: 20px" @click="addProperty">添加属性</el-button>
             <el-button type="success" style="margin-bottom: 20px" @click="deleteProperty">删除</el-button>
             <template>
-                <el-table :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange">
+                <el-table :data="tableData" v-loading="tableLoading" border style="width: 100%" @selection-change="handleSelectionChange">
                     <el-table-column
                         type="selection"
                         width="55" align="center">
@@ -50,23 +50,23 @@
                     <el-table-column prop="remark" label="属性描述" align="center"></el-table-column>
                     <el-table-column prop="type" label="属性类型" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.type==1">销售属性</template>
-                            <template v-if="scope.row.type==2">自然属性</template>
+                            <template v-if="scope.row.type==1">自然属性</template>
+                            <template v-if="scope.row.type==2">销售属性</template>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="typeValue" label="属性值类型" align="center">
+                    <el-table-column prop="valueType" label="属性值类型" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.typeValue==1">文字</template>
-                            <template v-if="scope.row.typeValue==2">图片</template>
+                            <template v-if="scope.row.valueType==1">文字</template>
+                            <template v-if="scope.row.valueType==2">图片</template>
                         </template>
                     </el-table-column>
                     <el-table-column prop="status" label="状态" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.status==1">启用</template>
-                            <template v-if="scope.row.status==2">停用</template>
+                            <template v-if="scope.row.status==0">启用</template>
+                            <template v-if="scope.row.status==1">停用</template>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="remark" label="最近更新者" align="center"></el-table-column>
+                    <el-table-column prop="createAdmin" label="最近更新者" align="center"></el-table-column>
                     <el-table-column prop="updateTime" label="更新时间" align="center">
                         <template slot-scope="scope">
                             {{scope.row.updateTime|formatDateAll}}
@@ -74,9 +74,9 @@
                     </el-table-column>
                     <el-table-column  label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="danger" size="small" @click="mask=true">编辑</el-button>
-                            <el-button type="success" size="small" v-if="scope.row.status==2">启用</el-button>
-                            <el-button type="success" size="small" v-else>停用</el-button>
+                            <el-button type="danger" size="small" @click="editProperty(scope.row.id)">编辑</el-button>
+                            <el-button type="success" size="small" @click="openOrstop(scope.row.id,1)" v-if="scope.row.status==1">启用</el-button>
+                            <el-button type="success" size="small" @click="openOrstop(scope.row.id,0)" v-else>停用</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -105,15 +105,18 @@
                     <el-select v-model="maskForm.type" placeholder="全部">
                         <el-option v-for="(v,k) in typeArr" :label="v.label" :value="v.value" :key="k"></el-option>
                     </el-select>                </el-form-item>
-                <el-form-item prop="typeValue" label="属性值类型">
-                    <el-select v-model="maskForm.typeValue" placeholder="全部">
-                        <el-option v-for="(v,k) in typeValueArr" :label="v.label" :value="v.value" :key="k"></el-option>
+                <el-form-item prop="valueType" label="属性值类型">
+                    <el-select v-model="maskForm.valueType" placeholder="全部">
+                        <el-option v-for="(v,k) in valueTypeArr" :label="v.label" :value="v.value" :key="k"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="status" label="启用状态">
                     <el-radio-group v-model="maskForm.status" placeholder="全部">
-                        <el-radio v-for="(v,k) in statusArr" :label="v.label" :value="v.value" :key="k"></el-radio>
+                        <el-radio v-for="(v,k) in statusArr" :label="v.value" :key="k">{{v.label}}</el-radio>
                     </el-radio-group>
+                </el-form-item>
+                <el-form-item prop="remark" label="属性描述">
+                    <el-input v-model="maskForm.remark" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item class="add-item">
                     <el-button type="danger" @click="addPropertyValue">添加属性值</el-button>
@@ -134,12 +137,12 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="addOrEdit('maskForm')">确 认</el-button>
+                <el-button type="primary" :loading="btnLoading" @click="addOrEdit('maskForm')">确 认</el-button>
                 <el-button @click="cancel">取 消</el-button>
             </div>
         </el-dialog>
         <!--删除弹窗-->
-        <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
+        <delete-toast :id='delId' :url='delUrl' :isProperty="true" :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
     </div>
 </template>
 
@@ -147,8 +150,9 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
 import deleteToast from '@/components/common/DeleteToast';
-import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
+import moment from 'moment';
+import utils from '@/utils/index.js';
 import request from '@/http/http.js';
 
 export default {
@@ -160,7 +164,7 @@ export default {
     mixins: [myMixinTable],
     data() {
         return {
-            tableData: [{id:1}],
+            tableData: [],
             height: '',
             mask: false,
             isShowDelToast: false,
@@ -169,44 +173,44 @@ export default {
                 code: '',
                 name: '',
                 type: '',
-                typeValue: '',
+                valueType: '',
                 status: ''
             },
             title: '添加属性',
             id: '',
-            name: '',
-            superiorName: '',
-            className: '',
+            itemId: '',
             itype: '',
-            delId: 66,
+            delId: '',
             delUrl: 'http://api',
-            delUri: '',
             typeArr: [// 属性类型数组
-                { label: '销售属性', value: 1 },
-                { label: '自然属性', value: 2 }
+                { label: '自然属性', value: 1 },
+                { label: '销售属性', value: 2 }
             ],
-            typeValueArr: [// 属性值类型数组
+            valueTypeArr: [// 属性值类型数组
                 { label: '文字', value: 1 },
                 { label: '图片', value: 2 }
             ],
             statusArr: [// 状态数组
-                { label: '启用', value: 1 },
-                { label: '停用', value: 2 }
+                { label: '启用', value: 0 },
+                { label: '停用', value: 1 }
             ],
             maskForm: { // 编辑编辑表单
                 name: '',
-                type: '',
-                typeValue: '',
-                status: '',
+                type: 1,
+                valueType: 1,
+                status: 1,
                 values: []
             },
             rules: {
                 name: [{ required: true, message: '请输入属性名称', trigger: 'blur' }],
                 type: [{ required: true, message: '请选择属性类型', trigger: 'blur' }],
-                typeValue: [{ required: true, message: '请选择属性值类型', trigger: 'blur' }],
+                valueType: [{ required: true, message: '请选择属性值类型', trigger: 'blur' }],
                 status: [{ required: true, message: '请选择启用状态', trigger: 'blur' }]
             },
-            multipleSelection: []
+            multipleSelection: [],
+            tableLoading: false,
+            btnLoading: false
+
         };
     },
     created() {
@@ -217,7 +221,30 @@ export default {
     },
     methods: {
         // 获取列表
-        getList(val) {},
+        getList(val) {
+            const data = {
+                name: this.form.name,
+                code: this.form.code,
+                valueType: this.form.valueType,
+                type: this.form.type,
+                status: this.form.status,
+                updateTimeBegin: this.form.date[0] ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
+                updateTimeEnd: this.form.date[1] ? moment(this.form.date[1]).format('YYYY-MM-DD') : '',
+                page: val,
+                pageSize: this.page.pageSize
+            };
+            this.page.currentPage = val;
+            this.tableLoading = true;
+            request.queryCategoryProperty(data).then(res => {
+                this.tableData = [];
+                if (!res.data.data) return;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
+                this.tableLoading = false;
+            }).catch(err => {
+                this.tableLoading = false;
+            });
+        },
         // 删除
         handleSelectionChange(val) {
             this.multipleSelection = [];
@@ -230,11 +257,25 @@ export default {
                 return this.$message.warning('请选择要删除的属性');
             }
             this.isShowDelToast = true;
+            this.delId = this.multipleSelection;
+            this.delUrl = 'deleteCategoryProperty';
         },
         // 删除弹窗
         deleteToast(msg) {
             this.isShowDelToast = msg;
             this.getList(this.page.currentPage);
+        },
+        addProperty() {
+            this.itemId = '';
+            this.title = '添加属性';
+            utils.cleanFormData(this.maskForm);
+            this.maskForm.status = 0;
+            this.mask = true;
+        },
+        editProperty(id) {
+            this.itemId = id;
+            this.title = '编辑属性';
+            this.mask = true;
         },
         // 添加确定
         addOrEdit(formName) {
@@ -242,7 +283,29 @@ export default {
                 if (!valid) {
                     return;
                 } else {
-                    this.mask = false;
+                    if (!this.maskForm.values.length) {
+                        return this.$message.warning('请添加属性值');
+                    }
+                    const data = this[formName];
+                    if (this.itemId) data.id = this.itemId;
+                    const tempArr = [];
+                    this.maskForm.values.forEach((v, k) => {
+                        const temp = {
+                            value: v.value,
+                            sort: k
+                        };
+                        tempArr.push(temp);
+                    });
+                    data.values = tempArr;
+                    this.btnLoading = true;
+                    request.saveCategoryProperty(data).then(res => {
+                        this.$message.success(res.msg);
+                        this.btnLoading = false;
+                        this.mask = false;
+                        this.getList(this.page.currentPage);
+                    }).catch(err => {
+                        this.btnLoading = false;
+                    });
                 }
             });
         },
@@ -274,6 +337,19 @@ export default {
         resetForm(formName) {
             this.$refs[formName].resetFields();
             this.getList(this.page.currentPage);
+        },
+        // 启用停用
+        openOrstop(id, num) {
+            const data = {
+                id: id,
+                status: num
+            };
+            request.updateCategoryPropertyStatus(data).then(res => {
+                this.$message.success(res.msg);
+                this.getList(this.page.currentPage);
+            }).catch(err => {
+
+            });
         }
     }
 };

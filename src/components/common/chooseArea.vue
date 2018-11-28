@@ -347,6 +347,9 @@
                     that.expandId = -1;
                     that.showCities = false;
                     that.checkAll[index].provinceCheck.forEach(function(v, k) {
+                        v.cityCheck.forEach((v1, k1) => {
+                            v.cityCheck[k1] = false;
+                        });
                         that.preChooseData.forEach((v1, k1) => {
                             if (that.checkAll[index].provinceCheck[k].code == v1.provinceId) {
                                 that.preChooseData.splice(k1, 1);
@@ -360,7 +363,7 @@
                         // that.$set(that.checkAll[index].provinceCheck[k].checkedCities, k, that.checkAll[index].provinceCheck[k].checkedCities);
                     });
                 }
-                this.areaCheckedAll(index)
+                this.areaCheckedAll(index);
             },
             // 省对应的全选操作
             handleCheckAll(val, k, index) {
