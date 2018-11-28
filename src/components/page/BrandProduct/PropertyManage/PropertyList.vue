@@ -62,11 +62,11 @@
                     </el-table-column>
                     <el-table-column prop="status" label="状态" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.status==0">启用</template>
-                            <template v-if="scope.row.status==1">停用</template>
+                            <template v-if="scope.row.status==1">启用</template>
+                            <template v-if="scope.row.status==0">停用</template>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="createAdmin" label="最近更新者" align="center"></el-table-column>
+                    <el-table-column prop="adminName" label="最近更新者" align="center"></el-table-column>
                     <el-table-column prop="updateTime" label="更新时间" align="center">
                         <template slot-scope="scope">
                             {{scope.row.updateTime|formatDateAll}}
@@ -74,9 +74,9 @@
                     </el-table-column>
                     <el-table-column  label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="danger" size="small" @click="editProperty(scope.row.id)">编辑</el-button>
-                            <el-button type="success" size="small" @click="openOrstop(scope.row.id,1)" v-if="scope.row.status==1">启用</el-button>
-                            <el-button type="success" size="small" @click="openOrstop(scope.row.id,0)" v-else>停用</el-button>
+                            <el-button type="primary" size="small" @click="editProperty(scope.row)">编辑</el-button>
+                            <el-button type="success" size="small" @click="openOrstop(scope.row.id,1)" v-if="scope.row.status==0">启用</el-button>
+                            <el-button type="danger" size="small" @click="openOrstop(scope.row.id,0)" v-else>停用</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -92,7 +92,6 @@
                     </el-pagination>
                 </div>
             </template>
-
         </div>
 
         <!--添加产品详细参数弹窗-->
@@ -191,8 +190,8 @@ export default {
                 { label: '图片', value: 2 }
             ],
             statusArr: [// 状态数组
-                { label: '启用', value: 0 },
-                { label: '停用', value: 1 }
+                { label: '启用', value: 1 },
+                { label: '停用', value: 0 }
             ],
             maskForm: { // 编辑编辑表单
                 name: '',
@@ -249,7 +248,7 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = [];
             val.forEach((v, k) => {
-                this.multipleSelection.push(v.id);
+                this.multipleSelection.push(v.code);
             });
         },
         deleteProperty() {
@@ -269,12 +268,14 @@ export default {
             this.itemId = '';
             this.title = '添加属性';
             utils.cleanFormData(this.maskForm);
-            this.maskForm.status = 0;
+            this.maskForm.status = 1;
             this.mask = true;
         },
-        editProperty(id) {
-            this.itemId = id;
+        editProperty(row) {
+            this.itemId = row.id;
             this.title = '编辑属性';
+            this.maskForm = row;
+            this.maskForm.values = this.maskForm.values ? this.maskForm.values : [];
             this.mask = true;
         },
         // 添加确定

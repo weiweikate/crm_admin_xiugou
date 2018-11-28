@@ -94,10 +94,10 @@
             <div>对应分类：{{superiorName}}>{{name}}>{{row.name}}</div>
             <el-button style="margin-top: 20px" @click="editProperty" type="danger">添加关联属性</el-button>
             <table class="table-area">
-                <tr v-for="(v,k) in propertyList">
+                <tr v-for="(v,k) in propertyList" :key="k">
                     <td>
-                        <i class="el-icon-close"></i>
-                        属性（自然属性）
+                        <i class="el-icon-close" @click="deleteProperty(k)"></i>
+                        {{v.label}}
                     </td>
                 </tr>
             </table>
@@ -311,8 +311,14 @@ export default {
                 categoryId: row.id
             };
             request.queryPropertyByCategoryId(data).then(res => {
-                this.propertyList = res.data;
+                this.propertyList = [];
+                this.propertyIds = [];
                 res.data.forEach((v, k) => {
+                    const type = v.type == 1 ? '自然属性' : '销售属性';
+                    const temp = {
+                        label: `${v.name}（` + type + `）`
+                    };
+                    this.propertyList.push(temp);
                     this.propertyIds.push(v.propertyCode);
                 });
             }).catch(err => {
@@ -321,41 +327,52 @@ export default {
         },
         propertySure() {
             const data = {
-                categoryPropertyAssociateVO: this.propertyIds.join(',')
+                propertyCodes: this.propertyIds,
+                categoryId: this.row.id
             };
             this.btnLoading = true;
             request.bindCategoryProperty(data).then(res => {
                 this.$message.success(res.msg);
+                this.propertyMask = false;
                 this.btnLoading = false;
+                this.getList(this.page.currentPage);
             }).catch(err => {
                 this.btnLoading = false;
             });
+        },
+        // 删除
+        deleteProperty(index) {
+            this.propertyList.splice(index, 1);
+            this.propertyIds.splice(index, 1);
         },
         // 编辑关联属性
         editProperty() {
             this.editPropertyMask = true;
             const data = {
                 page: 1,
-                pageSize: 10000
+                pageSize: 10000,
+                status: 1
             };
             request.queryCategoryProperty(data).then(res => {
-                this.allPropertyList = res.data;
-                res.data.forEach((v, k) => {
+                this.allPropertyList = [];
+                res.data.data.forEach((v, k) => {
                     const type = v.type == 1 ? '自然属性' : '销售属性';
                     const temp = {
-                        key: v.propertyCode,
+                        key: v.code,
                         label: `${v.name}（` + type + `）`
                     };
+                    this.allPropertyList.push(temp);
                 });
             });
         },
         editSure() {
             this.propertyList = [];
             this.allPropertyList.forEach((v, k) => {
-                if (this.propertyIds.join(',').indexOf(v.propertyCode) != -1) {
-                    this.propertyList.push(...v);
+                if (this.propertyIds.join(',').indexOf(v.key) != -1) {
+                    this.propertyList.push(v);
                 }
             });
+            this.editPropertyMask = false;
         }
     }
 };

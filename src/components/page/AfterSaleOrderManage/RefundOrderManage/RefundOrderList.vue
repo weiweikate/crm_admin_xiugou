@@ -180,12 +180,6 @@ export default {
             Object.assign(data, this.form);
             data.startTime = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : '';
             data.endTime = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : '';
-            if (this.form.closeReason) {
-                this.activeName = '6';
-            }
-            if (this.form.refundStatus) {
-                this.activeName = '9';
-            }
             data.status = this.activeName === 'all' ? '' : this.activeName;
             this.$refs[this.activeName].page.currentPage = 1;
             this.$refs[this.activeName].data = data;
