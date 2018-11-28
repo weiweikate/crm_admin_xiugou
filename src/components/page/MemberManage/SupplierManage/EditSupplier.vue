@@ -16,6 +16,15 @@
                     <el-form-item prop="userName" label="供应商姓名">
                         <el-input placeholder="请输入供应商姓名" v-model="form.userName"></el-input>
                     </el-form-item>
+                    <el-form-item prop="loginName" label="供应商账号">
+                        <el-input placeholder="请输入供应商账号" v-model="form.loginName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码" prop="password">
+                        <el-input placeholder="请输入供应商账号密码" v-model="form.password" type="password" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="确认密码" prop="confirmPassword">
+                        <el-input placeholder="请再次输入供应商账号密码" v-model="form.confirmPassword" type="password" autocomplete="off"></el-input>
+                    </el-form-item>
                     <el-form-item prop="name" label="联系方式" class="phone-area">
                         <el-input class="small-inp" v-model="first"></el-input>
                         <el-input class="mid-inp" v-model="second"></el-input>
@@ -57,6 +66,9 @@
                     <el-form-item prop="endTime" label="供应商结算帐期：">
                         <p>每月15号</p>
                     </el-form-item>
+                    <el-form-item prop="remark" label="备注">
+                        <el-input placeholder="备注" v-model="form.remark"></el-input>
+                    </el-form-item>
                     <div class="submit-btn">
                         <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">确认保存</el-button>
                         <el-button @click="cancel">取消</el-button>
@@ -89,7 +101,11 @@
                     bankName: '',
                     bankOpening: '',
                     bankCard: '',
-                    bankUsername: ''
+                    bankUsername: '',
+                    loginName: '',
+                    password: '',
+                    confirmPassword: '',
+                    remark: ''
                 },
                 first: '',
                 second: '',
@@ -174,6 +190,18 @@
                 }
                 if (!that[form].userName) {
                     that.$message.warning('请输入供应商姓名!');
+                    return;
+                }
+                if (!that[form].loginName) {
+                    that.$message.warning('请输入供应商账号!');
+                    return;
+                }
+                if (!that[form].password) {
+                    that.$message.warning('请输入密码!');
+                    return;
+                }
+                if (that[form].password !== that[form].confirmPassword) {
+                    that.$message.warning('两次密码输入不一致!');
                     return;
                 }
                 if (!that[form].mobile) {
