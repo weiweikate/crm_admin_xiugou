@@ -3,7 +3,7 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="query-panue" :body-style="{ padding: '20px 20px'}">
             <el-form :model="form" ref="form" inline label-width="120px">
-                <el-form-item prop="dateRange" label="下单时间">
+                <el-form-item prop="dateRange" label="创建时间">
                     <el-date-picker
                         v-model="dateRange"
                         type="datetimerange"
@@ -13,57 +13,18 @@
                     >
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item prop="platOrderNum" label="平台级订单号">
-                    <el-input v-model="form.orderNum" placeholder="请输入平台级订单号"></el-input>
-                </el-form-item>
-                <el-form-item prop="repertoryOrderNum" label="仓库级订单号">
-                    <el-input v-model="form.orderNum" placeholder="请输入仓库级订单号"></el-input>
-                </el-form-item>
-                <el-form-item prop="repertory" label="发货仓库">
-                    <el-select v-model="form.repertory" placeholder="请选择">
-                        <el-option v-for="(v,k) in repertoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item prop="orderSource" label="订单来源">
-                    <el-select v-model="form.orderSource" placeholder="请选择">
-                        <el-option v-for="(v,k) in orderSourceArr" :key="k" :label="v.label" :value="v.value"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item prop="ticket" label="开具发票">
-                    <el-select v-model="form.ticket" placeholder="请选择">
-                      <el-option label="是" value="0"></el-option>
-                      <el-option label="否" value="1"></el-option>
-                    </el-select>
-                </el-form-item>
                 <el-form-item prop="user" label="用户账号">
                     <el-input v-model="form.user" placeholder="请输入用户账号"></el-input>
                 </el-form-item>
-                <el-form-item prop="receiver" label="收货人姓名">
-                    <el-input v-model="form.receiver" placeholder="请输入收货人姓名"></el-input>
+                <el-form-item prop="platOrderNum" label="退款单号">
+                    <el-input v-model="form.orderNum" placeholder="请输入退款单号"></el-input>
                 </el-form-item>
-                <el-form-item prop="stars" label="订单标记">
-                    <el-select v-model="form.stars" placeholder="请选择">
-                        <el-option v-for="(v,k) in starArr" :key="k" :label="v.label" :value="v.value"></el-option>
-                    </el-select>
+                <el-form-item prop="repertoryOrderNum" label="售后单号">
+                    <el-input v-model="form.orderNum" placeholder="请输入售后单号"></el-input>
                 </el-form-item>
-                <el-form-item prop="sendStatus" label="推送状态">
-                    <el-select v-model="form.sendStatus" placeholder="请选择" @change="changeStatus(1)">
-                      <el-option label="暂不选择" value=""></el-option>
-                        <el-option v-for="(v,k) in sendStatusArr" :label="v.type" :value="v.id" :key="k">{{v.type}}</el-option>
-                    </el-select>
+                <el-form-item prop="repertoryOrderNum" label="仓库订单号">
+                    <el-input v-model="form.orderNum" placeholder="请输入仓库订单号"></el-input>
                 </el-form-item>
-                <el-form-item prop="lockStatus" label="锁定状态">
-                    <el-select v-model="form.lockStatus" placeholder="请选择" @change="changeStatus(1)">
-                      <el-option label="暂不选择" value=""></el-option>
-                        <el-option v-for="(v,k) in lockStatusArr" :label="v.type" :value="v.id" :key="k">{{v.type}}</el-option>
-                    </el-select>
-                </el-form-item>
-                <!--<el-form-item prop="orderStatus" label="订单状态">-->
-                    <!--<el-select v-model="form.orderStatus" placeholder="请选择" @change="changeStatus(2)">-->
-                        <!--<el-option label="暂不选择" value=""></el-option>-->
-                        <!--<el-option v-for="(v,k) in orderStatusArr" :label="v.type" :value="v.id" :key="k">{{v.type}}</el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
                 <el-form-item label=" ">
                     <el-button type="primary" @click="getList(1)">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
@@ -71,31 +32,21 @@
             </el-form>
         </el-card>
         <el-card style='margin-top:20px;minHeight:90vh;overflow-x: auto;min-width: 1336px' :body-style="{ padding: '20px 50px' }">
-            <div class="btn-group">
-                <el-button type="danger" @click="sendOut" v-auth="'order.orderList.yjts'">推送云仓</el-button>
-                <el-button type="primary" @click="sendOut" v-auth="'order.orderList.yjts'">导出</el-button>
-            </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="all">
                     <v-orderlist ref="all"></v-orderlist>
                 </el-tab-pane>
-                <el-tab-pane label="待付款" name="1">
+                <el-tab-pane label="等待退款" name="1">
                     <v-orderlist ref="1"></v-orderlist>
                 </el-tab-pane>
-                <el-tab-pane label="已付款" name="2">
+                <el-tab-pane label="退款成功" name="2">
                     <v-orderlist ref="2"></v-orderlist>
                 </el-tab-pane>
-                <el-tab-pane label="部分发货" name="3">
+                <el-tab-pane label="退款关闭" name="3">
                     <v-orderlist ref="3"></v-orderlist>
                 </el-tab-pane>
-                <el-tab-pane label="已发货" name="9">
+                <el-tab-pane label="退款失败" name="9">
                     <v-orderlist ref="9"></v-orderlist>
-                </el-tab-pane>
-                <el-tab-pane label="交易完成" name="5">
-                    <v-orderlist ref="5"></v-orderlist>
-                </el-tab-pane>
-                <el-tab-pane label="交易关闭" name="6">
-                    <v-orderlist ref="6"></v-orderlist>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
@@ -118,7 +69,7 @@ export default {
 
     data() {
         return {
-            nav: ['订单管理', '订单管理'],
+            nav: ['订单管理', '售后管理', '退款单列表'],
             activeName: 'all',
             dateRange: [],
             repertoryArr: [// 发货仓库

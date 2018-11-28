@@ -101,6 +101,12 @@ export const asyncRouterMap = [
                 meta: { title: '产品品牌分类管理' }
             },
             {
+                name: 'propertyList',
+                path: '/propertyList',
+                component: resolve => require(['../components/page/BrandProduct/PropertyManage/PropertyList.vue'], resolve),
+                meta: { title: '属性管理' }
+            },
+            {
                 name: 'brandManage',
                 path: '/brandManage',
                 component: resolve => require(['../components/page/BrandProduct/BrandManage/BrandManage.vue'], resolve),
@@ -165,10 +171,42 @@ export const asyncRouterMap = [
                 meta: { title: '订单管理' }
             },
             {
+                name: 'payOrderList',
+                path: '/payOrderList',
+                component: resolve => require(['../components/page/OrderManage/PayOrderManage/PayOrderList.vue'], resolve),
+                meta: { title: '支付单列表' }
+            },
+            {
+                name: 'sendedOrderList',
+                path: '/sendedOrderList',
+                component: resolve => require(['../components/page/OrderManage/SendedOrderManage/SendedOrderList.vue'], resolve),
+                meta: { title: '发货单列表' }
+            },
+            {
                 name: 'giftOrderList',
                 path: '/giftOrderList',
                 component: resolve => require(['../components/page/OrderManage/GiftOrderManage/GiftOrderList.vue'], resolve),
                 meta: { title: '礼包订单' }
+            }
+        ]
+    },
+    {
+        path: '/afterSaleOrder',
+        component: Layout,
+        name: 'afterSaleOrder',
+        meta: { title: '售后单管理', icon: 'icon-dingdan' },
+        children: [
+            {
+                name: 'afterSaleOrderList',
+                path: '/afterSaleOrderList',
+                component: resolve => require(['../components/page/AfterSaleOrderManage/AfterSaleOrderManage/AfterSaleOrderList.vue'], resolve),
+                meta: { title: '售后单列表' }
+            },
+            {
+                name: 'refundOrderList',
+                path: '/refundOrderList',
+                component: resolve => require(['../components/page/AfterSaleOrderManage/RefundOrderManage/RefundOrderList.vue'], resolve),
+                meta: { title: '退款单列表' }
             }
         ]
     },
@@ -387,7 +425,7 @@ export const asyncRouterMap = [
                 path: '/versionIteration',
                 component: resolve => require(['../components/page/Permission/VersionIteration.vue'], resolve),
                 meta: { title: '版本迭代管理' }
-            },
+            }
         ]
     },
     {
@@ -413,7 +451,7 @@ export const asyncRouterMap = [
                 path: '/repertoryReportList',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryReport/RepertoryReportList.vue'], resolve),
                 meta: { title: '仓库单' }
-            },
+            }
         ]
     },
     {
@@ -589,13 +627,12 @@ export const asyncRouterMap = [
                 component: resolve => require(['../components/page/BrandProduct/HotClassifyManage/HotClassifyManage.vue'], resolve),
                 meta: { title: '热门分类管理' }
             },
-            {
-                name: 'productDetailParam',
-                path: '/productDetailParam',
-                component: resolve => require(['../components/page/BrandProduct/BrandProductClassify/ProductDetailParam.vue'], resolve),
-                meta: { title: '产品详细参数' }
-            },
-
+            // {
+            //     name: 'productDetailParam',
+            //     path: '/productDetailParam',
+            //     component: resolve => require(['../components/page/BrandProduct/BrandProductClassify/ProductDetailParam.vue'], resolve),
+            //     meta: { title: '产品详细参数' }
+            // },
             {
                 name: 'addBrand',
                 path: '/addBrand',
@@ -740,7 +777,6 @@ export const asyncRouterMap = [
                 component: resolve => require(['../components/page/MemberManage/LevelManage/LevelInfo.vue'], resolve),
                 meta: { title: '层级信息' }
             },
-
 
             {
                 name: 'lowerMemberManage',
@@ -1043,7 +1079,6 @@ export const asyncRouterMap = [
                 meta: { title: '查看' }
             },
 
-
             {
                 name: 'questionList',
                 path: '/questionList',
@@ -1138,7 +1173,6 @@ export const asyncRouterMap = [
                 meta: { title: '红包翻倍周期设置' }
             },
 
-
             {
                 name: 'featuredManage',
                 path: '/featuredManage',
@@ -1170,14 +1204,12 @@ export const asyncRouterMap = [
                 meta: { title: '推荐产品管理' }
             },
 
-
             {
                 name: 'deliveryAddress',
                 path: '/deliveryAddress',
                 component: resolve => require(['../components/page/OperateManage/DeliveryAddress.vue'], resolve),
                 meta: { title: '提货地址设置' }
             },
-
 
             {
                 name: 'couponDetail',
@@ -1364,6 +1396,18 @@ export const asyncRouterMap = [
                 meta: { title: '订单详情', keepAlive: true }
             },
             {
+                name: 'sendedOrderInfo',
+                path: '/sendedOrderInfo',
+                component: resolve => require(['../components/page/OrderManage/SendedOrderManage/SendedOrderInfo.vue'], resolve),
+                meta: { title: '发货单详情' }
+            },
+            {
+                name: 'afterSaleOrderInfo',
+                path: '/afterSaleOrderInfo',
+                component: resolve => require(['../components/page/AfterSaleOrderManage/AfterSaleOrderManage/AfterSaleOrderInfo.vue'], resolve),
+                meta: { title: '售后单详情' }
+            },
+            {
                 name: 'afterSaleOpr',
                 path: '/afterSaleOpr',
                 component: resolve => require(['../components/page/OrderManage/OrderManage/AfterSaleOpr.vue'], resolve),
@@ -1456,7 +1500,6 @@ export const asyncRouterMap = [
                 meta: { title: '仓库详情' }
             },
 
-
             {
                 name: 'repertoryReportSet',
                 path: '/repertoryReportSet',
@@ -1525,7 +1568,7 @@ export default new Router({
     routes: constantRouterMap
 });
 
-let tmp = [];
+const tmp = [];
 asyncRouterMap.forEach(item => {
     tmp.push(item.name);
     if (item.children) {

@@ -31,7 +31,8 @@
                 require: true
             },
             status: {},
-            isTopic: {}
+            isTopic: {},
+            isProperty: {}
         },
         components: {
             icon
@@ -56,6 +57,8 @@
                     const data = {};
                     if (that.isTopic) {
                         data.code = that.id;
+                    } else if (that.isProperty) {
+                        data.codes = that.id;
                     } else {
                         data.id = that.id;
                     }
