@@ -63,3 +63,9 @@ export const storePayRecordList = ['/store/deposit/query', { methods: 'get' }];
 export const querySupplierByProductId = ['/order/orderProduct/queryByProductId', { methods: 'post' }];
 //导出对账单
 export const exportStorePayRecordList = '/admin/order/orderProduct/export';
+//提现申请审核列表
+export const queryUserWithdrawList = '/user/withdraw/queryUserWithdrawList';
+// 同意/拒绝提现申请
+export const updateApply = ['/user/withdraw/updateApply', { methods: 'get' }];
+// 查看账户明细
+export const findUserWithdrawById = ['/user/withdraw/findUserWithdrawById', { methods: 'get' }];

@@ -202,11 +202,11 @@
                     that.$message.warning('请输入银行卡号!');
                     return;
                 }
-                const reg = /^([1-9]{1})(\d{14}|\d{18})$/;
-                if (!reg.test(that.form.bankCard)) {
-                    that.$message.warning('请输入合法的银行卡号!');
-                    return;
-                }
+                // const reg = /^([1-9]{1})(\d{14}|\d{18})$/;
+                // if (!reg.test(that.form.bankCard)) {
+                //     that.$message.warning('请输入合法的银行卡号!');
+                //     return;
+                // }
                 if (!that.form.bankUsername) {
                     that.$message.warning('请输入持卡人姓名!');
                     return;
