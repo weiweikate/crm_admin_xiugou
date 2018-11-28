@@ -1,4 +1,4 @@
-<script src="../../../../../webpack.dll.conf.js"></script>
+<!--<script src="../../../../../webpack.dll.conf.js"></script>-->
 <template>
     <div class="supplier">
         <v-breadcrumb :nav="['经销商会员管理','供应商管理']"></v-breadcrumb>
@@ -6,6 +6,27 @@
             <el-form ref="form" :inline="true" :model="form">
                 <el-form-item prop="name" label="供应商名称" label-width="120">
                     <el-input style="width:200px" placeholder="请输入供应商名称" v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item prop="loginName" label="供应商账号">
+                    <el-input v-model="form.loginName" placeholder="请输入供应商账号"></el-input>
+                </el-form-item>
+                <el-form-item label="最近登录时间" prop="time">
+                    <el-date-picker
+                        v-model="form.time"
+                        type="daterange"
+                        value-format="yyyy-MM-dd"
+                        format="yyyy/MM/dd"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="状态" prop="status">
+                    <el-select v-model="form.status">
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="启用" value="1"></el-option>
+                        <el-option label="停用" value="2"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item prop="mobile" label="手机号" label-width="120">
                     <el-input style="width:200px" placeholder="请输入手机号" v-model="form.mobile"></el-input>
@@ -27,6 +48,7 @@
                 <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%">
                     <el-table-column type="index" label="供应商编号" width="100" align="center"></el-table-column>
                     <el-table-column prop="code" label="供应商ID" width="100" align="center"></el-table-column>
+                    <el-table-column prop="loginName" label="供应商账号" width="100" align="center"></el-table-column>
                     <el-table-column prop="name" label="供应商名称" align="center"></el-table-column>
                     <el-table-column label="供应商类型" width="100" align="center">
                         <template slot-scope="scope">
@@ -44,6 +66,13 @@
                             </template>
                         </template>
                     </el-table-column>
+                    <el-table-column prop="lastLoginTime" label="最近登录时间" width="150" align="center">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.lastLoginTime">{{scope.row.lastLoginTime  | dateformat('YYYY-MM-DD HH:mm:ss')}}</span>
+                            <span v-else>null</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="createName" label="创建者" width="100" align="center"></el-table-column>
                     <el-table-column label="状态" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.status==1">正常</template>
@@ -110,6 +139,7 @@
 </template>
 
 <script>
+    import Vue from 'vue';
     import vBreadcrumb from '../../common/Breadcrumb.vue';
     import icon from '../../common/ico.vue';
     import region from '../../common/Region';
@@ -119,6 +149,10 @@
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http';
 
+    Vue.filter('dateformat', function(dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
+        return moment(dataStr).format(pattern)
+
+    })
     export default {
         components: {
             vBreadcrumb, icon, region
@@ -135,7 +169,10 @@
                 formLabelWidth: '100px',
                 form: {
                     name: '',
-                    mobile: ''
+                    mobile: '',
+                    time: '',
+                    loginName: '',
+                    status: ''
                 },
                 exportForm: {},
                 selected: '',
@@ -164,6 +201,8 @@
                 data.provinceCode = this.address[0] == '0' ? '' : this.address[0];
                 data.cityCode = this.address[1];
                 data.areaCode = this.address[2];
+                data.startTime = data.time[0];
+                data.startEndTime = data.time[1];
                 that.tableLoading = true;
                 request.queryProductSupplierList(data).then(res => {
                     that.tableLoading = false;
