@@ -82,6 +82,8 @@ export const orderDetail = '/order/lookDetail';
 // 订单发货
 // export const orderSendOut = '/order/sendOut';
 export const orderSendOut = '/order/pushCloudStorehouse';
+// 虚拟发货
+export const sendGoods = '/order/sendOut';
 export const orderSign = '/order/sign';
 
 // 售后
@@ -104,5 +106,7 @@ export const refundAmounts = '/order/returnProduct/refundAmounts';
 // 拒绝售后
 export const refuse = '/order/returnProduct/refuse';
 // 云仓换货发货
-export const sendOut = '/order/returnProduct/sendOut';
+export const sendOut = '/order/returnProduct/pushCloudSend';
+// 虚拟发货
+export const sendFictitiousOut = '/order/returnProduct/sendFictitiousOut';
 

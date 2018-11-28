@@ -6,7 +6,7 @@
             <el-table-column prop="version" label="版本号" align="center"></el-table-column>
             <el-table-column prop="createTime" label="上传时间" align="center">
                 <template slot-scope="scope">
-                    {{scope.row.createTime | formatDate}}
+                    {{scope.row.createTime | formatDateAll}}
                 </template>
             </el-table-column>
             <el-table-column prop="coerce" label="是否强制更新" align="center">

@@ -23,7 +23,7 @@
                     <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
                         <i class="el-icon-bell" @click="getMsg"></i>
                     </el-tooltip>
-                    <span class="btn-bell-badge" v-if="message"></span>
+                    <span class="btn-bell-badge" ref="messageBell" v-if="message != 0"></span>
                 </div>
                 <!-- 用户头像 -->
                 <div v-if="user.face" class="user-avator"><img :src="user.face"></div>
@@ -60,7 +60,8 @@ export default {
             collapse: false,
             fullscreen: false,
             showMsg: false,
-            message: 0
+            message: 0,
+            a: 0
         };
     },
     computed: {
@@ -80,7 +81,7 @@ export default {
     // 用户名下拉菜单选择事件
         handleCommand(command) {
             if (command === 'loginout') {
-                this.$store.dispatch('FedLogOut').then(()=>{
+                this.$store.dispatch('FedLogOut').then(() => {
                     this.$router.push('/login');
                 });
             } else if (command === 'editMangerMsg') {
@@ -126,16 +127,19 @@ export default {
         },
         // 获取未读消息数量
         getNoReadNum() {
+            const that = this;
             request.queryNewMessageCount({}).then(res => {
                 this.message = res.data || 0;
-                console.log(this.message);
             }).catch(err => {
                 console.log(err);
             });
             clearInterval(timer);
             var timer = setInterval(function() {
                 request.queryNewMessageCount({}).then(res => {
-                    this.message = res.data || 0;
+                    that.$nextTick(() => {
+                        that.message = res.data || 0;
+                        that.$refs['messageBell'];
+                    });
                 }).catch(err => {
                     console.log(err);
                 });
@@ -143,7 +147,7 @@ export default {
         },
         // 获取消息
         async getMsg() {
-            if (this.message === 0) return;
+            // if (this.message === 0) return;
             await this.$refs.msg.getAllMsg();
             this.showMsg = true;
         }
