@@ -72,8 +72,8 @@
             };
         },
         activated() {
-            this.id = this.$route.query.memberAccMsg.memberId || sessionStorage.getItem('memberAccMsg').memberId;
-            this.name = this.$route.query.memberAccMsg.nickname || sessionStorage.getItem('memberAccMsg').nickname;
+            this.id = this.$route.query.memberAccMsg.memberId || '';
+            this.name = this.$route.query.memberAccMsg.nickname || '';
             this.getList();
         },
         methods: {

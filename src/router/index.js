@@ -393,7 +393,21 @@ export const asyncRouterMap = [
                 name: 'groupBaseParamsSet',
                 path: '/groupBaseParamsSet',
                 component: resolve => require(['../components/page/BasePramConfig/GroupBaseParamsSet.vue'], resolve),
+                meta: { title: '拼店基础设置' }
+            },
+            {
+                hidden: true,
+                name: 'groupBaseParam',
+                path: '/groupBaseParam',
+                component: resolve => require(['../components/page/BasePramConfig/groupBaseParamSet/baseParamSet.vue'], resolve),
                 meta: { title: '拼店基础参数设置' }
+            },
+            {
+                hidden: true,
+                name: 'cycle',
+                path: '/cycle',
+                component: resolve => require(['../components/page/BasePramConfig/groupBaseParamSet/cycle.vue'], resolve),
+                meta: { title: '拼店结算周期设置' }
             },
             {
                 name: 'backAddress',
@@ -538,12 +552,12 @@ export const asyncRouterMap = [
         name: 'settlement',
         meta: { title: '结算管理', icon: 'icon-shezhi', roles: ['admin'] },
         children: [
-            // {
-            //     name: 'withdrawalAudit',
-            //     path: '/withdrawalAudit',
-            //     component: resolve => require(['../components/page/SettlementMange/WithdrawalAudit.vue'], resolve),
-            //     meta: { title: '提现申请审核' }
-            // },
+            {
+                name: 'withdrawalAudit',
+                path: '/withdrawalAudit',
+                component: resolve => require(['../components/page/SettlementMange/WithdrawalAudit.vue'], resolve),
+                meta: { title: '提现申请审核' }
+            },
             // {
             //     name: 'refundMange',
             //     path: '/refundMange',
