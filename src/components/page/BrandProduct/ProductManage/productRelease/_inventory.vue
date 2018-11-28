@@ -5,11 +5,12 @@
             <el-form-item v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
                 <div v-if="v.type == 1">
                     <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
-                        <el-checkbox v-model="v1.value">{{v1.label}}</el-checkbox>
+                        <el-checkbox v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
                         <template v-if="v1.imgUrl == ''">
                             <el-upload
                                 :action="imgUpload"
                                 :show-file-list="false"
+                                :before-upload="beforeAvatarUpload"
                                 :on-success="uploadSuccess"
                             >
                                 <span class="primary-text" @click="beforeUpload(k, k1)">上传图片</span>
@@ -22,7 +23,7 @@
                     </div>
                 </div>
                 <div v-else-if="v.type == 2" class="sales-type">
-                    <el-checkbox v-for="(v1, k1) in v.options" :key="`${k}--${k1}`" v-model="v1.value">{{v1.label}}</el-checkbox>
+                    <el-checkbox v-for="(v1, k1) in v.options" :key="`${k}--${k1}`" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
                 </div>
                 <div class="primary-text">
                     <span @click="addAttrValue(k)">新建子属性</span>
@@ -77,7 +78,9 @@
 <script>
     import request from '@/http/http';
     import * as api from '@/api/api.js';
+    import { beforeAvatarUpload } from '@/JS/commom.js';
     export default {
+        mixins: [beforeAvatarUpload],
         data() {
             return {
                 form: {},
@@ -141,9 +144,7 @@
             },
             // 删除图片
             deleteImg(bIndex, mIndex) {
-                const bInd = this.rowIndex.bIndex || 0;
-                const mInd = this.rowIndex.mIndex || 0;
-                this.salesAttrArr[bInd].options[mInd].imgUrl = '';
+                this.salesAttrArr[bIndex].options[mIndex].imgUrl = '';
             },
             // 改变表头单位
             changeTableTitle(val) {
@@ -179,6 +180,11 @@
             padding: 0 25px;
             box-sizing: border-box;
             margin-bottom: 20px;
+        }
+        .def-param{
+            display: inline-block;
+            max-width: 215px;
+            vertical-align: middle;
         }
         .img-type{
             width: 600px;
