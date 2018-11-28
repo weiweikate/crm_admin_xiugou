@@ -174,7 +174,7 @@ export const updateActivityPackageSpecPriceStock = ['/operator/activityPackageSp
 export const queryCouponByType = ['/coupon/queryByType', { methods: 'get' }]; // 查询优惠券列表
 // 属性
 // 条件查询分类属性
-export const queryCategoryProperty = '/product/categoryProperty/queryCategoryProperty';
+export const queryCategoryProperty = '/product/categoryProperty/queryCategoryPropertyPageList';
 // 新增/编辑分类属性
 export const saveCategoryProperty = '/product/categoryProperty/save';
 // 删除分类属性

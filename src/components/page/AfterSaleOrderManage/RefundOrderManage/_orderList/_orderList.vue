@@ -1,6 +1,6 @@
 <template>
     <div class="refund-order-list" v-loading="pageLoading">
-        <el-table border>
+        <el-table border :data="tableData">
             <el-table-column label="退款单号" align="center"></el-table-column>
             <el-table-column label="售后单号" align="center"></el-table-column>
             <el-table-column label="仓库订单号" align="center"></el-table-column>
@@ -32,7 +32,7 @@
         </div>
         <el-dialog title="手工退款备注" :visible.sync="mask">
             <el-form>
-                <el-input type="textarea" placeholder="请输入手工退款账号等信息"></el-input>
+                <el-input type="textarea" v-model="remark" placeholder="请输入手工退款账号等信息" @input="inputRemark" maxlength="50"></el-input>
                 <span>{{count}}/50</span>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -85,7 +85,8 @@
                 afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭'],
                 ids: [],
                 mask: false,
-                count: 0
+                count: 0,
+                remark: ''
             };
         },
         methods: {
@@ -97,19 +98,7 @@
                 this.pageLoading = true;
                 request.queryOrderPageList(this.data).then(res => {
                     this.pageLoading = false;
-                    for (const i in res.data.data) {
-                        // res.data.data[i].isShowPop = false;
-                        res.data.data[i].starColor =
-                            this.markArr[res.data.data[i].adminStars - 1] == undefined
-                                ? '#ccc'
-                                : this.markArr[res.data.data[i].adminStars - 1].label;
-                        // res.data.data[i].price =
-                        //     res.data.data[i].totalPrice == null
-                        //         ? '0'
-                        //         : res.data.data[i].totalPrice;
-                        res.data.data[i].orderProductList = res.data.data[i].orderProductList || [];
-                        this.tableData.push(res.data.data[i]);
-                    }
+                    this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                 }).catch(err => {
                     this.pageLoading = false;
@@ -187,12 +176,18 @@
                 if (num == 1) {
                     this.mask = true;
                 } else {
-
+                    this.refundRequest();
                 }
+            },
+            refundRequest() {
+
+            },
+            inputRemark() {
+                this.count = this.remark.length;
             },
             // 手工退款
             refundSure() {
-
+                this.refundRequest();
             }
         }
     };
