@@ -136,6 +136,9 @@
                 return api.uploadImg;
             }
         },
+        created() {
+            console.log(666);
+        },
         methods: {
             // 添加属性值
             addAttrValue(index) {

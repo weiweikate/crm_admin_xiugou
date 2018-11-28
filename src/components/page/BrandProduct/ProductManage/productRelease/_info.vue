@@ -109,6 +109,28 @@
                 <span class="grey-text ml10"> 注：库存为0时是否自动下架</span>
             </el-form-item>
             <div class="pro-title">标签信息</div>
+            <div class="tag-btn-group">
+                <el-button-group v-loading="tagLoading">
+                    <el-button v-for="(v, k) in tagTypeArr" :key="k" :type="v.selected?'primary':''" @click="getAllTags(v.id,k, v.selected)">{{v.name}}</el-button>
+                </el-button-group>
+            </div>
+            <div class="selected-tag">
+                <span v-if="selectedTagArr.length == 0" class="tag-tip">请选择标签</span>
+                <el-tag class="tag" type="info" closable v-for="(v,k) in selectedTagArr" :key="k"
+                        @close="handleClose(k,v)">{{v.label}}
+                </el-tag>
+            </div>
+            <div class="add-tag">
+                <el-input style="width:215px;margin-right:20px" v-model="tagName"
+                          placeholder="请输入标签/至多可添加20个"></el-input>
+                <el-button type="primary" @click="addTag">添加标签</el-button>
+            </div>
+            <div class="tag-list">
+                <span v-if="tagArr.length == 0" class="tag-tip">请添加标签</span>
+                <el-button style="margin-bottom:10px" v-for="(v,k) in tagArr" :key="k" @click="insertTag(v)"
+                           :disabled="v.selected" :class="{'selected-btn':v.selected}">{{v.label}}
+                </el-button>
+            </div>
         </el-form>
         <!--区域选择-->
         <choose-area @getArea='chooseUnSupportArea' :chooseData="unSupportAreasData" :preData="unSupportAreasData" :isSingleLine="true" v-if="unSupportMask"></choose-area>
@@ -145,7 +167,12 @@
                 unSupportAreasData: [], // 不配送区域
                 unSupportsssAreasData: [], // 不配送区域
                 imgList: [], // 商品主图
-                imgInfoList: [] // 商品详情
+                imgInfoList: [], // 商品详情
+                tagTypeArr: [], // 标签类型
+                tagLoading: false, // 标签loading
+                selectedTagArr: [],
+                tagArr: [],
+                tagName: ''
             };
         },
         computed: {
@@ -237,7 +264,34 @@
                 const arr = str.split(',');
                 arr.splice(arr.length - 1, 1);
                 this.unSupportsssAreasData = arr;
-            }
+            },
+            // 获取所有标签
+            getAllTags(val, key, status) {
+                if (this.form.secCategoryId === '') return;
+                this.tagTypeArr.forEach(v => {
+                    v.selected = false;
+                });
+                this.tagTypeArr[key].selected = status;
+                this.tagLoading = true;
+                request.querySysTagLibraryList({ typeId: val, secCategoryId: this.form.secCategoryId }).then(res => {
+                    this.tagLoading = false;
+                    this.tagArr = [];
+                    this.tagTypeArr[key].selected = !this.tagTypeArr[key].selected;
+                    res.data[0].sysTagLibraryVOList.forEach(v => {
+                        this.tagArr.push({ label: v.name, value: v.id });
+                    });
+                    this.tagArr.forEach((v, k) => {
+                        this.selectedTagArr.forEach((v1, k1) => {
+                            if (v.value == v1.value) {
+                                v.selected = true;
+                            }
+                        });
+                    });
+                }).catch(err => {
+                    this.tagLoading = false;
+                    console.log(err);
+                });
+            },
         }
     };
 </script>
@@ -296,6 +350,45 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             margin-bottom: 10px;
+        }
+        .tag-btn-group{
+            margin-top: 15px;
+        }
+        .selected-tag {
+            width: 100%;
+            padding: 6px 22px;
+            box-sizing: border-box;
+            border: 1px solid #e8edf0;
+            border-radius: 5px;
+            margin-top: 20px;
+            .tag {
+                margin-right: 5px;
+            }
+            .tag-tip {
+                font-size: 14px;
+                color: #9a9a9a;
+            }
+        }
+        .add-tag {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .tag-list {
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 1px solid #e8edf0;
+            border-radius: 5px;
+            margin: 10px 0 20px 0;
+            .tag-tip {
+                font-size: 14px;
+                color: #9a9a9a;
+            }
+            .selected-btn {
+                background-color: #409EFF;
+                border-color: #409EFF;
+                color: #fff;
+            }
         }
     }
 </style>

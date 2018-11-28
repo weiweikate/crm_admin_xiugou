@@ -846,7 +846,7 @@ export const asyncRouterMap = [
                 name: 'releaseProduct',
                 path: '/releaseProduct',
                 component: resolve => require(['../components/page/BrandProduct/ProductManage/ReleaseProduct.vue'], resolve),
-                meta: { title: '发布商品', noKeepAlive: true }
+                meta: { title: '发布商品' }
             },
             {
                 name: 'editProductInfo',

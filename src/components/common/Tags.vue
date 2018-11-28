@@ -5,7 +5,7 @@
                 <!--<router-link :to="item.path" class="tags-li-title">-->
                     <!--{{item.title}}-->
                 <!--</router-link>-->
-                <span class="tags-li-title" @click="$router.push({name: item.name,query: item.query })">
+                <span class="tags-li-title" @click="$router.push({path: item.path,query: item.query })">
                     {{item.title}}
                 </span>
                 <span class="tags-li-icon" @click="closeTags(index)"><i class="el-icon-close"></i></span>
@@ -44,7 +44,7 @@
                 const delItem = this.tagsList.splice(index, 1)[0];
                 const item = this.tagsList[index] ? this.tagsList[index] : this.tagsList[index - 1];
                 if (item) {
-                    this.$router.push({ name: item.name, query: item.query }) && delItem.path === this.$route.path;
+                    this.$router.push({ path: item.path, query: item.query }) && delItem.path === this.$route.path;
                 } else {
                     this.$router.push('/dashboard');
                 }
