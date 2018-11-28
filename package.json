@@ -6,7 +6,7 @@
     "private": true,
     "scripts": {
         "mock":"node server/mock.js",
-        "dev": "cross-env proxy=qa webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+        "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
         "dev:dev": "cross-env proxy=dev webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
         "dev:mock": "cross-env proxy=mock webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
         "build": "node build/build.js",

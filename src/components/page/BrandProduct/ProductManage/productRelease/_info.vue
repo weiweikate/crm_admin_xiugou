@@ -1,6 +1,6 @@
 <template>
     <div class="prod-message">
-        <el-form :model="form" ref="form" :rules="rules" label-position="right" label-width="100px">
+        <el-form :model="form" ref="form" :rules="rules" label-position="right" label-width="120px">
             <div class="pro-title">图文描述</div>
             <el-form-item label="商品主图">
                 <el-upload v-if="form.video === ''" list-type="picture-card" class="fl" :before-upload="beforeUploadVideo" :action="imgUpload" :show-file-list="false" :on-success="successUploadVideo">

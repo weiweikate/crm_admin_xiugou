@@ -71,16 +71,21 @@
             </el-form-item>
             <div class="pro-title">自然属性</div>
             <el-form-item>
-                <el-col :span="11" v-for="(v, k) in naturalAttribute" :key="k">
-                    <el-form-item :label="v.name">
-                        <el-select class="search-inp" filterable placeholder="请选择" v-model="v.value">
+                <el-col :span="11" v-for="(v, k) in naturalAttribute" :key="k" class="mb10">
+                    <el-form-item :label="v.name" style="position: relative">
+                        <el-select :disabled="v.defParam != ''" class="search-inp" filterable placeholder="请选择" v-model="v.value">
                             <el-option v-for="(v1, k1) in v.options" :key="`${k}-${k1}`" :label="v1.label" :value="v1.value"></el-option>
                         </el-select>
+                        <span class="primary-text" @click="addAttrValue(k)">添加属性值</span>
+                        <p v-if="v.defParam != ''" class="extra-attr pram-inp primary-text">
+                            <span class="over-hidden">{{v.defParam}}</span>
+                            <span @click="v.defParam = ''">删除</span>
+                        </p>
                     </el-form-item>
                 </el-col>
                 <el-col :span="11">
                     <div class="operate-natural-attr">
-                        <span>添加新属性</span>
+                        <span>添加主属性</span>
                         <span>|</span>
                         <span>刷新</span>
                     </div>
@@ -123,7 +128,7 @@
                 },
                 supplierArr: [{ label: '小米批发商', value: '1' }],
                 deliveryWarehouseArr: [{ label: '平台发货', value: '1' }],
-                naturalAttribute: [{ name: '尺寸', value: '', options: [{ label: 'XL', value: '1' }] }, { name: '重量', value: '', options: [{ label: '10kg', value: '1' }] }, { name: '颜色', value: '', options: [{ label: '红色', value: '1' }] }]
+                naturalAttribute: [{ name: '尺寸', value: '', options: [{ label: 'XL', value: '1' }], defParam: '' }, { name: '重量', value: '', options: [{ label: '10kg', value: '1' }], defParam: '' }, { name: '颜色', value: '', options: [{ label: '红色', value: '1' }], defParam: '' }]
             };
         },
         computed: {
@@ -132,6 +137,17 @@
             }
         },
         methods: {
+            // 添加属性值
+            addAttrValue(index) {
+                this.$prompt('请输入属性值', null, {
+                    showCancelButton: true
+                }).then(({ value }) => {
+                    this.naturalAttribute[index].value = '';
+                    this.naturalAttribute[index].defParam = value;
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
             // 下一步
             nextTip() {
                 this.$refs['form'].validate((valid) => {
@@ -141,7 +157,7 @@
                     //     console.log('error submit!!');
                     //     return false;
                     // }
-                    this.$emit('nextName', 'inventory')
+                    this.$emit('nextName', 'inventory');
                 });
             }
         }
@@ -159,8 +175,26 @@
             box-sizing: border-box;
             margin-bottom: 20px;
         }
+        .extra-attr {
+            position: absolute;
+            top: 80%;
+            left: 0px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            & :first-child{
+                display: inline-block;
+                max-width: 170px;
+            }
+            & :last-child{
+                display: inline-block;
+                width: 30px;
+                color: red;
+                margin-left: 10px;
+            }
+        }
         .pram-inp{
-            width: 215px;
+            max-width: 215px;
         }
         .operate-natural-attr{
             cursor: pointer;
