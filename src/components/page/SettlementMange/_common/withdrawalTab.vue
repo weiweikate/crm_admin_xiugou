@@ -22,6 +22,15 @@
                     <template v-else-if='scope.row.status==3'>驳回</template>
                 </template>
             </el-table-column>
+            <el-table-column prop='applyStatus' label="提现状态" align="center">
+                <template slot-scope="scope">
+                    <template v-if='scope.row.applyStatus==1'>待确认</template>
+                    <template v-else-if='scope.row.applyStatus==2'>交易待受理</template>
+                    <template v-else-if='scope.row.applyStatus==3'>交易已受理(成功)</template>
+                    <template v-else-if='scope.row.applyStatus==4'>交易受理失败(失败)</template>
+                    <template v-else>-</template>
+                </template>
+            </el-table-column>
             <el-table-column label="操作" align="center" width="300px">
                 <template slot-scope="scope">
                     <el-button @click="accountMsg(scope.row)" type="primary">账户明细</el-button>
@@ -139,6 +148,7 @@ export default {
             const data = {};
             data.userName = this.form.applyPeople;
             data.status = this.form.status == 'all' ? '' : this.form.status;
+            data.applyStatus = this.form.applyStatus;
             data.withdrawNum = this.form.withdraNo;
             data.startTime = this.form.time.length == 0 ? '' : utils.formatTime(this.form.time[0], 1);
             data.endTime = this.form.time.length == 0 ? '' : utils.formatTime(this.form.time[1], 1);
