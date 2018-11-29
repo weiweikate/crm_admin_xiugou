@@ -11,11 +11,11 @@ export const deliveryOrderDetail = ['/orderManagement/delivery/deliveryNo', { me
 // 查询支付单列表
 export const queryPaymentsOrderPageList = '/orderManagement/payments/query';
 // 订单详情
-export const orderDetail = ['/orderManagement/orders/warehouseOrderNo', { methods: 'get' }];
+export const orderDetail = '/order/lookDetail';
 // 取消订单
 export const cancelOrder = '/orderManagement/orders/cancel';
 // 订单发货
-export const orderSendOut = '/orderManagement/orders/pushToWarehouse';
+export const orderSendOut = '/order/pushCloudStorehouse';
 // 虚拟发货
 export const sendGoods = '/order/sendOut';
 export const orderSign = '/order/sign';
