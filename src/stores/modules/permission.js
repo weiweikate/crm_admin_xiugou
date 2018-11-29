@@ -12,7 +12,7 @@ function hasPermission(auth, roles, route) {
     } else if (auth.includes(route.name)) {
         return true;
     } else {
-        return false;
+        return true;
     }
 }
 
