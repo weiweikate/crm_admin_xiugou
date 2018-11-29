@@ -44,7 +44,7 @@
                 <!--<el-table-column prop="id" label="是否开启推荐" align="center"></el-table-column>-->
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button type="primary" @click='showInfo(scope.row)' v-auth="'pindian.recruitShopManage.ckxq"'">查看详情</el-button>
+                        <el-button type="primary" @click='showInfo(scope.row)' v-auth="'pindian.recruitShopManage.ckxq'">查看详情</el-button>
                     </template>
                 </el-table-column>
             </el-table>
