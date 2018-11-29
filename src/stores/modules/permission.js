@@ -12,7 +12,7 @@ function hasPermission(auth, roles, route) {
     } else if (auth.includes(route.name)) {
         return true;
     } else {
-        return true;
+        return false;
     }
 }
 
@@ -59,7 +59,8 @@ const permission = {
                 } else {
                     accessedRouters = filterAsyncRouter(asyncRouterMap, auth, roles);
                 }
-                commit('SET_ROUTERS', accessedRouters);
+                console.log('用户权限',accessedRouters)
+                commit('SET_ROUTERS', accessedRouters.concat([{ path: '*', redirect: '/404', hidden: true }]));
                 resolve();
             });
         }

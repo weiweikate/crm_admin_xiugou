@@ -458,7 +458,7 @@ export const asyncRouterMap = [
         path: '/showValue',
         component: Layout,
         name: 'showValue',
-        meta: { title: '秀值模块', icon: 'icon-shezhi', roles: ['admin'] },
+        meta: { title: '秀值模块', icon: 'icon-shezhi'},
         children: [
             {
                 name: 'taskHome',
@@ -490,7 +490,7 @@ export const asyncRouterMap = [
         path: '/settlement',
         component: Layout,
         name: 'settlement',
-        meta: { title: '结算管理', icon: 'icon-shezhi', roles: ['admin'] },
+        meta: { title: '结算管理', icon: 'icon-shezhi' },
         children: [
             {
                 name: 'withdrawalAudit',
@@ -1539,7 +1539,7 @@ export const asyncRouterMap = [
         ]
     },
 
-    { path: '*', redirect: '/404', hidden: true }
+    //{ path: '*', redirect: '/404', hidden: true }
 ];
 
 export const constantRouterMap = [
