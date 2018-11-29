@@ -12,7 +12,7 @@
             <el-table-column label="实际退款金额" align="center"></el-table-column>
             <el-table-column label="创建时间" align="center"></el-table-column>
             <el-table-column label="退款备注" align="center"></el-table-column>
-            <el-table-column label="操作" align="center">
+            <el-table-column label="操作" align="center" min-width="150px">
                 <template slot-scope="scope">
                     <el-button type="primary" @click="refund(scope.row.id,1)">手工退款</el-button>
                     <el-button type="success" @click="refund(scope.row.id,2)">退款</el-button>
@@ -33,7 +33,7 @@
         <el-dialog title="手工退款备注" :visible.sync="mask">
             <el-form>
                 <el-input type="textarea" v-model="remark" placeholder="请输入手工退款账号等信息" @input="inputRemark" maxlength="50"></el-input>
-                <span>{{count}}/50</span>
+                <span class="count">{{count}}/50</span>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="refundSure">确 认</el-button>
@@ -262,6 +262,17 @@
         }
         .block {
             margin: 20px 0px;
+        }
+        /deep/.el-dialog{
+            .count{
+                position: absolute;
+                right: 30px;
+                top: 155px;
+            }
+            .el-textarea__inner{
+                height: 100px;
+                resize: none;
+            }
         }
     }
 </style>

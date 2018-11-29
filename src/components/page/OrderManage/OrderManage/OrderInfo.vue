@@ -10,8 +10,8 @@
                         <span>{{orderMsg.orderNum}}</span>
                     </div>
                     <div class="item">
-                        <span>仓库订单号</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <div>仓库订单号</div>
+                        <div>{{orderMsg.orderNum}}</div>
                     </div>
                     <div class="item">
                         <span>支付方式</span>
@@ -194,7 +194,7 @@
                             <td :rowspan="v.rows" v-if="k1==0" style="width: 400px">
                                <div class="name">
                                     <img :src="v.specImg" alt="">
-                                    <span class="pro-name">{{v.productName}}</span>
+                                    <span class="pro-name color-blue" @click="$router.push({path:'/productInfo',query:{productInfoId:v.productId}})">{{v.productName}}</span>
                                     <span class="pro-spec">{{v.spec}}</span>
                                 </div>
                             </td>
@@ -395,6 +395,10 @@
                     width: 270px;
                 }
             }
+        }
+        .color-blue{
+            color: #33b4ff;
+            cursor: pointer;
         }
     }
 </style>

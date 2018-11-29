@@ -7,7 +7,7 @@
                     <div class="title">订单基础信息</div>
                     <div class="item">
                         <span>平台订单号</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>1111111111111111111111</span>
                     </div>
                     <div class="item">
                         <span>仓库订单号</span>
@@ -166,7 +166,7 @@
 
         created() {
             // 获取订单信息
-            this.orderId = this.$route.query.orderInfoId;
+            this.orderId = this.$route.query.sendedOrderInfoId;
             this.getInfo();
         },
         methods: {
@@ -203,12 +203,13 @@
         }
         .wrap{
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             .item-wrap{
                 .item{
                     font-size: 14px;
                     color: #666666;
                     line-height: 30px;
+                    margin-right: 100px;
                     span:first-child{
                         display: inline-block;
                         width: 100px;

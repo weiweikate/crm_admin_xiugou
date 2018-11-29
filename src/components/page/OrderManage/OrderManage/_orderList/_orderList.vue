@@ -248,8 +248,9 @@
                 text-align: center;
             }
             .head{
-                background: #33b4ff;
-                color: #fff;
+                background: #eee;
+                color: #000;
+                font-size: 14px;
                 text-align: left;
                 div{
                     display: inline-block;
