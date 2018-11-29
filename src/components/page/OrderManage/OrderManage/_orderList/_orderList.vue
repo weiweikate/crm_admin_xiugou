@@ -16,11 +16,11 @@
                 <span>订单号：{{v.orderNum}}</span>
                 <span style="margin-left:30px">创建时间：{{v.createTime|formatDateAll}}</span>
                 <div class="operate-btn-group">
-                    <span v-if='v.status == 2&&v.cloudHadSend==0' @click="sendGoods(v)" style="margin-right: 15px">虚拟发货</span>
-                    <span v-if='v.status == 2&&v.cloudHadSend==0' @click="pushCloud(v)">推送云仓</span>
-                    <span @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
+                    <span v-if='v.status == 2&&v.cloudHadSend==0' v-auth="'order.orderList.xnfh'" @click="sendGoods(v)" style="margin-right: 15px">虚拟发货</span>
+                    <span v-if='v.status == 2&&v.cloudHadSend==0' v-auth="'order.orderList.tsyc'" @click="pushCloud(v)">推送云仓</span>
+                    <span @click="orderInfo(v)" style="margin:0 15px 0 15px" v-auth="'order.orderList.ddxq'">订单详情</span>
                     <el-popover placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
-                                        <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
+                                        <span slot="reference" style="cursor:pointer" v-auth="'order.orderList.bj'">标记 &nbsp <span class="star"
                                                                                                      :style="{color:v.starColor}">★</span></span>
                         <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
                               :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
