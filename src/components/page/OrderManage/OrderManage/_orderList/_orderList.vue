@@ -1,81 +1,79 @@
 <template>
     <div class="product-order-list" v-loading="pageLoading">
-        <el-table v-if="tableData.length==0" border>
-            <el-table-column label="商品信息" align="center"></el-table-column>
-            <el-table-column label="单价  元" align="center"></el-table-column>
-            <el-table-column label="订单金额" align="center"></el-table-column>
-            <el-table-column label="收货信息" align="center"></el-table-column>
-            <el-table-column label="发货信息" align="center"></el-table-column>
-            <el-table-column label="发票信息" align="center"></el-table-column>
-            <el-table-column label="操作" align="center"></el-table-column>
-        </el-table>
-        <table v-else class="order-list-table">
-            <thead>
-                <tr>
-                    <td>商品信息</td>
-                    <td>单价<span class="marl20">元</span></td>
-                    <td>订单金额</td>
-                    <td>收货信息</td>
-                    <td>发货信息</td>
-                    <td>发票信息</td>
-                    <td>操作</td>
-                </tr>
-            </thead>
-            <tbody v-for="(v,k) in tableData" :key="k">
-                <tr>
-                    <td colspan="7" class="head">
-                        <div><el-checkbox @change="orderCheckBox(v)" v-model="v.checked"></el-checkbox><span class="marl20">平台订单号 </span><span class="marl20">{{v.orderNum}}</span></div>
-                        <div>仓库订单号 <span class="marl20">{{v.orderNum}}</span></div>
-                        <div>下单时间 <span class="marl20">{{v.createTime|formatDateAll}}</span></div>
-                        <div>
-                            <el-popover v-auth="'order.orderList.bj'" placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
-                                            <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
-                                                                                                         :style="{color:v.starColor}">★</span></span>
-                                <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
-                                      :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
-                                <el-input v-model="v.adminRemark" placeholder="请输入备注"></el-input>
-                            </el-popover>
-                        </div>
-                    </td>
-                </tr>
-                <tr v-for="(value,index) in v.orderProductList" :key="index">
-                    <td style="width: 400px">
+        <div class="tab-title">
+            <span class="spec" :style="{width:w.name,minWidth:w.minWidth}">产品名称</span>
+            <span class="spec" :style="{width:w.price,minWidth:w.minWidth}">单价</span>
+            <span class="spec" :style="{width:w.num,minWidth:w.minWidth}">数量</span>
+            <span class="spec" :style="{width:w.consignee,minWidth:w.minWidth}">收货人</span>
+            <span class="spec" :style="{width:w.status,minWidth:w.minWidth}">交易状态</span>
+            <span class="spec" :style="{width:w.collection,minWidth:w.minWidth}">实收款</span>
+            <span class="spec" :style="{width:w.shipper,minWidth:w.minWidth}">发货方</span>
+            <span class="spec" :style="{width:w.operate,minWidth:w.minWidth}">操作</span>
+        </div>
+        <div v-for="(v,k) in tableData" :key="k" class="tab-wrap">
+            <div class="tab-content-title">
+                <el-checkbox @change="orderCheckBox(v)" v-model="v.checked"></el-checkbox>
+                <span>订单号：{{v.orderNum}}</span>
+                <span style="margin-left:30px">创建时间：{{v.createTime|formatDateAll}}</span>
+                <div class="operate-btn-group">
+                    <span v-if='v.status == 2&&v.cloudHadSend==0' @click="sendGoods(v)" style="margin-right: 15px">虚拟发货</span>
+                    <span v-if='v.status == 2&&v.cloudHadSend==0' @click="pushCloud(v)">推送云仓</span>
+                    <span @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
+                    <el-popover placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
+                                        <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
+                                                                                                     :style="{color:v.starColor}">★</span></span>
+                        <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
+                              :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
+                        <el-input v-model="v.adminRemark" placeholder="请输入备注"></el-input>
+                    </el-popover>
+                </div>
+            </div>
+            <div class="tab-content">
+                <div class="left">
+                    <div v-for="(value,index) in v.orderProductList" :key="index" class="bar">
                         <div class="name">
                             <img :src="value.specImg" alt="">
-                            <div class="pro-name">{{value.productName}}</div>
-                            <div class="pro-spec">{{value.spec}}</div>
-                            <div style="clear: both"></div>
+                            <span class="pro-name">{{value.productName}}</span>
+                            <span class="pro-spec">{{value.spec}}</span>
                         </div>
-                    </td>
-                    <td>
-                        <span>¥{{value.price}}</span>
-                        <span class="num">{{value.num}}</span>
-                    </td>
-                    <td class="text-left" :rowspan="v.orderProductList.length" v-if="index==0">
-                        应付金额：{{v.totalPrice}}
-                    </td>
-                    <td class="text-left" :rowspan="v.orderProductList.length" v-if="index==0">
-                        <div>用户账号：13333333333</div>
-                        <div>收货人姓名：{{v.receiver}}</div>
-                        <div>客服备注：{{v.remark}}</div>
-                    </td>
-                    <td class="text-left" :rowspan="v.orderProductList.length" v-if="index==0">
-                        <div>供应商：13333333333</div>
-                        <div>发货仓库：{{v.receiver}}</div>
-                        <div>推送状态：{{v.remark}}</div>
-                        <div>锁定状态：{{v.remark}}</div>
-                    </td>
-                    <td class="text-left" :rowspan="v.orderProductList.length" v-if="index==0">
-                        <div>开具发票：13333333333</div>
-                    </td>
-                    <td :rowspan="v.orderProductList.length" v-if="index==0">
-                        <div class="order-status">待付款</div>
-                        <div class="color-blue" v-if="v.status<5">取消订单</div>
-                        <div class="color-blue" @click="$router.push({path:'/orderInfo',query:{orderInfoId:v.id}})">订单详情</div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        <div class="price">{{value.price}}</div>
+                        <div class="num">{{value.num}}</div>
+                        <div class="consignee"><span>{{v.receiver}}<br>{{v.recevicePhone}}</span></div>
+                    </div>
+                </div>
+                <div class="center">
+                    <div class="status"
+                         :style="{height:120*v.orderProductList.length+v.orderProductList.length-1+'px',lineHeight:120*v.orderProductList.length+v.orderProductList.length-1+'px'}">
+                        <template v-if='v.status == 1'>待支付</template>
+                        <template v-if='v.status == 2'>待发货</template>
+                        <template v-if='v.status == 3'>待确认</template>
+                        <template v-if='v.status == 4'>确认收货</template>
+                        <template v-if='v.status == 5'>已完成</template>
+                        <template v-if='v.status == 6'>已关闭(退款关闭)</template>
+                        <template v-if='v.status == 7'>已关闭(用户关闭)</template>
+                        <template v-if='v.status == 8'>已关闭(超时关闭)</template>
+                    </div>
+                    <div class="collection"
+                         :style="{height:120*v.orderProductList.length+v.orderProductList.length-1+'px',paddingTop:120*v.orderProductList.length/2-30+'px'}">
+                        <span>{{(v.totalPrice + v.freightPrice || 0) | handleMoney}}<br>（含运费：{{(v.freightPrice||0) | handleMoney}}）</span>
+                    </div>
+                </div>
+                <div class="right">
+                    <div v-for="(value,index) in v.orderProductList" :key="index" class="bar">
+                        <div class="shipper">{{value.origin}}</div>
+                        <div class="operate">
+                            <template v-if="value.returnType">
+                                <!--退款 退货 换货处理-->
+                                <el-button @click='toAfterSale(value.returnProductId)' type="primary">{{`${returnTypeArr[Number(value.returnType)-1]}${afterSaleStatusArr[Number(value.returnProductStatus)-1]}`}}</el-button>
+                            </template>
+                            <template v-else>
+                                <template v-if="value.status==6">已完成</template>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="block">
             <el-pagination
                 background
@@ -87,6 +85,21 @@
                 :total="page.totalPage">
             </el-pagination>
         </div>
+        <!--虚拟发货-->
+        <el-dialog title="虚拟发货" :visible.sync="mask">
+            <el-form :model="form">
+                <el-form-item label="物流单号">
+                    <el-input v-model="form.expressNo" placeholder="请输入物流单号"></el-input>
+                </el-form-item>
+                <el-form-item label="物流公司">
+                    <el-input v-model="form.expressName" placeholder="请输入物流公司"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" :loading="btnLoading" @click="sendSure('form')">确 认</el-button>
+                <el-button @click="mask=false">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -130,7 +143,14 @@
                 returnTypeArr: ['退款', '退货', '换货'],
                 // 售后状态
                 afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭'],
-                ids: []
+                ids: [],
+                form: {
+                    expressName: '',
+                    expressNo: ''
+                },
+                mask: false,
+                sendId: '',
+                btnLoading: false
             };
         },
         methods: {
@@ -200,6 +220,28 @@
                     console.log(err);
                 });
             },
+            // 虚拟发货
+            sendGoods(row) {
+                this.mask = true;
+                this.sendId = row.id;
+            },
+            sendSure(formName) {
+                const data = this[formName];
+                data.id = this.sendId;
+                if (!data.expressName || !data.expressNo) {
+                    return this.$message.warning('请输入物流单号和物流公司');
+                }
+                this.btnLoading = true;
+                request.sendGoods(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.mask = false;
+                    this.btnLoading = false;
+                    this.getList(this.page.currentPage);
+                }).catch(err => {
+                    console.log(err);
+                    this.btnLoading = false;
+                });
+            },
             // 订单详情
             orderInfo(row) {
                 sessionStorage.setItem('orderInfoId', row.id);
@@ -234,73 +276,189 @@
 
 <style lang='less' scoped>
     .product-order-list {
-        .order-list-table {
-            font-size:12px;
-            width: 100%;
-            color:#606266;
-            border: 1px solid #ebeef5;
-            border-collapse: collapse;
+        .tab-title {
+            height: 60px;
+            line-height: 60px;
+            border-bottom: 1px solid #eee;
+            background-color: #f7f7f7;
             margin-bottom: 20px;
-            line-height: 23px;
-            td {
-                border: 1px solid #ebeef5;
-                padding: 8px;
-                text-align: center;
-            }
-            .head{
-                background: #33b4ff;
-                color: #fff;
-                text-align: left;
-                div{
-                    display: inline-block;
-                    width: 20%;
-                }
-            }
-            .marl20{
-                margin-left: 20px;
-            }
-            .name {
-                float: left;
-                position: relative;
+            .spec {
                 display: inline-block;
-                height: 100px;
-                text-align: left;
-                img {
-                    position: absolute;
-                    width: 100px;
-                    height: 100px;
-                    border-radius: 5px;
-                    border: 1px solid #eee;
-                }
-                .pro-name {
-                    position: absolute;
-                    top: 5px;
-                    left: 115px;
-                    width: 270px;
-                }
-                .pro-spec {
-                    position: absolute;
-                    left: 115px;
-                    bottom:5px;
-                    width: 270px;
-                }
-            }
-            .num {
-              margin-left: 20px;
-            }
-            .order-status{
-                margin-bottom: 10px;
-            }
-            .color-blue{
-                color: #33b4ff;
-                cursor: pointer;
-            }
-            .text-left{
-                text-align: left;
+                text-align: center;
+                box-sizing: border-box;
             }
         }
-        .block {
-            margin: 20px 0px;
+        .tab-wrap {
+            border: 1px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            .tab-content-title {
+                width: 100%;
+                height: 40px;
+                background-color: #f7f7f7;
+                padding: 0 18px;
+                line-height: 40px;
+                border-bottom: 1px solid #eee;
+                span {
+                    font-size: 14px;
+                    color: #666;
+                }
+                .star {
+                    font-size: 22px;
+                    vertical-align: middle;
+                    cursor: pointer;
+                }
+                .operate-btn-group {
+                    float: right;
+                    margin-right: 90px;
+                    span {
+                        color: #33b4ff;
+                        cursor: pointer;
+                    }
+                }
+            }
+            .tab-content {
+                .left {
+                    float: left;
+                    width: 53%;
+                    border-right: 1px solid #eee;
+                    .bar {
+                        padding: 10px;
+                        box-sizing: border-box;
+                        font-size: 14px;
+                        overflow: hidden;
+                        border-bottom: 1px solid #eee;
+                        .name {
+                            float: left;
+                            position: relative;
+                            display: inline-block;
+                            height: 100px;
+                            width: 43%;
+                            img {
+                                position: absolute;
+                                left: 0;
+                                top: 0;
+                                width: 100px;
+                                height: 100px;
+                                border-radius: 5px;
+                                border: 1px solid #eee;
+                            }
+                            .pro-name {
+                                position: absolute;
+                                top: 5px;
+                                left: 110px;
+                                display: inline-block;
+                            }
+                            .pro-spec {
+                                position: absolute;
+                                bottom: 5px;
+                                left: 110px;
+                                display: inline-block;
+                            }
+                        }
+                        .price {
+                            float: left;
+                            display: inline-block;
+                            width: 16%;
+                            height: 100px;
+                            margin-left: 4%;
+                            text-align: center;
+                            line-height: 100px;
+                        }
+                        .num {
+                            float: left;
+                            display: inline-block;
+                            width: 16%;
+                            height: 100px;
+                            text-align: center;
+                            line-height: 100px;
+                        }
+                        .consignee {
+                            float: left;
+                            display: inline-block;
+                            width: 16%;
+                            height: 100px;
+                            margin-left: 4%;
+                            text-align: center;
+                            line-height: 20px !important;
+                            span{
+                                display: inline-block;
+                                margin-top: 30px;
+                            }
+                        }
+                    }
+                    .bar:last-child {
+                        border-bottom: none;
+                    }
+                }
+                .center {
+                    float: left;
+                    border-right: 1px solid #eee;
+                    width: 21%;
+                    font-size: 14px;
+                    .status {
+                        display: inline-block;
+                        float: left;
+                        width: 50%;
+                        text-align: center;
+                        border-right: 1px solid #eee;
+                    }
+                    .collection {
+                        display: inline-block;
+                        float: left;
+                        width: 46%;
+                        text-align: center;
+                        box-sizing: border-box;
+                    }
+                }
+                .right {
+                    float: left;
+                    width: 25%;
+                    .bar {
+                        padding: 10px;
+                        box-sizing: border-box;
+                        font-size: 14px;
+                        overflow: hidden;
+                        border-bottom: 1px solid #eee;
+                        .shipper {
+                            float: left;
+                            width: 36%;
+                            height: 100px;
+                            text-align: center;
+                            line-height: 100px;
+                        }
+                        .operate {
+                            float: left;
+                            width: 63%;
+                            height: 100px;
+                            text-align: center;
+                            line-height: 100px;
+                        }
+                    }
+                    .bar:last-child {
+                        border: none;
+                    }
+                }
+            }
+            .block {
+                margin: 20px 0px;
+            }
+        }
+        /*弹窗样式*/
+        .el-dialog {
+            width: 530px;
+            border-radius: 10px;
+            .el-dialog__header {
+                border-bottom: 1px solid #eee;
+                padding: 20px 20px 10px 50px;
+            }
+            .el-dialog__title {
+                color: #ff6868;
+            }
+            .el-input,.el-input__inner {
+                width: 360px;
+            }
         }
     }
 </style>

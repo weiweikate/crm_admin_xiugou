@@ -2,220 +2,235 @@
     <div class="order-info">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '28px 50px' }">
-            <div class="wrap">
-                <div class="item-wrap">
-                    <div class="title">订单基础信息</div>
-                    <div class="item">
-                        <span>平台订单号</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>仓库订单号</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>支付方式</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <!--待付款，交易完成-->
-                    <div class="item" v-if="orderMsg.status==1&&orderMsg.status==4">
-                        <span>用户留言</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <!--已发货，交易完成-->
-                    <div class="item" v-if="orderMsg.status==3&&orderMsg.status==4">
-                        <span>平台备注</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>下单时间</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <!--已付款，已发货，交易关闭-->
-                    <div class="item" v-if="orderMsg.status!=1">
-                        <span>付款时间</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <!--已发货-->
-                    <div class="item" v-if="orderMsg.status==3&&orderMsg.status==4">
-                        <span>发货时间</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <!--交易完成-->
-                    <div class="item" v-if="orderMsg.status==4">
-                        <span>成交时间</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <!--交易关闭-->
-                    <div class="item" v-if="orderMsg.status==5">
-                        <span>关闭原因</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
+            <!-- 订单状态 -->
+            <div class="order-status">
+                <div :class="{'s-block':true,'s-block-bgcolor':boolFirst}">
+                    <div class="s-block-content">买家下单</div>
                 </div>
-                <div class="item-wrap">
-                    <div class="title">订单支付信息</div>
-                    <div class="item">
-                        <span>商品总额</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>运费</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>应付金额</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>促销优惠</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>优惠券</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>一元券</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <!--已付款,已发货，交易完成，交易关闭-->
-                    <div class="item" v-if="orderMsg.status!=1">
-                        <span>余额支付</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status!=1">
-                        <span>第三方支付</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status!=1">
-                        <span>开票余额</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status!=1">
-                        <span>实付金额</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
+                <div :class="{'s-block':true,'s-block-bgcolor':boolsec}">
+                    <div class="s-block-content">买家付款</div>
                 </div>
-                <div class="item-wrap">
-                    <div class="title">订单发票信息</div>
-                    <div class="item">
-                        <span>开具发票</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <!--待付款，交易完成-->
-                    <div class="item" v-if="orderMsg.status==1&&orderMsg.status==4&&orderMsg.status==5">
-                        <span>发票类型</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status==1">
-                        <span>发票抬头</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status==1">
-                        <span>发票内容</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status==1">
-                        <span>发票金额</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <!--交易完成-->
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>单位名称</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>纳税人识别号</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>注册电话</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>开户银行</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="orderMsg.status>=4">
-                        <span>银行账户</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
+                <div :class="{'s-block':true,'s-block-bgcolor':boolThr}">
+                    <div class="s-block-content">发货</div>
                 </div>
-                <div class="item-wrap">
-                    <div class="title">订单收货信息</div>
-                    <div class="item">
-                        <span>收货人姓名</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>收货人联系方式</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>收货省市区</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>收货详细地址</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
-                    <div class="item">
-                        <span>配送方式</span>
-                        <span>{{orderMsg.orderNum}}</span>
-                    </div>
+                <div :class="{'s-block':true,'s-block-bgcolor':boolFor}">
+                    <div class="s-block-content">买家确认收货</div>
                 </div>
             </div>
-            <div class="goods-info">
-                <div class="title">商品信息</div>
-                <table border :data="tableData" class="table-area">
-                    <thead>
-                        <tr>
-                            <td rowspan="2">商品信息</td>
-                            <td rowspan="2">SKU编码</td>
-                            <td rowspan="2">供应商SKU编码</td>
-                            <td rowspan="2">应付单价</td>
-                            <td rowspan="2">实付单价</td>
-                            <td rowspan="2">数量</td>
-                            <td rowspan="2">实付金额</td>
-                            <td rowspan="2">发货仓库</td>
-                            <td colspan="3">物流信息</td>
-                            <td colspan="2">售后信息</td>
-                        </tr>
-                        <tr>
-                            <td>物流公司</td>
-                            <td>物流单号</td>
-                            <td>商品数量</td>
-                            <td>售后状态</td>
-                            <td>售后数量</td>
-                        </tr>
-                    </thead>
-                    <tbody v-for="(v,k) in tableData" :key="k">
-                        <tr v-for="(v1,k1) in v.rows" :key="k1">
-                            <td :rowspan="v.rows" v-if="k1==0" style="width: 400px">
-                               <div class="name">
-                                    <img :src="v.specImg" alt="">
-                                    <span class="pro-name">{{v.productName}}</span>
-                                    <span class="pro-spec">{{v.spec}}</span>
-                                </div>
-                            </td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.id}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.id}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.num}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                            <td>{{v.price}}</td>
-                            <td>{{v.price}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                            <td>{{v.price}}</td>
-                            <td>{{v.price}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="top">
+                <span v-if='orderStatus == 1&&orderMsg.outTradeNo' class="activite-status">当前订单状态：继续支付</span>
+                <span v-if='orderStatus == 1&&!orderMsg.outTradeNo' class="activite-status">当前订单状态：待支付</span>
+                <span v-if='orderStatus == 2' class="activite-status">当前订单状态：待发货</span>
+                <span v-if='orderStatus == 3' class="activite-status">当前订单状态：待收货</span>
+                <span v-if='orderStatus == 4' class="activite-status">当前订单状态：确认收货</span>
+                <span v-if='orderStatus == 5' class="activite-status">当前订单状态：已完成</span>
+                <span v-if='orderStatus == 6' class="activite-status">当前订单状态：已关闭(退货退款关闭)</span>
+                <span v-if='orderStatus == 7' class="activite-status">当前订单状态：已关闭(用户关闭)</span>
+                <span v-if='orderStatus == 8' class="activite-status">当前订单状态：已关闭(超时关闭)</span>
+                <span v-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
+                <span v-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
+                <br/>
+                <el-button v-if="orderStatus == 2&&orderMsg.cloudHadSend==0" @click='orderSendOut' class="cloud-delivery-btn"
+                           type="danger">推送云仓
+                </el-button>
+                <el-button v-if="orderStatus == 2&&orderMsg.cloudHadSend==0" @click='sendGoods' class="cloud-delivery-btn"
+                           type="primary">虚拟发货
+                </el-button>
+                <p class="preferential-info" @click='isShowPreferential = true'>优惠详情</p>
+                <span class="mark">标记</span>
+                <el-popover placement="bottom" width="150" v-model="isShowPop" trigger="hover">
+                    <span slot="reference" style="cursor:pointer"><span class="star" :style="{color:orderMsg.star}">★</span></span>
+                    <span v-for="(v,k) in markArr" :key="k" @click="changeColor(1,v)" :style="{color:v.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
+                </el-popover>
+                <el-input v-model="orderMsg.adminRemark" type="textarea" placeholder="请输入备注" :rows="5" style="width:50%;float:right;margin-right:42%"></el-input>
+                <div style="clear: both;"></div>
+                <div style="margin-left: 130px;margin-top: 10px">
+                    <el-button type="primary" @click="changeColor">保存</el-button>
+                </div>
+                <!-- <span class="star" :style="{color:orderMsg.star}">★</span>
+                <span class="tip">备注：</span>
+                <div class="tip-content">{{orderMsg.adminRemark}}</div> -->
+            </div>
+            <!-- 收货人信息 -->
+            <div class="user-info">
+                <p class="info-title">买家信息</p>
+                <p class="info-content">
+                    <span class="smal-span">昵称：{{orderMsg.dealerName}}</span>
+                    <span class="smal-span">联系方式：{{orderMsg.dealerPhone}}</span>
+                </p>
+                <p class="info-title">收货地址</p>
+                <p class="info-content">
+                    <span class="smal-span">收货人：{{orderMsg.receiver}}</span>
+                    <span class="smal-span">收货人联系方式：{{orderMsg.recevicePhone}}</span>
+                </p>
+                <p class="info-content">
+                    <span class="smal-span">收货地址：{{orderMsg.receiveAddress}}</span>
+                </p>
+                <p class="info-content">
+                    <span class="smal-span">买家备注：{{orderMsg.buyerRemark}}</span>
+                </p>
+                <p v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5' class="info-title">物流信息</p>
+                <p v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5' class="info-content">
+                    <span class="smal-span">物流公司名称：{{orderMsg.expressName}}</span>
+                    <span class="smal-span">运单号：{{orderMsg.expressNo}}</span>
+                    <span style="color:#33b4ff;cursor:pointer" @click="showLogisticsMsg">查看物流信息</span>
+                </p>
+            </div>
+            <!-- 发货人信息 -->
+            <!--<div class="delivery">-->
+            <!--<p class="info-content">-->
+            <!--<span class="smal-span">发货方：代理商</span>-->
+            <!--<span class="smal-span">联系方式：17601056863</span>-->
+            <!--</p>-->
+            <!--</div>-->
+            <!-- 订单信息 -->
+            <div class="order-info">
+                <p class="info-content">
+                    <span class="content-con">订单号：{{ orderMsg.orderNum }}</span>
+                    <span class="content-con">创建时间：{{ orderMsg.createTime | formatDateAll }}</span>
+                    <span class="content-con" v-if="orderMsg.payTime">平台支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
+                    <span v-if='orderStatus == 5' class="content-con">支付时间：{{ orderMsg.payTime | formatDateAll }}</span>
+                </p>
+                <p class="info-content">
+                    <span v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5'
+                          class="content-con">发货时间：{{ orderMsg.sendTime | formatDateAll }}</span>
+                    <span v-if='orderStatus == 6 || orderStatus == 7 || orderStatus == 8' class="content-con">取消时间：{{ orderMsg.cancleTime | formatDateAll }}</span>
+                    <span v-if='orderStatus != 1 && orderStatus != 2 ' class="content-con">支付交易号：{{ orderMsg.outTradeNo }}</span>
+                    <span v-if='orderStatus == 4 || orderStatus == 5' class="content-con">确认时间：{{orderMsg.deliverTime | formatDateAll}}</span>
+                </p>
+                <el-table border :data="tableData" :span-method="spanMethod">
+                    <el-table-column label="产品名称" align="center" width="500px">
+                        <template slot-scope="scope">
+                            <div class="name">
+                                <img :src="scope.row.specImg" alt="">
+                                <span class="pro-name">{{scope.row.productName}}</span>
+                                <span class="pro-spec">{{scope.row.spec}}</span>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="price" label="单价" align="center"></el-table-column>
+                    <el-table-column prop="num" label="数量" align="center"></el-table-column>
+                    <el-table-column label="买家" align="center">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.dealerName}}</span><br/>
+                            <span>{{scope.row.dealerPhone}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="status" label="交易状态" align="center">
+                        <template slot-scope="scope">
+                            <template v-if='scope.row.status == 1'>待支付</template>
+                            <template v-else-if='scope.row.status == 2'>待发货</template>
+                            <template v-else-if='scope.row.status == 3'>待收货</template>
+                            <template v-else-if='scope.row.status == 4'>退货中</template>
+                            <template v-else-if='scope.row.status == 5'>确认收货</template>
+                            <template v-else-if='scope.row.status == 6'>已完成</template>
+                            <template v-else-if='scope.row.status == 7'>已关闭</template>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="实收款" align="center">
+                        <template slot-scope="scope">
+                            <div v-if="orderStatus == 8">
+                                /
+                            </div>
+                            <div v-else>
+                                实收款:{{scope.row.totalPrice+scope.row.freightPrice | handleMoney}}<br/>
+                                （含运费:{{scope.row.freightPrice | handleMoney}}）
+                            </div>
+                            <!--实收款:{{scope.row.totalPrice+scope.row.freightPrice | handleMoney}}<br/>-->
+                            <!--（含运费:{{scope.row.freightPrice | handleMoney}}）-->
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="id" label="支付详情" align="center">
+                        <template slot-scope="scope">
+                            <div v-if="orderStatus == 8">
+                                /
+                            </div>
+                            <div v-else>
+                                余额支付:{{scope.row.balance | handleMoney}}<br/>
+                                1元券抵扣:{{scope.row.tokenCoin  | handleMoney}}<br/>
+                                优惠券抵扣:{{scope.row.couponPrice | handleMoney}}<br/>
+                                <span v-if="scope.row.type != ''">{{scope.row.type}}:{{scope.row.amounts | handleMoney}}</span>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.returnType">
+                                <el-button @click='toAfterSale(scope.row.returnProductId)' type="primary">{{`${returnTypeArr[Number(scope.row.returnType)-1]}${afterSaleStatusArr[Number(scope.row.returnProductStatus)-1]}`}}</el-button>
+                            </template>
+                            <template v-else-if="scope.row.isBusinessRefund">
+                                <el-button @click='refundMask(scope.row)' type="primary">商家退款</el-button>
+                            </template>
+                        </template>
+                    </el-table-column>
+                </el-table>
             </div>
         </el-card>
+        <!-- 优惠活动 -->
+        <el-dialog title="端午活动专题" width="30%" :visible.sync="isShowPreferential">
+            <h2 style="margin-bottom:10px">券值：30元</h2>
+            <p>使用限制：满100可用</p>
+            <p>可用周期：2018/02/04 12:00 - 2018/02/08 13:00</p>
+            <p>可用品类：全品类</p>
+            <p>可使用用户层级：V0,V1</p>
+            <p>发放数量：999</p>
+            <p>优惠券说明：优惠券仅限于商品购物使用，只有满足消费100元才可以使用。</p>
+            <p>发布人：杨小猛</p>
+        </el-dialog>
+        <!--同意退款弹窗-->
+        <el-dialog title="确认退款金额" class="agreeMask" :visible.sync="agreeMask">
+            <el-form v-model="refundForm" label-width="110px">
+                <el-form-item label="买家支付方式：">{{payType}}</el-form-item>
+                <el-form-item label="退还余额">
+                    <el-input v-model="refundForm.returnBalance" :controls="false" auto-complete="off" placeholder="请输入退还余额"></el-input>
+                    <span class="mar-left5">元</span>
+                    <span class="tips">最多可退{{value[0]}}元</span>
+                </el-form-item>
+                <el-form-item label="三方账户">
+                    <el-input auto-complete="off" v-model="refundForm.returnAmounts" :controls="false" placeholder="0"></el-input>
+                    <span class="mar-left5">元</span>
+                    <span class="tips">最多可退{{value[1]}}元</span>
+                </el-form-item>
+                <el-form-item label="退还1元现金券">
+                    <el-input auto-complete="off" v-model="refundForm.returnTokenCoin" :controls="false" placeholder="0"></el-input>
+                    <span class="mar-left5">张</span>
+                    <span class="tips">最多可退{{value[2]}}张</span>
+                </el-form-item>
+                <el-form-item label="支付交易号">{{refundForm.outTradeNo}}</el-form-item>
+                <el-form-item style="margin-left: -84px">
+                    <el-checkbox v-model="refundForm.hadScrap">产品报损</el-checkbox>
+                    <el-select v-model="refundForm.badReason" :disabled="!refundForm.hadScrap" @change="chooseBadReason" placeholder="请选择报损原因">
+                        <el-option label="请选择报损原因" value=""></el-option>
+                        <el-option v-for="(v,k) in reasonList" :key="k" :label="v.value" :value="v.value"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="报损说明">
+                    <el-input type="textarea" :disabled="!refundForm.hadScrap" v-model="refundForm.scrapReason" auto-complete="off"
+                              placeholder="请输入说明文字"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="refundSubmit('refundForm')">确认退款金额</el-button>
+            </div>
+        </el-dialog>
+        <!--虚拟发货-->
+        <el-dialog title="虚拟发货" :visible.sync="mask" class="send-mask">
+            <el-form :model="form">
+                <el-form-item label="物流单号">
+                    <el-input v-model="form.expressNo" placeholder="请输入物流单号"></el-input>
+                </el-form-item>
+                <el-form-item label="物流公司">
+                    <el-input v-model="form.expressName" placeholder="请输入物流公司"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" :loading="btnLoading" @click="sendSure('form')">确 认</el-button>
+                <el-button @click="mask=false">取 消</el-button>
+            </div>
+        </el-dialog>
+
     </div>
+
 </template>
 
 <script>
@@ -294,35 +309,373 @@
                     expressNo: '', // 物流单号
                     freeTimer: '', // 待支付倒计时
                     confirmTimer: '' // 待确认倒计时
-                }
+                },
+                // returnType状态
+                returnTypeArr: ['退款', '退货', '换货'],
+                // 售后状态
+                afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭'],
+                form: {
+                    expressName: '',
+                    expressNo: ''
+                },
+                mask: false,
+                btnLoading: false
             };
         },
 
         created() {
             // 获取订单信息
-            this.orderId = this.$route.query.orderInfoId;
+            this.orderId =
+                this.$route.query.orderInfoId || sessionStorage.getItem('orderInfoId');
             this.getInfo();
+            this.getDictionaryData();
+        },
+        destroyed() {
+            clearInterval(this.freeTimer);
+            clearInterval(this.confirmTimer);
         },
         methods: {
             //  获取信息
             getInfo() {
                 request.orderDetail({ id: this.orderId }).then(res => {
+                    this.orderMsg.status = res.data.status;
+                    this.orderStatus = res.data.status;
                     this.orderMsg = res.data;
+                    this.getProgressStu(this.orderStatus.toString());
+                    this.orderMsg.starIndex = res.data.star || 1;
+                    this.orderMsg.star =
+                        res.data.adminStars == null
+                            ? ''
+                            : this.markArr[res.data.adminStars - 1].label;
+                    this.orderMsg.adminRemark = res.data.adminRemark;
+                    this.orderMsg.dealerName = res.data.dealerName;
+                    this.orderMsg.dealerPhone = res.data.dealerPhone;
+                    this.orderMsg.receiver = res.data.receiver;
+                    this.orderMsg.recevicePhone = res.data.recevicePhone;
+                    this.orderMsg.receiveAddress = `${
+                        res.data.province == undefined ? '' : res.data.province
+                        }${res.data.city}${res.data.area}`;
+                    this.orderMsg.buyerRemark = res.data.buyerRemark;
+                    res.data.storehouseProvince = res.data.storehouseProvince == null ? '' : res.data.storehouseProvince;
+                    res.data.storehouseCity = res.data.storehouseCity == null ? '' : res.data.storehouseCity;
+                    res.data.storehouseArea = res.data.storehouseArea == null ? '' : res.data.storehouseArea;
+                    res.data.storehouseAddress = res.data.storehouseAddress == null ? '' : res.data.storehouseAddress;
+                    this.orderMsg.storehouseName = `${
+                        res.data.storehouseProvince == null
+                            ? ''
+                            : res.data.storehouseProvince
+                        }${res.data.storehouseCity}${res.data.storehouseArea}${
+                        res.data.storehouseAddress
+                        }`;
+                    this.orderMsg.orderNum = res.data.orderNum;
+                    this.orderMsg.createTime = res.data.createTime; // 创建时间
+                    this.orderMsg.payTime = res.data.payTime; // 第三方支付时间
+                    this.orderMsg.sendTime = res.data.sendTime; // 发货时间
+                    this.orderMsg.cancleTime = res.data.cancelTime; // 取消时间
+                    // this.orderFreePayTime = res.data.createTime; // 倒计时
+                    this.orderMsg.expressName = res.data.expressName; // 物流公司名称
+                    this.orderMsg.expressNo = res.data.expressNo; // 物流单号
                     this.tableData = [];
+
+                    // this.pickedUp = res.data.pickedUp;
                     res.data.orderPayRecord = res.data.orderPayRecord ? res.data.orderPayRecord : {};
                     res.data.orderProductList.forEach((v, k) => {
-                        if (k == 0) {
-                            v.returnProductList = [{ id: 1, salesStatus: '11' }, { id: 1, salesStatus: '22' }];
-                            v.logicList = [{ id: 1, logicStatus: '11' }];
-                        } else {
-                            v.returnProductList = [{ id: 2, salesStatus: '11' }];
-                            v.logicList = [{ id: 2, logicStatus: '11' }, { id: 2, logicStatus: '22' }];
+                        v.totalPrice = res.data.totalPrice;
+                        v.freightPrice = res.data.freightPrice;
+                        v.isBusinessRefund = false;
+                        v.dealerName = res.data.dealerName;
+                        v.dealerPhone = res.data.dealerPhone;
+                        const present = new Date().getTime();
+                        if ((!v.finishTime && v.status > 1 && v.status < 6) || present < v.finishTime || v.returnProductId && (v.returnProductStatus == 7 || v.returnProductStatus == 8)) {
+                            v.isBusinessRefund = true;
                         }
-                        const length = v.returnProductList.length > v.logicList.length ? v.returnProductList.length : v.logicList.length;
-                        v.rows = length;
+                        v.tokenCoin = res.data.orderPayRecord.tokenCoin ? res.data.orderPayRecord.tokenCoin : '0';
+                        v.balance = res.data.orderPayRecord.balance ? res.data.orderPayRecord.balance : '0';
+                        v.userScore = res.data.orderPayRecord.userScore ? res.data.orderPayRecord.userScore : '0';
+                        let tmpType = '';
+                        if ((res.data.orderPayRecord.type & 1) != 0) {
+                            tmpType += `纯平台+`;
+                        }
+                        if ((res.data.orderPayRecord.type & 2) != 0) {
+                            tmpType += `微信(小程序)+`;
+                        }
+                        if ((res.data.orderPayRecord.type & 4) != 0) {
+                            tmpType += `微信(APP)+`;
+                        }
+                        if ((res.data.orderPayRecord.type & 8) != 0) {
+                            tmpType += `支付宝+`;
+                        }
+                        if ((res.data.orderPayRecord.type & 16) != 0) {
+                            tmpType += `银联+`;
+                        }
+                        if (tmpType !== '') tmpType = tmpType.slice(0, -1);
+                        v.type = tmpType;
+                        v.amounts = res.data.amounts ? res.data.amounts : '0';
+                        v.couponPrice = res.data.couponPrice ? res.data.couponPrice : '0';
                         this.tableData.push(v);
-                        console.log(this.tableData);
                     });
+                    // 待支付剩余时间
+                    if (res.data.shutOffTime) {
+                        this.orderFreeTimeDown(res.data.shutOffTime);
+                    }
+                    // 待完成剩余时间
+                    if (res.data.autoReceiveTime) {
+                        this.orderFinishTimeDown(res.data.autoReceiveTime);
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            //  重置表单
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            },
+            // 判断进度条状态
+            getProgressStu(n) {
+                switch (n) {
+                    case '1':
+                        this.boolFirst = true;
+                        this.boolsec = false;
+                        this.boolThr = false;
+                        this.boolFor = false;
+                        break;
+                    case '2':
+                        this.boolFirst = true;
+                        this.boolsec = true;
+                        this.boolThr = false;
+                        this.boolFor = false;
+                        break;
+                    case '3':
+                        this.boolFirst = true;
+                        this.boolsec = true;
+                        this.boolThr = true;
+                        this.boolFor = false;
+                        break;
+                    case '4':
+                        this.boolFirst = true;
+                        this.boolsec = true;
+                        this.boolThr = true;
+                        this.boolFor = false;
+                        break;
+                    case '5':
+                        this.boolFirst = true;
+                        this.boolsec = true;
+                        this.boolThr = true;
+                        this.boolFor = true;
+                        break;
+                    case '6':
+                        this.boolFirst = false;
+                        this.boolsec = false;
+                        this.boolThr = false;
+                        this.boolFor = false;
+                        break;
+                    case '7':
+                        this.boolFirst = false;
+                        this.boolsec = false;
+                        this.boolThr = false;
+                        this.boolFor = false;
+                        break;
+                    case '8':
+                        this.boolFirst = false;
+                        this.boolsec = false;
+                        this.boolThr = false;
+                        this.boolFor = false;
+                        break;
+                }
+            },
+            // 合并单元格
+            spanMethod({ row, column, rowIndex, columnIndex }) {
+                if (columnIndex == 5 || columnIndex == 6) {
+                    if (rowIndex == 0) {
+                        return {
+                            rowspan: this.tableData.length,
+                            colspan: 1
+                        };
+                    } else {
+                        return [0, 0];
+                    }
+                }
+            },
+            // 获取订单
+            // 订单剩余时间倒计时
+            orderFreeTimeDown(createTime) {
+                const date = createTime;
+                const that = this;
+                this.freeTimer = setInterval(function() {
+                    const nowDate = new Date().getTime();
+                    const time = date - nowDate;
+                    if (time <= 0) {
+                        that.orderFreeTime = '00:00:00';
+                        clearInterval(this.freeTimer);
+                        return;
+                    }
+                    let hour = Math.floor((time / 1000 / 60 / 60) % 60);
+                    let minute = Math.floor((time / 1000 / 60) % 60);
+                    let second = Math.floor((time / 1000) % 60);
+                    hour = hour > 9 ? hour : '0' + hour;
+                    minute = minute > 9 ? minute : '0' + minute;
+                    second = second > 9 ? second : '0' + second;
+                    that.orderFreeTime = `${hour}:${minute}:${second}`;
+                }, 1000);
+            },
+            // 订单待完成时间倒计时
+            orderFinishTimeDown(createTime) {
+                const date = createTime;
+                const that = this;
+                this.confirmTimer = setInterval(function() {
+                    const nowDate = new Date().getTime();
+                    const time = date - nowDate;
+                    if (time <= 0) {
+                        clearInterval(this.confirmTimer);
+                        that.orderFinishTime = '00:00:00';
+                        return;
+                    }
+                    let hour = Math.floor((time / 1000 / 60 / 60) % 60);
+                    let minute = Math.floor((time / 1000 / 60) % 60);
+                    let second = Math.floor((time / 1000) % 60);
+                    hour = hour > 9 ? hour : '0' + hour;
+                    minute = minute > 9 ? minute : '0' + minute;
+                    second = second > 9 ? second : '0' + second;
+                    that.orderFinishTime = `${hour}:${minute}:${second}`;
+                }, 1000);
+            },
+            // 更改订单状态(批量)
+            changeStatus(url) {
+                request[url]({ orderId: this.orderId }).then(res => {
+                    this.$message.success(res.msg);
+                    this.getInfo();
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            // 跳到售后详情
+            toAfterSale(id) {
+                sessionStorage.setItem('afterSaleOprId', id);
+                this.$router.push({
+                    path: '/afterSaleOpr',
+                    query: { afterSaleOprId: id }
+                });
+            },
+            // 查看物流信息
+            showLogisticsMsg() {
+                sessionStorage.setItem('findExpressId', this.orderMsg.expressNo);
+                this.$router.push({ name: 'logistics', query: { findExpressId: this.orderMsg.expressNo }});
+            },
+            // 获取提货仓列表
+            getStoreList() {
+                this.warehouseArr = [];
+                request.queryStoreHouseList({ }).then(res => {
+                    res.data.forEach((v, k) => {
+                        v.active = false;
+                        this.warehouseArr.push(v);
+                    });
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            // 云仓发货
+            orderSendOut() {
+                const data = {
+                    ids: []
+                };
+                data.ids.push(this.orderId);
+                request.orderSendOut(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.getInfo();
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            // 虚拟发货
+            sendGoods() {
+                this.mask = true;
+            },
+            sendSure(formName) {
+                const data = this[formName];
+                data.id = this.orderId;
+                if (!data.expressName || !data.expressNo) {
+                    return this.$message.warning('请输入物流单号和物流公司');
+                }
+                this.btnLoading = true;
+                request.sendGoods(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.mask = false;
+                    this.btnLoading = false;
+                    this.getInfo();
+                }).catch(err => {
+                    console.log(err);
+                    this.btnLoading = false;
+                });
+            },
+            // 备注
+            changeColor(status, v) {
+                const data = {};
+                data.id = this.orderId;
+                data.adminStars = status == 1 ? v.value : this.orderMsg.starIndex;
+                data.adminRemark = this.orderMsg.adminRemark;
+                request.orderSign(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.orderMsg.star = this.markArr[Number(data.adminStars) - 1].label;
+                    this.isShowPop = false;
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            // 产品报损数据字典
+            async getDictionaryData() {
+                await this.queryDictonary('CPBS');
+                this.reasonList = this.tmpAxiosData;
+            },
+            // 选择报损原因
+            chooseBadReason() {
+                this.refundForm.scrapReason = this.refundForm.badReason;
+            },
+            // 获取退款金额详情
+            getMoney() {
+                const data = {
+                    orderProductId: this.productId
+                };
+                request.businessRefund(data).then(res => {
+                    this.refundForm = res.data;
+                    this.payType = this.getType(res.data.payType);
+                    this.value.push(this.refundForm.returnBalance, this.refundForm.returnAmounts, this.refundForm.returnTokenCoin);
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            getType(value) {
+                let result = '';
+                if ((value & 1) != 0) {
+                    result += '三方支付+';
+                }
+                if ((value & 2) != 0) {
+                    result += '余额支付+';
+                }
+                if ((value & 4) != 0) {
+                    result += '1元券支付+';
+                }
+                if (result != '') result = result.slice(0, -1);
+                return result;
+            },
+            // 商家退款
+            refundMask(row) {
+                this.agreeMask = true;
+                this.productId = row.id;
+                this.getMoney();
+            },
+            // 是否同意退款提交
+            refundSubmit(form) {
+                const data = this[form];
+                if (data.returnBalance > this.value[0] || data.returnAmounts > this.value[1] || data.returnTokenCoin > this.value[2]) {
+                    return this.$message.warning('输入值有误！');
+                }
+                data.hadScrap = this[form].hadScrap ? 1 : 2;
+                data.orderProductId = this.productId;
+                request.doBusinessRefund(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.getInfo();
+                    this.agreeMask = false;
+                    this[form].hadScrap = false;
                 }).catch(err => {
                     console.log(err);
                 });
@@ -332,69 +685,238 @@
 </script>
 <style lang='less'>
     .order-info {
-        .title{
-            margin-bottom: 10px;
-        }
-        .wrap{
-            display: flex;
-            justify-content: space-between;
-            .item-wrap{
-                .item{
-                    font-size: 14px;
-                    color: #666666;
-                    line-height: 30px;
-                    span:first-child{
-                        display: inline-block;
-                        width: 100px;
-                    }
-                    span:nth-child(2){
-                        display: inline-block;
-                    }
+        min-width: 960px;
+        .el-dialog {
+            padding: 0 20px;
+            .el-dialog__header {
+                border-bottom: 1px solid #ccc;
+                .el-dialog__title {
+                    color: #ff6868;
+                    font-weight: 600;
                 }
             }
-        }
-        .goods-info{
-            margin-top: 50px;
-            .table-area{
-                font-size:12px;
-                width: 100%;
-                color:#606266;
-                border: 1px solid #ebeef5;
-                border-collapse: collapse;
-                margin-bottom: 20px;
-                line-height: 23px;
-                td {
-                    border: 1px solid #ebeef5;
-                    padding: 8px;
-                    text-align: center;
-                }
+            .tips{
+                color: #ff6868;
+                font-size: 12px;
             }
-            .name {
+        }
+        .order-status {
+            height: 55px;
+            min-width: 1000px;
+            .s-block {
                 float: left;
-                position: relative;
+                width: 200px;
+                height: 53px;
+                border: 1px solid #eee;
+                border-right: none;
+                transform: skew(-30deg);
+                text-align: center;
+                line-height: 53px;
+                color: #999;
+                .s-block-content {
+                    display: inline-block;
+                    transform: skew(30deg);
+                }
+            }
+            .s-block:first-child {
+                margin-left: 25px;
+            }
+            .s-block:last-child {
+                border-right: 1px solid #eee;
+            }
+            .s-block-bgcolor {
+                background-color: #33b4ff;
+                color: #fff;
+            }
+        }
+        .top {
+            position: relative;
+            padding: 30px 55px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #ddd;
+            overflow: hidden;
+            .activite-status {
                 display: inline-block;
-                height: 100px;
-                text-align: left;
-                img {
-                    position: absolute;
-                    width: 100px;
-                    height: 100px;
-                    border-radius: 5px;
-                    border: 1px solid #eee;
-                }
-                .pro-name {
-                    position: absolute;
-                    top: 5px;
-                    left: 115px;
-                    width: 270px;
-                }
-                .pro-spec {
-                    position: absolute;
-                    left: 115px;
-                    bottom:5px;
-                    width: 270px;
+                color: #666;
+                font-size: 14px;
+            }
+            .cloud-delivery-btn {
+                margin: 20px 0 0 0;
+            }
+            .preferential-info {
+                margin: 20px 0 10px 0;
+                font-size: 14px;
+                cursor: pointer;
+                color: #33b4ff;
+            }
+            .mark {
+                float: left;
+                font-size: 14px;
+                cursor: pointer;
+                color: #33b4ff;
+            }
+            .star {
+                vertical-align: top;
+                float: left;
+                font-size: 20px;
+                cursor: pointer;
+                margin: -5px 0 0 10px;
+            }
+            .tip {
+                float: left;
+                margin-left: 35px;
+                font-size: 14px;
+                cursor: pointer;
+                color: #33b4ff;
+            }
+            .tip-content {
+                float: left;
+                display: inline-block;
+                background-color: #f7f7f7;
+                border: 1px solid #eee;
+                font-size: 14px;
+                width: 500px;
+                height: auto;
+                color: #999;
+                margin-top: 5px;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+            .pay-time {
+                color: #ff6868;
+                font-size: 14px;
+                margin-left: 150px;
+            }
+        }
+        .user-info,
+        .delivery {
+            color: #666;
+            padding: 30px 0 8px 0;
+            border-bottom: 1px solid #ddd;
+            .info-title {
+                margin-bottom: 20px;
+            }
+            .info-content {
+                padding-left: 50px;
+                margin-bottom: 22px;
+                box-sizing: border-box;
+                font-size: 14px;
+                .smal-span {
+                    margin-right: 50px;
                 }
             }
         }
+        .order-info {
+            padding: 30px 0 8px 0;
+            color: #666;
+            .info-content {
+                padding-left: 50px;
+                margin-bottom: 22px;
+                box-sizing: border-box;
+                font-size: 14px;
+                .content-con {
+                    margin-right: 40px;
+                }
+            }
+        }
+        .name {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            height: 100px;
+            img {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100px;
+                height: 100px;
+                border-radius: 5px;
+                border: 1px solid #eee;
+            }
+            .pro-name {
+                position: absolute;
+                top: 5px;
+                left: 110px;
+                display: inline-block;
+            }
+            .pro-spec {
+                position: absolute;
+                bottom: 5px;
+                left: 110px;
+                display: inline-block;
+            }
+        }
+        .warehouse-wrap {
+            width: 100%;
+            max-height: 400px;
+            padding: 5px 0;
+            box-sizing: border-box;
+            overflow-y: scroll;
+            .warehouse-box {
+                box-shadow: 0px 0px 2px 1px #ccc;
+                margin: 0 auto;
+                height: 100px;
+                width: 80%;
+                border-radius: 10px;
+                padding: 20px;
+                box-sizing: border-box;
+                cursor: pointer;
+                margin-bottom: 20px;
+                .warehouse-box-tit {
+                    font-size: 20px;
+                }
+                .warehouse-box-con {
+                    font-size: 14px;
+                    margin-top: 10px;
+                }
+            }
+            .warehouse-box-active {
+                box-shadow: 0px 0px 2px 1px #33b4ff;
+                background-color: #33b4ff;
+                color: #fff;
+            }
+        }
+        .agreeMask {
+            .el-dialog {
+                width: 530px;
+            }
+            .el-dialog .el-input__inner {
+                width: 180px;
+            }
+            .el-dialog .el-input {
+                width: 180px;
+            }
+            .el-select .el-input__inner {
+                width: 180px;
+            }
+
+            .icon-area .el-input__inner {
+                width: 180px;
+            }
+            .el-dialog__footer {
+                text-align: center;
+            }
+            .mar-left5 {
+                margin-left: 5px;
+            }
+        }
+        /*弹窗样式*/
+        .send-mask{
+            .el-dialog {
+                width: 530px;
+                border-radius: 10px;
+                .el-dialog__header {
+                    border-bottom: 1px solid #eee;
+                    padding: 20px 20px 10px 50px;
+                }
+                .el-dialog__title {
+                    color: #ff6868;
+                }
+                .el-input,.el-input__inner {
+                    width: 360px;
+                }
+            }
+        }
+
     }
 </style>
