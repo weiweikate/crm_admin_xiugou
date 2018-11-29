@@ -2,23 +2,23 @@
     <div class="prod-base-param">
         <el-form :model="form" ref="form" :rules="rules" label-position="left" label-width="100px">
             <div class="pro-title">基础信息</div>
-            <el-form-item prop="title" label="商品标题">
-                <el-input v-model="form.title"></el-input>
+            <el-form-item prop="name" label="商品标题">
+                <el-input v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item prop="subtitle" label="商品副标题">
-                <el-input v-model="form.subtitle"></el-input>
+            <el-form-item prop="secondName" label="商品副标题">
+                <el-input v-model="form.secondName"></el-input>
             </el-form-item>
             <el-form-item label-width="0px">
                 <el-col :span="11">
-                    <el-form-item prop="supplier" label="选择供应商">
-                        <el-select v-model="form.supplier" placeholder="请选择供应商">
+                    <el-form-item prop="supplierCode" label="选择供应商">
+                        <el-select v-model="form.supplierCode" placeholder="请选择供应商">
                             <el-option v-for="(v, k) in supplierArr" :key="k" :label="v.label" :value="v.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="11">
-                    <el-form-item prop="deliveryWarehouse" label="发货仓库">
-                        <el-select v-model="form.deliveryWarehouse" placeholder="请选择发货仓库">
+                    <el-form-item prop="warehouseType" label="发货仓库">
+                        <el-select v-model="form.warehouseType" placeholder="请选择发货仓库">
                             <el-option v-for="(v, k) in deliveryWarehouseArr" :key="k" :label="v.label" :value="v.value"></el-option>
                         </el-select>
                     </el-form-item>
@@ -26,8 +26,8 @@
             </el-form-item>
             <el-form-item label-width="0px">
                 <el-col :span="11">
-                    <el-form-item prop="prodType" label="商品类型">
-                        <el-select v-model="form.prodType" placeholder="请选择商品类型">
+                    <el-form-item prop="type" label="商品类型">
+                        <el-select v-model="form.type" placeholder="请选择商品类型">
                             <el-option label="普通商品" value="1"></el-option>
                             <el-option label="内购商品" value="2"></el-option>
                             <!--<el-option label="虚拟商品" value="3"></el-option>-->
@@ -36,8 +36,8 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="11">
-                    <el-form-item prop="isProprietary" label="是否自营">
-                        <el-select v-model="form.isProprietary" placeholder="请选择是否自营">
+                    <el-form-item prop="selfProduct" label="是否自营">
+                        <el-select v-model="form.selfProduct" placeholder="请选择是否自营">
                             <el-option label="是" value="1"></el-option>
                             <el-option label="否" value="2"></el-option>
                         </el-select>
@@ -47,8 +47,8 @@
             </el-form-item>
             <el-form-item label-width="0px">
                 <el-col :span="11">
-                    <el-form-item prop="tradeType" label="贸易类型">
-                        <el-select v-model="form.tradeType" placeholder="请选择贸易类型">
+                    <el-form-item prop="businessType" label="贸易类型">
+                        <el-select v-model="form.businessType" @change="changeTradeType" placeholder="请选择贸易类型">
                             <el-option label="一般贸易" value="1"></el-option>
                             <!--<el-option label="跨境保税" value="2"></el-option>-->
                             <!--<el-option label="海外直邮" value="3"></el-option>-->
@@ -56,16 +56,16 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="11">
-                    <el-form-item prop="rate" label="税率">
-                        <el-input class="pram-inp" v-model.number="form.rate">
-                            <template slot="append">%</template>
-                        </el-input>
-                    </el-form-item>
-                </el-col>
+                <!--<el-col :span="11">-->
+                    <!--<el-form-item prop="taxRate" label="税率">-->
+                        <!--<el-input class="pram-inp" v-model.number="form.taxRate">-->
+                            <!--<template slot="append">%</template>-->
+                        <!--</el-input>-->
+                    <!--</el-form-item>-->
+                <!--</el-col>-->
             </el-form-item>
-            <el-form-item prop="brand" label="品牌">
-                <el-select class="search-inp" filterable placeholder="请选择品牌" v-model="form.brand">
+            <el-form-item prop="brandId" label="品牌">
+                <el-select class="search-inp" filterable placeholder="请选择品牌" v-model="form.brandId">
                     <el-option value="1">小米</el-option>
                 </el-select>
             </el-form-item>
@@ -105,29 +105,28 @@
         data() {
             return {
                 form: {
-                    title: '',
-                    subtitle: '',
-                    supplier: '',
-                    deliveryWarehouse: '',
-                    prodType: '',
-                    isProprietary: '',
-                    tradeType: '',
-                    rate: '',
-                    brand: ''
+                    name: '',
+                    secondName: '',
+                    supplierCode: '',
+                    warehouseType: '',
+                    type: '',
+                    selfProduct: '',
+                    businessType: '',
+                    taxRate: '',
+                    brandId: ''
                 },
                 rules: {
-                    title: [{ required: true, message: '请输入商品标题', trigger: 'blur' }, { min: 2, max: 46, message: '长度在 2 到 46 个字符', trigger: 'blur' }],
-                    subtitle: [{ min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }],
+                    name: [{ required: true, message: '请输入商品标题', trigger: 'blur' }, { min: 2, max: 46, message: '长度在 2 到 46 个字符', trigger: 'blur' }],
+                    secondName: [{ min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }],
                     supplier: [{ required: true, message: '请选择供应商', trigger: 'blur' }],
-                    deliveryWarehouse: [{ required: true, message: '请选择发货仓库', trigger: 'blur' }],
-                    prodType: [{ required: true, message: '请选择商品类型', trigger: 'blur' }],
-                    isProprietary: [{ required: true, message: '请选择是否自营', trigger: 'blur' }],
-                    tradeType: [{ required: true, message: '请选择贸易类型', trigger: 'blur' }],
-                    rate: [{ required: true, type: 'number', message: '请输入正确的税率', trigger: 'blur' }],
-                    brand: [{ required: true, message: '请输入品牌', trigger: 'blur' }]
+                    warehouseType: [{ required: true, message: '请选择发货仓库', trigger: 'blur' }],
+                    type: [{ required: true, message: '请选择商品类型', trigger: 'blur' }],
+                    selfProduct: [{ required: true, message: '请选择是否自营', trigger: 'blur' }],
+                    businessType: [{ required: true, message: '请选择贸易类型', trigger: 'blur' }],
+                    brandId: [{ required: true, message: '请输入品牌', trigger: 'blur' }]
                 },
-                supplierArr: [{ label: '小米批发商', value: '1' }],
-                deliveryWarehouseArr: [{ label: '平台发货', value: '1' }],
+                supplierArr: [{ label: '小米批发商', value: '1' }], // 供应商列表
+                deliveryWarehouseArr: [{ label: '加盟仓', value: '1' }, { label: '供应商仓库', value: '2' }, { label: '虚拟仓库', value: '3' }], // 发货仓库
                 naturalAttribute: [{ name: '尺寸', value: '', options: [{ label: 'XL', value: '1' }], defParam: '' }, { name: '重量', value: '', options: [{ label: '10kg', value: '1' }], defParam: '' }, { name: '颜色', value: '', options: [{ label: '红色', value: '1' }], defParam: '' }]
             };
         },
@@ -136,10 +135,20 @@
                 return api.uploadImg;
             }
         },
-        created() {
-            console.log(666);
+        mounted() {
+            this.getSupplyList();
         },
         methods: {
+            // 获取供应商列表
+            getSupplyList() {
+                request.findProductSupplierList({}).then(res => {
+                    this.supplierArr = [];
+                    this.supplierArr.push({ name: '全部', id: '' });
+                    this.supplierArr.push(...res.data);
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
             // 添加属性值
             addAttrValue(index) {
                 this.$prompt('请输入属性值', null, {

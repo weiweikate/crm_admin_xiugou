@@ -53,6 +53,20 @@
                         <el-option value="3" label="供应商仓"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item prop="brandId" label="品牌">
+                    <el-input v-model.trim="form.brandId" placeholder="模糊下拉搜索"></el-input>
+                </el-form-item>
+                <el-form-item prop="suppilerId" label="供应商ID">
+                    <el-input v-model.trim="form.suppilerId" placeholder="模糊下拉搜索"></el-input>
+                </el-form-item>
+                <el-form-item prop="prodWarea" label="商品库存">
+                    <el-select v-model="form.prodWarea" placeholder="请选择发货方仓">
+                        <el-option value="" label="全部"></el-option>
+                        <el-option value="1" label="库存不足"></el-option>
+                        <el-option value="2" label="库存紧张"></el-option>
+                        <el-option value="3" label="暂无库存"></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item prop="updateTime" label="更新时间">
                     <el-date-picker type="daterange" v-model="form.updateTime" placeholder="请输入更新时间" start-placeholder="开始时间" end-placeholder="结束时时间"></el-date-picker>
                 </el-form-item>
@@ -124,6 +138,9 @@
                     isProprietary: '',
                     pushStatus: '',
                     deliveryWare: '',
+                    brandId: '',
+                    suppilerId: '',
+                    prodWarea: '',
                     updateTime: [],
                     minPrice: '',
                     maxPrice: ''

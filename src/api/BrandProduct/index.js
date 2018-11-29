@@ -174,3 +174,4 @@ export const updateActivityPackageSpecPriceStock = ['/operator/activityPackageSp
 export const queryCouponByType = ['/coupon/queryByType', { methods: 'get' }]; // 查询优惠券列表
 //-----------------------------------------------------------------------------------------2018-11-29 产品重构-----------
 export const queryProdList = ['/product/product/queryProductPageList', { methods: 'post' }]; // 查询产品列表
+export const findProductSupplierList = ['/product/productSupplier/findProductBrandList', { methods: 'post' }]; // 查询供应商列表

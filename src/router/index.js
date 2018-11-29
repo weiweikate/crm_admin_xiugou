@@ -832,13 +832,13 @@ export const asyncRouterMap = [
             {
                 name: 'promotionManage',
                 path: '/promotionManage',
-                component: resolve => require(['../components/page/MemberManage/PromotionManage.vue/PromotionManage.vue'], resolve),
+                component: resolve => require(['../components/page/MemberManage/PromotionManage/PromotionManage'], resolve),
                 meta: { title: '晋升设置' }
             },
             {
                 name: 'degradeManage',
                 path: '/degradeManage',
-                component: resolve => require(['../components/page/MemberManage/DegradeManage.vue/DegradeManage.vue'], resolve),
+                component: resolve => require(['../components/page/MemberManage/DegradeManage/DegradeManage'], resolve),
                 meta: { title: '降级设置' }
             },
             // 产品管理

@@ -6,37 +6,69 @@
             <el-table-column label="商品名称" width="400px">
                 <template slot-scope="scope">
                     <div class="product-info">
-                        <img :src="scope.row.imgUrl" :alt="scope.row.name">
+                        <img :src="scope.row.imgUrl" :alt="scope.row.imgUrl">
                         <div class="info">
                             <div class="prod-name over-more-hidden">{{scope.row.name}}</div>
                             <div class="prod-type">{{scope.row.short}}</div>
                             <div class="prod-tag">
                                 <el-tag class="tag-item" type="primary" v-for="(v,k) in scope.row.tags" :key="k">{{v}}</el-tag>
                             </div>
-                            <div class="prod-spu">SPU: {{scope.row.code}}</div>
+                            <div class="prod-spu">SPU: {{scope.row.prodCode}}</div>
                         </div>
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="id" label="商品类目" align="center"></el-table-column>
-            <el-table-column prop="id" label="商品售价" align="center"></el-table-column>
-            <el-table-column prop="id" label="商品状态" align="center"></el-table-column>
-            <el-table-column prop="id" label="审核状态" align="center"></el-table-column>
-            <el-table-column prop="id" label="商品类型" align="center"></el-table-column>
-            <el-table-column prop="id" label="贸易类型" align="center"></el-table-column>
-            <el-table-column prop="id" label="税率" align="center"></el-table-column>
-            <el-table-column prop="id" label="总库存" align="center"></el-table-column>
-            <el-table-column prop="id" label="活动冻结库存" align="center"></el-table-column>
-            <el-table-column prop="id" label="订单冻结库存" align="center"></el-table-column>
-            <el-table-column prop="id" label="商品来源" align="center"></el-table-column>
-            <el-table-column prop="id" label="发货方仓" align="center"></el-table-column>
-            <el-table-column prop="id" label="运费模板" align="center"></el-table-column>
-            <el-table-column prop="id" label="推送状态" align="center"></el-table-column>
-            <el-table-column prop="id" label="创建时间" align="center"></el-table-column>
-            <el-table-column prop="id" label="最近更新者" align="center"></el-table-column>
-            <el-table-column prop="id" label="更新时间" align="center"></el-table-column>
-            <el-table-column prop="id" label="备注" align="center"></el-table-column>
-            <el-table-column prop="id" label="操作" align="center" width="80px">
+            <el-table-column label="商品类目" align="center">
+                <template slot-scope="scope">
+                    <p>{{scope.row.firstCategoryName}}</p>
+                    <p>{{scope.row.secCategoryName}}</p>
+                    <p>{{scope.row.thirdCategoryName}}</p>
+                </template>
+            </el-table-column>
+            <el-table-column prop="" label="商品售价" align="center"></el-table-column>
+            <el-table-column prop="status" label="商品状态" align="center">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.status == 0">删除</span>
+                    <span v-else-if="scope.row.status == 1">待审核</span>
+                    <span v-else-if="scope.row.status == 2">已通过</span>
+                    <span v-else-if="scope.row.status == 3">未通过</span>
+                    <span v-else-if="scope.row.status == 4">已上架</span>
+                    <span v-else-if="scope.row.status == 5">停用</span>
+                    <span v-else>-</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="checkStatus" label="审核状态" align="center">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.status == 0">未审核通过</span>
+                    <span v-else-if="scope.row.status == 1">审核通过</span>
+                    <span v-else>-</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="" label="商品类型" align="center"></el-table-column>
+            <el-table-column prop="" label="贸易类型" align="center"></el-table-column>
+            <el-table-column prop="" label="税率" align="center"></el-table-column>
+            <el-table-column prop="stock" label="总库存" align="center"></el-table-column>
+            <el-table-column prop="" label="活动冻结库存" align="center"></el-table-column>
+            <el-table-column prop="" label="订单冻结库存" align="center"></el-table-column>
+            <el-table-column prop="" label="商品来源" align="center"></el-table-column>
+            <el-table-column prop="sendMode" label="发货方仓" align="center">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.sendMode == 1">平台发货</span>
+                    <span v-else-if="scope.row.sendMode == 2">供应商发货</span>
+                    <span v-else>-</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="freightTemplateName" label="运费模板" align="center"></el-table-column>
+            <el-table-column prop="" label="推送状态" align="center"></el-table-column>
+            <el-table-column label="创建时间" align="center">
+                <template slot-scope="scope" v-if="scope.row.upTime">
+                    {{scope.row.upTime | formatDateAll}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="" label="最近更新者" align="center"></el-table-column>
+            <el-table-column prop="" label="更新时间" align="center"></el-table-column>
+            <el-table-column prop="" label="备注" align="center"></el-table-column>
+            <el-table-column label="操作" align="center" width="80px">
                 <template slot-scope="scope">
                     <div class="operate">
                         <span @click="editProduct(scope.row)">编辑</span>
@@ -77,7 +109,9 @@ export default {
                 pageSize: this.page.pageSize
             }
             request.queryProdList(data).then(res => {
-                console.log(res);
+                let tblData = res.data || {};
+                this.tableData = tblData.data;
+                this.page.totalPage = tblData.totalNum;
             }).catch(err => {
                 console.log(err);
             });
@@ -124,6 +158,7 @@ export default {
             img {
                 width: 100px;
                 height: 100px;
+                border: 1px solid #ccc;
                 border-radius: 5px;
             }
             .info {
