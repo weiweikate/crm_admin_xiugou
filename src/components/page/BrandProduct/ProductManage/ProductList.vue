@@ -9,6 +9,7 @@
                 <el-form-item prop="feightTpl" label="运费模板">
                     <el-select v-model="form.feightTpl" placeholder="请选择运费模板">
                         <el-option value="" label="全部"></el-option>
+                        <el-option v-for="(v, k) in freightList" :key="k" :value="v.id" :label="v.name"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="prodType" label="商品类型">
@@ -26,6 +27,7 @@
                 <el-form-item prop="firstCategoryId" label="一级分类">
                     <el-select v-model="form.firstCategoryId" placeholder="请选择一级分类">
                         <el-option value="" label="全部"></el-option>
+                        <el-option v-for="(v, k) in firstCateList" :key="k" :value="v.id" :label="v.name"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="isProprietary" label="是否自营">
@@ -111,6 +113,8 @@
         data() {
             return {
                 nav: ['品牌产品管理', '产品管理'],
+                freightList: [],
+                firstCateList: [],
                 form: {
                     prodSpuCode: '',
                     feightTpl: '',
@@ -120,7 +124,7 @@
                     isProprietary: '',
                     pushStatus: '',
                     deliveryWare: '',
-                    updateTime: '',
+                    updateTime: [],
                     minPrice: '',
                     maxPrice: ''
                 },
@@ -128,8 +132,9 @@
             };
         },
         mounted() {
-            this.handleClick();
             this.getFeightList();
+            this.getFirstCateList();
+            this.handleClick();
         },
         methods: {
             handleClick(tab) {
@@ -141,14 +146,33 @@
                     case 'warehouse': status = 'warehouse'; break;
                     default: status = 'allProduct';
                 }
-                this.$refs[this.activeName].name = status;
-                this.$refs[this.activeName].form = this.form;
+                if (!this.form.updateTime) this.form.updateTime = [];
+                const data = {
+                    ...this.form,
+                    beginTime: this.$utils.formatTime(this.form.updateTime[0], 1),
+                    endTime: this.$utils.formatTime(this.form.updateTime[1], 1)
+                };
+                this.$refs[this.activeName].form = {...data};
                 this.$refs[this.activeName].handleCurrentChange(1);
             },
             // 获取运费模板列表
             getFeightList() {
                 request.queryFreightTemplateList({}).then(res => {
-                    console.log(res);
+                    this.freightList = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            // 获取一级分类列表
+            getFirstCateList() {
+                const data = {
+                    fatherId: 0,
+                    level: 1,
+                    page: 1,
+                    pageSize: 100000
+                };
+                request.queryProductCategoryList(data).then(res => {
+                    this.firstCateList = res.data.data;
                 }).catch(err => {
                     console.log(err);
                 });

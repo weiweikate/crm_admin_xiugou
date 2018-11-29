@@ -42,8 +42,8 @@ axios.interceptors.request.use(config => {
 
 axios.interceptors.response.use(
     res => {
+        // 重发code列表
         const code = [10006];
-        console.log(res);
         if (code.includes(res.data.code)) {
             const config = res.config;
             if (!config || !config.retry) return res.data || {};

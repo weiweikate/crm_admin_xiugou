@@ -60,7 +60,6 @@ export default {
 
     data() {
         return {
-            name: '',
             prodIdArr: [],
             form: {},
             tableData: [{ id: 1, name: '苹果8xApple/苹果 iPhone X 4G手机 iphonex苹果x屏,苹果8xApple/苹果 iPhone X 4G手机 iphonex苹果x屏', imgUrl: 'https://mr-test-sg.oss-cn-hangzhou.aliyuncs.com/sharegoods/a6bd99c9c1c04c778e86c9de57f92a09.png', short: '双十一超值热卖', tags: ['自营', '7天无理由退换'], code: '123456789' }] // 表格名称
@@ -73,16 +72,15 @@ export default {
         //   提交表单
         getList(val) {
             let data = {
+                ...this.form,
                 page: val,
                 pageSize: this.page.pageSize
             }
-            request.queryProdList({}).then(res => {
+            request.queryProdList(data).then(res => {
                 console.log(res);
             }).catch(err => {
                 console.log(err);
             });
-            console.log(this.name);
-            console.log(this.form);
         },
         // 全选
         handleSelectionChange(val) {

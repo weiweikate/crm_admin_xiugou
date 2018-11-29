@@ -5,6 +5,7 @@
             <div class="search">
                 <span class="search-title">您当前选择的分类是：</span>
                 <el-cascader class="search-inp" :options="itemList" filterable placeholder="选择或者搜索分类" v-model="content"></el-cascader>
+                <el-button type="success" @click="getAllItem">获取所有分类</el-button>
                 <p class="operate-btn">
                     <el-button type="primary" @click="nextSage">下一步,编辑商品信息</el-button>
                     <el-button @click="content = []">取消</el-button>
@@ -24,6 +25,7 @@ export default {
     data() {
         return {
             nav: ['品牌产品管理', '产品管理', '发布商品'],
+            loading: false,
             itemList: [],
             content: []
         };
@@ -45,14 +47,16 @@ export default {
         }
     },
 
-    created() {
+    mounted() {
         this.getAllItem();
     },
 
     methods: {
         // 获取所有分类
         getAllItem() {
+            this.loading = true;
             request.getAllProductCategory({}).then(res => {
+                this.loading = false;
                 const firstList = res.data.firstList || [];
                 const secList = res.data.secList || [];
                 const thirdList = res.data.thirdList || [];
@@ -77,6 +81,7 @@ export default {
                     }
                 });
             }).catch(err => {
+                this.loading = false;
                 console.log(err);
             });
         },

@@ -173,4 +173,4 @@ export const updataActivityPackagePriceAndStock = ['/operator/activityPackage/up
 export const updateActivityPackageSpecPriceStock = ['/operator/activityPackageSpecPrice/updateActivityPackageSpecPriceStock', { methods: 'post' }]; // 添加礼包库存
 export const queryCouponByType = ['/coupon/queryByType', { methods: 'get' }]; // 查询优惠券列表
 //-----------------------------------------------------------------------------------------2018-11-29 产品重构-----------
-export const queryProdList = ['/product/product/queryProductList', { methods: 'post' }]; // 查询产品列表
+export const queryProdList = ['/product/product/queryProductPageList', { methods: 'post' }]; // 查询产品列表
