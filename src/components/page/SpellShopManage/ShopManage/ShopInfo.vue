@@ -71,6 +71,9 @@
                     <p style="margin-top:10px">
                         <el-button @click="shopAnnouncement" type="primary" v-auth="'pindian.shopList.dpgggl'">店铺公告管理</el-button>
                     </p>
+                    <p style="margin-top:10px">
+                        <el-button @click="updateLevel" type="primary">修改店铺层级</el-button>
+                    </p>
                 </div>
             </div>
             <hr style="border:none;height:1px;background-color:#e2e2e2"/>
@@ -139,7 +142,27 @@
                 </div>
             </div>
         </el-card>
-
+       <el-dialog title="修改店铺层级" :visible.sync="mask">
+           <el-form>
+               <el-form-item label="当前：">
+                   {{detail.starName}}
+               </el-form-item>
+               <el-form-item label="更改">
+                   <el-select v-model="starId" placeholder="请选择店铺等级">
+                       <el-option
+                           v-for="item in shopLevelArr"
+                           :key="item.id"
+                           :label="item.name"
+                           :value="item.id">
+                       </el-option>
+                   </el-select>
+               </el-form-item>
+           </el-form>
+           <div slot="footer" class="dialog-footer">
+               <el-button type="primary" :loading="btnLoading" @click="sure">确 认</el-button>
+               <el-button @click="mask=false">取 消</el-button>
+           </div>
+       </el-dialog>
     </div>
 </template>
 
@@ -158,7 +181,11 @@
                 nav: ['拼店管理', '店铺管理', '店铺详情'],
                 shopId: '',
                 avatar: '',
-                detail: {}
+                detail: {},
+                mask: false,
+                shopLevelArr: [],
+                starId: '',
+                btnLoading: false
             };
         },
 
@@ -175,6 +202,7 @@
                 };
                 request.getStoreDetail(data).then(res => {
                     this.detail = res.data;
+                    this.starId = res.data.storeStarId;
                 }).catch(error => {
                     console.log(error);
                 });
@@ -214,6 +242,35 @@
             shopAnnouncement() {
                 sessionStorage.setItem('recruitShopId', this.shopId);
                 this.$router.push({ name: 'shopAnnouncement', query: { 'recruitShopId': this.shopId }});
+            },
+            // 获取店铺等级
+            getAllStoreStar() {
+                request.getAllStoreStar({}).then(res => {
+                    this.shopLevelArr = [];
+                    this.shopLevelArr = res.data;
+                }).catch(error => {
+                    console.log(error);
+                });
+            },
+            // 修改店铺层级
+            updateLevel() {
+                this.mask = true;
+                this.getAllStoreStar();
+            },
+            sure() {
+                const data = {
+                    id: this.shopId,
+                    starId: this.starId
+                };
+                this.btnLoading = true;
+                request.updateShopLevel(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.mask = false;
+                    this.btnLoading = false;
+                    this.getInfo();
+                }).catch(err => {
+                    this.btnLoading = false;
+                });
             }
         }
     };
