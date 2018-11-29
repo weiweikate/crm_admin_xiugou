@@ -72,6 +72,15 @@ export default {
     methods: {
         //   提交表单
         getList(val) {
+            let data = {
+                page: val,
+                pageSize: this.page.pageSize
+            }
+            request.queryProdList({}).then(res => {
+                console.log(res);
+            }).catch(err => {
+                console.log(err);
+            });
             console.log(this.name);
             console.log(this.form);
         },

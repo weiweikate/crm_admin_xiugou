@@ -172,3 +172,5 @@ export const findActivityPackageProductAndSpecByIdAn = ['/operator/activityPacka
 export const updataActivityPackagePriceAndStock = ['/operator/activityPackage/updateActivityPackagePriceAndStock', { methods: 'post' }]; // 修改礼包价格库存
 export const updateActivityPackageSpecPriceStock = ['/operator/activityPackageSpecPrice/updateActivityPackageSpecPriceStock', { methods: 'post' }]; // 添加礼包库存
 export const queryCouponByType = ['/coupon/queryByType', { methods: 'get' }]; // 查询优惠券列表
+//-----------------------------------------------------------------------------------------2018-11-29 产品重构-----------
+export const queryProdList = ['/product/product/queryProductList', { methods: 'post' }]; // 查询产品列表

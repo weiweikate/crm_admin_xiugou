@@ -14,13 +14,17 @@
                 <el-form-item prop="prodType" label="商品类型">
                     <el-select v-model="form.prodType" placeholder="请选择商品类型">
                         <el-option value="" label="全部"></el-option>
+                        <el-option value="1" label="普通商品"></el-option>
+                        <el-option value="2" label="虚拟商品"></el-option>
+                        <el-option value="3" label="内购商品"></el-option>
+                        <el-option value="4" label="卡券商品"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="updateUser" label="更新者">
                     <el-input v-model.trim="form.updateUser" placeholder="模糊下拉搜索"></el-input>
                 </el-form-item>
-                <el-form-item prop="firstCate" label="一级分类">
-                    <el-select v-model="form.firstCate" placeholder="请选择一级分类">
+                <el-form-item prop="firstCategoryId" label="一级分类">
+                    <el-select v-model="form.firstCategoryId" placeholder="请选择一级分类">
                         <el-option value="" label="全部"></el-option>
                     </el-select>
                 </el-form-item>
@@ -97,7 +101,7 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import vTabContent from './productList/_tabContent';
-
+    import request from '@/http/http';
     export default {
         components: {
             vBreadcrumb,
@@ -112,7 +116,7 @@
                     feightTpl: '',
                     prodType: '',
                     updateUser: '',
-                    firstCate: '',
+                    firstCategoryId: '',
                     isProprietary: '',
                     pushStatus: '',
                     deliveryWare: '',
@@ -125,6 +129,7 @@
         },
         mounted() {
             this.handleClick();
+            this.getFeightList();
         },
         methods: {
             handleClick(tab) {
@@ -139,6 +144,14 @@
                 this.$refs[this.activeName].name = status;
                 this.$refs[this.activeName].form = this.form;
                 this.$refs[this.activeName].handleCurrentChange(1);
+            },
+            // 获取运费模板列表
+            getFeightList() {
+                request.queryFreightTemplateList({}).then(res => {
+                    console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                });
             },
             // 创建商品
             createProd() {

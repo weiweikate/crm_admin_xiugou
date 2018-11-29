@@ -143,7 +143,7 @@ export default {
                 }).catch(err => {
                     console.log(err);
                 });
-            }, 5000);
+            }, 60000);
         },
         // 获取消息
         async getMsg() {
