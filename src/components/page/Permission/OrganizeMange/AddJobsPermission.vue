@@ -35,6 +35,7 @@
     import breadcrumb from '../../../common/Breadcrumb';
     import request from '@/http/http.js';
     import authList from '@/components/auth-list.vue';
+    import { validateZh } from '@/utils/validate.js';
 
     export default {
         components: {
@@ -53,7 +54,10 @@
                     privilegeInfo: ''
                 },
                 rules: {
-                    name: { required: true, message: '岗位名称必填', trigger: 'blur' },
+                    name: [{ required: true, message: '岗位名称必填', trigger: 'blur' }, {
+                        validator: validateZh,
+                        trigger: 'blur'
+                    }],
                     departmentId: {
                         required: true,
                         message: '请选择所属部门',
@@ -75,8 +79,7 @@
                     request.findRoleById({ id: parseInt(id) }).then(res => {
                         console.log('findRoleById', res);
                         this.form = res.data || {};
-                        this.auth = this.form.privilegeInfo;
-                        console.log(this.auth);
+                        this.auth = this.form.privilegeInfo || '';
                         this.$refs.auth.updateStatus(this.auth);
                     }).catch(err => {
                         console.log(err);

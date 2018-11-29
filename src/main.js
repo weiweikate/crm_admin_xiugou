@@ -75,7 +75,15 @@ Vue.directive('auth', {
             return;
         }
         if (!auth.includes(value)) {
-            el.parentNode.removeChild(el);
+
+            setTimeout(function () {
+                try {
+                    el.parentNode.removeChild(el);
+                }
+                catch (e) {
+                    console.log(e);
+                }
+            }, 10);
         }
     }
 });
