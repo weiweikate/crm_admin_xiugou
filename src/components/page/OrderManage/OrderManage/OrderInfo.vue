@@ -30,21 +30,21 @@
                 <span v-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
                 <span v-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
                 <br/>
-                <el-button v-if="orderStatus == 2&&orderMsg.cloudHadSend==0" @click='orderSendOut' class="cloud-delivery-btn"
+                <el-button v-if="orderStatus == 2&&orderMsg.cloudHadSend==0" v-auth="'order.orderList.tsyc'" @click='orderSendOut' class="cloud-delivery-btn"
                            type="danger">推送云仓
                 </el-button>
-                <el-button v-if="orderStatus == 2&&orderMsg.cloudHadSend==0" @click='sendGoods' class="cloud-delivery-btn"
+                <el-button v-if="orderStatus == 2&&orderMsg.cloudHadSend==0" v-auth="'order.orderList.xnfh'" @click='sendGoods' class="cloud-delivery-btn"
                            type="primary">虚拟发货
                 </el-button>
                 <p class="preferential-info" @click='isShowPreferential = true'>优惠详情</p>
-                <span class="mark">标记</span>
+                <span class="mark" v-auth="'order.orderList.bj'">标记</span>
                 <el-popover placement="bottom" width="150" v-model="isShowPop" trigger="hover">
-                    <span slot="reference" style="cursor:pointer"><span class="star" :style="{color:orderMsg.star}">★</span></span>
+                    <span slot="reference" style="cursor:pointer"  v-auth="'order.orderList.bj'"><span class="star" :style="{color:orderMsg.star}">★</span></span>
                     <span v-for="(v,k) in markArr" :key="k" @click="changeColor(1,v)" :style="{color:v.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
                 </el-popover>
-                <el-input v-model="orderMsg.adminRemark" type="textarea" placeholder="请输入备注" :rows="5" style="width:50%;float:right;margin-right:42%"></el-input>
+                <el-input v-model="orderMsg.adminRemark"  v-auth="'order.orderList.bj'" type="textarea" placeholder="请输入备注" :rows="5" style="width:50%;float:right;margin-right:42%"></el-input>
                 <div style="clear: both;"></div>
-                <div style="margin-left: 130px;margin-top: 10px">
+                <div style="margin-left: 130px;margin-top: 10px" v-auth="'order.orderList.bj'">
                     <el-button type="primary" @click="changeColor">保存</el-button>
                 </div>
                 <!-- <span class="star" :style="{color:orderMsg.star}">★</span>
