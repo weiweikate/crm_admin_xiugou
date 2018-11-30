@@ -70,7 +70,7 @@
                     </td>
                     <td :rowspan="v.productOrders.length" v-if="index==0">
                         <div class="order-status">待付款</div>
-                        <div class="color-blue" v-if="v.status<4">取消订单</div>
+                        <div class="color-blue" v-if="v.status<4" @click="cancelOrder(v)">取消订单</div>
                         <div class="color-blue" @click="$router.push({path:'/orderInfo',query:{orderInfoId:v.id}})">订单详情</div>
                     </td>
                 </tr>
@@ -187,23 +187,15 @@
                     console.log(err);
                 });
             },
-            // 跳到售后详情
-            toAfterSale(id) {
-                sessionStorage.setItem('afterSaleOprId', id);
-                this.$router.push({
-                    path: '/afterSaleOpr',
-                    query: { afterSaleOprId: id }
-                });
-            },
             // 推送云仓
             pushCloud(row) {
                 const data = {
-                    ids: []
+                    warehouseOrderNos: ''
                 };
                 if (row) {
-                    data.ids.push(row.id);
+                    data.warehouseOrderNos = row.id;
                 } else {
-                    data.ids = this.ids;
+                    data.ids = this.ids.join(',');
                 }
                 request.orderSendOut(data).then(res => {
                     this.$message.success(res.msg);
@@ -239,6 +231,18 @@
                         console.log(err);
                     });
                 }
+            },
+            // 取消订单
+            cancelOrder(id) {
+                const data = {
+                    warehouseOrderId: id
+                };
+                request.cancelOrder(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.getList(1);
+                }).catch(err => {
+
+                });
             }
         }
     };

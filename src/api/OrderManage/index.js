@@ -14,7 +14,7 @@ export const orderDetail = ['/orderManagement/orders/warehouseOrderNo', { method
 // 取消订单
 export const cancelOrder = '/orderManagement/orders/cancel';
 // 订单发货
-export const orderSendOut = '/order/pushCloudStorehouse';
+export const orderSendOut = '/orderManagement/orders/pushToWarehouse';
 // 虚拟发货
 export const sendGoods = '/order/sendOut';
 export const orderSign = '/order/sign';
