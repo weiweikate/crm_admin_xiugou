@@ -112,9 +112,9 @@
                     password: '',
                     confirmPassword: '',
                     remark: '',
-                    provinceCode: 330000,
-                    cityCode: 330100,
-                    areaCode: 330109,
+                    provinceCode: '',
+                    cityCode: '',
+                    areaCode: '',
                     status: 1
                 },
                 first: '',
