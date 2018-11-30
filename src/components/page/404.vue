@@ -6,12 +6,12 @@
         <div class="error-code">
             <img src="../../assets/images/common/404.png" alt="">
         </div>
-        <div class="error-desc">抱歉，您访问的页面不存在</div>
+        <div class="error-desc">抱歉，您暂无权限访问此页面</div>
         <div class="error-handle">
             <router-link to="/dashboard">
                 <el-button type="primary" size="large">返回首页</el-button>
             </router-link>
-            <el-button class="error-btn" type="primary" size="large" @click="goBack">返回上一页</el-button>
+            <el-button class="error-btn" type="primary" size="large" @click="logout">退出登录</el-button>
         </div>
     </div>
 </template>
@@ -21,6 +21,11 @@
         methods: {
             goBack() {
                 this.$router.go(-1);
+            },
+            logout() {
+                this.$store.dispatch('LogOut').then(() => {
+                    location.href = location.protocol + '//' + location.host;
+                });
             }
         }
     };

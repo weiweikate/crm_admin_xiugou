@@ -25,9 +25,9 @@
                 <el-table-column prop="adminName" label="创建者" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button @click='editItem(scope.row)' type="primary" v-auth="'unying.topicManage.bj'">编辑</el-button>
+                        <el-button @click='editItem(scope.row)' type="primary" v-auth="'yunying.topicManage.bj'">编辑</el-button>
                         <!--<el-button @click='preview(scope.row.id)' type="success">预览</el-button>-->
-                        <el-button type="warning" @click="del(scope.row.code)" v-auth="'unying.topicManage.sc'">删除</el-button>
+                        <el-button type="warning" @click="del(scope.row.code)" v-auth="'yunying.topicManage.sc'">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
