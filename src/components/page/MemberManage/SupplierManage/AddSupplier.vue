@@ -20,10 +20,10 @@
                         <el-input placeholder="请输入供应商账号" v-model="form.loginName"></el-input>
                     </el-form-item>
                     <el-form-item label="密码" prop="password">
-                        <el-input v-model="form.password" type="password" autocomplete="off"></el-input>
+                        <el-input v-model="form.password" type="password"></el-input>
                     </el-form-item>
                     <el-form-item label="确认密码" prop="confirmPassword">
-                        <el-input v-model="form.confirmPassword" type="password" autocomplete="off"></el-input>
+                        <el-input v-model="form.confirmPassword" type="password"></el-input>
                     </el-form-item>
                     <el-form-item prop="name" label="联系方式" class="phone-area">
                         <el-input class="small-inp" v-model="first"></el-input>
@@ -65,6 +65,12 @@
                     </el-form-item>
                     <el-form-item prop="endTime" label="供应商结算帐期：">
                         <p>每月15号</p>
+                    </el-form-item>
+                    <el-form-item label="状态" prop="status">
+                        <el-radio-group v-model="form.status">
+                            <el-radio :label="1">启用</el-radio>
+                            <el-radio :label="2">停用</el-radio>
+                        </el-radio-group>
                     </el-form-item>
                     <el-form-item prop="remark" label="备注">
                         <el-input placeholder="备注" v-model="form.remark"></el-input>
@@ -108,7 +114,8 @@
                     remark: '',
                     provinceCode: 330000,
                     cityCode: 330100,
-                    areaCode: 330109
+                    areaCode: 330109,
+                    status: 1
                 },
                 first: '',
                 second: '',
