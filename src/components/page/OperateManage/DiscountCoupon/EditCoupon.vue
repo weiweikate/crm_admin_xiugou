@@ -81,7 +81,8 @@
                 </el-form-item>
 
                 <el-form-item label="优惠券说明">
-                    <el-input type="textarea" v-model="form.remarks" placeholder="请输入说明"></el-input>
+                    <el-input type="textarea" v-model="form.remarks" @input="inputCount" maxlength="180" placeholder="请输入说明"></el-input>
+                    <span class="count">{{count}}/180</span>
                 </el-form-item>
 
                 <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">提交</el-button>
@@ -208,7 +209,8 @@
                 getProducts: {},
                 // 0:没有指定分类 1：全品类 2：多品类 3：单分类 4：多商品 5：但商品
                 categoryType: 0,
-                isOnly: false
+                isOnly: false,
+                count: 0
             };
         },
         activated() {
@@ -242,6 +244,7 @@
                     this.form.value = detail.value;
                     this.form.couponTemplateId = detail.couponTemplateId;
                     this.form.remarks = detail.remarks;
+                    this.count = detail.remarks.length;
                     this.categoryType = res.data.categoryType;
                     this.useConditions = detail.useConditions;
                     this.getProducts = {
@@ -531,6 +534,9 @@
             // 取消
             cancel() {
                 this.$router.push('/discountCoupon');
+            },
+            inputCount() {
+                this.count = this.form.remarks.length;
             }
         }
     };
@@ -701,8 +707,13 @@
         }
         .el-textarea__inner {
             width: 500px;
-            height: 100px;
+            height: 150px;
             resize: none;
+        }
+        .count{
+            position: absolute;
+            bottom: 0;
+            left: 450px;
         }
     }
 </style>
