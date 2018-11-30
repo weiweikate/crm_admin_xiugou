@@ -78,6 +78,7 @@
                 if (!list || list.length === 0) return list;
                 list.forEach(item => {
                     item.checked = false;
+                    if (item.name == 'labelManage') { console.log(item.children); }
                     this.dealAuth(item.children);
                 });
                 return list;
@@ -111,7 +112,7 @@
             },
             //  添加权限key值
             addAuth() {
-                let hasAuthMap = {};
+                const hasAuthMap = {};
                 let result = true;
                 this.list.forEach(first => {
                     if (first.checked) {
@@ -142,12 +143,11 @@
                                     }
                                 });
                             }
-
                         });
                     }
                 });
-                let tmp = [];
-                for (let key in hasAuthMap) {
+                const tmp = [];
+                for (const key in hasAuthMap) {
                     tmp.push(key);
                 }
                 this.$emit('message', tmp.join(','));

@@ -671,6 +671,7 @@ export const asyncRouterMap = [
                 meta: { title: '编辑模板' }
             },
             {
+                hidden: true,
                 name: 'giftManage',
                 path: '/giftManage',
                 component: resolve => require(['../components/page/BrandProduct/GiftManage/GiftManage.vue'], resolve),
