@@ -487,6 +487,27 @@ export const asyncRouterMap = [
         ]
     },
     {
+        path: '/logistics',
+        component: Layout,
+        name: 'logistics',
+        meta: { title: '物流管理', icon: 'icon-shezhi' },
+        children: [
+            {
+                hidden: true,
+                name: 'logisticsArea',
+                path: '/logisticsArea',
+                component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
+                meta: { title: '地区列表'}
+            },
+            {
+                name: 'logisticsCompanyList',
+                path: '/logisticsCompanyList',
+                component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
+                meta: { title: '物流公司列表'}
+            }
+        ]
+    },
+    {
         path: '/settlement',
         component: Layout,
         name: 'settlement',
