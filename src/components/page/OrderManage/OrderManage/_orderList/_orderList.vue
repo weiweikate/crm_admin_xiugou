@@ -25,20 +25,20 @@
                 <tr>
                     <td colspan="7" class="head">
                         <div><el-checkbox @change="orderCheckBox(v)" v-model="v.checked"></el-checkbox><span class="marl20">平台订单号 </span><span class="marl20">{{v.orderNum}}</span></div>
-                        <div>仓库订单号 <span class="marl20">{{v.orderNum}}</span></div>
-                        <div>下单时间 <span class="marl20">{{v.createTime|formatDateAll}}</span></div>
+                        <div>仓库订单号 <span class="marl20">{{v.warehouseOrder.platformOrderNo}}</span></div>
+                        <div>下单时间 <span class="marl20">{{v.warehouseOrder.createTime|formatDateAll}}</span></div>
                         <div>
                             <el-popover v-auth="'order.orderList.bj'" placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
                                             <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
                                                                                                          :style="{color:v.starColor}">★</span></span>
                                 <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
                                       :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
-                                <el-input v-model="v.adminRemark" placeholder="请输入备注"></el-input>
+                                <el-input v-model="v.warehouseOrder.markStar" placeholder="请输入备注"></el-input>
                             </el-popover>
                         </div>
                     </td>
                 </tr>
-                <tr v-for="(value,index) in v.orderProductList" :key="index">
+                <tr v-for="(value,index) in v.productOrders" :key="index">
                     <td style="width: 400px">
                         <div class="name">
                             <img :src="value.specImg" alt="">
@@ -51,26 +51,26 @@
                         <span>¥{{value.price}}</span>
                         <span class="num">{{value.num}}</span>
                     </td>
-                    <td class="text-left" :rowspan="v.orderProductList.length" v-if="index==0">
+                    <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
                         应付金额：{{v.totalPrice}}
                     </td>
-                    <td class="text-left" :rowspan="v.orderProductList.length" v-if="index==0">
-                        <div>用户账号：13333333333</div>
-                        <div>收货人姓名：{{v.receiver}}</div>
-                        <div>客服备注：{{v.remark}}</div>
+                    <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
+                        <div>用户账号：{{v.warehouseOrder.userPhone}}</div>
+                        <div>收货人姓名：{{v.warehouseOrder.receiver}}</div>
+                        <div>客服备注：{{v.warehouseOrder.message}}</div>
                     </td>
-                    <td class="text-left" :rowspan="v.orderProductList.length" v-if="index==0">
-                        <div>供应商：13333333333</div>
-                        <div>发货仓库：{{v.receiver}}</div>
+                    <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
+                        <div>供应商：{{v.warehouseOrder.supplierName}}</div>
+                        <div>发货仓库：{{v.warehouseOrder.warehouseType}}</div>
                         <div>推送状态：{{v.remark}}</div>
-                        <div>锁定状态：{{v.remark}}</div>
+                        <div>锁定状态：{{v.warehouseOrder.lockStatus}}</div>
                     </td>
-                    <td class="text-left" :rowspan="v.orderProductList.length" v-if="index==0">
+                    <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
                         <div>开具发票：13333333333</div>
                     </td>
-                    <td :rowspan="v.orderProductList.length" v-if="index==0">
+                    <td :rowspan="v.productOrders.length" v-if="index==0">
                         <div class="order-status">待付款</div>
-                        <div class="color-blue" v-if="v.status<5">取消订单</div>
+                        <div class="color-blue" v-if="v.status<4">取消订单</div>
                         <div class="color-blue" @click="$router.push({path:'/orderInfo',query:{orderInfoId:v.id}})">订单详情</div>
                     </td>
                 </tr>
@@ -98,17 +98,6 @@
         mixins: [myMixinTable],
         data() {
             return {
-                w: {
-                    name: '25%',
-                    price: '8%',
-                    num: '8%',
-                    consignee: '12%',
-                    status: '8%',
-                    collection: '12%',
-                    shipper: '8%',
-                    operate: '15%',
-                    minWidth: '100px'
-                },
                 starArr: [
                     { label: '红色标记', value: '1' },
                     { label: '蓝色标记', value: '2' },
@@ -137,29 +126,42 @@
             // 提交表单
             getList(val) {
                 this.data.page = this.page.currentPage;
-                this.data.size = this.page.pageSize;
+                this.data.pageSize = this.page.pageSize;
                 this.tableData = [];
                 this.pageLoading = true;
                 request.queryOrderPageList(this.data).then(res => {
                     this.pageLoading = false;
                     for (const i in res.data.data) {
-                        // res.data.data[i].isShowPop = false;
-                        res.data.data[i].starColor =
-                            this.markArr[res.data.data[i].adminStars - 1] == undefined
+                        res.data.data[i].warehouseOrder.starColor =
+                            this.markArr[res.data.data[i].warehouseOrder.markStar - 1] == undefined
                                 ? '#ccc'
-                                : this.markArr[res.data.data[i].adminStars - 1].label;
-                        // res.data.data[i].price =
-                        //     res.data.data[i].totalPrice == null
-                        //         ? '0'
-                        //         : res.data.data[i].totalPrice;
-                        res.data.data[i].orderProductList = res.data.data[i].orderProductList || [];
-                        this.tableData.push(res.data.data[i]);
+                                : this.markArr[res.data.data[i].warehouseOrder.markStar - 1].label;
+                        res.data.data[i].warehouseOrder.warehouseType = this.transWarehouseType(res.data.data[i].warehouseOrder.warehouseType);
                     }
+                    this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                 }).catch(err => {
                     this.pageLoading = false;
                     console.log(err);
                 });
+            },
+            transWarehouseType(type) {
+                let name = '';
+                switch (type) {
+                    case 1:
+                        name = '自建仓';
+                        break;
+                    case 2:
+                        name = '加盟仓';
+                        break;
+                    case 3:
+                        name = '供应商仓';
+                        break;
+                    case 4:
+                        name = '虚拟仓';
+                        break;
+                }
+                return name;
             },
             // 修改星级
             changeColor(v1, v) {
