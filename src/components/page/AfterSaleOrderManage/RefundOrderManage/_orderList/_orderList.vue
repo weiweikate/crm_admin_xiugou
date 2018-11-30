@@ -32,8 +32,8 @@
         </div>
         <el-dialog title="手工退款备注" :visible.sync="mask">
             <el-form>
-                <el-input type="textarea" v-model="remark" placeholder="请输入手工退款账号等信息" @input="inputRemark" maxlength="50"></el-input>
-                <span class="count">{{count}}/50</span>
+                <el-input type="textarea" v-model="remark" placeholder="仅需操作第三方退款金额，余额由系统自动退回，请详细记录手工退款账号等信息。" @input="inputRemark" maxlength="100"></el-input>
+                <span class="count">{{count}}/100</span>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="refundSure">确 认</el-button>

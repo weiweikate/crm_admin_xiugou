@@ -2,8 +2,7 @@ export const findLogisticsDetail = ['/order/logistics/findLogisticsDetail', { me
 
 // 订单管理
 // 订单列表
-// export const queryOrderPageList = '/orderManagement/orders/query';
-export const queryOrderPageList = '/order/queryPage';
+export const queryOrderPageList = '/orderManagement/orders/query';
 // 查询发货单列表
 export const queryDeliveryOrderPageList = '/orderManagement/delivery/query';
 // 查询发货单详情
@@ -11,7 +10,7 @@ export const deliveryOrderDetail = ['/orderManagement/delivery/deliveryNo', { me
 // 查询支付单列表
 export const queryPaymentsOrderPageList = '/orderManagement/payments/query';
 // 订单详情
-export const orderDetail = '/order/lookDetail';
+export const orderDetail = ['/orderManagement/orders/warehouseOrderNo', { methods: 'get' }];
 // 取消订单
 export const cancelOrder = '/orderManagement/orders/cancel';
 // 订单发货

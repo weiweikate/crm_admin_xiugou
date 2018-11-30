@@ -161,7 +161,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="审核金额调整">
-                        <el-input v-model="form.price"></el-input><span class="tip">元，请在¥0.00~¥20.00区间内调整</span>
+                        <el-input v-model="form.price"></el-input><span class="tip">元，请在¥0.00~¥20.00区间内调整，其中含运费¥6。66</span>
                     </el-form-item>
                     <el-form-item label="退货信息" class="back-address">
                         <div class="address-area">
@@ -197,14 +197,14 @@
                         </el-radio-group>
                     </el-form-item>
                     <!--退款-->
-                    <el-form-item label="处理金额调整" v-if="status==1">
-                        <el-input v-model="form.price"></el-input><span class="tip">元，请在¥0.00~¥20.00区间内调整</span>
-                    </el-form-item>
                     <el-form-item label="售后类型">
                         <el-radio-group v-model="form.type">
                             <el-radio label="1">换货</el-radio>
                             <el-radio label="2">退货退款</el-radio>
                         </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="处理金额调整" v-if="status==1">
+                        <el-input v-model="form.price"></el-input><span class="tip">元，请在¥0.00~¥20.00区间内调整</span>
                     </el-form-item>
                     <el-form-item label="售后处理说明">
                         <el-input v-model="form.remark"></el-input>
