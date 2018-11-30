@@ -7,12 +7,15 @@ import { asyncRouterMap, constantRouterMap } from '@/router';
  * @param route
  */
 function hasPermission(auth, roles, route) {
-    if (route.meta && route.meta.roles) {
+    if (route.hidden) {
+        return true;
+    }
+    else if (route.meta && route.meta.roles) {
         return roles.some(role => route.meta.roles.includes(role));
     } else if (auth.includes(route.name)) {
         return true;
     } else {
-        return true;
+        return false;
     }
 }
 
@@ -59,7 +62,7 @@ const permission = {
                 } else {
                     accessedRouters = filterAsyncRouter(asyncRouterMap, auth, roles);
                 }
-                console.log('用户权限',accessedRouters)
+                console.log('用户权限', accessedRouters);
                 commit('SET_ROUTERS', accessedRouters.concat([{ path: '*', redirect: '/404', hidden: true }]));
                 resolve();
             });
