@@ -55,44 +55,44 @@
                     <div class="title">订单支付信息</div>
                     <div class="item">
                         <span>商品总额</span>
-                        <span>{{customerServiceInfos.totalAmount}}</span>
+                        <span>¥{{customerServiceInfos.totalAmount||0}}</span>
                     </div>
                     <div class="item">
                         <span>运费</span>
-                        <span>{{customerServiceInfos.freightAmount}}</span>
+                        <span>¥{{customerServiceInfos.freightAmount||0}}</span>
                     </div>
                     <div class="item">
                         <span>应付金额</span>
-                        <span>{{customerServiceInfos.totalAmount+customerServiceInfos.freightAmount}}</span>
+                        <span>¥{{customerServiceInfos.totalAmount||0+customerServiceInfos.freightAmount||0}}</span>
                     </div>
                     <div class="item">
                         <span>促销优惠</span>
-                        <span>{{customerServiceInfos.promotionAmount}}</span>
+                        <span>¥{{customerServiceInfos.promotionAmount||0}}</span>
                     </div>
                     <div class="item">
                         <span>优惠券</span>
-                        <span>{{customerServiceInfos.couponAmount}}</span>
+                        <span>¥{{customerServiceInfos.couponAmount||0}}</span>
                     </div>
                     <div class="item">
                         <span>一元券</span>
-                        <span>{{customerServiceInfos.tokenCoinAmount}}</span>
+                        <span>¥{{customerServiceInfos.tokenCoinAmount||0}}</span>
                     </div>
                     <!--已付款,已发货，交易完成，交易关闭-->
                     <div class="item" v-if="customerServiceInfos.status!=1">
                         <span>余额支付</span>
-                        <span>{{customerServiceInfos.accountPayAmount}}</span>
+                        <span>¥{{customerServiceInfos.accountPayAmount||0}}</span>
                     </div>
                     <div class="item" v-if="customerServiceInfos.status!=1">
                         <span>第三方支付</span>
-                        <span>{{customerServiceInfos.cashPayAmount}}</span>
+                        <span>¥{{customerServiceInfos.cashPayAmount||0}}</span>
                     </div>
                     <div class="item" v-if="customerServiceInfos.status!=1">
                         <span>开票余额</span>
-                        <span>{{customerServiceInfos.invoiceAmount}}</span>
+                        <span>¥{{customerServiceInfos.invoiceAmount||0}}</span>
                     </div>
                     <div class="item" v-if="customerServiceInfos.status!=1">
                         <span>实付金额</span>
-                        <span>{{customerServiceInfos.payAmount}}</span>
+                        <span>¥{{customerServiceInfos.payAmount||0}}</span>
                     </div>
                 </div>
                 <div class="item-wrap">
@@ -246,7 +246,7 @@
                 customerServiceInfos: {},
                 expressInfos: {},
                 orderInvoiceInfo: {},
-                warehouseOrder: {},
+                warehouseOrder: {}
             };
         },
 

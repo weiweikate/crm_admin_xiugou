@@ -18,6 +18,12 @@ export const orderSendOut = '/order/pushCloudStorehouse';
 // 虚拟发货
 export const sendGoods = '/order/sendOut';
 export const orderSign = '/order/sign';
+// 支付单列表
+export const queryPayments = '/orderManagement/payments/query';
+// 查询发货单列表
+export const queryDelivery = '/orderManagement/delivery/query';
+// 订单详情
+export const deliveryNo = ['/orderManagement/delivery/{deliveryNo}', { methods: 'get' }];
 
 // 售后
 // 同意申请（第一次同意）

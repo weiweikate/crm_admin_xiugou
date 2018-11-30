@@ -7,35 +7,35 @@
                     <div class="title">订单基础信息</div>
                     <div class="item">
                         <span>平台订单号</span>
-                        <span>1111111111111111111111</span>
+                        <span>{{platformOrder.platformOrderNo}}</span>
                     </div>
                     <div class="item">
                         <span>仓库订单号</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{orderProductExpress.warehouseOrderNo}}</span>
                     </div>
                     <div class="item">
                         <span>发货单号</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{orderProductExpress.orderProductNo}}</span>
                     </div>
                     <div class="item">
                         <span>供应商名称</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{orderDelivery.supplierName}}</span>
                     </div>
                     <div class="item">
                         <span>物流公司</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{orderProductExpress.expressName}}</span>
                     </div>
                     <div class="item">
                         <span>物流单号</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{orderProductExpress.expressNo}}</span>
                     </div>
                     <div class="item">
                         <span>物流费用</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{orderDelivery.freightAmount}}</span>
                     </div>
                     <div class="item">
                         <span>发货单创建时间</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{orderDelivery.createTime|formatDateAll}}</span>
                     </div>
                 </div>
 
@@ -43,23 +43,23 @@
                     <div class="title">订单收货信息</div>
                     <div class="item">
                         <span>收货人姓名</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{platformOrder.receiver}}</span>
                     </div>
                     <div class="item">
                         <span>收货人联系方式</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{platformOrder.receiverPhone}}</span>
                     </div>
                     <div class="item">
                         <span>收货省市区</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{platformOrder.province}}{{platformOrder.city}}{{platformOrder.area}}</span>
                     </div>
                     <div class="item">
                         <span>收货详细地址</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{platformOrder.address}}</span>
                     </div>
                     <div class="item">
                         <span>配送方式</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{platformOrder.orderNum}}</span>
                     </div>
                 </div>
             </div>
@@ -75,9 +75,9 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="code" label="SKU编码" align="center"></el-table-column>
-                    <el-table-column prop="code" label="供应商SKU编码" align="center"></el-table-column>
-                    <el-table-column prop="num" label="发货数量" align="center"></el-table-column>
+                    <el-table-column prop="skuCode" label="SKU编码" align="center"></el-table-column>
+                    <el-table-column prop="supplierSkuCode" label="供应商SKU编码" align="center"></el-table-column>
+                    <el-table-column prop="quantity" label="发货数量" align="center"></el-table-column>
                 </el-table>
             </div>
         </el-card>
@@ -95,7 +95,7 @@
         mixins: [queryDictonary],
         data() {
             return {
-                nav: ['订单管理', '发货单列表','发货单详情'],
+                nav: ['订单管理', '发货单列表', '发货单详情'],
                 detailUrl: '',
                 orderId: '',
                 boolFirst: false,
@@ -176,18 +176,15 @@
                     this.orderMsg = res.data;
                     this.tableData = [];
                     res.data.orderPayRecord = res.data.orderPayRecord ? res.data.orderPayRecord : {};
-                    res.data.orderProductList.forEach((v, k) => {
-                        if (k == 0) {
-                            v.returnProductList = [{ id: 1, salesStatus: '11' }, { id: 1, salesStatus: '22' }];
-                            v.logicList = [{ id: 1, logicStatus: '11' }];
-                        } else {
-                            v.returnProductList = [{ id: 2, salesStatus: '11' }];
-                            v.logicList = [{ id: 2, logicStatus: '11' }, { id: 2, logicStatus: '22' }];
-                        }
-                        const length = v.returnProductList.length > v.logicList.length ? v.returnProductList.length : v.logicList.length;
-                        v.rows = length;
+                    res.data.warehouseOrderProducts.forEach((v, k) => {
+                        const tempTitle = v.specTitle.split(',');
+                        const tempValue = v.specValues.split(',');
+                        v.spec = [];
+                        tempTitle.forEach((v, k) => {
+                            const temp = v + ':' + tempValue[k] + '    ';
+                            v.spec.push(temp);
+                        });
                         this.tableData.push(v);
-                        console.log(this.tableData);
                     });
                 }).catch(err => {
                     console.log(err);

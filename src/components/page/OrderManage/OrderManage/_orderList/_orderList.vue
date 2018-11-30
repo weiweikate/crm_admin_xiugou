@@ -125,10 +125,11 @@
         methods: {
             // 提交表单
             getList(val) {
-                this.data.page = this.page.currentPage;
+                this.data.page = val;
                 this.data.pageSize = this.page.pageSize;
                 this.tableData = [];
                 this.pageLoading = true;
+                this.page.currentPage = val;
                 request.queryOrderPageList(this.data).then(res => {
                     this.pageLoading = false;
                     for (const i in res.data.data) {
@@ -138,6 +139,15 @@
                                 : this.markArr[res.data.data[i].warehouseOrder.markStar - 1].label;
                         res.data.data[i].warehouseOrder.warehouseType = this.transWarehouseType(res.data.data[i].warehouseOrder.warehouseType);
                     }
+                    res.data.data.productOrders.forEach((v, k) => {
+                        const tempTitle = v.specTitle.split(',');
+                        const tempValue = v.specValues.split(',');
+                        v.spec = [];
+                        tempTitle.forEach((v, k) => {
+                            const temp = v + ':' + tempValue[k] + '    ';
+                            v.spec.push(temp);
+                        });
+                    });
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                 }).catch(err => {

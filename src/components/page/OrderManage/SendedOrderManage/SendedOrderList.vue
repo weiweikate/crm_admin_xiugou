@@ -13,11 +13,11 @@
                     >
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item prop="user" label="发货单号">
-                    <el-input style="width:200px" placeholder="请输入发货单号" v-model="form.user"></el-input>
+                <el-form-item prop="deliveryNo" label="发货单号">
+                    <el-input style="width:200px" placeholder="请输入发货单号" v-model="form.deliveryNo"></el-input>
                 </el-form-item>
-                <el-form-item prop="payNum" label="仓库订单号">
-                    <el-input style="width:200px" placeholder="请输入仓库订单号" v-model="form.payNum"></el-input>
+                <el-form-item prop="warehouseNo" label="仓库订单号">
+                    <el-input style="width:200px" placeholder="请输入仓库订单号" v-model="form.warehouseNo"></el-input>
                 </el-form-item>
                 <el-form-item prop="status" label="发货单状态">
                     <el-select v-model="form.status" placeholder="全部">
@@ -36,11 +36,11 @@
         </el-card>
         <div class="table-block">
             <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
-                    <el-table-column prop="payNum" label="发货单号" align="center"></el-table-column>
-                    <el-table-column prop="area" label="仓库订单号" align="center"></el-table-column>
-                    <el-table-column prop="payNum" label="供应商名称" align="center"></el-table-column>
-                    <el-table-column prop="area" label="物流费用" align="center"></el-table-column>
-                    <el-table-column prop="area" label="物流公司" align="center"></el-table-column>
+                    <el-table-column :prop="orderProductExpress.expressNo" label="发货单号" align="center"></el-table-column>
+                    <el-table-column :prop="orderProductExpress.warehouseOrderNo" label="仓库订单号" align="center"></el-table-column>
+                    <el-table-column :prop="orderDelivery.supplierName" label="供应商名称" align="center"></el-table-column>
+                    <el-table-column :prop="orderDelivery.freightAmount" label="物流费用" align="center"></el-table-column>
+                    <el-table-column :prop="orderProductExpress.expressName" label="物流公司" align="center"></el-table-column>
                     <el-table-column label="发货单状态" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.status == 1">仓库接收失败</template>
@@ -78,6 +78,7 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import { myMixinTable } from '@/JS/commom';
+    import moment from 'moment';
     import request from '@/http/http.js';
 
     export default {
@@ -93,8 +94,8 @@
                 height: '',
                 form: {
                     time: '',
-                    user: '',
-                    payNum: '',
+                    deliveryNo: '',
+                    warehouseNo: '',
                     status: ''
                 }
             };
@@ -112,13 +113,16 @@
                     page: val,
                     pageSize: this.page.pageSize,
                     status: that.form.status,
-                    name: that.form.name
+                    deliveryNo: that.form.deliveryNo,
+                    warehouseNo: that.form.warehouseNo,
+                    from: this.form.time[0] ? moment(this.form.time[0]).format('YYYY-MM-DD') : '',
+                    to: this.form.time[1] ? moment(this.form.time[1]).format('YYYY-MM-DD') : ''
                 };
                 this.page.currentPage = val;
                 that.tableLoading = true;
                 request.getProductBrandList(data).then(res => {
                     that.tableLoading = false;
-                    if (!res.data) return;
+                    if (!res.data.data) return;
                     that.tableData = res.data.data;
                     that.page.totalPage = res.data.totalNum;
                 }).catch(error => {
