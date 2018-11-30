@@ -4,8 +4,8 @@
         <el-card :body-style="{ padding: '30px' }" v-loading="pageLoading">
             <div class="charge-title">提现手续费设置</div>
             <p class="with-charge-p">
-                <el-radio v-model="withSet" label="minBalance" >设置起始提现金额</el-radio>
-                <el-input v-model="minBalance" :disabled="withSet !== 'minBalance'" style="width:150px" placeholder="请输入数值"></el-input>　元　
+                <el-radio v-model="withSet" label="minBalance" >提现手续费比例</el-radio>
+                <el-input :disabled="withSet !== 'minBalance'" v-model="charge" style="width:150px" placeholder="请输入数值"></el-input> %　
                 <span style="color: #ccc">注：填写数值0-100，只可填写数字</span>
             </p>
             <p class="with-charge-p">
@@ -16,8 +16,8 @@
             </p>
             <div class="charge-title">提现设置</div>
             <p class="with-charge-p">
-                <el-checkbox v-model="isSelectWithCharge" @change="isSelectWithCharge?'':charge = '0'">提现手续费比例</el-checkbox>
-                <el-input :disabled="!isSelectWithCharge" v-model="charge" style="width:150px" placeholder="请输入数值"></el-input> %　
+                <el-checkbox v-model="isSelectWithCharge" @change="isSelectWithCharge?'':charge = '0'">设置起始提现金额</el-checkbox>
+                <el-input v-model="minBalance" :disabled="!isSelectWithCharge" style="width:150px" placeholder="请输入数值"></el-input>　元　
                 <span style="color: #ccc">注：填写数值0-100，只可填写数字</span>
             </p>
             <p class="with-charge-p">

@@ -265,6 +265,18 @@ export const findDepartmentById = '/department/findDepartmentById';
 // 编辑部门
 export const updateDepartment = '/department/updateDepartment';
 
+
+// 物流公司查询
+export const sysExpressQuery = ['/config/sysExpress/query', { methods: 'get'}];
+// 停用某物流公司
+export const disableExpress = ['/config/sysExpress/disable', { methods: 'get'}];
+// 启用某物流公司
+export const enableExpress = ['/config/sysExpress/enable', { methods: 'get'}];
+// 添加物流公司
+export const addExpress = ['/config/sysExpress/save', { methods: 'post'}];
+// 更新物流公司
+export const updateExpress = ['/config/sysExpress/edit', { methods: 'post'}];
+
 // ERP接口
 export const updateERPstatus = ['/config/erp/change', { methods: 'get' }];
 export const updateERP = '/config/erp/save';

@@ -17,6 +17,7 @@
                         <el-upload
                             :action="uploadImg"
                             :show-file-list="false"
+                            :before-upload="beforeAvatarUpload"
                             :on-success="uploadAvatar">
                             <el-button type="primary">编辑头像</el-button>
                         </el-upload>
@@ -60,12 +61,15 @@
     import * as api from '@/api/api.js';
     import request from '@/http/http.js';
     import authList from '@/components/auth-list.vue';
+    import { beforeAvatarUpload } from '@/JS/commom';
+    import { validateZh, validatePhone } from '@/utils/validate.js';
 
     export default {
         components: {
             breadcrumb,
             authList
         },
+        mixins: [beforeAvatarUpload],
         data() {
             return {
                 auth: '',
@@ -84,8 +88,14 @@
                     face: ''
                 },
                 rules: {
-                    name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-                    telephone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+                    name: [{ required: true, message: '请输入姓名', trigger: 'blur' }, {
+                        validator: validateZh,
+                        trigger: 'blur'
+                    }],
+                    telephone: [{ required: true, message: '请输入手机号', trigger: 'blur' }, {
+                        validator: validatePhone,
+                        trigger: 'blur'
+                    }],
                     deptmentId: [{ required: true, message: '请输入所属部门', trigger: 'blur' }],
                     jobId: [{ required: true, message: '请输入所在岗位', trigger: 'blur' }],
                     immediateSuperior: [{ required: true, message: '请输入直接上级ID', trigger: 'blur' }]
@@ -98,6 +108,9 @@
             this.initAction();
         },
         methods: {
+            beforeUpload() {
+
+            },
             initAction() {
                 const id = this.$route.query.id;
                 // 修改
@@ -115,7 +128,7 @@
                             immediateSuperior: 1,
                             face: data.face
                         };
-                        this.auth = data.privilegeInfo;
+                        this.auth = data.privilegeInfo || '';
                         this.$refs.auth.updateStatus(this.auth);
                         this.getJobList(data.deptmentId);
                     }).catch(err => {
@@ -156,11 +169,6 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         let data = {};
-                        const reg = /^\d{11}$/;
-                        if (!reg.test(this.form.telephone)) {
-                            this.$message.warning('请输入正确的手机号！');
-                            return;
-                        }
                         data = this.form;
                         this.btnLoading = true;
                         this.$refs[formName].validate((valid) => {
@@ -190,6 +198,7 @@
             // 重置表单
             resetForm(formName) {
                 this.$refs[formName].resetFields();
+                this.$refs.auth.updateStatus('');
             },
 
             // 上传图片

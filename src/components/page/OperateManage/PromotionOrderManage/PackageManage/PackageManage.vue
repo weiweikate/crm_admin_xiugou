@@ -43,10 +43,10 @@
                 </el-table-column>
                 <el-table-column label="操作" min-width="200">
                     <template slot-scope="scope">
-                        <el-button type="success"  @click="addInventory(scope.row)" v-auth="'yunying.promotionOrderManage.zjkc'">增加库存</el-button>
-                        <el-button type="primary" @click="buyDetail(scope.row)" v-auth="'gmxq'">购买详情</el-button>
-                        <el-button type="warning" @click="toDetail(scope.row)" v-auth="'yunying.promotionOrderManage.ckxq'">查看详情</el-button>
-                        <el-button @click="openOrClose(scope.row,0)" v-if="scope.row.status==1" type="danger" v-auth="'yunying.promotionOrderManage.gb'">关闭</el-button>
+                        <el-button type="success"  @click="addInventory(scope.row)" v-auth="'yyunying.promotionOrderManage.tcgl.zjkc'">增加库存</el-button>
+                        <el-button type="primary" @click="buyDetail(scope.row)" v-auth="'yunying.promotionOrderManage.tcgl.gmxq'">购买详情</el-button>
+                        <el-button type="warning" @click="toDetail(scope.row)" v-auth="'yunying.promotionOrderManage.tcgl.ckxq'">查看详情</el-button>
+                        <el-button @click="openOrClose(scope.row,0)" v-if="scope.row.status==1" type="danger" v-auth="'yunying.promotionOrderManage.tcgl.gb'">关闭</el-button>
                         <!--<el-button @click="openOrClose(scope.row,1)" v-else type="warning">开启</el-button>-->
                     </template>
                 </el-table-column>
