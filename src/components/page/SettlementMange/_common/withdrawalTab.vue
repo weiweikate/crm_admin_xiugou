@@ -75,11 +75,11 @@
                 <el-form-item prop="no" label="提现编号:">{{recordForm.withdrawNum}}</el-form-item>
                 <el-form-item prop="rePeople" label="申请人:">{{recordForm.userName}}</el-form-item>
                 <el-form-item prop="money" label="申请提现金额:"><span style="color:red">{{(recordForm.withdrawBalance || 0) | handleMoney}}</span></el-form-item>
-                <el-form-item prop="beginTime" label="发起时间:">{{recordForm.createTime?(recordForm.createTime | formatDateAll):''}}</el-form-item>
+                <el-form-item prop="beginTime" label="发起时间:">{{recordForm.createTime | formatDateAll}}</el-form-item>
                 <el-form-item prop="blank" label="银行:">{{recordForm.bankName}}</el-form-item>
                 <el-form-item prop="card" label="提现卡号:">{{recordForm.cardNo}}</el-form-item>
                 <el-form-item prop="operatePeople" label="操作人:">{{recordForm.adminName}}</el-form-item>
-                <el-form-item prop="confirmTime" label="确认时间:">{{recordForm.updateTime?(recordForm.updateTime | formatDateAll):''}}</el-form-item>
+                <el-form-item prop="confirmTime" label="确认时间:">{{recordForm.updateTime | formatDateAll}}</el-form-item>
             </el-form>
             <span slot="footer">
                 <el-button type="primary" @click="isShowRecord = false">确 定</el-button>
