@@ -10,6 +10,9 @@
                 <el-form-item prop="loginName" label="供应商账号">
                     <el-input v-model="form.loginName" placeholder="请输入供应商账号"></el-input>
                 </el-form-item>
+                <el-form-item prop="code" label="供应商编号">
+                    <el-input v-model="form.code" placeholder="请输入供应商编号"></el-input>
+                </el-form-item>
                 <el-form-item label="最近登录时间" prop="time">
                     <el-date-picker
                         v-model="form.time"
@@ -46,8 +49,8 @@
             <template>
                 <el-button type="primary" style="margin-bottom: 20px" @click="addSupplier" v-auth="'vip.supplierManage.tjgys'">添加供应商</el-button>
                 <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%">
-                    <el-table-column type="index" label="供应商编号" width="100" align="center"></el-table-column>
-                    <el-table-column prop="code" label="供应商ID" width="100" align="center"></el-table-column>
+                    <el-table-column prop="id" label="供应商ID" width="100" align="center"></el-table-column>
+                    <el-table-column prop="code" label="供应商编号" width="100" align="center"></el-table-column>
                     <el-table-column prop="loginName" label="供应商账号" width="100" align="center"></el-table-column>
                     <el-table-column prop="name" label="供应商名称" align="center"></el-table-column>
                     <el-table-column label="供应商类型" width="100" align="center">
@@ -69,7 +72,6 @@
                     <el-table-column prop="lastLoginTime" label="最近登录时间" width="150" align="center">
                         <template slot-scope="scope">
                             <span v-if="scope.row.lastLoginTime">{{scope.row.lastLoginTime  | dateformat('YYYY-MM-DD HH:mm:ss')}}</span>
-                            <span v-else>null</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="createName" label="创建者" width="100" align="center"></el-table-column>
@@ -80,7 +82,7 @@
                             <template v-if="scope.row.status==3">删除</template>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" align="center">
+                    <el-table-column label="操作" align="center">l ；。、
                         <template slot-scope="scope">
                             <el-button type="warning" size="small"
                                        @click="detailItem(scope.$index,scope.row)" v-auth="'vip.supplierManage.xq'">详情
@@ -172,7 +174,8 @@
                     mobile: '',
                     time: '',
                     loginName: '',
-                    status: ''
+                    status: '',
+                    code: ''
                 },
                 exportForm: {},
                 selected: '',
