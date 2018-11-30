@@ -3,9 +3,12 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="mb10">
             <el-form :model="form" ref='form' inline label-width="130px">
-                <el-form-item prop="prodSpuCode" label="商品SPU">
-                    <el-input v-model.trim="form.prodSpuCode" placeholder="请输入商品SPU"></el-input>
+                <el-form-item prop="prodSpuCode" label="商品SPU/商品名称">
+                    <el-input v-model.trim="form.prodSpuCode" placeholder="请输入商品SPU/商品名称"></el-input>
                 </el-form-item>
+                <!--<el-form-item prop="name" label="商品名称">-->
+                    <!--<el-input v-model.trim="form.name" placeholder="请输入商品名称"></el-input>-->
+                <!--</el-form-item>-->
                 <el-form-item prop="feightTpl" label="运费模板">
                     <el-select v-model="form.feightTpl" placeholder="请选择运费模板">
                         <el-option value="" label="全部"></el-option>
@@ -16,14 +19,14 @@
                     <el-select v-model="form.prodType" placeholder="请选择商品类型">
                         <el-option value="" label="全部"></el-option>
                         <el-option value="1" label="普通商品"></el-option>
-                        <el-option value="2" label="虚拟商品"></el-option>
-                        <el-option value="3" label="内购商品"></el-option>
+                        <el-option value="2" label="内购商品"></el-option>
+                        <el-option value="3" label="虚拟商品"></el-option>
                         <el-option value="4" label="卡券商品"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="updateUser" label="更新者">
-                    <el-input v-model.trim="form.updateUser" placeholder="模糊下拉搜索"></el-input>
-                </el-form-item>
+                <!--<el-form-item prop="updateUser" label="更新者">-->
+                    <!--<el-input v-model.trim="form.updateUser" placeholder="模糊下拉搜索"></el-input>-->
+                <!--</el-form-item>-->
                 <el-form-item prop="firstCategoryId" label="一级分类">
                     <el-select v-model="form.firstCategoryId" placeholder="请选择一级分类">
                         <el-option value="" label="全部"></el-option>
@@ -37,14 +40,14 @@
                         <el-option value="2" label="否"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="pushStatus" label="推送状态">
-                    <el-select v-model="form.pushStatus" placeholder="请选择推送状态">
-                        <el-option value="" label="全部"></el-option>
-                        <el-option value="1" label="未推送"></el-option>
-                        <el-option value="2" label="推送成功"></el-option>
-                        <el-option value="3" label="推送失败"></el-option>
-                    </el-select>
-                </el-form-item>
+                <!--<el-form-item prop="pushStatus" label="推送状态">-->
+                    <!--<el-select v-model="form.pushStatus" placeholder="请选择推送状态">-->
+                        <!--<el-option value="" label="全部"></el-option>-->
+                        <!--<el-option value="1" label="未推送"></el-option>-->
+                        <!--<el-option value="2" label="推送成功"></el-option>-->
+                        <!--<el-option value="3" label="推送失败"></el-option>-->
+                    <!--</el-select>-->
+                <!--</el-form-item>-->
                 <el-form-item prop="deliveryWare" label="发货方仓">
                     <el-select v-model="form.deliveryWare" placeholder="请选择发货方仓">
                         <el-option value="" label="全部"></el-option>
@@ -53,20 +56,29 @@
                         <el-option value="3" label="供应商仓"></el-option>
                     </el-select>
                 </el-form-item>
+                <!--<el-form-item prop="deliveryWare" label="商品来源">-->
+                    <!--<el-select v-model="form.deliveryWare" placeholder="请选择商品来源">-->
+                        <!--<el-option value="" label="全部"></el-option>-->
+                        <!--<el-option value="1" label="平台"></el-option>-->
+                        <!--<el-option value="2" label="供应商"></el-option>-->
+                    <!--</el-select>-->
+                <!--</el-form-item>-->
+                <!--/product/productBrand/findProductBrandList?name=耐克-->
                 <el-form-item prop="brandId" label="品牌">
                     <el-input v-model.trim="form.brandId" placeholder="模糊下拉搜索"></el-input>
                 </el-form-item>
+                <!--findAllSupplier-->
                 <el-form-item prop="suppilerId" label="供应商ID">
                     <el-input v-model.trim="form.suppilerId" placeholder="模糊下拉搜索"></el-input>
                 </el-form-item>
-                <el-form-item prop="prodWarea" label="商品库存">
-                    <el-select v-model="form.prodWarea" placeholder="请选择发货方仓">
-                        <el-option value="" label="全部"></el-option>
-                        <el-option value="1" label="库存不足"></el-option>
-                        <el-option value="2" label="库存紧张"></el-option>
-                        <el-option value="3" label="暂无库存"></el-option>
-                    </el-select>
-                </el-form-item>
+                <!--<el-form-item prop="prodWarea" label="商品库存">-->
+                    <!--<el-select v-model="form.prodWarea" placeholder="请选择发货方仓">-->
+                        <!--<el-option value="" label="全部"></el-option>-->
+                        <!--<el-option value="1" label="库存不足"></el-option>-->
+                        <!--<el-option value="2" label="库存紧张"></el-option>-->
+                        <!--<el-option value="3" label="暂无库存"></el-option>-->
+                    <!--</el-select>-->
+                <!--</el-form-item>-->
                 <el-form-item prop="updateTime" label="更新时间">
                     <el-date-picker type="daterange" v-model="form.updateTime" placeholder="请输入更新时间" start-placeholder="开始时间" end-placeholder="结束时时间"></el-date-picker>
                 </el-form-item>
@@ -91,7 +103,7 @@
             <el-button>下架</el-button>
             <el-button>审核</el-button>
             <el-button>调整运费模板</el-button>
-            <el-button type="danger">推送云仓</el-button>
+            <!--<el-button type="danger">推送云仓</el-button>-->
             <el-button type="danger">导出</el-button>
             <el-button @click="createProd" type="danger">创建商品</el-button>
         </el-card>
@@ -100,13 +112,13 @@
                 <el-tab-pane label="全部(0)" name="allProduct">
                     <v-tab-content ref="allProduct"></v-tab-content>
                 </el-tab-pane>
-                <el-tab-pane label="待审核(66)" name="auditProduct">
+                <el-tab-pane label="待审核(checkingTotal)" name="auditProduct">
                     <v-tab-content ref="auditProduct"></v-tab-content>
                 </el-tab-pane>
-                <el-tab-pane label="出售中(99)" name="sale">
+                <el-tab-pane label="出售中(inSellingTotal)" name="sale">
                     <v-tab-content ref="sale"></v-tab-content>
                 </el-tab-pane>
-                <el-tab-pane label="仓库中(100)" name="warehouse">
+                <el-tab-pane label="仓库中(inWarehouseTotal)" name="warehouse">
                     <v-tab-content ref="warehouse"></v-tab-content>
                 </el-tab-pane>
             </el-tabs>
@@ -131,12 +143,13 @@
                 firstCateList: [],
                 form: {
                     prodSpuCode: '',
+                    // name: '',
                     feightTpl: '',
                     prodType: '',
-                    updateUser: '',
+                    // updateUser: '',
                     firstCategoryId: '',
                     isProprietary: '',
-                    pushStatus: '',
+                    // pushStatus: '',
                     deliveryWare: '',
                     brandId: '',
                     suppilerId: '',

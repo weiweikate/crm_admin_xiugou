@@ -3,13 +3,13 @@
         <el-form :model="form" ref="form" :rules="rules" label-position="right" label-width="120px">
             <div class="pro-title">图文描述</div>
             <el-form-item label="商品主图">
-                <el-upload v-if="form.video === ''" list-type="picture-card" class="fl" :before-upload="beforeUploadVideo" :action="imgUpload" :show-file-list="false" :on-success="successUploadVideo">
+                <el-upload v-if="form.videoUrl === ''" list-type="picture-card" class="fl" :before-upload="beforeUploadVideo" :action="imgUpload" :show-file-list="false" :on-success="successUploadVideo">
                     <i class="el-icon-plus" style="font-size: 14px">添加视频</i>
                     <div slot="tip" class="el-upload__tip">请控制在5M以内</div>
                 </el-upload>
                 <div class="img-list fl" v-else style="margin-right: 0px">
                     <div class="del-mask">删 除</div>
-                    <video :src="form.video" style="width: 150px;height: 150px" controls="controls"></video>
+                    <video :src="form.videoUrl" style="width: 150px;height: 150px" controls="controls"></video>
                 </div>
                 <div class="sep-video fl"></div>
                 <draggable v-model="imgList">
@@ -58,14 +58,14 @@
                 </el-upload>
             </el-form-item>
             <div class="pro-title">物流信息</div>
-            <el-form-item prop="delivery" label="是否需要发货">
-                <el-select v-model="form.delivery">
+            <el-form-item prop="needDeliver" label="是否需要发货">
+                <el-select v-model="form.needDeliver">
                     <el-option label="是" value="1"></el-option>
                     <el-option label="否" value="2"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item prop="feightTpl" label="运费模板">
-                <el-select v-model="form.feightTpl">
+            <el-form-item prop="freightTemplateId" label="运费模板">
+                <el-select v-model="form.freightTemplateId">
                     <el-option label="t1" value="1"></el-option>
                     <el-option label="t2" value="2"></el-option>
                 </el-select>
@@ -80,16 +80,16 @@
                 <el-button type="danger" @click="unSupportMask = true">添加区域</el-button>
             </el-form-item>
             <div class="pro-title">其他信息</div>
-            <el-form-item prop="upShelfTimeType" label="上架时间">
-                <el-radio-group @change="form.upShelfTime = ''" v-model="form.upShelfTimeType">
+            <el-form-item prop="upType" label="上架时间">
+                <el-radio-group @change="form.upType = ''" v-model="form.upShelfTimeType">
                     <el-radio :label="1">立即上架</el-radio>
                     <el-radio :label="2">定时上架</el-radio>
                     <el-radio :label="3">放入仓库</el-radio>
                 </el-radio-group>
-                <el-date-picker v-if="form.upShelfTimeType == 2" v-model="form.upShelfTime" type="datetime" placeholder="请选择上架时间" style="margin-left: 10px"></el-date-picker>
+                <el-date-picker v-if="form.upType == 2" v-model="form.upTime" type="datetime" placeholder="请选择上架时间" style="margin-left: 10px"></el-date-picker>
             </el-form-item>
             <el-form-item prop="limitBuy" label="限购">
-                <el-checkbox-group @change="form.limitBuyNum = form.limitBuy.includes(1)?form.limitBuyNum:''" v-model="form.limitBuy">
+                <el-checkbox-group @change="form.buyLimit = form.limitBuy.includes(1)?form.buyLimit:''" v-model="form.limitBuy">
                     <el-checkbox :label="1">限制每人可购买数量</el-checkbox>
                     <el-checkbox :label="2">不支持使用优惠卷</el-checkbox>
                 </el-checkbox-group>
@@ -101,10 +101,10 @@
                     <el-checkbox :label="2">支持7天无理由退换</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
-            <el-form-item prop="autoDownShelf" label="自动下架">
-                <el-radio-group v-model="form.autoDownShelf">
+            <el-form-item prop="autoUnShelve" label="自动下架">
+                <el-radio-group v-model="form.autoUnShelve">
                     <el-radio :label="1">是</el-radio>
-                    <el-radio :label="2">否 </el-radio>
+                    <el-radio :label="0">否 </el-radio>
                 </el-radio-group>
                 <span class="grey-text ml10"> 注：库存为0时是否自动下架</span>
             </el-form-item>
@@ -147,21 +147,27 @@
         data() {
             return {
                 form: {
-                    video: '',
-                    delivery: '',
-                    feightTpl: '',
-                    upShelfTimeType: '',
-                    upShelfTime: '',
-                    limitBuy: [],
+                    videoUrl: '',
+                    imgUrl: '', // 主图
+                    content: '', //详情图','分割
+                    imgFileList: [], // 图片
+                    needDeliver: '', // 0: 否 1: 是
+                    freightTemplateId: '',
+                    undeliveredList: [], // 不支持配送区域
+                    upType: '',
+                    upTime: '',
+                    buyLimit: '',
                     limitBuyNum: 0,
+                    afterSaleServiceDays: 0, // 售后周期
                     flatService: [],
-                    autoDownShelf: ''
+                    autoUnShelve: '',
+                    tagList: []
                 },
                 rules: {
-                    delivery: [{ required: true, message: '请选择是否发货', trigger: 'blur' }],
-                    feightTpl: [{ required: true, message: '请选择运费模板', trigger: 'blur' }],
-                    upShelfTimeType: [{ required: true, message: '请选择上架时间', trigger: 'blur' }],
-                    autoDownShelf: [{ required: true, message: '请选择是否自动下架', trigger: 'blur' }]
+                    needDeliver: [{ required: true, message: '请选择是否发货', trigger: 'blur' }],
+                    freightTemplateId: [{ required: true, message: '请选择运费模板', trigger: 'blur' }],
+                    upType: [{ required: true, message: '请选择上架时间', trigger: 'blur' }],
+                    autoUnShelve: [{ required: true, message: '请选择是否自动下架', trigger: 'blur' }]
                 },
                 unSupportMask: false,
                 unSupportAreasData: [], // 不配送区域
@@ -291,7 +297,7 @@
                     this.tagLoading = false;
                     console.log(err);
                 });
-            },
+            }
         }
     };
 </script>

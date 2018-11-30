@@ -45,19 +45,88 @@
             <el-form-item label="销售价格">
                 <el-button type="primary" class="mb10" @click="batchPrice = true">批量输入</el-button>
                 <el-table :data="priceTable" border stripe>
-                    <el-table-column prop="id" label="规格" align="center"></el-table-column>
+                    <el-table-column prop="propertyValues" label="属性" align="center"></el-table-column>
                     <el-table-column label="原价" align="center">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.value"></el-input>
-                    </template>
-                </el-table-column>
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.propertyValues"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="v0" align="center">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.v0"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="v1" align="center">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.v1"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="v2" align="center">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.v2"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="v3" align="center">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.v3"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="v4" align="center">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.v4"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="v5" align="center">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.v5"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="v6" align="center">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.v6"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="拼店价" align="center">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.groupPrice"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="最低支付价" align="center">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.minPrice"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="结算价" align="center">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.settlementPrice"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="重量（kg）" align="center">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.weight"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="skuCode" label="SKU编码" align="center"></el-table-column>
+                    <el-table-column label="SKU条形码" align="center">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.barCode"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="供应商SKU编码" align="center">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.supplierSkuCode"></el-input>
+                        </template>
+                    </el-table-column>
                 </el-table>
             </el-form-item>
             <div class="pro-title">库存信息 <span class="grey-text">注：可售库存不编辑默认全部可售</span></div>
             <el-form-item label="库存信息">
                 <el-table :data="priceTable" border stripe>
-                    <el-table-column prop="id" label="规格" align="center"></el-table-column>
-                    <el-table-column :render-header="renderTitle" prop="id" label="单位" align="center"></el-table-column>
+                    <el-table-column prop="propertyValues" label="属性" align="center"></el-table-column>
+                    <el-table-column :render-header="renderTitle" prop="stockUnit" label="单位" align="center"></el-table-column>
+                    <el-table-column prop="warehouseStock" label="仓库同步库存" align="center"></el-table-column>
+                    <el-table-column prop="sellStock" label="可售库存" align="center"></el-table-column>
+                    <el-table-column label="操作" align="center"></el-table-column>
                 </el-table>
             </el-form-item>
             <el-form-item label=" ">

@@ -9,8 +9,9 @@
                         <img :src="scope.row.imgUrl" :alt="scope.row.imgUrl">
                         <div class="info">
                             <div class="prod-name over-more-hidden">{{scope.row.name}}</div>
-                            <div class="prod-type">{{scope.row.short}}</div>
+                            <div class="prod-type">{{scope.row.secondName}}</div>
                             <div class="prod-tag">
+                                <!--位运算取值 restrictions-->
                                 <el-tag class="tag-item" type="primary" v-for="(v,k) in scope.row.tags" :key="k">{{v}}</el-tag>
                             </div>
                             <div class="prod-spu">SPU: {{scope.row.prodCode}}</div>
@@ -25,7 +26,12 @@
                     <p>{{scope.row.thirdCategoryName}}</p>
                 </template>
             </el-table-column>
-            <el-table-column prop="" label="商品售价" align="center"></el-table-column>
+            <el-table-column label="商品售价" align="center">
+                <template slot-scope="scope">
+                    <p>${{scope.row.minPrice}}</p>
+                    <p>${{scope.row.maxPrice}}</p>
+                </template>
+            </el-table-column>
             <el-table-column prop="status" label="商品状态" align="center">
                 <template slot-scope="scope">
                     <span v-if="scope.row.status == 0">删除</span>
@@ -37,37 +43,70 @@
                     <span v-else>-</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="checkStatus" label="审核状态" align="center">
+            <el-table-column prop="status" label="审核状态" align="center">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.status == 0">未审核通过</span>
-                    <span v-else-if="scope.row.status == 1">审核通过</span>
+                    <span v-if="scope.row.status == 3">未审核通过</span>
+                    <span v-else-if="scope.row.status == 1">待审核</span>
+                    <span v-else-if="scope.row.status == 2">审核通过</span>
                     <span v-else>-</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="" label="商品类型" align="center"></el-table-column>
-            <el-table-column prop="" label="贸易类型" align="center"></el-table-column>
-            <el-table-column prop="" label="税率" align="center"></el-table-column>
-            <el-table-column prop="stock" label="总库存" align="center"></el-table-column>
-            <el-table-column prop="" label="活动冻结库存" align="center"></el-table-column>
-            <el-table-column prop="" label="订单冻结库存" align="center"></el-table-column>
-            <el-table-column prop="" label="商品来源" align="center"></el-table-column>
-            <el-table-column prop="sendMode" label="发货方仓" align="center">
+            <el-table-column prop="type" label="商品类型" align="center">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.sendMode == 1">平台发货</span>
-                    <span v-else-if="scope.row.sendMode == 2">供应商发货</span>
+                    <span v-if="scope.row.type == 1">普通商品</span>
+                    <span v-else-if="scope.row.type == 2">内购商品</span>
+                    <span v-else-if="scope.row.type == 3">虚拟商品</span>
+                    <span v-else-if="scope.row.type == 4">卡券商品</span>
+                    <span v-else>-</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="businessType" label="贸易类型" align="center">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.businessType == 1">一般贸易</span>
+                    <span v-else-if="scope.row.businessType == 2">跨境保税</span>
+                    <span v-else-if="scope.row.businessType == 3">海外直邮</span>
+                    <span v-else-if="scope.row.businessType == 4">海淘</span>
+                    <span v-else>-</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="taxRate" label="税率" align="center"></el-table-column>
+            <el-table-column prop="stock" label="总库存" align="center"></el-table-column>
+            <el-table-column prop="activityFreezeStock" label="活动冻结库存" align="center"></el-table-column>
+            <el-table-column prop="freezeStock" label="订单冻结库存" align="center"></el-table-column>
+            <el-table-column prop="warehouseType" label="商品来源" align="center">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.warehouseType == 1 || scope.row.warehouseType == 2">平台</span>
+                    <span v-else-if="scope.row.warehouseType == 3 || scope.row.warehouseType == 4">供应商</span>
+                    <span v-else>-</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="warehouseType" label="发货方仓" align="center">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.warehouseType == 1 || scope.row.warehouseType == 2">平台</span>
+                    <span v-else-if="scope.row.warehouseType == 3 || scope.row.warehouseType == 4">供应商</span>
                     <span v-else>-</span>
                 </template>
             </el-table-column>
             <el-table-column prop="freightTemplateName" label="运费模板" align="center"></el-table-column>
-            <el-table-column prop="" label="推送状态" align="center"></el-table-column>
+            <!--<el-table-column prop="sendType" label="推送状态" align="center">-->
+                <!--<template slot-scope="scope">-->
+                    <!--<span v-if="scope.row.sendType == 1">未推送</span>-->
+                    <!--<span v-else-if="scope.row.sendType == 2">推送成功</span>-->
+                    <!--<span v-else>-</span>-->
+                <!--</template>-->
+            <!--</el-table-column>-->
             <el-table-column label="创建时间" align="center">
-                <template slot-scope="scope" v-if="scope.row.upTime">
-                    {{scope.row.upTime | formatDateAll}}
+                <template slot-scope="scope" v-if="scope.row.createTime">
+                    {{scope.row.createTime | formatDateAll}}
                 </template>
             </el-table-column>
-            <el-table-column prop="" label="最近更新者" align="center"></el-table-column>
-            <el-table-column prop="" label="更新时间" align="center"></el-table-column>
-            <el-table-column prop="" label="备注" align="center"></el-table-column>
+            <el-table-column prop="createAdminName" label="最近更新者" align="center"></el-table-column>
+            <el-table-column prop="updateTime" label="更新时间" align="center">
+                <template slot-scope="scope" v-if="scope.row.updateTime">
+                    {{scope.row.updateTime | formatDateAll}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="remark" label="备注" align="center"></el-table-column>
             <el-table-column label="操作" align="center" width="80px">
                 <template slot-scope="scope">
                     <div class="operate">
