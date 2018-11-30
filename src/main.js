@@ -49,19 +49,41 @@ Vue.use(Vue => {
 });
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$utils = utils;
-
-/**权限指令**/
+Vue.prototype.$oprAuth = function (value) {
+    // 获取用户权限
+    const getters = this.$store.getters;
+    const roles = getters.roles;
+    const auth = getters.auth;
+    // 假如不是超级管理员则判断用户用户权限
+    if (!roles.includes('admin') && !auth.includes(value)) {
+        return false;
+    }
+    return true;
+};
+/** 权限指令**/
 Vue.directive('auth', {
     bind: function (el, binding, vnode) {
         // 获取按钮权限
-        let value = binding.value;
+        const value = binding.value;
         // 获取用户权限
-        let getters = vnode.context.$store.getters;
-        let roles = getters.roles;
-        let auth = getters.auth;
+        const getters = vnode.context.$store.getters;
+        const roles = getters.roles;
+        const auth = getters.auth;
+
         // 假如不是超级管理员则判断用户用户权限
-        if (!roles.includes('admin') && !auth.includes(value)) {
-            el.parentNode.removeChild(el);
+        if (roles.includes('admin')) {
+            return;
+        }
+        if (!auth.includes(value)) {
+
+            setTimeout(function () {
+                try {
+                    el.parentNode.removeChild(el);
+                }
+                catch (e) {
+                    console.log(e);
+                }
+            }, 10);
         }
     }
 });

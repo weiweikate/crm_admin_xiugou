@@ -1,6 +1,6 @@
 <template>
     <div class="tab-gift-content">
-      <el-button @click="releaseProduct" class="add-product" type="primary">添加礼包</el-button>
+      <el-button @click="releaseProduct" class="add-product" type="primary" v-auth="'unying.marketToolsManage.yhtc.tjlb'">添加礼包</el-button>
       <div class="search-pane">
           <el-form :model="form" ref='form' inline label-width="100px">
               <el-form-item prop="name" label="礼包名称">
@@ -94,19 +94,19 @@
           </el-table-column>
           <el-table-column label="操作" align="center" min-width="100">
             <template slot-scope="scope">
-              <el-button v-if="scope.row.status == 2" @click="giftMange(scope.row,4)" style="margin-bottom:10px" type="success">通过审核</el-button>
-              <el-button v-if="scope.row.status == 2" @click="giftMange(scope.row,3)" style="margin-bottom:10px" type="danger">驳回审核</el-button>
-              <el-button v-if="scope.row.status == 4" @click="giftMange(scope.row,5)" style="margin-bottom:10px" type="success">礼包上架</el-button>
-              <el-button v-if="scope.row.status == 5" @click="(()=>{productDownMask = true;row = scope.row})" type="danger">礼包下架</el-button>
-              <el-button v-if="scope.row.status == 1 || scope.row.status == 6  || scope.row.status == 3" @click="giftMange(scope.row,2)" type="danger">确认提交</el-button>
+              <el-button v-if="scope.row.status == 2" @click="giftMange(scope.row,4)" style="margin-bottom:10px" type="success" v-auth="'yunying.marketToolsManage.yhtc.tgsh'">通过审核</el-button>
+              <el-button v-if="scope.row.status == 2" @click="giftMange(scope.row,3)" style="margin-bottom:10px" type="danger" v-auth="'yunying.marketToolsManage.yhtc.bhsh'">驳回审核</el-button>
+              <el-button v-if="scope.row.status == 4" @click="giftMange(scope.row,5)" style="margin-bottom:10px" type="success" v-auth="'yunying.marketToolsManage.yhtc.lbsj'">礼包上架</el-button>
+              <el-button v-if="scope.row.status == 5" @click="(()=>{productDownMask = true;row = scope.row})" type="danger" v-auth="'yunying.marketToolsManage.yhtc.lbxj'">礼包下架</el-button>
+              <el-button v-if="scope.row.status == 1 || scope.row.status == 6  || scope.row.status == 3" @click="giftMange(scope.row,2)" type="danger" v-auth="'yunying.marketToolsManage.yhtc.qrtj'">确认提交</el-button>
             </template>
           </el-table-column>
           <el-table-column label="管理操作" align="center" min-width="100">
               <template slot-scope="scope">
-                  <div v-if="scope.row.status != 5 && scope.row.status != 0" class="mange-sty" @click="editProduct(scope.row)">编辑</div>
-                  <div v-if="scope.row.status != 5 && scope.row.status != 0" class="mange-sty" @click="productMange(scope.row)">产品管理</div>
-                  <div v-if="scope.row.status != 5 && scope.row.status != 0" class="mange-sty" @click="priceOfInventory(scope.row)">价格库存</div>
-                  <div v-if="scope.row.status != 0 && scope.row.stockType == 2" class="mange-sty" @click="expMange(scope.row)">添加库存</div>
+                  <div v-if="scope.row.status != 5 && scope.row.status != 0" class="mange-sty" @click="editProduct(scope.row)" v-auth="'yunying.marketToolsManage.yhtc.bj'">编辑</div>
+                  <div v-if="scope.row.status != 5 && scope.row.status != 0" class="mange-sty" @click="productMange(scope.row)" v-auth="'yunying.marketToolsManage.yhtc.cpgl'">产品管理</div>
+                  <div v-if="scope.row.status != 5 && scope.row.status != 0" class="mange-sty" @click="priceOfInventory(scope.row)" v-auth="'yunying.marketToolsManage.yhtc.jgkc'">价格库存</div>
+                  <div v-if="scope.row.status != 0 && scope.row.stockType == 2" class="mange-sty" @click="expMange(scope.row)" v-auth="'yunying.marketToolsManage.yhtc.tjkc'">添加库存</div>
                   <div class="mange-sty" @click="productInfo(scope.row)">查看详情</div>
               </template>
           </el-table-column>

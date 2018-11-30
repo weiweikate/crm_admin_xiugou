@@ -34,7 +34,7 @@
             </el-form>
         </el-card>
         <el-card>
-            <el-button type="primary" class="mb10" @click="$router.push({path:'cardMange',query:{status:'add'}})">新增刮刮卡</el-button>
+            <el-button type="primary" class="mb10" @click="$router.push({path:'cardMange',query:{status:'add'}})" v-auth="'unying.marketToolsManage.ggk.xzggk'">新增刮刮卡</el-button>
             <el-table :data="tableData" border stripe>
                 <el-table-column prop="code" label="编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="刮刮卡名称" align="center"></el-table-column>
@@ -43,7 +43,8 @@
                 <el-table-column prop="residualQuantity" label="剩余数量" align="center"></el-table-column>
                 <el-table-column prop="totalActivity" label="当前活动使用数" align="center">
                     <template slot-scope="scope">
-                        <el-button type="primary" size="mini" style="cursor: pointer" @click="showUse(scope.row)">{{scope.row.totalActivity}}</el-button>
+                        <el-button type="primary" v-if="hasAuth" size="mini" style="cursor: pointer" @click="showUse(scope.row)">{{scope.row.totalActivity||0}}</el-button>
+                        <span v-else>{{scope.row.totalActivity||0}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="状态" align="center">
@@ -60,11 +61,11 @@
                 </el-table-column>
                 <el-table-column label="操作" width="320px">
                     <template slot-scope="scope">
-                        <el-button type="primary" v-if="scope.row.status==1" @click="showTip(scope.row.code, '2')">暂停</el-button>
-                        <el-button type="primary" v-if="scope.row.status==2" @click="showTip(scope.row.code, '1')">开启</el-button>
-                        <el-button type="warning" @click="editCard(scope.row.id)">编辑</el-button>
-                        <el-button type="success" @click="toDetail(scope.row.id)">详情</el-button>
-                        <el-button type="danger" v-if="scope.row.status==2" @click="showTip(scope.row.code, '0')">删除</el-button>
+                        <el-button type="primary" v-if="scope.row.status==1" @click="showTip(scope.row.code, '2')" v-auth="'yunying.marketToolsManage.ggk.zt'">暂停</el-button>
+                        <el-button type="primary" v-if="scope.row.status==2" @click="showTip(scope.row.code, '1')" v-auth="'yunying.marketToolsManage.ggk.kq'">开启</el-button>
+                        <el-button type="warning" @click="editCard(scope.row.id)" v-auth="'yunying.marketToolsManage.ggk.bj'">编辑</el-button>
+                        <el-button type="success" @click="toDetail(scope.row.id)" v-auth="'yunying.marketToolsManage.ggk.xq'">详情</el-button>
+                        <el-button type="danger" v-if="scope.row.status==2" @click="showTip(scope.row.code, '0')" v-auth="'yunying.marketToolsManage.ggk.sc'">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -106,12 +107,14 @@
                     updateTime: []
                 },
                 createUserArr: [],
-                tableData: []
+                tableData: [],
+                hasAuth: ''// 是否有查看下级的权限
             };
         },
         activated() {
             this.getList(this.page.currentPage);
             this.getCreateUserList();// 加载发布人列表
+            this.hasAuth = this.$oprAuth('unying.marketToolsManage.ggk.dqhdsys');
         },
         methods: {
             // 获取发布人列表

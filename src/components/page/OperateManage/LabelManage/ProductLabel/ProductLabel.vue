@@ -2,7 +2,7 @@
     <div class="second-classify">
         <v-breadcrumb :nav="['运营管理','标签管理','产品品类']"></v-breadcrumb>
         <div class="table-block">
-            <el-button type="primary" style="margin-bottom: 20px" @click="productLabelClassify">产品标签类型设置</el-button>
+            <el-button type="primary" style="margin-bottom: 20px" @click="productLabelClassify" v-auth="'yunying.labelManage.cpbqlxsz'">产品标签类型设置</el-button>
             <template>
                 <el-table :data="tableData" border style="width: 100%">
                     <el-table-column prop="id" label="ID" align="center"></el-table-column>
@@ -15,7 +15,7 @@
                     <el-table-column  label="操作" align="center">
                         <template slot-scope="scope">
                             <!--<el-button type="danger" size="small" @click="delItem(scope.row.id)">删除</el-button>-->
-                            <el-button type="primary" size="small" @click="toSecondClassify(scope.row.id)">二级类目</el-button>
+                            <el-button type="primary" size="small" @click="toSecondClassify(scope.row.id)" v-auth="'yunying.labelManage.ejlm'">二级类目</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

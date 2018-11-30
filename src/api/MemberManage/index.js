@@ -60,6 +60,8 @@ export const updateUserLevelUpBuyById = '/user/Level/updateUserLevelUpBuyById';
 export const updateUserLevelUpPerSalesById = '/user/Level/updateUserLevelUpPerSalesById';
 // 代币充值
 export const updateUserLevelUpTokenCoinBuyById = '/user/Level/updateUserLevelUpTokenCoinBuyById';
+// 修改会员层级晋升
+export const updateByLevelId = '/user/Level/updateByLevelId';
 // 他的账户
 export const memberAccountListInfo = ['/user/account/findByUserId', { methods: 'get' }];
 // 现金账户收入明细列表

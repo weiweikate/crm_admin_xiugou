@@ -155,7 +155,7 @@
                 <el-form-item>
                     <el-checkbox  v-model="checkedAllUser" @change="selectedAlLevel">全选</el-checkbox>
                     <el-checkbox-group v-model="chectedUser">
-                        <el-checkbox @change="selectSingleUser" v-for="(v,k) in userLevel" :label="v.id" :key="k">{{v.name}}</el-checkbox>
+                        <el-checkbox @change="selectSingleUser" v-for="(v,k) in userLevel" :label="v.id" :key="k">{{`v${v.level}`}}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <div class="tag-btn-group">
@@ -410,7 +410,7 @@
                     this.form.experience = res.data.experience;
                     this.gifts.isSetExp = res.data.experience !== '';
                     this.gifts.isSetBuyTime = res.data.couponList.length !== 0;
-                    this.form.dealDays = res.data.dealDays.toString();
+                    // this.form.dealDays = res.data.dealDays.toString();
                     this.form.type = res.data.type.toString();
                     this.form.firstCategoryId = Number(res.data.firstCategoryId);
                     this.proItemArr.push(this.form.firstCategoryId);

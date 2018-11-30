@@ -2,8 +2,8 @@
     <div class="topic-list">
         <v-breadcrumb :nav="['运营管理','专题管理']"></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
-            <el-button @click="addTopic" type="primary" style="margin-bottom:20px">添加专题</el-button>
-            <el-button @click="topicTemplate" type="success" style="margin-bottom:20px">专题模板</el-button>
+            <el-button @click="addTopic" type="primary" style="margin-bottom:20px" v-auth="'yunying.topicManage.tjzt'">添加专题</el-button>
+            <el-button @click="topicTemplate" type="success" style="margin-bottom:20px" v-auth="'yunying.topicManage.ztmb'">专题模板</el-button>
             <el-table border v-loading="tableLoading" :data="tableData">
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="name" label="专题名称" align="center"></el-table-column>
@@ -25,9 +25,9 @@
                 <el-table-column prop="adminName" label="创建者" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button @click='editItem(scope.row)' type="primary">编辑</el-button>
+                        <el-button @click='editItem(scope.row)' type="primary" v-auth="'yunying.topicManage.bj'">编辑</el-button>
                         <!--<el-button @click='preview(scope.row.id)' type="success">预览</el-button>-->
-                        <el-button type="warning" @click="del(scope.row.code)">删除</el-button>
+                        <el-button type="warning" @click="del(scope.row.code)" v-auth="'yunying.topicManage.sc'">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>

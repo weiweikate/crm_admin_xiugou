@@ -27,7 +27,7 @@ const user = {
             state.roles = roles;
         },
         SET_AUTH: (state, data) => {
-            state.auths = data;
+            state.auth = data;
         },
         SET_USER: (state, user) => {
             console.log('SET_USER', user);

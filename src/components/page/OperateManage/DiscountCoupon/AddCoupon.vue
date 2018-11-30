@@ -80,7 +80,8 @@
                 </el-form-item>
 
                 <el-form-item label="优惠券说明">
-                    <el-input type="textarea" v-model="form.remarks" placeholder="请输入说明"></el-input>
+                    <el-input type="textarea" v-model="form.remarks" @input="inputCount" maxlength="180" placeholder="请输入说明"></el-input>
+                    <span class="count">{{count}}/180</span>
                 </el-form-item>
 
                 <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">提交</el-button>
@@ -199,7 +200,8 @@
                 type: '3', // 可用周期月、周选择
                 isDay: false, // 是否设置未礼包周期优惠券
                 useConditions: '', // 使用限制
-                btnLoading: false
+                btnLoading: false,
+                count: 0
             };
         },
         activated() {
@@ -227,6 +229,7 @@
                 this.checkedUsers = [];
                 this.getProducts = {};
                 this.remindDays = '';
+                this.count = 0;
             },
             // 优惠券模版
             queryTemplateList() {
@@ -365,7 +368,7 @@
                         }
                         if (this.form.type == 4) {
                             if (!that.productList.products) {
-                                this.$message.warning('请选择可用品类!');
+                                this.$message.warning('请选择可用产品!');
                                 return;
                             }
                             data.firstCategoryIds = that.productList.firstCategoryIds;
@@ -440,6 +443,9 @@
             // 取消
             cancel() {
                 this.$router.push('/discountCoupon');
+            },
+            inputCount() {
+                this.count = this.form.remarks.length;
             }
         }
     };
@@ -610,8 +616,13 @@
         }
         .el-textarea__inner {
             width: 500px;
-            height: 100px;
+            height: 150px;
             resize: none;
+        }
+        .count{
+            position: absolute;
+            bottom: 0;
+            left: 450px;
         }
     }
 </style>

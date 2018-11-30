@@ -253,17 +253,18 @@ export const downloadCouponList = '/admin/user/coupon/downloadCouponList';
 // 添加岗位
 export const addRole = '/role/addRole';
 // 根据id查询岗位
-export const findRoleById = '/role/findRoleById';
+export const findRoleById = ['/role/findRoleById', { methods: 'get' }];
 // 修改岗位
 export const updateRole = '/role/updateRole';
 // 删除岗位
-export const updateDeleteRole = '/role/updateDeleteRole';
+export const updateDeleteRole = ['/role/updateDeleteRole', { methods: 'get' }];
 // 添加部门
 export const addDepartment = '/department/addDepartment';
 // 根据id查询部门
 export const findDepartmentById = '/department/findDepartmentById';
 // 编辑部门
 export const updateDepartment = '/department/updateDepartment';
+
 
 // 物流公司查询
 export const sysExpressQuery = ['/config/sysExpress/query', { methods: 'get'}];
@@ -275,3 +276,11 @@ export const enableExpress = ['/config/sysExpress/enable', { methods: 'get'}];
 export const addExpress = ['/config/sysExpress/save', { methods: 'post'}];
 // 更新物流公司
 export const updateExpress = ['/config/sysExpress/edit', { methods: 'post'}];
+
+// ERP接口
+export const updateERPstatus = ['/config/erp/change', { methods: 'get' }];
+export const updateERP = '/config/erp/save';
+export const addERP = '/config/erp/save';
+export const getERPList = ['/config/erp/query', { methods: 'get' }];
+export const getERP = ['/config/erp/get', { methods: 'get' }];
+

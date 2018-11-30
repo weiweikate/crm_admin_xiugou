@@ -2,8 +2,8 @@
     <div class="brand-product">
         <v-breadcrumb :nav="['品牌产品管理','产品品类分类管理']"></v-breadcrumb>
         <div class="table-block">
-            <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加一级类目</el-button>
-            <el-button type="success" style="margin-bottom: 20px" @click="hotClassifyManage">热门分类管理</el-button>
+            <el-button type="primary" style="margin-bottom: 20px" @click="addClassify" v-auth="'brand.brandProductClassify.tjyjlm'">添加一级类目</el-button>
+            <el-button type="success" style="margin-bottom: 20px" @click="hotClassifyManage" v-auth="'brand.brandProductClassify.tjrmfl'">热门分类管理</el-button>
             <template>
                 <el-table :data="tableData"  border style="width: 100%">
                     <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
@@ -28,10 +28,10 @@
                     </el-table-column>
                     <el-table-column label="操作" min-width="160" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" @click="toSecondClassify(scope.$index,scope.row)">
+                            <el-button type="primary" size="small" @click="toSecondClassify(scope.$index,scope.row)" v-auth="'brand.brandProductClassify.ejfl'">
                                 二级类目
                             </el-button>
-                            <el-button type="warning" size="small" @click="editItem(scope.$index,scope.row)">编辑
+                            <el-button type="warning" size="small" @click="editItem(scope.$index,scope.row)" v-auth="'brand.brandProductClassify.bj'">编辑
                             </el-button>
                             <!--<el-button type="danger" size="small" @click="delItem(scope.$index,scope.row.id)">删除-->
                             <!--</el-button>-->
@@ -53,49 +53,13 @@
         </div>
 
         <!--添加/编辑类目弹窗-->
-        <el-dialog :title="title" :visible.sync="addMask">
-            <el-form v-model="addForm">
-                <el-form-item prop="name" label="类目名称" :label-width="formLabelWidth">
-                    <el-input v-model="addForm.name" auto-complete="off"></el-input>
-                    <span style="font-size: 12px;color: #aaa">（2-16位汉字字母组合）</span>
-                </el-form-item>
-                <el-form-item prop="img" label="类目图标" :label-width="formLabelWidth" class="icon-area">
-                    <el-input readonly v-model="addForm.img" auto-complete="off"></el-input>
-                    <el-upload class="icon-uploader"
-                               :action="uploadImg"
-                               :before-upload="beforeAvatarUpload"
-                               :on-success="handleAvatarSuccess">
-                        <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
-                    </el-upload>
-                </el-form-item>
-                <el-form-item prop="status" label="是否启用" :label-width="formLabelWidth">
-                    <el-select v-model="addForm.status">
-                        <el-option label="是" value='1'></el-option>
-                        <el-option label="否" value='2'></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item prop="type" label="类目类型" :label-width="formLabelWidth">
-                    <el-select v-model="addForm.type">
-                        <el-option label="普通类目" value='1'></el-option>
-                        <el-option label="隐藏类目" value='2'></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item prop="name" label="APP排序" :label-width="formLabelWidth">
-                    <el-input v-model="addForm.sort" auto-complete="off"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button :loading="btnLoading" type="primary" @click="addOrEdit('addForm')">确 认</el-button>
-                <el-button @click="cancel">取 消</el-button>
-            </div>
-        </el-dialog>
         <el-dialog :title="title" :visible.sync="editMask">
-            <el-form v-model="form">
-                <el-form-item prop="name" label="类目名称" :label-width="formLabelWidth">
+            <el-form v-model="form" label-width="100px">
+                <el-form-item prop="name" label="类目名称">
                     <el-input v-model="form.name" auto-complete="off"></el-input>
                     <span style="font-size: 12px;color: #aaa">（2-16位汉字字母组合）</span>
                 </el-form-item>
-                <el-form-item prop="img" label="类目图标" :label-width="formLabelWidth" class="icon-area">
+                <el-form-item prop="img" label="类目图标" class="icon-area">
                     <el-input readonly v-model="form.img" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
                                :action="uploadImg"
@@ -104,19 +68,19 @@
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
                 </el-form-item>
-                <el-form-item prop="status" label="是否启用" :label-width="formLabelWidth">
+                <el-form-item prop="status" label="是否启用">
                     <el-select v-model="form.status">
                         <el-option label="是" value='1'></el-option>
                         <el-option label="否" value='2'></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="type" label="类目类型" :label-width="formLabelWidth">
-                    <el-select disabled v-model="form.type">
+                <el-form-item prop="type" label="类目类型">
+                    <el-select :disabled="itype=='edit'" v-model="form.type">
                         <el-option label="普通类目" value='1'></el-option>
                         <el-option label="隐藏类目" value='2'></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="name" label="APP排序" :label-width="formLabelWidth">
+                <el-form-item prop="name" label="APP排序">
                     <el-input v-model="form.sort" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
@@ -157,18 +121,11 @@ export default {
             },
             itype: '',
             height: '',
-            addMask: false,
             editMask: false,
             isShowDelToast: false,
             btnLoading: false,
             formLabelWidth: '100px',
             form: {
-                name: '',
-                status: '1',
-                img: '',
-                type: ''
-            },
-            addForm: {
                 name: '',
                 status: '1',
                 img: '',
@@ -212,21 +169,17 @@ export default {
         // 添加一级类目
         addClassify() {
             this.title = '添加一级类目';
-            this.addMask = true;
-            this.addForm.name = '';
-            this.addForm.img = '';
-            this.addForm.sort = '';
-            this.addForm.status = '1';
+            this.editMask = true;
+            utils.cleanFormData(this.form);
+            this.form.status = '1';
             this.itype = 'add';
         },
         // 编辑
         editItem(index, row) {
             this.title = '编辑一级类目';
             this.editMask = true;
-            this.form.name = row.name;
+            this.form = row;
             this.form.status = row.status.toString();
-            this.form.img = row.img;
-            this.form.sort = row.sort;
             this.form.type = row.type.toString();
             this.id = row.id;
             this.itype = 'edit';
@@ -265,7 +218,6 @@ export default {
                 .then(res => {
                     this.$message.success(res.msg);
                     this.btnLoading = false;
-                    this.addMask = false;
                     this.editMask = false;
                     this.getList(this.page.currentPage);
                 })
@@ -298,15 +250,10 @@ export default {
         },
         // 上传图片
         handleAvatarSuccess(res, file) {
-            if (this.itype == 'add') {
-                this.addForm.img = res.data;
-            } else {
-                this.form.img = res.data;
-            }
+            this.form.img = res.data;
         },
         // 取消
         cancel() {
-            this.addMask = false;
             this.editMask = false;
             this.getList(this.page.currentPage);
         },

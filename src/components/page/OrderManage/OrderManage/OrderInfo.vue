@@ -30,18 +30,21 @@
                 <span v-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
                 <span v-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
                 <br/>
-                <el-button v-if="orderStatus == 2" @click='orderSendOut' class="cloud-delivery-btn"
+                <el-button v-if="orderStatus == 2&&orderMsg.cloudHadSend==0" v-auth="'order.orderList.tsyc'" @click='orderSendOut' class="cloud-delivery-btn"
                            type="danger">推送云仓
                 </el-button>
+                <el-button v-if="orderStatus == 2&&orderMsg.cloudHadSend==0" v-auth="'order.orderList.xnfh'" @click='sendGoods' class="cloud-delivery-btn"
+                           type="primary">虚拟发货
+                </el-button>
                 <p class="preferential-info" @click='isShowPreferential = true'>优惠详情</p>
-                <span class="mark">标记</span>
+                <span class="mark" v-auth="'order.orderList.bj'">标记</span>
                 <el-popover placement="bottom" width="150" v-model="isShowPop" trigger="hover">
-                    <span slot="reference" style="cursor:pointer"><span class="star" :style="{color:orderMsg.star}">★</span></span>
+                    <span slot="reference" style="cursor:pointer"  v-auth="'order.orderList.bj'"><span class="star" :style="{color:orderMsg.star}">★</span></span>
                     <span v-for="(v,k) in markArr" :key="k" @click="changeColor(1,v)" :style="{color:v.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
                 </el-popover>
-                <el-input v-model="orderMsg.adminRemark" type="textarea" placeholder="请输入备注" :rows="5" style="width:50%;float:right;margin-right:42%"></el-input>
+                <el-input v-model="orderMsg.adminRemark"  v-auth="'order.orderList.bj'" type="textarea" placeholder="请输入备注" :rows="5" style="width:50%;float:right;margin-right:42%"></el-input>
                 <div style="clear: both;"></div>
-                <div style="margin-left: 130px;margin-top: 10px">
+                <div style="margin-left: 130px;margin-top: 10px" v-auth="'order.orderList.bj'">
                     <el-button type="primary" @click="changeColor">保存</el-button>
                 </div>
                 <!-- <span class="star" :style="{color:orderMsg.star}">★</span>
@@ -75,10 +78,10 @@
             </div>
             <!-- 发货人信息 -->
             <!--<div class="delivery">-->
-                <!--<p class="info-content">-->
-                    <!--<span class="smal-span">发货方：代理商</span>-->
-                    <!--<span class="smal-span">联系方式：17601056863</span>-->
-                <!--</p>-->
+            <!--<p class="info-content">-->
+            <!--<span class="smal-span">发货方：代理商</span>-->
+            <!--<span class="smal-span">联系方式：17601056863</span>-->
+            <!--</p>-->
             <!--</div>-->
             <!-- 订单信息 -->
             <div class="order-info">
@@ -210,7 +213,21 @@
                 <el-button type="primary" @click="refundSubmit('refundForm')">确认退款金额</el-button>
             </div>
         </el-dialog>
-
+        <!--虚拟发货-->
+        <el-dialog title="虚拟发货" :visible.sync="mask" class="send-mask">
+            <el-form :model="form">
+                <el-form-item label="物流单号">
+                    <el-input v-model="form.expressNo" placeholder="请输入物流单号"></el-input>
+                </el-form-item>
+                <el-form-item label="物流公司">
+                    <el-input v-model="form.expressName" placeholder="请输入物流公司"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" :loading="btnLoading" @click="sendSure('form')">确 认</el-button>
+                <el-button @click="mask=false">取 消</el-button>
+            </div>
+        </el-dialog>
 
     </div>
 
@@ -296,7 +313,13 @@
                 // returnType状态
                 returnTypeArr: ['退款', '退货', '换货'],
                 // 售后状态
-                afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭']
+                afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭'],
+                form: {
+                    expressName: '',
+                    expressNo: ''
+                },
+                mask: false,
+                btnLoading: false
             };
         },
 
@@ -331,7 +354,7 @@
                     this.orderMsg.recevicePhone = res.data.recevicePhone;
                     this.orderMsg.receiveAddress = `${
                         res.data.province == undefined ? '' : res.data.province
-                    }${res.data.city}${res.data.area}`;
+                        }${res.data.city}${res.data.area}`;
                     this.orderMsg.buyerRemark = res.data.buyerRemark;
                     res.data.storehouseProvince = res.data.storehouseProvince == null ? '' : res.data.storehouseProvince;
                     res.data.storehouseCity = res.data.storehouseCity == null ? '' : res.data.storehouseCity;
@@ -341,9 +364,9 @@
                         res.data.storehouseProvince == null
                             ? ''
                             : res.data.storehouseProvince
-                    }${res.data.storehouseCity}${res.data.storehouseArea}${
+                        }${res.data.storehouseCity}${res.data.storehouseArea}${
                         res.data.storehouseAddress
-                    }`;
+                        }`;
                     this.orderMsg.orderNum = res.data.orderNum;
                     this.orderMsg.createTime = res.data.createTime; // 创建时间
                     this.orderMsg.payTime = res.data.payTime; // 第三方支付时间
@@ -563,6 +586,27 @@
                     console.log(err);
                 });
             },
+            // 虚拟发货
+            sendGoods() {
+                this.mask = true;
+            },
+            sendSure(formName) {
+                const data = this[formName];
+                data.id = this.orderId;
+                if (!data.expressName || !data.expressNo) {
+                    return this.$message.warning('请输入物流单号和物流公司');
+                }
+                this.btnLoading = true;
+                request.sendGoods(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.mask = false;
+                    this.btnLoading = false;
+                    this.getInfo();
+                }).catch(err => {
+                    console.log(err);
+                    this.btnLoading = false;
+                });
+            },
             // 备注
             changeColor(status, v) {
                 const data = {};
@@ -650,6 +694,10 @@
                     color: #ff6868;
                     font-weight: 600;
                 }
+            }
+            .tips{
+                color: #ff6868;
+                font-size: 12px;
             }
         }
         .order-status {
@@ -852,5 +900,23 @@
                 margin-left: 5px;
             }
         }
+        /*弹窗样式*/
+        .send-mask{
+            .el-dialog {
+                width: 530px;
+                border-radius: 10px;
+                .el-dialog__header {
+                    border-bottom: 1px solid #eee;
+                    padding: 20px 20px 10px 50px;
+                }
+                .el-dialog__title {
+                    color: #ff6868;
+                }
+                .el-input,.el-input__inner {
+                    width: 360px;
+                }
+            }
+        }
+
     }
 </style>

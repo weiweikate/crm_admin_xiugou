@@ -2,7 +2,7 @@
   <div class="help-center">
     <v-breadcrumb :nav="nav"></v-breadcrumb>
     <el-card :body-style="{ padding: '30px 60px' }">
-      <el-button type="primary" @click="addQuestionCate">添加问题类目</el-button>
+      <el-button type="primary" @click="addQuestionCate" v-auth="'yunying.helpCenter.tjwtlm'">添加问题类目</el-button>
       <el-table :data="tableData" border style='margin-top:20px' :height="height">
         <el-table-column prop="id" label="编号" align="center"></el-table-column>
         <el-table-column prop="name" label="问题类目" align="center"></el-table-column>
@@ -14,8 +14,8 @@
         <el-table-column prop="num" label="问题数量" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button type="primary" @click="questionList(scope.row)">问题列表</el-button>
-            <el-button type="danger" @click="deleteUser(scope.row)">删除</el-button>
+            <el-button type="primary" @click="questionList(scope.row)" v-auth="'yunying.helpCenter.wtlb'">问题列表</el-button>
+            <el-button type="danger" @click="deleteUser(scope.row)" v-auth="'yunying.helpCenter.sc'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
