@@ -1,6 +1,6 @@
 <template>
     <div class="tab-gift-content">
-      <el-button @click="releaseProduct" class="add-product" type="primary" v-auth="'unying.marketToolsManage.yhtc.tjlb'">添加礼包</el-button>
+      <el-button @click="releaseProduct" class="add-product" type="primary" v-auth="'yunying.marketToolsManage.yhtc.tjlb'">添加礼包</el-button>
       <div class="search-pane">
           <el-form :model="form" ref='form' inline label-width="100px">
               <el-form-item prop="name" label="礼包名称">
