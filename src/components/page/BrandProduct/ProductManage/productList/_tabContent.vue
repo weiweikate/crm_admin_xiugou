@@ -78,6 +78,17 @@
                 </template>
             </el-table-column>
         </el-table>
+        <div class="block">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :page-size="page.pageSize"
+                :current-page="page.currentPage"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </div>
     </div>
 </template>
 

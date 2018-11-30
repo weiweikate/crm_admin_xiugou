@@ -11,8 +11,8 @@
             <el-form-item label-width="0px">
                 <el-col :span="11">
                     <el-form-item prop="supplierCode" label="选择供应商">
-                        <el-select v-model="form.supplierCode" placeholder="请选择供应商">
-                            <el-option v-for="(v, k) in supplierArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                        <el-select v-model="form.supplierCode" placeholder="请选择供应商" @change="selectBrand">
+                            <el-option v-for="(v, k) in supplierArr" :key="k" :label="v.name" :value="v.code"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -66,15 +66,15 @@
             </el-form-item>
             <el-form-item prop="brandId" label="品牌">
                 <el-select class="search-inp" filterable placeholder="请选择品牌" v-model="form.brandId">
-                    <el-option value="1">小米</el-option>
+                    <el-option v-for="(v, k) in brandArr" :key="k" :label="v.name" :value="v.id"></el-option>
                 </el-select>
             </el-form-item>
             <div class="pro-title">自然属性</div>
-            <el-form-item>
+            <el-form-item v-loading="naturalLoading">
                 <el-col :span="11" v-for="(v, k) in naturalAttribute" :key="k" class="mb10">
                     <el-form-item :label="v.name" style="position: relative">
                         <el-select :disabled="v.defParam != ''" class="search-inp" filterable placeholder="请选择" v-model="v.value">
-                            <el-option v-for="(v1, k1) in v.options" :key="`${k}-${k1}`" :label="v1.label" :value="v1.value"></el-option>
+                            <el-option v-for="(v1, k1) in v.options" :key="`${k}-${k1}`" :label="v1.value" :value="v1.value"></el-option>
                         </el-select>
                         <span class="primary-text" @click="addAttrValue(k)">添加属性值</span>
                         <p v-if="v.defParam != ''" class="extra-attr pram-inp primary-text">
@@ -85,9 +85,9 @@
                 </el-col>
                 <el-col :span="11">
                     <div class="operate-natural-attr">
-                        <span>添加主属性</span>
+                        <span @click="addPrimaryAttr">添加主属性</span>
                         <span>|</span>
-                        <span>刷新</span>
+                        <span @click="getNaturalList">刷新</span>
                     </div>
                 </el-col>
             </el-form-item>
@@ -104,6 +104,7 @@
     export default {
         data() {
             return {
+                naturalLoading: false, // 自然属性loading
                 form: {
                     name: '',
                     secondName: '',
@@ -112,7 +113,7 @@
                     type: '',
                     selfProduct: '',
                     businessType: '',
-                    taxRate: '',
+                    // taxRate: '',
                     brandId: ''
                 },
                 rules: {
@@ -125,20 +126,29 @@
                     businessType: [{ required: true, message: '请选择贸易类型', trigger: 'blur' }],
                     brandId: [{ required: true, message: '请输入品牌', trigger: 'blur' }]
                 },
-                supplierArr: [{ label: '小米批发商', value: '1' }], // 供应商列表
+                selectedCateArr: [], // 分类列表
+                supplierArr: [], // 供应商列表
+                brandArr: [], // 品牌列表
                 deliveryWarehouseArr: [{ label: '加盟仓', value: '1' }, { label: '供应商仓库', value: '2' }, { label: '虚拟仓库', value: '3' }], // 发货仓库
                 naturalAttribute: [{ name: '尺寸', value: '', options: [{ label: 'XL', value: '1' }], defParam: '' }, { name: '重量', value: '', options: [{ label: '10kg', value: '1' }], defParam: '' }, { name: '颜色', value: '', options: [{ label: '红色', value: '1' }], defParam: '' }]
             };
         },
+        props: ['selectedCate'],
         computed: {
             imgUpload() {
                 return api.uploadImg;
             }
         },
         mounted() {
+            this.selectedCateArr = this.selectedCate;
             this.getSupplyList();
+            this.getNaturalList();
         },
         methods: {
+            // 添加主属性
+            addPrimaryAttr() {
+                this.$router.push({ path: '/thirdClassify', query: { name: this.selectedCateArr[2].label, id: this.selectedCateArr[2].value, superiorName: this.selectedCateArr[1].label }});
+            },
             // 获取供应商列表
             getSupplyList() {
                 request.findProductSupplierList({}).then(res => {
@@ -149,10 +159,20 @@
                     console.log(err);
                 });
             },
+            // 获取品牌列表
+            selectBrand(val) {
+                this.form.brandId = '';
+                request.findProductBrandListBySupplier({ supplierCode: val }).then(res => {
+                    this.brandArr = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
             // 添加属性值
             addAttrValue(index) {
-                this.$prompt('请输入属性值', null, {
-                    showCancelButton: true
+                this.$prompt('请输入属性值', '', {
+                    inputPattern: /^.{1,20}$/,
+                    inputErrorMessage: '请输入1-20位的名字'
                 }).then(({ value }) => {
                     this.naturalAttribute[index].value = '';
                     this.naturalAttribute[index].defParam = value;
@@ -160,16 +180,58 @@
                     console.log(err);
                 });
             },
+            // 根据三级类目获取自然属性列表
+            getNaturalList() {
+                const thirdCateId = this.selectedCateArr[2].value;
+                const data = {
+                    categoryId: thirdCateId,
+                    type: 1,
+                    pageSize: 10000
+                };
+                this.naturalLoading = true;
+                request.queryPropertyPageListByCate(data).then(res => {
+                    this.naturalLoading = false;
+                    const tmpData = res.data || [];
+                    this.naturalAttribute = [];
+                    tmpData.data.forEach(v => {
+                        this.naturalAttribute.push({
+                            name: v.name,
+                            value: '',
+                            defParam: '',
+                            options: v.categoryPropertyValueList || []
+                        });
+                    });
+                }).catch(err => {
+                    this.naturalLoading = false;
+                    console.log(err);
+                });
+            },
             // 下一步
             nextTip() {
                 this.$refs['form'].validate((valid) => {
-                    // if (valid) {
-                    //     alert('submit!');
-                    // } else {
-                    //     console.log('error submit!!');
-                    //     return false;
-                    // }
-                    this.$emit('nextName', 'inventory');
+                    if (valid) {
+                        const data = {
+                            ...this.form
+                        };
+                        const attrArr = [];
+                        this.naturalAttribute.forEach(v => {
+                            if (v.defParam === '') {
+                                attrArr.push(v.value);
+                            } else {
+                                attrArr.push(v.defParam);
+                            }
+                        });
+                        data.properties = attrArr.join(',');
+                        request.addProducts(data).then(res => {
+                            console.log(res);
+                        }).catch(err => {
+                            console.log(err);
+                        });
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                    // this.$emit('nextName', 'inventory');
                 });
             }
         }

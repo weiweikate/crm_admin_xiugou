@@ -5,7 +5,8 @@
             <el-form-item v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
                 <div v-if="v.type == 1">
                     <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
-                        <el-checkbox v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
+                        <el-checkbox v-if="v1.defType == 1" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
+                        <el-input v-else v-model="v1.value" style="width: 215px"></el-input>
                         <template v-if="v1.imgUrl == ''">
                             <el-upload
                                 :action="imgUpload"
@@ -23,7 +24,8 @@
                     </div>
                 </div>
                 <div v-else-if="v.type == 2" class="sales-type">
-                    <el-checkbox v-for="(v1, k1) in v.options" :key="`${k}--${k1}`" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
+                    <el-checkbox v-if="v1.defType == 1" v-for="(v1, k1) in v.options" :key="`${k}--${k1}`" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
+                    <el-input v-else v-model="v1.value" style="width: 215px"></el-input>
                 </div>
                 <div class="primary-text">
                     <span @click="addAttrValue(k)">新建子属性</span>
@@ -87,7 +89,7 @@
                 rules: {},
                 unit: '',
                 rowIndex: { bIndex: '', mIndex: '' },
-                salesAttrArr: [{ name: '体积', type: '1', options: [{ label: '大', value: false, imgUrl: '' }] }, { name: '规格', type: '2', options: [{ label: '全网通', value: true }, { label: '联通', value: false }] }],
+                salesAttrArr: [{ name: '体积', type: '1', options: [{ label: '大', defType: '1', value: '大', imgUrl: '' }] }, { name: '规格', type: '2', options: [{ label: '全网通', value: '全网通', defType: '2' }, { label: '联通', value: '联通', defType: '1' }] }],
                 priceTable: [{ id: 1 }],
                 wareTable: [{ id: 1 }],
                 batchPrice: false,

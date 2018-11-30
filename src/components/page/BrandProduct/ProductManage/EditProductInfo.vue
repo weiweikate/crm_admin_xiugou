@@ -10,7 +10,7 @@
         <el-card>
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
                 <el-tab-pane label="基础参数编辑" name="baseParam">
-                    <v-prod-param @nextName="getNextName" ref="baseParam"></v-prod-param>
+                    <v-prod-param @nextName="getNextName" :selectedCate='selectedCate' ref="baseParam"></v-prod-param>
                 </el-tab-pane>
                 <el-tab-pane label="库存编辑" name="inventory">
                     <v-inventory @nextName="getNextName" ref="inventory"></v-inventory>
@@ -43,7 +43,7 @@ export default {
             selectedCate: []
         };
     },
-    activated() {
+    created() {
         this.selectedCate = JSON.parse(this.$route.query.cate) || [];
     },
     methods: {

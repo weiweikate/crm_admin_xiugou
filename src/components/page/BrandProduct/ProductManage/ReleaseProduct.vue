@@ -88,6 +88,7 @@ export default {
         // 下一步
         nextSage() {
             if (this.content.length === 0) return this.$message.warning('请选择产品分类!');
+            console.log(this.selectedItem);
             this.$router.push({ name: 'editProductInfo', query: { cate: JSON.stringify(this.selectedItem) }});
         }
     }
