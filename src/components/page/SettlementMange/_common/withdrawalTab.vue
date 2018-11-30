@@ -71,7 +71,7 @@
         </el-dialog>
         <!-- 打款记录 -->
         <el-dialog title="查看打款记录" :visible.sync="isShowRecord" center width="30%">
-            <el-form :model="recordForm" label-width="130px" >
+            <el-form :model="recordForm" label-width="130px">
                 <el-form-item prop="no" label="提现编号:">{{recordForm.withdrawNum}}</el-form-item>
                 <el-form-item prop="rePeople" label="申请人:">{{recordForm.userName}}</el-form-item>
                 <el-form-item prop="money" label="申请提现金额:"><span style="color:red">{{(recordForm.withdrawBalance || 0) | handleMoney}}</span></el-form-item>
