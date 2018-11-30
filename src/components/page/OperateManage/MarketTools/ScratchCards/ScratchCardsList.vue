@@ -61,11 +61,11 @@
                 </el-table-column>
                 <el-table-column label="操作" width="320px">
                     <template slot-scope="scope">
-                        <el-button type="primary" v-if="scope.row.status==1" @click="showTip(scope.row.code, '2')" v-auth="'unying.marketToolsManage.ggk.zt'">暂停</el-button>
-                        <el-button type="primary" v-if="scope.row.status==2" @click="showTip(scope.row.code, '1')" v-auth="'unying.marketToolsManage.ggk.kq'">开启</el-button>
-                        <el-button type="warning" @click="editCard(scope.row.id)" v-auth="'unying.marketToolsManage.ggk.bj'">编辑</el-button>
-                        <el-button type="success" @click="toDetail(scope.row.id)" v-auth="'unying.marketToolsManage.ggk.xq'">详情</el-button>
-                        <el-button type="danger" v-if="scope.row.status==2" @click="showTip(scope.row.code, '0')" v-auth="'unying.marketToolsManage.ggk.sc'">删除</el-button>
+                        <el-button type="primary" v-if="scope.row.status==1" @click="showTip(scope.row.code, '2')" v-auth="'yunying.marketToolsManage.ggk.zt'">暂停</el-button>
+                        <el-button type="primary" v-if="scope.row.status==2" @click="showTip(scope.row.code, '1')" v-auth="'yunying.marketToolsManage.ggk.kq'">开启</el-button>
+                        <el-button type="warning" @click="editCard(scope.row.id)" v-auth="'yunying.marketToolsManage.ggk.bj'">编辑</el-button>
+                        <el-button type="success" @click="toDetail(scope.row.id)" v-auth="'yunying.marketToolsManage.ggk.xq'">详情</el-button>
+                        <el-button type="danger" v-if="scope.row.status==2" @click="showTip(scope.row.code, '0')" v-auth="'yunying.marketToolsManage.ggk.sc'">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
