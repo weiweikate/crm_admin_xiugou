@@ -66,9 +66,9 @@
                     <el-form-item prop="endTime" label="供应商结算帐期：">
                         <p>每月15号</p>
                     </el-form-item>
-                    <el-form-item prop="remark" label="备注">
-                        <el-input placeholder="备注" v-model="form.remark"></el-input>
-                    </el-form-item>
+                    <!--<el-form-item prop="remark" label="备注">-->
+                        <!--<el-input placeholder="备注" v-model="form.remark"></el-input>-->
+                    <!--</el-form-item>-->
                     <div class="submit-btn">
                         <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">确认保存</el-button>
                         <el-button @click="cancel">取消</el-button>
@@ -112,7 +112,7 @@
                 detailData: [],
                 btnLoading: false,
                 isUp: false, // 添加false，修改true
-                id: '',
+                code: '',
                 address: '',
                 areaDisabled: true,
                 phone: true,
@@ -123,7 +123,7 @@
             };
         },
         activated() {
-            this.id = this.$route.query.supplierEditInfo;
+            this.code = this.$route.query.supplierEditInfo;
             this.address = '';
             this.getBrandList();
         },
@@ -132,7 +132,7 @@
             getDetail() {
                 const that = this;
                 const data = {
-                    id: that.id
+                    code: that.code
                 };
                 that.loading = true;
                 request.findSupplierById(data).then(res => {

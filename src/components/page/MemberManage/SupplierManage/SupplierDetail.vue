@@ -72,20 +72,20 @@
             return {
                 detail: {},
                 brand: [],
-                id: '',
+                code: '',
                 loading: false,
                 list: ''
             };
         },
         activated() {
-            this.id = this.$route.query.supplierInfo;
+            this.code = this.$route.query.supplierInfo;
             this.getDetail();
         },
         methods: {
             // 获取详情
             getDetail() {
                 const data = {
-                    id: this.id
+                    code: this.code
                 };
                 request.findSupplierById(data).then(res => {
                     this.brand = res.data.productSupplierBrandList;
