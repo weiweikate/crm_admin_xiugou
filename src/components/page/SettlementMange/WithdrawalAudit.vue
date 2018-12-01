@@ -12,6 +12,13 @@
                 <el-form-item prop="time" label="发起时间">
                     <el-date-picker v-model="form.time" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
                 </el-form-item>
+                <el-form-item prop="applyStatus" label="提现状态">
+                    <el-select v-model="form.applyStatus">
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="提现成功" value="3"></el-option>
+                        <el-option label="提现失败" value="4"></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label=" ">
                     <el-button type="primary" @click="submitForm(1)">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
@@ -20,29 +27,19 @@
         </el-card>
         <el-card style='margin-top:20px' :body-style="{ padding: '30px'}">
             <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="全部申请" name="1">
+                <el-tab-pane label="全部申请" name="all">
+                    <v-tab ref="all"></v-tab>
+                </el-tab-pane>
+                <el-tab-pane label="待确认" name="1">
                     <v-tab ref="1"></v-tab>
                 </el-tab-pane>
-                <el-tab-pane label="待确认" name="2">
+                <el-tab-pane label="已确认" name="2">
                     <v-tab ref="2"></v-tab>
                 </el-tab-pane>
-                <el-tab-pane label="已确认" name="3">
+                <el-tab-pane label="已驳回" name="3">
                     <v-tab ref="3"></v-tab>
                 </el-tab-pane>
-                <el-tab-pane label="已驳回" name="4">
-                    <v-tab ref="4"></v-tab>
-                </el-tab-pane>
             </el-tabs>
-            <div class="block">
-                <el-pagination
-                        background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page.currentPage"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
     </div>
 </template>
@@ -50,9 +47,6 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import vTab from '@/components/page/SettlementMange/_common/withdrawalTab.vue';
-import utils from '@/utils/index.js';
-import * as api from '@/api/SettlementMange/index.js';
-import * as pApi from '@/privilegeList/SettlementMange/index.js';
 import { myMixinTable, queryDictonary } from '@/JS/commom';
 export default {
     components: { vBreadcrumb, vTab },
@@ -61,29 +55,33 @@ export default {
 
     data() {
         return {
-            activeName: '1', // 选项卡当前名称
+            activeName: 'all', // 选项卡当前名称
             // 表单
             form: {
                 applyPeople: '', // 申请人
                 withdraNo: '', // 提现编号
-                time: [] // 发起时间
+                time: [], // 发起时间
+                applyStatus: '',
+                status: ''
             },
             tableData: []
         };
     },
 
     activated() {
-
+        this.submitForm();
     },
 
     methods: {
         // tab 选项卡切换
         handleClick(tab) {
-            console.log(this.$refs[tab.name]);
+            this.form.status = tab.name;
+            this.submitForm();
         },
         // 提交表单
-        submitForm(val) {
-
+        submitForm() {
+            this.$refs[this.activeName].form = this.form;
+            this.$refs[this.activeName].handleCurrentChange(1);
         },
         // 重置表单
         resetForm(formName) {
@@ -95,6 +93,5 @@ export default {
 </script>
 <style lang='less' scoped>
 .witdrawal-audit{
-    .block{margin: 10px 0 20px 0}
 }
 </style>

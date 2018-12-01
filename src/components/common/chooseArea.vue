@@ -347,6 +347,15 @@
                     that.expandId = -1;
                     that.showCities = false;
                     that.checkAll[index].provinceCheck.forEach(function(v, k) {
+                        v.cityCheck.forEach((v1, k1) => {
+                            v.cityCheck[k1] = false;
+                        });
+                        that.preChooseData.forEach((v1, k1) => {
+                            if (that.checkAll[index].provinceCheck[k].code == v1.provinceId) {
+                                that.preChooseData.splice(k1, 1);
+                                that.preChooseProvinceIds.splice(k1, 1);
+                            }
+                        });
                         that.checkAll[index].provinceCheck[k].isChecked = false;
                         that.checkAll[index].provinceCheck[k].names = [];
                         that.checkAll[index].provinceCheck[k].ids = [];
@@ -354,6 +363,7 @@
                         // that.$set(that.checkAll[index].provinceCheck[k].checkedCities, k, that.checkAll[index].provinceCheck[k].checkedCities);
                     });
                 }
+                this.areaCheckedAll(index);
             },
             // 省对应的全选操作
             handleCheckAll(val, k, index) {
@@ -395,7 +405,6 @@
                 that.$set(that.checkAll, index, that.checkAll[index]);
                 that.$set(that.checkAll[index].provinceCheck, k, that.checkAll[index].provinceCheck[k]);
                 that.areaCheckedAll(index);
-                // console.log(city.name)
             },
             // 点击市，重构chooseData数据
             handelChooseData(chooseData, tempProvinceId, index, k, tempId, name) {
@@ -407,6 +416,7 @@
                     tempChooseData = that.preChooseData;
                     tempChooseProvinceIds = that.preChooseProvinceIds;
                 }
+                tempProvinceId = typeof tempProvinceId === 'string' ? tempProvinceId : tempProvinceId.toString();
                 if (tempChooseData.length) {
                     tempChooseData.forEach(function(v, k1) {
                         if (tempChooseProvinceIds.indexOf(tempProvinceId) != -1) {
@@ -433,6 +443,7 @@
                     tempChooseData = that.preChooseData;
                     tempChooseProvinceIds = that.preChooseProvinceIds;
                 }
+                tempProvinceId = typeof tempProvinceId === 'string' ? tempProvinceId : tempProvinceId.toString();
                 if (tempChooseProvinceIds.indexOf(tempProvinceId) == -1) {
                     tempChooseProvinceIds.push(tempProvinceId);
                 }

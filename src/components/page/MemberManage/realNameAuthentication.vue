@@ -37,8 +37,8 @@
                     </el-table-column>
                     <el-table-column  label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button v-if="scope.row.status==1" @click="realName(scope.row)" type="primary">详细信息</el-button>
-                            <el-button v-if="scope.row.status==1" @click="refuseAudit(scope.row)" type="danger">驳回认证</el-button>
+                            <el-button v-if="scope.row.status==1" @click="realName(scope.row)" type="primary" v-auth="'vip.realNameAuthentication.xq'">详细信息</el-button>
+                            <el-button v-if="scope.row.status==1" @click="refuseAudit(scope.row)" type="danger" v-auth="'vip.realNameAuthentication.bhrz'">驳回认证</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

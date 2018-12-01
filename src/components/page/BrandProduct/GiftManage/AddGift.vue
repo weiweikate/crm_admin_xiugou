@@ -155,7 +155,7 @@
                 <el-form-item>
                     <el-checkbox  v-model="checkedAllUser" @change="selectedAlLevel">全选</el-checkbox>
                     <el-checkbox-group v-model="chectedUser">
-                        <el-checkbox @change="selectSingleUser" v-for="(v,k) in userLevel" :label="v.id" :key="k">{{v.name}}</el-checkbox>
+                        <el-checkbox @change="selectSingleUser" v-for="(v,k) in userLevel" :label="v.id" :key="k">{{`v${v.level}`}}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <div class="tag-btn-group">

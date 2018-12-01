@@ -16,10 +16,11 @@
                 <span>订单号：{{v.orderNum}}</span>
                 <span style="margin-left:30px">创建时间：{{v.createTime|formatDateAll}}</span>
                 <div class="operate-btn-group">
-                    <span v-if='v.status == 2' @click="pushCloud(v)">推送云仓</span>
-                    <span @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
+                    <span v-if='v.status == 2&&v.cloudHadSend==0' v-auth="'order.orderList.xnfh'" @click="sendGoods(v)" style="margin-right: 15px">虚拟发货</span>
+                    <span v-if='v.status == 2&&v.cloudHadSend==0' v-auth="'order.orderList.tsyc'" @click="pushCloud(v)">推送云仓</span>
+                    <span @click="orderInfo(v)" style="margin:0 15px 0 15px" v-auth="'order.orderList.ddxq'">订单详情</span>
                     <el-popover placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
-                                        <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
+                                        <span slot="reference" style="cursor:pointer" v-auth="'order.orderList.bj'">标记 &nbsp <span class="star"
                                                                                                      :style="{color:v.starColor}">★</span></span>
                         <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
                               :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
@@ -43,14 +44,14 @@
                 <div class="center">
                     <div class="status"
                          :style="{height:120*v.orderProductList.length+v.orderProductList.length-1+'px',lineHeight:120*v.orderProductList.length+v.orderProductList.length-1+'px'}">
-                            <template v-if='v.status == 1'>待支付</template>
-                            <template v-if='v.status == 2'>待发货</template>
-                            <template v-if='v.status == 3'>待确认</template>
-                            <template v-if='v.status == 4'>确认收货</template>
-                            <template v-if='v.status == 5'>已完成</template>
-                            <template v-if='v.status == 6'>已关闭(退款关闭)</template>
-                            <template v-if='v.status == 7'>已关闭(用户关闭)</template>
-                            <template v-if='v.status == 8'>已关闭(超时关闭)</template>
+                        <template v-if='v.status == 1'>待支付</template>
+                        <template v-if='v.status == 2'>待发货</template>
+                        <template v-if='v.status == 3'>待确认</template>
+                        <template v-if='v.status == 4'>确认收货</template>
+                        <template v-if='v.status == 5'>已完成</template>
+                        <template v-if='v.status == 6'>已关闭(退款关闭)</template>
+                        <template v-if='v.status == 7'>已关闭(用户关闭)</template>
+                        <template v-if='v.status == 8'>已关闭(超时关闭)</template>
                     </div>
                     <div class="collection"
                          :style="{height:120*v.orderProductList.length+v.orderProductList.length-1+'px',paddingTop:120*v.orderProductList.length/2-30+'px'}">
@@ -84,6 +85,21 @@
                 :total="page.totalPage">
             </el-pagination>
         </div>
+        <!--虚拟发货-->
+        <el-dialog title="虚拟发货" :visible.sync="mask">
+            <el-form :model="form">
+                <el-form-item label="物流单号">
+                    <el-input v-model="form.expressNo" placeholder="请输入物流单号"></el-input>
+                </el-form-item>
+                <el-form-item label="物流公司">
+                    <el-input v-model="form.expressName" placeholder="请输入物流公司"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" :loading="btnLoading" @click="sendSure('form')">确 认</el-button>
+                <el-button @click="mask=false">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -127,7 +143,14 @@
                 returnTypeArr: ['退款', '退货', '换货'],
                 // 售后状态
                 afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭'],
-                ids: []
+                ids: [],
+                form: {
+                    expressName: '',
+                    expressNo: ''
+                },
+                mask: false,
+                sendId: '',
+                btnLoading: false
             };
         },
         methods: {
@@ -195,6 +218,28 @@
                     this.getList(this.page.currentPage);
                 }).catch(err => {
                     console.log(err);
+                });
+            },
+            // 虚拟发货
+            sendGoods(row) {
+                this.mask = true;
+                this.sendId = row.id;
+            },
+            sendSure(formName) {
+                const data = this[formName];
+                data.id = this.sendId;
+                if (!data.expressName || !data.expressNo) {
+                    return this.$message.warning('请输入物流单号和物流公司');
+                }
+                this.btnLoading = true;
+                request.sendGoods(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.mask = false;
+                    this.btnLoading = false;
+                    this.getList(this.page.currentPage);
+                }).catch(err => {
+                    console.log(err);
+                    this.btnLoading = false;
                 });
             },
             // 订单详情
@@ -398,6 +443,21 @@
             }
             .block {
                 margin: 20px 0px;
+            }
+        }
+        /*弹窗样式*/
+        .el-dialog {
+            width: 530px;
+            border-radius: 10px;
+            .el-dialog__header {
+                border-bottom: 1px solid #eee;
+                padding: 20px 20px 10px 50px;
+            }
+            .el-dialog__title {
+                color: #ff6868;
+            }
+            .el-input,.el-input__inner {
+                width: 360px;
             }
         }
     }

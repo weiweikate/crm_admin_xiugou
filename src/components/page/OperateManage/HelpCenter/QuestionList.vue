@@ -2,7 +2,7 @@
   <div class="question-list">
     <v-breadcrumb :nav="nav"></v-breadcrumb>
     <el-card :body-style="{ padding: '30px 60px' }">
-      <el-button type="primary" @click="addQuestion">添加问题</el-button>
+      <el-button type="primary" @click="addQuestion" v-auth="'yunying.helpCenter.tjwt'">添加问题</el-button>
       <el-table :data="tableData" border style='margin-top:20px' :height="height">
         <el-table-column prop="id" label="编号" align="center"></el-table-column>
         <el-table-column prop="title" label="问题标题" align="center"></el-table-column>
@@ -10,9 +10,9 @@
         <el-table-column prop="helpNoNum" label="反馈没用" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click='showQuestionInfo(scope.row)' type="primary">查看详情</el-button>
-            <el-button @click="editQuestion(scope.row)" type="warning">编辑</el-button>
-            <el-button @click="deleteUser(scope.row)" type="danger">删除</el-button>
+            <el-button @click='showQuestionInfo(scope.row)' type="primary" v-auth="'unying.helpCenter.ckxq'">查看详情</el-button>
+            <el-button @click="editQuestion(scope.row)" type="warning" v-auth="yunying.helpCenter.bj">编辑</el-button>
+            <el-button @click="deleteUser(scope.row)" type="danger" v-auth="'yunying.helpCenter.wtlb.sc'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
