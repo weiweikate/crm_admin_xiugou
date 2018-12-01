@@ -6,8 +6,8 @@
                 <el-form-item prop="name" label="店铺名称">
                     <el-input v-model="form.name" placeholder="请输入店铺名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="showNumber" label="店铺ID">
-                    <el-input v-model="form.showNumber" placeholder="请输入店铺ID"></el-input>
+                <el-form-item prop="storeNumber" label="店铺ID">
+                    <el-input v-model="form.storeNumber" placeholder="请输入店铺ID"></el-input>
                 </el-form-item>
                 <el-form-item prop="bonusCount" label="分红次数">
                     <el-input v-model="form.bonusCount" placeholder="请输入分红次数"></el-input>
@@ -150,7 +150,7 @@ export default {
             const data = {
                 name: this.form.name,
                 bonusCount: this.form.bonusCount,
-                showNumber: this.form.showNumber,
+                storeNumber: this.form.storeNumber,
                 storeStarId: this.form.storeStarId,
                 maxMoney: this.form.maxTradeMoney,
                 minMoney: this.form.minTradeMoney,
