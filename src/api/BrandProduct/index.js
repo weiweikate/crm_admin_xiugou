@@ -175,6 +175,7 @@ export const queryCouponByType = ['/coupon/queryByType', { methods: 'get' }]; //
 //-----------------------------------------------------------------------------------------2018-11-29 产品重构-----------
 export const queryProdList = ['/product/product/queryProductPageList', { methods: 'post' }]; // 查询产品列表
 export const findProductSupplierList = ['/product/productSupplier/findProductBrandList', { methods: 'post' }]; // 查询供应商列表
+export const batchUpdateProductStatus = ['/product/product/batchUpdateProductStatus', { methods: 'post' }]; // 批量删除下架产品
 export const findProductBrandListBySupplier = ['/product/productBrand/queryProductBrandBySupplierCode', { methods: 'post' }]; // 查询品牌列表
-export const queryPropertyPageListByCate = ['/product/categoryPropertyAssociate/queryByCategoryId', { methods: 'get' }]; // 查询自然/销售属性
-export const addProducts = ['/product/product/addProduct', { methods: 'post' }]; // 添加商品
+export const queryPropertyPageListByCate = ['/product/productProperty/queryCategoryPropertyPageList', { methods: 'post' }]; // 查询自然/销售属性
+export const addProducts = ['/product/product/addOrModifyProduct', { methods: 'post' }]; // 添加商品

@@ -1,6 +1,6 @@
 <template>
     <div class="tab-content">
-        <el-table :data="tableData" @selection-change="handleSelectionChange" border stripe>
+        <el-table v-loading="tableLoading" :data="tableData" @selection-change="handleSelectionChange" border stripe>
             <el-table-column type="selection" label="全选" align="center"></el-table-column>
             <el-table-column type="index" label="编号" align="center"></el-table-column>
             <el-table-column label="商品名称" width="400px">
@@ -28,8 +28,8 @@
             </el-table-column>
             <el-table-column label="商品售价" align="center">
                 <template slot-scope="scope">
-                    <p>${{scope.row.minPrice}}</p>
-                    <p>${{scope.row.maxPrice}}</p>
+                    <p>{{scope.row.minPrice || 0 | handleMoney}}</p>
+                    <p>{{scope.row.maxPrice || 0 | handleMoney}}</p>
                 </template>
             </el-table-column>
             <el-table-column prop="status" label="商品状态" align="center">
@@ -144,7 +144,13 @@ export default {
         return {
             prodIdArr: [],
             form: {},
-            tableData: [{ id: 1, name: '苹果8xApple/苹果 iPhone X 4G手机 iphonex苹果x屏,苹果8xApple/苹果 iPhone X 4G手机 iphonex苹果x屏', imgUrl: 'https://mr-test-sg.oss-cn-hangzhou.aliyuncs.com/sharegoods/a6bd99c9c1c04c778e86c9de57f92a09.png', short: '双十一超值热卖', tags: ['自营', '7天无理由退换'], code: '123456789' }] // 表格名称
+            listNum: {
+                checkingTotal: 0,
+                inSellingTotal: 0,
+                inWarehouseTotal: 0
+            },
+            tableLoading: false,
+            tableData: [] // 表格名称
         };
     },
 
@@ -153,16 +159,23 @@ export default {
     methods: {
         //   提交表单
         getList(val) {
-            let data = {
+            const data = {
                 ...this.form,
                 page: val,
                 pageSize: this.page.pageSize
-            }
+            };
+            this.tableLoading = true;
             request.queryProdList(data).then(res => {
-                let tblData = res.data || {};
+                this.tableLoading = false;
+                const tblData = res.data || {};
+                this.listNum.checkingTotal = tblData.checkingTotal || 0;
+                this.listNum.inSellingTotal = tblData.inSellingTotal || 0;
+                this.listNum.inWarehouseTotal = tblData.inWarehouseTotal || 0;
+                this.$emit('transData', this.listNum);
                 this.tableData = tblData.data;
                 this.page.totalPage = tblData.totalNum;
             }).catch(err => {
+                this.tableLoading = false;
                 console.log(err);
             });
         },
@@ -174,15 +187,32 @@ export default {
                     this.prodIdArr.push(v.id);
                 });
             }
-            console.log(this.prodIdArr);
         },
         // 编辑产品
         editProduct(row) {
 
         },
-        // 产品上架/下架
-        productStatus(row, status) {
+        // 产品删除/下架
+        productStatus(status) {
+            if (this.prodIdArr.length === 0) return this.$message.warning('请先选择产品再进行操作');
+            // 0：删除 1：待审核2：已通过3：未通过4:已上架5：停用
+            const data = {
+                codes: this.prodIdArr.join(','),
+                status: status
+            };
+            this.$confirm(`是否${status == 0 ? '删除' : '下架'}选中商品?`, '', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                request.batchUpdateProductStatus(data).then(res => {
+                    console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                });
+            }).catch(() => {
 
+            });
         },
         // 通过/不通过审核
         auditProduct(row, status) {
@@ -200,7 +230,7 @@ export default {
     }
 };
 </script>
-<style lang='less'>
+<style lang='less' scoped>
     .tab-content {
         .product-info{
             display: flex;

@@ -99,30 +99,52 @@
             </el-form>
         </el-card>
         <el-card class="mb10">
-            <el-button>删除</el-button>
-            <el-button>下架</el-button>
-            <el-button>审核</el-button>
-            <el-button>调整运费模板</el-button>
-            <!--<el-button type="danger">推送云仓</el-button>-->
+            <el-button @click="$refs[activeName].productStatus(0)">删除</el-button>
+            <el-button @click="$refs[activeName].productStatus(5)">下架</el-button>
+            <el-button @click="auditToask = true">审核</el-button>
+            <el-button @click="freightToask = true">调整运费模板</el-button>
+            <el-button type="danger">推送云仓</el-button>
             <el-button type="danger">导出</el-button>
             <el-button @click="createProd" type="danger">创建商品</el-button>
         </el-card>
         <el-card>
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-                <el-tab-pane label="全部(0)" name="allProduct">
-                    <v-tab-content ref="allProduct"></v-tab-content>
+                <el-tab-pane label="全部" name="allProduct">
+                    <v-tab-content @transData = 'getData' ref="allProduct"></v-tab-content>
                 </el-tab-pane>
-                <el-tab-pane label="待审核(checkingTotal)" name="auditProduct">
+                <el-tab-pane :label="listNum.checkingTotal" name="auditProduct">
                     <v-tab-content ref="auditProduct"></v-tab-content>
                 </el-tab-pane>
-                <el-tab-pane label="出售中(inSellingTotal)" name="sale">
+                <el-tab-pane :label="listNum.inSellingTotal" name="sale">
                     <v-tab-content ref="sale"></v-tab-content>
                 </el-tab-pane>
-                <el-tab-pane label="仓库中(inWarehouseTotal)" name="warehouse">
+                <el-tab-pane :label="listNum.inWarehouseTotal" name="warehouse">
                     <v-tab-content ref="warehouse"></v-tab-content>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
+        <!--批量调整运费模板-->
+        <el-dialog title="替换模板" :visible.sync="freightToask" :before-close="()=>{freightToask = false;newFeightTpl=''}">
+            <p class="tac">
+                <el-select v-model="newFeightTpl" placeholder="请选择运费模板">
+                    <el-option v-for="(v, k) in freightList" :key="k" :value="v.id" :label="v.name"></el-option>
+                </el-select>
+            </p>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="editFreightTpl">确 定</el-button>
+                <el-button @click="()=>{freightToask = false;newFeightTpl=''}">取 消</el-button>
+            </span>
+        </el-dialog>
+        <!--批量审核-->
+        <el-dialog title="审核" :visible.sync="auditToask">
+            <p class="tac">
+                是否审核选中商品
+            </p>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="auditProduct(2)">审核通过</el-button>
+                <el-button @click="auditProduct(3)">审核驳回</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -141,6 +163,11 @@
                 nav: ['品牌产品管理', '产品管理'],
                 freightList: [],
                 firstCateList: [],
+                listNum: {
+                    checkingTotal: '待审核',
+                    inSellingTotal: '出售中',
+                    inWarehouseTotal: '仓库中'
+                },
                 form: {
                     prodSpuCode: '',
                     // name: '',
@@ -158,6 +185,9 @@
                     minPrice: '',
                     maxPrice: ''
                 },
+                freightToask: false,
+                auditToask: false,
+                newFeightTpl: '', // 批量调整运费模板
                 activeName: 'allProduct'
             };
         },
@@ -167,6 +197,39 @@
             this.handleClick();
         },
         methods: {
+            // 批量审核产品
+            auditProduct(status) {
+                if (this.$refs[this.activeName].prodIdArr.length === 0) return this.$message.warning('请先选择产品再进行操作');
+                // 0：删除 1：待审核2：已通过3：未通过4:已上架5：停用
+                const data = {
+                    codes: this.$refs[this.activeName].prodIdArr.join(','),
+                    status: status
+                };
+                request.batchUpdateProductStatus(data).then(res => {
+                    console.log(res);
+                    this.auditToask = false;
+                }).catch(err => {
+                    this.auditToask = false;
+                    console.log(err);
+                });
+            },
+            // 批量调整运费模板
+            editFreightTpl() {
+                if (this.$refs[this.activeName].prodIdArr.length === 0) return this.$message.warning('请先选择产品再进行操作');
+                const data = {
+                    codes: this.$refs[this.activeName].prodIdArr.join(','),
+                    freightTemplateId: this.newFeightTpl
+                };
+                request.batchUpdateProductStatus(data).then(res => {
+                    this.newFeightTpl = '';
+                    this.freightToask = false;
+                }).catch(err => {
+                    this.newFeightTpl = '';
+                    this.freightToask = false;
+                    console.log(err);
+                });
+            },
+            // 切换选项卡
             handleClick(tab) {
                 let status = '';
                 switch (this.activeName) {
@@ -182,8 +245,16 @@
                     beginTime: this.$utils.formatTime(this.form.updateTime[0], 1),
                     endTime: this.$utils.formatTime(this.form.updateTime[1], 1)
                 };
-                this.$refs[this.activeName].form = {...data};
+                this.$refs[this.activeName].form = { ...data };
                 this.$refs[this.activeName].handleCurrentChange(1);
+            },
+            // 获取子组件传的数据
+            getData(val) {
+                this.listNum = {
+                    checkingTotal: `待审核(${val.checkingTotal})`,
+                    inSellingTotal: `出售中(${val.inSellingTotal})`,
+                    inWarehouseTotal: `仓库中(${val.inWarehouseTotal})`
+                }
             },
             // 获取运费模板列表
             getFeightList() {

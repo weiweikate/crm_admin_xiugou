@@ -119,7 +119,7 @@
                 rules: {
                     name: [{ required: true, message: '请输入商品标题', trigger: 'blur' }, { min: 2, max: 46, message: '长度在 2 到 46 个字符', trigger: 'blur' }],
                     secondName: [{ min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }],
-                    supplier: [{ required: true, message: '请选择供应商', trigger: 'blur' }],
+                    supplierCode: [{ required: true, message: '请选择供应商', trigger: 'blur' }],
                     warehouseType: [{ required: true, message: '请选择发货仓库', trigger: 'blur' }],
                     type: [{ required: true, message: '请选择商品类型', trigger: 'blur' }],
                     selfProduct: [{ required: true, message: '请选择是否自营', trigger: 'blur' }],
@@ -153,7 +153,6 @@
             getSupplyList() {
                 request.findProductSupplierList({}).then(res => {
                     this.supplierArr = [];
-                    this.supplierArr.push({ name: '全部', id: '' });
                     this.supplierArr.push(...res.data);
                 }).catch(err => {
                     console.log(err);
@@ -186,6 +185,7 @@
                 const data = {
                     categoryId: thirdCateId,
                     type: 1,
+                    page: 1,
                     pageSize: 10000
                 };
                 this.naturalLoading = true;
@@ -198,7 +198,7 @@
                             name: v.name,
                             value: '',
                             defParam: '',
-                            options: v.categoryPropertyValueList || []
+                            options: v.values || []
                         });
                     });
                 }).catch(err => {
@@ -216,12 +216,12 @@
                         const attrArr = [];
                         this.naturalAttribute.forEach(v => {
                             if (v.defParam === '') {
-                                attrArr.push(v.value);
+                                attrArr.push({paramName: v.name, paramValue: v.value});
                             } else {
-                                attrArr.push(v.defParam);
+                                attrArr.push({paramName: v.name, paramValue: v.defParam});
                             }
                         });
-                        data.properties = attrArr.join(',');
+                        data.paramList = JSON.stringify(attrArr);
                         request.addProducts(data).then(res => {
                             console.log(res);
                         }).catch(err => {

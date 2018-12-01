@@ -156,7 +156,7 @@
                     undeliveredList: [], // 不支持配送区域
                     upType: '',
                     upTime: '',
-                    buyLimit: '',
+                    buyLimit: [],
                     limitBuyNum: 0,
                     afterSaleServiceDays: 0, // 售后周期
                     flatService: [],
