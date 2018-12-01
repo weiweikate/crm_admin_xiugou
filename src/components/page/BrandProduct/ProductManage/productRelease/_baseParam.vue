@@ -38,8 +38,8 @@
                 <el-col :span="11">
                     <el-form-item prop="selfProduct" label="是否自营">
                         <el-select v-model="form.selfProduct" placeholder="请选择是否自营">
-                            <el-option label="是" value="1"></el-option>
-                            <el-option label="否" value="2"></el-option>
+                            <el-option label="是" value="true"></el-option>
+                            <el-option label="否" value="false"></el-option>
                         </el-select>
                         <span style="color: #ccc">自营代表开票方为平台</span>
                     </el-form-item>
@@ -92,7 +92,7 @@
                 </el-col>
             </el-form-item>
             <el-form-item label=" ">
-                <el-button type="primary" @click="nextTip">下 一 步</el-button>
+                <el-button :loading="btnLoading" type="primary" @click="nextTip">下 一 步</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -105,6 +105,7 @@
         data() {
             return {
                 naturalLoading: false, // 自然属性loading
+                btnLoading: false,
                 form: {
                     name: '',
                     secondName: '',
@@ -221,17 +222,28 @@
                                 attrArr.push({paramName: v.name, paramValue: v.defParam});
                             }
                         });
-                        data.paramList = JSON.stringify(attrArr);
+                        data.paramList = attrArr;
+                        data.firstCategoryId = this.selectedCate[0].value;
+                        data.secCategoryId = this.selectedCate[1].value;
+                        data.thirdCategoryId = this.selectedCate[2].value;
+                        this.btnLoading = true;
                         request.addProducts(data).then(res => {
-                            console.log(res);
+                            this.btnLoading = false;
+                            this.$emit('productInfo', {
+                                proCode: res.data.prodCode,
+                                paramList: res.data.paramList,
+                                id: res.data.id
+                            })
+                            this.$message.success(res.msg);
+                            this.$emit('nextName', 'inventory');
                         }).catch(err => {
+                            this.btnLoading = false;
                             console.log(err);
                         });
                     } else {
                         console.log('error submit!!');
                         return false;
                     }
-                    // this.$emit('nextName', 'inventory');
                 });
             }
         }

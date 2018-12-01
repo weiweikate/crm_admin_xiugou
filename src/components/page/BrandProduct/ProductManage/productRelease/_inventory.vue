@@ -1,12 +1,15 @@
 <template>
     <div class="prod-inventory">
-        <el-form :model="form" ref="form" :rules="rules" label-position="right" label-width="100px">
+        <el-form v-loading="salesLoading" :model="form" ref="form" :rules="rules" label-position="right" label-width="100px">
             <div class="pro-title">销售属性</div>
             <el-form-item v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
-                <div v-if="v.type == 1">
+                <div v-if="v.type == 2">
                     <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
                         <el-checkbox v-if="v1.defType == 1" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
-                        <el-input v-else v-model="v1.value" style="width: 215px"></el-input>
+                        <div class="mt10" v-else>
+                            <el-input v-model="v1.value" style="width: 215px"></el-input>
+                            <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
+                        </div>
                         <template v-if="v1.imgUrl == ''">
                             <el-upload
                                 :action="imgUpload"
@@ -23,9 +26,12 @@
                         </template>
                     </div>
                 </div>
-                <div v-else-if="v.type == 2" class="sales-type">
+                <div v-else-if="v.type == 1" class="sales-type">
                     <el-checkbox v-if="v1.defType == 1" v-for="(v1, k1) in v.options" :key="`${k}--${k1}`" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
-                    <el-input v-else v-model="v1.value" style="width: 215px"></el-input>
+                    <div class="mt10" v-else>
+                        <el-input v-model="v1.value" style="width: 215px"></el-input>
+                        <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
+                    </div>
                 </div>
                 <div class="primary-text">
                     <span @click="addAttrValue(k)">新建子属性</span>
@@ -35,86 +41,90 @@
                 <div class="primary-text">
                     <span>新建主属性</span>
                     <span>|</span>
-                    <span>刷新</span>
+                    <span @click="getSalesList">刷新</span>
                 </div>
             </el-form-item>
             <el-form-item label=" ">
-                <el-button type="primary" @click="">生成列表</el-button>
+                <el-button :loading="createListLoading" type="primary" @click="addprodSku">生成列表</el-button>
             </el-form-item>
             <div class="pro-title">价格信息</div>
             <el-form-item label="销售价格">
                 <el-button type="primary" class="mb10" @click="batchPrice = true">批量输入</el-button>
                 <el-table :data="priceTable" border stripe>
-                    <el-table-column prop="propertyValues" label="属性" align="center"></el-table-column>
-                    <el-table-column label="原价" align="center">
+                    <el-table-column prop="propertyValues" label="属性" width="225" align="center">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.propertyValues"></el-input>
+                            {{scope.row.propertyValues.split('@').join('-')}}
                         </template>
                     </el-table-column>
-                    <el-table-column label="v0" align="center">
+                    <el-table-column label="原价" align="center" width="225">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.v0"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model.number="scope.row.originalPrice"></el-input-number>
                         </template>
                     </el-table-column>
-                    <el-table-column label="v1" align="center">
+                    <el-table-column label="v0" align="center" width="225">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.v1"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model.number="scope.row.v0"></el-input-number>
                         </template>
                     </el-table-column>
-                    <el-table-column label="v2" align="center">
+                    <el-table-column label="v1" align="center" width="225">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.v2"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model.number="scope.row.v1"></el-input-number>
                         </template>
                     </el-table-column>
-                    <el-table-column label="v3" align="center">
+                    <el-table-column label="v2" align="center" width="225">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.v3"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model.number="scope.row.v2"></el-input-number>
                         </template>
                     </el-table-column>
-                    <el-table-column label="v4" align="center">
+                    <el-table-column label="v3" align="center" width="225">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.v4"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model.number="scope.row.v3"></el-input-number>
                         </template>
                     </el-table-column>
-                    <el-table-column label="v5" align="center">
+                    <el-table-column label="v4" align="center" width="225">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.v5"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model.number="scope.row.v4"></el-input-number>
                         </template>
                     </el-table-column>
-                    <el-table-column label="v6" align="center">
+                    <el-table-column label="v5" align="center" width="225">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.v6"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model.number="scope.row.v5"></el-input-number>
                         </template>
                     </el-table-column>
-                    <el-table-column label="拼店价" align="center">
+                    <el-table-column label="v6" align="center" width="225">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.groupPrice"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model.number="scope.row.v6"></el-input-number>
                         </template>
                     </el-table-column>
-                    <el-table-column label="最低支付价" align="center">
+                    <el-table-column label="拼店价" align="center" width="225">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.minPrice"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model.number="scope.row.groupPrice"></el-input-number>
                         </template>
                     </el-table-column>
-                    <el-table-column label="结算价" align="center">
+                    <el-table-column label="结算价" align="center" width="225">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.settlementPrice"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model.number="scope.row.settlementPrice"></el-input-number>
                         </template>
                     </el-table-column>
-                    <el-table-column label="重量（kg）" align="center">
+                    <el-table-column label="最低支付价" align="center" width="225">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.weight"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model.number="scope.row.minPrice"></el-input-number>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="skuCode" label="SKU编码" align="center"></el-table-column>
-                    <el-table-column label="SKU条形码" align="center">
+                    <el-table-column label="重量（kg）" align="center" width="225">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.barCode"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model.number="scope.row.weight"></el-input-number>
                         </template>
                     </el-table-column>
-                    <el-table-column label="供应商SKU编码" align="center">
+                    <el-table-column prop="skuCode" label="SKU编码" align="center" width="225"></el-table-column>
+                    <el-table-column label="SKU条形码" align="center" width="225">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.supplierSkuCode"></el-input>
+                            <el-input v-model="scope.row.barCode"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="供应商SKU编码" align="center" width="225">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.row.supplierSkuCode"></el-input>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -122,25 +132,113 @@
             <div class="pro-title">库存信息 <span class="grey-text">注：可售库存不编辑默认全部可售</span></div>
             <el-form-item label="库存信息">
                 <el-table :data="priceTable" border stripe>
-                    <el-table-column prop="propertyValues" label="属性" align="center"></el-table-column>
-                    <el-table-column :render-header="renderTitle" prop="stockUnit" label="单位" align="center"></el-table-column>
-                    <el-table-column prop="warehouseStock" label="仓库同步库存" align="center"></el-table-column>
-                    <el-table-column prop="sellStock" label="可售库存" align="center"></el-table-column>
-                    <el-table-column label="操作" align="center"></el-table-column>
+                    <el-table-column prop="propertyValues" label="属性" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.propertyValues.split('@').join('-')}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column :render-header="renderTitle" prop="stockUnit" label="单位" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.stockUnit || '-'}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="warehouseStock" label="仓库同步库存" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.warehouseStock || '-'}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="sellStock" label="可售库存" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.sellStock || '-'}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <span class="primary-text" @click="showWareaMsg(scope.row)">查看</span>
+                        </template>
+                    </el-table-column>
                 </el-table>
             </el-form-item>
             <el-form-item label=" ">
-                <el-button type="primary" @click="nextTip">下 一 步</el-button>
+                <el-button :loading="subformBtn" type="primary" @click="nextTip">下 一 步</el-button>
             </el-form-item>
         </el-form>
         <!--批量添加产品价格-->
-        <el-dialog title="批量操作" :visible.sync="batchPrice" width="30%" style="min-width: 500px">
+        <el-dialog title="批量操作" :visible.sync="batchPrice" width="30%" :before-close="cancleBatchAdd" style="min-width: 500px">
             <el-table :data="batchPriceArr" border stripe>
-                <el-table-column prop="originPrice" label="原价" align="center"></el-table-column>
+                <el-table-column label="原价" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.originalPrice"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="v0" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.v0"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="v1" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.v1"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="v2" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.v2"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="v3" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.v3"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="v4" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.v4"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="v5" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.v5"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="v6" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.v6"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="拼店价" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.groupPrice"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="结算价" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.settlementPrice"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="重量（kg）" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.weight"></el-input>
+                    </template>
+                </el-table-column>
             </el-table>
             <span slot="footer">
-                <el-button type="primary" @click="batchPrice = false">确 定</el-button>
-                <el-button @click="batchDealPrice">取 消</el-button>
+                <el-button type="primary" @click="batchAddPrice">确 定</el-button>
+                <el-button @click="cancleBatchAdd">取 消</el-button>
+            </span>
+        </el-dialog>
+        <!--查看仓库信息-->
+        <el-dialog title="仓库信息" :visible.sync="showWareaMsgToask" width="30%" style="min-width: 500px">
+            <!--TODO 暂无字段-->
+            <el-table :data="batchPriceArr" border stripe>
+                <el-table-column prop="wareaCode" label="仓库编码" align="center"></el-table-column>
+                <el-table-column prop="wareaCode" label="仓库名称" align="center"></el-table-column>
+                <el-table-column prop="wareaCode" label="仓库类型" align="center"></el-table-column>
+                <el-table-column prop="warehouseStock" label="仓库库存" align="center"></el-table-column>
+            </el-table>
+            <span slot="footer">
+                <el-button type="primary" @click="showWareaMsgToask = false">确 定</el-button>
+                <el-button @click="showWareaMsgToask = false">取 消</el-button>
             </span>
         </el-dialog>
     </div>
@@ -152,17 +250,24 @@
     import { beforeAvatarUpload } from '@/JS/commom.js';
     export default {
         mixins: [beforeAvatarUpload],
+        props: ['selectedCate', 'productInfo'],
         data() {
             return {
+                createListLoading: false,
+                showWareaMsgToask: false,
+                subformBtn: false,
+                selectedCateArr: [],
                 form: {},
                 rules: {},
                 unit: '',
                 rowIndex: { bIndex: '', mIndex: '' },
-                salesAttrArr: [{ name: '体积', type: '1', options: [{ label: '大', defType: '1', value: '大', imgUrl: '' }] }, { name: '规格', type: '2', options: [{ label: '全网通', value: '全网通', defType: '2' }, { label: '联通', value: '联通', defType: '1' }] }],
-                priceTable: [{ id: 1 }],
-                wareTable: [{ id: 1 }],
+                salesLoading: false,
+                salesAttrArr: [],
+                priceTable: [],
+                wareTable: [],
+                wareMsgTable: [],
                 batchPrice: false,
-                batchPriceArr: [{ originPrice: '' }]
+                batchPriceArr: [{ originalPrice: '', v0: '', v1: '', v2: '', v3: '', v4: '', v5: '', v6: '', groupPrice: '', settlementPrice: '', weight: '' }]
             };
         },
         computed: {
@@ -170,10 +275,113 @@
                 return api.uploadImg;
             }
         },
+        mounted() {
+            this.selectedCateArr = this.selectedCate;
+            this.getSalesList();
+        },
         methods: {
-            // 批量处理价格
-            batchDealPrice() {
+            // 查看库存信息
+            showWareaMsg(row) {
+                this.wareMsgTable = [];
+                this.wareMsgTable.push(row);
+                this.showWareaMsgToask = true;
+            },
+            // 取消批量添加
+            cancleBatchAdd() {
                 this.batchPrice = false;
+                this.batchPriceArr = [{ originalPrice: '', v0: '', v1: '', v2: '', v3: '', v4: '', v5: '', v6: '', groupPrice: '', settlementPrice: '', weight: '' }];
+            },
+            // 批量添加价格
+            batchAddPrice() {
+                if (this.priceTable.length === 0) return this.$message.warning('添加失败');
+                this.priceTable.forEach((v, k) => {
+                    v.originalPrice = this.batchPriceArr[0].originalPrice;
+                    v.v0 = this.batchPriceArr[0].v0;
+                    v.v1 = this.batchPriceArr[0].v1;
+                    v.v2 = this.batchPriceArr[0].v2;
+                    v.v3 = this.batchPriceArr[0].v3;
+                    v.v4 = this.batchPriceArr[0].v4;
+                    v.v5 = this.batchPriceArr[0].v5;
+                    v.v6 = this.batchPriceArr[0].v6;
+                    v.groupPrice = this.batchPriceArr[0].groupPrice;
+                    v.settlementPrice = this.batchPriceArr[0].settlementPrice;
+                    v.weight = this.batchPriceArr[0].weight;
+                    this.$set(this.priceTable, k, v);
+                });
+                this.batchPrice = false;
+            },
+            // 生成列表
+            addprodSku() {
+                const data = {
+                    prodCode: this.productInfo.proCode
+                };
+                const arr = [];
+                this.salesAttrArr.forEach((v, k) => {
+                    const obj = {
+                        specName: v.name,
+                        specValues: []
+                    };
+                    v.options.forEach(v1 => {
+                        if (v1.value) {
+                            obj.specValues.push({
+                                specImg: v1.imgUrl,
+                                specName: v.name,
+                                specValue: v1.value === true ? v1.label : v1.value
+                            });
+                        }
+                    });
+                    arr.push(obj);
+                });
+                if (arr.length === 0) return this.$message.warning('请选择销售属性');
+                data.specifies = arr;
+                this.createListLoading = true;
+                request.addProductSku(data).then(res => {
+                    this.createListLoading = false;
+                    this.$message.success(res.msg);
+                    this.priceTable = [];
+                    if (res.data.length !== 0) {
+                        this.priceTable = res.data;
+                    }
+                }).catch(err => {
+                    this.createListLoading = false;
+                    console.log(err);
+                });
+            },
+            // 根据三级类目获取销售属性列表
+            getSalesList() {
+                const thirdCateId = this.selectedCateArr[2].value;
+                const data = {
+                    categoryId: thirdCateId,
+                    type: 2,
+                    page: 1,
+                    pageSize: 10000
+                };
+                this.salesLoading = true;
+                request.queryPropertyPageListByCate(data).then(res => {
+                    this.salesLoading = false;
+                    const tplData = res.data;
+                    this.salesAttrArr = [];
+                    tplData.data.forEach((v, k) => {
+                        this.salesAttrArr.push({
+                            name: v.name,
+                            type: v.valueType,
+                            options: []
+                        });
+                        if (v.values.length !== 0) {
+                            v.values.forEach(v1 => {
+                                this.salesAttrArr[k].options.push({
+                                    label: v1.value,
+                                    value: false,
+                                    defType: 1,
+                                    imgUrl: v1.imgUrl || ''
+                                });
+                            });
+                        }
+                    });
+                }).catch(err => {
+                    this.salesLoading = false;
+                    console.log(err);
+                });
             },
             // 添加属性值
             addAttrValue(index) {
@@ -181,26 +389,14 @@
                     showCancelButton: true
                 }).then(({ value }) => {
                     const item = this.salesAttrArr[index];
-                    if (item.type == 1) {
-                        item.options.push({ label: value, value: false, imgUrl: '' });
-                    } else {
-                        item.options.push({ label: value, value: false });
-                    }
+                    item.options.push({ label: value, value: value, defType: 2, imgUrl: '' });
                 }).catch(err => {
                     console.log(err);
                 });
             },
-            // 下一步
-            nextTip() {
-                this.$refs['form'].validate((valid) => {
-                    // if (valid) {
-                    //     alert('submit!');
-                    // } else {
-                    //     console.log('error submit!!');
-                    //     return false;
-                    // }
-                    this.$emit('nextName', 'info');
-                });
+            // 删除自定义属性值
+            deleteProps(bIndex, sIndex) {
+                this.salesAttrArr[bIndex].options.splice(sIndex, 1);
             },
             // 上传之前
             beforeUpload(bIndex, mIndex) {
@@ -229,6 +425,38 @@
                         <el-option label='包' value='2'></el-option>
                     </el-select>
                 );
+            },
+            // 下一步
+            nextTip() {
+                for (let i = 0; i < this.priceTable.length; i++) {
+                    const price = this.priceTable[i];
+                    if (price.v0 > price.v1 || price.v1 > price.v2 || price.v2 > price.v3 || price.v3 > price.v4 || price.v4 > price.v5 || price.v5 > price.v6 || price.v6 > price.groupPrice || price.groupPrice > price.settlementPrice) {
+                        return this.$message.warning('请输入正确的价格');
+                    }
+                    if (!price.weight) return this.$message.warning('请输入正确重量');
+                    if (!price.barCode) return this.$message.warning('请输入SKU条形码');
+                    if (!price.supplierSkuCode) return this.$message.warning('请输入正确供应商SKU编码');
+                }
+                const data = {
+                    prodCode: this.productInfo.proCode,
+                    paramList: this.productInfo.paramList,
+                    id: this.productInfo.id,
+                    skuList: this.priceTable
+                };
+                this.subformBtn = true;
+                request.addProducts(data).then(res => {
+                    this.subformBtn = false;
+                    this.$message.success(res.msg);
+                    this.$emit('productInfo', {
+                        proCode: res.data.prodCode,
+                        paramList: res.data.paramList,
+                        id: res.data.id
+                    })
+                    this.$emit('nextName', 'info');
+                }).catch(err => {
+                    this.subformBtn = false;
+                    console.log(err);
+                });
             }
         }
     };

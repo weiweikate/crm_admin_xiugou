@@ -60,8 +60,8 @@
             <div class="pro-title">物流信息</div>
             <el-form-item prop="needDeliver" label="是否需要发货">
                 <el-select v-model="form.needDeliver">
-                    <el-option label="是" value="1"></el-option>
-                    <el-option label="否" value="2"></el-option>
+                    <el-option label="是" value="true"></el-option>
+                    <el-option label="否" value="false"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item prop="freightTemplateId" label="运费模板">
@@ -81,24 +81,24 @@
             </el-form-item>
             <div class="pro-title">其他信息</div>
             <el-form-item prop="upType" label="上架时间">
-                <el-radio-group @change="form.upType = ''" v-model="form.upShelfTimeType">
+                <el-radio-group @change="form.upTime = ''" v-model="form.upType">
                     <el-radio :label="1">立即上架</el-radio>
                     <el-radio :label="2">定时上架</el-radio>
                     <el-radio :label="3">放入仓库</el-radio>
                 </el-radio-group>
                 <el-date-picker v-if="form.upType == 2" v-model="form.upTime" type="datetime" placeholder="请选择上架时间" style="margin-left: 10px"></el-date-picker>
             </el-form-item>
-            <el-form-item prop="limitBuy" label="限购">
-                <el-checkbox-group @change="form.buyLimit = form.limitBuy.includes(1)?form.buyLimit:''" v-model="form.limitBuy">
+            <el-form-item prop="buyLimit" label="限购">
+                <el-checkbox-group @change="form.limitBuyNum = form.buyLimit.includes(1)?form.limitBuyNum:'-1'" v-model="form.buyLimit">
                     <el-checkbox :label="1">限制每人可购买数量</el-checkbox>
-                    <el-checkbox :label="2">不支持使用优惠卷</el-checkbox>
                 </el-checkbox-group>
-                <el-input-number :controls="false" :min="0" v-if="form.limitBuy.includes(1)" v-model="form.limitBuyNum"></el-input-number>
+                <el-input-number :controls="false" :min="0" v-if="form.buyLimit.includes(1)" v-model="form.limitBuyNum"></el-input-number>
             </el-form-item>
             <el-form-item prop="flatService" label="平台服务">
                 <el-checkbox-group v-model="form.flatService">
-                    <el-checkbox :label="1">提供发票</el-checkbox>
-                    <el-checkbox :label="2">支持7天无理由退换</el-checkbox>
+                    <el-checkbox :label="1">不支持使用优惠卷</el-checkbox>
+                    <el-checkbox :label="2">提供发票</el-checkbox>
+                    <el-checkbox :label="4">支持7天无理由退换</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
             <el-form-item prop="autoUnShelve" label="自动下架">
@@ -131,6 +131,9 @@
                            :disabled="v.selected" :class="{'selected-btn':v.selected}">{{v.label}}
                 </el-button>
             </div>
+            <el-form-item label=" ">
+                <el-button type="primary" :loading="subformBtn" @click="submitForm">提交</el-button>
+            </el-form-item>
         </el-form>
         <!--区域选择-->
         <choose-area @getArea='chooseUnSupportArea' :chooseData="unSupportAreasData" :preData="unSupportAreasData" :isSingleLine="true" v-if="unSupportMask"></choose-area>
@@ -144,13 +147,16 @@
     import chooseArea from '@/components/common/chooseArea';
     export default {
         components: { draggable, chooseArea },
+        props: ['selectedCate', 'productInfo'],
         data() {
             return {
+                subformBtn: false,
+                selectedCateArr: [],
                 form: {
                     videoUrl: '',
-                    imgUrl: '', // 主图
-                    content: '', //详情图','分割
-                    imgFileList: [], // 图片
+                    // imgUrl: '', // 主图
+                    // content: '', //详情图','分割
+                    // imgFileList: [], // 图片
                     needDeliver: '', // 0: 否 1: 是
                     freightTemplateId: '',
                     undeliveredList: [], // 不支持配送区域
@@ -186,7 +192,51 @@
                 return api.uploadImg;
             }
         },
+        mounted() {
+            this.selectedCateArr = this.selectedCate;
+            this.getAllTagType();
+        },
         methods: {
+            // 提交表单
+            submitForm() {
+                if (!this.form.upTime) this.form.upTime = [];
+                let restrictions = 0;
+                if (this.form.flatService.includes(1)) restrictions += 1;
+                if (this.form.flatService.includes(2)) restrictions += 2;
+                if (this.form.flatService.includes(4)) restrictions += 4;
+                let tags = [];
+                if (this.selectedTagArr.length !== 0) {
+                    this.selectedTagArr.forEach(v => {
+                        let obj = {
+                            tagName: v.label,
+                            tagId: v.value
+                        }
+                        tags.push(obj);
+                    });
+                }
+                const data = {
+                    videoUrl: this.form.videoUrl,
+                    imgUrl: this.imgList.join(','),
+                    content: this.imgInfoList.join(','),
+                    needDeliver: this.form.needDeliver,
+                    freightTemplateId: this.form.freightTemplateId,
+                    undeliveredList: this.form.undeliveredList,
+                    upType: this.form.upType == '2' ? this.$utils.formatDate(this.form.upTime) : this.form.upType,
+                    buyLimit: this.form.limitBuyNum,
+                    restrictions: restrictions,
+                    autoUnShelve: this.form.autoUnShelve,
+                    tags: tags,
+                    prodCode: this.productInfo.proCode
+                };
+                this.subformBtn = true;
+                request.addProducts(data).then(res => {
+                    this.subformBtn = false;
+                    this.$message.success(res.msg);
+                }).catch(err => {
+                    this.subformBtn = false;
+                    console.log(err);
+                });
+            },
             // 校验视频参数
             beforeUploadVideo(file) {
                 const that = this;
@@ -211,7 +261,7 @@
             },
             // 上传成功视频
             successUploadVideo(res) {
-                this.form.video = res.data;
+                this.form.videoUrl = res.data;
             },
             // 校验图片大小
             beforeUploadImg(file, type) {
@@ -234,6 +284,7 @@
                             }
                         };
                     }
+                    resolve();
                     image.src = _URL.createObjectURL(file);
                 }).then(
                     () => {
@@ -261,6 +312,12 @@
             },
             // 选择区域
             chooseUnSupportArea(getArea) {
+                if (getArea.length !== 0) {
+                    getArea.forEach(v => {
+                        v.prodCode = this.productInfo.proCode;
+                    });
+                }
+                this.undeliveredList = getArea;
                 this.unSupportMask = false;
                 if (getArea.length === 0 || !getArea) return;
                 let str = '';
@@ -295,6 +352,78 @@
                     });
                 }).catch(err => {
                     this.tagLoading = false;
+                    console.log(err);
+                });
+            },
+            // 关闭标签
+            handleClose(index, value) {
+                this.selectedTagArr.splice(index, 1);
+                this.tagArr.forEach((v, k) => {
+                    if (value.label == v.label) {
+                        this.tagArr[k].selected = false;
+                    }
+                });
+            },
+            // 加入新的标签
+            addTag() {
+                if (this.tagName == '') {
+                    this.$message.warning('请输入正确的标签');
+                    return;
+                }
+                if (this.selectedTagArr.length === 20) return this.$message.warning('最多添加二十个标签');
+                let tmp = false;
+                this.tagArr.forEach((v, k) => {
+                    if (this.tagName == v.label) {
+                        tmp = true;
+                    }
+                });
+                if (!tmp) {
+                    let typeId = 1;
+                    let tagName = '';
+                    this.tagTypeArr.forEach((v, k) => {
+                        if (v.selected) {
+                            typeId = v.id;
+                            tagName = k;
+                        }
+                    });
+                    const data = {
+                        name: this.tagName,
+                        status: 1
+                    };
+                    request.addSysTagLibrary(data).then(res => {
+                        this.$message.success(res.msg);
+                        this.selectedTagArr.push({ label: res.data.name, value: res.data.id });
+                        this.tagTypeArr[tagName].selected = true;
+                        this.tagName = '';
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                } else {
+                    this.$message.warning('标签已存在，请不要重复添加!');
+                }
+            },
+            // 添加标签
+            insertTag(v) {
+                if (this.selectedTagArr.length > 19) {
+                    this.$message.warning('最多添加20个标签');
+                    return;
+                }
+                v.selected = true;
+                this.selectedTagArr.push({ label: v.label, value: v.value });
+            },
+            // 获取所有标签类型
+            getAllTagType() {
+                request.querySysTagTypePageList({ pageSize: 100000 }).then(res => {
+                    this.tagTypeArr = [];
+                    if (res.data.data.length === 0) return;
+                    res.data.data.forEach(v => {
+                        this.tagTypeArr.push({
+                            id: v.id,
+                            name: v.name,
+                            isSelected: false
+                        });
+                    });
+                }).catch(err => {
                     console.log(err);
                 });
             }

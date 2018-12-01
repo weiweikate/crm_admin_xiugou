@@ -10,13 +10,13 @@
         <el-card>
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
                 <el-tab-pane label="基础参数编辑" name="baseParam">
-                    <v-prod-param @nextName="getNextName" :selectedCate='selectedCate' ref="baseParam"></v-prod-param>
+                    <v-prod-param @nextName="getNextName" @productInfo="getProdInfo" :selectedCate='selectedCate' ref="baseParam"></v-prod-param>
                 </el-tab-pane>
                 <el-tab-pane label="库存编辑" name="inventory">
-                    <v-inventory @nextName="getNextName" ref="inventory"></v-inventory>
+                    <v-inventory @nextName="getNextName" @productInfo="getProdInfo" :productInfo="productInfo" :selectedCate='selectedCate' ref="inventory"></v-inventory>
                 </el-tab-pane>
                 <el-tab-pane label="商品详情编辑" name="info">
-                    <v-info ref="info"></v-info>
+                    <v-info ref="info" :selectedCate='selectedCate' :productInfo="productInfo"></v-info>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
@@ -40,6 +40,7 @@ export default {
         return {
             nav: ['品牌产品管理', '产品管理', '发布商品'],
             activeName: 'baseParam',
+            productInfo: {},
             selectedCate: []
         };
     },
@@ -50,6 +51,10 @@ export default {
         // 切换产品编辑信息
         handleClick(tab) {
             this.activeName = tab.name;
+        },
+        getProdInfo(info) {
+            console.log(info);
+            this.productInfo = info;
         },
         // 获取下一步参数
         getNextName(name) {

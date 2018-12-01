@@ -179,3 +179,4 @@ export const batchUpdateProductStatus = ['/product/product/batchUpdateProductSta
 export const findProductBrandListBySupplier = ['/product/productBrand/queryProductBrandBySupplierCode', { methods: 'post' }]; // 查询品牌列表
 export const queryPropertyPageListByCate = ['/product/productProperty/queryCategoryPropertyPageList', { methods: 'post' }]; // 查询自然/销售属性
 export const addProducts = ['/product/product/addOrModifyProduct', { methods: 'post' }]; // 添加商品
+export const addProductSku = ['/product/sku/addProductSku', { methods: 'post' }]; // 生成列表
