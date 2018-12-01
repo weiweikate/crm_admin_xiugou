@@ -204,8 +204,8 @@
                             <td :rowspan="v.rows" v-if="k1==0">{{v.unitPrice}}</td>
                             <td :rowspan="v.rows" v-if="k1==0">{{v.payAmount}}</td>
                             <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                            <td>{{v.express_name}}</td>
-                            <td>{{v.express_no}}</td>
+                            <td :rowspan="v.espressRows">{{v.expressName}}</td>
+                            <td :rowspan="v.espressRows">{{v.expressNo}}</td>
                             <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
                             <td>{{v.price}}</td>
                             <td>{{v.price}}</td>
@@ -265,15 +265,20 @@
                     this.warehouseOrder = res.data.warehouseOrder;
                     this.tableData = [];
                     res.data.productOrders.forEach((v, k) => {
-                        // if (k == 0) {
-                        //     v.returnProductList = [{ id: 1, salesStatus: '11' }, { id: 1, salesStatus: '22' }];
-                        //     v.logicList = [{ id: 1, logicStatus: '11' }];
-                        // } else {
-                        //     v.returnProductList = [{ id: 2, salesStatus: '11' }];
-                        //     v.logicList = [{ id: 2, logicStatus: '11' }, { id: 2, logicStatus: '22' }];
-                        // }
-                        // const length = v.returnProductList.length > v.logicList.length ? v.returnProductList.length : v.logicList.length;
-                        // v.rows = length;
+                        v.customerServiceInfos = [];
+                        v.expressInfos = [];
+                        res.data.customerServiceInfos.forEach((v1, k1) => {
+                            if (v.orderProductNo == v1.orderProductNo) {
+                                v.customerServiceInfos.push(v1);
+                            }
+                        });
+                        res.data.expressInfos.forEach((v1, k1) => {
+                            if (v.orderProductNo == v1.orderProductNo) {
+                                v.expressInfos.push(v1);
+                            }
+                        });
+                        const length = v.customerServiceInfos.length > v.expressInfos.length ? v.customerServiceInfos.length : v.expressInfos.length;
+                        v.rows = length;
                         this.tableData.push(v);
                         console.log(this.tableData);
                     });
