@@ -6,8 +6,8 @@
                 <el-form-item prop="name" label="店铺名称">
                     <el-input v-model="form.name" placeholder="请输入店铺名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="storeNumber" label="店铺ID">
-                    <el-input v-model="form.storeNumber" placeholder="请输入店铺ID"></el-input>
+                <el-form-item prop="showNumber" label="店铺ID">
+                    <el-input v-model="form.showNumber" placeholder="请输入店铺ID"></el-input>
                 </el-form-item>
                 <el-form-item prop="bonusCount" label="分红次数">
                     <el-input v-model="form.bonusCount" placeholder="请输入分红次数"></el-input>
@@ -49,7 +49,7 @@
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="店铺名称" align="center"></el-table-column>
-                <el-table-column prop="storeNumber" label="店铺ID" align="center"></el-table-column>
+                <el-table-column prop="showNumber" label="店铺ID" align="center"></el-table-column>
                 <el-table-column prop="starName" label="店铺等级" align="center"></el-table-column>
                 <el-table-column prop="storeUserName" label="店长" align="center"></el-table-column>
                 <el-table-column label="成员数" align="center">
@@ -150,7 +150,7 @@ export default {
             const data = {
                 name: this.form.name,
                 bonusCount: this.form.bonusCount,
-                storeNumber: this.form.storeNumber,
+                showNumber: this.form.showNumber,
                 storeStarId: this.form.storeStarId,
                 maxMoney: this.form.maxTradeMoney,
                 minMoney: this.form.minTradeMoney,
