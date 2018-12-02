@@ -161,6 +161,7 @@
         data() {
             return {
                 nav: ['品牌产品管理', '产品管理'],
+                keepAlive: true,
                 freightList: [],
                 firstCateList: [],
                 listNum: {
@@ -233,15 +234,16 @@
             handleClick(tab) {
                 let status = '';
                 switch (this.activeName) {
-                    case 'allProduct': status = 'allProduct'; break;
-                    case 'auditProduct': status = 'auditProduct'; break;
-                    case 'sale': status = 'sale'; break;
-                    case 'warehouse': status = 'warehouse'; break;
-                    default: status = 'allProduct';
+                    case 'allProduct': status = '0'; break;
+                    case 'auditProduct': status = '1'; break;
+                    case 'sale': status = '2'; break;
+                    case 'warehouse': status = '3'; break;
+                    default: status = '0';
                 }
                 if (!this.form.updateTime) this.form.updateTime = [];
                 const data = {
                     ...this.form,
+                    totalStatus: status,
                     beginTime: this.$utils.formatTime(this.form.updateTime[0], 1),
                     endTime: this.$utils.formatTime(this.form.updateTime[1], 1)
                 };
@@ -280,8 +282,14 @@
             },
             // 创建商品
             createProd() {
+                this.keepAlive = true;
                 this.$router.push('releaseProduct');
             }
+        },
+        // 路由离开钩子
+        beforeRouteLeave(to, from, next) {
+            to.meta.noKeepAlive = !this.keepAlive;
+            next();
         }
     };
 </script>

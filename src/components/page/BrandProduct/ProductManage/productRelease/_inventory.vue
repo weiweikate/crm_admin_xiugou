@@ -2,12 +2,49 @@
     <div class="prod-inventory">
         <el-form v-loading="salesLoading" :model="form" ref="form" :rules="rules" label-position="right" label-width="100px">
             <div class="pro-title">销售属性</div>
-            <el-form-item v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
+            <!--未同步仓库-->
+            <el-form-item v-if="!checkStatus" v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
                 <div v-if="v.type == 2">
                     <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
                         <el-checkbox v-if="v1.defType == 1" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
                         <div class="mt10" v-else>
                             <el-input v-model="v1.value" style="width: 215px"></el-input>
+                            <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
+                        </div>
+                        <template v-if="v1.imgUrl == ''">
+                            <el-upload
+                                :action="imgUpload"
+                                :show-file-list="false"
+                                :before-upload="beforeAvatarUpload"
+                                :on-success="uploadSuccess"
+                            >
+                                <span class="primary-text" @click="beforeUpload(k, k1)">上传图片</span>
+                            </el-upload>
+                        </template>
+                        <template v-else>
+                            <img :src="v1.imgUrl" alt="">
+                            <span class="primary-text" @click="deleteImg(k, k1)">删除</span>
+                        </template>
+                    </div>
+                </div>
+                <div v-else-if="v.type == 1" class="sales-type">
+                    <el-checkbox v-if="v1.defType == 1" v-for="(v1, k1) in v.options" :key="`${k}--${k1}`" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
+                    <div class="mt10" v-else>
+                        <el-input v-model="v1.value" style="width: 215px"></el-input>
+                        <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
+                    </div>
+                </div>
+                <div class="primary-text">
+                    <span @click="addAttrValue(k)">新建子属性</span>
+                </div>
+            </el-form-item>
+            <!--同步了仓库-->
+            <el-form-item v-if="checkStatus" v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
+                <div v-if="v.type == 2">
+                    <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
+                        <el-input v-if="v1.defType == 1 && v1.value == true" style="width: 215px" v-model="v1.value"></el-input>
+                        <div class="mt10" v-else>
+                            <el-input v-model="v1.label" style="width: 215px"></el-input>
                             <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
                         </div>
                         <template v-if="v1.imgUrl == ''">
@@ -253,6 +290,7 @@
         props: ['selectedCate', 'productInfo'],
         data() {
             return {
+                checkStatus: true, // 审核状态
                 createListLoading: false,
                 showWareaMsgToask: false,
                 subformBtn: false,
@@ -313,7 +351,7 @@
             // 生成列表
             addprodSku() {
                 const data = {
-                    prodCode: this.productInfo.proCode
+                    prodCode: this.productInfo.prodCode
                 };
                 const arr = [];
                 this.salesAttrArr.forEach((v, k) => {
@@ -348,8 +386,8 @@
                 });
             },
             // 根据三级类目获取销售属性列表
-            getSalesList() {
-                const thirdCateId = this.selectedCateArr[2].value;
+            async getSalesList() {
+                const thirdCateId = this.selectedCateArr[2].value || '';
                 const data = {
                     categoryId: thirdCateId,
                     type: 2,
@@ -357,7 +395,7 @@
                     pageSize: 10000
                 };
                 this.salesLoading = true;
-                request.queryPropertyPageListByCate(data).then(res => {
+                await request.queryPropertyPageListByCate(data).then(res => {
                     this.salesLoading = false;
                     const tplData = res.data;
                     this.salesAttrArr = [];
@@ -430,7 +468,7 @@
             nextTip() {
                 for (let i = 0; i < this.priceTable.length; i++) {
                     const price = this.priceTable[i];
-                    if (price.v0 > price.v1 || price.v1 > price.v2 || price.v2 > price.v3 || price.v3 > price.v4 || price.v4 > price.v5 || price.v5 > price.v6 || price.v6 > price.groupPrice || price.groupPrice > price.settlementPrice) {
+                    if (price.v0 < price.v1 || price.v1 < price.v2 || price.v2 < price.v3 || price.v3 < price.v4 || price.v4 < price.v5 || price.v5 < price.v6 || price.v6 < price.groupPrice || price.groupPrice < price.settlementPrice) {
                         return this.$message.warning('请输入正确的价格');
                     }
                     if (!price.weight) return this.$message.warning('请输入正确重量');
@@ -438,7 +476,7 @@
                     if (!price.supplierSkuCode) return this.$message.warning('请输入正确供应商SKU编码');
                 }
                 const data = {
-                    prodCode: this.productInfo.proCode,
+                    prodCode: this.productInfo.prodCode,
                     paramList: this.productInfo.paramList,
                     id: this.productInfo.id,
                     skuList: this.priceTable
@@ -447,11 +485,7 @@
                 request.addProducts(data).then(res => {
                     this.subformBtn = false;
                     this.$message.success(res.msg);
-                    this.$emit('productInfo', {
-                        proCode: res.data.prodCode,
-                        paramList: res.data.paramList,
-                        id: res.data.id
-                    })
+                    this.$emit('productInfo', this.productInfo);
                     this.$emit('nextName', 'info');
                 }).catch(err => {
                     this.subformBtn = false;

@@ -180,3 +180,4 @@ export const findProductBrandListBySupplier = ['/product/productBrand/queryProdu
 export const queryPropertyPageListByCate = ['/product/productProperty/queryCategoryPropertyPageList', { methods: 'post' }]; // 查询自然/销售属性
 export const addProducts = ['/product/product/addOrModifyProduct', { methods: 'post' }]; // 添加商品
 export const addProductSku = ['/product/sku/addProductSku', { methods: 'post' }]; // 生成列表
+export const findProductDetailsByCode = ['/product/product/findProductDetailsByCode', { methods: 'get' }]; // 获取商品详情

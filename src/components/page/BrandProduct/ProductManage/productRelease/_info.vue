@@ -204,13 +204,13 @@
                 if (this.form.flatService.includes(1)) restrictions += 1;
                 if (this.form.flatService.includes(2)) restrictions += 2;
                 if (this.form.flatService.includes(4)) restrictions += 4;
-                let tags = [];
+                const tags = [];
                 if (this.selectedTagArr.length !== 0) {
                     this.selectedTagArr.forEach(v => {
-                        let obj = {
+                        const obj = {
                             tagName: v.label,
                             tagId: v.value
-                        }
+                        };
                         tags.push(obj);
                     });
                 }
@@ -221,16 +221,19 @@
                     needDeliver: this.form.needDeliver,
                     freightTemplateId: this.form.freightTemplateId,
                     undeliveredList: this.form.undeliveredList,
-                    upType: this.form.upType == '2' ? this.$utils.formatDate(this.form.upTime) : this.form.upType,
+                    upType: this.form.upType == '2' ? this.$utils.formatTime(this.form.upTime) : this.form.upType,
                     buyLimit: this.form.limitBuyNum,
                     restrictions: restrictions,
                     autoUnShelve: this.form.autoUnShelve,
                     tags: tags,
-                    prodCode: this.productInfo.proCode
+                    prodCode: this.productInfo.prodCode,
+                    paramList: this.productInfo.paramList
                 };
                 this.subformBtn = true;
                 request.addProducts(data).then(res => {
                     this.subformBtn = false;
+                    this.$emit('isKeepAlive', false); // 不缓存组件
+                    this.$router.push('/productList');
                     this.$message.success(res.msg);
                 }).catch(err => {
                     this.subformBtn = false;
@@ -314,10 +317,10 @@
             chooseUnSupportArea(getArea) {
                 if (getArea.length !== 0) {
                     getArea.forEach(v => {
-                        v.prodCode = this.productInfo.proCode;
+                        v.prodCode = this.productInfo.prodCode;
                     });
                 }
-                this.undeliveredList = getArea;
+                this.form.undeliveredList = getArea;
                 this.unSupportMask = false;
                 if (getArea.length === 0 || !getArea) return;
                 let str = '';

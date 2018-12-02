@@ -6,7 +6,7 @@
             <el-table-column label="商品名称" width="400px">
                 <template slot-scope="scope">
                     <div class="product-info">
-                        <img :src="scope.row.imgUrl" :alt="scope.row.imgUrl">
+                        <img :src="scope.row.imgUrl" alt="图片加载失败">
                         <div class="info">
                             <div class="prod-name over-more-hidden">{{scope.row.name}}</div>
                             <div class="prod-type">{{scope.row.secondName}}</div>
@@ -107,7 +107,7 @@
                 </template>
             </el-table-column>
             <el-table-column prop="remark" label="备注" align="center"></el-table-column>
-            <el-table-column label="操作" align="center" width="80px">
+            <el-table-column label="操作" align="center" width="80px" fixed="right">
                 <template slot-scope="scope">
                     <div class="operate">
                         <span @click="editProduct(scope.row)">编辑</span>
@@ -190,7 +190,11 @@ export default {
         },
         // 编辑产品
         editProduct(row) {
-
+            let selectedItem = []
+            selectedItem.push({type: 1, label: row.firstCategoryName, value: row.firstCategoryId});
+            selectedItem.push({type: 2, label: row.secCategoryName, value: row.secCategoryId});
+            selectedItem.push({type: 3, label: row.thirdCategoryName, value: row.thirdCategoryId});
+            this.$router.push({name: 'editProductInfo', query: {cate: JSON.stringify(selectedItem), prodCode: row.prodCode}})
         },
         // 产品删除/下架
         productStatus(status) {

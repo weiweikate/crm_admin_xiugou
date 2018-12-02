@@ -107,6 +107,7 @@
                 naturalLoading: false, // 自然属性loading
                 btnLoading: false,
                 form: {
+                    prodCode: '',
                     name: '',
                     secondName: '',
                     supplierCode: '',
@@ -151,8 +152,8 @@
                 this.$router.push({ path: '/thirdClassify', query: { name: this.selectedCateArr[2].label, id: this.selectedCateArr[2].value, superiorName: this.selectedCateArr[1].label }});
             },
             // 获取供应商列表
-            getSupplyList() {
-                request.findProductSupplierList({}).then(res => {
+            async getSupplyList() {
+                await request.findProductSupplierList({}).then(res => {
                     this.supplierArr = [];
                     this.supplierArr.push(...res.data);
                 }).catch(err => {
@@ -160,9 +161,9 @@
                 });
             },
             // 获取品牌列表
-            selectBrand(val) {
+            async selectBrand(val) {
                 this.form.brandId = '';
-                request.findProductBrandListBySupplier({ supplierCode: val }).then(res => {
+                await request.findProductBrandListBySupplier({ supplierCode: val }).then(res => {
                     this.brandArr = res.data;
                 }).catch(err => {
                     console.log(err);
@@ -181,8 +182,8 @@
                 });
             },
             // 根据三级类目获取自然属性列表
-            getNaturalList() {
-                const thirdCateId = this.selectedCateArr[2].value;
+            async getNaturalList() {
+                const thirdCateId = this.selectedCateArr[2].value || '';
                 const data = {
                     categoryId: thirdCateId,
                     type: 1,
@@ -190,7 +191,7 @@
                     pageSize: 10000
                 };
                 this.naturalLoading = true;
-                request.queryPropertyPageListByCate(data).then(res => {
+                await request.queryPropertyPageListByCate(data).then(res => {
                     this.naturalLoading = false;
                     const tmpData = res.data || [];
                     this.naturalAttribute = [];
@@ -229,11 +230,7 @@
                         this.btnLoading = true;
                         request.addProducts(data).then(res => {
                             this.btnLoading = false;
-                            this.$emit('productInfo', {
-                                proCode: res.data.prodCode,
-                                paramList: res.data.paramList,
-                                id: res.data.id
-                            })
+                            this.$emit('productInfo', res.data)
                             this.$message.success(res.msg);
                             this.$emit('nextName', 'inventory');
                         }).catch(err => {

@@ -8,7 +8,7 @@
                 <el-button type="success" @click="getAllItem">获取所有分类</el-button>
                 <p class="operate-btn">
                     <el-button type="primary" @click="nextSage">下一步,编辑商品信息</el-button>
-                    <el-button @click="content = []">取消</el-button>
+                    <el-button @click="()=>{content = [];$router.push('/productList')}">取消</el-button>
                 </p>
             </div>
         </el-card>
@@ -24,6 +24,7 @@ export default {
     },
     data() {
         return {
+            keepAlive: true,
             nav: ['品牌产品管理', '产品管理', '发布商品'],
             loading: false,
             itemList: [],
@@ -88,9 +89,15 @@ export default {
         // 下一步
         nextSage() {
             if (this.content.length === 0) return this.$message.warning('请选择产品分类!');
-            console.log(this.selectedItem);
+            this.keepAlive = true;
             this.$router.push({ name: 'editProductInfo', query: { cate: JSON.stringify(this.selectedItem) }});
         }
+    },
+    // 路由离开钩子
+    beforeRouteLeave(to, from, next) {
+        to.meta.noKeepAlive = !this.keepAlive;
+        from.meta.noKeepAlive = !this.keepAlive;
+        next();
     }
 };
 </script>
