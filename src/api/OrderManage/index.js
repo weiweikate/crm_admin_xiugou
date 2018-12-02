@@ -17,7 +17,7 @@ export const cancelOrder = '/orderManagement/orders/{warehouseOrderNo}/cancel';
 export const orderSendOut = '/orderManagement/orders/pushToWarehouse';
 // 虚拟发货
 export const sendGoods = '/order/sendOut';
-export const orderSign = '/order/sign';
+export const orderSign = '/orderManagement/orders/markn';
 // 支付单列表
 export const queryPayments = '/orderManagement/payments/query';
 // 查询发货单列表

@@ -284,3 +284,5 @@ export const addERP = '/config/erp/save';
 export const getERPList = ['/config/erp/query', { methods: 'get' }];
 export const getERP = ['/config/erp/get', { methods: 'get' }];
 
+// 导出
+export const downloadOrderList = '/admin/orderManagement/orders/export';

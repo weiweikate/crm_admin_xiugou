@@ -41,8 +41,8 @@
                 <el-form-item prop="userPhone" label="用户账号">
                     <el-input v-model="form.userPhone" placeholder="请输入用户账号"></el-input>
                 </el-form-item>
-                <el-form-item prop="userName" label="收货人姓名">
-                    <el-input v-model="form.userName" placeholder="请输入收货人姓名"></el-input>
+                <el-form-item prop="userPhoneName" label="收货人姓名">
+                    <el-input v-model="form.userPhoneName" placeholder="请输入收货人姓名"></el-input>
                 </el-form-item>
                 <el-form-item prop="marker" label="订单标记">
                     <el-select v-model="form.marker" placeholder="请选择">
@@ -77,7 +77,9 @@
         <el-card style='margin-top:20px;minHeight:90vh;overflow-x: auto;min-width: 1336px' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
                 <el-button type="danger" @click="sendOut" v-auth="'order.orderList.yjts'">推送云仓</el-button>
-                <el-button type="primary" @click="sendOut" v-auth="'order.orderList.yjts'">导出</el-button>
+                <a ref="exportData" @click="downloadOrderData">
+                    <el-button type="primary">导出</el-button>
+                </a>
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="all">
@@ -111,6 +113,7 @@ import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
 import vOrderlist from './_orderList/_orderList';
+import * as api from '@/api/api.js';
 
 export default {
     components: {
@@ -169,8 +172,8 @@ export default {
                 warehouseType: '', // 发货仓库
                 source: '', // 订单来源
                 invoiceRequired: '', // 开具发票
-                user: '', // 用户账号
-                receiver: '', // 收货人姓名
+                userPhone: '', // 用户账号
+                userPhoneName: '', // 收货人姓名
                 marker: '', // 标记
                 pushStatus: '', // 推送状态
                 lockStatus: '', // 锁定状态
@@ -185,6 +188,23 @@ export default {
     },
 
     methods: {
+        downloadOrderData() {
+            const platformNo = this.form.platformNo;
+            const warehouseOrderNo = this.form.warehouseOrderNo;
+            const warehouseType = this.form.warehouseType;
+            const source = this.form.source;
+            const invoiceRequired = this.form.invoiceRequired;
+            const userPhone = this.form.userPhone;
+            const userPhoneName = this.form.userPhoneName;
+            const marker = this.form.marker;
+            const pushStatus = this.form.pushStatus;
+            const lockStatus = this.form.lockStatus;
+            const orderStatus = this.form.orderStatus;
+            const form = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : '';
+            const to = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : '';
+            this.downloadOrderList = api.downloadOrderList + '?platformNo=' + platformNo + '&warehouseOrderNo=' + warehouseOrderNo + '&warehouseType=' + warehouseType + '&source=' + source + '&invoiceRequired=' + invoiceRequired + '&userPhone=' + userPhone + '&userPhoneName=' + userPhoneName + '&marker=' + marker + '&pushStatus=' + pushStatus + '&lockStatus=' + lockStatus + '&orderStatus=' + orderStatus + '&form=' + form + '&to=' + to;
+            this.$refs.exportData.href = this.downloadOrderList;
+        },
         // 提交表单
         getList() {
             const data = {};
@@ -210,8 +230,8 @@ export default {
         },
         // 推送
         sendOut() {
-            const ids = this.$refs[this.activeName].ids;
-            if (!ids.length) {
+            const warehouseOrderNos = this.$refs[this.activeName].warehouseOrderNos;
+            if (!warehouseOrderNos.length) {
                 return this.$message.warning('请选择订单');
             } else {
                 this.$refs[this.activeName].pushCloud();

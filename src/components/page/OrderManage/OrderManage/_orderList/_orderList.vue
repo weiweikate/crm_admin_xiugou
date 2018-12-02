@@ -94,6 +94,7 @@
     import request from '@/http/http.js';
     import { myMixinTable } from '@/JS/commom';
     import moment from 'moment';
+
     export default {
         mixins: [myMixinTable],
         data() {
@@ -121,7 +122,7 @@
                 returnTypeArr: ['退款', '退货', '换货'],
                 // 售后状态
                 afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭'],
-                ids: []
+                warehouseOrderNos: []
             };
         },
         methods: {
@@ -177,9 +178,9 @@
                     warehouseOrderNos: ''
                 };
                 if (row) {
-                    data.warehouseOrderNos = row.id;
+                    data.warehouseOrderNos = row.warehouseOrder.warehouseOrderNo;
                 } else {
-                    data.ids = this.ids.join(',');
+                    data.warehouseOrderNos = this.warehouseOrderNos.join(',');
                 }
                 request.orderSendOut(data).then(res => {
                     this.$message.success(res.msg);
@@ -196,11 +197,11 @@
             // 订单多选框
             orderCheckBox(row) {
                 if (row.checked) {
-                    this.ids.push(row.id);
+                    this.warehouseOrderNos.push(row.warehouseOrder.warehouseOrderNo);
                 } else {
-                    this.ids.forEach((v, k) => {
-                        if (v == row.id) {
-                            this.ids.splice(k, 1);
+                    this.warehouseOrderNos.forEach((v, k) => {
+                        if (v == row.warehouseOrder.warehouseOrderNo) {
+                            this.warehouseOrderNos.splice(k, 1);
                         }
                     });
                 }
