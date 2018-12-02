@@ -24,8 +24,8 @@
             <tbody v-for="(v,k) in tableData" :key="k">
                 <tr>
                     <td colspan="7" class="head">
-                        <div><el-checkbox @change="orderCheckBox(v)" v-model="v.checked"></el-checkbox><span class="marl20">平台订单号 </span><span class="marl20">{{v.orderNum}}</span></div>
-                        <div>仓库订单号 <span class="marl20">{{v.warehouseOrder.platformOrderNo}}</span></div>
+                        <div><el-checkbox @change="orderCheckBox(v)" v-model="v.checked"></el-checkbox><span class="marl20">平台订单号 </span><span class="marl20">{{v.warehouseOrder.platformOrderNo}}</span></div>
+                        <div>仓库订单号 <span class="marl20">{{v.warehouseOrder.warehouseOrderNo}}</span></div>
                         <div>下单时间 <span class="marl20">{{v.warehouseOrder.createTime|formatDateAll}}</span></div>
                         <div>
                             <el-popover v-auth="'order.orderList.bj'" placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
@@ -48,30 +48,30 @@
                         </div>
                     </td>
                     <td>
-                        <span>¥{{value.price}}</span>
-                        <span class="num">{{value.num}}</span>
+                        <span>¥{{value.unitPrice}}</span>
+                        <span class="num">{{value.quantity}}</span>
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
-                        应付金额：{{v.totalPrice}}
+                        应付金额：¥{{value.payAmount}}
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
                         <div>用户账号：{{v.warehouseOrder.userPhone}}</div>
                         <div>收货人姓名：{{v.warehouseOrder.receiver}}</div>
-                        <div>客服备注：{{v.warehouseOrder.message}}</div>
+                        <div>客服备注：{{v.warehouseOrder.platformRemarks}}</div>
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
                         <div>供应商：{{v.warehouseOrder.supplierName}}</div>
-                        <div>发货仓库：{{v.warehouseOrder.warehouseType}}</div>
-                        <div>推送状态：{{v.remark}}</div>
-                        <div>锁定状态：{{v.warehouseOrder.lockStatus}}</div>
+                        <div>发货仓库：{{warehouseArr[v.warehouseOrder.warehouseType-1]}}</div>
+                        <div>推送状态：{{v.warehouseOrder.lockStatus}}</div>
+                        <div>锁定状态：{{lockStatusArr[v.warehouseOrder.lockStatus]}}</div>
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
-                        <div>开具发票：13333333333</div>
+                        <div>开具发票：{{v.orderInvoiceInfo?'是':'否'}}</div>
                     </td>
                     <td :rowspan="v.productOrders.length" v-if="index==0">
                         <div class="order-status">待付款</div>
-                        <div class="color-blue" v-if="v.status<4" @click="cancelOrder(v)">取消订单</div>
-                        <div class="color-blue" @click="$router.push({path:'/orderInfo',query:{orderInfoId:v.id}})">订单详情</div>
+                        <!--<div class="color-blue" v-if="v.status<4" @click="cancelOrder(v)">取消订单</div>-->
+                        <div class="color-blue" @click="$router.push({path:'/orderInfo',query:{orderInfoId:v.warehouseOrder.warehouseOrderNo}})">订单详情</div>
                     </td>
                 </tr>
             </tbody>
@@ -112,6 +112,8 @@
                     { label: 'orange', value: '4' },
                     { label: 'purple', value: '5' }
                 ],
+                lockStatusArr: ['未锁定', '已锁定', '无需锁定'], // 锁定状态: 0.未锁定 1.已锁定 2.无需锁定
+                warehouseArr: ['自建仓', '加盟仓', '供应商仓', '虚拟仓'], // 仓库类型: 0. 1.自建仓 2.加盟仓，3.供应商仓
                 tableData: [],
                 pageLoading: false,
                 data: {},
@@ -137,41 +139,23 @@
                             this.markArr[res.data.data[i].warehouseOrder.markStar - 1] == undefined
                                 ? '#ccc'
                                 : this.markArr[res.data.data[i].warehouseOrder.markStar - 1].label;
-                        res.data.data[i].warehouseOrder.warehouseType = this.transWarehouseType(res.data.data[i].warehouseOrder.warehouseType);
-                    }
-                    res.data.data.productOrders.forEach((v, k) => {
-                        const tempTitle = v.specTitle.split(',');
-                        const tempValue = v.specValues.split(',');
-                        v.spec = [];
-                        tempTitle.forEach((v, k) => {
-                            const temp = v + ':' + tempValue[k] + '    ';
-                            v.spec.push(temp);
+                        res.data.data[i].productOrders.forEach((v, k) => {
+                            const tempTitle = v.specTitle.split(',');
+                            const tempValue = v.specValues.split(',');
+                            v.spec = [];
+                            tempTitle.forEach((v1, k1) => {
+                                const temp = v1 + ':' + tempValue[k1] + '    ';
+                                v.spec.push(temp);
+                            });
+                            v.spec = v.spec.join('  ');
                         });
-                    });
+                    }
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                 }).catch(err => {
                     this.pageLoading = false;
                     console.log(err);
                 });
-            },
-            transWarehouseType(type) {
-                let name = '';
-                switch (type) {
-                    case 1:
-                        name = '自建仓';
-                        break;
-                    case 2:
-                        name = '加盟仓';
-                        break;
-                    case 3:
-                        name = '供应商仓';
-                        break;
-                    case 4:
-                        name = '虚拟仓';
-                        break;
-                }
-                return name;
             },
             // 修改星级
             changeColor(v1, v) {

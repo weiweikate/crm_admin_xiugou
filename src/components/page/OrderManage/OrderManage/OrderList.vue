@@ -21,46 +21,50 @@
                 </el-form-item>
                 <el-form-item prop="warehouseType" label="发货仓库">
                     <el-select v-model="form.warehouseType" placeholder="请选择">
+                        <el-option label="全部" value=""></el-option>
                         <el-option v-for="(v,k) in repertoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="source" label="订单来源">
                     <el-select v-model="form.source" placeholder="请选择">
+                        <el-option label="全部" value=""></el-option>
                         <el-option v-for="(v,k) in orderSourceArr" :key="k" :label="v.label" :value="v.value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="invoiceRequired" label="开具发票">
                     <el-select v-model="form.invoiceRequired" placeholder="请选择">
+                        <el-option label="全部" value=""></el-option>
                       <el-option label="是" value="true"></el-option>
                       <el-option label="否" value="false"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="userName" label="用户账号">
-                    <el-input v-model="form.userName" placeholder="请输入用户账号"></el-input>
+                <el-form-item prop="userPhone" label="用户账号">
+                    <el-input v-model="form.userPhone" placeholder="请输入用户账号"></el-input>
                 </el-form-item>
                 <el-form-item prop="userName" label="收货人姓名">
                     <el-input v-model="form.userName" placeholder="请输入收货人姓名"></el-input>
                 </el-form-item>
                 <el-form-item prop="marker" label="订单标记">
                     <el-select v-model="form.marker" placeholder="请选择">
+                        <el-option label="全部" value=""></el-option>
                         <el-option v-for="(v,k) in starArr" :key="k" :label="v.label" :value="v.value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="pushStatus" label="推送状态">
                     <el-select v-model="form.pushStatus" placeholder="请选择" @change="changeStatus(1)">
-                      <el-option label="暂不选择" value=""></el-option>
-                        <el-option v-for="(v,k) in sendStatusArr" :label="v.type" :value="v.id" :key="k">{{v.type}}</el-option>
+                      <el-option label="全部" value=""></el-option>
+                        <el-option v-for="(v,k) in sendStatusArr" :label="v.label" :value="v.value" :key="k"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="lockStatus" label="锁定状态">
                     <el-select v-model="form.lockStatus" placeholder="请选择" @change="changeStatus(1)">
-                      <el-option label="暂不选择" value=""></el-option>
-                        <el-option v-for="(v,k) in lockStatusArr" :label="v.type" :value="v.id" :key="k">{{v.type}}</el-option>
+                      <el-option label="全部" value=""></el-option>
+                        <el-option v-for="(v,k) in lockStatusArr" :label="v.label" :value="v.value" :key="k"></el-option>
                     </el-select>
                 </el-form-item>
                 <!--<el-form-item prop="orderStatus" label="订单状态">-->
                     <!--<el-select v-model="form.orderStatus" placeholder="请选择" @change="changeStatus(2)">-->
-                        <!--<el-option label="暂不选择" value=""></el-option>-->
+                        <!--<el-option label="全部" value=""></el-option>-->
                         <!--<el-option v-for="(v,k) in orderStatusArr" :label="v.type" :value="v.id" :key="k">{{v.type}}</el-option>-->
                     <!--</el-select>-->
                 <!--</el-form-item>-->
@@ -124,10 +128,10 @@ export default {
             repertoryArr: [// 发货仓库
                 { label: '自建仓', value: '1' },
                 { label: '加盟仓', value: '2' },
-                { label: '供应商仓', value: '3' },
-                { label: '虚拟仓', value: '4' }
+                { label: '供应商仓', value: '3' }
+                // { label: '虚拟仓', value: '4' }
             ],
-            orderSource: [// 订单来源
+            orderSourceArr: [// 订单来源
                 { label: '小程序', value: '1' },
                 { label: 'APP', value: '2' },
                 { label: '微商城', value: '3' }
@@ -139,18 +143,18 @@ export default {
                 { label: '黄色标记', value: '4' },
                 { label: '紫色标记', value: '5' }
             ],
-            sendStatus: [// 推送状态
+            sendStatusArr: [// 推送状态
                 { label: '无需推送', value: '1' },
                 { label: '等待推送', value: '2' },
                 { label: '推送成功', value: '3' },
                 { label: '推送失败', value: '4' }
             ],
-            lockStatus: [// 锁定状态
+            lockStatusArr: [// 锁定状态
                 { label: '无需锁定', value: '2' },
                 { label: '未锁定', value: '0' },
                 { label: '已锁定', value: '1' }
             ],
-            orderStatus: [// 订单状态
+            orderStatusArr: [// 订单状态
                 { label: '待付款', value: '1' },
                 { label: '已付款', value: '2' },
                 { label: '已付款', value: '3' },
@@ -190,7 +194,7 @@ export default {
             data.orderStatus = this.activeName === 'all' ? '' : this.activeName;
             this.$refs[this.activeName].page.currentPage = 1;
             this.$refs[this.activeName].data = data;
-            this.$refs[this.activeName].getList();
+            this.$refs[this.activeName].getList(this.page.currentPage);
         },
         //  重置表单
         resetForm(formName) {

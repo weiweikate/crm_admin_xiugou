@@ -7,11 +7,12 @@
                     <div class="title">订单基础信息</div>
                     <div class="item">
                         <span>平台订单号</span>
-                        <span>{{customerServiceInfos.platformOrderNo}}</span>
+                        <span>{{warehouseOrder.platformOrderNo}}</span>
                     </div>
                     <div class="item">
-                        <div>仓库订单号</div>
-                        <div>{{customerServiceInfos.warehouseOrderNo}}</div>
+                        <span>仓库订单号</span>
+                        <span>{{warehouseOrder.warehouseOrderNo}}</span>
+                    </div>
                     <div class="item">
                         <span>支付方式</span>
                         <span>{{customerServiceInfos.orderNum}}</span>
@@ -28,7 +29,7 @@
                     </div>
                     <div class="item">
                         <span>下单时间</span>
-                        <span>{{customerServiceInfos.orderTime|formatDateAll}}</span>
+                        <span>{{warehouseOrder.createTime|formatDateAll}}</span>
                     </div>
                     <!--已付款，已发货，交易关闭-->
                     <div class="item" v-if="customerServiceInfos.status>1&&customerServiceInfos.status<5">
@@ -164,55 +165,54 @@
                     </div>
                 </div>
             </div>
-                <div class="goods-info">
+            <div class="goods-info">
                 <div class="title">商品信息</div>
                 <table border :data="tableData" class="table-area">
                     <thead>
-                        <tr>
-                            <td rowspan="2">商品信息</td>
-                            <td rowspan="2">SKU编码</td>
-                            <td rowspan="2">供应商SKU编码</td>
-                            <td rowspan="2">应付单价</td>
-                            <td rowspan="2">实付单价</td>
-                            <td rowspan="2">数量</td>
-                            <td rowspan="2">实付金额</td>
-                            <td rowspan="2">发货仓库</td>
-                            <td colspan="3">物流信息</td>
-                            <td colspan="2">售后信息</td>
-                        </tr>
-                        <tr>
-                            <td>物流公司</td>
-                            <td>物流单号</td>
-                            <td>商品数量</td>
-                            <td>售后状态</td>
-                            <td>售后数量</td>
-                        </tr>
+                    <tr>
+                        <td rowspan="2">商品信息</td>
+                        <td rowspan="2">SKU编码</td>
+                        <td rowspan="2">供应商SKU编码</td>
+                        <td rowspan="2">应付单价</td>
+                        <td rowspan="2">实付单价</td>
+                        <td rowspan="2">数量</td>
+                        <td rowspan="2">实付金额</td>
+                        <td rowspan="2">发货仓库</td>
+                        <td colspan="3">物流信息</td>
+                        <td colspan="2">售后信息</td>
+                    </tr>
+                    <tr>
+                        <td>物流公司</td>
+                        <td>物流单号</td>
+                        <td>商品数量</td>
+                        <td>售后状态</td>
+                        <td>售后数量</td>
+                    </tr>
                     </thead>
                     <tbody v-for="(v,k) in tableData" :key="k">
-                        <tr v-for="(v1,k1) in v.rows" :key="k1">
-                            <td :rowspan="v.rows" v-if="k1==0" style="width: 400px">
-                               <div class="name">
-                                    <img :src="v.specImg" alt="">
-                                    <span class="pro-name color-blue" @click="$router.push({path:'/productInfo',query:{productInfoId:v.productId}})">{{v.productName}}</span>
-                                    <span class="pro-spec">{{v.spec}}</span>
-                                </div>
-                            </td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.skuCode}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.supplierSkuCode}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.unitPrice}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.unitPrice}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.unitPrice}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.payAmount}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                            <td :rowspan="v.espressRows">{{v.expressName}}</td>
-                            <td :rowspan="v.espressRows">{{v.expressNo}}</td>
-                            <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                            <td>{{v.price}}</td>
-                            <td>{{v.price}}</td>
-                        </tr>
+                    <tr v-for="(v1,k1) in v.rows" :key="k1">
+                        <td :rowspan="v.rows" v-if="k1==0" style="width: 400px">
+                            <div class="name">
+                                <img :src="v.specImg" alt="">
+                                <span class="pro-name color-blue" @click="$router.push({path:'/productInfo',query:{productInfoId:v.productId}})">{{v.productName}}</span>
+                                <span class="pro-spec">{{v.spec}}</span>
+                            </div>
+                        </td>
+                        <td :rowspan="v.rows" v-if="k1==0">{{v.skuCode}}</td>
+                        <td :rowspan="v.rows" v-if="k1==0">{{v.supplierSkuCode}}</td>
+                        <td :rowspan="v.rows" v-if="k1==0">¥{{v.unitPrice}}</td>
+                        <td :rowspan="v.rows" v-if="k1==0">¥{{v.unitPrice}}</td>
+                        <td :rowspan="v.rows" v-if="k1==0">{{v.quantity}}</td>
+                        <td :rowspan="v.rows" v-if="k1==0">¥{{v.payAmount}}</td>
+                        <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
+                        <!--<td :rowspan="v.espressRows[k1]" v-if="v.expressInfos[k1]">{{v.expressInfos[k1].expressName}}</td>-->
+                        <!--<td :rowspan="v.espressRows[k1]">{{v.expressInfos[k1].expressNo}}</td>-->
+                        <!--<td :rowspan="v.espressRows[k1]">{{v.expressInfos[k1].skuNum}}</td>-->
+                        <!--<td :rowspan="v.refundRows[k1]">{{v.customerServiceInfos[k1].status}}</td>-->
+                        <!--<td :rowspan="v.refundRows[k1]">{{v.customerServiceInfos[k1].refundNum}}</td>-->
+                    </tr>
                     </tbody>
                 </table>
-            </div>
             </div>
         </el-card>
     </div>
@@ -258,22 +258,32 @@
         methods: {
             //  获取信息
             getInfo() {
-                request.orderDetail({ id: this.warehouseOrderNo }).then(res => {
+                request.orderDetail({ warehouseOrderNo: this.warehouseOrderNo }).then(res => {
                     this.customerServiceInfos = res.data.customerServiceInfos;
                     this.expressInfos = res.data.expressInfos;
                     this.orderInvoiceInfo = res.data.orderInvoiceInfo;
                     this.warehouseOrder = res.data.warehouseOrder;
                     this.tableData = [];
                     res.data.productOrders.forEach((v, k) => {
+                        const tempTitle = v.specTitle.split(',');
+                        const tempValue = v.specValues.split(',');
+                        v.spec = [];
+                        tempTitle.forEach((v1, k1) => {
+                            const temp = v1 + ':' + tempValue[k1] + '    ';
+                            v.spec.push(temp);
+                        });
+                        v.spec = v.spec.join('  ');
                         v.customerServiceInfos = [];
                         v.expressInfos = [];
-                        res.data.customerServiceInfos.forEach((v1, k1) => {
-                            if (v.orderProductNo == v1.orderProductNo) {
-                                v.customerServiceInfos.push(v1);
-                            }
-                        });
+                        if(res.data.customerServiceInfos){
+                            res.data.customerServiceInfos.forEach((v1, k1) => {
+                                if (v.warehouseOrderNo == v1.warehouseOrderNo) {
+                                    v.customerServiceInfos.push(v1);
+                                }
+                            });
+                        }
                         res.data.expressInfos.forEach((v1, k1) => {
-                            if (v.orderProductNo == v1.orderProductNo) {
+                            if (v.warehouseOrderNo == v1.warehouseOrderNo) {
                                 v.expressInfos.push(v1);
                             }
                         });

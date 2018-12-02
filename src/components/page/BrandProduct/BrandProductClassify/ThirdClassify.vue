@@ -106,7 +106,7 @@
                 <el-button @click="propertyMask=false">取 消</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="关联属性" :visible.sync="editPropertyMask" width="540px">
+        <el-dialog title="关联属性" :visible.sync="editPropertyMask" width="700px">
             <el-transfer :titles="['选择区域','选中预览']"
                          v-model="propertyIds"
                          :data="allPropertyList">
@@ -308,7 +308,8 @@ export default {
             this.propertyMask = true;
             this.row = row;
             const data = {
-                categoryId: row.id
+                categoryId: row.id,
+                type: ''
             };
             request.queryPropertyByCategoryId(data).then(res => {
                 this.propertyList = [];
@@ -316,7 +317,7 @@ export default {
                 res.data.forEach((v, k) => {
                     const type = v.type == 1 ? '自然属性' : '销售属性';
                     const temp = {
-                        label: `${v.name}（` + type + `）`
+                        label: `${v.name}（` + type + `） ID:${v.propertyCode}`
                     };
                     this.propertyList.push(temp);
                     this.propertyIds.push(v.propertyCode);
@@ -359,7 +360,7 @@ export default {
                     const type = v.type == 1 ? '自然属性' : '销售属性';
                     const temp = {
                         key: v.code,
-                        label: `${v.name}（` + type + `）`
+                        label: `${v.name}（` + type + `） ID:${v.code}`
                     };
                     this.allPropertyList.push(temp);
                 });
@@ -468,6 +469,9 @@ export default {
                 padding: 8px;
                 text-align: left;
             }
+        }
+        .el-transfer-panel{
+            width: 280px;
         }
     }
 </style>

@@ -12,9 +12,9 @@
         <!-- 无交易额条件 -->
         <el-dialog title="每周交易额无成长" :visible.sync="showWeekTradNo" width="30%"open="cleanData">
             <p class="dialog-item">
-                <span class="dialog-title">扣除经验值</span>
+                <span class="dialog-title">扣除</span>
                 <el-input class="dialog-inp" v-model="form.demotionWeekNoSaleExp" placeholder="请输入数值"></el-input>
-                分
+                点Exp
             </p>
             <span slot="footer">
             <el-button type="primary" @click="sure(0)">确 定</el-button>
@@ -29,7 +29,7 @@
             <p class="dialog-item">
                 <el-input class="dialog-inp" style="margin-left:30px" v-model="form.demotionWeekUserReduceOneExp"
                           placeholder="请输入数值"></el-input>
-                分
+                点Exp
             </p>
             <span slot="footer">
             <el-button type="primary" @click="sure(1)">确 定</el-button>
@@ -44,9 +44,9 @@
                 次
             </p>
             <p class="dialog-item">
-                <span class="dialog-title">扣除经验值</span>
+                <span class="dialog-title">扣除</span>
                 <el-input class="dialog-inp" v-model="form.demotionWeekSalesFreqExp" placeholder="请输入数值"></el-input>
-                分
+                点Exp
             </p>
             <span slot="footer">
             <el-button type="primary" @click="sure(2)">确 定</el-button>
@@ -61,9 +61,9 @@
                 元
             </p>
             <p class="dialog-item">
-                <span class="dialog-title">扣除经验值</span>
+                <span class="dialog-title">扣除</span>
                 <el-input class="dialog-inp" v-model="form.demotionTotleSalesExp" placeholder="请输入数值"></el-input>
-                分
+                点Exp
             </p>
             <span slot="footer">
             <el-button type="primary" @click="sure(3)">确 定</el-button>
