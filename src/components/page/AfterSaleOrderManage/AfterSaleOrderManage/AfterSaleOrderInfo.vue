@@ -263,7 +263,7 @@
                 platformRefundAddress: {},
                 refundExpress: {},
                 supplierRefundAddress: {},
-                statusArr: ['待审核', '待寄回', '待仓库确认', '待平台处理', '售后完成 ', '售后关闭'], // 状态
+                statusArr: ['待审核', '待商品寄回', '待仓库确认', '待平台处理', '售后完成 ', '售后关闭'], // 状态
                 typeArr: ['仅退款', '退货退款 ', '换货'], // 类型
                 btnLoading: false,
                 logicList: [{ label: '顺丰', code: 1 }]
@@ -274,6 +274,7 @@
             // 获取订单信息
             this.serviceNo = this.$route.query.afterSaleOrderInfoId;
             this.getInfo();
+            this.getLogic();
         },
         methods: {
             //  获取信息
@@ -290,6 +291,12 @@
                     this.orderCustomerServiceInfo.imgList = this.orderCustomerServiceInfo.imgList.split(',');
                 }).catch(err => {
                     console.log(err);
+                });
+            },
+            // 物流公司查询
+            getLogic() {
+                request.sysExpressQuery({ page: 1, pageSize: 10000 }).then(res => {
+                    this.logicList = res.data.data;
                 });
             },
             // 提交

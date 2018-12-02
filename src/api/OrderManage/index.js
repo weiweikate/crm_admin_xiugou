@@ -23,7 +23,7 @@ export const queryPayments = '/orderManagement/payments/query';
 // 查询发货单列表
 export const queryDelivery = '/orderManagement/delivery/query';
 // 订单详情
-export const deliveryNo = ['/orderManagement/delivery/{deliveryNo}', { methods: 'get' }];
+export const deliveryNo = ['/orderManagement/delivery/detail', { methods: 'get' }];
 
 // 售后
 // 商家退款

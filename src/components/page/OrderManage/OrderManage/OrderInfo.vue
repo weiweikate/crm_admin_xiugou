@@ -48,59 +48,63 @@
                     </div>
                     <!--交易关闭-->
                     <div class="item" v-if="customerServiceInfos.status==5">
+                        <span>关闭时间</span>
+                        <span>{{warehouseOrder.finishTime|formatDateAll}}</span>
+                    </div>
+                    <div class="item" v-if="customerServiceInfos.status==5">
                         <span>关闭原因</span>
-                        <span>{{customerServiceInfos.orderNum}}</span>
+                        <span>{{subStatusArr[customerServiceInfos.subStatus]}}</span>
                     </div>
                 </div>
                 <div class="item-wrap">
                     <div class="title">订单支付信息</div>
                     <div class="item">
                         <span>商品总额</span>
-                        <span>¥{{customerServiceInfos.totalAmount||0}}</span>
+                        <span>¥{{payInfo.totalAmount}}</span>
                     </div>
                     <div class="item">
                         <span>运费</span>
-                        <span>¥{{customerServiceInfos.freightAmount||0}}</span>
+                        <span>¥{{payInfo.freightAmount}}</span>
                     </div>
                     <div class="item">
                         <span>应付金额</span>
-                        <span>¥{{customerServiceInfos.totalAmount||0+customerServiceInfos.freightAmount||0}}</span>
+                        <span>¥{{payInfo.totalAmount+payInfo.freightAmount}}</span>
                     </div>
                     <div class="item">
                         <span>促销优惠</span>
-                        <span>¥{{customerServiceInfos.promotionAmount||0}}</span>
+                        <span>¥{{payInfo.promotionAmount}}</span>
                     </div>
                     <div class="item">
                         <span>优惠券</span>
-                        <span>¥{{customerServiceInfos.couponAmount||0}}</span>
+                        <span>¥{{payInfo.couponAmount}}</span>
                     </div>
                     <div class="item">
                         <span>一元券</span>
-                        <span>¥{{customerServiceInfos.tokenCoinAmount||0}}</span>
+                        <span>¥{{payInfo.tokenCoinAmount}}</span>
                     </div>
                     <!--已付款,已发货，交易完成，交易关闭-->
                     <div class="item" v-if="customerServiceInfos.status!=1">
                         <span>余额支付</span>
-                        <span>¥{{customerServiceInfos.accountPayAmount||0}}</span>
+                        <span>¥{{payInfo.accountPayAmount}}</span>
                     </div>
                     <div class="item" v-if="customerServiceInfos.status!=1">
                         <span>第三方支付</span>
-                        <span>¥{{customerServiceInfos.cashPayAmount||0}}</span>
+                        <span>¥{{payInfo.cashPayAmount}}</span>
                     </div>
                     <div class="item" v-if="customerServiceInfos.status!=1">
                         <span>开票余额</span>
-                        <span>¥{{customerServiceInfos.invoiceAmount||0}}</span>
+                        <span>¥{{payInfo.invoiceAmount}}</span>
                     </div>
                     <div class="item" v-if="customerServiceInfos.status!=1">
                         <span>实付金额</span>
-                        <span>¥{{customerServiceInfos.payAmount||0}}</span>
+                        <span>¥{{payInfo.payAmount}}</span>
                     </div>
                 </div>
                 <div class="item-wrap">
                     <div class="title">订单发票信息</div>
                     <div class="item">
                         <span>开具发票</span>
-                        <span>{{orderInvoiceInfo.orderNum}}</span>
+                        <span>{{orderInvoiceInfo?'是':'否'}}</span>
                     </div>
                     <!--待付款，交易完成-->
                     <div class="item" v-if="customerServiceInfos.status==1&&customerServiceInfos.status==4">
@@ -145,23 +149,23 @@
                     <div class="title">订单收货信息</div>
                     <div class="item">
                         <span>收货人姓名</span>
-                        <span>{{customerServiceInfos.receiver}}</span>
+                        <span>{{platformOrder.receiver}}</span>
                     </div>
                     <div class="item">
                         <span>收货人联系方式</span>
-                        <span>{{customerServiceInfos.receiverPhone}}</span>
+                        <span>{{platformOrder.receiverPhone}}</span>
                     </div>
                     <div class="item">
                         <span>收货省市区</span>
-                        <span>{{customerServiceInfos.province}}{{customerServiceInfos.city}}{{customerServiceInfos.area}}</span>
+                        <span>{{platformOrder.province}}{{platformOrder.city}}{{platformOrder.area}}</span>
                     </div>
                     <div class="item">
                         <span>收货详细地址</span>
-                        <span>{{customerServiceInfos.address}}</span>
+                        <span>{{platformOrder.address}}</span>
                     </div>
                     <div class="item">
                         <span>配送方式</span>
-                        <span>{{customerServiceInfos.orderNum}}</span>
+                        <span>快递</span>
                     </div>
                 </div>
             </div>
@@ -205,11 +209,26 @@
                         <td :rowspan="v.rows" v-if="k1==0">{{v.quantity}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">¥{{v.payAmount}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                        <!--<td :rowspan="v.espressRows[k1]" v-if="v.expressInfos[k1]">{{v.expressInfos[k1].expressName}}</td>-->
-                        <!--<td :rowspan="v.espressRows[k1]">{{v.expressInfos[k1].expressNo}}</td>-->
-                        <!--<td :rowspan="v.espressRows[k1]">{{v.expressInfos[k1].skuNum}}</td>-->
-                        <!--<td :rowspan="v.refundRows[k1]">{{v.customerServiceInfos[k1].status}}</td>-->
-                        <!--<td :rowspan="v.refundRows[k1]">{{v.customerServiceInfos[k1].refundNum}}</td>-->
+                        <td>
+                            <span v-if="v.expressInfos[k1].expressName">{{v.expressInfos[k1].expressName}}</span>
+                            <span v-else>/</span>
+                        </td>
+                        <td>
+                            <span v-if="v.expressInfos[k1].expressNo">{{v.expressInfos[k1].expressNo}}</span>
+                            <span v-else>/</span>
+                        </td>
+                        <td>
+                            <span v-if="v.expressInfos[k1].skuNum">{{v.expressInfos[k1].skuNum}}</span>
+                            <span v-else>/</span>
+                        </td>
+                        <td>
+                            <span v-if="v.expressInfos[k1].status">{{status[v.expressInfos[k1].status-1]}}</span>
+                            <span v-else>/</span>
+                        </td>
+                        <td>
+                            <span v-if="v.expressInfos[k1].refundNum">{{v.expressInfos[k1].refundNum}}</span>
+                            <span v-else>/</span>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -230,23 +249,17 @@
         data() {
             return {
                 nav: ['订单管理', '订单详情'],
-                detailUrl: '',
                 warehouseOrderNo: '',
-                isShowPop: false, // 订单标记颜色是否显示
-                orderStatus: '', // 总订单状态: 1:待支付 2:待发货 3:待收货 4:确认收货 5:已完成 6:退货关闭 7:用户关闭 8:超时关闭
-                markArr: [
-                    { label: 'red', value: '1' },
-                    { label: 'skyblue', value: '2' },
-                    { label: 'lightgreen', value: '3' },
-                    { label: 'orange', value: '4' },
-                    { label: 'purple', value: '5' }
-                ],
+                status: ['待审核', '待商品寄回', '待仓库确认', '待平台处理', '售后完成', '售后关闭'], // 状态: 1.待审核 2.待商品寄回 3.待仓库确认 4.待平台处理 5.售后完成 6.售后关闭
+                subStatusArr: ['超时取消', '用户手动取消', '平台取消', '全部已售后完成'], // 1.超时取消 2.用户手动取消 3.平台取消 4.全部已售后完成
                 tableData: [],
                 // 订单信息
                 customerServiceInfos: {},
+                platformOrder: {},
                 expressInfos: {},
                 orderInvoiceInfo: {},
-                warehouseOrder: {}
+                warehouseOrder: {},
+                payInfo: {}
             };
         },
 
@@ -263,9 +276,28 @@
                     this.expressInfos = res.data.expressInfos;
                     this.orderInvoiceInfo = res.data.orderInvoiceInfo;
                     this.warehouseOrder = res.data.warehouseOrder;
+                    this.platformOrder = res.data.platformOrder;
                     this.tableData = [];
+                    let totalAmount = 0;
+                    let freightAmount = 0;
+                    let promotionAmount = 0;
+                    let couponAmount = 0;
+                    let tokenCoinAmount = 0;
+                    let accountPayAmount = 0;
+                    let cashPayAmount = 0;
+                    let invoiceAmount = 0;
+                    let payAmount = 0;
                     res.data.productOrders.forEach((v, k) => {
                         const tempTitle = v.specTitle.split(',');
+                        totalAmount += v.totalAmount || 0;
+                        freightAmount += v.freightAmount || 0;
+                        promotionAmount += v.promotionAmount || 0;
+                        couponAmount += v.couponAmount || 0;
+                        tokenCoinAmount += v.tokenCoinAmount || 0;
+                        accountPayAmount += v.accountPayAmount || 0;
+                        cashPayAmount += v.cashPayAmount || 0;
+                        invoiceAmount += v.invoiceAmount || 0;
+                        payAmount += v.payAmount || 0;
                         const tempValue = v.specValues.split(',');
                         v.spec = [];
                         tempTitle.forEach((v1, k1) => {
@@ -275,7 +307,7 @@
                         v.spec = v.spec.join('  ');
                         v.customerServiceInfos = [];
                         v.expressInfos = [];
-                        if(res.data.customerServiceInfos){
+                        if (res.data.customerServiceInfos) {
                             res.data.customerServiceInfos.forEach((v1, k1) => {
                                 if (v.warehouseOrderNo == v1.warehouseOrderNo) {
                                     v.customerServiceInfos.push(v1);
@@ -290,8 +322,18 @@
                         const length = v.customerServiceInfos.length > v.expressInfos.length ? v.customerServiceInfos.length : v.expressInfos.length;
                         v.rows = length;
                         this.tableData.push(v);
-                        console.log(this.tableData);
                     });
+                    this.payInfo = {
+                        totalAmount: totalAmount,
+                        freightAmount: freightAmount,
+                        promotionAmount: promotionAmount,
+                        couponAmount: couponAmount,
+                        tokenCoinAmount: tokenCoinAmount,
+                        accountPayAmount: accountPayAmount,
+                        cashPayAmount: cashPayAmount,
+                        invoiceAmount: invoiceAmount,
+                        payAmount: payAmount
+                    };
                 }).catch(err => {
                     console.log(err);
                 });
@@ -307,6 +349,7 @@
         .wrap{
             display: flex;
             justify-content: space-between;
+            margin-right: 100px;
             .item-wrap{
                 .item{
                     font-size: 14px;

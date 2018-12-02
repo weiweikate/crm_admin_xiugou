@@ -36,27 +36,40 @@
         </el-card>
         <div class="table-block">
             <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
-                    <el-table-column :prop="orderProductExpress.expressNo" label="发货单号" align="center"></el-table-column>
-                    <el-table-column :prop="orderProductExpress.warehouseOrderNo" label="仓库订单号" align="center"></el-table-column>
-                    <el-table-column :prop="orderDelivery.supplierName" label="供应商名称" align="center"></el-table-column>
-                    <el-table-column :prop="orderDelivery.freightAmount" label="物流费用" align="center"></el-table-column>
-                    <el-table-column :prop="orderProductExpress.expressName" label="物流公司" align="center"></el-table-column>
+                    <el-table-column label="发货单号" align="center">
+                        <template slot-scope="scope">{{scope.row.orderProductExpress.expressNo}}</template>
+                    </el-table-column>
+                    <el-table-column label="仓库订单号" align="center">
+                        <template slot-scope="scope">{{scope.row.orderProductExpress.warehouseOrderNo}}</template>
+                    </el-table-column>
+                    <el-table-column label="供应商名称" align="center">
+                        <template slot-scope="scope">{{scope.row.orderDelivery.supplierName}}</template>
+                    </el-table-column>
+                    <el-table-column label="物流费用" align="center">
+                        <template slot-scope="scope">¥{{scope.row.orderDelivery.freightAmount||0}}</template>
+                    </el-table-column>
+                    <el-table-column label="物流公司" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.orderProductExpress.expressName">{{scope.row.orderProductExpress.expressName}}</template>
+                            <template v-else>/</template>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="发货单状态" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.status == 1">仓库接收失败</template>
-                            <template v-if="scope.row.status == 2">全部发货</template>
-                            <template v-if="scope.row.status == 3">等待仓库发货</template>
-                            <template v-if="scope.row.status == 4">发货取消</template>
+                            <template v-if="scope.row.orderDelivery.status == 1">仓库接收失败</template>
+                            <template v-if="scope.row.orderDelivery.status == 2">全部发货</template>
+                            <template v-if="scope.row.orderDelivery.status == 3">等待仓库发货</template>
+                            <template v-if="scope.row.orderDelivery.status == 4">发货取消</template>
                         </template>
                     </el-table-column>
                     <el-table-column label="创建时间" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.createTime|formatDateAll}}
+                            {{scope.row.orderDelivery.createTime|formatDateAll}}
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" @click="$router.push({path:'/sendedOrderInfo',query:{sendedOrderInfoId:scope.row.id}})">查看</el-button>
+                            <el-button type="primary" @click="$router.push({path:'/sendedOrderInfo',query:{sendedOrderInfoId:scope.row.orderDelivery.dispatchNo}})">查看</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -120,7 +133,7 @@
                 };
                 this.page.currentPage = val;
                 that.tableLoading = true;
-                request.getProductBrandList(data).then(res => {
+                request.queryDelivery(data).then(res => {
                     that.tableLoading = false;
                     if (!res.data.data) return;
                     that.tableData = res.data.data;

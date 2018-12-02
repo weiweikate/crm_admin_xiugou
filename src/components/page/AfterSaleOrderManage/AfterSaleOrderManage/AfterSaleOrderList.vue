@@ -25,7 +25,7 @@
                 <el-form-item prop="status" label="售后状态">
                     <el-select v-model="form.status" placeholder="请选择" @change="changeStatus(1)">
                       <el-option label="暂不选择" value=""></el-option>
-                        <el-option v-for="(v,k) in afterSaleStatusArr" :label="v.type" :value="v.id" :key="k">{{v.type}}</el-option>
+                        <el-option v-for="(v,k) in afterSaleStatusArr" :label="v.label" :value="v.value" :key="k"></el-option>
                     </el-select>
                 </el-form-item>
                 <!--<el-form-item prop="afterSaleType" label="售后类型">-->
