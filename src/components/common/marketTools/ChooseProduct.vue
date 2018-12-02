@@ -54,7 +54,7 @@
 
     export default {
         components: {},
-        props: ['productId', 'activityType', 'searchProductId', 'searchProductName'],
+        props: ['prodCode', 'activityType', 'searchProductId', 'searchProductName'],
         data() {
             return {
                 keyWords: '', // 关键字搜索
@@ -82,7 +82,7 @@
             this.keyWords = '';
             this.resultTip = '';
             this.showResult = false;
-            this.chooseId = this.productId;
+            this.chooseId = this.prodCode;
         },
         methods: {
             //  提交表单
@@ -114,7 +114,7 @@
                     }
                 } else {
                     this.noResult = false;
-                    request.queryProductSpecByproductId({ productId: this.keyWordsID }).then(res => {
+                    request.queryProductSpecByprodCode({ prodCode: this.keyWordsID }).then(res => {
                         if (!res.data) return;
                         this.tableData = [];
                         this.tableData = res.data;
