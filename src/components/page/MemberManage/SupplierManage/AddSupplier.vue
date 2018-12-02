@@ -66,15 +66,15 @@
                     <el-form-item prop="endTime" label="供应商结算帐期：">
                         <p>每月15号</p>
                     </el-form-item>
-                    <el-form-item label="状态" prop="status">
-                        <el-radio-group v-model="form.status">
-                            <el-radio :label="1">启用</el-radio>
-                            <el-radio :label="2">停用</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                    <el-form-item prop="remark" label="备注">
-                        <el-input placeholder="备注" v-model="form.remark"></el-input>
-                    </el-form-item>
+                    <!--<el-form-item label="状态" prop="status">-->
+                        <!--<el-radio-group v-model="form.status">-->
+                            <!--<el-radio :label="1">启用</el-radio>-->
+                            <!--<el-radio :label="2">停用</el-radio>-->
+                        <!--</el-radio-group>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item prop="remark" label="备注">-->
+                        <!--<el-input placeholder="备注" v-model="form.remark"></el-input>-->
+                    <!--</el-form-item>-->
                     <div class="submit-btn">
                         <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">确认保存</el-button>
                         <el-button @click="cancel('form')">取消</el-button>
