@@ -69,6 +69,9 @@
                         { required: true, message: '请输入部门名称', trigger: 'blur' },
                         { validator: validateZh, trigger: 'blur' }
                     ],
+                    manager: [
+                        { validator: validateZh, trigger: 'blur' }
+                    ],
                     remark: [
                         { max: 16, message: '最多输入180位字符', trigger: 'blur' }
                     ]

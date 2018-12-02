@@ -492,13 +492,13 @@ export const asyncRouterMap = [
         name: 'logistics',
         meta: { title: '物流管理', icon: 'icon-shezhi' },
         children: [
-            {
-                hidden: true,
-                name: 'logisticsArea',
-                path: '/logisticsArea',
-                component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
-                meta: { title: '地区列表'}
-            },
+            // {
+            //     hidden: true,
+            //     name: 'logisticsArea',
+            //     path: '/logisticsArea',
+            //     component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
+            //     meta: { title: '地区列表'}
+            // },
             {
                 name: 'logisticsCompanyList',
                 path: '/logisticsCompanyList',
@@ -575,13 +575,6 @@ export const asyncRouterMap = [
         name: 'system',
         meta: { title: '系统设置', icon: 'icon-shezhi' },
         children: [
-            {
-                hidden: true,
-                name: 'placeholder',
-                path: '/placeholder',
-                component: resolve => require(['../components/page/Dashboard/message.vue'], resolve),
-                meta: { title: '占位' }
-            },
             {
                 name: 'erp',
                 path: '/erp',
