@@ -37,7 +37,8 @@
                     <el-button @click="audit(scope.row,1)" v-if='scope.row.status == 1' type="danger">确认</el-button>
                     <el-button @click="audit(scope.row,2)" v-if='scope.row.status == 1' type="warning">驳回</el-button>
                     <el-button :loading="btnloading" @click="record(scope.row)" v-if='scope.row.status == 2' type="warning">打款记录</el-button>
-                    <el-button :loading="refReaBtnLoading" @click="showRefuseReason(scope.row)" v-if='scope.row.status == 3' type="danger">查看驳回理由</el-button>
+                    <!--<el-button :loading="refReaBtnLoading" @click="showRefuseReason(scope.row)" v-if='scope.row.status == 3' type="danger">查看驳回理由</el-button>-->
+                    <el-button :loading="refReaBtnLoading" @click="audit(scope.row,2)" v-if='scope.row.status == 3' type="danger">查看驳回理由</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -59,7 +60,10 @@
                 <el-option label="账号异常" value="账号异常"></el-option>
                 <el-option label="其他" value="其他"></el-option>
             </el-select>
-            <el-input v-if='status == 2 && fastReplay == "其他"' v-model="reason" rows="10" type="textarea" placeholder="请填写驳回理由"></el-input>
+            <div class="refuse-reason">
+                <el-input v-if='status == 2 && fastReplay == "其他"' v-model="reason" :maxlength="180" rows="10" type="textarea" placeholder="请填写驳回理由"></el-input>
+                <span v-if='status == 2 && fastReplay == "其他"' class="tip">{{reason.length}}/180</span>
+            </div>
             <span slot="footer">
                 <el-button type="primary" @click="confirmAudit">确 定</el-button>
                 <el-button @click="isShowAuditDia = false">取 消</el-button>
@@ -67,15 +71,15 @@
         </el-dialog>
         <!-- 打款记录 -->
         <el-dialog title="查看打款记录" :visible.sync="isShowRecord" center width="30%">
-            <el-form :model="recordForm" label-width="130px" >
+            <el-form :model="recordForm" label-width="130px">
                 <el-form-item prop="no" label="提现编号:">{{recordForm.withdrawNum}}</el-form-item>
                 <el-form-item prop="rePeople" label="申请人:">{{recordForm.userName}}</el-form-item>
                 <el-form-item prop="money" label="申请提现金额:"><span style="color:red">{{(recordForm.withdrawBalance || 0) | handleMoney}}</span></el-form-item>
-                <el-form-item prop="beginTime" label="发起时间:">{{recordForm.createTime?(recordForm.createTime | formatDateAll):''}}</el-form-item>
+                <el-form-item prop="beginTime" label="发起时间:">{{recordForm.createTime | formatDateAll}}</el-form-item>
                 <el-form-item prop="blank" label="银行:">{{recordForm.bankName}}</el-form-item>
                 <el-form-item prop="card" label="提现卡号:">{{recordForm.cardNo}}</el-form-item>
                 <el-form-item prop="operatePeople" label="操作人:">{{recordForm.adminName}}</el-form-item>
-                <el-form-item prop="confirmTime" label="确认时间:">{{recordForm.updateTime?(recordForm.updateTime | formatDateAll):''}}</el-form-item>
+                <el-form-item prop="confirmTime" label="确认时间:">{{recordForm.updateTime | formatDateAll}}</el-form-item>
             </el-form>
             <span slot="footer">
                 <el-button type="primary" @click="isShowRecord = false">确 定</el-button>
@@ -234,5 +238,13 @@ export default {
 .withdrawal-tab{
     /deep/.el-dialog{border-radius: 10px;.el-dialog__header{border-bottom: 1px solid #ccc;.el-dialog__title{color: #ff6868}}}
     .record-p{text-align: center;line-height: 30px}
+    .refuse-reason{
+        position: relative;
+        .tip{
+            position: absolute;
+            bottom: 0px;
+            right: 8px;
+        }
+    }
 }
 </style>
