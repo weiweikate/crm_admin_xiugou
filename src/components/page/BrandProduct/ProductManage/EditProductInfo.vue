@@ -108,6 +108,7 @@ export default {
                 const secondStep = this.$refs['inventory'];
                 await secondStep.getSalesList();
                 secondStep.checkStatus = data.checkStatus;
+                secondStep.priceTable = data.skuList;
                 if (secondStep.salesAttrArr.length !== 0) {
                     secondStep.salesAttrArr.forEach(v => {
                         if (data.specifies.length !== 0) {
@@ -142,7 +143,20 @@ export default {
                         }
                     });
                 }
-                console.log(secondStep.salesAttrArr);
+                secondStep.form = {
+                    videoUrl: data.videoUrl,
+                    needDeliver: data.needDeliver.toString(), // 0: 否 1: 是
+                    freightTemplateId: data.freightTemplateId.toString(),
+                    undeliveredList: [], // 不支持配送区域
+                    upType: data.type.toString(),
+                    upTime: data.upTime,
+                    buyLimit: [],
+                    limitBuyNum: data.buyLimit,
+                    afterSaleServiceDays: data.afterSaleServiceDays.toString(), // 售后周期
+                    flatService: [],
+                    autoUnShelve: data.autoUnShelve.toString(),
+                    tagList: []
+                }
                 this.pageLoading = false;
             } else {
                 this.$refs['baseParam'].form.prodCode = '';
