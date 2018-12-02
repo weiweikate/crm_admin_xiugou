@@ -13,17 +13,17 @@
                 <el-form-item prop="code" label="供应商编号">
                     <el-input v-model="form.code" placeholder="请输入供应商编号"></el-input>
                 </el-form-item>
-                <el-form-item label="最近登录时间" prop="time">
-                    <el-date-picker
-                        v-model="form.time"
-                        type="daterange"
-                        value-format="yyyy-MM-dd"
-                        format="yyyy/MM/dd"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期">
-                    </el-date-picker>
-                </el-form-item>
+                <!--<el-form-item label="最近登录时间" prop="time">-->
+                    <!--<el-date-picker-->
+                        <!--v-model="form.time"-->
+                        <!--type="daterange"-->
+                        <!--value-format="yyyy-MM-dd"-->
+                        <!--format="yyyy/MM/dd"-->
+                        <!--range-separator="至"-->
+                        <!--start-placeholder="开始日期"-->
+                        <!--end-placeholder="结束日期">-->
+                    <!--</el-date-picker>-->
+                <!--</el-form-item>-->
                 <el-form-item label="状态" prop="status">
                     <el-select v-model="form.status">
                         <el-option label="全部" value=""></el-option>
@@ -34,11 +34,11 @@
                 <el-form-item prop="mobile" label="手机号" label-width="120">
                     <el-input style="width:200px" placeholder="请输入手机号" v-model="form.mobile"></el-input>
                 </el-form-item>
-                <el-form-item>
-                    <div style="display: inline-block;margin-right: 20px">
-                        <region @regionMsg='getRegion' :regionMsg='address'></region>
-                    </div>
-                </el-form-item>
+                <!--<el-form-item>-->
+                    <!--<div style="display: inline-block;margin-right: 20px">-->
+                        <!--<region @regionMsg='getRegion' :regionMsg='address'></region>-->
+                    <!--</div>-->
+                <!--</el-form-item>-->
                 <el-form-item>
                     <el-button @click="getList(1)" type="primary">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
@@ -98,10 +98,11 @@
                                </el-button>
                            </template>
                             <el-button type="danger" :disabled="!(scope.row.porductNum == 0)" v-if="scope.row.status==1" size="small"
-                                       @click="updateStatusItem(scope.$index,scope.row.id,1)" v-auth="'vip.supplierManage.ty'">停用
+                                       @click="updateStatusItem(scope.$index,scope.row.code,1)" v-auth="'vip.supplierManage.ty'">停用
                             </el-button>
                             <el-button type="danger" v-if="scope.row.status==2" size="small"
-                                       @click="updateStatusItem(scope.$index,scope.row.id,2)" v-auth="'vip.supplierManage.ty'">启用
+                                       @click="updateStatusItem(scope.$index,scope.row.code,2)" v-auth="'vip.supplierManage.ty'">启用
+
                             </el-button>
                         </template>
                     </el-table-column>
@@ -181,6 +182,7 @@
                 selected: '',
                 address: [],
                 id: '',
+                code: '',
                 info: '',
                 type: '',
                 btnTxt: ''
@@ -219,16 +221,16 @@
             },
             // 详情
             detailItem(index, row) {
-                this.$router.push({name: 'supplierDetail', query: {supplierInfo: row.id}});
+                this.$router.push({name: 'supplierDetail', query: {supplierInfo: row.code}});
             },
             // 编辑
             editItem(index, row) {
-                this.$router.push({name: 'editSupplier', query: {supplierEditInfo: row.id}});
+                this.$router.push({name: 'editSupplier', query: {supplierEditInfo: row.code}});
             },
             // 关闭,开启
-            updateStatusItem(index, id, num) {
+            updateStatusItem(index, code, num) {
                 const that = this;
-                that.id = id;
+                that.code = code;
                 if (num == 1) {
                     that.info = '是否确认停用？';
                     that.type = 2;
@@ -243,7 +245,7 @@
             oprSure() {
                 const that = this;
                 const data = {
-                    id: that.id
+                    code: that.code
                 };
                 if (that.type == 1) {
                     data.status = 1;
