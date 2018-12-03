@@ -10,13 +10,13 @@
         </el-card>
         <el-card v-loading="pageLoading">
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-                <el-tab-pane label="基础参数编辑" name="baseParam">
+                <el-tab-pane disabled label="基础参数编辑" name="baseParam">
                     <v-prod-param @nextName="getNextName" @productInfo="getProdInfo" :selectedCate='selectedCate' ref="baseParam"></v-prod-param>
                 </el-tab-pane>
-                <el-tab-pane label="库存编辑" name="inventory">
+                <el-tab-pane disabled label="库存编辑" name="inventory">
                     <v-inventory @nextName="getNextName" @productInfo="getProdInfo" :productInfo="productInfo" :selectedCate='selectedCate' ref="inventory"></v-inventory>
                 </el-tab-pane>
-                <el-tab-pane label="商品详情编辑" name="info">
+                <el-tab-pane disabled label="商品详情编辑" name="info">
                     <v-info ref="info" @isKeepAlive="isKeepAlive" :selectedCate='selectedCate' :productInfo="productInfo"></v-info>
                 </el-tab-pane>
             </el-tabs>
@@ -108,12 +108,13 @@ export default {
                 // 添加商品第二步赋值
                 const secondStep = this.$refs['inventory'];
                 await secondStep.getSalesList();
+                console.log(secondStep.salesAttrArr);
                 secondStep.unit = data.skuList.length === 0 ? '包' : data.skuList[0].stockUnit;
                 secondStep.checkStatus = data.checkStatus;
                 secondStep.priceTable = data.skuList;
                 if (data.checkStatus) {
                     secondStep.salesAttrArr = [];
-                    data.specifies.forEach(v => {
+                    data.specifies.forEach((v, k) => {
                         const obj = {
                             name: v.specName,
                             options: []
@@ -129,6 +130,7 @@ export default {
                             });
                         }
                         secondStep.salesAttrArr.push(obj);
+                        this.$set(secondStep.salesAttrArr, k, obj);
                     });
                 } else {
                     if (secondStep.salesAttrArr.length !== 0) {
@@ -166,7 +168,6 @@ export default {
                         });
                     }
                 }
-                console.log(secondStep.salesAttrArr);
 
                 // 添加商品第三步赋值
                 const thirdStep = this.$refs['info'];
