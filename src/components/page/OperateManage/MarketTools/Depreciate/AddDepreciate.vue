@@ -22,7 +22,7 @@
                     v-else>--</span>
                 </el-form-item>
                 <el-form-item label="商品库存">
-                    <span v-if="productDetail.stock">{{productDetail.stock}}</span><span v-else>--</span>
+                    <span v-if="productDetail.sellStock">{{productDetail.sellStock}}</span><span v-else>--</span>
                 </el-form-item>
                 <el-form-item prop="startPrice" label="起拍价格" style="margin-top: 30px">
                     ￥
@@ -327,7 +327,7 @@
                         data.beginTime = moment(this.time).format('YYYY-MM-DD HH:mm:00'); // 活动开始时间
                         data.endTime = moment(this.endTime).format('YYYY-MM-DD HH:mm:00'); // 活动开始时间
                         data.prodCode = this.productDetail.prodCode; // 产品ID
-                        data.skuCode = this.productDetail.id; // 产品规格价格编号
+                        data.skuCode = this.productDetail.skuCode; // 产品规格价格编号
                         this.btnLoading = true;
                         request.operatorAddDepreciate(data).then(res => {
                             this.$message.success(res.msg);

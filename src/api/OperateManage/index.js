@@ -226,7 +226,7 @@ export const operatorfindById = ['/operator/activityDepreciate/findActivityDepre
 // 根据活动类型和查询关键字查询产品信息
 export const queryProductByTypeOrCode = '/product/product/queryProductByNameOrCode';
 // 根据产品id查询产品规格
-export const queryProductSpecByproductId = ['/product/productSpecPrice/queryProductSpecByproductId', { methods: 'get' }];
+export const queryByProductCode = ['/product/sku/queryByProductCode', { methods: 'get' }];
 /** ************关键词*****************/
 // 关键词分页列表
 export const getWordsByPage = '/config/searchWord/queryByPage';
