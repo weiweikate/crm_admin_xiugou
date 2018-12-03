@@ -3,11 +3,10 @@
         <el-form v-loading="salesLoading" :model="form" ref="form" :rules="rules" label-position="right" label-width="100px">
             <div class="pro-title">销售属性</div>
             <!--未同步仓库-->
-            <el-form-item v-if="!checkStatus" v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
+            <el-form-item v-if="!productInfo.checkStatus" v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
                 <div v-if="v.type == 2">
                     <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
-                        {{v1.defType}}
-                        <el-checkbox v-if="v1.defType === 1" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
+                        <el-checkbox v-if="v1.defType == 1" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
                         <div class="mt10" v-else>
                             <el-input v-model="v1.value" style="width: 215px"></el-input>
                             <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
@@ -40,7 +39,7 @@
                 </div>
             </el-form-item>
             <!--同步了仓库-->
-            <el-form-item v-if="checkStatus" v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
+            <el-form-item v-else v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
                 <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
                     <el-input v-if="v1.defType == 1" style="width: 215px" v-model="v1.value"></el-input>
                     <div class="mt10" v-else>
@@ -68,8 +67,8 @@
             </el-form-item>
             <el-form-item label=" ">
                 <div class="primary-text">
-                    <span v-if="!checkStatus">新建主属性</span>
-                    <span v-if="!checkStatus">|</span>
+                    <span v-if="!productInfo.checkStatus">新建主属性</span>
+                    <span v-if="!productInfo.checkStatus">|</span>
                     <span @click="refreshAttr">刷新</span>
                 </div>
             </el-form-item>
@@ -178,7 +177,7 @@
                     </el-table-column>
                     <el-table-column prop="sellStock" label="可售库存" align="center">
                         <template slot-scope="scope">
-                            <el-input v-if="checkStatus" v-model="scope.row.sellStock"></el-input>
+                            <el-input v-if="productInfo.checkStatus" v-model="scope.row.sellStock"></el-input>
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
@@ -206,7 +205,7 @@
                     </el-table-column>
                     <el-table-column prop="sellStock" label="可售库存" align="center">
                         <template slot-scope="scope">
-                            <el-input v-if="checkStatus" v-model="scope.row.sellStock"></el-input>
+                            <el-input v-if="productInfo.checkStatus" v-model="scope.row.sellStock"></el-input>
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
@@ -463,7 +462,6 @@
                                 });
                             });
                         }
-                        console.log(this.salesAttrArr);
                     });
                 }).catch(err => {
                     this.salesLoading = false;

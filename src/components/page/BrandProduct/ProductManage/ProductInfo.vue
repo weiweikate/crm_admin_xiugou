@@ -101,19 +101,21 @@
                   <template v-else>{{info.buyLimit}}</template>
               </el-form-item>
               <el-form-item label="平台服务：">
-                    <template v-if="1"></template>
-                    <template v-else-if="2"></template>
-                    <template v-else-if="3"></template>
-                    <template v-else-if="5"></template>
-                    <template v-else-if="6"></template>
-                    <template v-else-if="7"></template>
+                    <template v-if="1">不支持使用优惠卷</template>
+                    <template v-else-if="2">提供发票</template>
+                    <template v-else-if="3">不支持使用优惠卷, 提供发票</template>
+                    <template v-else-if="5">不支持使用优惠卷, 支持7天无理由退换</template>
+                    <template v-else-if="6">提供发票, 支持7天无理由退换</template>
+                    <template v-else-if="7">不支持使用优惠卷, 提供发票, 支持7天无理由退换</template>
               </el-form-item>
               <el-form-item label="售后保障：">
                   <template v-if="this.info.afterSaleServiceDays>0">{{this.info.afterSaleServiceDays}}天</template>
               </el-form-item>
-              <el-form-item label="自动下架：">{{this.info.name}}</el-form-item>
+              <el-form-item label="自动下架：">{{this.info.autoUnShelve? '是':'否'}}</el-form-item>
               <div class="pro-title">标签信息</div>
-              <el-form-item label="已有标签：">{{this.info.name}}</el-form-item>
+              <el-form-item label="已有标签：">
+                <el-tag type="primary" v-for="(v, k) in info.selectedTag" :key="k">{{v}}</el-tag>
+              </el-form-item>
           </el-form>
       </el-card>
 
@@ -164,6 +166,13 @@ export default {
                 const cArr = str.split(',');
                 cArr.splice(cArr.length - 1, 1);
                 this.info.unSupportsssAreasDataArr = cArr;
+                let tagArr = [];
+                if (this.info.tagList.length !== 0) {
+                    this.info.tagList.forEach(v => {
+                        tagArr.push(v.tagName);
+                    });
+                }
+                this.info.selectedTag = tagArr;
             }).catch(err => {
                 this.loading = false;
                 console.log(err);

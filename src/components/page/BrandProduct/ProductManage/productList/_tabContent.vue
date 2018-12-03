@@ -112,7 +112,7 @@
                 <template slot-scope="scope">
                     <div class="operate">
                         <span v-if="scope.row.status == 1 || scope.row.status == 5 || scope.row.status == 6" @click="editProduct(scope.row)">编辑</span>
-                        <span>备注</span>
+                        <span @click="addRemark(scope.row)">备注</span>
                         <span @click="productInfo(scope.row)">详情</span>
                     </div>
                 </template>
@@ -219,6 +219,23 @@ export default {
             }).catch(() => {
 
             });
+        },
+        // 添加备注
+        addRemark(row) {
+            this.$prompt('请输入备注', '', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消'
+            }).then(({ value }) => {
+                const data = {
+                    prodCode: row.prodCode,
+                    remark: value
+                };
+                request.updateProdRemark(data).then(res => {
+                    this.$message.success(res.msg);
+                }).catch(err => {
+                    console.log(err);
+                });
+            }).catch(() => {});
         },
         // 查看详情
         productInfo(row) {
