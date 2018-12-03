@@ -261,9 +261,9 @@ export const queryOperatorSeckillList = '/operator/seckill/queryPageList';
 // 批量结束/删除秒杀
 export const bathUpdateActiviySeckillStatus = '/operator/seckill/bathUpdateStatusByCodes';
 // 结束/删除秒杀
-export const updateActiviySeckillStatus = '/operator/seckill/updateStatusById';
+export const updateActiviySeckillStatus = '/operator/seckill/updateStatusByCode';
 // 查看活动详情
-export const findActivitySeckillByActivityCode = ['/operator/seckill/findByCode', { methods: 'get' }];
+export const findActivitySeckillByActivityCode = ['/operator/seckill/findById', { methods: 'get' }];
 
 /** ************标签管理*****************/
 // 添加标签

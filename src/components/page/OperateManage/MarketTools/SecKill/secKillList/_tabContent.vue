@@ -79,7 +79,11 @@
                     <p class="product-inf">产品ID：{{scope.row.prodCode}}</p>
                 </template>
             </el-table-column>
-            <el-table-column prop="spec" label="规格" align="center" min-width="100"></el-table-column>
+            <el-table-column label="规格" align="center" min-width="100">
+                <template slot-scope="scope">
+                    {{scope.row.propertyValues.replace(/@/g,'')}}
+                </template>
+            </el-table-column>
             <el-table-column label="秒杀价格" align="center" min-width="60">
                 <template slot-scope="scope">
                     ￥{{scope.row.seckillPrice}}

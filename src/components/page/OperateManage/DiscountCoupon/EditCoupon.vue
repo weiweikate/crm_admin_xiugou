@@ -251,7 +251,7 @@
                         firstCategoryIds: detail.firstCategoryIds,
                         secondCategoryIds: detail.secondCategoryIds,
                         thirdCategoryIds: detail.thirdCategoryIds,
-                        products: detail.productIds,
+                        products: detail.prodCodes,
                         firstCategoryNames: detail.firstCategoryNames,
                         secondCategoryNames: detail.secondCategoryNames,
                         thirdCategoryNames: detail.thirdCategoryNames,
@@ -294,7 +294,7 @@
                         firstCategoryIds: detail.firstCategoryIds,
                         secondCategoryIds: detail.secondCategoryIds,
                         thirdCategoryIds: detail.thirdCategoryIds,
-                        productIds: detail.productIds
+                        productIds: detail.prodCodes
                     };
                     this.productIds = temp;
                 }).catch(error => {
@@ -457,12 +457,12 @@
                                 data.firstCategoryIds = that.productList.firstCategoryIds.join(',');
                                 data.secondCategoryIds = that.productList.secondCategoryIds.join(',');
                                 data.thirdCategoryIds = that.productList.thirdCategoryIds.join(',');
-                                data.productIds = that.productList.products.join(',');
+                                data.prodCodes = that.productList.products.join(',');
                             } else {
                                 data.firstCategoryIds = that.productList.firstCategoryIds;
                                 data.secondCategoryIds = that.productList.secondCategoryIds;
                                 data.thirdCategoryIds = that.productList.thirdCategoryIds;
-                                data.productIds = that.productList.products;
+                                data.prodCodes = that.productList.products;
                             }
                             data.categoryType = 5;
                         } else {
