@@ -20,7 +20,7 @@
                     <el-input v-model="form.serviceNo" placeholder="请输入售后单号"></el-input>
                 </el-form-item>
                 <el-form-item prop="warehouseOrderNo" label="仓库订单号">
-                    <el-input v-model="form.serviceNo" placeholder="请输入仓库订单号"></el-input>
+                    <el-input v-model="form.warehouseOrderNo" placeholder="请输入仓库订单号"></el-input>
                 </el-form-item>
                 <el-form-item prop="status" label="售后状态">
                     <el-select v-model="form.status" placeholder="请选择" @change="changeStatus(1)">
@@ -113,8 +113,8 @@ export default {
         getList() {
             const data = {};
             Object.assign(data, this.form);
-            data.createStartTime = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : '';
-            data.createEndTime = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : '';
+            data.createStartTime = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '';
+            data.createEndTime = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : '';
             data.type = this.activeName === 'all' ? '' : this.activeName;
             this.$refs[this.activeName].page.currentPage = 1;
             this.$refs[this.activeName].data = data;

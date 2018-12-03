@@ -117,9 +117,10 @@
                     page: val,
                     pageSize: this.page.pageSize,
                     status: this.form.status,
-                    name: this.form.name,
-                    from: this.form.time[0] ? moment(this.form.time[0]).format('YYYY-MM-DD') : '',
-                    to: this.form.time[1] ? moment(this.form.time[1]).format('YYYY-MM-DD') : ''
+                    userPhone: this.form.userPhone,
+                    paymentNo: this.form.paymentNo,
+                    from: this.form.time[0] ? moment(this.form.time[0]).format('YYYY-MM-DD 00:00:00') : '',
+                    to: this.form.time[1] ? moment(this.form.time[1]).format('YYYY-MM-DD 23:59:59') : ''
                 };
                 this.page.currentPage = val;
                 this.tableLoading = true;

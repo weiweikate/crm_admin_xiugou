@@ -280,7 +280,7 @@
             //  获取信息
             getInfo() {
                 this.tableData = [];
-                request.orderDetail({ serviceNo: this.serviceNo }).then(res => {
+                request.lookDetail({ serviceNo: this.serviceNo }).then(res => {
                     this.exchangeExpress = res.data;
                     this.table = res.data.warehouseOrderProduct;
                     this.exchangeExpress = res.data.exchangeExpress;

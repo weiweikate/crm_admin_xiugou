@@ -51,13 +51,13 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="pushStatus" label="推送状态">
-                    <el-select v-model="form.pushStatus" placeholder="请选择" @change="changeStatus(1)">
+                    <el-select v-model="form.pushStatus" placeholder="请选择">
                       <el-option label="全部" value=""></el-option>
                         <el-option v-for="(v,k) in sendStatusArr" :label="v.label" :value="v.value" :key="k"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="lockStatus" label="锁定状态">
-                    <el-select v-model="form.lockStatus" placeholder="请选择" @change="changeStatus(1)">
+                    <el-select v-model="form.lockStatus" placeholder="请选择">
                       <el-option label="全部" value=""></el-option>
                         <el-option v-for="(v,k) in lockStatusArr" :label="v.label" :value="v.value" :key="k"></el-option>
                     </el-select>
@@ -91,9 +91,9 @@
                 <el-tab-pane label="已付款" name="2">
                     <v-orderlist ref="2"></v-orderlist>
                 </el-tab-pane>
-                <el-tab-pane label="部分发货" name="6">
-                    <v-orderlist ref="6"></v-orderlist>
-                </el-tab-pane>
+                <!--<el-tab-pane label="部分发货" name="6">-->
+                    <!--<v-orderlist ref="6"></v-orderlist>-->
+                <!--</el-tab-pane>-->
                 <el-tab-pane label="已发货" name="3">
                     <v-orderlist ref="3"></v-orderlist>
                 </el-tab-pane>
@@ -200,8 +200,8 @@ export default {
             const pushStatus = this.form.pushStatus;
             const lockStatus = this.form.lockStatus;
             const orderStatus = this.form.orderStatus;
-            const form = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : '';
-            const to = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : '';
+            const form = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '';
+            const to = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : '';
             this.downloadOrderList = api.downloadOrderList + '?platformNo=' + platformNo + '&warehouseOrderNo=' + warehouseOrderNo + '&warehouseType=' + warehouseType + '&source=' + source + '&invoiceRequired=' + invoiceRequired + '&userPhone=' + userPhone + '&userPhoneName=' + userPhoneName + '&marker=' + marker + '&pushStatus=' + pushStatus + '&lockStatus=' + lockStatus + '&orderStatus=' + orderStatus + '&form=' + form + '&to=' + to;
             this.$refs.exportData.href = this.downloadOrderList;
         },
@@ -209,8 +209,8 @@ export default {
         getList() {
             const data = {};
             Object.assign(data, this.form);
-            data.from = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : '';
-            data.to = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : '';
+            data.from = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '';
+            data.to = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : '';
             data.orderStatus = this.activeName === 'all' ? '' : this.activeName;
             this.$refs[this.activeName].page.currentPage = 1;
             this.$refs[this.activeName].data = data;

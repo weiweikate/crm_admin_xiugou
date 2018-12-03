@@ -2,7 +2,7 @@
     <div class="product-order-list" v-loading="pageLoading">
         <el-table border :data="tableData">
             <el-table-column prop="serviceNo" label="售后单号" align="center"></el-table-column>
-            <el-table-column prop="platformOrderNo" label="仓库订单号" align="center"></el-table-column>
+            <el-table-column prop="warehouseOrderNo" label="仓库订单号" align="center"></el-table-column>
             <el-table-column prop="productName" label="商品名称" align="center"></el-table-column>
             <el-table-column prop="skuCode" label="SKU编码" align="center"></el-table-column>
             <el-table-column prop="supplierSkuCode" label="供应商SKU编码" align="center"></el-table-column>

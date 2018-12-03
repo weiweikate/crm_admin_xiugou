@@ -128,8 +128,8 @@
                     status: that.form.status,
                     deliveryNo: that.form.deliveryNo,
                     warehouseNo: that.form.warehouseNo,
-                    from: this.form.time[0] ? moment(this.form.time[0]).format('YYYY-MM-DD') : '',
-                    to: this.form.time[1] ? moment(this.form.time[1]).format('YYYY-MM-DD') : ''
+                    from: this.form.time[0] ? moment(this.form.time[0]).format('YYYY-MM-DD 00:00:00') : '',
+                    to: this.form.time[1] ? moment(this.form.time[1]).format('YYYY-MM-DD 23:59:59') : ''
                 };
                 this.page.currentPage = val;
                 that.tableLoading = true;

@@ -68,7 +68,7 @@
                     </div>
                     <div class="item">
                         <span>应付金额</span>
-                        <span>¥{{payInfo.totalAmount+payInfo.freightAmount}}</span>
+                        <span>¥{{payInfo.totalAmount||0+payInfo.freightAmount||0}}</span>
                     </div>
                     <div class="item">
                         <span>促销优惠</span>
@@ -198,7 +198,8 @@
                         <td :rowspan="v.rows" v-if="k1==0" style="width: 400px">
                             <div class="name">
                                 <img :src="v.specImg" alt="">
-                                <span class="pro-name color-blue" @click="$router.push({path:'/productInfo',query:{productInfoId:v.productId}})">{{v.productName}}</span>
+                                <!--<span class="pro-name color-blue" @click="$router.push({path:'/productInfo',query:{productInfoId:v.productId}})">{{v.productName}}</span>-->
+                                <span class="pro-name">{{v.productName}}</span>
                                 <span class="pro-spec">{{v.spec}}</span>
                             </div>
                         </td>
@@ -209,24 +210,24 @@
                         <td :rowspan="v.rows" v-if="k1==0">{{v.quantity}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">¥{{v.payAmount}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                        <td>
-                            <span v-if="v.expressInfos[k1].expressName">{{v.expressInfos[k1].expressName}}</span>
+                        <td :rowspan="v.customerServiceInfos.length" v-if="k1==0">
+                            <span v-if="v.expressInfos[k1]&&v.expressInfos[k1].expressName">{{v.expressInfos[k1].expressName}}</span>
+                            <span v-else>/</span>
+                        </td>
+                        <td :rowspan="v.customerServiceInfos.length" v-if="k1==0">
+                            <span v-if="v.expressInfos[k1]&&v.expressInfos[k1].expressNo">{{v.expressInfos[k1].expressNo}}</span>
+                            <span v-else>/</span>
+                        </td>
+                        <td :rowspan="v.customerServiceInfos.length" v-if="k1==0">
+                            <span v-if="v.expressInfos[k1]&&v.expressInfos[k1].skuNum">{{v.expressInfos[k1].skuNum}}</span>
                             <span v-else>/</span>
                         </td>
                         <td>
-                            <span v-if="v.expressInfos[k1].expressNo">{{v.expressInfos[k1].expressNo}}</span>
-                            <span v-else>/</span>
+                            <span v-if="v.customerServiceInfos[k1]&&v.customerServiceInfos[k1].status">{{status[v.customerServiceInfos[k1].status-1]}}</span>
+                            <span v-else>无</span>
                         </td>
                         <td>
-                            <span v-if="v.expressInfos[k1].skuNum">{{v.expressInfos[k1].skuNum}}</span>
-                            <span v-else>/</span>
-                        </td>
-                        <td>
-                            <span v-if="v.expressInfos[k1].status">{{status[v.expressInfos[k1].status-1]}}</span>
-                            <span v-else>/</span>
-                        </td>
-                        <td>
-                            <span v-if="v.expressInfos[k1].refundNum">{{v.expressInfos[k1].refundNum}}</span>
+                            <span v-if="v.customerServiceInfos[k1]&&v.customerServiceInfos[k1].refundNum">{{v.customerServiceInfos[k1].refundNum}}</span>
                             <span v-else>/</span>
                         </td>
                     </tr>
@@ -307,6 +308,8 @@
                         v.spec = v.spec.join('  ');
                         v.customerServiceInfos = [];
                         v.expressInfos = [];
+                        res.data.customerServiceInfos.push({ warehouseOrderNo: 'C88888888', status: 1, refundNum: 1 }, { warehouseOrderNo: 'C88888888', status: 2, refundNum: 1 });
+                        res.data.expressInfos.push({ warehouseOrderNo: 'C88888888', expressName: '申通', expressNo: '4343443', skuNum: 1 });
                         if (res.data.customerServiceInfos) {
                             res.data.customerServiceInfos.forEach((v1, k1) => {
                                 if (v.warehouseOrderNo == v1.warehouseOrderNo) {
