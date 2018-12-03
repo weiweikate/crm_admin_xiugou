@@ -118,9 +118,9 @@
                     <!--</div>-->
                 <!--</div>-->
             </div>
-            <div class="">
+            <div style="margin-top: 50px" v-if="orderCustomerServiceInfo.status==4&&orderCustomerServiceInfo.status==5">
                 <div class="title">仓库反馈</div>
-                <div class="item">
+                <div class="item" v-if="orderCustomerServiceInfo.refundWarehouseFeedback">
                     <span>退货仓反馈</span>
                     <span>{{orderCustomerServiceInfo.refundWarehouseFeedback}}</span>
                    <div>
@@ -133,7 +133,7 @@
                    </div>
                 </div>
 
-                <div class="item">
+                <div class="item" v-if="orderCustomerServiceInfo.sendWarehouseFeedback">
                     <span>发货仓反馈</span>
                     <span>{{orderCustomerServiceInfo.sendWarehouseFeedback}}</span>
                     <div>
@@ -274,7 +274,7 @@
             // 获取订单信息
             this.serviceNo = this.$route.query.afterSaleOrderInfoId;
             this.getInfo();
-            this.getLogic();
+            // this.getLogic();
         },
         methods: {
             //  获取信息
@@ -355,8 +355,9 @@
         }
         .wrap{
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             .item-wrap{
+                margin-right: 100px;
                 .item{
                     font-size: 14px;
                     color: #666666;
