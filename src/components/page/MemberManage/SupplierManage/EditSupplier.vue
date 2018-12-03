@@ -3,7 +3,7 @@
         <v-breadcrumb :nav="['经销商会员管理','供应商管理','编辑供应商']"></v-breadcrumb>
         <div class="container">
             <div class="supplier-box">
-                <el-form :model="form" ref="form">
+                <el-form :model="form" ref="form" :rules="rules">
                     <el-form-item prop="loginName" label="供应商账号">
                         <el-input placeholder="请输入供应商账号" v-model="form.loginName"></el-input>
                     </el-form-item>
@@ -138,7 +138,15 @@
                 // 二级类目ids
                 secIds: '',
                 brandList: [], // 品牌列表
-                brandIds: []
+                brandIds: [],
+                rules: {
+                    password: [
+                        { required: true, validator: validatePass, trigger: 'blur' }
+                    ],
+                    confirmPassword: [
+                        { required: true, validator: validatePass2, trigger: 'blur' }
+                    ]
+                }
             };
         },
         activated() {

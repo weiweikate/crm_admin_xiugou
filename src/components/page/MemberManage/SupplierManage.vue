@@ -40,7 +40,7 @@
                     <!--</div>-->
                 <!--</el-form-item>-->
                 <el-form-item>
-                    <el-button @click="getList(1)" type="primary">查询</el-button>
+                    <el-button @click="getList(1)" type="primary">搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
@@ -49,9 +49,9 @@
             <template>
                 <el-button type="primary" style="margin-bottom: 20px" @click="addSupplier" v-auth="'vip.supplierManage.tjgys'">添加供应商</el-button>
                 <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%">
-                    <el-table-column prop="id" label="供应商ID" width="100" align="center"></el-table-column>
-                    <el-table-column prop="code" label="供应商编号" width="100" align="center"></el-table-column>
+                    <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
                     <el-table-column prop="loginName" label="供应商账号" width="100" align="center"></el-table-column>
+                    <el-table-column prop="code" label="供应商编号" width="100" align="center"></el-table-column>
                     <el-table-column prop="name" label="供应商名称" align="center"></el-table-column>
                     <el-table-column label="供应商类型" width="100" align="center">
                         <template slot-scope="scope">
