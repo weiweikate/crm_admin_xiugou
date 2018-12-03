@@ -26,6 +26,7 @@ export default {
         return {
             keepAlive: true,
             nav: ['品牌产品管理', '产品管理', '发布商品'],
+            prodCode: '',
             loading: false,
             itemList: [],
             content: []
@@ -46,6 +47,9 @@ export default {
             });
             return arr;
         }
+    },
+    created() {
+        this.prodCode = this.$route.query.prodCode || null;
     },
 
     mounted() {
@@ -90,7 +94,7 @@ export default {
         nextSage() {
             if (this.content.length === 0) return this.$message.warning('请选择产品分类!');
             this.keepAlive = true;
-            this.$router.push({ name: 'editProductInfo', query: { cate: JSON.stringify(this.selectedItem) }});
+            this.$router.push({ name: 'editProductInfo', query: { cate: JSON.stringify(this.selectedItem), prodCode: this.prodCode }});
         }
     },
     // 路由离开钩子

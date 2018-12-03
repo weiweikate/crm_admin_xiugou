@@ -6,7 +6,8 @@
             <el-form-item v-if="!checkStatus" v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
                 <div v-if="v.type == 2">
                     <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
-                        <el-checkbox v-if="v1.defType == 1" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
+                        {{v1.defType}}
+                        <el-checkbox v-if="v1.defType === 1" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
                         <div class="mt10" v-else>
                             <el-input v-model="v1.value" style="width: 215px"></el-input>
                             <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
@@ -40,35 +41,26 @@
             </el-form-item>
             <!--同步了仓库-->
             <el-form-item v-if="checkStatus" v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
-                <div v-if="v.type == 2">
-                    <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
-                        <el-input v-if="v1.defType == 1 && v1.value == true" style="width: 215px" v-model="v1.value"></el-input>
-                        <div class="mt10" v-else>
-                            <el-input v-model="v1.label" style="width: 215px"></el-input>
-                            <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
-                        </div>
-                        <template v-if="v1.imgUrl == ''">
-                            <el-upload
-                                :action="imgUpload"
-                                :show-file-list="false"
-                                :before-upload="beforeAvatarUpload"
-                                :on-success="uploadSuccess"
-                            >
-                                <span class="primary-text" @click="beforeUpload(k, k1)">上传图片</span>
-                            </el-upload>
-                        </template>
-                        <template v-else>
-                            <img :src="v1.imgUrl" alt="">
-                            <span class="primary-text" @click="deleteImg(k, k1)">删除</span>
-                        </template>
-                    </div>
-                </div>
-                <div v-else-if="v.type == 1" class="sales-type">
-                    <el-checkbox v-if="v1.defType == 1" v-for="(v1, k1) in v.options" :key="`${k}--${k1}`" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
+                <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
+                    <el-input v-if="v1.defType == 1" style="width: 215px" v-model="v1.value"></el-input>
                     <div class="mt10" v-else>
-                        <el-input v-model="v1.value" style="width: 215px"></el-input>
+                        <el-input v-model="v1.label" style="width: 215px"></el-input>
                         <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
                     </div>
+                    <template v-if="v1.imgUrl == ''">
+                        <el-upload
+                            :action="imgUpload"
+                            :show-file-list="false"
+                            :before-upload="beforeAvatarUpload"
+                            :on-success="uploadSuccess"
+                        >
+                            <span class="primary-text" @click="beforeUpload(k, k1)">上传图片</span>
+                        </el-upload>
+                    </template>
+                    <template v-else>
+                        <img :src="v1.imgUrl" alt="">
+                        <span class="primary-text" @click="deleteImg(k, k1)">删除</span>
+                    </template>
                 </div>
                 <div class="primary-text">
                     <span @click="addAttrValue(k)">新建子属性</span>
@@ -76,9 +68,9 @@
             </el-form-item>
             <el-form-item label=" ">
                 <div class="primary-text">
-                    <span>新建主属性</span>
-                    <span>|</span>
-                    <span @click="getSalesList">刷新</span>
+                    <span v-if="!checkStatus">新建主属性</span>
+                    <span v-if="!checkStatus">|</span>
+                    <span @click="refreshAttr">刷新</span>
                 </div>
             </el-form-item>
             <el-form-item label=" ">
@@ -88,7 +80,7 @@
             <el-form-item label="销售价格">
                 <el-button type="primary" class="mb10" @click="batchPrice = true">批量输入</el-button>
                 <el-table :data="priceTable" border stripe>
-                    <el-table-column prop="propertyValues" label="属性" width="225" align="center">
+                    <el-table-column v-if="!flag" prop="propertyValues" label="属性" width="225" align="center">
                         <template slot-scope="scope">
                             {{scope.row.propertyValues.split('@').join('-')}}
                         </template>
@@ -168,8 +160,36 @@
             </el-form-item>
             <div class="pro-title">库存信息 <span class="grey-text">注：可售库存不编辑默认全部可售</span></div>
             <el-form-item label="库存信息">
-                <el-table :data="priceTable" border stripe>
+                <el-table v-if="!flag" :data="priceTable" border stripe>
                     <el-table-column prop="propertyValues" label="属性" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.propertyValues.split('@').join('-')}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column :render-header="renderTitle" label="单位" align="center">
+                        <template slot-scope="scope" v-if="priceTable.length !==0">
+                            {{unit || '-'}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="warehouseStock" label="仓库同步库存" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.warehouseStock || '-'}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="sellStock" label="可售库存" align="center">
+                        <template slot-scope="scope">
+                            <el-input v-if="checkStatus" v-model="scope.row.sellStock"></el-input>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <span class="primary-text" @click="showWareaMsg(scope.row)">查看</span>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-table v-else :data="priceTable" border stripe>
+                    <el-table-column prop="propertyValues" label="默认" align="center">
                         <template slot-scope="scope">
                             {{scope.row.propertyValues.split('@').join('-')}}
                         </template>
@@ -186,7 +206,8 @@
                     </el-table-column>
                     <el-table-column prop="sellStock" label="可售库存" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.sellStock || '-'}}
+                            <el-input v-if="checkStatus" v-model="scope.row.sellStock"></el-input>
+                            <span v-else>-</span>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" align="center">
@@ -290,6 +311,7 @@
         props: ['selectedCate', 'productInfo'],
         data() {
             return {
+                flag: false, // true: 无销售属性
                 checkStatus: true, // 审核状态
                 createListLoading: false,
                 showWareaMsgToask: false,
@@ -297,10 +319,22 @@
                 selectedCateArr: [],
                 form: {},
                 rules: {},
-                unit: '',
+                unit: '包',
+                unitArr: [
+                    { label: '包', value: '包' },
+                    { label: '箱', value: '箱' },
+                    { label: '件', value: '件' },
+                    { label: '条', value: '条' },
+                    { label: '盒', value: '盒' },
+                    { label: 'KG', value: 'KG' },
+                    { label: '吨', value: '吨' },
+                    { label: '平米', value: '平米' },
+                    { label: '立方', value: '立方' }
+                ],
                 rowIndex: { bIndex: '', mIndex: '' },
                 salesLoading: false,
                 salesAttrArr: [],
+                tmpSalesAttrArr: [],
                 priceTable: [],
                 wareTable: [],
                 wareMsgTable: [],
@@ -318,6 +352,12 @@
             this.getSalesList();
         },
         methods: {
+            // 刷新属性
+            async refreshAttr() {
+                this.tmpSalesAttrArr = this.salesAttrArr;
+                await this.getSalesList();
+                this.salesAttrArr = this.tmpSalesAttrArr;
+            },
             // 查看库存信息
             showWareaMsg(row) {
                 this.wareMsgTable = [];
@@ -371,7 +411,14 @@
                     arr.push(obj);
                 });
                 if (arr.length === 0) return this.$message.warning('请选择销售属性');
-                data.specifies = arr;
+                this.flag = arr.every(v => {
+                    return v.specValues.length === 0;
+                });
+                if (this.flag) {
+                    data.specifies = [];
+                } else {
+                    data.specifies = arr;
+                }
                 this.createListLoading = true;
                 request.addProductSku(data).then(res => {
                     this.createListLoading = false;
@@ -402,7 +449,8 @@
                     tplData.data.forEach((v, k) => {
                         this.salesAttrArr.push({
                             name: v.name,
-                            type: v.valueType,
+                            // TODO valueType
+                            type: 2,
                             options: []
                         });
                         if (v.values.length !== 0) {
@@ -415,6 +463,7 @@
                                 });
                             });
                         }
+                        console.log(this.salesAttrArr);
                     });
                 }).catch(err => {
                     this.salesLoading = false;
@@ -452,17 +501,37 @@
                 this.salesAttrArr[bIndex].options[mIndex].imgUrl = '';
             },
             // 改变表头单位
-            changeTableTitle(val) {
-                console.log(this.unit);
+            tableHeadChange(val) {
+                this.unit = val;
             },
             // 表头
             renderTitle(h, { column, $index }) {
-                return (
-                    <el-select v-model={this.unit} onChange={this.changeTableTitle} placeholder={'单位'}>
-                        <el-option label='kg' value='1'></el-option>
-                        <el-option label='包' value='2'></el-option>
-                    </el-select>
-                );
+                return [
+                    h(
+                        'el-select',
+                        {
+                            style: {
+                                display: 'block',
+                                width: '100%'
+                            },
+                            attrs: {
+                                value: this.unit,
+                                placeholder: ''
+                            },
+                            on: {
+                                change: this.tableHeadChange
+                            }
+                        },
+                        this.unitArr.map((v, k) => {
+                            return h('el-option', {
+                                attrs: {
+                                    label: v.label,
+                                    value: v.value
+                                }
+                            });
+                        })
+                    )
+                ];
             },
             // 下一步
             nextTip() {
@@ -475,6 +544,9 @@
                     if (!price.barCode) return this.$message.warning('请输入SKU条形码');
                     if (!price.supplierSkuCode) return this.$message.warning('请输入正确供应商SKU编码');
                 }
+                this.priceTable.forEach(v => {
+                    v.stockUnit = this.unit;
+                });
                 const data = {
                     prodCode: this.productInfo.prodCode,
                     paramList: this.productInfo.paramList,

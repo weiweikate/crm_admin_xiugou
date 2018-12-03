@@ -65,9 +65,9 @@
                 </el-select>
             </el-form-item>
             <el-form-item prop="freightTemplateId" label="运费模板">
-                <el-select v-model="form.freightTemplateId">
-                    <el-option label="t1" value="1"></el-option>
-                    <el-option label="t2" value="2"></el-option>
+                <el-select v-model="form.freightTemplateId" placeholder="请选择运费模板">
+                    <el-option value="" label="全部"></el-option>
+                    <el-option v-for="(v, k) in freightList" :key="k" :value="v.id" :label="v.name"></el-option>
                 </el-select>
                 <span class="primary-text">添加运费模板</span>
                 <span class="primary-text">|</span>
@@ -82,9 +82,9 @@
             <div class="pro-title">其他信息</div>
             <el-form-item prop="upType" label="上架时间">
                 <el-radio-group @change="form.upTime = ''" v-model="form.upType">
-                    <el-radio :label="1">立即上架</el-radio>
-                    <el-radio :label="2">定时上架</el-radio>
-                    <el-radio :label="3">放入仓库</el-radio>
+                    <el-radio label="1">立即上架</el-radio>
+                    <el-radio label="2">定时上架</el-radio>
+                    <el-radio label="3">放入仓库</el-radio>
                 </el-radio-group>
                 <el-date-picker v-if="form.upType == 2" v-model="form.upTime" type="datetime" placeholder="请选择上架时间" style="margin-left: 10px"></el-date-picker>
             </el-form-item>
@@ -101,10 +101,14 @@
                     <el-checkbox :label="4">支持7天无理由退换</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
+            <el-form-item prop="afterSaleServiceDays" label="售后保障">
+                <span v-if="form.afterSaleServiceDays">售后时间: {{form.afterSaleServiceDays || 0}}天</span>
+                <span class="grey-text ml10">注：虚拟商品默认不支持售后</span>
+            </el-form-item>
             <el-form-item prop="autoUnShelve" label="自动下架">
                 <el-radio-group v-model="form.autoUnShelve">
-                    <el-radio :label="1">是</el-radio>
-                    <el-radio :label="0">否 </el-radio>
+                    <el-radio :label="true">是</el-radio>
+                    <el-radio :label="false">否 </el-radio>
                 </el-radio-group>
                 <span class="grey-text ml10"> 注：库存为0时是否自动下架</span>
             </el-form-item>
@@ -152,6 +156,7 @@
             return {
                 subformBtn: false,
                 selectedCateArr: [],
+                freightList: [], // 运费模板
                 form: {
                     videoUrl: '',
                     // imgUrl: '', // 主图
@@ -166,8 +171,7 @@
                     limitBuyNum: 0,
                     afterSaleServiceDays: 0, // 售后周期
                     flatService: [],
-                    autoUnShelve: '',
-                    tagList: []
+                    autoUnShelve: ''
                 },
                 rules: {
                     needDeliver: [{ required: true, message: '请选择是否发货', trigger: 'blur' }],
@@ -194,7 +198,9 @@
         },
         mounted() {
             this.selectedCateArr = this.selectedCate;
+            this.form.afterSaleServiceDays = this.productInfo.afterSaleServiceDays;
             this.getAllTagType();
+            this.getFeightList();
         },
         methods: {
             // 提交表单
@@ -216,7 +222,7 @@
                 }
                 const data = {
                     videoUrl: this.form.videoUrl,
-                    imgUrl: this.imgList.join(','),
+                    imgUrl: this.imgList[0],
                     content: this.imgInfoList.join(','),
                     needDeliver: this.form.needDeliver,
                     freightTemplateId: this.form.freightTemplateId,
@@ -225,10 +231,24 @@
                     buyLimit: this.form.limitBuyNum,
                     restrictions: restrictions,
                     autoUnShelve: this.form.autoUnShelve,
-                    tags: tags,
+                    tagList: tags,
                     prodCode: this.productInfo.prodCode,
-                    paramList: this.productInfo.paramList
+                    paramList: this.productInfo.paramList,
+                    skuList: this.productInfo.skuList
                 };
+                if (this.imgList.length == 0 || this.imgList.length == 1) {
+                    data.imgFileList = [];
+                } else {
+                    this.imgList.splice(0, 1);
+                    const arr = [];
+                    this.imgList.forEach(v => {
+                        arr.push({
+                            originalImg: v,
+                            smallImg: v
+                        });
+                    });
+                    data.imgFileList = arr;
+                }
                 this.subformBtn = true;
                 request.addProducts(data).then(res => {
                     this.subformBtn = false;
@@ -237,6 +257,14 @@
                     this.$message.success(res.msg);
                 }).catch(err => {
                     this.subformBtn = false;
+                    console.log(err);
+                });
+            },
+            // 获取运费模板列表
+            async getFeightList() {
+                await request.queryFreightTemplateList({}).then(res => {
+                    this.freightList = res.data;
+                }).catch(err => {
                     console.log(err);
                 });
             },
@@ -315,13 +343,14 @@
             },
             // 选择区域
             chooseUnSupportArea(getArea) {
+                this.unSupportMask = false;
+                if (getArea == false) return;
                 if (getArea.length !== 0) {
                     getArea.forEach(v => {
                         v.prodCode = this.productInfo.prodCode;
                     });
                 }
                 this.form.undeliveredList = getArea;
-                this.unSupportMask = false;
                 if (getArea.length === 0 || !getArea) return;
                 let str = '';
                 getArea.forEach(v => {
@@ -332,14 +361,14 @@
                 this.unSupportsssAreasData = arr;
             },
             // 获取所有标签
-            getAllTags(val, key, status) {
+            async getAllTags(val, key, status) {
                 if (this.form.secCategoryId === '') return;
                 this.tagTypeArr.forEach(v => {
                     v.selected = false;
                 });
                 this.tagTypeArr[key].selected = status;
                 this.tagLoading = true;
-                request.querySysTagLibraryList({ typeId: val, secCategoryId: this.form.secCategoryId }).then(res => {
+                await request.querySysTagLibraryList({ typeId: val, secCategoryId: this.form.secCategoryId }).then(res => {
                     this.tagLoading = false;
                     this.tagArr = [];
                     this.tagTypeArr[key].selected = !this.tagTypeArr[key].selected;
@@ -415,8 +444,8 @@
                 this.selectedTagArr.push({ label: v.label, value: v.value });
             },
             // 获取所有标签类型
-            getAllTagType() {
-                request.querySysTagTypePageList({ pageSize: 100000 }).then(res => {
+            async getAllTagType() {
+                await request.querySysTagTypePageList({ pageSize: 100000 }).then(res => {
                     this.tagTypeArr = [];
                     if (res.data.data.length === 0) return;
                     res.data.data.forEach(v => {

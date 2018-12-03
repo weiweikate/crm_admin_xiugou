@@ -87,7 +87,7 @@
                     <div class="operate-natural-attr">
                         <span @click="addPrimaryAttr">添加主属性</span>
                         <span>|</span>
-                        <span @click="getNaturalList">刷新</span>
+                        <span @click="refreshAttr">刷新</span>
                     </div>
                 </el-col>
             </el-form-item>
@@ -132,7 +132,8 @@
                 supplierArr: [], // 供应商列表
                 brandArr: [], // 品牌列表
                 deliveryWarehouseArr: [{ label: '加盟仓', value: '1' }, { label: '供应商仓库', value: '2' }, { label: '虚拟仓库', value: '3' }], // 发货仓库
-                naturalAttribute: [{ name: '尺寸', value: '', options: [{ label: 'XL', value: '1' }], defParam: '' }, { name: '重量', value: '', options: [{ label: '10kg', value: '1' }], defParam: '' }, { name: '颜色', value: '', options: [{ label: '红色', value: '1' }], defParam: '' }]
+                naturalAttribute: [],
+                naturalTmpAttribute: []
             };
         },
         props: ['selectedCate'],
@@ -180,6 +181,12 @@
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+            // 刷新属性
+            async refreshAttr() {
+                this.naturalTmpAttribute = this.naturalAttribute;
+                await this.getNaturalList();
+                this.naturalAttribute = this.naturalTmpAttribute;
             },
             // 根据三级类目获取自然属性列表
             async getNaturalList() {

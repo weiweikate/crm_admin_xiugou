@@ -5,6 +5,7 @@
             <div v-if="selectedCate.length !== 0">
                 <span style="font-weight: 900">您当前选择的分类是</span>: {{selectedCate[0].label || ''}} > {{selectedCate[1].label || ''}} > {{selectedCate[2].label || ''}}
                 <el-button @click="toggleCate" type="primary" style="margin-left: 30px">切换分类</el-button>
+                <el-button @click="cancleEdit" type="success" style="margin-left: 30px">取消编辑</el-button>
             </div>
         </el-card>
         <el-card v-loading="pageLoading">
@@ -107,56 +108,118 @@ export default {
                 // 添加商品第二步赋值
                 const secondStep = this.$refs['inventory'];
                 await secondStep.getSalesList();
+                secondStep.unit = data.skuList.length === 0 ? '包' : data.skuList[0].stockUnit;
                 secondStep.checkStatus = data.checkStatus;
                 secondStep.priceTable = data.skuList;
-                if (secondStep.salesAttrArr.length !== 0) {
-                    secondStep.salesAttrArr.forEach(v => {
-                        if (data.specifies.length !== 0) {
-                            data.specifies.forEach(v1 => {
-                                if (v.name == v1.specName) {
-                                    if (v1.specValues.length !== 0) {
-                                        v1.specValues.forEach(v2 => {
-                                            if (v.options.length !== 0) {
-                                                let flag = true;
-                                                v.options.forEach(v3 => {
-                                                    if (v2.specValue == v3.label) {
-                                                        v3.value = true;
-                                                        v3.defType = 1;
-                                                        v3.imgUrl = v2.specImg;
-                                                        flag = false;
-                                                    }
-                                                });
-                                                // flag:true  自定义属性
-                                                if (flag) {
-                                                    v.options.push({
-                                                        defType: 2,
-                                                        imgUrl: v2.specImg,
-                                                        label: v2.specValue,
-                                                        value: v2.specValue
-                                                    })
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
+                if (data.checkStatus) {
+                    secondStep.salesAttrArr = [];
+                    data.specifies.forEach(v => {
+                        const obj = {
+                            name: v.specName,
+                            options: []
+                        };
+                        if (v.specValues !== 0) {
+                            v.specValues.forEach(v1 => {
+                                obj.options.push({
+                                    label: v1.specValue,
+                                    value: v1.specValue,
+                                    defType: 1,
+                                    imgUrl: v1.specImg
+                                });
                             });
                         }
+                        secondStep.salesAttrArr.push(obj);
+                    });
+                } else {
+                    if (secondStep.salesAttrArr.length !== 0) {
+                        secondStep.salesAttrArr.forEach(v => {
+                            if (data.specifies.length !== 0) {
+                                data.specifies.forEach(v1 => {
+                                    if (v.name == v1.specName) {
+                                        if (v1.specValues.length !== 0) {
+                                            v1.specValues.forEach(v2 => {
+                                                if (v.options.length !== 0) {
+                                                    let flag = true;
+                                                    v.options.forEach(v3 => {
+                                                        if (v2.specValue == v3.label) {
+                                                            v3.value = true;
+                                                            v3.defType = 1;
+                                                            v3.imgUrl = v2.specImg;
+                                                            flag = false;
+                                                        }
+                                                    });
+                                                    // flag:true  自定义属性
+                                                    if (flag) {
+                                                        v.options.push({
+                                                            defType: 2,
+                                                            imgUrl: v2.specImg,
+                                                            label: v2.specValue,
+                                                            value: v2.specValue
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+                console.log(secondStep.salesAttrArr);
+
+                // 添加商品第三步赋值
+                const thirdStep = this.$refs['info'];
+                await thirdStep.getAllTagType();
+                thirdStep.imgInfoList = data.content ? data.content.split(',') : [];
+                await thirdStep.getFeightList();
+                let str = '';
+                data.undeliveredList.forEach(v => {
+                    str += v.cityNames + ',';
+                });
+                const cArr = str.split(',');
+                cArr.splice(cArr.length - 1, 1);
+                thirdStep.unSupportsssAreasData = cArr;
+                // thirdStep.unSupportAreasData = data.undeliveredList;
+                // thirdStep.unSupportsssAreasData = data.undeliveredList;
+                const arr = [];
+                arr.push(data.imgUrl);
+                if (data.imgFileList.length !== 0) {
+                    data.imgFileList.forEach(v => {
+                        arr.push(v.originalImg);
                     });
                 }
-                secondStep.form = {
-                    videoUrl: data.videoUrl,
-                    needDeliver: data.needDeliver.toString(), // 0: 否 1: 是
-                    freightTemplateId: data.freightTemplateId.toString(),
-                    undeliveredList: [], // 不支持配送区域
-                    upType: data.type.toString(),
-                    upTime: data.upTime,
-                    buyLimit: [],
-                    limitBuyNum: data.buyLimit,
-                    afterSaleServiceDays: data.afterSaleServiceDays.toString(), // 售后周期
-                    flatService: [],
-                    autoUnShelve: data.autoUnShelve.toString(),
-                    tagList: []
+                thirdStep.imgList = arr;
+                if (data.tagList && data.tagList.length !== 0) {
+                    data.tagList.forEach(v => {
+                        thirdStep.selectedTagArr.push({ label: v.tagName, value: v.tagId });
+                    });
                 }
+                await thirdStep.getAllTags(thirdStep.tagTypeArr[0].id, 0, thirdStep.tagTypeArr[0].selected);
+                let flatServiceArr = [];
+                const limitServer = data.restrictions || 0;
+                switch (limitServer.toString()) {
+                    case '1': flatServiceArr = [1]; break;
+                    case '2': flatServiceArr = [2]; break;
+                    case '3': flatServiceArr = [1, 2]; break;
+                    case '5': flatServiceArr = [1, 4]; break;
+                    case '6': flatServiceArr = [2, 4]; break;
+                    case '7': flatServiceArr = [1, 2, 4]; break;
+                }
+                thirdStep.form = {
+                    videoUrl: data.videoUrl,
+                    needDeliver: data.needDeliver ? data.needDeliver.toString() : '', // 0: 否 1: 是
+                    freightTemplateId: data.freightTemplateId ? data.freightTemplateId.toString() : '',
+                    undeliveredList: [], // 不支持配送区域
+                    upType: data.type ? data.type.toString() : '',
+                    upTime: data.type == 2 ? data.upTime : '',
+                    buyLimit: data.buyLimit == -1 ? [] : [1],
+                    limitBuyNum: data.buyLimit == -1 ? '' : data.buyLimit,
+                    afterSaleServiceDays: data.afterSaleServiceDays ? data.afterSaleServiceDays.toString() : '', // 售后周期
+                    flatService: flatServiceArr,
+                    autoUnShelve: data.autoUnShelve,
+                    tagList: []
+                };
                 this.pageLoading = false;
             } else {
                 this.$refs['baseParam'].form.prodCode = '';
@@ -171,7 +234,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.keepAlive = false;
-                this.$router.push('/releaseProduct');
+                this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null }});
             }).catch(() => {});
         },
         // 切换产品编辑信息
@@ -185,6 +248,11 @@ export default {
         // 获取下一步参数
         getNextName(name) {
             this.activeName = name;
+        },
+        // 取消编辑
+        cancleEdit() {
+            this.keepAlive = false;
+            this.$router.push('/productList');
         },
         // 组件缓存状态
         isKeepAlive(status) {

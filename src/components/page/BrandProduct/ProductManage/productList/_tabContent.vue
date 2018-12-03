@@ -35,19 +35,20 @@
             <el-table-column prop="status" label="商品状态" align="center">
                 <template slot-scope="scope">
                     <span v-if="scope.row.status == 0">删除</span>
-                    <span v-else-if="scope.row.status == 1">待审核</span>
-                    <span v-else-if="scope.row.status == 2">已通过</span>
-                    <span v-else-if="scope.row.status == 3">未通过</span>
+                    <span v-else-if="scope.row.status == 1">待发布</span>
+                    <span v-else-if="scope.row.status == 2">待审核</span>
+                    <span v-else-if="scope.row.status == 3">已通过</span>
                     <span v-else-if="scope.row.status == 4">已上架</span>
-                    <span v-else-if="scope.row.status == 5">停用</span>
+                    <span v-else-if="scope.row.status == 5">未通过</span>
+                    <span v-else-if="scope.row.status == 6">已下架</span>
                     <span v-else>-</span>
                 </template>
             </el-table-column>
             <el-table-column prop="status" label="审核状态" align="center">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.status == 3">未审核通过</span>
-                    <span v-else-if="scope.row.status == 1">待审核</span>
-                    <span v-else-if="scope.row.status == 2">审核通过</span>
+                    <span v-if="scope.row.status == 5">未通过</span>
+                    <span v-else-if="scope.row.status == 2">待审核</span>
+                    <span v-else-if="scope.row.status == 3">已通过</span>
                     <span v-else>-</span>
                 </template>
             </el-table-column>
@@ -71,7 +72,7 @@
             </el-table-column>
             <el-table-column prop="taxRate" label="税率" align="center"></el-table-column>
             <el-table-column prop="stock" label="总库存" align="center"></el-table-column>
-            <el-table-column prop="activityFreezeStock" label="活动冻结库存" align="center"></el-table-column>
+            <!--<el-table-column prop="activityFreezeStock" label="活动冻结库存" align="center"></el-table-column>-->
             <el-table-column prop="freezeStock" label="订单冻结库存" align="center"></el-table-column>
             <el-table-column prop="warehouseType" label="商品来源" align="center">
                 <template slot-scope="scope">
@@ -110,7 +111,7 @@
             <el-table-column label="操作" align="center" width="80px" fixed="right">
                 <template slot-scope="scope">
                     <div class="operate">
-                        <span @click="editProduct(scope.row)">编辑</span>
+                        <span v-if="scope.row.status == 1 || scope.row.status == 5 || scope.row.status == 6" @click="editProduct(scope.row)">编辑</span>
                         <span>备注</span>
                         <span @click="productInfo(scope.row)">详情</span>
                     </div>
@@ -172,8 +173,8 @@ export default {
                 this.listNum.inSellingTotal = tblData.inSellingTotal || 0;
                 this.listNum.inWarehouseTotal = tblData.inWarehouseTotal || 0;
                 this.$emit('transData', this.listNum);
-                this.tableData = tblData.data;
                 this.page.totalPage = tblData.totalNum;
+                this.tableData = tblData.data;
             }).catch(err => {
                 this.tableLoading = false;
                 console.log(err);
@@ -184,22 +185,22 @@ export default {
             this.prodIdArr = [];
             if (val.length !== 0) {
                 val.forEach(v => {
-                    this.prodIdArr.push(v.id);
+                    this.prodIdArr.push(v.prodCode);
                 });
             }
         },
         // 编辑产品
         editProduct(row) {
-            let selectedItem = []
-            selectedItem.push({type: 1, label: row.firstCategoryName, value: row.firstCategoryId});
-            selectedItem.push({type: 2, label: row.secCategoryName, value: row.secCategoryId});
-            selectedItem.push({type: 3, label: row.thirdCategoryName, value: row.thirdCategoryId});
-            this.$router.push({name: 'editProductInfo', query: {cate: JSON.stringify(selectedItem), prodCode: row.prodCode}})
+            const selectedItem = [];
+            selectedItem.push({ type: 1, label: row.firstCategoryName, value: row.firstCategoryId });
+            selectedItem.push({ type: 2, label: row.secCategoryName, value: row.secCategoryId });
+            selectedItem.push({ type: 3, label: row.thirdCategoryName, value: row.thirdCategoryId });
+            this.$router.push({ name: 'editProductInfo', query: { cate: JSON.stringify(selectedItem), prodCode: row.prodCode }});
         },
         // 产品删除/下架
         productStatus(status) {
             if (this.prodIdArr.length === 0) return this.$message.warning('请先选择产品再进行操作');
-            // 0：删除 1：待审核2：已通过3：未通过4:已上架5：停用
+            // 0：删除 1：待发布2：待审核3：已通过4:已上架5：未通过6:已下架
             const data = {
                 codes: this.prodIdArr.join(','),
                 status: status
@@ -210,7 +211,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 request.batchUpdateProductStatus(data).then(res => {
-                    console.log(res);
+                    this.$message.success(res.msg);
+                    this.getList(this.page.currentPage);
                 }).catch(err => {
                     console.log(err);
                 });
@@ -218,13 +220,9 @@ export default {
 
             });
         },
-        // 通过/不通过审核
-        auditProduct(row, status) {
-
-        },
         // 查看详情
         productInfo(row) {
-
+            this.$router.push({ name: 'productInfo', query: { prodCode: row.prodCode }});
         }
     },
     filters: {

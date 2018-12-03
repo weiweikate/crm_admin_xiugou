@@ -100,7 +100,7 @@
         </el-card>
         <el-card class="mb10">
             <el-button @click="$refs[activeName].productStatus(0)">删除</el-button>
-            <el-button @click="$refs[activeName].productStatus(5)">下架</el-button>
+            <el-button @click="$refs[activeName].productStatus(6)">下架</el-button>
             <el-button @click="auditToask = true">审核</el-button>
             <el-button @click="freightToask = true">调整运费模板</el-button>
             <el-button type="danger">推送云仓</el-button>
@@ -141,8 +141,8 @@
                 是否审核选中商品
             </p>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="auditProduct(2)">审核通过</el-button>
-                <el-button @click="auditProduct(3)">审核驳回</el-button>
+                <el-button type="primary" @click="auditProduct(3)">审核通过</el-button>
+                <el-button @click="auditProduct(5)">审核驳回</el-button>
             </span>
         </el-dialog>
     </div>
@@ -201,13 +201,14 @@
             // 批量审核产品
             auditProduct(status) {
                 if (this.$refs[this.activeName].prodIdArr.length === 0) return this.$message.warning('请先选择产品再进行操作');
-                // 0：删除 1：待审核2：已通过3：未通过4:已上架5：停用
+                // 0：删除 1：待发布2：待审核3：已通过4:已上架5：未通过6:已下架
                 const data = {
                     codes: this.$refs[this.activeName].prodIdArr.join(','),
                     status: status
                 };
                 request.batchUpdateProductStatus(data).then(res => {
-                    console.log(res);
+                    this.$message.success(res.msg);
+                    this.$refs[this.activeName].handleCurrentChange(this.$refs[this.activeName].page.currentPage);
                     this.auditToask = false;
                 }).catch(err => {
                     this.auditToask = false;
