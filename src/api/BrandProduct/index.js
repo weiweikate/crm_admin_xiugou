@@ -185,3 +185,13 @@ export const updateCategoryPropertyStatus = '/product/categoryProperty/updateSta
 export const queryPropertyByCategoryId = ['/product/categoryPropertyAssociate/queryByCategoryId', { methods: 'get' }];
 // 绑定类目与属性
 export const bindCategoryProperty = '/product/categoryPropertyAssociate/bind';
+//-----------------------------------------------------------------------------------------2018-11-29 产品重构-----------
+export const queryProdList = ['/product/product/queryProductPageList', { methods: 'post' }]; // 查询产品列表
+export const findProductSupplierList = ['/product/productSupplier/findProductBrandList', { methods: 'post' }]; // 查询供应商列表
+export const batchUpdateProductStatus = ['/product/product/batchUpdateProductStatus', { methods: 'post' }]; // 批量删除下架产品
+export const findProductBrandListBySupplier = ['/product/productBrand/queryProductBrandBySupplierCode', { methods: 'post' }]; // 查询品牌列表
+export const queryPropertyPageListByCate = ['/product/productProperty/queryCategoryPropertyPageList', { methods: 'post' }]; // 查询自然/销售属性
+export const addProducts = ['/product/product/addOrModifyProduct', { methods: 'post' }]; // 添加商品
+export const addProductSku = ['/product/sku/addProductSku', { methods: 'post' }]; // 生成列表
+export const findProductDetailsByCode = ['/product/product/findProductDetailsByCode', { methods: 'get' }]; // 获取商品详情
+export const updateProdRemark = ['/product/product/updateRemark', { methods: 'get' }]; // 更新产品备注
