@@ -52,11 +52,11 @@
                 </span>
             </div>
             <el-table :data="allData" border width="100%">
-                <el-table-column label="仓库排序" align="center">
+                <el-table-column label="仓库排序" align="center" key="1">
                     <template slot-scope="scope">{{title[type]}}{{scope.$index+1}}</template>
                 </el-table-column>
-                <el-table-column prop="warehouseName" label="仓库名称" align="center"></el-table-column>
-                <el-table-column label="操作" align="center">
+                <el-table-column prop="warehouseName" label="仓库名称" align="center" key="2"></el-table-column>
+                <el-table-column label="操作" align="center"  key="3">
                     <template slot-scope="scope">
                         <span class="color-blue" @click="upOrDown(-1,scope.$index)" v-if="scope.$index!=0">上移</span>
                         <span class="color-blue" @click="upOrDown(1,scope.$index)" v-if="scope.$index!=allData.length-1">下移</span>
@@ -155,11 +155,11 @@ export default {
         },
         handleSelect(item) {
             this.formMask = item;
-            this.$set(this.formMask, 'code', item.code);
+            this.$set(this.formMask, 'warehouseCode', item.code);
             this.$set(this.formMask, 'name', item.name);
         },
         sure(formName) {
-            if (!this[formName].code || !this[formName].name) {
+            if (!this[formName].warehouseCode || !this[formName].name) {
                 return this.$message.warning('请输入仓库编码和名称');
             }
             const data = this.formMask;
@@ -172,14 +172,8 @@ export default {
                 this.$message.success(res.msg);
                 this.getList();
                 this.mask = false;
-                // if (!this.allData) {
-                //     this.allData = [];
-                //     this.allData.push(data);
-                //     this.$set(this.allData, 0, this.allData[0]);
-                //     this.$set(this.tableData[this.tableIndex], 'sendList', this.tableData[this.tableIndex].sendList);
-                // } else {
-                //     this.allData.push(data);
-                // }
+                this.allData = this.allData ? this.allData : [];
+                this.allData.push(data);
                 this.btnLoading = false;
             }).catch(err => {
                 console.log(err);
@@ -219,6 +213,7 @@ export default {
                 type: this.type,
                 list: []
             };
+            if (!this.allData) return;
             this.allData.forEach((v, k) => {
                 const temp = v;
                 temp.sort = k + 1;
