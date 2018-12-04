@@ -51,7 +51,7 @@
                     <i class="el-icon-circle-plus-outline" @click="addRepertory(allData,addressCode,type)"></i>
                 </span>
             </div>
-            <el-table :data="allData" border width="100%">
+            <el-table :data="tempAllData" border width="100%">
                 <el-table-column label="仓库排序" align="center" key="1">
                     <template slot-scope="scope">{{title[type]}}{{scope.$index+1}}</template>
                 </el-table-column>
@@ -59,7 +59,7 @@
                 <el-table-column label="操作" align="center"  key="3">
                     <template slot-scope="scope">
                         <span class="color-blue" @click="upOrDown(-1,scope.$index)" v-if="scope.$index!=0">上移</span>
-                        <span class="color-blue" @click="upOrDown(1,scope.$index)" v-if="scope.$index!=allData.length-1">下移</span>
+                        <span class="color-blue" @click="upOrDown(1,scope.$index)" v-if="scope.$index!=tempAllData.length-1">下移</span>
                         <span class="color-blue" @click="upOrDown(0,scope.$index)" v-if="scope.$index!=0">置顶</span>
                         <span class="color-blue" @click="deleteData(scope.$index)">删除</span>
                     </template>
@@ -99,6 +99,7 @@ export default {
             mask: false,
             allMask: false,
             allData: [], // 查看全部数据
+            tempAllData: [], // 暂时存放查看的全部数据
             deleteMask: false,
             index: '', // 删除索引
             row: '', // 查看全部添加参数
@@ -170,10 +171,12 @@ export default {
             this.btnLoading = true;
             request.addAreaOption(data).then(res => {
                 this.$message.success(res.msg);
-                this.getList();
                 this.mask = false;
-                this.allData = this.allData ? this.allData : [];
-                this.allData.push(data);
+                this.getList();
+                if (this.allMask) {
+                    this.tempAllData = this.tempAllData ? this.tempAllData : [];
+                    this.tempAllData.push(data);
+                }
                 this.btnLoading = false;
             }).catch(err => {
                 console.log(err);
@@ -182,7 +185,10 @@ export default {
         },
         // 查看全部
         watchAll(row, num) {
-            this.allData = num == 1 ? row.sendList : row.returnList;
+            this.allData = [];
+            this.allData = num == 1 ? row.sendList ? row.sendList : [] : row.returnList ? row.returnList : [];
+            this.tempAllData = [];
+            this.tempAllData.push(...this.allData);
             this.allMask = true;
             this.row = row;
             this.addressCode = row.addressCode;
@@ -191,19 +197,19 @@ export default {
         // 上移下移置顶
         // num:-1上移 1下移 0置顶
         upOrDown(num, index) {
-            const _this = this.allData[index];
+            const _this = this.tempAllData[index];
             const tempArr = [];
             if (num == 0) {
                 tempArr.push(_this);
-                this.allData.splice(index, 1);
-                const newArr = tempArr.concat(this.allData);
-                this.allData = newArr;
+                this.tempAllData.splice(index, 1);
+                const newArr = tempArr.concat(this.tempAllData);
+                this.tempAllData = newArr;
             } else {
-                const change = this.allData[index + num];
-                this.allData[index] = change;
-                this.allData[index + num] = _this;
-                this.$set(this.allData, index, change);
-                this.$set(this.allData, index + num, _this);
+                const change = this.tempAllData[index + num];
+                this.tempAllData[index] = change;
+                this.tempAllData[index + num] = _this;
+                this.$set(this.tempAllData, index, change);
+                this.$set(this.tempAllData, index + num, _this);
             }
         },
         sureSort() {
@@ -213,8 +219,8 @@ export default {
                 type: this.type,
                 list: []
             };
-            if (!this.allData) return;
-            this.allData.forEach((v, k) => {
+            if (!this.tempAllData) return;
+            this.tempAllData.forEach((v, k) => {
                 const temp = v;
                 temp.sort = k + 1;
                 temp.addressCode = this.addressCode;
@@ -224,6 +230,7 @@ export default {
             request.areaOption(data).then(res => {
                 this.$message.success(res.msg);
                 this.allMask = false;
+                this.getList();
                 this.btnLoading = false;
             }).catch(err => {
                 console.log(err);
@@ -236,7 +243,7 @@ export default {
             this.index = index;
         },
         deleteSure() {
-            this.allData.splice(this.index, 1);
+            this.tempAllData.splice(this.index, 1);
             this.deleteMask = false;
         }
     }
