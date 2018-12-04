@@ -89,7 +89,6 @@
                 <el-button @click="cancel">取消</el-button>
             </el-form>
         </el-card>
-        <!--<v-choosebrand v-if="isChooseBrand" :productIds="productIds" :type="type" @chooseProduct="getProductIds"></v-choosebrand>-->
     </div>
 </template>
 
@@ -244,7 +243,7 @@
                     this.form.value = detail.value;
                     this.form.couponTemplateId = detail.couponTemplateId;
                     this.form.remarks = detail.remarks;
-                    this.count = detail.remarks.length;
+                    this.count = detail.remarks ? detail.remarks.length : 0;
                     this.categoryType = res.data.categoryType;
                     this.useConditions = detail.useConditions;
                     this.getProducts = {

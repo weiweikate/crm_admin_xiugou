@@ -56,7 +56,7 @@
                     <el-radio-group v-model="productName">
                         <div v-for="(item,index) in productList" :key="index" class="product-list">
                             <el-radio @change="chooseProduct(item,index)"
-                                      :value="item.id" :label="item.name">产品ID:{{item.id}} <span class="product-name">{{item.name}}</span>
+                                      :value="item.prodCode" :label="item.name">产品ID:{{item.prodCode}} <span class="product-name">{{item.name}}</span>
                             </el-radio>
                         </div>
                     </el-radio-group>
@@ -88,11 +88,11 @@
                         {{thirdClassifyTag.name}}
                     </el-tag>
                 </div>
-                <div v-if="productTag.id">
+                <div v-if="productTag.prodCode">
                     产品ID：
                     <el-tag
                         closable @close="deleteTags(4)">
-                        {{productTag.id}}
+                        {{productTag.prodCode}}
                     </el-tag>
                 </div>
             </div>
@@ -172,7 +172,7 @@
                     this.productId = params.products;
                     this.productName = params.productNames;
                     this.productTag = {
-                        id: this.productId
+                        prodCode: this.productId
                     };
                 } else {
                     this.productId = '';
@@ -326,7 +326,7 @@
             chooseProduct(item) {
                 this.productTag = item;
                 this.productName = item.name;
-                this.productId = item.id;
+                this.productId = item.prodCode;
                 this.transValue();// 向父组件传值
             },
             // 删除标签
@@ -334,34 +334,38 @@
                 if (num === 1) {
                     this.firstCategoryName = '';
                     this.firstCategoryId = '';
-                    this.secondCategoryId = '';
-                    this.thirdCategoryId = '';
-                    this.productId = '';
                     this.firstClassifyTag = {};
+                    this.secondCategoryName = '';
+                    this.secondClassifyTag = {};
+                    this.secondCategoryId = '';
                     this.second = [];
+                    this.thirdCategoryId = '';
+                    this.thirdClassifyTag = {};
+                    this.thirdCategoryName = '';
                     this.third = [];
+                    this.productName = '';
+                    this.productId = '';
                     this.productList = [];
-                    this.deleteTags(2);
-                    this.deleteTags(3);
-                    this.deleteTags(4);
                 } else if (num === 2) {
                     this.secondCategoryName = '';
+                    this.secondClassifyTag = {};
                     this.secondCategoryId = '';
+                    this.second = [];
                     this.thirdCategoryId = '';
-                    this.productId = '';
-                    this.secondClassifyTag = {};
-                    this.secondClassifyTag = {};
-                    this.productList = [];
-                    this.deleteTags(3);
-                    this.deleteTags(4);
-                } else if (num === 3) {
+                    this.thirdClassifyTag = {};
                     this.thirdCategoryName = '';
-                    this.thirdClassifyTag = {};
-                    this.thirdClassifyTag = {};
-                    this.thirdCategoryId = '';
+                    this.third = [];
+                    this.productName = '';
                     this.productId = '';
                     this.productList = [];
-                    this.deleteTags(4);
+                } else if (num === 3) {
+                    this.thirdCategoryId = '';
+                    this.thirdClassifyTag = {};
+                    this.thirdCategoryName = '';
+                    this.third = [];
+                    this.productName = '';
+                    this.productId = '';
+                    this.productList = [];
                 } else {
                     this.productName = '';
                     this.productId = '';
