@@ -78,10 +78,12 @@
                     </div>
                     <p class="product-inf">{{scope.row.productName}}</p>
                     <p class="product-inf" style="margin-top: 25px">原价：￥{{scope.row.originalPrice}}</p>
-                    <p class="product-inf">产品ID：{{scope.row.productCode}}</p>
+                    <p class="product-inf">产品ID：{{scope.row.prodCode}}</p>
                 </template>
             </el-table-column>
-            <el-table-column prop="spec" label="规格" align="center" min-width="100"></el-table-column>
+            <el-table-column prop="spec" label="规格" align="center" min-width="100">
+                <template slot-scope="scope">{{scope.row.propertyValues.replace(/@/g,'')}}</template>
+            </el-table-column>
             <el-table-column label="起拍价(元)" align="center" min-width="60">
                 <template slot-scope="scope">
                     ￥{{scope.row.startPrice}}
@@ -101,7 +103,11 @@
                     ￥{{scope.row.payTotal?scope.row.payTotal:'0'}}
                 </template>
             </el-table-column>
-            <el-table-column prop="payOrderCount" label="成交订单数" align="center" min-width="60"></el-table-column>
+            <el-table-column prop="payOrderCount" label="成交订单数" align="center" min-width="60">
+                <template slot-scope="scope">
+                    {{scope.row.payOrderCount||0}}
+                </template>
+            </el-table-column>
             <el-table-column prop="freezeNumber" label="减少数量" align="center" min-width="60"></el-table-column>
             <el-table-column prop="payUserTotal" label="付款人数" align="center" min-width="60">
                 <template slot-scope="scope">{{scope.row.payUserTotal?scope.row.payUserTotal:'0'}}</template>
@@ -320,8 +326,6 @@
             }
         },
         created() {
-            this.getList(this.page.currentPage);
-            this.getCreateUserList();// 加载发布人列表
             const winHeight = window.screen.availHeight - 520;
             this.height = winHeight;
         },

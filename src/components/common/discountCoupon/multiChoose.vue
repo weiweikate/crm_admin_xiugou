@@ -55,7 +55,7 @@
                     <div v-for="(item,index) in productList" :key="index">
                         <el-checkbox @change="chooseProduct(item,index)"
                                      v-model="productChecked[index]" :label="item.name" :value="item.id">
-                            产品ID:{{item.id}} <span class="product-name">{{item.name}}</span>
+                            产品ID:{{item.prodCode}} <span class="product-name">{{item.name}}</span>
                         </el-checkbox>
                     </div>
                 </div>
@@ -98,7 +98,7 @@
                         v-for="(tag,k) in productTags"
                         :key="k"
                         closable @close="deleteTags(4,tag,'true')">
-                        {{tag.id}}
+                        {{tag.prodCode}}
                     </el-tag>
                 </div>
             </div>
@@ -208,12 +208,12 @@
                 }
                 if (params.products) {
                     if (params.products.indexOf(',') == -1) {
-                        this.productTagIds = this.products = [Number(params.products)];
+                        this.productTagIds = this.products = [params.products];
                     } else {
-                        this.productTagIds = this.products = this.toNumber((params.products.split(',')));
+                        this.productTagIds = this.products = params.products.split(',');
                     }
                     for (const i in this.productTagIds) {
-                        this.productTags.push({ id: this.productTagIds[i] });
+                        this.productTags.push({ prodCode: this.productTagIds[i] });
                     }
                 } else {
                     this.productTags = this.productTagIds = this.products = [];
@@ -304,15 +304,16 @@
                 this.isFirstAllCheck();
                 const that = this;
                 if (this.checkAll) {
+                    this.secondClassifyTags = [];
+                    this.thirdClassifyTags = [];
+                    this.products = [];
                     that.first.forEach(function(v, k) {
                         that.addTags(1, v);
-                        that.firstCategoryIds.push(v.id);
                     });
                 } else {
                     that.first.forEach(function(v, k) {
                         that.deleteTags(1, v, 'false');
                     });
-                    that.firstCategoryIds = [];
                 }
                 this.second = [];
                 this.third = [];
@@ -380,14 +381,11 @@
                 that.firstCategoryName = item.name;
                 if (that.firstChecked[index]) { // 改变对应一级类目的选中值
                     that.addTags(1, item);// 增加一级类目标签值
-                    that.changePreValues(item, 'add', 1);
                     that.second.forEach(function(v, k) {
                         that.deleteTags(2, v, 'false');// 删除二级类目标签值
                     });
-                    // that.deleteProductTags(item);// 删除对应产品标签值
                 } else {
                     that.deleteTags(1, item, 'false');// 移除一级类目标签值
-                    that.changePreValues(item, 'delete', 1);
                 }
 
                 // 封装一级类目与三级类目、产品列表，作用于跨级回显
@@ -396,7 +394,7 @@
                     firstIds.push(v.id);
                 });
                 if (firstIds.indexOf(item.id) == -1) {
-                    that.checkedList.push({ id: item.id, third: [], productIds: [] });
+                    that.checkedList.push({ id: item.id, third: [], productCodes: [] });
                 }
 
                 that.isFirstAllCheck();// 全品类的选中状态
@@ -443,14 +441,12 @@
                 that.secondCategoryName = item.name;
                 if (that.secondChecked[index]) { // 改变对应二级类目的选中值
                     that.addTags(2, item);// 增加二级类目标签值
-                    that.changePreValues(item, 'add', 2);
                     that.third.forEach(function(v, k) {
                         that.deleteTags(3, v, 'false');// 删除三级类目标签值
                     });
                     that.deleteProductTags(item);// 删除对应产品标签值
                 } else {
                     that.deleteTags(2, item, 'false');// 移除二级类目标签值
-                    that.changePreValues(item, 'delete', 2);
                 }
                 that.isUpCheck(1);// 一级类目的选中状态
                 // 封装一级类目与产品列表，作用于跨级回显
@@ -459,7 +455,7 @@
                     secondIds.push(v.id);
                 });
                 if (secondIds.indexOf(item.id) == -1) {
-                    that.checkedList.push({ id: item.id, productIds: [] });
+                    that.checkedList.push({ id: item.id, productCodes: [] });
                 }
 
                 that.isFirstAllCheck();// 全品类的选中状态
@@ -506,17 +502,14 @@
                     if (that.thirdChecked[index]) { // 改变对应三级类目的选中值
                         that.thirdCategoryName = item.name;
                         that.addTags(3, item);// 增加三级类目标签值
-                        that.changePreValues(item, 'add', 3);
                         that.productList.forEach(function(v, k) {
                             that.deleteTags(4, v, 'false');// 删除产品标签值
                         });
                     } else {
                         that.deleteTags(3, item, 'false');// 移除三级类目标签值
-                        that.changePreValues(item, 'delete', 3);
                     }
                     that.isUpCheck(1);// 一级类目的选中状态
                     that.isUpCheck(2);// 二级类目的选中状态
-                    // that.isUpCheck(3);// 三级类目的选中状态
                     if (that.thirdCategoryId == item.id) {
                         that.changeNextValues(3, index);// 改变产品的选中状态
                         return;
@@ -538,7 +531,7 @@
                 request.queryProductList(data).then(res => {
                     that.productList = res.data;
                     res.data.forEach(function(v, k) {
-                        if (that.productTagIds.indexOf(v.id) != -1 || that.thirdChecked[index]) {
+                        if (that.productTagIds.indexOf(v.prodCode) != -1 || that.thirdChecked[index]) {
                             that.productChecked[k] = true;
                         } else {
                             that.productChecked[k] = false;
@@ -554,14 +547,14 @@
             chooseProduct(item, index) {
                 if (this.productChecked[index]) {
                     this.addTags(4, item);// 增加产品Ids标签值
-                    if (this.products.indexOf(item.id) == -1) {
-                        this.products.push(item.id);
+                    if (this.products.indexOf(item.prodCode) == -1) {
+                        this.products.push(item.prodCode);
                     }
                 } else {
                     this.deleteTags(4, item, 'false');// 移除产品Ids标签值
-                    if (this.products.indexOf(item.id) != -1) {
+                    if (this.products.indexOf(item.prodCode) != -1) {
                         for (const i in this.products) {
-                            if (this.products[i] == item.id) {
+                            if (this.products[i] == item.prodCode) {
                                 this.products.splice(i, 1);
                             }
                         }
@@ -571,11 +564,11 @@
                 that.checkedList.forEach(function(v, k) { // 封装一级类目与产品列表，作用于跨级回显
                     if (v.id == that.firstCategoryId) {
                         if (that.productChecked[index]) {
-                            v.productIds.push(item.id);
+                            v.productCodes.push(item.prodCode);
                         } else {
-                            for (const i in v.productIds) {
-                                if (item.id == v.productIds[i]) {
-                                    v.productIds.splice(i, 1);
+                            for (const i in v.productCodes) {
+                                if (item.prodCode == v.productCodes[i]) {
+                                    v.productCodes.splice(i, 1);
                                 }
                             }
                         }
@@ -592,7 +585,7 @@
                     if (item && v.id == item.id) {
                         for (const i in that.productTagIds) {
                             const tempId = that.productTagIds[i];
-                            if (v.productIds.indexOf(tempId) != -1) {
+                            if (v.productCodes.indexOf(tempId) != -1) {
                                 that.productTagIds.splice(i, 1);
                                 that.productTags.splice(i, 1);
                                 if (that.productTagIds.length) {
@@ -604,25 +597,6 @@
                 });
             },
 
-            // 二级类目三级类目产品列表选中改变一二三级类目值
-            changePreValues(item, style, num) {
-                const tempIds = num === 1 ? this.firstCategoryIds : num === 2 ? this.secondCategoryIds : this.thirdCategoryIds;
-                const tempNames = num === 1 ? this.firstCategoryNames : num === 2 ? this.secondCategoryNames : this.thirdCategoryNames;
-                if (style === 'add') {
-                    if (tempIds.indexOf(item.id) === -1) {
-                        tempIds.push(item.id);
-                        tempNames.push(item.name);
-                    }
-                } else {
-                    for (const i in tempIds) {
-                        if (item && item.id == tempIds[i]) {
-                            tempIds.splice(i, 1);
-                            tempNames.splice(i, 1);
-                        }
-                    }
-                }
-                this.transValue();// 向父组件传值
-            },
             // 一级类目二级类目三级类目选中取消改变二级类目三级类目产品列表值
             changeNextValues(num, index) {
                 const tempChecked = num === 1 ? this.firstChecked : num === 2 ? this.secondChecked : this.thirdChecked;
@@ -653,15 +627,16 @@
                 const tagIds = num === 1 ? this.firstTagIds : num === 2 ? this.secondTagIds : num === 3 ? this.thirdTagIds : this.productTagIds;
                 const preClassifyId = num === 2 ? this.firstCategoryId : num === 3 ? this.secondCategoryId : this.thirdCategoryId;// 对应上一级类目id
                 const preTagIds = num === 2 ? this.secondTagIds : num === 3 ? this.thirdTagIds : this.productTagIds;// 对应上一级标签ids;
-                if (item && tagIds.indexOf(item.id) == -1) {
+                const temp = num == 4 ? item.prodCode : item.id;
+                if (item && tagIds.indexOf(temp) == -1) {
                     if (num != 1) {
                         if (preTagIds.indexOf(preClassifyId) == -1) {
                             tag.push(item);
-                            tagIds.push(item.id);
+                            tagIds.push(temp);
                         }
                     } else {
                         tag.push(item);
-                        tagIds.push(item.id);
+                        tagIds.push(temp);
                     }
                 }
             },
@@ -672,10 +647,10 @@
                 const tag = num === 1 ? this.firstClassifyTags : num === 2 ? this.secondClassifyTags : num === 3 ? this.thirdClassifyTags : this.productTags;
                 const classify = num === 1 ? this.first : num === 2 ? this.second : num === 3 ? this.third : this.productList;
                 const classifyChecked = num === 1 ? this.firstChecked : num === 2 ? this.secondChecked : num === 3 ? this.thirdChecked : this.productChecked;
-                const ids = num === 1 ? this.firstCategoryIds : num === 2 ? this.secondCategoryIds : num === 3 ? this.thirdCategoryIds : this.productIds;
-
+                const ids = num === 1 ? this.firstCategoryIds : num === 2 ? this.secondCategoryIds : num === 3 ? this.thirdCategoryIds : this.products;
+                const temp = num == 4 ? item.prodCode : item.id;
                 for (const i in tagIds) {
-                    if (item && item.id == tagIds[i]) {
+                    if (item && temp == tagIds[i]) {
                         tag.splice(i, 1);
                         tagIds.splice(i, 1);
                     }
@@ -697,7 +672,7 @@
                         }
                     }
                     for (const i in ids) {
-                        if (item && ids[i] == item.id) {
+                        if (item && ids[i] == temp) {
                             ids.splice(i, 1);
                         }
                     }
@@ -706,14 +681,29 @@
             },
             // 向父组件传值
             transValue() {
+                const firstCategoryIds = [];
+                this.firstClassifyTags.forEach((v, k) => {
+                    firstCategoryIds.push(v.id);
+                });
+                const secondCategoryIds = [];
+                this.secondClassifyTags.forEach((v, k) => {
+                    secondCategoryIds.push(v.id);
+                });
+                const thirdCategoryIds = [];
+                this.thirdClassifyTags.forEach((v, k) => {
+                    thirdCategoryIds.push(v.id);
+                });
+                const products = [];
+                this.productTags.forEach((v, k) => {
+                    products.push(v.prodCode);
+                });
                 const productList = {
-                    firstCategoryIds: this.firstCategoryIds,
-                    secondCategoryIds: this.secondCategoryIds,
-                    thirdCategoryIds: this.thirdCategoryIds,
-                    products: this.products,
+                    firstCategoryIds: firstCategoryIds,
+                    secondCategoryIds: secondCategoryIds,
+                    thirdCategoryIds: thirdCategoryIds,
+                    products: products,
                     checkAll: this.checkAll
                 };
-
                 this.$emit('getProductIds', JSON.stringify(productList));
             },
             // 字符串转数组
