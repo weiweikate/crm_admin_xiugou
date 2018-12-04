@@ -985,14 +985,28 @@ export const asyncRouterMap = [
                 name: 'releaseProduct',
                 path: '/releaseProduct',
                 component: resolve => require(['../components/page/BrandProduct/ProductManage/ReleaseProduct.vue'], resolve),
-                meta: { title: '发布商品' }
+                meta: { title: '发布商品', noKeepAlive: true }
             },
             {
                 hidden: true,
-                name: 'editProductInfo',
-                path: '/editProductInfo',
-                component: resolve => require(['../components/page/BrandProduct/ProductManage/EditProductInfo.vue'], resolve),
-                meta: { title: '发布商品' }
+                name: 'productBaseParam',
+                path: '/productBaseParam',
+                component: resolve => require(['../components/page/BrandProduct/ProductManage/productRelease/baseParam.vue'], resolve),
+                meta: { title: '基础参数编辑', noKeepAlive: true }
+            },
+            {
+                hidden: true,
+                name: 'inventory',
+                path: '/inventory',
+                component: resolve => require(['../components/page/BrandProduct/ProductManage/productRelease/inventory.vue'], resolve),
+                meta: { title: '销售信息编辑', noKeepAlive: true }
+            },
+            {
+                hidden: true,
+                name: 'prodInfo',
+                path: '/prodInfo',
+                component: resolve => require(['../components/page/BrandProduct/ProductManage/productRelease/info.vue'], resolve),
+                meta: { title: '商品详情编辑', noKeepAlive: true }
             },
             {
                 hidden: true,

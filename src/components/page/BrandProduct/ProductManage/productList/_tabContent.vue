@@ -168,13 +168,13 @@ export default {
             this.tableLoading = true;
             request.queryProdList(data).then(res => {
                 this.tableLoading = false;
-                const tblData = res.data || {};
+                const tblData = res.data || [];
                 this.listNum.checkingTotal = tblData.checkingTotal || 0;
                 this.listNum.inSellingTotal = tblData.inSellingTotal || 0;
                 this.listNum.inWarehouseTotal = tblData.inWarehouseTotal || 0;
                 this.$emit('transData', this.listNum);
                 this.page.totalPage = tblData.totalNum;
-                if (tblData.data.length !== 0) {
+                if (tblData.data && tblData.data.length !== 0) {
                     tblData.data.forEach(v => {
                         let restrictions = v.restrictions || 0;
                         switch (restrictions.toString()) {
