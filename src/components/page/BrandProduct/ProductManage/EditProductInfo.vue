@@ -195,7 +195,9 @@ export default {
                         thirdStep.selectedTagArr.push({ label: v.tagName, value: v.tagId });
                     });
                 }
-                await thirdStep.getAllTags(thirdStep.tagTypeArr[0].id, 0, thirdStep.tagTypeArr[0].selected);
+                const tagId = thirdStep.tagTypeArr[0] ? thirdStep.tagTypeArr[0].id : 0;
+                const tagSele = thirdStep.tagTypeArr[0] ? thirdStep.tagTypeArr[0].selected : 0;
+                await thirdStep.getAllTags(tagId, 0, tagSele);
                 let flatServiceArr = [];
                 const limitServer = data.restrictions || 0;
                 switch (limitServer.toString()) {

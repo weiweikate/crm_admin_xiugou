@@ -246,6 +246,7 @@ export default {
                 };
                 request.updateProdRemark(data).then(res => {
                     this.$message.success(res.msg);
+                    this.getList(this.page.currentPage)
                 }).catch(err => {
                     console.log(err);
                 });
