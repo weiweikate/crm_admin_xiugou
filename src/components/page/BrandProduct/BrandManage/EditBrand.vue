@@ -10,7 +10,7 @@
                     <el-form-item prop="area" label="品牌区域">
                         <el-input placeholder="请输入品牌区域" v-model="form.area"></el-input>
                     </el-form-item>
-                    <el-form-item prop="original_img" label="品牌logo">
+                    <el-form-item prop="imgUrl" label="品牌logo">
                         <el-upload
                                 class="avatar-uploader"
                                 :action="uploadImg"
@@ -94,10 +94,13 @@
                     ],
                     area: [
                         { required: true, trigger: 'blur', validator: checkArea }
+                    ],
+                    imgUrl: [
+                        { required: true, message: '请上传品牌LOGO', trigger: 'blur' }
+                    ],
+                    status: [
+                        { required: true, message: '是否启用', trigger: 'blur' }
                     ]
-                    // imgUrl: [
-                    //     { required: true, message: '请上传品牌LOGO', trigger: 'blur' }
-                    // ]
                 },
                 id: '',
                 addBrand: '',

@@ -245,7 +245,7 @@
                     this.$message.warning('请输入排序!');
                     return;
                 }
-                if (!/^(0|[1-9]\d*)$/.test(data.afterSaleTime)) {
+                if (data.afterSaleTime && !/^(0|[1-9]\d*)$/.test(data.afterSaleTime)) {
                     return this.$message.warning('请输入合法的售后天数!');
                 }
                 if (this.itype == 'add') {
