@@ -174,7 +174,21 @@ export default {
                 this.listNum.inWarehouseTotal = tblData.inWarehouseTotal || 0;
                 this.$emit('transData', this.listNum);
                 this.page.totalPage = tblData.totalNum;
-                this.tableData = tblData.data;
+                if (tblData.data.length !== 0) {
+                    tblData.data.forEach(v => {
+                        let restrictions = v.restrictions || 0;
+                        switch (restrictions.toString()) {
+                            case '1': v.tags = ['不支持使用优惠卷']; break;
+                            case '2': v.tags = ['提供发票']; break;
+                            case '3': v.tags = ['不支持使用优惠卷', '提供发票']; break;
+                            case '4': v.tags = ['支持7天无理由退换']; break;
+                            case '5': v.tags = ['不支持使用优惠卷', '支持7天无理由退换']; break;
+                            case '6': v.tags = ['提供发票', '支持7天无理由退换']; break;
+                            case '7': v.tags = ['不支持使用优惠卷', '提供发票', '支持7天无理由退换']; break;
+                        }
+                        this.tableData.push(v);
+                    });
+                }
             }).catch(err => {
                 this.tableLoading = false;
                 console.log(err);

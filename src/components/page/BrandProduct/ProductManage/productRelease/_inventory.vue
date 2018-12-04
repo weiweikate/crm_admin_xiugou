@@ -348,7 +348,7 @@
         },
         mounted() {
             this.selectedCateArr = this.selectedCate;
-            this.getSalesList();
+            // this.getSalesList();
         },
         methods: {
             // 刷新属性
