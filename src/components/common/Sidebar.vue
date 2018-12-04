@@ -8,8 +8,14 @@
                  text-color="#b1b1b1" active-text-color="#fff" router>
             <template v-for="item in permission_routers">
                 <template v-if="!item.hidden">
-                    <template v-if="item.children && item.children.length>1">
-                        <el-submenu :index="item.name" :key="item.name">
+                    <template v-if="item.children && item.children.length>=1">
+                        <template v-if="item.name === 'dashboard'">
+                            <el-menu-item :index="item.name" :key="item.name" v-if="!item.hidden">
+                                <icon :ico="item.meta.icon"></icon>
+                                <span style="margin-left:6px" slot="title">{{ item.meta.title }}</span>
+                            </el-menu-item>
+                        </template>
+                        <el-submenu v-else :index="item.name" :key="item.name">
                             <template slot="title">
                                 <icon :ico="item.meta.icon"></icon>
                                 <span style="margin-left:6px" slot="title">{{ item.meta.title }}</span>
@@ -18,12 +24,6 @@
                                 {{ subItem.meta.title }}
                             </el-menu-item>
                         </el-submenu>
-                    </template>
-                    <template v-else-if="item.children && item.children.length === 1">
-                        <el-menu-item :index="item.name" :key="item.name" v-if="!item.hidden">
-                            <icon :ico="item.meta.icon"></icon>
-                            <span style="margin-left:6px" slot="title">{{ item.meta.title }}</span>
-                        </el-menu-item>
                     </template>
                     <template v-else>
                         <el-menu-item :index="item.name" :key="item.name" v-if="!item.hidden && item.meta">

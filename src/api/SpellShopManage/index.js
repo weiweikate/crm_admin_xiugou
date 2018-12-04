@@ -31,3 +31,5 @@ export const getStoreDetail = ['/store/store/getById', { methods: 'get' }];
 export const updateStoreStar = '/store/storeStar/update';
 // 店铺举报列表
 export const getStoreTipOffList = ['/store/storeTipOff/query', { methods: 'get' }];
+// 根据id修改店铺层级
+export const updateShopLevel = ['/store/store/updateLevel', { methods: 'get' }];

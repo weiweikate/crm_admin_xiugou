@@ -181,6 +181,7 @@ export default {
                 ...this.form
             };
             data.page = val;
+            data.pageSize = this.page.pageSize;
             data.provinceId = this.address[0] == '0' ? '' : this.address[0];
             data.cityId = this.address[1];
             data.areaId = this.address[2];

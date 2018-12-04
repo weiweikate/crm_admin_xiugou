@@ -4,22 +4,28 @@
         <v-breadcrumb :nav="['经销商会员管理','供应商管理']"></v-breadcrumb>
         <el-card style="margin:10px 0 20px">
             <el-form ref="form" :inline="true" :model="form">
-                <el-form-item prop="name" label="供应商名称" label-width="120">
-                    <el-input style="width:200px" placeholder="请输入供应商名称" v-model="form.name"></el-input>
-                </el-form-item>
                 <el-form-item prop="loginName" label="供应商账号">
                     <el-input v-model="form.loginName" placeholder="请输入供应商账号"></el-input>
                 </el-form-item>
-                <el-form-item label="最近登录时间" prop="time">
-                    <el-date-picker
-                        v-model="form.time"
-                        type="daterange"
-                        value-format="yyyy-MM-dd"
-                        format="yyyy/MM/dd"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期">
-                    </el-date-picker>
+                <el-form-item prop="name" label="供应商名称" label-width="120">
+                    <el-input style="width:200px" placeholder="请输入供应商名称" v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item prop="code" label="供应商编号">
+                    <el-input v-model="form.code" placeholder="请输入供应商编号"></el-input>
+                </el-form-item>
+                <!--<el-form-item label="最近登录时间" prop="time">-->
+                    <!--<el-date-picker-->
+                        <!--v-model="form.time"-->
+                        <!--type="daterange"-->
+                        <!--value-format="yyyy-MM-dd"-->
+                        <!--format="yyyy/MM/dd"-->
+                        <!--range-separator="至"-->
+                        <!--start-placeholder="开始日期"-->
+                        <!--end-placeholder="结束日期">-->
+                    <!--</el-date-picker>-->
+                <!--</el-form-item>-->
+                <el-form-item prop="mobile" label="手机号" label-width="120">
+                    <el-input style="width:200px" placeholder="请输入手机号" v-model="form.mobile"></el-input>
                 </el-form-item>
                 <el-form-item label="状态" prop="status">
                     <el-select v-model="form.status">
@@ -28,16 +34,13 @@
                         <el-option label="停用" value="2"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="mobile" label="手机号" label-width="120">
-                    <el-input style="width:200px" placeholder="请输入手机号" v-model="form.mobile"></el-input>
-                </el-form-item>
+                <!--<el-form-item>-->
+                    <!--<div style="display: inline-block;margin-right: 20px">-->
+                        <!--<region @regionMsg='getRegion' :regionMsg='address'></region>-->
+                    <!--</div>-->
+                <!--</el-form-item>-->
                 <el-form-item>
-                    <div style="display: inline-block;margin-right: 20px">
-                        <region @regionMsg='getRegion' :regionMsg='address'></region>
-                    </div>
-                </el-form-item>
-                <el-form-item>
-                    <el-button @click="getList(1)" type="primary">查询</el-button>
+                    <el-button @click="getList(1)" type="primary">搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
@@ -46,9 +49,9 @@
             <template>
                 <el-button type="primary" style="margin-bottom: 20px" @click="addSupplier" v-auth="'vip.supplierManage.tjgys'">添加供应商</el-button>
                 <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%">
-                    <el-table-column type="index" label="供应商编号" width="100" align="center"></el-table-column>
-                    <el-table-column prop="code" label="供应商ID" width="100" align="center"></el-table-column>
+                    <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
                     <el-table-column prop="loginName" label="供应商账号" width="100" align="center"></el-table-column>
+                    <el-table-column prop="code" label="供应商编号" width="100" align="center"></el-table-column>
                     <el-table-column prop="name" label="供应商名称" align="center"></el-table-column>
                     <el-table-column label="供应商类型" width="100" align="center">
                         <template slot-scope="scope">
@@ -58,21 +61,20 @@
                     </el-table-column>
                     <el-table-column prop="mobile" label="手机号" align="center"></el-table-column>
                     <el-table-column prop="porductNum" label="供应产品数" width="100" align="center"></el-table-column>
-                    <el-table-column label="区域/省市区" align="center">
+                    <el-table-column label="区域/省市区" align="center" width="150">
                         <template slot-scope="scope">
                             <template v-if="scope.row.country==2">海外</template>
                             <template v-else>
-                                {{scope.row.provinceName}}{{scope.row.cityName}}{{scope.row.areaName}}
+                                {{scope.row.provinceName}}-{{scope.row.cityName}}-{{scope.row.areaName}}
                             </template>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="lastLoginTime" label="最近登录时间" width="150" align="center">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.lastLoginTime">{{scope.row.lastLoginTime  | dateformat('YYYY-MM-DD HH:mm:ss')}}</span>
-                            <span v-else>null</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="createName" label="创建者" width="100" align="center"></el-table-column>
+                    <!--<el-table-column prop="lastLoginTime" label="最近登录时间" width="150" align="center">-->
+                        <!--<template slot-scope="scope">-->
+                            <!--<span v-if="scope.row.lastLoginTime">{{scope.row.lastLoginTime  | dateformat('YYYY-MM-DD HH:mm:ss')}}</span>-->
+                        <!--</template>-->
+                    <!--</el-table-column>-->
+                    <!--<el-table-column prop="createName" label="创建者" width="100" align="center"></el-table-column>-->
                     <el-table-column label="状态" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.status==1">正常</template>
@@ -80,7 +82,7 @@
                             <template v-if="scope.row.status==3">删除</template>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" align="center">
+                    <el-table-column label="操作" align="center" width="300">
                         <template slot-scope="scope">
                             <el-button type="warning" size="small"
                                        @click="detailItem(scope.$index,scope.row)" v-auth="'vip.supplierManage.xq'">详情
@@ -96,10 +98,11 @@
                                </el-button>
                            </template>
                             <el-button type="danger" :disabled="!(scope.row.porductNum == 0)" v-if="scope.row.status==1" size="small"
-                                       @click="updateStatusItem(scope.$index,scope.row.id,1)" v-auth="'vip.supplierManage.ty'">停用
+                                       @click="updateStatusItem(scope.$index,scope.row.code,1)" v-auth="'vip.supplierManage.ty'">停用
                             </el-button>
                             <el-button type="danger" v-if="scope.row.status==2" size="small"
-                                       @click="updateStatusItem(scope.$index,scope.row.id,2)" v-auth="'vip.supplierManage.ty'">启用
+                                       @click="updateStatusItem(scope.$index,scope.row.code,2)" v-auth="'vip.supplierManage.ty'">启用
+
                             </el-button>
                         </template>
                     </el-table-column>
@@ -172,12 +175,14 @@
                     mobile: '',
                     time: '',
                     loginName: '',
-                    status: ''
+                    status: '',
+                    code: ''
                 },
                 exportForm: {},
                 selected: '',
                 address: [],
                 id: '',
+                code: '',
                 info: '',
                 type: '',
                 btnTxt: ''
@@ -216,16 +221,16 @@
             },
             // 详情
             detailItem(index, row) {
-                this.$router.push({name: 'supplierDetail', query: {supplierInfo: row.id}});
+                this.$router.push({name: 'supplierDetail', query: {supplierInfo: row.code}});
             },
             // 编辑
             editItem(index, row) {
-                this.$router.push({name: 'editSupplier', query: {supplierEditInfo: row.id}});
+                this.$router.push({name: 'editSupplier', query: {supplierEditInfo: row.code}});
             },
             // 关闭,开启
-            updateStatusItem(index, id, num) {
+            updateStatusItem(index, code, num) {
                 const that = this;
-                that.id = id;
+                that.code = code;
                 if (num == 1) {
                     that.info = '是否确认停用？';
                     that.type = 2;
@@ -240,7 +245,7 @@
             oprSure() {
                 const that = this;
                 const data = {
-                    id: that.id
+                    code: that.code
                 };
                 if (that.type == 1) {
                     data.status = 1;

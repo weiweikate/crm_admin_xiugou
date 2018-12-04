@@ -4,10 +4,13 @@
         <div class="container" v-loading="loading">
             <div class="basic-inf-area">
                 <div class="item-row">
+                    供应商账号：{{detail.loginName}}
+                </div>
+                <div class="item-row">
                     供应商名称：{{detail.name}}
                 </div>
                 <div class="item-row">
-                    供应商ID：{{detail.id}}
+                    供应商ID：{{detail.code}}
                 </div>
                 <div class="item-row">
                     供应商类型：
@@ -23,7 +26,7 @@
                     {{detail.telephone}}
                 </div>
                 <div class="item-row">
-                    手机：
+                    手机号码：
                     {{detail.mobile}}
                 </div>
                 <div class="item-row">
@@ -72,20 +75,20 @@
             return {
                 detail: {},
                 brand: [],
-                id: '',
+                code: '',
                 loading: false,
                 list: ''
             };
         },
         activated() {
-            this.id = this.$route.query.supplierInfo;
+            this.code = this.$route.query.supplierInfo;
             this.getDetail();
         },
         methods: {
             // 获取详情
             getDetail() {
                 const data = {
-                    id: this.id
+                    code: this.code
                 };
                 request.findSupplierById(data).then(res => {
                     this.brand = res.data.productSupplierBrandList;

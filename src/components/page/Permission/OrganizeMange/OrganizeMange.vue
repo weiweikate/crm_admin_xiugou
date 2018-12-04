@@ -46,6 +46,7 @@
     import breadcrumb from '../../../common/Breadcrumb';
     import utils from '../../../../utils/index.js';
     import request from '@/http/http.js';
+    import { validateZh } from '@/utils/validate.js';
 
     export default {
         components: {
@@ -64,7 +65,16 @@
                 formType: 'add',
                 departId: '',
                 rules: {
-                    departmentName: [{ required: true, message: '请输入部门名称', trigger: 'blur' }],
+                    name: [
+                        { required: true, message: '请输入部门名称', trigger: 'blur' },
+                        { validator: validateZh, trigger: 'blur' }
+                    ],
+                    manager: [
+                        { validator: validateZh, trigger: 'blur' }
+                    ],
+                    remark: [
+                        { max: 16, message: '最多输入180位字符', trigger: 'blur' }
+                    ]
                 },
                 tableData: []
             };

@@ -40,6 +40,11 @@
                                 <el-input class="lar-inp" v-model="dealer.address" placeholder="详细地址..." size="medium"></el-input>
                             </el-form-item>
                         </div>
+                        <div class="form-item">
+                            <el-form-item label="个人简介">
+                                <el-input type="textarea" autosize v-model="dealer.profile" placeholder="个人简介..." size="medium" style="width: 500px"></el-input>
+                            </el-form-item>
+                        </div>
                     </div>
                     <div class="right">
                         <img v-if="dealer.headImg" :src="dealer.headImg" alt="">
@@ -151,6 +156,7 @@
                 data.phone = that.dealer.phone;
                 data.wechatId = that.dealer.wechatId;
                 data.realname = that.dealer.realname;
+                data.profile = that.dealer.profile;
                 data.updateType = 1;
                 if (that.address) {
                     data.provinceId = that.address[0];
@@ -203,10 +209,8 @@
         background-color: rgba(0, 0, 0, 0.2);
         .box {
             width: 840px;
-            height: 482px;
             background-color: #fff;
             border-radius: 10px;
-            overflow: hidden;
             .mask-title {
                 width: 100%;
                 height: 56px;
@@ -220,7 +224,7 @@
             .mask-content {
                 position: relative;
                 width: 100%;
-                overflow: hidden;
+                overflow-y: auto;
                 padding: 10px 45px 0 45px;
                 box-sizing: border-box;
                 .submit-btn {

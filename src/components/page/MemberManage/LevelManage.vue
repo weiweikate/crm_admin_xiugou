@@ -60,42 +60,6 @@
         </div>
 
         <!--添加/编辑层级弹窗-->
-        <el-dialog :title="title" :visible.sync="addMask">
-            <el-form v-model="addForm" label-width="100px">
-                <el-form-item prop="name" label="名称">
-                    <el-input v-model="addForm.name" auto-complete="off" placeholder="请输入名称"></el-input>
-                </el-form-item>
-                <el-form-item prop="level" label="层级">
-                    <el-input v-model="addForm.level" auto-complete="off" placeholder="请输入数值"></el-input>
-                    <span>级</span>
-                </el-form-item>
-                <el-form-item label="能否参加拼店">
-                    <el-radio-group v-model="addForm.allowGroupStore">
-                        <el-radio label="1">是</el-radio>
-                        <el-radio label="2">否</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="能否创建店铺">
-                    <el-radio-group v-model="addForm.allowCreateStore">
-                        <el-radio label="1">是</el-radio>
-                        <el-radio label="2">否</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="是否晋级">
-                    <el-radio-group v-model="addForm.autoUp">
-                        <el-radio label="1">是</el-radio>
-                        <el-radio label="2">否</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="备注说明" class="remark-area">
-                    <el-input v-model="addForm.remark" auto-complete="off" placeholder="请输入说明文字"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" :loading="btnLoading" @click="addOrEdit('addForm')">确定保存</el-button>
-                <el-button  @click="cancel">取消</el-button>
-            </div>
-        </el-dialog>
         <el-dialog :title="title" :visible.sync="editMask">
             <el-form v-model="form" label-width="100px">
                 <el-form-item prop="name" label="名称">
@@ -181,18 +145,9 @@
 
                 tableData: [],
                 height: '',
-                addMask: false,
                 editMask: false,
                 // priceLevelMask:false,//价格层级弹窗
                 form: {// 添加修改表单
-                    name: '',
-                    level: '',
-                    autoUp: '1',
-                    allowGroupStore: '1',
-                    allowCreateStore: '1',
-                    remark: ''
-                },
-                addForm: {
                     name: '',
                     level: '',
                     autoUp: '1',
@@ -218,7 +173,6 @@
         methods: {
             // 取消
             cancel() {
-                this.addMask = false;
                 this.editMask = false;
                 this.getList();
             },
@@ -242,14 +196,12 @@
             // 添加层级
             addClassify() {
                 this.title = '添加层级';
-                this.addMask = true;
+                this.editMask = true;
                 this.isUp = false;
-                this.addForm.name = '';
-                this.addForm.level = '';
-                this.addForm.autoUp = '1';
-                this.addForm.allowGroupStore = '1';
-                this.addForm.allowCreateStore = '1';
-                this.addForm.remark = '';
+                utils.cleanFormData(this.form);
+                this.form.autoUp = '1';
+                this.form.allowGroupStore = '1';
+                this.form.allowCreateStore = '1';
             },
             // 编辑
             editItem(index, row) {
@@ -287,7 +239,6 @@
                 request.updateUserLevel(data).then(res => {
                     // this.$message.success(res.data.msg);
                     this.btnLoading = false;
-                    this.addMask = false;
                     this.editMask = false;
                     this.getList();
                 }).catch(err => {
@@ -298,11 +249,11 @@
 
             // 晋级设置
             upSet(index, row) {
-                this.$router.push({name: 'promotionManage', query: {levelMangeToUp: row.id}});
+                this.$router.push({ name: 'promotionManage', query: { levelMangeToUp: row.id }});
             },
             // 降级设置
             downSet(index, row) {
-                this.$router.push({name: 'degradeManage', query: {levelMangeToLower: row.id}});
+                this.$router.push({ name: 'degradeManage', query: { levelMangeToLower: row.id }});
             },
             // //价格阶层
             // priceLevel(index,row){
@@ -328,7 +279,7 @@
             },
             // 层级信息页面
             toLevelInfo(index, row) {
-                this.$router.push({name: 'levelInfo', query: {levelMangeInfo: row.id}});
+                this.$router.push({ name: 'levelInfo', query: { levelMangeInfo: row.id }});
             }
         }
     };

@@ -172,3 +172,26 @@ export const findActivityPackageProductAndSpecByIdAn = ['/operator/activityPacka
 export const updataActivityPackagePriceAndStock = ['/operator/activityPackage/updateActivityPackagePriceAndStock', { methods: 'post' }]; // 修改礼包价格库存
 export const updateActivityPackageSpecPriceStock = ['/operator/activityPackageSpecPrice/updateActivityPackageSpecPriceStock', { methods: 'post' }]; // 添加礼包库存
 export const queryCouponByType = ['/coupon/queryByType', { methods: 'get' }]; // 查询优惠券列表
+// 属性
+// 条件查询分类属性
+export const queryCategoryProperty = '/product/categoryProperty/queryCategoryPropertyPageList';
+// 新增/编辑分类属性
+export const saveCategoryProperty = '/product/categoryProperty/save';
+// 删除分类属性
+export const deleteCategoryProperty = '/product/categoryProperty/bathDelete';
+// 停用启用分类属性
+export const updateCategoryPropertyStatus = '/product/categoryProperty/updateStatus';
+// 查询三级类目下的属性
+export const queryPropertyByCategoryId = ['/product/categoryPropertyAssociate/queryByCategoryId', { methods: 'get' }];
+// 绑定类目与属性
+export const bindCategoryProperty = '/product/categoryPropertyAssociate/bind';
+//-----------------------------------------------------------------------------------------2018-11-29 产品重构-----------
+export const queryProdList = ['/product/product/queryProductPageList', { methods: 'post' }]; // 查询产品列表
+export const findProductSupplierList = ['/product/productSupplier/findProductBrandList', { methods: 'post' }]; // 查询供应商列表
+export const batchUpdateProductStatus = ['/product/product/batchUpdateProductStatus', { methods: 'post' }]; // 批量删除下架产品
+export const findProductBrandListBySupplier = ['/product/productBrand/queryProductBrandBySupplierCode', { methods: 'post' }]; // 查询品牌列表
+export const queryPropertyPageListByCate = ['/product/productProperty/queryCategoryPropertyPageList', { methods: 'post' }]; // 查询自然/销售属性
+export const addProducts = ['/product/product/addOrModifyProduct', { methods: 'post' }]; // 添加商品
+export const addProductSku = ['/product/sku/addProductSku', { methods: 'post' }]; // 生成列表
+export const findProductDetailsByCode = ['/product/product/findProductDetailsByCode', { methods: 'get' }]; // 获取商品详情
+export const updateProdRemark = ['/product/product/updateRemark', { methods: 'get' }]; // 更新产品备注

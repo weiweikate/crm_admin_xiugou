@@ -12,6 +12,13 @@
                 <el-form-item prop="time" label="发起时间">
                     <el-date-picker v-model="form.time" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
                 </el-form-item>
+                <el-form-item prop="applyStatus" label="提现状态">
+                    <el-select v-model="form.applyStatus">
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="提现成功" value="3"></el-option>
+                        <el-option label="提现失败" value="4"></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label=" ">
                     <el-button type="primary" @click="submitForm(1)">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
@@ -54,6 +61,7 @@ export default {
                 applyPeople: '', // 申请人
                 withdraNo: '', // 提现编号
                 time: [], // 发起时间
+                applyStatus: '',
                 status: ''
             },
             tableData: []
@@ -85,6 +93,5 @@ export default {
 </script>
 <style lang='less' scoped>
 .witdrawal-audit{
-    .block{margin: 10px 0 20px 0}
 }
 </style>
