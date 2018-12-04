@@ -21,7 +21,7 @@
                 <!-- 消息中心 -->
                 <div class="btn-bell">
                     <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
-                        <i class="el-icon-bell" @click="getMsg"></i>
+                        <i class="el-icon-bell" :title="message" @click="getMsg"></i>
                     </el-tooltip>
                     <span class="btn-bell-badge" ref="messageBell" v-if="message != 0"></span>
                 </div>
@@ -143,7 +143,7 @@ export default {
                 }).catch(err => {
                     console.log(err);
                 });
-            }, 5000);
+            }, 60000);
         },
         // 获取消息
         async getMsg() {

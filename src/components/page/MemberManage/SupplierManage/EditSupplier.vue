@@ -3,7 +3,16 @@
         <v-breadcrumb :nav="['经销商会员管理','供应商管理','编辑供应商']"></v-breadcrumb>
         <div class="container">
             <div class="supplier-box">
-                <el-form :model="form" ref="form">
+                <el-form :model="form" ref="form" :rules="rules">
+                    <el-form-item prop="loginName" label="供应商账号">
+                        <el-input placeholder="请输入供应商账号" v-model="form.loginName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码" prop="password">
+                        <el-input placeholder="请输入供应商账号密码" v-model="form.password" type="password" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="确认密码" prop="confirmPassword">
+                        <el-input placeholder="请再次输入供应商账号密码" v-model="form.confirmPassword" type="password" autocomplete="off"></el-input>
+                    </el-form-item>
                     <el-form-item prop="name" label="供应商名称">
                         <el-input placeholder="请输入供应商名称" v-model="form.name"></el-input>
                     </el-form-item>
@@ -16,16 +25,7 @@
                     <el-form-item prop="userName" label="供应商姓名">
                         <el-input placeholder="请输入供应商姓名" v-model="form.userName"></el-input>
                     </el-form-item>
-                    <el-form-item prop="loginName" label="供应商账号">
-                        <el-input placeholder="请输入供应商账号" v-model="form.loginName"></el-input>
-                    </el-form-item>
-                    <el-form-item label="密码" prop="password">
-                        <el-input placeholder="请输入供应商账号密码" v-model="form.password" type="password" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="确认密码" prop="confirmPassword">
-                        <el-input placeholder="请再次输入供应商账号密码" v-model="form.confirmPassword" type="password" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item prop="name" label="联系方式" class="phone-area">
+                    <el-form-item label="联系方式" class="phone-area">
                         <el-input class="small-inp" v-model="first"></el-input>
                         <el-input class="mid-inp" v-model="second"></el-input>
                         <div class="intent">
@@ -53,7 +53,7 @@
                             :data="brandList">
                         </el-transfer>
                     </el-form-item>
-                    <el-form-item label="供应商账号">
+                    <el-form-item label="供应商开户账号">
                         <el-input placeholder="请输入银行名称" v-model="form.bankName"></el-input>
                         <el-input placeholder="请输入开户支行" v-model="form.bankOpening"></el-input>
                     </el-form-item>
@@ -90,6 +90,25 @@
             vBreadcrumb, icon, region
         },
         data() {
+            const validatePass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入密码'));
+                } else {
+                    if (this.form.password !== '') {
+                        this.$refs.form.validateField('confirmPassword');
+                    }
+                    callback();
+                }
+            };
+            const validatePass2 = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请再次输入密码'));
+                } else if (value !== this.form.password) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 form: {
                     name: '',
@@ -119,7 +138,15 @@
                 // 二级类目ids
                 secIds: '',
                 brandList: [], // 品牌列表
-                brandIds: []
+                brandIds: [],
+                rules: {
+                    password: [
+                        { required: true, validator: validatePass, trigger: 'blur' }
+                    ],
+                    confirmPassword: [
+                        { required: true, validator: validatePass2, trigger: 'blur' }
+                    ]
+                }
             };
         },
         activated() {
@@ -184,14 +211,6 @@
             // 提交表单
             submitForm(form) {
                 const that = this;
-                if (!that[form].name) {
-                    that.$message.warning('请输入供货商名称!');
-                    return;
-                }
-                if (!that[form].userName) {
-                    that.$message.warning('请输入供应商姓名!');
-                    return;
-                }
                 if (!that[form].loginName) {
                     that.$message.warning('请输入供应商账号!');
                     return;
@@ -206,6 +225,14 @@
                 }
                 if (!that[form].mobile) {
                     that.$message.warning('请输入联系方式!');
+                    return;
+                }
+                if (!that[form].name) {
+                    that.$message.warning('请输入供货商名称!');
+                    return;
+                }
+                if (!that[form].userName) {
+                    that.$message.warning('请输入供应商姓名!');
                     return;
                 }
                 if (that.form.country == 1) {

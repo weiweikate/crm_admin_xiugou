@@ -19,7 +19,7 @@
             </el-form>
         </el-card>
         <el-card class="con-card">
-          <el-button type="primary" @click="addManger">新建管理员</el-button>
+          <el-button type="primary" @click="addManger" v-auth="'quanxian.manageList.xjzh'">新建管理员</el-button>
           <el-table v-loading="tableLoading" class="w-table" stripe :data="tableData" :height="height" border style="width: 100%">
               <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
               <el-table-column prop="name" label="管理员姓名" align="center"></el-table-column>
@@ -34,7 +34,7 @@
               </el-table-column>
               <el-table-column label="操作" width="400" align="center">
                 <template slot-scope="scope">
-                  <el-button  size="mini" type="primary" @click="editManger(scope.row)">编辑</el-button>
+                  <el-button  size="mini" type="primary" @click="editManger(scope.row)" v-auth="'quanxian.manageList.bjzh'">编辑</el-button>
                   <!--<el-button v-if='scope.row.status == 1' size="mini" type="warning" @click="resetPwd(scope.row)">密码重置</el-button>-->
                   <!--<el-button size="mini" type="warning" @click="showLog(scope.row)">查看日志</el-button>-->
                   <!--<el-button v-if='scope.row.status == 0' @click="deleteUser(scope.row)" size="mini" type="danger"  >账号删除</el-button>-->

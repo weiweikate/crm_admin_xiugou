@@ -26,15 +26,20 @@ function hasPermission(auth, roles, route) {
  */
 function filterAsyncRouter(routes, auth, roles) {
     const res = [];
-    routes.forEach(route => {
-        const tmp = { ...route };
+    const len = routes.length;
+    for (let i = 0; i < len; i++) {
+        const tmp = { ...routes[i] };
+        if (tmp.default) {
+            res.push(tmp);
+            continue;
+        }
         if (hasPermission(auth, roles, tmp)) {
             if (tmp.children) {
                 tmp.children = filterAsyncRouter(tmp.children, auth, roles);
             }
             res.push(tmp);
         }
-    });
+    }
 
     return res;
 }
