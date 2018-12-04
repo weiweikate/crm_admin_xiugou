@@ -363,6 +363,7 @@
             // 获取所有标签
             async getAllTags(val, key, status) {
                 if (this.form.secCategoryId === '') return;
+                if(this.tagTypeArr.length === 0) return;
                 this.tagTypeArr.forEach(v => {
                     v.selected = false;
                 });
