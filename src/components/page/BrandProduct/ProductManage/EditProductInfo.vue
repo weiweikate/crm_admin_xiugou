@@ -107,13 +107,12 @@ export default {
                 };
                 // 添加商品第二步赋值
                 const secondStep = this.$refs['inventory'];
-                await secondStep.getSalesList();
-                console.log(secondStep.salesAttrArr);
                 secondStep.unit = data.skuList.length === 0 ? '包' : data.skuList[0].stockUnit;
                 secondStep.checkStatus = data.checkStatus;
                 secondStep.priceTable = data.skuList;
                 if (data.checkStatus) {
                     secondStep.salesAttrArr = [];
+                    console.log(secondStep.salesAttrArr);
                     data.specifies.forEach((v, k) => {
                         const obj = {
                             name: v.specName,
@@ -129,10 +128,10 @@ export default {
                                 });
                             });
                         }
-                        secondStep.salesAttrArr.push(obj);
-                        this.$set(secondStep.salesAttrArr, k, obj);
+                        // secondStep.salesAttrArr.push(obj);
                     });
                 } else {
+                    await secondStep.getSalesList();
                     if (secondStep.salesAttrArr.length !== 0) {
                         secondStep.salesAttrArr.forEach(v => {
                             if (data.specifies.length !== 0) {
@@ -203,6 +202,7 @@ export default {
                     case '1': flatServiceArr = [1]; break;
                     case '2': flatServiceArr = [2]; break;
                     case '3': flatServiceArr = [1, 2]; break;
+                    case '4': flatServiceArr = [4]; break;
                     case '5': flatServiceArr = [1, 4]; break;
                     case '6': flatServiceArr = [2, 4]; break;
                     case '7': flatServiceArr = [1, 2, 4]; break;
