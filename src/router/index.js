@@ -101,6 +101,7 @@ export const asyncRouterMap = [
                 meta: { title: '产品品牌分类管理' }
             },
             {
+                default: true,
                 name: 'propertyList',
                 path: '/propertyList',
                 component: resolve => require(['../components/page/BrandProduct/PropertyManage/PropertyList.vue'], resolve),
@@ -458,7 +459,7 @@ export const asyncRouterMap = [
         path: '/showValue',
         component: Layout,
         name: 'showValue',
-        meta: { title: '秀值模块', icon: 'icon-shezhi'},
+        meta: { title: '秀值模块', icon: 'icon-shezhi' },
         children: [
             {
                 name: 'taskHome',
@@ -503,7 +504,7 @@ export const asyncRouterMap = [
                 name: 'logisticsCompanyList',
                 path: '/logisticsCompanyList',
                 component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
-                meta: { title: '物流公司列表'}
+                meta: { title: '物流公司列表' }
             }
         ]
     },
