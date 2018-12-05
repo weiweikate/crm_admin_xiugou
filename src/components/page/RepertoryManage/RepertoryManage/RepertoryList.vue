@@ -218,18 +218,18 @@ export default {
         },
         // 查看详情
         showInfo(row) {
-            sessionStorage.setItem('repertoryInfoId', row.id);
+            sessionStorage.setItem('repertoryInfoId', row.code);
             this.$router.push({
                 name: 'repertoryInfo',
-                query: { repertoryInfoId: row.id }
+                query: { repertoryInfoId: row.code }
             });
         },
         // 编辑
         editRepertory(row) {
-            sessionStorage.setItem('repertoryId', row.id);
+            sessionStorage.setItem('repertoryId', row.code);
             this.$router.push({
                 name: 'repertorySet',
-                query: { repertoryId: row.id }
+                query: { repertoryId: row.code }
             });
         },
         // 重置表单
@@ -243,6 +243,8 @@ export default {
             this.mask = true;
             this.formMask.code = row.code;
             this.formMask.status = row.status;
+            this.formMask.verifyCode = '';
+            this.codeTime = 60;
             this.title = num == 1 ? '停用仓库' : '启用仓库';
         },
         sure(formName) {
