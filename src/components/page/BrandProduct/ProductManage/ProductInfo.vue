@@ -35,7 +35,7 @@
                   <el-form-item v-for="(v, k) in info.specifies" :key="k" :label="v.specName">
                       <el-form-item v-for="(v1, k1) in v.specValues" :key="`${k1}-1`">
                           <span >{{v1.specValue}}</span>
-                          <img :src="v1.specImg" alt="" style="width: 50px;height: 50px;vertical-align: middle;margin-left: 20px">
+                          <img v-show="v1.specImg" :src="v1.specImg" alt="" style="width: 50px;height: 50px;vertical-align: middle;margin-left: 20px">
                       </el-form-item>
                   </el-form-item>
               </el-form-item>
@@ -74,10 +74,10 @@
               </el-table>
               <div class="pro-title">图文描述</div>
               <el-form-item label="商品主图：">
-                  <div class="img-list fl" style="margin-right: 0px">
-                      <video v-if="info.videoUrl && info.videoUrl!== ''" :src="info.videoUrl" style="width: 150px;height: 150px" controls="controls"></video>
+                  <div v-if="info.videoUrl && info.videoUrl!== ''" class="img-list fl" style="margin-right: 0px">
+                      <video :src="info.videoUrl" style="width: 150px;height: 150px" controls="controls"></video>
                   </div>
-                  <div class="sep-video fl"></div>
+                  <div v-if="info.videoUrl && info.videoUrl!== ''" class="sep-video fl"></div>
                   <div v-for="(v,k) in info.mainImg" class="fl" :key="k">
                       <div class="img-list">
                           <img :src="v" alt="">

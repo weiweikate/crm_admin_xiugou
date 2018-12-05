@@ -30,7 +30,7 @@
                            <div v-for="(v,k) in imgList" class="fl" :key="k">
                                <div class="img-list">
                                    <div @click="handleRemoveImg(k, 'imgList')" class="del-mask">删 除</div>
-                                   <img :src="v" alt="">
+                                   <img v-if="v !== ''" :src="v" alt="">
                                </div>
                            </div>
                        </transition-group>
@@ -53,7 +53,7 @@
                            <div v-for="(v,k) in imgInfoList" class="fl" :key="k">
                                <div class="img-list">
                                    <div @click="handleRemoveImg(k, 'imgInfoList')" class="del-mask">删 除</div>
-                                   <img :src="v" alt="">
+                                   <img v-if="v !== ''" :src="v" alt="">
                                </div>
                            </div>
                        </transition-group>

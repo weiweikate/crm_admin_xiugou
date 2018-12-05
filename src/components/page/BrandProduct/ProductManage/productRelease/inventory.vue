@@ -25,7 +25,7 @@
                                     <el-input v-model="v1.value" style="width: 215px"></el-input>
                                     <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
                                 </div>
-                                <template v-if="v1.imgUrl == ''">
+                                <template v-if="v1.imgUrl == '' || !v1.imgUrl">
                                     <el-upload
                                         :action="imgUpload"
                                         :show-file-list="false"
@@ -62,7 +62,7 @@
                                 <el-input v-model="v1.label" style="width: 215px"></el-input>
                                 <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
                             </div>
-                            <template v-if="v1.imgUrl == ''">
+                            <template v-if="v1.imgUrl == '' || !v1.imgUrl">
                                 <el-upload
                                     :action="imgUpload"
                                     :show-file-list="false"
@@ -345,7 +345,7 @@
                     thirdCategoryName: '',
                     paramList: []
                 },
-                unit: '包',
+                unit: '件',
                 unitArr: [
                     { label: '包', value: '包' },
                     { label: '箱', value: '箱' },
@@ -357,6 +357,7 @@
                     { label: '平米', value: '平米' },
                     { label: '立方', value: '立方' }
                 ],
+                tmpParamList: [],
                 rowIndex: { bIndex: '', mIndex: '' }, // 上传图片的index
                 salesAttrArr: [], // 销售属性列表
                 batchPriceArr: [{ originalPrice: '', v0: '', v1: '', v2: '', v3: '', v4: '', v5: '', v6: '', groupPrice: '', settlementPrice: '', weight: '' }], // 批量添加列表
@@ -430,6 +431,7 @@
                 };
                 this.unit = resData.skuList.length === 0 ? '包' : resData.skuList[0].stockUnit;
                 this.priceTable = resData.skuList;
+                this.tmpParamList = resData.specifies;
                 if (resData.checkStatus) {
                     this.salesAttrArr = [];
                     let tmp = [];
@@ -453,7 +455,6 @@
                     this.salesAttrArr = tmp;
                 } else {
                     await this.getSalesList();
-                    console.log(this.salesAttrArr);
                     if (this.salesAttrArr.length !== 0) {
                         this.salesAttrArr.forEach(v => {
                             if (resData.specifies.length !== 0) {
@@ -637,9 +638,41 @@
             },
             // 刷新属性
             async refreshAttr() {
-                const tmpSalesAttrArr = this.salesAttrArr;
                 await this.getSalesList();
-                this.salesAttrArr = tmpSalesAttrArr;
+                if (this.salesAttrArr.length !== 0) {
+                    this.salesAttrArr.forEach(v => {
+                        if (this.tmpParamList.length !== 0) {
+                            this.tmpParamList.forEach(v1 => {
+                                if (v.name == v1.specName) {
+                                    if (v1.specValues.length !== 0) {
+                                        v1.specValues.forEach(v2 => {
+                                            if (v.options.length !== 0) {
+                                                let flag = true;
+                                                v.options.forEach(v3 => {
+                                                    if (v2.specValue == v3.label) {
+                                                        v3.value = true;
+                                                        v3.defType = 1;
+                                                        v3.imgUrl = v2.specImg;
+                                                        flag = false;
+                                                    }
+                                                });
+                                                // flag:true  自定义属性
+                                                if (flag) {
+                                                    v.options.push({
+                                                        defType: 2,
+                                                        imgUrl: v2.specImg,
+                                                        label: v2.specValue,
+                                                        value: v2.specValue
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
             },
             // 添加属性值
             addAttrValue(index) {

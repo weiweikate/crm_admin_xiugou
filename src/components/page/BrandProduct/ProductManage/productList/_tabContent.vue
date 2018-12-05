@@ -176,6 +176,7 @@ export default {
                 this.listNum.inWarehouseTotal = tblData.inWarehouseTotal || 0;
                 this.$emit('transData', this.listNum);
                 this.page.totalPage = tblData.totalNum;
+                this.tableData = [];
                 if (tblData.data && tblData.data.length !== 0) {
                     tblData.data.forEach(v => {
                         let restrictions = v.restrictions || 0;
