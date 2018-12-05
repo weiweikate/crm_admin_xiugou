@@ -134,7 +134,7 @@ export default {
         getDetail() {
             const that = this;
             const data = {
-                id: that.id
+                code: that.id
             };
             request.queryRepertoryById(data).then(res => {
                 that.detail = res.data;

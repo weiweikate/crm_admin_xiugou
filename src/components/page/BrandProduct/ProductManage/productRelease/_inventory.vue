@@ -67,7 +67,7 @@
             </el-form-item>
             <el-form-item label=" ">
                 <div class="primary-text">
-                    <span v-if="!productInfo.checkStatus">新建主属性</span>
+                    <span @click="addPrimaryAttr" v-if="!productInfo.checkStatus">新建主属性</span>
                     <span v-if="!productInfo.checkStatus">|</span>
                     <span @click="refreshAttr">刷新</span>
                 </div>
@@ -351,6 +351,10 @@
             this.getSalesList();
         },
         methods: {
+            // 添加主属性
+            addPrimaryAttr() {
+                this.$router.push({ path: '/thirdClassify', query: { name: this.selectedCateArr[2].label, id: this.selectedCateArr[2].value, superiorName: this.selectedCateArr[1].label }});
+            },
             // 刷新属性
             async refreshAttr() {
                 this.tmpSalesAttrArr = this.salesAttrArr;

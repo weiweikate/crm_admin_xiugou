@@ -94,7 +94,7 @@ export default {
                 supplierName: this.form.supplierName,
                 prodCode: this.form.prodCode,
                 supplierCode: this.form.supplierCode,
-                warehouseId: this.warehouseId,
+                warehouseCode: this.warehouseId,
                 page: val,
                 pageSize: this.page.pageSize
             };
@@ -117,12 +117,12 @@ export default {
             sessionStorage.setItem('warehouseId', this.warehouseId);
             this.$router.push({
                 path: 'repertoryInventoryInfo',
-                query: { repertoryInventoryInfoId: row.id, warehouseId: this.warehouseId }
+                query: { repertoryInventoryInfoId: row.prodCode, warehouseId: this.warehouseId }
             });
         },
         getDetail() {
             const data = {
-                id: this.warehouseId
+                code: this.warehouseId
             };
             request.queryRepertoryById(data).then(res => {
                 this.name = res.data.name;

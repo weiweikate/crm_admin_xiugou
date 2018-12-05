@@ -49,7 +49,7 @@
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="店铺名称" align="center"></el-table-column>
-                <el-table-column prop="storeNumber" label="店铺ID" align="center"></el-table-column>
+                <el-table-column prop="showNumber" label="店铺ID" align="center"></el-table-column>
                 <el-table-column prop="starName" label="店铺等级" align="center"></el-table-column>
                 <el-table-column prop="storeUserName" label="店长" align="center"></el-table-column>
                 <el-table-column label="成员数" align="center">

@@ -14,7 +14,7 @@
                     <span>{{form.name}}</span>
                 </el-form-item>
                 <el-form-item label="商品规格">
-                    <span>{{form.spec}}</span>
+                    <span>{{form.propertyValues.replace(/@/g,'')}}</span>
                 </el-form-item>
                 <el-form-item label="商品原价">
                     <span class="color-red">¥{{form.originalPrice}}</span>

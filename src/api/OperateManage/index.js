@@ -226,7 +226,7 @@ export const operatorfindById = ['/operator/activityDepreciate/findActivityDepre
 // 根据活动类型和查询关键字查询产品信息
 export const queryProductByTypeOrCode = '/product/product/queryProductByNameOrCode';
 // 根据产品id查询产品规格
-export const queryProductSpecByproductId = ['/product/productSpecPrice/queryProductSpecByproductId', { methods: 'get' }];
+export const queryByProductCode = ['/product/sku/queryByProductCode', { methods: 'get' }];
 /** ************关键词*****************/
 // 关键词分页列表
 export const getWordsByPage = '/config/searchWord/queryByPage';
@@ -259,9 +259,9 @@ export const addOperatorSeckill = '/operator/seckill/add';
 // 秒杀活动查询
 export const queryOperatorSeckillList = '/operator/seckill/queryPageList';
 // 批量结束/删除秒杀
-export const bathUpdateActiviySeckillStatus = '/operator/seckill/bathUpdateStatusByIds';
+export const bathUpdateActiviySeckillStatus = '/operator/seckill/bathUpdateStatusByCodes';
 // 结束/删除秒杀
-export const updateActiviySeckillStatus = '/operator/seckill/updateStatusById';
+export const updateActiviySeckillStatus = '/operator/seckill/updateStatusByCode';
 // 查看活动详情
 export const findActivitySeckillByActivityCode = ['/operator/seckill/findById', { methods: 'get' }];
 
