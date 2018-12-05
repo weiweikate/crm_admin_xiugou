@@ -28,9 +28,9 @@
                    <draggable v-model="imgList">
                        <transition-group>
                            <div v-for="(v,k) in imgList" class="fl" :key="k">
-                               <div class="img-list">
+                               <div v-if="v !== '' && v" class="img-list">
                                    <div @click="handleRemoveImg(k, 'imgList')" class="del-mask">删 除</div>
-                                   <img v-if="v !== ''" :src="v" alt="">
+                                   <img :src="v" alt="">
                                </div>
                            </div>
                        </transition-group>
