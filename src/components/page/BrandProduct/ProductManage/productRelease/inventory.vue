@@ -334,6 +334,7 @@
                 batchPrice: false,
                 showWareaMsgToask: false,
                 flag: false, // true: 无销售属性
+                prodCode: '',
                 form: {
                     checkStatus: false, // 是否同步仓库
                     firstCategoryId: '',
@@ -671,6 +672,16 @@
             // 删除图片
             deleteImg(bIndex, mIndex) {
                 this.salesAttrArr[bIndex].options[mIndex].imgUrl = '';
+            },
+            // 切换分类
+            toggleCate() {
+                this.$confirm('切换后系统不会保留您本次的编辑', '您确定要切换分类吗？', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null }});
+                }).catch(() => {});
             }
         }
     };

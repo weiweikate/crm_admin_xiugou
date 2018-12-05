@@ -90,7 +90,7 @@
                    <div class="area-list" v-if="unSupportsssAreasData.length !== 0">
                        <el-tag type="primary" v-for="(v, k) in unSupportsssAreasData" :key="k">{{v}}</el-tag>
                    </div>
-                   <el-button type="danger" @click="unSupportMask = true">添加区域</el-button>
+                   <el-button type="danger" @click="chooseArea">添加区域</el-button>
                </el-form-item>
                <div class="pro-title">其他信息</div>
                <el-form-item prop="upType" label="上架时间">
@@ -350,23 +350,11 @@
                 this.form.needDeliver = resData.needDeliver ? resData.needDeliver.toString() : '';
                 this.form.freightTemplateId = resData.freightTemplateId ? resData.freightTemplateId : '';
                 this.form.upType = resData.upType ? resData.upType.toString() : '';
-                this.form.upTime = resData.type == 2 ? resData.upTime : '';
+                this.form.upTime = resData.upType == 2 ? resData.upTime : '';
                 this.form.buyLimit = resData.buyLimit == -1 ? [] : [1];
                 this.form.limitBuyNum = resData.buyLimit == -1 ? '' : resData.buyLimit;
                 this.form.autoUnShelve = resData.autoUnShelve;
-                // const list = resData.undeliveredList;
-                // if (list.length !== 0) {
-                //     for (let i = 1; i < list.length; i++) {
-                //         let includeArea = ''; let includeAreaName = '';
-                //         for (const j in list[i].freightTemplateInfoDetailList) {
-                //             const temp = list[i].freightTemplateInfoDetailList[j];
-                //             includeArea += temp.provinceCode + ':' + temp.cityCodes + ',';
-                //             includeAreaName += temp.provinceName + ':' + temp.cityNames + ',';
-                //         }
-                //         list[i].includeArea = includeArea.slice(0, -1);
-                //         list[i].includeAreaName = includeAreaName.slice(0, -1);
-                //     }
-                // }
+                this.unSupportAreasData = resData.undeliveredList;
                 this.pageLoading = false;
             },
             // 获取运费模板列表
@@ -452,6 +440,16 @@
             handleRemoveImg(index, fileList) {
                 this[fileList].splice(index, 1);
             },
+            // 显示区域mask
+            chooseArea() {
+                this.unSupportMask = true;
+                let arr = this.unSupportAreasData;
+                for (const i in arr) {
+                    arr[i].includeAreaName = arr[i].provinceName + ':' + arr[i].cityNames;
+                    arr[i].includeArea = arr[i].provinceCode + ':' + arr[i].cityCodes;
+                }
+                this.unSupportAreasData = arr;
+            },
             // 选择区域
             chooseUnSupportArea(getArea) {
                 this.unSupportMask = false;
@@ -482,8 +480,8 @@
                     this.tagLoading = false;
                     this.tagArr = [];
                     this.tagTypeArr[key].selected = !this.tagTypeArr[key].selected;
-                    if (res.data[0].sysTagLibraryVOList && res.data[0].sysTagLibraryVOList.length !== 0) {
-                        res.data[0].sysTagLibraryVOList.forEach(v => {
+                    if (res.data && res.data.length !== 0) {
+                        res.data.forEach(v => {
                             this.tagArr.push({ label: v.name, value: v.id });
                         });
                     }
@@ -570,6 +568,16 @@
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+            // 切换分类
+            toggleCate() {
+                this.$confirm('切换后系统不会保留您本次的编辑', '您确定要切换分类吗？', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null }});
+                }).catch(() => {});
             }
         }
     };

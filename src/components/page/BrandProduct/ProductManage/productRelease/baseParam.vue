@@ -225,11 +225,12 @@
                         businessType: resData.businessType ? resData.businessType.toString() : '',
                         brandId: resData.brandId
                     };
-                    this.pageLoading = false;
+                    // this.pageLoading = false;
                 } else {
                     this.form.prodCode = '';
                     await this.getSupplyList();
                     await this.getNaturalList();
+                    this.pageLoading = false;
                 }
             },
             // 获取供应商列表
