@@ -82,7 +82,7 @@
                        <el-option value="" label="全部"></el-option>
                        <el-option v-for="(v, k) in freightList" :key="k" :value="v.id" :label="v.name"></el-option>
                    </el-select>
-                   <a href="#/addTemplate" target="_blank" class="primary-text href">添加运费模板</a>
+                   <a href="#/shippingTemplate" target="_blank" class="primary-text href">添加运费模板</a>
                    <span class="primary-text">|</span>
                    <span class="primary-text" @click="getFeightList">刷新</span>
                </el-form-item>
@@ -288,7 +288,7 @@
                 if (!this.prodCode) return this.$message.warning('产品编码丢失!');
                 this.pageLoading = true;
                 let resData = {};
-                request.findProductDetailsByCode({ code: this.prodCode }).then(res => {
+                await request.findProductDetailsByCode({ code: this.prodCode }).then(res => {
                     resData = res.data || {};
                     let flatServiceArr = [];
                     const limitServer = resData.restrictions || 0;
