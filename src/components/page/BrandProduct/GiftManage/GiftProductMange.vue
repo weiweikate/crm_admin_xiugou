@@ -22,7 +22,7 @@
                     <tr v-for="(v1,k1) in v" :key="k1">
                         <td v-if='k1 == 0' :rowspan="v.length" style="padding:0 10px" >{{k+1}}</td>
                         <td>{{(v1.productName || '')+' '+(v1.specValues || '')}}</td>
-                        <td>产品ID：{{v1.productCode}}</td>
+                        <td>产品ID：{{v1.prodCode}}</td>
                         <td style="min-width:100px">x1</td>
                         <td style="min-width:80px;cursor: pointer;color:#33b4ff" @click="delselectedPro(k,k1)">删除</td>
                     </tr>
@@ -81,11 +81,11 @@ export default {
                     itemArr.forEach((item, index) => {
                         let itemObj = {};
                         itemObj.packageId = v.packageId;
-                        itemObj.productId = v.productId;
-                        itemObj.productCode = v.productCode;
-                        itemObj.productName = v.productName;
+                        // itemObj.productId = v.productId;
+                        itemObj.prodCode = v.prodCode;
+                        // itemObj.productName = v.productName;
                         itemObj.productNumber = 1;
-                        itemObj.productPriceId = specIdArr[index];
+                        itemObj.skuCode = specIdArr[index];
                         itemObj.specValues = item;
                         specWrapArr.push(itemObj);
                     });
@@ -127,9 +127,9 @@ export default {
                     const o = {};
                     o.value = `${v.name} 产品ID：${v.prodCode}`;
                     o.id = v.id;
-                    o.spec = { specId: v.priceId.split(','), spec: v.spec.split(',') };
-                    o.productId = v.id;
-                    o.productCode = v.prodCode;
+                    o.spec = { skuCode: v.skuCode ? v.skuCode.split(',') : [], spec: v.spec ? v.spec.replace(/@/g,'-').split(',') : [] };
+                    // o.productId = v.id;
+                    o.prodCode = v.prodCode;
                     o.productName = v.name;
                     tmpArr.push(o);
                 });
@@ -142,13 +142,13 @@ export default {
         handleSelect(item) {
             this.tableData = [];
             this.checkList = [];
-            item.spec.specId.forEach((v, k) => {
+            item.spec.skuCode.forEach((v, k) => {
                 const specItem = {
                     id: v,
                     spec: item.spec.spec[k],
                     checked: false,
-                    productId: item.productId,
-                    productCode: item.productCode,
+                    // productId: item.productId,
+                    prodCode: item.prodCode,
                     productName: item.productName
                 };
                 this.tableData.push(specItem);
@@ -161,21 +161,36 @@ export default {
                 this.$message.warning('请选择产品规格');
                 return;
             }
+            // let tag = false
+            // this.checkList.forEach(v => {
+            //      this.selectedPro.forEach(element => {
+            //         element.forEach(el => {
+            //             if(v.prodCode == el.prodCode){
+            //                 this.$message.warning('同一个礼包不能绑定相同的产品')
+            //                 tag = true
+            //             }
+            //         });
+            //     });
+            // });
+            // if(tag){
+            //     return
+            // }
             // 添加数量
             const tmp = []; // 建立空数组保存便利出来的产品
             this.checkList.forEach((v, k) => {
                 const specItem = {
                     packageId: this.giftId,
-                    productId: v.productId,
-                    productCode: v.productCode,
-                    productName: v.productName,
-                    productNumber: 1,
-                    productPriceId: v.id,
-                    specValues: v.spec
+                    // productId: v.productId,
+                    prodCode: v.prodCode,
+                    // productName: v.productName,
+                    skuCode: v.id,
+                    specValues: v.spec,
+                    productNumber: 1
                 };
                 tmp.push(specItem);
             });
             this.selectedPro.push(tmp);
+            console.log(`this.selectedPro`+this.selectedPro)
         },
         // 删除已选择产品
         delselectedPro(bIndex, mIndex) {
