@@ -40,8 +40,12 @@
                   </el-form-item>
               </el-form-item>
               <div class="pro-title">销售信息编辑</div>
-              <el-table :data="info.priceTable" border stripe>
-                  <el-table-column prop="propertyValues" label="属性" width="225" align="center"></el-table-column>
+              <el-table :data="info.skuList" border stripe>
+                  <el-table-column prop="propertyValues" label="属性" width="225" align="center">
+                      <template slot-scope="scope">
+                          {{scope.row.propertyValues.split('@').join('-')}}
+                      </template>
+                  </el-table-column>
                   <el-table-column prop="originalPrice" label="原价" align="center" width="225"></el-table-column>
                   <el-table-column prop="v0" label="v0" align="center" width="225"></el-table-column>
                   <el-table-column prop="v1" label="v1" align="center" width="225"></el-table-column>
@@ -50,24 +54,28 @@
                   <el-table-column prop="v4" label="v4" align="center" width="225"></el-table-column>
                   <el-table-column prop="v5" label="v5" align="center" width="225"></el-table-column>
                   <el-table-column prop="v6" label="v6" align="center" width="225"></el-table-column>
-                  <el-table-column prop="originalPrice" label="拼店价" align="center" width="225"></el-table-column>
-                  <el-table-column prop="originalPrice" label="结算价" align="center" width="225"></el-table-column>
-                  <el-table-column prop="originalPrice" label="最低支付价" align="center" width="225"></el-table-column>
-                  <el-table-column prop="originalPrice" label="重量（kg）" align="center" width="225"></el-table-column>
+                  <el-table-column prop="groupPrice" label="拼店价" align="center" width="225"></el-table-column>
+                  <el-table-column prop="settlementPrice" label="结算价" align="center" width="225"></el-table-column>
+                  <el-table-column prop="minPrice" label="最低支付价" align="center" width="225"></el-table-column>
+                  <el-table-column prop="weight" label="重量（kg）" align="center" width="225"></el-table-column>
                   <el-table-column prop="skuCode" label="SKU编码" align="center" width="225"></el-table-column>
-                  <el-table-column prop="originalPrice" label="SKU条形码" align="center" width="225"></el-table-column>
-                  <el-table-column prop="originalPrice" label="供应商SKU编码" align="center" width="225"></el-table-column>
+                  <el-table-column prop="barCode" label="SKU条形码" align="center" width="225"></el-table-column>
+                  <el-table-column prop="supplierSkuCode" label="供应商SKU编码" align="center" width="225"></el-table-column>
               </el-table>
-              <el-table class="mt10" :data="info.priceTable" border stripe>
-                  <el-table-column prop="propertyValues" label="属性" align="center"></el-table-column>
-                  <el-table-column :render-header="renderTitle" label="单位" align="center"></el-table-column>
+              <el-table class="mt10" :data="info.skuList" border stripe>
+                  <el-table-column prop="propertyValues" label="属性" align="center">
+                      <template slot-scope="scope">
+                          {{scope.row.propertyValues.split('@').join('-')}}
+                      </template>
+                  </el-table-column>
+                  <el-table-column prop="stockUnit" label="单位" align="center"></el-table-column>
                   <el-table-column prop="warehouseStock" label="仓库同步库存" align="center"></el-table-column>
                   <el-table-column prop="sellStock" label="可售库存" align="center"></el-table-column>
               </el-table>
               <div class="pro-title">图文描述</div>
               <el-form-item label="商品主图：">
                   <div class="img-list fl" style="margin-right: 0px">
-                      <video :src="info.videoUrl" style="width: 150px;height: 150px" controls="controls"></video>
+                      <video v-if="info.videoUrl && info.videoUrl!== ''" :src="info.videoUrl" style="width: 150px;height: 150px" controls="controls"></video>
                   </div>
                   <div class="sep-video fl"></div>
                   <div v-for="(v,k) in info.mainImg" class="fl" :key="k">
@@ -86,7 +94,7 @@
               <div class="pro-title">物流信息</div>
               <el-form-item label="运费模板：">{{this.info.freightTemplateName}}</el-form-item>
               <el-form-item label="不支持配送区域：">
-                  <div class="area-list">
+                  <div class="area-list" v-if="info.unSupportsssAreasDataArr && info.unSupportsssAreasDataArr.length !== 0">
                       <el-tag type="primary" v-for="(v, k) in info.unSupportsssAreasDataArr" :key="k">{{v}}</el-tag>
                   </div>
               </el-form-item>
@@ -115,6 +123,9 @@
               <div class="pro-title">标签信息</div>
               <el-form-item label="已有标签：">
                 <el-tag type="primary" v-for="(v, k) in info.selectedTag" :key="k">{{v}}</el-tag>
+              </el-form-item>
+              <el-form-item>
+                  <el-button type="primary" @click="$router.push('/productList')">返回列表页</el-button>
               </el-form-item>
           </el-form>
       </el-card>
@@ -151,6 +162,7 @@ export default {
                 this.loading = false;
                 this.info = res.data || {};
                 const mainImgArr = [];
+                console.log(this.info);
                 mainImgArr.push(this.info.imgUrl);
                 if (this.info.imgFileList.length !== 0) {
                     this.info.imgFileList.forEach(v => {

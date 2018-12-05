@@ -1,5 +1,10 @@
 <template>
     <div class="prod-base-param">
+        <el-steps :space="900" :active="0" finish-status="success">
+            <el-step title="基础参数编辑"></el-step>
+            <el-step title="库存编辑"></el-step>
+            <el-step title="商品详情编辑"></el-step>
+        </el-steps>
         <el-form :model="form" ref="form" :rules="rules" label-position="left" label-width="100px">
             <div class="pro-title">基础信息</div>
             <el-form-item prop="name" label="商品标题">
@@ -36,17 +41,6 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="11">
-                    <el-form-item prop="selfProduct" label="是否自营">
-                        <el-select v-model="form.selfProduct" placeholder="请选择是否自营">
-                            <el-option label="是" value="true"></el-option>
-                            <el-option label="否" value="false"></el-option>
-                        </el-select>
-                        <span style="color: #ccc">自营代表开票方为平台</span>
-                    </el-form-item>
-                </el-col>
-            </el-form-item>
-            <el-form-item label-width="0px">
-                <el-col :span="11">
                     <el-form-item prop="businessType" label="贸易类型">
                         <el-select v-model="form.businessType" @change="changeTradeType" placeholder="请选择贸易类型">
                             <el-option label="一般贸易" value="1"></el-option>
@@ -56,13 +50,6 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <!--<el-col :span="11">-->
-                    <!--<el-form-item prop="taxRate" label="税率">-->
-                        <!--<el-input class="pram-inp" v-model.number="form.taxRate">-->
-                            <!--<template slot="append">%</template>-->
-                        <!--</el-input>-->
-                    <!--</el-form-item>-->
-                <!--</el-col>-->
             </el-form-item>
             <el-form-item prop="brandId" label="品牌">
                 <el-select class="search-inp" filterable placeholder="请选择品牌" v-model="form.brandId">
@@ -113,9 +100,7 @@
                     supplierCode: '',
                     warehouseType: '',
                     type: '',
-                    selfProduct: '',
                     businessType: '',
-                    // taxRate: '',
                     brandId: ''
                 },
                 rules: {
@@ -124,11 +109,9 @@
                     supplierCode: [{ required: true, message: '请选择供应商', trigger: 'blur' }],
                     warehouseType: [{ required: true, message: '请选择发货仓库', trigger: 'blur' }],
                     type: [{ required: true, message: '请选择商品类型', trigger: 'blur' }],
-                    selfProduct: [{ required: true, message: '请选择是否自营', trigger: 'blur' }],
                     businessType: [{ required: true, message: '请选择贸易类型', trigger: 'blur' }],
                     brandId: [{ required: true, message: '请输入品牌', trigger: 'blur' }]
                 },
-                selectedCateArr: [], // 分类列表
                 supplierArr: [], // 供应商列表
                 brandArr: [], // 品牌列表
                 deliveryWarehouseArr: [{ label: '加盟仓', value: '1' }, { label: '供应商仓库', value: '2' }, { label: '虚拟仓库', value: '3' }], // 发货仓库
@@ -136,21 +119,23 @@
                 naturalTmpAttribute: []
             };
         },
-        props: ['selectedCate'],
+        props: ['productInfo'],
         computed: {
             imgUpload() {
                 return api.uploadImg;
             }
         },
+        created() {
+            this.form = this.productInfo;
+        },
         mounted() {
-            this.selectedCateArr = this.selectedCate;
             this.getSupplyList();
             this.getNaturalList();
         },
         methods: {
             // 添加主属性
             addPrimaryAttr() {
-                this.$router.push({ path: '/thirdClassify', query: { name: this.selectedCateArr[2].label, id: this.selectedCateArr[2].value, superiorName: this.selectedCateArr[1].label }});
+                this.$router.push({ path: '/thirdClassify', query: { name: this.form.secCategoryName, type: 1, id: this.form.secCategoryId, superiorName: this.form.firstCategoryName }});
             },
             // 获取供应商列表
             async getSupplyList() {
@@ -190,7 +175,7 @@
             },
             // 根据三级类目获取自然属性列表
             async getNaturalList() {
-                const thirdCateId = this.selectedCateArr[2].value || '';
+                const thirdCateId = this.form.thirdCategoryId || '';
                 const data = {
                     categoryId: thirdCateId,
                     type: 1,
@@ -230,11 +215,8 @@
                                 attrArr.push({paramName: v.name, paramValue: v.defParam});
                             }
                         });
-                        data.paramList = attrArr;
-                        data.firstCategoryId = this.selectedCate[0].value;
-                        data.secCategoryId = this.selectedCate[1].value;
-                        data.thirdCategoryId = this.selectedCate[2].value;
                         this.btnLoading = true;
+                        data.paramList = attrArr;
                         request.addProducts(data).then(res => {
                             this.btnLoading = false;
                             this.$emit('productInfo', res.data)

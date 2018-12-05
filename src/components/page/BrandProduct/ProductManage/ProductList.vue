@@ -224,6 +224,7 @@
                 };
                 request.batchUpdateProductStatus(data).then(res => {
                     this.newFeightTpl = '';
+                    this.$message.success(res.msg);
                     this.freightToask = false;
                 }).catch(err => {
                     this.newFeightTpl = '';

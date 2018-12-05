@@ -62,9 +62,10 @@ export default {
             this.loading = true;
             request.getAllProductCategory({}).then(res => {
                 this.loading = false;
-                const firstList = res.data.firstList || [];
-                const secList = res.data.secList || [];
-                const thirdList = res.data.thirdList || [];
+                let firstList = res.data.firstList || [];
+                let secList = res.data.secList || [];
+                let thirdList = res.data.thirdList || [];
+                this.itemList = []
                 firstList.forEach(v => {
                     this.itemList.push({ label: v.name, value: v.id, children: [] });
                 });
@@ -93,15 +94,8 @@ export default {
         // 下一步
         nextSage() {
             if (this.content.length === 0) return this.$message.warning('请选择产品分类!');
-            this.keepAlive = true;
-            this.$router.push({ name: 'editProductInfo', query: { cate: JSON.stringify(this.selectedItem), prodCode: this.prodCode }});
+            this.$router.push({ name: 'productBaseParam', query: { cate: JSON.stringify(this.selectedItem), prodCode: this.prodCode }});
         }
-    },
-    // 路由离开钩子
-    beforeRouteLeave(to, from, next) {
-        to.meta.noKeepAlive = !this.keepAlive;
-        from.meta.noKeepAlive = !this.keepAlive;
-        next();
     }
 };
 </script>

@@ -307,7 +307,7 @@
     import { beforeAvatarUpload } from '@/JS/commom.js';
     export default {
         mixins: [beforeAvatarUpload],
-        props: ['selectedCate', 'productInfo'],
+        props: ['productInfo'],
         data() {
             return {
                 flag: false, // true: 无销售属性
@@ -347,8 +347,8 @@
             }
         },
         mounted() {
-            this.selectedCateArr = this.selectedCate;
-            // this.getSalesList();
+            console.log('inventory', this.productInfo);
+            this.getSalesList();
         },
         methods: {
             // 添加主属性
