@@ -128,7 +128,7 @@
                 tmpParamList: [], // 临时储存属性，刷新使用
                 supplierArr: [], // 供应商列表
                 brandArr: [], // 品牌列表
-                deliveryWarehouseArr: [{ label: '加盟仓', value: '1' }, { label: '供应商仓库', value: '2' }, { label: '虚拟仓库', value: '3' }], // 发货仓库
+                deliveryWarehouseArr: [{ label: '自建仓', value: '1' }, { label: '加盟仓', value: '2' }, { label: '供应商', value: '3' }, { label: '虚拟仓库', value: '4' }], // 发货仓库
                 naturalAttribute: [], // 自然属性列表
                 naturalLoading: false, // 自然属性loading
                 btnLoading: false
