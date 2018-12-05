@@ -75,7 +75,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="type" label="类目类型">
-                    <el-select :disabled="itype=='edit'" v-model="form.type">
+                    <el-select v-model="form.type">
                         <el-option label="普通类目" value='1'></el-option>
                         <el-option label="隐藏类目" value='2'></el-option>
                     </el-select>
