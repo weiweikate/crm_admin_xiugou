@@ -110,13 +110,13 @@
                 });
             },
             // 添加店铺等级
-            addShopLevel() {
-                this.diaTitle = '添加店铺等级';
-                utils.cleanFormData(this.form);
-                this.isShowAddShopLevel = true;
-                this.itype = 'add';
-                this.getMaxLevel();
-            },
+            // addShopLevel() {
+            //     this.diaTitle = '添加店铺等级';
+            //     utils.cleanFormData(this.form);
+            //     this.isShowAddShopLevel = true;
+            //     this.itype = 'add';
+            //     this.getMaxLevel();
+            // },
             // 编辑店铺
             editShopLevel(row) {
                 this.diaTitle = '编辑店铺等级';

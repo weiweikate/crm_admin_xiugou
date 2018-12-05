@@ -274,8 +274,12 @@ export default {
         editProperty(row) {
             this.itemId = row.id;
             this.title = '编辑属性';
-            this.maskForm = row;
-            this.maskForm.values = this.maskForm.values ? this.maskForm.values : [];
+            this.maskForm.name = row.name;
+            this.maskForm.type = row.type;
+            this.maskForm.valueType = row.valueType;
+            this.maskForm.status = row.status;
+            this.maskForm.remark = row.remark;
+            this.maskForm.values = row.values ? row.values : [];
             this.mask = true;
         },
         // 添加确定

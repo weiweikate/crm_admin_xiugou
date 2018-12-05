@@ -102,7 +102,7 @@
                         <template>{{scope.row.createTime|formatDateAll}}</template>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" min-width="150">
+                <el-table-column label="操作" min-width="200">
                     <template slot-scope="scope">
                         <el-button @click="showInfo(scope.row)" type="primary">详情</el-button>
                         <el-button @click="editRepertory(scope.row)" type="success" v-if="scope.row.status==2">编辑</el-button>

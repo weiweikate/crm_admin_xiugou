@@ -178,7 +178,9 @@ export default {
         editItem(index, row) {
             this.title = '编辑一级类目';
             this.editMask = true;
-            this.form = row;
+            this.form.name = row.name;
+            this.form.img = row.img;
+            this.form.sort = row.sort;
             this.form.status = row.status.toString();
             this.form.type = row.type.toString();
             this.id = row.id;
