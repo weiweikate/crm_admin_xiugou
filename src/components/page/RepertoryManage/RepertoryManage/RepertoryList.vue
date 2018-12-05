@@ -241,14 +241,14 @@ export default {
         // 停用启用
         openOrClose(row, num) {
             this.mask = true;
-            this.formMask.id = row.id;
+            this.formMask.code = row.code;
             this.formMask.status = row.status;
             this.title = num == 1 ? '停用仓库' : '启用仓库';
         },
         sure(formName) {
             const data = {};
             data.verifyCode = this.formMask.verifyCode;
-            data.warehouseId = this.formMask.id;
+            data.warehouseCode = this.formMask.code;
             if (!data.verifyCode) {
                 return this.$message.warning('请获取验证码');
             }
