@@ -10,7 +10,7 @@
        <el-card>
            <el-steps :space="900" :active="2" finish-status="success">
                <el-step title="基础参数编辑"></el-step>
-               <el-step title="库存编辑"></el-step>
+               <el-step title="销售信息编辑"></el-step>
                <el-step title="商品详情编辑"></el-step>
            </el-steps>
            <el-form :model="form" ref="form" :rules="rules" label-position="right" label-width="120px">
@@ -30,7 +30,7 @@
                            <div v-for="(v,k) in imgList" class="fl" :key="k">
                                <div class="img-list">
                                    <div @click="handleRemoveImg(k, 'imgList')" class="del-mask">删 除</div>
-                                   <img :src="v" alt="">
+                                   <img v-if="v !== ''" :src="v" alt="">
                                </div>
                            </div>
                        </transition-group>
@@ -53,7 +53,7 @@
                            <div v-for="(v,k) in imgInfoList" class="fl" :key="k">
                                <div class="img-list">
                                    <div @click="handleRemoveImg(k, 'imgInfoList')" class="del-mask">删 除</div>
-                                   <img :src="v" alt="">
+                                   <img v-if="v !== ''" :src="v" alt="">
                                </div>
                            </div>
                        </transition-group>
@@ -109,7 +109,7 @@
                </el-form-item>
                <el-form-item prop="flatService" label="平台服务">
                    <el-checkbox-group v-model="form.flatService">
-                       <el-checkbox :label="1">不支持使用优惠卷</el-checkbox>
+                       <el-checkbox :label="1">不支持使用优惠券</el-checkbox>
                        <el-checkbox :label="2">提供发票</el-checkbox>
                        <el-checkbox :label="4">支持7天无理由退换</el-checkbox>
                    </el-checkbox-group>
@@ -318,7 +318,6 @@
                     this.pageLoading = false;
                     console.log(err);
                 });
-                await this.getAllTagType();
                 this.imgInfoList = resData.content ? resData.content.split(',') : [];
                 await this.getFeightList();
                 let str = '';
@@ -343,9 +342,9 @@
                         this.selectedTagArr.push({ label: v.tagName, value: v.tagId });
                     });
                 }
-                const tagId = this.tagTypeArr[0] ? this.tagTypeArr[0].id : 0;
-                const tagSel = this.tagTypeArr[0] ? this.tagTypeArr[0].selected : false;
-                await this.getAllTags(tagId, 0, tagSel);
+                // const tagId = this.tagTypeArr[0] ? this.tagTypeArr[0].id : 0;
+                // const tagSel = this.tagTypeArr[0] ? this.tagTypeArr[0].selected : false;
+                // await this.getAllTags(tagId, 0, tagSel);
                 this.form.videoUrl = resData.videoUrl ? resData.videoUrl : '';
                 this.form.needDeliver = resData.needDeliver ? resData.needDeliver.toString() : '';
                 this.form.freightTemplateId = resData.freightTemplateId ? resData.freightTemplateId : '';
@@ -480,8 +479,8 @@
                     this.tagLoading = false;
                     this.tagArr = [];
                     this.tagTypeArr[key].selected = !this.tagTypeArr[key].selected;
-                    if (res.data && res.data.length !== 0) {
-                        res.data.forEach(v => {
+                    if (res.data[0].sysTagLibraryVOList && res.data[0].sysTagLibraryVOList.length !== 0) {
+                        res.data[0].sysTagLibraryVOList.forEach(v => {
                             this.tagArr.push({ label: v.name, value: v.id });
                         });
                     }

@@ -11,7 +11,7 @@
         <el-card>
             <el-steps :space="900" :active="0" finish-status="success">
                 <el-step title="基础参数编辑"></el-step>
-                <el-step title="库存编辑"></el-step>
+                <el-step title="销售信息编辑"></el-step>
                 <el-step title="商品详情编辑"></el-step>
             </el-steps>
             <el-form :model="form" ref="form" :rules="rules" label-position="left" label-width="100px">
@@ -125,9 +125,10 @@
                     businessType: [{ required: true, message: '请选择贸易类型', trigger: 'blur' }],
                     brandId: [{ required: true, message: '请输入品牌', trigger: 'blur' }]
                 },
+                tmpParamList: [], // 临时储存属性，刷新使用
                 supplierArr: [], // 供应商列表
                 brandArr: [], // 品牌列表
-                deliveryWarehouseArr: [{ label: '加盟仓', value: '1' }, { label: '供应商仓库', value: '2' }, { label: '虚拟仓库', value: '3' }], // 发货仓库
+                deliveryWarehouseArr: [{ label: '自建仓', value: '1' }, { label: '加盟仓', value: '2' }, { label: '供应商', value: '3' }, { label: '虚拟仓库', value: '4' }], // 发货仓库
                 naturalAttribute: [], // 自然属性列表
                 naturalLoading: false, // 自然属性loading
                 btnLoading: false
@@ -195,6 +196,7 @@
                     await this.getSupplyList();
                     await this.selectBrand(resData.supplierCode);
                     await this.getNaturalList();
+                    this.tmpParamList = resData.paramList;
                     if (this.naturalAttribute.length !== 0) {
                         this.naturalAttribute.forEach((v, k) => {
                             resData.paramList.forEach(v1 => {
@@ -267,9 +269,27 @@
             },
             // 刷新属性
             async refreshAttr() {
-                const naturalTmpAttribute = this.naturalAttribute;
                 await this.getNaturalList();
-                this.naturalAttribute = naturalTmpAttribute;
+                if (this.naturalAttribute.length !== 0) {
+                    this.naturalAttribute.forEach((v, k) => {
+                        this.tmpParamList.forEach(v1 => {
+                            if (v1.paramName == v.name) {
+                                if (v.options.length !== 0) {
+                                    const arr = [];
+                                    v.options.forEach(v2 => {
+                                        arr.push(v2.value);
+                                    });
+                                    if (arr.includes(v1.paramValue)) {
+                                        v.value = v1.paramValue;
+                                    } else {
+                                        v.defParam = v1.paramValue;
+                                    }
+                                    this.$set(this.naturalAttribute, k, v);
+                                }
+                            }
+                        });
+                    });
+                }
             },
             // 根据三级类目获取自然属性列表
             async getNaturalList() {

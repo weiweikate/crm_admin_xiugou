@@ -83,9 +83,10 @@
             </el-table-column>
             <el-table-column prop="warehouseType" label="发货方仓" align="center">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.warehouseType == 1 ">加盟仓</span>
-                    <span v-else-if="scope.row.warehouseType == 2">供应商</span>
-                    <span v-else-if="scope.row.warehouseType == 3">虚拟仓库</span>
+                    <span v-if="scope.row.warehouseType == 1 ">自建仓</span>
+                    <span v-else-if="scope.row.warehouseType == 2">加盟仓</span>
+                    <span v-else-if="scope.row.warehouseType == 3">供应商</span>
+                    <span v-else-if="scope.row.warehouseType == 4">虚拟仓库</span>
                     <span v-else>-</span>
                 </template>
             </el-table-column>
@@ -176,17 +177,18 @@ export default {
                 this.listNum.inWarehouseTotal = tblData.inWarehouseTotal || 0;
                 this.$emit('transData', this.listNum);
                 this.page.totalPage = tblData.totalNum;
+                this.tableData = [];
                 if (tblData.data && tblData.data.length !== 0) {
                     tblData.data.forEach(v => {
                         let restrictions = v.restrictions || 0;
                         switch (restrictions.toString()) {
-                            case '1': v.tags = ['不支持使用优惠卷']; break;
+                            case '1': v.tags = ['不支持使用优惠券']; break;
                             case '2': v.tags = ['提供发票']; break;
-                            case '3': v.tags = ['不支持使用优惠卷', '提供发票']; break;
+                            case '3': v.tags = ['不支持使用优惠券', '提供发票']; break;
                             case '4': v.tags = ['支持7天无理由退换']; break;
-                            case '5': v.tags = ['不支持使用优惠卷', '支持7天无理由退换']; break;
+                            case '5': v.tags = ['不支持使用优惠券', '支持7天无理由退换']; break;
                             case '6': v.tags = ['提供发票', '支持7天无理由退换']; break;
-                            case '7': v.tags = ['不支持使用优惠卷', '提供发票', '支持7天无理由退换']; break;
+                            case '7': v.tags = ['不支持使用优惠券', '提供发票', '支持7天无理由退换']; break;
                         }
                         this.tableData.push(v);
                     });
