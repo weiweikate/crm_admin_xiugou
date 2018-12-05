@@ -82,9 +82,9 @@
                        <el-option value="" label="全部"></el-option>
                        <el-option v-for="(v, k) in freightList" :key="k" :value="v.id" :label="v.name"></el-option>
                    </el-select>
-                   <span class="primary-text">添加运费模板</span>
+                   <a href="#/addTemplate" target="_blank" class="primary-text href">添加运费模板</a>
                    <span class="primary-text">|</span>
-                   <span class="primary-text">刷新</span>
+                   <span class="primary-text" @click="getFeightList">刷新</span>
                </el-form-item>
                <el-form-item label="不支持配送区域">
                    <div class="area-list" v-if="unSupportsssAreasData.length !== 0">
@@ -174,6 +174,9 @@
                 subformBtn: false,
                 prodCode: '',
                 form: {
+                    firstCategoryName: '',
+                    secCategoryName: '',
+                    thirdCategoryName: '',
                     videoUrl: '',
                     imgUrl: '', // 主图
                     needDeliver: '', // 0: 否 1: 是
@@ -238,13 +241,15 @@
                     });
                 }
                 const data = {
+                    ...this.form,
                     videoUrl: this.form.videoUrl,
                     imgUrl: this.imgList[0],
                     content: this.imgInfoList.join(','),
                     needDeliver: this.form.needDeliver,
                     freightTemplateId: this.form.freightTemplateId,
                     undeliveredList: this.unSupportAreasData,
-                    upType: this.form.upType == '2' ? this.$utils.formatTime(this.form.upTime) : this.form.upType,
+                    upType: this.form.upType,
+                    upTime: this.form.upType == '2' ? this.$utils.formatTime(this.form.upTime) : '',
                     buyLimit: this.form.limitBuyNum,
                     restrictions: restrictions,
                     autoUnShelve: this.form.autoUnShelve,
@@ -267,10 +272,9 @@
                     data.imgFileList = arr;
                 }
                 this.subformBtn = true;
-                console.log(data);
                 request.addProducts(data).then(res => {
                     this.subformBtn = false;
-                    // this.$router.push('/productList');
+                    this.$router.push('/productList');
                     this.$message.success(res.msg);
                 }).catch(err => {
                     this.subformBtn = false;
@@ -286,15 +290,84 @@
                 let resData = {};
                 request.findProductDetailsByCode({ code: this.prodCode }).then(res => {
                     resData = res.data || {};
-                    this.form.secCategoryId = resData.secCategoryId;
-                    this.form.paramList = resData.paramList;
-                    this.form.skuList = resData.skuList;
-                    this.form.afterSaleServiceDays = resData.afterSaleServiceDays;
-                    this.pageLoading = false;
+                    let flatServiceArr = [];
+                    const limitServer = resData.restrictions || 0;
+                    switch (limitServer.toString()) {
+                        case '1': flatServiceArr = [1]; break;
+                        case '2': flatServiceArr = [2]; break;
+                        case '3': flatServiceArr = [1, 2]; break;
+                        case '4': flatServiceArr = [4]; break;
+                        case '5': flatServiceArr = [1, 4]; break;
+                        case '6': flatServiceArr = [2, 4]; break;
+                        case '7': flatServiceArr = [1, 2, 4]; break;
+                    }
+                    resData.flatService = flatServiceArr;
+                    this.form = {
+                        ...resData,
+                        buyLimit: resData.buyLimit == -1 ? [] : [1],
+                        limitBuyNum: resData.buyLimit == -1 ? '' : resData.buyLimit,
+                        secCategoryId: resData.secCategoryId,
+                        paramList: resData.paramList,
+                        skuList: resData.skuList,
+                        afterSaleServiceDays: resData.afterSaleServiceDays,
+                        firstCategoryName: resData.firstCategoryName,
+                        secCategoryName: resData.secCategoryName,
+                        thirdCategoryName: resData.thirdCategoryName
+                    };
                 }).catch(err => {
                     this.pageLoading = false;
                     console.log(err);
                 });
+                await this.getAllTagType();
+                this.imgInfoList = resData.content ? resData.content.split(',') : [];
+                await this.getFeightList();
+                let str = '';
+                resData.undeliveredList.forEach(v => {
+                    str += v.cityNames + ',';
+                });
+                const cArr = str.split(',');
+                cArr.splice(cArr.length - 1, 1);
+                this.unSupportsssAreasData = cArr;
+                const arr = [];
+                if (resData.imgUrl !== '') {
+                    arr.push(resData.imgUrl);
+                }
+                if (resData.imgFileList.length !== 0) {
+                    resData.imgFileList.forEach(v => {
+                        arr.push(v.originalImg);
+                    });
+                }
+                this.imgList = arr;
+                if (resData.tagList && resData.tagList.length !== 0) {
+                    resData.tagList.forEach(v => {
+                        this.selectedTagArr.push({ label: v.tagName, value: v.tagId });
+                    });
+                }
+                const tagId = this.tagTypeArr[0] ? this.tagTypeArr[0].id : 0;
+                const tagSel = this.tagTypeArr[0] ? this.tagTypeArr[0].selected : false;
+                await this.getAllTags(tagId, 0, tagSel);
+                this.form.videoUrl = resData.videoUrl ? resData.videoUrl : '';
+                this.form.needDeliver = resData.needDeliver ? resData.needDeliver.toString() : '';
+                this.form.freightTemplateId = resData.freightTemplateId ? resData.freightTemplateId : '';
+                this.form.upType = resData.upType ? resData.upType.toString() : '';
+                this.form.upTime = resData.type == 2 ? resData.upTime : '';
+                this.form.buyLimit = resData.buyLimit == -1 ? [] : [1];
+                this.form.limitBuyNum = resData.buyLimit == -1 ? '' : resData.buyLimit;
+                this.form.autoUnShelve = resData.autoUnShelve;
+                // const list = resData.undeliveredList;
+                // if (list.length !== 0) {
+                //     for (let i = 1; i < list.length; i++) {
+                //         let includeArea = ''; let includeAreaName = '';
+                //         for (const j in list[i].freightTemplateInfoDetailList) {
+                //             const temp = list[i].freightTemplateInfoDetailList[j];
+                //             includeArea += temp.provinceCode + ':' + temp.cityCodes + ',';
+                //             includeAreaName += temp.provinceName + ':' + temp.cityNames + ',';
+                //         }
+                //         list[i].includeArea = includeArea.slice(0, -1);
+                //         list[i].includeAreaName = includeAreaName.slice(0, -1);
+                //     }
+                // }
+                this.pageLoading = false;
             },
             // 获取运费模板列表
             async getFeightList() {
@@ -336,7 +409,9 @@
                 const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
                 return new Promise(function(resolve, reject) {
                     if (!isJPG) reject('请上传图片');
-                    if (that.imgList.length >= 10) reject('最多上传十张图片');
+                    if (type == 'mainImg') {
+                        if (that.imgList.length >= 10) reject('最多上传十张图片');
+                    }
                     const _URL = window.URL || window.webkitURL;
                     const image = new Image();
                     if (type == 'mainImg') {
@@ -396,18 +471,22 @@
             // 获取所有标签
             async getAllTags(val, key, status) {
                 if (this.form.secCategoryId === '') return;
-                this.tagTypeArr.forEach(v => {
-                    v.selected = false;
-                });
-                this.tagTypeArr[key].selected = status;
+                if (this.tagTypeArr && this.tagTypeArr.length !== 0) {
+                    this.tagTypeArr.forEach(v => {
+                        v.selected = false;
+                    });
+                    this.tagTypeArr[key].selected = status;
+                }
                 this.tagLoading = true;
                 await request.querySysTagLibraryList({ typeId: val, secCategoryId: this.form.secCategoryId }).then(res => {
                     this.tagLoading = false;
                     this.tagArr = [];
                     this.tagTypeArr[key].selected = !this.tagTypeArr[key].selected;
-                    res.data[0].sysTagLibraryVOList.forEach(v => {
-                        this.tagArr.push({ label: v.name, value: v.id });
-                    });
+                    if (res.data[0].sysTagLibraryVOList && res.data[0].sysTagLibraryVOList.length !== 0) {
+                        res.data[0].sysTagLibraryVOList.forEach(v => {
+                            this.tagArr.push({ label: v.name, value: v.id });
+                        });
+                    }
                     this.tagArr.forEach((v, k) => {
                         this.selectedTagArr.forEach((v1, k1) => {
                             if (v.value == v1.value) {

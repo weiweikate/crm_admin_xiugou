@@ -36,7 +36,7 @@
                 <template slot-scope="scope">
                     <span v-if="scope.row.status == 0">删除</span>
                     <span v-else-if="scope.row.status == 1">待发布</span>
-                    <span v-else-if="scope.row.status == 2">待审核</span>
+                    <span v-else-if="scope.row.status == 2">审核中</span>
                     <span v-else-if="scope.row.status == 3">已通过</span>
                     <span v-else-if="scope.row.status == 4">已上架</span>
                     <span v-else-if="scope.row.status == 5">未通过</span>
@@ -47,7 +47,7 @@
             <el-table-column prop="status" label="审核状态" align="center">
                 <template slot-scope="scope">
                     <span v-if="scope.row.status == 5">未通过</span>
-                    <span v-else-if="scope.row.status == 2">待审核</span>
+                    <span v-else-if="scope.row.status == 2">审核中</span>
                     <span v-else-if="scope.row.status == 3">已通过</span>
                     <span v-else>-</span>
                 </template>
@@ -83,8 +83,9 @@
             </el-table-column>
             <el-table-column prop="warehouseType" label="发货方仓" align="center">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.warehouseType == 1 || scope.row.warehouseType == 2">平台</span>
-                    <span v-else-if="scope.row.warehouseType == 3 || scope.row.warehouseType == 4">供应商</span>
+                    <span v-if="scope.row.warehouseType == 1 ">加盟仓</span>
+                    <span v-else-if="scope.row.warehouseType == 2">供应商</span>
+                    <span v-else-if="scope.row.warehouseType == 3">虚拟仓库</span>
                     <span v-else>-</span>
                 </template>
             </el-table-column>
@@ -111,7 +112,8 @@
             <el-table-column label="操作" align="center" width="80px" fixed="right">
                 <template slot-scope="scope">
                     <div class="operate">
-                        <span v-if="scope.row.status == 1 || scope.row.status == 5 || scope.row.status == 6" @click="editProduct(scope.row)">编辑</span>
+                        <!--<span v-if="scope.row.status == 1 || scope.row.status == 5 || scope.row.status == 6" @click="editProduct(scope.row)">编辑</span>-->
+                        <span @click="editProduct(scope.row)">编辑</span>
                         <span @click="addRemark(scope.row)">备注</span>
                         <span @click="productInfo(scope.row)">详情</span>
                     </div>
@@ -209,7 +211,7 @@ export default {
             selectedItem.push({ type: 1, label: row.firstCategoryName, value: row.firstCategoryId });
             selectedItem.push({ type: 2, label: row.secCategoryName, value: row.secCategoryId });
             selectedItem.push({ type: 3, label: row.thirdCategoryName, value: row.thirdCategoryId });
-            this.$router.push({ name: 'editProductInfo', query: { cate: JSON.stringify(selectedItem), prodCode: row.prodCode }});
+            this.$router.push({ name: 'productBaseParam', query: { cate: JSON.stringify(selectedItem), prodCode: row.prodCode }});
         },
         // 产品删除/下架
         productStatus(status) {
@@ -238,7 +240,9 @@ export default {
         addRemark(row) {
             this.$prompt('请输入备注', '', {
                 confirmButtonText: '确定',
-                cancelButtonText: '取消'
+                cancelButtonText: '取消',
+                inputPattern: /^.{1,180}$/,
+                inputErrorMessage: '备注不能为空'
             }).then(({ value }) => {
                 const data = {
                     prodCode: row.prodCode,

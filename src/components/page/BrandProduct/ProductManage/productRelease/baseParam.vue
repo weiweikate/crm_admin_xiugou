@@ -81,8 +81,7 @@
                     </el-col>
                     <el-col :span="11">
                         <div class="operate-natural-attr">
-                            <a :href="link" target="_blank">添加主属性</a>
-                            <!--<a @click="addPrimaryAttr">添加主属性</a>-->
+                            <a class="href" :href="link" target="_blank">添加主属性</a>
                             <span>|</span>
                             <span @click="refreshAttr">刷新</span>
                         </div>
@@ -136,13 +135,12 @@
         },
         computed: {
             link() {
-                return `${window.location.host}/#/thirdClassify?name=${this.cateArr[1].label}&type=1&id=${this.cateArr[1].value}&superiorName=${this.cateArr[0].label}`
+                return `#/thirdClassify?name=${this.cateArr[1].label}&type=1&id=${this.cateArr[1].value}&superiorName=${this.cateArr[0].label}`;
             }
         },
         created() {
             this.prodCode = this.$route.query.prodCode || null;
             this.cateArr = JSON.parse(this.$route.query.cate) || [];
-            console.log(this.cateArr);
         },
         mounted() {
             this.getProductInfo();
@@ -158,9 +156,9 @@
                         const attrArr = [];
                         this.naturalAttribute.forEach(v => {
                             if (v.defParam === '') {
-                                attrArr.push({paramName: v.name, paramValue: v.value});
+                                attrArr.push({ paramName: v.name, paramValue: v.value });
                             } else {
-                                attrArr.push({paramName: v.name, paramValue: v.defParam});
+                                attrArr.push({ paramName: v.name, paramValue: v.defParam });
                             }
                         });
                         this.btnLoading = true;
@@ -171,7 +169,7 @@
                         request.addProducts(data).then(res => {
                             this.btnLoading = false;
                             this.$message.success(res.msg);
-                            this.$router.push({path: '/inventory', query: {prodCode: res.data.prodCode}});
+                            this.$router.push({ path: '/inventory', query: { prodCode: res.data.prodCode }});
                         }).catch(err => {
                             this.btnLoading = false;
                             console.log(err);
@@ -184,20 +182,55 @@
             },
             // 获取产品信息
             async getProductInfo() {
-                await this.getSupplyList();
-                await this.getNaturalList();
                 if (this.prodCode) {
-                    this.form.prodCode = '';
-                    console.log('add');
-                } else {
                     this.form.prodCode = this.prodCode;
-                    console.log('edit');
+                    let resData = {};
+                    this.pageLoading = true;
+                    await request.findProductDetailsByCode({ code: this.prodCode }).then(res => {
+                        resData = res.data || {};
+                    }).catch(err => {
+                        this.pageLoading = false;
+                        console.log(err);
+                    });
+                    await this.getSupplyList();
+                    await this.selectBrand(resData.supplierCode);
+                    await this.getNaturalList();
+                    if (this.naturalAttribute.length !== 0) {
+                        this.naturalAttribute.forEach((v, k) => {
+                            resData.paramList.forEach(v1 => {
+                                if (v1.paramName == v.name) {
+                                    if (v.options.length !== 0) {
+                                        const arr = [];
+                                        v.options.forEach(v2 => {
+                                            arr.push(v2.value);
+                                        });
+                                        if (arr.includes(v1.paramValue)) {
+                                            v.value = v1.paramValue;
+                                        } else {
+                                            v.defParam = v1.paramValue;
+                                        }
+                                        this.$set(this.naturalAttribute, k, v);
+                                    }
+                                }
+                            });
+                        });
+                    }
+                    this.form = {
+                        prodCode: this.prodCode,
+                        name: resData.name,
+                        secondName: resData.secondName,
+                        supplierCode: resData.supplierCode,
+                        warehouseType: resData.warehouseType ? resData.warehouseType.toString() : '',
+                        type: resData.type ? resData.type.toString() : '',
+                        businessType: resData.businessType ? resData.businessType.toString() : '',
+                        brandId: resData.brandId
+                    };
+                    this.pageLoading = false;
+                } else {
+                    this.form.prodCode = '';
+                    await this.getSupplyList();
+                    await this.getNaturalList();
                 }
-            },
-            // 添加主属性
-            addPrimaryAttr() {
-                console.log();
-                // this.$router.push({ path: '/thirdClassify', query: { name: this.form.secCategoryName, type: 1, id: this.form.secCategoryId, superiorName: this.form.firstCategoryName }});
             },
             // 获取供应商列表
             async getSupplyList() {
@@ -205,6 +238,7 @@
                     this.supplierArr = [];
                     this.supplierArr.push(...res.data);
                 }).catch(err => {
+                    this.pageLoading = false;
                     console.log(err);
                 });
             },
@@ -214,24 +248,25 @@
                 await request.findProductBrandListBySupplier({ supplierCode: val }).then(res => {
                     this.brandArr = res.data;
                 }).catch(err => {
+                    this.pageLoading = false;
                     console.log(err);
                 });
             },
             // 添加属性值
             addAttrValue(index) {
                 this.$prompt('请输入属性值', '', {
-                    inputPattern: /^.{1,20}$/,
+                    inputPattern: /\s*\S+?/,
                     inputErrorMessage: '请输入1-20位的名字'
                 }).then(({ value }) => {
                     this.naturalAttribute[index].value = '';
-                    this.naturalAttribute[index].defParam = value;
+                    this.naturalAttribute[index].defParam = value.trim();
                 }).catch(err => {
                     console.log(err);
                 });
             },
             // 刷新属性
             async refreshAttr() {
-                let naturalTmpAttribute = this.naturalAttribute;
+                const naturalTmpAttribute = this.naturalAttribute;
                 await this.getNaturalList();
                 this.naturalAttribute = naturalTmpAttribute;
             },
@@ -259,8 +294,19 @@
                     });
                 }).catch(err => {
                     this.naturalLoading = false;
+                    this.pageLoading = false;
                     console.log(err);
                 });
+            },
+            // 切换分类
+            toggleCate() {
+                this.$confirm('切换后系统不会保留您本次的编辑', '您确定要切换分类吗？', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null }});
+                }).catch(() => {});
             }
         }
     };

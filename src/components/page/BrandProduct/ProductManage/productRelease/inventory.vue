@@ -16,12 +16,50 @@
             <el-form :model="form" ref="form" label-position="right" label-width="100px">
                 <div class="pro-title">销售属性</div>
                 <!--未同步仓库-->
-                <el-form-item v-if="!form.checkStatus" v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
-                    <div v-if="v.type == 2">
-                        <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
-                            <el-checkbox v-if="v1.defType == 1" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
+                <template v-if="!form.checkStatus">
+                    <el-form-item v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
+                        <div v-if="v.type == 2">
+                            <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
+                                <el-checkbox v-if="v1.defType == 1" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
+                                <div class="mt10" v-else>
+                                    <el-input v-model="v1.value" style="width: 215px"></el-input>
+                                    <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
+                                </div>
+                                <template v-if="v1.imgUrl == ''">
+                                    <el-upload
+                                        :action="imgUpload"
+                                        :show-file-list="false"
+                                        :before-upload="beforeAvatarUpload"
+                                        :on-success="uploadSuccess"
+                                    >
+                                        <span class="primary-text" @click="beforeUpload(k, k1)">上传图片</span>
+                                    </el-upload>
+                                </template>
+                                <template v-else>
+                                    <img :src="v1.imgUrl" alt="">
+                                    <span class="primary-text" @click="deleteImg(k, k1)">删除</span>
+                                </template>
+                            </div>
+                        </div>
+                        <div v-else-if="v.type == 1" class="sales-type">
+                            <el-checkbox v-if="v1.defType == 1" v-for="(v1, k1) in v.options" :key="`${k}--${k1}`" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
                             <div class="mt10" v-else>
                                 <el-input v-model="v1.value" style="width: 215px"></el-input>
+                                <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
+                            </div>
+                        </div>
+                        <div class="primary-text">
+                            <span @click="addAttrValue(k)">新建子属性</span>
+                        </div>
+                    </el-form-item>
+                </template>
+                <!--同步了仓库-->
+                <template v-else>
+                    <el-form-item v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
+                        <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
+                            <el-input v-if="v1.defType == 1" style="width: 215px" v-model="v1.value"></el-input>
+                            <div class="mt10" v-else>
+                                <el-input v-model="v1.label" style="width: 215px"></el-input>
                                 <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
                             </div>
                             <template v-if="v1.imgUrl == ''">
@@ -39,22 +77,15 @@
                                 <span class="primary-text" @click="deleteImg(k, k1)">删除</span>
                             </template>
                         </div>
-                    </div>
-                    <div v-else-if="v.type == 1" class="sales-type">
-                        <el-checkbox v-if="v1.defType == 1" v-for="(v1, k1) in v.options" :key="`${k}--${k1}`" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
-                        <div class="mt10" v-else>
-                            <el-input v-model="v1.value" style="width: 215px"></el-input>
-                            <span class="primary-text" @click="deleteProps(k,k1)">删除</span>
+                        <div class="primary-text">
+                            <span @click="addAttrValue(k)">新建子属性</span>
                         </div>
-                    </div>
-                    <div class="primary-text">
-                        <span @click="addAttrValue(k)">新建子属性</span>
-                    </div>
-                </el-form-item>
+                    </el-form-item>
+                </template>
                 <el-form-item label=" ">
-                <div class="primary-text">
-                    <a v-if="!form.checkStatus" :href="link" target="_blank">新建主属性</a>
-                    <span v-if="!form.checkStatus">|</span>
+                <div v-if="!form.checkStatus" class="primary-text">
+                    <a class="href" :href="link" target="_blank">新建主属性</a>
+                    <span>|</span>
                     <span @click="refreshAttr">刷新</span>
                 </div>
                 </el-form-item>
@@ -336,7 +367,7 @@
                 return api.uploadImg;
             },
             link() {
-                return `${window.location.host}/#/thirdClassify?name=${this.form.secCategoryName}&type=1&id=${this.form.secCategoryId}&superiorName=${this.form.firstCategoryName}`;
+                return `#/thirdClassify?name=${this.form.secCategoryName}&type=1&id=${this.form.secCategoryId}&superiorName=${this.form.firstCategoryName}`;
             }
         },
         created() {
@@ -369,39 +400,95 @@
                 request.addProducts(data).then(res => {
                     this.subformBtn = false;
                     this.$message.success(res.msg);
-                    this.$router.push({path: '/prodInfo', query: {prodCode: res.data.prodCode}});
+                    this.$router.push({ path: '/prodInfo', query: { prodCode: res.data.prodCode }});
                 }).catch(err => {
                     this.subformBtn = false;
                     console.log(err);
                 });
             },
             // 获取产品信息
-            getProductInfo() {
+            async getProductInfo() {
                 if (!this.prodCode) return this.$message.warning('产品编码丢失!');
                 this.pageLoading = true;
                 let resData = {};
-                request.findProductDetailsByCode({ code: this.prodCode }).then(res => {
+                await request.findProductDetailsByCode({ code: this.prodCode }).then(res => {
                     resData = res.data || {};
-                    this.form = {
-                        checkStatus: resData.checkStatus,
-                        firstCategoryId: resData.firstCategoryId,
-                        firstCategoryName: resData.firstCategoryName,
-                        secCategoryId: resData.secCategoryId,
-                        secCategoryName: resData.secCategoryName,
-                        thirdCategoryId: resData.thirdCategoryId,
-                        thirdCategoryName: resData.thirdCategoryName,
-                        paramList: resData.paramList
-                    };
-                    this.getSalesList();
-                    if (resData.checkStatus) {
-
-                    } else {
-                    }
-                    this.pageLoading = false;
                 }).catch(err => {
                     this.pageLoading = false;
                     console.log(err);
                 });
+                this.form = {
+                    checkStatus: resData.checkStatus,
+                    firstCategoryId: resData.firstCategoryId,
+                    firstCategoryName: resData.firstCategoryName,
+                    secCategoryId: resData.secCategoryId,
+                    secCategoryName: resData.secCategoryName,
+                    thirdCategoryId: resData.thirdCategoryId,
+                    thirdCategoryName: resData.thirdCategoryName,
+                    paramList: resData.paramList
+                };
+                this.unit = resData.skuList.length === 0 ? '包' : resData.skuList[0].stockUnit;
+                this.priceTable = resData.skuList;
+                if (resData.checkStatus) {
+                    this.salesAttrArr = [];
+                    let tmp = [];
+                    resData.specifies.forEach((v, k) => {
+                        const obj = {
+                            name: v.specName,
+                            options: []
+                        };
+                        if (v.specValues !== 0) {
+                            v.specValues.forEach(v1 => {
+                                obj.options.push({
+                                    label: v1.specValue,
+                                    value: v1.specValue,
+                                    defType: 1,
+                                    imgUrl: v1.specImg
+                                });
+                            });
+                        }
+                        tmp.push(obj)
+                    });
+                    this.salesAttrArr = tmp;
+                } else {
+                    await this.getSalesList();
+                    console.log(this.salesAttrArr);
+                    if (this.salesAttrArr.length !== 0) {
+                        this.salesAttrArr.forEach(v => {
+                            if (resData.specifies.length !== 0) {
+                                resData.specifies.forEach(v1 => {
+                                    if (v.name == v1.specName) {
+                                        if (v1.specValues.length !== 0) {
+                                            v1.specValues.forEach(v2 => {
+                                                if (v.options.length !== 0) {
+                                                    let flag = true;
+                                                    v.options.forEach(v3 => {
+                                                        if (v2.specValue == v3.label) {
+                                                            v3.value = true;
+                                                            v3.defType = 1;
+                                                            v3.imgUrl = v2.specImg;
+                                                            flag = false;
+                                                        }
+                                                    });
+                                                    // flag:true  自定义属性
+                                                    if (flag) {
+                                                        v.options.push({
+                                                            defType: 2,
+                                                            imgUrl: v2.specImg,
+                                                            label: v2.specValue,
+                                                            value: v2.specValue
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+                this.pageLoading = false;
             },
             // 改变表头单位
             tableHeadChange(val) {
@@ -556,7 +643,9 @@
             // 添加属性值
             addAttrValue(index) {
                 this.$prompt('请输入属性名', null, {
-                    showCancelButton: true
+                    showCancelButton: true,
+                    inputPattern: /\s*\S+?/,
+                    inputErrorMessage: '请输入1-20位的名字'
                 }).then(({ value }) => {
                     const item = this.salesAttrArr[index];
                     item.options.push({ label: value, value: value, defType: 2, imgUrl: '' });

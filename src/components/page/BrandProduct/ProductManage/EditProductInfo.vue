@@ -148,7 +148,7 @@ export default {
                 //                 });
                 //             });
                 //         }
-                //         // secondStep.salesAttrArr.push(obj);
+                //         secondStep.salesAttrArr.push(obj);
                 //     });
                 // } else {
                 //     await secondStep.getSalesList();
@@ -189,58 +189,58 @@ export default {
                 // }
                 //
                 // // 添加商品第三步赋值
-                // const thirdStep = this.$refs['info'];
-                // await thirdStep.getAllTagType();
-                // thirdStep.imgInfoList = data.content ? data.content.split(',') : [];
-                // await thirdStep.getFeightList();
-                // let str = '';
-                // data.undeliveredList.forEach(v => {
-                //     str += v.cityNames + ',';
-                // });
-                // const cArr = str.split(',');
-                // cArr.splice(cArr.length - 1, 1);
-                // thirdStep.unSupportsssAreasData = cArr;
-                // // thirdStep.unSupportAreasData = data.undeliveredList;
-                // // thirdStep.unSupportsssAreasData = data.undeliveredList;
-                // const arr = [];
-                // arr.push(data.imgUrl);
-                // if (data.imgFileList.length !== 0) {
-                //     data.imgFileList.forEach(v => {
-                //         arr.push(v.originalImg);
-                //     });
-                // }
-                // thirdStep.imgList = arr;
-                // if (data.tagList && data.tagList.length !== 0) {
-                //     data.tagList.forEach(v => {
-                //         thirdStep.selectedTagArr.push({ label: v.tagName, value: v.tagId });
-                //     });
-                // }
-                // await thirdStep.getAllTags(thirdStep.tagTypeArr[0].id, 0, thirdStep.tagTypeArr[0].selected);
-                // let flatServiceArr = [];
-                // const limitServer = data.restrictions || 0;
-                // switch (limitServer.toString()) {
-                //     case '1': flatServiceArr = [1]; break;
-                //     case '2': flatServiceArr = [2]; break;
-                //     case '3': flatServiceArr = [1, 2]; break;
-                //     case '4': flatServiceArr = [4]; break;
-                //     case '5': flatServiceArr = [1, 4]; break;
-                //     case '6': flatServiceArr = [2, 4]; break;
-                //     case '7': flatServiceArr = [1, 2, 4]; break;
-                // }
-                // thirdStep.form = {
-                //     videoUrl: data.videoUrl,
-                //     needDeliver: data.needDeliver ? data.needDeliver.toString() : '', // 0: 否 1: 是
-                //     freightTemplateId: data.freightTemplateId ? data.freightTemplateId.toString() : '',
-                //     undeliveredList: [], // 不支持配送区域
-                //     upType: data.type ? data.type.toString() : '',
-                //     upTime: data.type == 2 ? data.upTime : '',
-                //     buyLimit: data.buyLimit == -1 ? [] : [1],
-                //     limitBuyNum: data.buyLimit == -1 ? '' : data.buyLimit,
-                //     afterSaleServiceDays: data.afterSaleServiceDays ? data.afterSaleServiceDays.toString() : '', // 售后周期
-                //     flatService: flatServiceArr,
-                //     autoUnShelve: data.autoUnShelve,
-                //     tagList: []
-                // };
+                const thirdStep = this.$refs['info'];
+                await thirdStep.getAllTagType();
+                thirdStep.imgInfoList = data.content ? data.content.split(',') : [];
+                await thirdStep.getFeightList();
+                let str = '';
+                data.undeliveredList.forEach(v => {
+                    str += v.cityNames + ',';
+                });
+                const cArr = str.split(',');
+                cArr.splice(cArr.length - 1, 1);
+                thirdStep.unSupportsssAreasData = cArr;
+                // thirdStep.unSupportAreasData = data.undeliveredList;
+                // thirdStep.unSupportsssAreasData = data.undeliveredList;
+                const arr = [];
+                arr.push(data.imgUrl);
+                if (data.imgFileList.length !== 0) {
+                    data.imgFileList.forEach(v => {
+                        arr.push(v.originalImg);
+                    });
+                }
+                thirdStep.imgList = arr;
+                if (data.tagList && data.tagList.length !== 0) {
+                    data.tagList.forEach(v => {
+                        thirdStep.selectedTagArr.push({ label: v.tagName, value: v.tagId });
+                    });
+                }
+                await thirdStep.getAllTags(thirdStep.tagTypeArr[0].id, 0, thirdStep.tagTypeArr[0].selected);
+                let flatServiceArr = [];
+                const limitServer = data.restrictions || 0;
+                switch (limitServer.toString()) {
+                    case '1': flatServiceArr = [1]; break;
+                    case '2': flatServiceArr = [2]; break;
+                    case '3': flatServiceArr = [1, 2]; break;
+                    case '4': flatServiceArr = [4]; break;
+                    case '5': flatServiceArr = [1, 4]; break;
+                    case '6': flatServiceArr = [2, 4]; break;
+                    case '7': flatServiceArr = [1, 2, 4]; break;
+                }
+                thirdStep.form = {
+                    videoUrl: data.videoUrl,
+                    needDeliver: data.needDeliver ? data.needDeliver.toString() : '', // 0: 否 1: 是
+                    freightTemplateId: data.freightTemplateId ? data.freightTemplateId.toString() : '',
+                    undeliveredList: [], // 不支持配送区域
+                    upType: data.type ? data.type.toString() : '',
+                    upTime: data.type == 2 ? data.upTime : '',
+                    buyLimit: data.buyLimit == -1 ? [] : [1],
+                    limitBuyNum: data.buyLimit == -1 ? '' : data.buyLimit,
+                    afterSaleServiceDays: data.afterSaleServiceDays ? data.afterSaleServiceDays.toString() : '', // 售后周期
+                    flatService: flatServiceArr,
+                    autoUnShelve: data.autoUnShelve,
+                    tagList: []
+                };
                 this.pageLoading = false;
             } else {
                 console.log('添加产品');

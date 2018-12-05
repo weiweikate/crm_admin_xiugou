@@ -55,6 +55,9 @@
     color: #ccc;
     font-size: 12px;
 }
+.href:link, .href:visited{
+    color: #33b4ff;
+}
 
 /*居中*/
 .tac{

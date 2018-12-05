@@ -1,5 +1,5 @@
 {
-    "proxy": "qa",
+    "proxy": "lijun",
     "env": {
         "qa": {
             "name": "测试环境",

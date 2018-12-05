@@ -94,7 +94,6 @@ export default {
         // 下一步
         nextSage() {
             if (this.content.length === 0) return this.$message.warning('请选择产品分类!');
-            this.keepAlive = true;
             this.$router.push({ name: 'productBaseParam', query: { cate: JSON.stringify(this.selectedItem), prodCode: this.prodCode }});
         }
     }
