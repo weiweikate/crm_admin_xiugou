@@ -37,7 +37,7 @@
                         <el-input type="textarea" :readonly="detail.status==2" v-model="detail.replyContent"></el-input>
                     </div>
                     <div class="detail-item">
-                        处理人：{{username}}
+                        处理人：<span v-if="detail.status==1">{{username}}</span><span v-else>{{detail.adminName}}</span>
                     </div>
                     <div style="margin-top: 30px" v-if="detail.status==1">
                         <el-button type="primary" v-loading="btnLoading" @click="update('reply')" v-auth="'service.feedBack.qrhf'">确认回复</el-button>
