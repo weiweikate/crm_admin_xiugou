@@ -128,7 +128,7 @@ export default {
         this.height = winHeight;
     },
     activated() {
-        // this.getList(this.page.currentPage);
+        this.getList(this.page.currentPage);
     },
 
     mounted() {
