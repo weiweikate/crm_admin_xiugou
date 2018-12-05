@@ -157,9 +157,13 @@
                         const attrArr = [];
                         this.naturalAttribute.forEach(v => {
                             if (v.defParam === '') {
-                                attrArr.push({ paramName: v.name, paramValue: v.value });
+                                if (v.value !== '') {
+                                    attrArr.push({ paramName: v.name, paramValue: v.value });
+                                }
                             } else {
-                                attrArr.push({ paramName: v.name, paramValue: v.defParam });
+                                if (v.defParam !== '') {
+                                    attrArr.push({ paramName: v.name, paramValue: v.defParam });
+                                }
                             }
                         });
                         this.btnLoading = true;

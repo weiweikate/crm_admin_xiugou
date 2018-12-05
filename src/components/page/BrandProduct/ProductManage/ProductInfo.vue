@@ -81,7 +81,7 @@
                   <div v-if="info.videoUrl && info.videoUrl!== ''" class="sep-video fl"></div>
                   <div v-for="(v,k) in info.mainImg" class="fl" :key="k">
                       <div class="img-list">
-                          <img :src="v" alt="">
+                          <img v-if="v && v!== ''" :src="v" alt="">
                       </div>
                   </div>
               </el-form-item>
@@ -171,15 +171,17 @@ export default {
                     });
                 }
                 this.info.mainImg = mainImgArr;
-                this.info.contentImgArr = this.info.content.split(',');
+                this.info.contentImgArr = this.info.content ? this.info.content.split(',') : '';
                 let str = '';
-                this.info.undeliveredList.forEach(v => {
-                    str += v.cityNames + ',';
-                });
+                if (this.info.undeliveredList && this.info.undeliveredList.length !== 0) {
+                    this.info.undeliveredList.forEach(v => {
+                        str += v.cityNames + ',';
+                    });
+                }
                 const cArr = str.split(',');
                 cArr.splice(cArr.length - 1, 1);
                 this.info.unSupportsssAreasDataArr = cArr;
-                let tagArr = [];
+                const tagArr = [];
                 if (this.info.tagList.length !== 0) {
                     this.info.tagList.forEach(v => {
                         tagArr.push(v.tagName);

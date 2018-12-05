@@ -322,8 +322,10 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import request from '@/http/http';
     import * as api from '@/api/api.js';
+    import { beforeAvatarUpload } from '@/JS/commom.js';
     export default {
         components: { vBreadcrumb },
+        mixins: [beforeAvatarUpload],
         data() {
             return {
                 nav: ['品牌产品管理', '产品管理', '销售信息编辑'],
@@ -434,7 +436,7 @@
                 this.tmpParamList = resData.specifies;
                 if (resData.checkStatus) {
                     this.salesAttrArr = [];
-                    let tmp = [];
+                    const tmp = [];
                     resData.specifies.forEach((v, k) => {
                         const obj = {
                             name: v.specName,
@@ -450,7 +452,7 @@
                                 });
                             });
                         }
-                        tmp.push(obj)
+                        tmp.push(obj);
                     });
                     this.salesAttrArr = tmp;
                 } else {
@@ -490,6 +492,7 @@
                         });
                     }
                 }
+                console.log(this.salesAttrArr);
                 this.pageLoading = false;
             },
             // 改变表头单位
@@ -575,9 +578,10 @@
                             });
                         }
                     });
-                    arr.push(obj);
+                    if (obj.specValues.length !== 0) {
+                        arr.push(obj);
+                    }
                 });
-                if (arr.length === 0) return this.$message.warning('请选择销售属性');
                 this.flag = arr.every(v => {
                     return v.specValues.length === 0;
                 });
