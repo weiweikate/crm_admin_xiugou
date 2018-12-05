@@ -8,7 +8,7 @@
                 <el-table-column prop="spec" label="规格" align="center"></el-table-column>
                 <el-table-column label="操作" align="center" width="150px">
                     <template slot-scope="scope">
-                        <el-checkbox v-model="scope.row.checked" @change="checked=>selectPro(checked,scope.row)" label="选择产品" :value='scope.id'></el-checkbox>
+                        <el-checkbox v-model="scope.row.checked" @change="checked=>selectPro(checked,scope.row)" label="选择产品" :value='scope.id' :disabled="scope.row.stock<=0"></el-checkbox><span class="red" v-if="scope.row.stock<=0">已停用</span>
                     </template>
                 </el-table-column>
             </el-table>
@@ -76,9 +76,9 @@ export default {
             request.findActivityPackageProductAndSpecById({ packageId: this.giftId }).then(res => {
                 res.data.forEach(v => {
                     this.bodyLoading = false;
-                    const itemArr = v.specValues.split(',');
+                    const itemArr = v.specValues?v.specValues.split(','):[];
                     let specWrapArr = [];
-                    let specIdArr = v.productPriceId.split(',');
+                    let skuCode = v.skuCode?v.skuCode.split(','):[];
                     itemArr.forEach((item, index) => {
                         let itemObj = {};
                         itemObj.packageId = v.packageId;
@@ -86,8 +86,8 @@ export default {
                         itemObj.prodCode = v.prodCode;
                         // itemObj.productName = v.productName;
                         itemObj.productNumber = 1;
-                        itemObj.skuCode = specIdArr[index];
-                        itemObj.specValues = item;
+                        itemObj.skuCode = skuCode[index];
+                        itemObj.specValues = item.replace('@','-');
                         specWrapArr.push(itemObj);
                     });
                     this.selectedPro.push(specWrapArr);
@@ -134,10 +134,14 @@ export default {
                 res.data.forEach((v, k) => {
                     const o = {};
                     o.value = `${v.name} 产品ID：${v.prodCode}`;
+                    if(v.stock<=0){
+                        o.value += '(无库存)'
+                    }
                     o.id = v.id;
                     o.spec = { skuCode: v.skuCode ? v.skuCode.split(',') : [], spec: v.spec ? v.spec.replace(/@([0-9a-zA-Z\u4e00-\u9fa5]+)@([0-9a-zA-Z\u4e00-\u9fa5]+)@/g,'$1-$2').split(',') : [] };
                     // o.productId = v.id;
                     o.prodCode = v.prodCode;
+                    o.stock = v.stock;
                     o.productName = v.name;
                     tmpArr.push(o);
                 });
@@ -150,6 +154,10 @@ export default {
         handleSelect(item) {
             this.tableData = [];
             this.checkList = [];
+            if(item.stock<=0){
+                this.$message.warning('库存不足，请选择其他产品')
+                return;
+            }
             item.spec.skuCode.forEach((v, k) => {
                 const specItem = {
                     id: v,
@@ -228,6 +236,7 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+@import '../../../../assets/css/common/common.less';
 .gift-product-mange {
     /deep/.el-input__inner{
         border-radius: 0px;
@@ -257,5 +266,8 @@ export default {
         height: 55px;
       }
   }
+}
+.red{
+    color: @color-red;
 }
 </style>

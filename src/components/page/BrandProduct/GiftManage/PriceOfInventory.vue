@@ -97,9 +97,9 @@ export default {
                 let tmp = 0;
                 this.topTableRow = [];
                 res.data.forEach((v, k) => {
-                    const specIdArr = v.productPriceId.split(',');
+                    const specIdArr = v.skuCode.split(',');
                     const specValArr = v.specValues.split(',');
-                    const productPriceIdArr = v.productPriceId.split(',');
+                    const productPriceIdArr = v.skuCode.split(',');
                     const  idArr = v.packageSpecPriceId.split(',');
                     const stockArr = v.stock.split(',');
                     const totalNumber = v.totalNumber.split(',');
