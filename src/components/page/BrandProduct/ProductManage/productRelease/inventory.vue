@@ -431,7 +431,8 @@
                     thirdCategoryName: resData.thirdCategoryName,
                     paramList: resData.paramList
                 };
-                this.unit = resData.skuList.length === 0 ? '包' : resData.skuList[0].stockUnit;
+                let unitDefault = resData.skuList.length === 0 ? '包' : resData.skuList[0].stockUnit;
+                this.unit = unitDefault || '件';
                 this.priceTable = resData.skuList;
                 this.tmpParamList = resData.specifies;
                 if (resData.checkStatus) {
