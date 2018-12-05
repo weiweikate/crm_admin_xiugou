@@ -63,11 +63,11 @@
                     </div>
                     <div class="item">
                         <span>仓库品类数：</span>
-                        <span class="color-blue" @click="toProduct(detail)">{{detail.productCount}}</span>
+                        <span class="color-blue" @click="toProduct(detail)">{{detail.productCount||0}}</span>
                     </div>
                     <div class="item">
                         <span>仓库报损数：</span>
-                        <span>{{detail.lossCount}}</span>
+                        <span>{{detail.lossCount||0}}</span>
                     </div>
                     <div class="item" v-if="detail.type==3">
                         <span>供应商ID：</span>
@@ -86,15 +86,15 @@
                     </div>
                     <div class="item">
                         <span>库存总数：</span>
-                        <span>{{detail.code}}</span>
+                        <span>{{detail.totalStock||0}}</span>
                     </div>
                     <div class="item">
                         <span>剩余仓库库存：</span>
-                        <span>{{detail.code}}</span>
+                        <span>{{detail.remainderStock||0}}</span>
                     </div>
                     <div class="item">
                         <span>冻结库存：</span>
-                        <span>{{detail.code}}</span>
+                        <span>{{detail.freezeStock||0}}</span>
                     </div>
                     <div class="item">
                         <span>备注：</span>
