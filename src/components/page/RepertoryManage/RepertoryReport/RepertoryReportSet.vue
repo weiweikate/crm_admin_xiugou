@@ -85,7 +85,7 @@
                 <table class="selected-product" v-for="(item,index) in chooseLists" :key="index">
                     <tr v-for="(v,k) in item.skuList" :key="k">
                         <td v-if="k==0" :rowspan="item.skuList.length" style="width: 50px">{{index+1}}</td>
-                        <td>{{(v.name || '')+(v.specifyValues || '')}}</td>
+                        <td>{{(v.name || '')+(v.specifyValues?v.specifyValues.replace(/@/,'') :'')}}</td>
                         <td>产品ID：{{v.prodCode}}</td>
                         <td style="min-width:100px">x{{v.estimateCount}}</td>
                         <td style="min-width:80px;cursor: pointer;color:#33b4ff" @click="delSelectedPro(k,index)">删除
@@ -451,7 +451,7 @@
             editNumber(row) {
                 this.mask = true;
                 const data = {
-                    productId: row.id,
+                    prodCode: row.prodCode,
                     page: 1,
                     pageSize: 10000
                 };
@@ -492,7 +492,7 @@
                         this.headData = [];
                         if (!v.specifies || !v.specifyValues) return;
                         const specs = v.specifies.split('-');
-                        const specValues = v.specifyValues.split('-');
+                        const specValues = v.specifyValues.substring(1, v.specifyValues.length - 1).split('@');
                         specs.forEach((v1, k1) => {
                             const temp = {
                                 value: v1,
@@ -544,6 +544,7 @@
     }
     /deep/.el-dialog {
         border-radius: 10px;
+        max-width: 800px;
         overflow: auto;
         .el-dialog__header {
             border-bottom: 1px solid #eee;

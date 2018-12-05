@@ -94,7 +94,7 @@ export default {
                 supplierName: this.form.supplierName,
                 prodCode: this.form.prodCode,
                 supplierCode: this.form.supplierCode,
-                warehouseId: this.warehouseId,
+                warehouseCode: this.warehouseId,
                 page: val,
                 pageSize: this.page.pageSize
             };
@@ -122,7 +122,7 @@ export default {
         },
         getDetail() {
             const data = {
-                id: this.warehouseId
+                code: this.warehouseId
             };
             request.queryRepertoryById(data).then(res => {
                 this.name = res.data.name;
