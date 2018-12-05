@@ -221,7 +221,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="处理金额调整" v-if="orderCustomerServiceInfo.type==1||orderCustomerServiceInfo.type==2">
-                        <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~¥20.00区间内调整</span>
+                        <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~¥20.00区间内调整，其中含运费￥6.66</span>
                     </el-form-item>
                     <el-form-item label="售后处理说明">
                         <el-input v-model="form.remarks"></el-input>

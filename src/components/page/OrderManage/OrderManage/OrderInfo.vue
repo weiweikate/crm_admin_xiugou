@@ -210,24 +210,24 @@
                         <td :rowspan="v.rows" v-if="k1==0">{{v.quantity}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">¥{{v.payAmount}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
-                        <td :rowspan="v.customerServiceInfos.length" v-if="k1==0">
-                            <span v-if="v.expressInfos[k1]&&v.expressInfos[k1].expressName">{{v.expressInfos[k1].expressName}}</span>
+                        <td :rowspan="v.expressInfos.rows" v-if="k1%v.expressInfos.rows==0">
+                            <span v-if="v.expressInfos[k1/v.expressInfos.rows].expressName">{{v.expressInfos[k1/v.expressInfos.rows].expressName}}</span>
                             <span v-else>/</span>
                         </td>
-                        <td :rowspan="v.customerServiceInfos.length" v-if="k1==0">
-                            <span v-if="v.expressInfos[k1]&&v.expressInfos[k1].expressNo">{{v.expressInfos[k1].expressNo}}</span>
+                        <td :rowspan="v.expressInfos.rows" v-if="k1%v.expressInfos.rows==0">
+                            <span v-if="v.expressInfos[k1/v.expressInfos.rows].expressNo">{{v.expressInfos[k1/v.expressInfos.rows].expressNo}}</span>
                             <span v-else>/</span>
                         </td>
-                        <td :rowspan="v.customerServiceInfos.length" v-if="k1==0">
-                            <span v-if="v.expressInfos[k1]&&v.expressInfos[k1].skuNum">{{v.expressInfos[k1].skuNum}}</span>
+                        <td :rowspan="v.expressInfos.rows" v-if="k1%v.expressInfos.rows==0">
+                            <span v-if="v.expressInfos[k1/v.expressInfos.rows].skuNum">{{v.expressInfos[k1/v.expressInfos.rows].skuNum}}</span>
                             <span v-else>/</span>
                         </td>
-                        <td>
-                            <span v-if="v.customerServiceInfos[k1]&&v.customerServiceInfos[k1].status">{{status[v.customerServiceInfos[k1].status-1]}}</span>
+                        <td :rowspan="v.customerServiceInfos.rows" v-if="k1%v.customerServiceInfos.rows==0">
+                            <span v-if="v.customerServiceInfos[k1/v.customerServiceInfos.rows].status">{{status[v.customerServiceInfos[k1/v.customerServiceInfos.rows].status-1]}}</span>
                             <span v-else>无</span>
                         </td>
-                        <td>
-                            <span v-if="v.customerServiceInfos[k1]&&v.customerServiceInfos[k1].refundNum">{{v.customerServiceInfos[k1].refundNum}}</span>
+                        <td :rowspan="v.customerServiceInfos.rows" v-if="k1%v.customerServiceInfos.rows==0">
+                            <span v-if="v.customerServiceInfos[k1/v.customerServiceInfos.rows].refundNum">{{v.customerServiceInfos[k1/v.customerServiceInfos.rows].refundNum}}</span>
                             <span v-else>/</span>
                         </td>
                     </tr>
@@ -308,8 +308,6 @@
                         v.spec = v.spec.join('  ');
                         v.customerServiceInfos = [];
                         v.expressInfos = [];
-                        res.data.customerServiceInfos.push({ warehouseOrderNo: 'C88888888', status: 1, refundNum: 1 }, { warehouseOrderNo: 'C88888888', status: 2, refundNum: 1 });
-                        res.data.expressInfos.push({ warehouseOrderNo: 'C88888888', expressName: '申通', expressNo: '4343443', skuNum: 1 });
                         if (res.data.customerServiceInfos) {
                             res.data.customerServiceInfos.forEach((v1, k1) => {
                                 if (v.warehouseOrderNo == v1.warehouseOrderNo) {
@@ -322,8 +320,9 @@
                                 v.expressInfos.push(v1);
                             }
                         });
-                        const length = v.customerServiceInfos.length > v.expressInfos.length ? v.customerServiceInfos.length : v.expressInfos.length;
-                        v.rows = length;
+                        v.rows = v.customerServiceInfos.length * v.expressInfos.length / this.getMaxDivisor(v.customerServiceInfos.length, v.expressInfos.length);
+                        v.customerServiceInfos.rows = v.rows / (v.customerServiceInfos).length;
+                        v.expressInfos.rows = v.rows / (v.expressInfos).length;
                         this.tableData.push(v);
                     });
                     this.payInfo = {
@@ -340,6 +339,11 @@
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+            // 获取最大公约数，计算合并行数
+            getMaxDivisor(n, m) {
+                if (m === 0) return n;
+                return this.getMaxDivisor(m, n % m);
             }
         }
     };
