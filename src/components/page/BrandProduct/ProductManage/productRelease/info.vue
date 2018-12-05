@@ -318,7 +318,6 @@
                     this.pageLoading = false;
                     console.log(err);
                 });
-                await this.getAllTagType();
                 this.imgInfoList = resData.content ? resData.content.split(',') : [];
                 await this.getFeightList();
                 let str = '';
@@ -343,9 +342,9 @@
                         this.selectedTagArr.push({ label: v.tagName, value: v.tagId });
                     });
                 }
-                const tagId = this.tagTypeArr[0] ? this.tagTypeArr[0].id : 0;
-                const tagSel = this.tagTypeArr[0] ? this.tagTypeArr[0].selected : false;
-                await this.getAllTags(tagId, 0, tagSel);
+                // const tagId = this.tagTypeArr[0] ? this.tagTypeArr[0].id : 0;
+                // const tagSel = this.tagTypeArr[0] ? this.tagTypeArr[0].selected : false;
+                // await this.getAllTags(tagId, 0, tagSel);
                 this.form.videoUrl = resData.videoUrl ? resData.videoUrl : '';
                 this.form.needDeliver = resData.needDeliver ? resData.needDeliver.toString() : '';
                 this.form.freightTemplateId = resData.freightTemplateId ? resData.freightTemplateId : '';
@@ -480,8 +479,8 @@
                     this.tagLoading = false;
                     this.tagArr = [];
                     this.tagTypeArr[key].selected = !this.tagTypeArr[key].selected;
-                    if (res.data && res.data.length !== 0) {
-                        res.data.forEach(v => {
+                    if (res.data[0].sysTagLibraryVOList && res.data[0].sysTagLibraryVOList.length !== 0) {
+                        res.data[0].sysTagLibraryVOList.forEach(v => {
                             this.tagArr.push({ label: v.name, value: v.id });
                         });
                     }
