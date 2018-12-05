@@ -288,7 +288,7 @@
                 if (!this.prodCode) return this.$message.warning('产品编码丢失!');
                 this.pageLoading = true;
                 let resData = {};
-                request.findProductDetailsByCode({ code: this.prodCode }).then(res => {
+                await request.findProductDetailsByCode({ code: this.prodCode }).then(res => {
                     resData = res.data || {};
                     let flatServiceArr = [];
                     const limitServer = resData.restrictions || 0;

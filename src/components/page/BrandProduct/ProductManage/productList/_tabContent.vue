@@ -37,18 +37,18 @@
                     <span v-if="scope.row.status == 0">删除</span>
                     <span v-else-if="scope.row.status == 1">待发布</span>
                     <span v-else-if="scope.row.status == 2">审核中</span>
-                    <span v-else-if="scope.row.status == 3">已通过</span>
+                    <span v-else-if="scope.row.status == 3">待上架</span>
                     <span v-else-if="scope.row.status == 4">已上架</span>
-                    <span v-else-if="scope.row.status == 5">未通过</span>
+                    <span v-else-if="scope.row.status == 5">待发布</span>
                     <span v-else-if="scope.row.status == 6">已下架</span>
                     <span v-else>-</span>
                 </template>
             </el-table-column>
             <el-table-column prop="status" label="审核状态" align="center">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.status == 5">未通过</span>
+                    <span v-if="scope.row.status == 5">审核通过</span>
                     <span v-else-if="scope.row.status == 2">审核中</span>
-                    <span v-else-if="scope.row.status == 3">已通过</span>
+                    <span v-else-if="scope.row.status == 3">审核驳回</span>
                     <span v-else>-</span>
                 </template>
             </el-table-column>
