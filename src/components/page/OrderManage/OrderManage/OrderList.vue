@@ -41,8 +41,8 @@
                 <el-form-item prop="userPhone" label="用户账号">
                     <el-input v-model="form.userPhone" placeholder="请输入用户账号"></el-input>
                 </el-form-item>
-                <el-form-item prop="userPhoneName" label="收货人姓名">
-                    <el-input v-model="form.userPhoneName" placeholder="请输入收货人姓名"></el-input>
+                <el-form-item prop="userName" label="收货人姓名">
+                    <el-input v-model="form.userName" placeholder="请输入收货人姓名"></el-input>
                 </el-form-item>
                 <el-form-item prop="marker" label="订单标记">
                     <el-select v-model="form.marker" placeholder="请选择">

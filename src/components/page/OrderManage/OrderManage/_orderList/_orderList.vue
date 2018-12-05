@@ -29,8 +29,7 @@
                         <div>下单时间 <span class="marl20">{{v.warehouseOrder.createTime|formatDateAll}}</span></div>
                         <div>
                             <el-popover v-auth="'order.orderList.bj'" placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
-                                            <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
-                                                                                                         :style="{color:markArr[v.warehouseOrder.markStar-1]}">★</span></span>
+                                            <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star" :style="{color:v.warehouseOrder.starColor}">★</span></span>
                                 <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
                                       :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
                                 <el-input v-model="v.warehouseOrder.markStar" placeholder="请输入备注"></el-input>
@@ -135,7 +134,7 @@
                     this.pageLoading = false;
                     for (const i in res.data.data) {
                         res.data.data[i].warehouseOrder.starColor =
-                            this.markArr[res.data.data[i].warehouseOrder.markStar - 1] == undefined
+                            this.markArr[res.data.data[i].warehouseOrder.markStar - 1] == undefined || null
                                 ? '#ccc'
                                 : this.markArr[res.data.data[i].warehouseOrder.markStar - 1].label;
                         res.data.data[i].productOrders.forEach((v, k) => {
@@ -161,7 +160,7 @@
                 const data = {};
                 data.id = v.id;
                 data.adminStars = v1.value;
-                data.adminRemark = v.adminRemark;
+                data.supplierCode = v.supplierCode;
                 request.orderSign(data).then(res => {
                     this.$message.success(res.msg);
                     v.starColor = v1.label;
