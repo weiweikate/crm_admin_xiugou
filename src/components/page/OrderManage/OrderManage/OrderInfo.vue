@@ -15,7 +15,7 @@
                     </div>
                     <div class="item">
                         <span>支付方式</span>
-                        <span>{{customerServiceInfos.orderNum}}</span>
+                        <span>{{payType}}</span>
                     </div>
                     <!--待付款，交易完成-->
                     <div class="item" v-if="customerServiceInfos.status==1&&customerServiceInfos.status==4">
@@ -211,23 +211,23 @@
                         <td :rowspan="v.rows" v-if="k1==0">¥{{v.payAmount}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
                         <td :rowspan="v.expressInfos.rows" v-if="k1%v.expressInfos.rows==0">
-                            <span v-if="v.expressInfos[k1/v.expressInfos.rows].expressName">{{v.expressInfos[k1/v.expressInfos.rows].expressName}}</span>
+                            <span v-if="v.expressInfos[k1/v.expressInfos.rows]&&v.expressInfos[k1/v.expressInfos.rows].expressName">{{v.expressInfos[k1/v.expressInfos.rows].expressName}}</span>
                             <span v-else>/</span>
                         </td>
                         <td :rowspan="v.expressInfos.rows" v-if="k1%v.expressInfos.rows==0">
-                            <span v-if="v.expressInfos[k1/v.expressInfos.rows].expressNo">{{v.expressInfos[k1/v.expressInfos.rows].expressNo}}</span>
+                            <span v-if="v.expressInfos[k1/v.expressInfos.rows]&&v.expressInfos[k1/v.expressInfos.rows].expressNo">{{v.expressInfos[k1/v.expressInfos.rows].expressNo}}</span>
                             <span v-else>/</span>
                         </td>
                         <td :rowspan="v.expressInfos.rows" v-if="k1%v.expressInfos.rows==0">
-                            <span v-if="v.expressInfos[k1/v.expressInfos.rows].skuNum">{{v.expressInfos[k1/v.expressInfos.rows].skuNum}}</span>
+                            <span v-if="v.expressInfos[k1/v.expressInfos.rows]&&v.expressInfos[k1/v.expressInfos.rows].skuNum">{{v.expressInfos[k1/v.expressInfos.rows].skuNum}}</span>
                             <span v-else>/</span>
                         </td>
                         <td :rowspan="v.customerServiceInfos.rows" v-if="k1%v.customerServiceInfos.rows==0">
-                            <span v-if="v.customerServiceInfos[k1/v.customerServiceInfos.rows].status">{{status[v.customerServiceInfos[k1/v.customerServiceInfos.rows].status-1]}}</span>
+                            <span v-if="v.customerServiceInfos[k1/v.customerServiceInfos.rows]&&v.customerServiceInfos[k1/v.customerServiceInfos.rows].status">{{status[v.customerServiceInfos[k1/v.customerServiceInfos.rows].status-1]}}</span>
                             <span v-else>无</span>
                         </td>
                         <td :rowspan="v.customerServiceInfos.rows" v-if="k1%v.customerServiceInfos.rows==0">
-                            <span v-if="v.customerServiceInfos[k1/v.customerServiceInfos.rows].refundNum">{{v.customerServiceInfos[k1/v.customerServiceInfos.rows].refundNum}}</span>
+                            <span v-if="v.customerServiceInfos[k1/v.customerServiceInfos.rows]&&v.customerServiceInfos[k1/v.customerServiceInfos.rows].refundNum">{{v.customerServiceInfos[k1/v.customerServiceInfos.rows].refundNum}}</span>
                             <span v-else>/</span>
                         </td>
                     </tr>
@@ -260,7 +260,8 @@
                 expressInfos: {},
                 orderInvoiceInfo: {},
                 warehouseOrder: {},
-                payInfo: {}
+                payInfo: {},
+                payType: ''
             };
         },
 
@@ -315,14 +316,16 @@
                                 }
                             });
                         }
-                        res.data.expressInfos.forEach((v1, k1) => {
-                            if (v.warehouseOrderNo == v1.warehouseOrderNo) {
-                                v.expressInfos.push(v1);
-                            }
-                        });
-                        v.rows = v.customerServiceInfos.length * v.expressInfos.length / this.getMaxDivisor(v.customerServiceInfos.length, v.expressInfos.length);
-                        v.customerServiceInfos.rows = v.rows / (v.customerServiceInfos).length;
-                        v.expressInfos.rows = v.rows / (v.expressInfos).length;
+                        if (res.data.expressInfos) {
+                            res.data.expressInfos.forEach((v1, k1) => {
+                                if (v.warehouseOrderNo == v1.warehouseOrderNo) {
+                                    v.expressInfos.push(v1);
+                                }
+                            });
+                        }
+                        v.rows = (v.customerServiceInfos.length || 1) * (v.expressInfos.length || 1) / this.getMaxDivisor(v.customerServiceInfos.length || 1, v.expressInfos.length || 1);
+                        v.customerServiceInfos.rows = v.rows / (v.customerServiceInfos.length || 1);
+                        v.expressInfos.rows = v.rows / (v.expressInfos.length || 1);
                         this.tableData.push(v);
                     });
                     this.payInfo = {
@@ -336,6 +339,9 @@
                         invoiceAmount: invoiceAmount,
                         payAmount: payAmount
                     };
+                    if (res.data.orderPayInfo && res.data.orderPayInfo.payType) {
+                        this.payType = this.getType(res.data.orderPayInfo.payType);
+                    }
                 }).catch(err => {
                     console.log(err);
                 });
@@ -344,6 +350,26 @@
             getMaxDivisor(n, m) {
                 if (m === 0) return n;
                 return this.getMaxDivisor(m, n % m);
+            },
+            getType(value) {
+                let result = '';
+                if ((value & 1) != 0) {
+                    result += '纯平台+';
+                }
+                if ((value & 2) != 0) {
+                    result += '微信(小程序)+';
+                }
+                if ((value & 4) != 0) {
+                    result += '微信(APP)+';
+                }
+                if ((value & 8) != 0) {
+                    result += '支付宝+';
+                }
+                if ((value & 16) != 0) {
+                    result += '银联+';
+                }
+                if (result != '') result = result.slice(0, -1);
+                return result;
             }
         }
     };

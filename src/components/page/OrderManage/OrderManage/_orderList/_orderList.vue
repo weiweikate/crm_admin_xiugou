@@ -30,7 +30,7 @@
                         <div>
                             <el-popover v-auth="'order.orderList.bj'" placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
                                             <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
-                                                                                                         :style="{color:v.starColor}">★</span></span>
+                                                                                                         :style="{color:markArr[v.warehouseOrder.markStar-1]}">★</span></span>
                                 <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
                                       :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
                                 <el-input v-model="v.warehouseOrder.markStar" placeholder="请输入备注"></el-input>
@@ -62,14 +62,14 @@
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
                         <div>供应商：{{v.warehouseOrder.supplierName}}</div>
                         <div>发货仓库：{{warehouseArr[v.warehouseOrder.warehouseType-1]}}</div>
-                        <div>推送状态：{{v.warehouseOrder.lockStatus}}</div>
+                        <div>推送状态：{{pushStatusArr[v.warehouseOrder.subStatus]}}</div>
                         <div>锁定状态：{{lockStatusArr[v.warehouseOrder.lockStatus]}}</div>
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
                         <div>开具发票：{{v.orderInvoiceInfo?'是':'否'}}</div>
                     </td>
                     <td :rowspan="v.productOrders.length" v-if="index==0">
-                        <div class="order-status">待付款</div>
+                        <div class="order-status">{{statusArr[v.warehouseOrder.status-1]}}</div>
                         <!--<div class="color-blue" v-if="v.status<4" @click="cancelOrder(v)">取消订单</div>-->
                         <div class="color-blue" @click="$router.push({path:'/orderInfo',query:{orderInfoId:v.warehouseOrder.warehouseOrderNo}})">订单详情</div>
                     </td>
@@ -118,10 +118,8 @@
                 tableData: [],
                 pageLoading: false,
                 data: {},
-                // returnType状态
-                returnTypeArr: ['退款', '退货', '换货'],
-                // 售后状态
-                afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭'],
+                statusArr: ['待付款', '已付款', '已发货', '交易完成', '交易关闭'],
+                pushStatusArr: ['无需推送', '未推送', '推送失败', '推送成功'], // 0.无需推送 1.未推送 2.推送失败 3.推送成功
                 warehouseOrderNos: []
             };
         },

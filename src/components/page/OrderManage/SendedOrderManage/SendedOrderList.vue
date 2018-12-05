@@ -23,8 +23,8 @@
                     <el-select v-model="form.status" placeholder="全部">
                         <el-option label="全部" value=""></el-option>
                         <el-option label="仓库接收失败" value="1"></el-option>
-                        <el-option label="全部发货" value="2"></el-option>
-                        <el-option label="等待仓库发货" value="3"></el-option>
+                        <el-option label="等待仓库发货" value="2"></el-option>
+                        <el-option label="全部发货" value="3"></el-option>
                         <el-option label="发货取消" value="4"></el-option>
                     </el-select>
                 </el-form-item>
@@ -37,10 +37,10 @@
         <div class="table-block">
             <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
                     <el-table-column label="发货单号" align="center">
-                        <template slot-scope="scope">{{scope.row.orderProductExpress.expressNo}}</template>
+                        <template slot-scope="scope">{{scope.row.orderDelivery?scope.row.orderDelivery.dispatchNo:'/'}}</template>
                     </el-table-column>
                     <el-table-column label="仓库订单号" align="center">
-                        <template slot-scope="scope">{{scope.row.orderProductExpress.warehouseOrderNo}}</template>
+                        <template slot-scope="scope">{{scope.row.orderDelivery?scope.row.orderDelivery.warehouseOrderNo:'/'}}</template>
                     </el-table-column>
                     <el-table-column label="供应商名称" align="center">
                         <template slot-scope="scope">{{scope.row.orderDelivery.supplierName}}</template>
@@ -50,15 +50,15 @@
                     </el-table-column>
                     <el-table-column label="物流公司" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.orderProductExpress.expressName">{{scope.row.orderProductExpress.expressName}}</template>
+                            <template v-if="scope.row.orderProductExpress&&scope.row.orderProductExpress.expressName">{{scope.row.orderProductExpress.expressName}}</template>
                             <template v-else>/</template>
                         </template>
                     </el-table-column>
                     <el-table-column label="发货单状态" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.orderDelivery.status == 1">仓库接收失败</template>
-                            <template v-if="scope.row.orderDelivery.status == 2">全部发货</template>
-                            <template v-if="scope.row.orderDelivery.status == 3">等待仓库发货</template>
+                            <template v-if="scope.row.orderDelivery.status == 3">全部发货</template>
+                            <template v-if="scope.row.orderDelivery.status == 2">等待仓库发货</template>
                             <template v-if="scope.row.orderDelivery.status == 4">发货取消</template>
                         </template>
                     </el-table-column>

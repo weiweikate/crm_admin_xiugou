@@ -160,11 +160,10 @@ export default {
             orderStatusArr: [// 订单状态
                 { label: '待付款', value: '1' },
                 { label: '已付款', value: '2' },
-                { label: '已付款', value: '3' },
-                { label: '部分发货', value: '4' },
-                { label: '已发货', value: '5' },
-                { label: '交易完成', value: '6' },
-                { label: '交易关闭', value: '7' }
+                // { label: '部分发货', value: '6' },
+                { label: '已发货', value: '3' },
+                { label: '交易完成', value: '4' },
+                { label: '交易关闭', value: '5' }
             ],
             form: {
                 platformNo: '', // 平台级订单号

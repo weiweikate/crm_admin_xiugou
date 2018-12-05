@@ -458,7 +458,7 @@ export const asyncRouterMap = [
         path: '/showValue',
         component: Layout,
         name: 'showValue',
-        meta: { title: '秀值模块', icon: 'icon-shezhi'},
+        meta: { title: '秀值模块', icon: 'icon-shezhi' },
         children: [
             {
                 name: 'taskHome',
@@ -503,7 +503,7 @@ export const asyncRouterMap = [
                 name: 'logisticsCompanyList',
                 path: '/logisticsCompanyList',
                 component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
-                meta: { title: '物流公司列表'}
+                meta: { title: '物流公司列表' }
             }
         ]
     },
@@ -1702,9 +1702,9 @@ export const asyncRouterMap = [
                 meta: { title: '仓库报损数详情' }
             }
         ]
-    },
+    }
 
-    //{ path: '*', redirect: '/404', hidden: true }
+    // { path: '*', redirect: '/404', hidden: true }
 ];
 
 export const constantRouterMap = [

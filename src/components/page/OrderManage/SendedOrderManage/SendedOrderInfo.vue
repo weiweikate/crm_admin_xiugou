@@ -15,7 +15,7 @@
                     </div>
                     <div class="item">
                         <span>发货单号</span>
-                        <span>{{orderProductExpress.orderProductNo}}</span>
+                        <span>{{orderDelivery.dispatchNo}}</span>
                     </div>
                     <div class="item">
                         <span>供应商名称</span>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="item">
                         <span>物流费用</span>
-                        <span>{{orderDelivery.freightAmount}}</span>
+                        <span>¥{{orderDelivery.freightAmount||0}}</span>
                     </div>
                     <div class="item">
                         <span>发货单创建时间</span>
