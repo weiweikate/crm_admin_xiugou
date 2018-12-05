@@ -16,7 +16,7 @@ export const findWarehouseLike = ['/warehouse/findWarehouseLike', { methods: 'ge
 // 根据code和name查询仓库
 export const findSupplierLike = ['/warehouse/findSupplierLike', { methods: 'get' }];
 // 获取仓库byid
-export const queryRepertoryById = ['/warehouse/queryById', { methods: 'get' }];
+export const queryRepertoryById = ['/warehouse/queryByCode', { methods: 'get' }];
 // 获取仓库列表
 export const queryRepertoryList = '/warehouse/queryList';
 // 启用停用

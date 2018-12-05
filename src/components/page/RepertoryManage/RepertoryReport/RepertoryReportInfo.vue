@@ -57,7 +57,9 @@
                 <el-table-column prop="prodCode" label="产品ID" align="center"></el-table-column>
                 <el-table-column prop="skuCode" label="商品编码" align="center"></el-table-column>
                 <el-table-column prop="productCategory" label="产品类目" align="center"></el-table-column>
-                <el-table-column prop="specifyValues" label="规格" align="center"></el-table-column>
+                <el-table-column prop="specifyValues" label="规格" align="center">
+                    <template slot-scope="scope">{{scope.row.specifyValues.replace(/@/g,' ')}}</template>
+                </el-table-column>
                 <el-table-column prop="estimateCount" label="预计入库数量" align="center"></el-table-column>
                 <el-table-column label="实际入库数量" align="center">
                     <template slot-scope="scope">{{scope.row.realCount||'/'}}</template>
