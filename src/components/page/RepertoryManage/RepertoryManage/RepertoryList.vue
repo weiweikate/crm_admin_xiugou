@@ -278,8 +278,8 @@ export default {
         },
         // 跳转到品类数
         toProduct(row) {
-            sessionStorage.setItem('repertotyId', row.id);
-            this.$router.push({ path: '/repertoryInventory', query: { repertotyId: row.id }});
+            sessionStorage.setItem('repertotyId', row.code);
+            this.$router.push({ path: '/repertoryInventory', query: { repertotyId: row.code }});
         },
         toLoss(row) {
             sessionStorage.setItem('repertotyId', row.id);
