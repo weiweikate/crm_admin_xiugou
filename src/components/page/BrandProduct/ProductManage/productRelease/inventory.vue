@@ -10,7 +10,7 @@
         <el-card>
             <el-steps space="100%" :active="1" finish-status="success">
                 <el-step title="基础参数编辑"></el-step>
-                <el-step title="库存编辑"></el-step>
+                <el-step title="销售信息编辑"></el-step>
                 <el-step title="商品详情编辑"></el-step>
             </el-steps>
             <el-form :model="form" ref="form" label-position="right" label-width="100px">

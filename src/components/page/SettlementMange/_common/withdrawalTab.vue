@@ -78,6 +78,7 @@
                 <el-form-item prop="beginTime" label="发起时间:">{{recordForm.createTime | formatDateAll}}</el-form-item>
                 <el-form-item prop="blank" label="银行:">{{recordForm.bankName}}</el-form-item>
                 <el-form-item prop="card" label="提现卡号:">{{recordForm.cardNo}}</el-form-item>
+                <el-form-item prop="status" label="提现状态:">{{}}</el-form-item>
                 <el-form-item prop="operatePeople" label="操作人:">{{recordForm.adminName}}</el-form-item>
                 <el-form-item prop="confirmTime" label="确认时间:">{{recordForm.updateTime | formatDateAll}}</el-form-item>
             </el-form>

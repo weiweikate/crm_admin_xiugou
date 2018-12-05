@@ -10,7 +10,7 @@
        <el-card>
            <el-steps :space="900" :active="2" finish-status="success">
                <el-step title="基础参数编辑"></el-step>
-               <el-step title="库存编辑"></el-step>
+               <el-step title="销售信息编辑"></el-step>
                <el-step title="商品详情编辑"></el-step>
            </el-steps>
            <el-form :model="form" ref="form" :rules="rules" label-position="right" label-width="120px">
@@ -109,7 +109,7 @@
                </el-form-item>
                <el-form-item prop="flatService" label="平台服务">
                    <el-checkbox-group v-model="form.flatService">
-                       <el-checkbox :label="1">不支持使用优惠卷</el-checkbox>
+                       <el-checkbox :label="1">不支持使用优惠券</el-checkbox>
                        <el-checkbox :label="2">提供发票</el-checkbox>
                        <el-checkbox :label="4">支持7天无理由退换</el-checkbox>
                    </el-checkbox-group>
