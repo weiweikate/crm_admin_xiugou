@@ -34,9 +34,9 @@
             </el-table-column>
             <el-table-column prop="status" label="商品状态" align="center">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.status == 0">删除</span>
-                    <span v-else-if="scope.row.status == 1">待发布</span>
-                    <span v-else-if="scope.row.status == 2">审核中</span>
+                    <!--<span v-if="scope.row.status == 0">删除</span>-->
+                    <span v-if="scope.row.status == 1">待发布</span>
+                    <span v-else-if="scope.row.status == 2">待审核</span>
                     <span v-else-if="scope.row.status == 3">待上架</span>
                     <span v-else-if="scope.row.status == 4">已上架</span>
                     <span v-else-if="scope.row.status == 5">待发布</span>
@@ -91,13 +91,15 @@
                 </template>
             </el-table-column>
             <el-table-column prop="freightTemplateName" label="运费模板" align="center"></el-table-column>
-            <!--<el-table-column prop="sendType" label="推送状态" align="center">-->
-                <!--<template slot-scope="scope">-->
-                    <!--<span v-if="scope.row.sendType == 1">未推送</span>-->
-                    <!--<span v-else-if="scope.row.sendType == 2">推送成功</span>-->
-                    <!--<span v-else>-</span>-->
-                <!--</template>-->
-            <!--</el-table-column>-->
+            <el-table-column prop="brandName" label="品牌" align="center"></el-table-column>
+            <el-table-column prop="supplierCode" label="供应商ID" align="center"></el-table-column>
+            <el-table-column prop="sendType" label="推送状态" align="center">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.sendType == 1">未推送</span>
+                    <span v-else-if="scope.row.sendType == 2">推送成功</span>
+                    <span v-else>-</span>
+                </template>
+            </el-table-column>
             <el-table-column label="创建时间" align="center">
                 <template slot-scope="scope" v-if="scope.row.createTime">
                     {{scope.row.createTime | formatDateAll}}
@@ -180,15 +182,9 @@ export default {
                 this.tableData = [];
                 if (tblData.data && tblData.data.length !== 0) {
                     tblData.data.forEach(v => {
-                        let restrictions = v.restrictions || 0;
-                        switch (restrictions.toString()) {
-                            case '1': v.tags = ['不支持使用优惠券']; break;
-                            case '2': v.tags = ['提供发票']; break;
-                            case '3': v.tags = ['不支持使用优惠券', '提供发票']; break;
-                            case '4': v.tags = ['支持7天无理由退换']; break;
-                            case '5': v.tags = ['不支持使用优惠券', '支持7天无理由退换']; break;
-                            case '6': v.tags = ['提供发票', '支持7天无理由退换']; break;
-                            case '7': v.tags = ['不支持使用优惠券', '提供发票', '支持7天无理由退换']; break;
+                        const restrictions = v.restrictions || 0;
+                        if (restrictions.toString() == 4) {
+                            v.tags = ['支持7天无理由退换'];
                         }
                         this.tableData.push(v);
                     });
@@ -252,7 +248,7 @@ export default {
                 };
                 request.updateProdRemark(data).then(res => {
                     this.$message.success(res.msg);
-                    this.getList(this.page.currentPage)
+                    this.getList(this.page.currentPage);
                 }).catch(err => {
                     console.log(err);
                 });
