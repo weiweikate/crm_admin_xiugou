@@ -491,8 +491,8 @@
                             }
                         });
                     }
+                    console.log(this.salesAttrArr);
                 }
-                console.log(this.salesAttrArr);
                 this.pageLoading = false;
             },
             // 改变表头单位
@@ -604,7 +604,7 @@
                 });
             },
             // 根据三级类目获取销售属性列表
-            getSalesList() {
+            async getSalesList() {
                 const thirdCateId = this.form.thirdCategoryId || '';
                 const data = {
                     categoryId: thirdCateId,
@@ -613,7 +613,7 @@
                     pageSize: 10000
                 };
                 this.salesLoading = true;
-                request.queryPropertyPageListByCate(data).then(res => {
+                await request.queryPropertyPageListByCate(data).then(res => {
                     this.salesLoading = false;
                     const tplData = res.data;
                     const tmpArr = [];
