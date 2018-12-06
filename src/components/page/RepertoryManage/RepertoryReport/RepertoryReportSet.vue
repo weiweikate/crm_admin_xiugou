@@ -270,6 +270,9 @@
                     page: val,
                     pageSize: this.page.pageSize
                 };
+                if (!data.warehouseCode) {
+                    return this.$message.warning('请输入入库方名称或编码');
+                }
                 this.page.currentPage = val;
                 request.SPUList(data).then(res => {
                     this.tableData = res.data.data;
