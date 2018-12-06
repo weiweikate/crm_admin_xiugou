@@ -166,12 +166,12 @@
                         <el-table-column prop="skuCode" label="SKU编码" align="center" width="225"></el-table-column>
                         <el-table-column label="SKU条形码" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input :disabled="status == 4 || (scope.row.barCode == '' && scope.row.supplierSkuCode == '')" v-model="scope.row.barCode"></el-input>
+                                <el-input :disabled="status == 4 || !scope.row.isEdit" v-model="scope.row.barCode"></el-input>
                             </template>
                         </el-table-column>
                         <el-table-column label="供应商SKU编码" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input :disabled="status == 4 || (scope.row.barCode == '' && scope.row.supplierSkuCode == '')" v-model="scope.row.supplierSkuCode"></el-input>
+                                <el-input :disabled="status == 4 || !scope.row.isEdit" v-model="scope.row.supplierSkuCode"></el-input>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -196,7 +196,7 @@
                         </el-table-column>
                         <el-table-column prop="sellStock" label="可售库存" align="center">
                             <template slot-scope="scope">
-                                <el-input :disabled="status == 4" v-if="form.checkStatus" v-model="scope.row.sellStock"></el-input>
+                                <el-input :disabled="status == 4" v-if="scope.row.warehouseStock" :max="scope.row.warehouseStock" v-model="scope.row.sellStock"></el-input>
                                 <span v-else>-</span>
                             </template>
                         </el-table-column>
@@ -224,15 +224,15 @@
                         </el-table-column>
                         <el-table-column prop="sellStock" label="可售库存" align="center">
                             <template slot-scope="scope">
-                                <el-input v-if="form.checkStatus" v-model="scope.row.sellStock"></el-input>
+                                <el-input-number :disabled="status == 4" v-if="scope.row.warehouseStock" :max="scope.row.warehouseStock" v-model="scope.row.sellStock"></el-input-number>
                                 <span v-else>-</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作" align="center">
-                            <template slot-scope="scope">
-                                <span class="primary-text" @click="showWareaMsg(scope.row)">查看</span>
-                            </template>
-                        </el-table-column>
+                        <!--<el-table-column label="操作" align="center">-->
+                            <!--<template slot-scope="scope">-->
+                                <!--<span class="primary-text" @click="showWareaMsg(scope.row)">查看</span>-->
+                            <!--</template>-->
+                        <!--</el-table-column>-->
                     </el-table>
                 </el-form-item>
                 <el-form-item label=" ">
@@ -435,7 +435,7 @@
                     paramList: resData.paramList
                 };
                 this.status = resData.status;
-                let unitDefault = resData.skuList.length === 0 ? '件' : resData.skuList[0].stockUnit;
+                const unitDefault = resData.skuList.length === 0 ? '件' : resData.skuList[0].stockUnit;
                 this.unit = unitDefault || '件';
                 this.priceTable = resData.skuList;
                 this.tmpParamList = resData.specifies;
@@ -601,8 +601,15 @@
                     this.createListLoading = false;
                     this.$message.success(res.msg);
                     this.priceTable = [];
-                    if (res.data.length !== 0) {
-                        this.priceTable = res.data;
+                    if (res.data && res.data.length !== 0) {
+                        res.data.forEach(v => {
+                            v.isEdit = true;
+                            // 如果SKU条形码和SKU编码都有则不可以编辑价格
+                            if (v.barCode && v.supplierSkuCode) {
+                                v.isEdit = false;
+                            }
+                            this.priceTable.push(v)
+                        });
                     }
                 }).catch(err => {
                     this.createListLoading = false;

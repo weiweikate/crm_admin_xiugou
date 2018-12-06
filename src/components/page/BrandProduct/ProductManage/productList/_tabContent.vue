@@ -46,7 +46,7 @@
             </el-table-column>
             <el-table-column prop="status" label="审核状态" align="center">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.status == 3">审核通过</span>
+                    <span v-if="scope.row.status == 3 || scope.row.status == 4">审核通过</span>
                     <span v-else-if="scope.row.status == 2">审核中</span>
                     <span v-else-if="scope.row.status == 5">审核驳回</span>
                     <span v-else>-</span>
