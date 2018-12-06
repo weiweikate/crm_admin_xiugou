@@ -166,12 +166,12 @@
                         <el-table-column prop="skuCode" label="SKU编码" align="center" width="225"></el-table-column>
                         <el-table-column label="SKU条形码" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input :disabled="status == 4" v-model="scope.row.barCode"></el-input>
+                                <el-input :disabled="status == 4 || (scope.row.barCode == '' && scope.row.supplierSkuCode == '')" v-model="scope.row.barCode"></el-input>
                             </template>
                         </el-table-column>
                         <el-table-column label="供应商SKU编码" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input :disabled="status == 4" v-model="scope.row.supplierSkuCode"></el-input>
+                                <el-input :disabled="status == 4 || (scope.row.barCode == '' && scope.row.supplierSkuCode == '')" v-model="scope.row.supplierSkuCode"></el-input>
                             </template>
                         </el-table-column>
                     </el-table>

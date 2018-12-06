@@ -3,8 +3,8 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="mb10">
             <el-form :model="form" ref='form' inline label-width="130px">
-                <el-form-item prop="prodSpuCode" label="商品SPU/商品名称">
-                    <el-input v-model.trim="form.prodSpuCode" placeholder="请输入商品SPU/商品名称"></el-input>
+                <el-form-item prop="nameOrCode" label="商品SPU/商品名称">
+                    <el-input v-model.trim="form.nameOrCode" placeholder="请输入商品SPU/商品名称"></el-input>
                 </el-form-item>
                 <!--<el-form-item prop="name" label="商品名称">-->
                     <!--<el-input v-model.trim="form.name" placeholder="请输入商品名称"></el-input>-->
@@ -69,7 +69,7 @@
                 </el-form-item>
                 <!--findAllSupplier-->
                 <el-form-item prop="suppilerId" label="供应商ID">
-                    <el-input v-model.trim="form.suppilerId" placeholder="模糊下拉搜索"></el-input>
+                    <el-input v-model.trim="form.supplierCode" placeholder="模糊下拉搜索"></el-input>
                 </el-form-item>
                 <!--<el-form-item prop="prodWarea" label="商品库存">-->
                     <!--<el-select v-model="form.prodWarea" placeholder="请选择发货方仓">-->
@@ -170,7 +170,7 @@
                     inWarehouseTotal: '仓库中'
                 },
                 form: {
-                    prodSpuCode: '',
+                    nameOrCode: '',
                     // name: '',
                     feightTpl: '',
                     prodType: '',
@@ -180,7 +180,7 @@
                     // pushStatus: '',
                     deliveryWare: '',
                     brandId: '',
-                    suppilerId: '',
+                    supplierCode: '',
                     prodWarea: '',
                     updateTime: [],
                     minPrice: '',
