@@ -245,7 +245,8 @@
                 prodCodes: [], // 添加的产品ids
                 isIndex: 0, // 编辑过数量的索引值
                 chooseData: [], // 当前选中的规格数据
-                headData: []// 规格表头
+                headData: [], // 规格表头
+                preCode: ''// 保存当前入库方code，切换时选中产品清空，否则不清空
             };
         },
         computed: {
@@ -257,7 +258,6 @@
             this.id = this.$route.query.reportId || sessionStorage.getItem('reportId');
             this.type = this.$route.query.type == 'add' ? 1 : 2;
             this.getInfo();
-            this.getList(this.page.currentPage);
         },
         methods: {
             getList(val) {
@@ -266,6 +266,7 @@
                     productName: this.form.productName,
                     supplierCode: this.form.supplierCode,
                     prodCode: this.form.prodCode,
+                    warehouseCode: this.form.receiveWarehouseCode,
                     page: val,
                     pageSize: this.page.pageSize
                 };
@@ -404,10 +405,19 @@
                 });
             },
             handleSelect(item) {
+                if (this.form.receiveWarehouseCode != item.code) {
+                    this.chooseLists = [{ prodCode: '', productId: '', skuList: [] }];
+                    this.prodCode = '';
+                    this.prodCodes = [];
+                    this.isIndex = 0;
+                    this.chooseData = [];
+                    this.headData = [];
+                }
                 this.$set(this.form, 'receiveWarehouseCode', item.code);
                 this.$set(this.form, 'receiveWarehouseName', item.name);
                 this.$set(this.form, 'receiveWarehouseAddress', item.receiveWarehouseAddress);
                 this.$set(this.form, 'receiveWarehouseId', item.id);
+                this.getList(this.page.currentPage);
             },
             save() {
                 this.chooseLists[this.isIndex].skuList = [];
