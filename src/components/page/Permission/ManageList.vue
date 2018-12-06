@@ -36,8 +36,8 @@
                 <template slot-scope="scope">
                   <el-button  size="mini" type="primary" @click="editManger(scope.row)" v-auth="'quanxian.manageList.bjzh'">编辑</el-button>
                   <el-button v-if='scope.row.status == 1' size="mini" type="warning" @click="resetPwd(scope.row)">密码重置</el-button>
-                  <el-button size="mini" type="warning" @click="showLog(scope.row)">查看日志</el-button>
-                  <el-button v-if='scope.row.status == 2' @click="deleteUser(scope.row)" size="mini" type="danger"  >账号删除</el-button>
+                  <!-- <el-button size="mini" type="warning" @click="showLog(scope.row)">查看日志</el-button> -->
+                  <el-button v-if='scope.row.status == 2' @click="deleteUser(scope.row)" size="mini" type="danger">账号删除</el-button>
                   <template >
                     <el-popover placement="top" width="160" v-model="scope.row.visible">
                       <p v-if='scope.row.status == 1'>确定关闭账号？</p>
@@ -47,8 +47,8 @@
                         <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 2' size="mini" type="primary" @click='accountMange(scope.row,1)' >确定</el-button>
                         <el-button size="mini" type="text" @click="scope.row.visible = false">取消</el-button>
                       </div>
-                      <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 1' size="mini" type="danger" >账号关闭</el-button>
-                      <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 2' size="mini" type="danger">账号开启</el-button>
+                      <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 1' size="mini" type="danger" class="ml10">账号关闭</el-button>
+                      <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 2' size="mini" type="danger" class="ml10">账号开启</el-button>
                     </el-popover>
                   </template>
                 </template>
@@ -66,7 +66,7 @@
               </el-pagination>
           </div>
         </el-card>
-        <el-dialog :visible.sync="isShowResetPwd" width="30%">
+        <el-dialog :visible.sync="isShowResetPwd" title="修改密码" width="30%">
             <el-form ref="pwdForm" :rules="rules" :model="pwdForm" inline label-width="100px">
               <el-form-item prop="password" label='密码重置'>
                 <el-input v-model.trim="pwdForm.password"></el-input>
@@ -96,8 +96,8 @@ export default {
     },
     mixins: [myMixinTable],
     data() {
-        var validatePwd = (rule, value, callback) => {
-            if (value === '') {
+        let validatePwd = (rule, value, callback) => {
+            if (value === '' || value === null || value === undefined) {
                 callback(new Error('请输入密码'));
             } else {
                 if (this.pwdForm.checkPassword !== '') {
@@ -106,8 +106,8 @@ export default {
                 callback();
             }
         }
-        var validateCheckPwd = (rule, value, callback) => {
-            if (value === '') {
+        let validateCheckPwd = (rule, value, callback) => {
+            if (value === '' || value === null || value === undefined) {
                 callback(new Error('请再次输入密码'));
             } else if (value !== this.pwdForm.password) {
                 callback(new Error('两次输入密码不一致!'));
@@ -138,10 +138,10 @@ export default {
             height: '',
             rules: {
                 password: [
-                    { required: true, validator: validatePwd, trigger: 'blur' }
+                    { validator: validatePwd, trigger: 'blur' }
                 ],
                 checkPassword: [
-                    { required: true, validator: validateCheckPwd, trigger: 'blur' }
+                    { validator: validateCheckPwd, trigger: 'blur' }
                 ]
             }
         };
@@ -156,7 +156,6 @@ export default {
     methods: {
         //  获取数据
         getList(val) {
-            const that = this;
             const data = {};
             data.page = val;
             data.pageSize = this.page.pageSize;
@@ -165,17 +164,17 @@ export default {
             data.url = pApi.manageList;
             this.tableLoading = true;
             request.getMangerList(data).then(res => {
-                that.tableData = [];
+                this.tableData = [];
                 res.data.data.forEach((v, k) => {
                     v.visible = false;
-                    that.tableData.push(v);
+                    this.tableData.push(v);
                 });
-                that.page.totalPage = res.data.totalNum;
-                that.page.currentPage = res.data.currentPage;
-                that.tableLoading = false;
+                this.page.totalPage = res.data.totalNum;
+                this.page.currentPage = res.data.currentPage;
+                this.tableLoading = false;
             }).catch(err => {
                 console.log(err);
-                that.tableLoading = false;
+                this.tableLoading = false;
             });
         },
 
@@ -203,23 +202,19 @@ export default {
 
         // 密码重置
         resetPwd(row) {
-            this.pwdForm = {};
+            this.pwdForm.password = '';
+            this.pwdForm.checkPassword = '';
             this.pwdForm.id = row.id;
-            this.pwdForm.url = pApi.resetPassword;
             this.isShowResetPwd = true;
         },
         confirmReset(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    this.$axios.post(api.resetPassword, this.pwdForm)
+                    request['resetPassword'](this.pwdForm)
                         .then(res => {
-                            if (res.code == 10000) {
-                                this.$message.success('密码重置成功');
-                                this.$refs[formName].resetFields();
-                                this.isShowResetPwd = false;
-                            } else {
-                                this.$message.warning(res.msg);
-                            }
+                            this.$message.success('密码重置成功');
+                            this.$refs[formName].resetFields();
+                            this.isShowResetPwd = false;
                         })
                         .catch(err => {
                             console.log(err);
