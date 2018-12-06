@@ -119,9 +119,9 @@
                     <template v-else-if="info.restrictions == 7">不支持使用优惠券, 提供发票, 支持7天无理由退换</template>
               </el-form-item>
               <el-form-item label="售后保障：">
-                  <template v-if="this.info.afterSaleServiceDays>0">{{this.info.afterSaleServiceDays}}天</template>
+                  <template v-if=info.afterSaleServiceDays>0">{{info.afterSaleServiceDays}}天</template>
               </el-form-item>
-              <el-form-item label="自动下架：">{{this.info.autoUnShelve? '是':'否'}}</el-form-item>
+              <el-form-item label="自动下架：">{{info.autoUnShelve? '是':'否'}}</el-form-item>
               <div class="pro-title">标签信息</div>
               <el-form-item label="已有标签：">
                 <el-tag type="primary" v-for="(v, k) in info.selectedTag" :key="k">{{v}}</el-tag>
