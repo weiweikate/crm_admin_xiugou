@@ -43,12 +43,13 @@ export default {
             if (!value) {
                 return callback(new Error("选项不能为空"));
             }
-            // setTimeout(() => {
+            setTimeout(() => {
             if (!Number.isInteger(value)) {
                 callback(new Error("请输入数字值"));
+            }else{
+                callback()
             }
-            // }, 1000);
-            callback()
+            }, 1000);
         };
         return {
             nav: ["基础参数设置", "交易基础参数设置"],
@@ -86,6 +87,13 @@ export default {
                     }
                 ],
                 evaluationCancleTime: [
+                    {
+                        required: true,
+                        validator: commonCheckReg,
+                        trigger: "blur"
+                    }
+                ],
+                expressSendTime: [
                     {
                         required: true,
                         validator: commonCheckReg,

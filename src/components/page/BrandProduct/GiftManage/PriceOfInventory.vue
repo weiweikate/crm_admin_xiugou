@@ -97,9 +97,9 @@ export default {
                 let tmp = 0;
                 this.topTableRow = [];
                 res.data.forEach((v, k) => {
-                    const specIdArr = v.productPriceId.split(',');
+                    const specIdArr = v.skuCode.split(',');
                     const specValArr = v.specValues.split(',');
-                    const productPriceIdArr = v.productPriceId.split(',');
+                    const productPriceIdArr = v.skuCode.split(',');
                     const  idArr = v.packageSpecPriceId.split(',');
                     const stockArr = v.stock.split(',');
                     const totalNumber = v.totalNumber.split(',');
@@ -118,7 +118,7 @@ export default {
                             'productCode': v.productCode,
                             'productName': v.productName,
                             'productNumber': 1,
-                            'productPriceId': item,
+                            'skuCode': item,
                             'specValues': specValArr[index],
                             'stock': stockArr[index],
                             'productPriceIdA': productPriceIdArr[index],
@@ -191,7 +191,7 @@ export default {
                     id: this.tableData[i].id,
                     totalNumber: this.tableData[i].num,
                     surplusNumber: this.tableData[i].num,
-                    productPriceId: this.tableData[i].productPriceId
+                    skuCode: this.tableData[i].skuCode
                 }
                 stockArr.push(obj);
             }
