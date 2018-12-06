@@ -118,7 +118,7 @@ export default {
                             'productCode': v.productCode,
                             'productName': v.productName,
                             'productNumber': 1,
-                            'productPriceId': item,
+                            'skuCode': item,
                             'specValues': specValArr[index],
                             'stock': stockArr[index],
                             'productPriceIdA': productPriceIdArr[index],
@@ -191,7 +191,7 @@ export default {
                     id: this.tableData[i].id,
                     totalNumber: this.tableData[i].num,
                     surplusNumber: this.tableData[i].num,
-                    productPriceId: this.tableData[i].productPriceId
+                    skuCode: this.tableData[i].skuCode
                 }
                 stockArr.push(obj);
             }

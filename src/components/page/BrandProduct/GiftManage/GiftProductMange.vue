@@ -134,14 +134,14 @@ export default {
                 res.data.forEach((v, k) => {
                     const o = {};
                     o.value = `${v.name} 产品ID：${v.prodCode}`;
-                    if(v.stock<=0){
+                    if(v.stock.length<1){
                         o.value += '(无库存)'
                     }
                     o.id = v.id;
                     o.spec = { skuCode: v.skuCode ? v.skuCode.split(',') : [], spec: v.spec ? v.spec.replace(/@([0-9a-zA-Z\u4e00-\u9fa5]+)@([0-9a-zA-Z\u4e00-\u9fa5]+)@/g,'$1-$2').split(',') : [] };
                     // o.productId = v.id;
                     o.prodCode = v.prodCode;
-                    o.stock = v.stock;
+                    o.stock = v.stock.split(',');
                     o.productName = v.name;
                     tmpArr.push(o);
                 });
@@ -162,6 +162,7 @@ export default {
                 const specItem = {
                     id: v,
                     spec: item.spec.spec[k],
+                    stock:item.stock[k],
                     checked: false,
                     // productId: item.productId,
                     prodCode: item.prodCode,
