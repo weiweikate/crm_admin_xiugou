@@ -22,7 +22,6 @@
   border-radius: 20px;
   overflow: hidden;
   background: #fff;
-    margin-bottom: 30px;
 }
 .login-wrap .login-btn {
   text-align: center;
@@ -111,3 +110,4 @@
   top: 75% !important;
   left: 15% !important;
 }
+/*# sourceMappingURL=login.css.map */

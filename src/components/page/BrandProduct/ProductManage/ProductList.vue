@@ -197,7 +197,7 @@
             if (param) {
                 this.form.brandId = param.brandId;
                 this.form.supplierCode = param.supplierCode;
-                this.form.status = param.flag; // 已上架状态
+                this.form.paramStatus = param.flag; // 已上架状态
             }
             this.getFeightList();
             this.getFirstCateList();
@@ -296,7 +296,7 @@
             // 重置
             resetForm() {
                 this.$refs['form'].resetFields();
-                this.form.status = '';
+                this.form.paramStatus = '';
             }
         },
         // 路由离开钩子

@@ -114,9 +114,9 @@
                     <template v-else-if="info.restrictions == 2">提供发票</template>
                     <template v-else-if="info.restrictions == 3">不支持使用优惠券, 提供发票</template>
                     <template v-else-if="info.restrictions == 4">支持7天无理由退换</template>
-                    <template v-else-if="5">不支持使用优惠券, 支持7天无理由退换</template>
-                    <template v-else-if="6">提供发票, 支持7天无理由退换</template>
-                    <template v-else-if="7">不支持使用优惠券, 提供发票, 支持7天无理由退换</template>
+                    <template v-else-if="info.restrictions == 5">不支持使用优惠券, 支持7天无理由退换</template>
+                    <template v-else-if="info.restrictions == 6">提供发票, 支持7天无理由退换</template>
+                    <template v-else-if="info.restrictions == 7">不支持使用优惠券, 提供发票, 支持7天无理由退换</template>
               </el-form-item>
               <el-form-item label="售后保障：">
                   <template v-if="this.info.afterSaleServiceDays>0">{{this.info.afterSaleServiceDays}}天</template>

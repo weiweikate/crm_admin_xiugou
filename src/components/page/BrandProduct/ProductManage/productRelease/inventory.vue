@@ -20,37 +20,37 @@
                     <el-form-item v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
                         <div v-if="v.type == 2">
                             <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
-                                <el-checkbox :disabled="status == 4" v-if="v1.defType == 1" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
+                                <el-checkbox :disabled="status == 4 || status == 3" v-if="v1.defType == 1" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
                                 <div class="mt10" v-else>
-                                    <el-input :disabled="status == 4" v-model="v1.value" style="width: 215px"></el-input>
-                                    <span v-if="status != 4" class="primary-text" @click="deleteProps(k,k1)">删除</span>
+                                    <el-input :disabled="status == 4 || status == 3" v-model="v1.value" style="width: 215px"></el-input>
+                                    <span v-if="status != 4 && status != 3" class="primary-text" @click="deleteProps(k,k1)">删除</span>
                                 </div>
                                 <template v-if="v1.imgUrl == '' || !v1.imgUrl">
                                     <el-upload
-                                        :disabled="status == 4"
+                                        :disabled="status == 4 || status == 3"
                                         :action="imgUpload"
                                         :show-file-list="false"
                                         :before-upload="beforeAvatarUpload"
                                         :on-success="uploadSuccess"
                                     >
-                                        <span class="primary-text" v-if="status != 4" @click="beforeUpload(k, k1)">上传图片</span>
+                                        <span class="primary-text" v-if="status != 4  && status != 3" @click="beforeUpload(k, k1)">上传图片</span>
                                     </el-upload>
                                 </template>
                                 <template v-else>
                                     <img :src="v1.imgUrl" alt="">
-                                    <span v-if="status != 4" class="primary-text" @click="deleteImg(k, k1)">删除</span>
+                                    <span v-if="status != 4  && status != 3" class="primary-text" @click="deleteImg(k, k1)">删除</span>
                                 </template>
                             </div>
                         </div>
                         <div v-else-if="v.type == 1" class="sales-type">
-                            <el-checkbox :disabled="status == 4" v-if="v1.defType == 1" v-for="(v1, k1) in v.options" :key="`${k}--${k1}`" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
+                            <el-checkbox :disabled="status == 4 || status == 3" v-if="v1.defType == 1" v-for="(v1, k1) in v.options" :key="`${k}--${k1}`" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
                             <div class="mt10" v-else>
-                                <el-input :disabled="status == 4" v-model="v1.value" style="width: 215px"></el-input>
-                                <span v-if="status != 4" class="primary-text" @click="deleteProps(k,k1)">删除</span>
+                                <el-input :disabled="status == 4 || status == 3" v-model="v1.value" style="width: 215px"></el-input>
+                                <span v-if="status != 4  && status != 3" class="primary-text" @click="deleteProps(k,k1)">删除</span>
                             </div>
                         </div>
                         <div class="primary-text">
-                            <span :disabled="status == 4" @click="addAttrValue(k)">新建子属性</span>
+                            <span v-if="status != 4  && status != 3" @click="addAttrValue(k)">新建子属性</span>
                         </div>
                     </el-form-item>
                 </template>
@@ -58,29 +58,29 @@
                 <template v-else>
                     <el-form-item v-for="(v, k) in salesAttrArr" :key="k" :label="v.name+' : '">
                         <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
-                            <el-input :disabled="status == 4" v-if="v1.defType == 1" style="width: 215px" v-model="v1.value"></el-input>
+                            <el-input :disabled="status == 4 || status == 3" v-if="v1.defType == 1" style="width: 215px" v-model="v1.value"></el-input>
                             <div class="mt10" v-else>
-                                <el-input :disabled="status == 4" v-model="v1.label" style="width: 215px"></el-input>
-                                <span v-if="status != 4" class="primary-text" @click="deleteProps(k,k1)">删除</span>
+                                <el-input :disabled="status == 4 || status == 3" v-model="v1.label" style="width: 215px"></el-input>
+                                <span v-if="status != 4 && status !=3" class="primary-text" @click="deleteProps(k,k1)">删除</span>
                             </div>
                             <template v-if="v1.imgUrl == '' || !v1.imgUrl">
                                 <el-upload
-                                    :disabled="status == 4"
+                                    :disabled="status == 4 || status == 3"
                                     :action="imgUpload"
                                     :show-file-list="false"
                                     :before-upload="beforeAvatarUpload"
                                     :on-success="uploadSuccess"
                                 >
-                                    <span v-if="status != 4" class="primary-text" @click="beforeUpload(k, k1)">上传图片</span>
+                                    <span v-if="status != 4  && status !=3" class="primary-text" @click="beforeUpload(k, k1)">上传图片</span>
                                 </el-upload>
                             </template>
                             <template v-else>
                                 <img :src="v1.imgUrl" alt="">
-                                <span v-if="status != 4" class="primary-text" @click="deleteImg(k, k1)">删除</span>
+                                <span v-if="status != 4  && status !=3" class="primary-text" @click="deleteImg(k, k1)">删除</span>
                             </template>
                         </div>
                         <div class="primary-text">
-                            <span :disabled="status == 4" @click="addAttrValue(k)">新建子属性</span>
+                            <span v-if="status != 4  && status !=3" @click="addAttrValue(k)">新建子属性</span>
                         </div>
                     </el-form-item>
                 </template>
@@ -92,11 +92,11 @@
                 </div>
                 </el-form-item>
                 <el-form-item label=" ">
-                    <el-button :loading="createListLoading" type="primary" @click="addprodSku">生成列表</el-button>
+                    <el-button :disabled="status == 4 || status == 3" :loading="createListLoading" type="primary" @click="addprodSku">生成列表</el-button>
                 </el-form-item>
                 <div class="pro-title">价格信息</div>
                 <el-form-item label="销售价格">
-                    <el-button :disabled="status == 4" type="primary" class="mb10" @click="batchPrice = true">批量输入</el-button>
+                    <el-button :disabled="status == 4 || status == 3" type="primary" class="mb10" @click="batchPrice = true">批量输入</el-button>
                     <el-table :data="priceTable" border stripe>
                         <el-table-column v-if="!flag" prop="propertyValues" label="属性" width="225" align="center">
                             <template slot-scope="scope">
@@ -105,73 +105,73 @@
                         </el-table-column>
                         <el-table-column label="原价" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 4" :controls="false" :min="0" v-model.number="scope.row.originalPrice"></el-input-number>
+                                <el-input-number :disabled="status == 4 || status == 3" :controls="false" :min="0" v-model.number="scope.row.originalPrice"></el-input-number>
                             </template>
                         </el-table-column>
                         <el-table-column label="v0" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 4" :controls="false" :min="0" v-model.number="scope.row.v0"></el-input-number>
+                                <el-input-number :disabled="status == 4 || status == 3" :controls="false" :min="0" v-model.number="scope.row.v0"></el-input-number>
                             </template>
                         </el-table-column>
                         <el-table-column label="v1" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 4" :controls="false" :min="0" v-model.number="scope.row.v1"></el-input-number>
+                                <el-input-number :disabled="status == 4 || status == 3" :controls="false" :min="0" v-model.number="scope.row.v1"></el-input-number>
                             </template>
                         </el-table-column>
                         <el-table-column label="v2" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 4" :controls="false" :min="0" v-model.number="scope.row.v2"></el-input-number>
+                                <el-input-number :disabled="status == 4 || status == 3" :controls="false" :min="0" v-model.number="scope.row.v2"></el-input-number>
                             </template>
                         </el-table-column>
                         <el-table-column label="v3" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 4" :controls="false" :min="0" v-model.number="scope.row.v3"></el-input-number>
+                                <el-input-number :disabled="status == 4 || status == 3" :controls="false" :min="0" v-model.number="scope.row.v3"></el-input-number>
                             </template>
                         </el-table-column>
                         <el-table-column label="v4" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 4" :controls="false" :min="0" v-model.number="scope.row.v4"></el-input-number>
+                                <el-input-number :disabled="status == 4 || status == 3" :controls="false" :min="0" v-model.number="scope.row.v4"></el-input-number>
                             </template>
                         </el-table-column>
                         <el-table-column label="v5" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 4" :controls="false" :min="0" v-model.number="scope.row.v5"></el-input-number>
+                                <el-input-number :disabled="status == 4 || status == 3" :controls="false" :min="0" v-model.number="scope.row.v5"></el-input-number>
                             </template>
                         </el-table-column>
                         <el-table-column label="v6" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 4" :controls="false" :min="0" v-model.number="scope.row.v6"></el-input-number>
+                                <el-input-number :disabled="status == 4 || status == 3" :controls="false" :min="0" v-model.number="scope.row.v6"></el-input-number>
                             </template>
                         </el-table-column>
                         <el-table-column label="拼店价" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 4" :controls="false" :min="0" v-model.number="scope.row.groupPrice"></el-input-number>
+                                <el-input-number :disabled="status == 4 || status == 3" :controls="false" :min="0" v-model.number="scope.row.groupPrice"></el-input-number>
                             </template>
                         </el-table-column>
                         <el-table-column label="结算价" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 4" :controls="false" :min="0" v-model.number="scope.row.settlementPrice"></el-input-number>
+                                <el-input-number :disabled="status == 4 || status == 3" :controls="false" :min="0" v-model.number="scope.row.settlementPrice"></el-input-number>
                             </template>
                         </el-table-column>
                         <el-table-column label="最低支付价" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 4" :controls="false" :min="0" v-model.number="scope.row.minPrice"></el-input-number>
+                                <el-input-number :disabled="status == 4 || status == 3" :controls="false" :min="0" v-model.number="scope.row.minPrice"></el-input-number>
                             </template>
                         </el-table-column>
                         <el-table-column label="重量（kg）" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 4" :controls="false" :min="0" v-model.number="scope.row.weight"></el-input-number>
+                                <el-input-number :disabled="status == 4 || status == 3" :controls="false" :min="0" v-model.number="scope.row.weight"></el-input-number>
                             </template>
                         </el-table-column>
                         <el-table-column prop="skuCode" label="SKU编码" align="center" width="225"></el-table-column>
                         <el-table-column label="SKU条形码" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input :disabled="status == 4 || !scope.row.isEdit" v-model="scope.row.barCode"></el-input>
+                                <el-input :disabled="status == 4 || status == 3 || !scope.row.isEdit" v-model="scope.row.barCode"></el-input>
                             </template>
                         </el-table-column>
                         <el-table-column label="供应商SKU编码" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input :disabled="status == 4 || !scope.row.isEdit" v-model="scope.row.supplierSkuCode"></el-input>
+                                <el-input :disabled="status == 4 || status == 3 || !scope.row.isEdit" v-model="scope.row.supplierSkuCode"></el-input>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -196,7 +196,7 @@
                         </el-table-column>
                         <el-table-column prop="sellStock" label="可售库存" align="center">
                             <template slot-scope="scope">
-                                <el-input :disabled="status == 4" v-if="scope.row.warehouseStock" :max="scope.row.warehouseStock" v-model="scope.row.sellStock"></el-input>
+                                <el-input :disabled="status == 4 || status == 3" v-if="scope.row.warehouseStock" :max="scope.row.warehouseStock" v-model="scope.row.sellStock"></el-input>
                                 <span v-else>-</span>
                             </template>
                         </el-table-column>
@@ -224,7 +224,7 @@
                         </el-table-column>
                         <el-table-column prop="sellStock" label="可售库存" align="center">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="status == 4" v-if="scope.row.warehouseStock" :max="scope.row.warehouseStock" v-model="scope.row.sellStock"></el-input-number>
+                                <el-input-number :disabled="status == 4 || status == 3" v-if="scope.row.warehouseStock" :max="scope.row.warehouseStock" v-model="scope.row.sellStock"></el-input-number>
                                 <span v-else>-</span>
                             </template>
                         </el-table-column>
@@ -395,9 +395,19 @@
                     if (!price.barCode) return this.$message.warning('请输入SKU条形码');
                     if (!price.supplierSkuCode) return this.$message.warning('请输入正确供应商SKU编码');
                 }
-                this.priceTable.forEach(v => {
+                for (let i = 0; i < this.priceTable.length; i++) {
+                    const v = this.priceTable[i];
                     v.stockUnit = this.unit;
-                });
+                    const reg = /^[+]{0,1}(\d+)$/;
+                    if (v.sellStock != '') {
+                        if (v.sellStock > v.warehouseStock) {
+                            return this.$message.warning('可售库存不能大于仓库同步库存!');
+                        }
+                        if (!reg.test(v.sellStock)) {
+                            return this.$message.warning('请输入正确的可售库存');
+                        }
+                    }
+                }
                 const data = {
                     prodCode: this.prodCode,
                     skuList: this.priceTable,
@@ -447,7 +457,7 @@
                             name: v.specName,
                             options: []
                         };
-                        if (v.specValues !== 0) {
+                        if (v.specValues && v.specValues.length !== 0) {
                             v.specValues.forEach(v1 => {
                                 obj.options.push({
                                     label: v1.specValue,
@@ -608,7 +618,7 @@
                             if (v.barCode && v.supplierSkuCode) {
                                 v.isEdit = false;
                             }
-                            this.priceTable.push(v)
+                            this.priceTable.push(v);
                         });
                     }
                 }).catch(err => {
