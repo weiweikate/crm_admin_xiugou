@@ -240,6 +240,7 @@
                         tags.push(obj);
                     });
                 }
+                console.log(this.imgList[0]);
                 const data = {
                     ...this.form,
                     videoUrl: this.form.videoUrl,
