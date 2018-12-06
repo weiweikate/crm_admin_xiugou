@@ -73,7 +73,7 @@
                   <el-table-column prop="warehouseStock" label="仓库同步库存" align="center"></el-table-column>
                   <el-table-column prop="sellStock" label="可售库存" align="center"></el-table-column>
               </el-table>
-              <div class="pro-title">图文描述</div>
+              <div class="pro-title mb10">图文描述</div>
               <el-form-item label="商品主图：">
                   <div v-if="info.videoUrl && info.videoUrl!== ''" class="img-list fl" style="margin-right: 0px">
                       <video :src="info.videoUrl" style="width: 150px;height: 150px" controls="controls"></video>
@@ -119,7 +119,7 @@
                     <template v-else-if="info.restrictions == 7">不支持使用优惠券, 提供发票, 支持7天无理由退换</template>
               </el-form-item>
               <el-form-item label="售后保障：">
-                  <template v-if=info.afterSaleServiceDays>0">{{info.afterSaleServiceDays}}天</template>
+                  <template v-if="info.afterSaleServiceDays>0">{{info.afterSaleServiceDays}}天</template>
               </el-form-item>
               <el-form-item label="自动下架：">{{info.autoUnShelve? '是':'否'}}</el-form-item>
               <div class="pro-title">标签信息</div>
