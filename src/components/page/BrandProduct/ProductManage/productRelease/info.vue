@@ -240,7 +240,6 @@
                         tags.push(obj);
                     });
                 }
-                console.log(this.imgList[0]);
                 const data = {
                     ...this.form,
                     videoUrl: this.form.videoUrl,
@@ -329,10 +328,10 @@
                 cArr.splice(cArr.length - 1, 1);
                 this.unSupportsssAreasData = cArr;
                 const arr = [];
-                if (resData.imgUrl !== '') {
+                if (resData.imgUrl && resData.imgUrl !== '') {
                     arr.push(resData.imgUrl);
                 }
-                if (resData.imgFileList.length !== 0) {
+                if (resData.imgFileList && resData.imgFileList.length !== 0) {
                     resData.imgFileList.forEach(v => {
                         arr.push(v.originalImg);
                     });
