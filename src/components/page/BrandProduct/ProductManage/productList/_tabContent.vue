@@ -34,21 +34,21 @@
             </el-table-column>
             <el-table-column prop="status" label="商品状态" align="center">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.status == 0">删除</span>
-                    <span v-else-if="scope.row.status == 1">待发布</span>
+                    <!--<span v-if="scope.row.status == 0">删除</span>-->
+                    <span v-if="scope.row.status == 1">待发布</span>
                     <span v-else-if="scope.row.status == 2">待审核</span>
-                    <span v-else-if="scope.row.status == 3">已通过</span>
+                    <span v-else-if="scope.row.status == 3">待上架</span>
                     <span v-else-if="scope.row.status == 4">已上架</span>
-                    <span v-else-if="scope.row.status == 5">未通过</span>
+                    <span v-else-if="scope.row.status == 5">待发布</span>
                     <span v-else-if="scope.row.status == 6">已下架</span>
                     <span v-else>-</span>
                 </template>
             </el-table-column>
             <el-table-column prop="status" label="审核状态" align="center">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.status == 5">未通过</span>
-                    <span v-else-if="scope.row.status == 2">待审核</span>
-                    <span v-else-if="scope.row.status == 3">已通过</span>
+                    <span v-if="scope.row.status == 3">审核通过</span>
+                    <span v-else-if="scope.row.status == 2">审核中</span>
+                    <span v-else-if="scope.row.status == 5">审核驳回</span>
                     <span v-else>-</span>
                 </template>
             </el-table-column>
@@ -83,19 +83,23 @@
             </el-table-column>
             <el-table-column prop="warehouseType" label="发货方仓" align="center">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.warehouseType == 1 || scope.row.warehouseType == 2">平台</span>
-                    <span v-else-if="scope.row.warehouseType == 3 || scope.row.warehouseType == 4">供应商</span>
+                    <span v-if="scope.row.warehouseType == 1 ">自建仓</span>
+                    <span v-else-if="scope.row.warehouseType == 2">加盟仓</span>
+                    <span v-else-if="scope.row.warehouseType == 3">供应商</span>
+                    <span v-else-if="scope.row.warehouseType == 4">虚拟仓库</span>
                     <span v-else>-</span>
                 </template>
             </el-table-column>
             <el-table-column prop="freightTemplateName" label="运费模板" align="center"></el-table-column>
-            <!--<el-table-column prop="sendType" label="推送状态" align="center">-->
-                <!--<template slot-scope="scope">-->
-                    <!--<span v-if="scope.row.sendType == 1">未推送</span>-->
-                    <!--<span v-else-if="scope.row.sendType == 2">推送成功</span>-->
-                    <!--<span v-else>-</span>-->
-                <!--</template>-->
-            <!--</el-table-column>-->
+            <el-table-column prop="brandName" label="品牌" align="center"></el-table-column>
+            <el-table-column prop="supplierCode" label="供应商ID" align="center"></el-table-column>
+            <el-table-column prop="sendType" label="推送状态" align="center">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.sendType == 1">未推送</span>
+                    <span v-else-if="scope.row.sendType == 2">推送成功</span>
+                    <span v-else>-</span>
+                </template>
+            </el-table-column>
             <el-table-column label="创建时间" align="center">
                 <template slot-scope="scope" v-if="scope.row.createTime">
                     {{scope.row.createTime | formatDateAll}}
@@ -111,7 +115,8 @@
             <el-table-column label="操作" align="center" width="80px" fixed="right">
                 <template slot-scope="scope">
                     <div class="operate">
-                        <span v-if="scope.row.status == 1 || scope.row.status == 5 || scope.row.status == 6" @click="editProduct(scope.row)">编辑</span>
+                        <!--<span v-if="scope.row.status == 1 || scope.row.status == 5 || scope.row.status == 6" @click="editProduct(scope.row)">编辑</span>-->
+                        <span @click="editProduct(scope.row)">编辑</span>
                         <span @click="addRemark(scope.row)">备注</span>
                         <span @click="productInfo(scope.row)">详情</span>
                     </div>
@@ -168,23 +173,18 @@ export default {
             this.tableLoading = true;
             request.queryProdList(data).then(res => {
                 this.tableLoading = false;
-                const tblData = res.data || {};
+                const tblData = res.data || [];
                 this.listNum.checkingTotal = tblData.checkingTotal || 0;
                 this.listNum.inSellingTotal = tblData.inSellingTotal || 0;
                 this.listNum.inWarehouseTotal = tblData.inWarehouseTotal || 0;
                 this.$emit('transData', this.listNum);
                 this.page.totalPage = tblData.totalNum;
-                if (tblData.data.length !== 0) {
+                this.tableData = [];
+                if (tblData.data && tblData.data.length !== 0) {
                     tblData.data.forEach(v => {
-                        let restrictions = v.restrictions || 0;
-                        switch (restrictions.toString()) {
-                            case '1': v.tags = ['不支持使用优惠卷']; break;
-                            case '2': v.tags = ['提供发票']; break;
-                            case '3': v.tags = ['不支持使用优惠卷', '提供发票']; break;
-                            case '4': v.tags = ['支持7天无理由退换']; break;
-                            case '5': v.tags = ['不支持使用优惠卷', '支持7天无理由退换']; break;
-                            case '6': v.tags = ['提供发票', '支持7天无理由退换']; break;
-                            case '7': v.tags = ['不支持使用优惠卷', '提供发票', '支持7天无理由退换']; break;
+                        const restrictions = v.restrictions || 0;
+                        if (restrictions.toString() == 4) {
+                            v.tags = ['支持7天无理由退换'];
                         }
                         this.tableData.push(v);
                     });
@@ -209,7 +209,7 @@ export default {
             selectedItem.push({ type: 1, label: row.firstCategoryName, value: row.firstCategoryId });
             selectedItem.push({ type: 2, label: row.secCategoryName, value: row.secCategoryId });
             selectedItem.push({ type: 3, label: row.thirdCategoryName, value: row.thirdCategoryId });
-            this.$router.push({ name: 'editProductInfo', query: { cate: JSON.stringify(selectedItem), prodCode: row.prodCode }});
+            this.$router.push({ name: 'productBaseParam', query: { cate: JSON.stringify(selectedItem), prodCode: row.prodCode }});
         },
         // 产品删除/下架
         productStatus(status) {
@@ -238,7 +238,9 @@ export default {
         addRemark(row) {
             this.$prompt('请输入备注', '', {
                 confirmButtonText: '确定',
-                cancelButtonText: '取消'
+                cancelButtonText: '取消',
+                inputPattern: /^.{1,180}$/,
+                inputErrorMessage: '备注不能为空'
             }).then(({ value }) => {
                 const data = {
                     prodCode: row.prodCode,
@@ -246,7 +248,7 @@ export default {
                 };
                 request.updateProdRemark(data).then(res => {
                     this.$message.success(res.msg);
-                    this.getList(this.page.currentPage)
+                    this.getList(this.page.currentPage);
                 }).catch(err => {
                     console.log(err);
                 });

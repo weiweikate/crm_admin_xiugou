@@ -85,7 +85,7 @@
                 <table class="selected-product" v-for="(item,index) in chooseLists" :key="index">
                     <tr v-for="(v,k) in item.skuList" :key="k">
                         <td v-if="k==0" :rowspan="item.skuList.length" style="width: 50px">{{index+1}}</td>
-                        <td>{{(v.name || '')+(v.specifyValues || '')}}</td>
+                        <td>{{(v.name || '')+(v.specifyValues?v.specifyValues.replace(/@/g,' ') :'')}}</td>
                         <td>产品ID：{{v.prodCode}}</td>
                         <td style="min-width:100px">x{{v.estimateCount}}</td>
                         <td style="min-width:80px;cursor: pointer;color:#33b4ff" @click="delSelectedPro(k,index)">删除
@@ -111,10 +111,6 @@
                        align="center">
                    </el-table-column>
                </template>
-               <!--<el-table-column prop="specifies" label="颜色" align="center"></el-table-column>-->
-               <!--<el-table-column prop="name" label="版本" align="center"></el-table-column>-->
-               <!--<el-table-column prop="specifyValues" label="规格" align="center"></el-table-column>-->
-               <!--<el-table-column prop="name" label="类型" align="center"></el-table-column>-->
                <el-table-column prop="name" label="采购数" align="center">
                    <template slot-scope="scope">
                        <el-input-number :min="0" :controls="false" v-model="scope.row.estimateCount"></el-input-number>件
@@ -246,8 +242,7 @@
                 mask: false,
                 chooseLists: [{ prodCode: '', productId: '', skuList: [] }], // 产品列表
                 prodCode: '', // 编辑数量选中的产品code
-                productIds: [], // 添加的产品ids
-                productId: '', // 编辑数量选中的产品id
+                prodCodes: [], // 添加的产品ids
                 isIndex: 0, // 编辑过数量的索引值
                 chooseData: [], // 当前选中的规格数据
                 headData: []// 规格表头
@@ -304,11 +299,11 @@
                     data.spuList = [];
                     this.chooseLists.forEach((v, k) => {
                         const temp = {
-                            productId: v.productId,
+                            prodCode: v.prodCode,
                             skuList: []
                         };
                         v.skuList.forEach((v1, k1) => {
-                            v1.productId = v.productId;
+                            v1.prodCode = v.prodCode;
                             v1.productSpecPriceId = v1.id;
                         });
                         temp.skuList = v.skuList;
@@ -356,9 +351,8 @@
                     supplierName: '',
                     spuList: []
                 };
-                this.chooseLists = [{ prodCode: '', productId: '', skuList: [] }];
-                this.productIds = [];
-                this.productId = '';
+                this.chooseLists = [{ prodCode: '', skuList: [] }];
+                this.prodCodes = [];
                 this.prodCode = '';
                 this.isIndex = 0;
             },
@@ -375,11 +369,11 @@
                             v.skuList.forEach((v1, k1) => {
                                 v1.id = v1.productSpecPriceId;
                             });
-                            this.productIds.push(v.productId);
+                            this.prodCodes.push(v.prodCode);
                             this.chooseLists.push(v);
                         });
                     } else {
-                        this.chooseLists = [{ prodCode: '', productId: '', skuList: [] }];
+                        this.chooseLists = [{ prodCode: '', skuList: [] }];
                     }
                 }).catch(err => {
                     console.log(err);
@@ -428,19 +422,18 @@
                             ++count;
                             this.chooseLists[this.isIndex].skuList.push(v);
                             this.chooseLists[this.isIndex].prodCode = v.prodCode;
-                            this.chooseLists[this.isIndex].productId = v.productId;
-                            this.productIds[this.isIndex] = this.productId;
+                            this.prodCodes[this.isIndex] = this.prodCode;
                         }
                     }
                 });
                 if (count == 0) {
                     this.chooseLists.splice(this.isIndex, 1);
-                    this.productIds.splice(this.isIndex, 1);
+                    this.prodCodes.splice(this.isIndex, 1);
                 }
                 if (!this.chooseLists.length) {
-                    this.chooseLists = [{ prodCode: '', productId: '', skuList: [] }];
+                    this.chooseLists = [{ prodCode: '', skuList: [] }];
                     this.isIndex = 0;
-                    this.productIds = [];
+                    this.prodCodes = [];
                 }
                 if (flag) {
                     this.mask = false;
@@ -451,48 +444,44 @@
             editNumber(row) {
                 this.mask = true;
                 const data = {
-                    productId: row.id,
+                    prodCode: row.prodCode,
                     page: 1,
                     pageSize: 10000
                 };
                 let flag = true;
-                this.productIds.forEach((v, k) => {
-                    if (row.id == v) {
+                this.prodCodes.forEach((v, k) => {
+                    if (row.prodCode == v) {
                         this.isIndex = k;
                         flag = false;
                     }
                 });
 
-                if (this.productIds.length && flag) {
-                    this.isIndex = this.productIds.length;
+                if (this.prodCodes.length && flag) {
+                    this.isIndex = this.prodCodes.length;
                     this.chooseLists.push({
                         prodCode: '',
-                        productId: '',
                         skuList: []
                     });
                 }
                 this.prodCode = row.prodCode;
-                this.productId = row.id;
                 this.chooseData = [];
                 request.SKUList(data).then(res => {
                     res.data.data.forEach((v, k) => {
-                        v.prodCode = row.prodCode;
-                        v.productId = row.id;
-                        this.productIds.forEach((v1, k1) => {
-                            // if (v1 == row.prodCode) {
-                            if (v1 == row.id) {
+                        this.prodCodes.forEach((v1, k1) => {
+                            if (v1 == row.prodCode) {
                                 this.chooseLists[k1].skuList.forEach((v2, k2) => {
-                                    if (v2.id == v.id) {
+                                    if (v2.skuCode == v.skuCode) {
                                         v.estimateCount = this.chooseLists[k1].skuList[k2].estimateCount;
                                     }
                                 });
                             }
                         });
+                        v.prodCode = this.prodCode;
                         this.chooseData.push(v);
                         this.headData = [];
                         if (!v.specifies || !v.specifyValues) return;
                         const specs = v.specifies.split('-');
-                        const specValues = v.specifyValues.split('-');
+                        const specValues = v.specifyValues.substring(1, v.specifyValues.length - 1).split('@');
                         specs.forEach((v1, k1) => {
                             const temp = {
                                 value: v1,
@@ -511,12 +500,12 @@
                 this.chooseLists[index].skuList.splice(cIndex, 1);
                 if (!this.chooseLists[index].skuList.length) {
                     this.chooseLists.splice(index, 1);
-                    this.productIds.splice(index, 1);
+                    this.prodCodes.splice(index, 1);
                 }
                 if (!this.chooseLists.length) {
                     this.chooseLists = [{ prodCode: '', productId: '', skuList: [] }];
                     this.isIndex = 0;
-                    this.productIds = [];
+                    this.prodCodes = [];
                 }
             }
         }
@@ -544,6 +533,7 @@
     }
     /deep/.el-dialog {
         border-radius: 10px;
+        max-width: 800px;
         overflow: auto;
         .el-dialog__header {
             border-bottom: 1px solid #eee;

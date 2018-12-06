@@ -216,9 +216,12 @@
             editItem(row) {
                 this.title = '编辑三级类目';
                 this.editMask = true;
-                row.status = row.status.toString();
-                this.form = row;
+                this.form.name = row.name;
+                this.form.img = row.img;
+                this.form.sort = row.sort;
+                this.form.afterSaleTime = row.afterSaleTime;
                 this.itemId = row.id;
+                this.form.status = row.status.toString();
                 this.itype = 'edit';
             },
             // 添加修改确定

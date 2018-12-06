@@ -231,7 +231,7 @@
                     if (!valid) return;
                     const data = this[formName];
                     if (this.type == 2) {
-                        data.id = this.id;
+                        data.code = this.id;
                     }
                     if (this.form.type == 1) {
                         data.supplierCode = '';
@@ -310,7 +310,7 @@
             },
             getDetail() {
                 const data = {
-                    id: this.id
+                    code: this.id
                 };
                 request.queryRepertoryById(data).then(res => {
                     this.form = res.data;

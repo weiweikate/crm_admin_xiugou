@@ -1,6 +1,6 @@
 <template>
     <div class="delivery-address">
-        <v-breadcrumb :nav="['运营管理','寄回地址管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['基础参数设置','寄回地址管理']"></v-breadcrumb>
         <div class="table-block">
             <el-button type="primary" style="margin-bottom: 20px" @click="addAddress">添加寄回点</el-button>
             <template>
@@ -52,7 +52,7 @@
                 <el-button @click="cancel">取 消</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="编辑寄回点" :visible.sync="editMask">
+        <el-dialog title="编辑寄回点" :visible.sync="editMask" :before-close="cancel">
             <el-form v-model="form" label-width="100px">
                 <el-form-item label="详细地址" class=" address-area">
                     <el-select v-model="form.country" class="small-inp" @change="changeArea">
@@ -206,7 +206,7 @@
                     this.$message.warning('请输入联系方式!');
                     return;
                 } else {
-                    const reg = /^(1[3-8]\d{9}|^\d{3}-?\d{8}|^\d{4}-?\d{7})$/;
+                    const reg = /^(1[3-8]\d{9}|^\d{3}-?\d{8}|^\d{4}-?\d{7,8})$/;
                     if (!reg.test(data.recevicePhone)) {
                         this.$message.warning('请输入正确的联系方式!');
                         return false;
@@ -224,6 +224,7 @@
                     this.btnLoading = false;
                     this.addMask = false;
                     this.editMask = false;
+                    this.address = [];
                     this.getList(this.page.currentPage);
                 }).catch(err => {
                     this.btnLoading = false;
@@ -246,6 +247,7 @@
             cancel() {
                 this.addMask = false;
                 this.editMask = false;
+                this.address = [];
                 this.getList();
             },
             // 开启关闭

@@ -20,7 +20,7 @@
                         <el-option value="" label="全部"></el-option>
                         <el-option value="1" label="普通商品"></el-option>
                         <el-option value="2" label="内购商品"></el-option>
-                        <el-option value="3" label="虚拟商品"></el-option>
+                        <!--<el-option value="3" label="虚拟商品"></el-option>-->
                         <el-option value="4" label="卡券商品"></el-option>
                     </el-select>
                 </el-form-item>
@@ -224,6 +224,7 @@
                 };
                 request.batchUpdateProductStatus(data).then(res => {
                     this.newFeightTpl = '';
+                    this.$message.success(res.msg);
                     this.freightToask = false;
                 }).catch(err => {
                     this.newFeightTpl = '';
