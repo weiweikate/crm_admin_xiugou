@@ -399,7 +399,7 @@
                     const v = this.priceTable[i];
                     v.stockUnit = this.unit;
                     const reg = /^[+]{0,1}(\d+)$/;
-                    if (v.sellStock != '') {
+                    if (v.warehouseStock && v.sellStock != '') {
                         if (v.sellStock > v.warehouseStock) {
                             return this.$message.warning('可售库存不能大于仓库同步库存!');
                         }
@@ -447,7 +447,16 @@
                 this.status = resData.status;
                 const unitDefault = resData.skuList.length === 0 ? '件' : resData.skuList[0].stockUnit;
                 this.unit = unitDefault || '件';
-                this.priceTable = resData.skuList;
+                if (resData.skuList && resData.skuList.length !== 0) {
+                    resData.skuList.forEach(v => {
+                        v.isEdit = true;
+                        // 如果SKU条形码和SKU编码都有则不可以编辑价格
+                        if (v.barCode && v.supplierSkuCode) {
+                            v.isEdit = false;
+                        }
+                        this.priceTable.push(v);
+                    });
+                }
                 this.tmpParamList = resData.specifies;
                 if (resData.checkStatus) {
                     this.salesAttrArr = [];
