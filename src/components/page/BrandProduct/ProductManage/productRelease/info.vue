@@ -346,7 +346,7 @@
                 // const tagSel = this.tagTypeArr[0] ? this.tagTypeArr[0].selected : false;
                 // await this.getAllTags(tagId, 0, tagSel);
                 this.form.videoUrl = resData.videoUrl ? resData.videoUrl : '';
-                this.form.needDeliver = resData.needDeliver ? resData.needDeliver.toString() : '';
+                this.form.needDeliver = resData.needDeliver !== null ? resData.needDeliver.toString() : '';
                 this.form.freightTemplateId = resData.freightTemplateId ? resData.freightTemplateId : '';
                 this.form.upType = resData.upType ? resData.upType.toString() : '';
                 this.form.upTime = resData.upType == 2 ? resData.upTime : '';

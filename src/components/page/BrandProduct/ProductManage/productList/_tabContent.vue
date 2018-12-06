@@ -46,7 +46,7 @@
             </el-table-column>
             <el-table-column prop="status" label="审核状态" align="center">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.status == 3">审核通过</span>
+                    <span v-if="scope.row.status == 3 || scope.row.status == 4">审核通过</span>
                     <span v-else-if="scope.row.status == 2">审核中</span>
                     <span v-else-if="scope.row.status == 5">审核驳回</span>
                     <span v-else>-</span>
@@ -72,7 +72,7 @@
             </el-table-column>
             <el-table-column prop="taxRate" label="税率" align="center"></el-table-column>
             <el-table-column prop="stock" label="总库存" align="center"></el-table-column>
-            <!--<el-table-column prop="activityFreezeStock" label="活动冻结库存" align="center"></el-table-column>-->
+            <el-table-column prop="activityFreezeStock" label="活动冻结库存" align="center"></el-table-column>
             <el-table-column prop="freezeStock" label="订单冻结库存" align="center"></el-table-column>
             <el-table-column prop="warehouseType" label="商品来源" align="center">
                 <template slot-scope="scope">
@@ -116,7 +116,7 @@
                 <template slot-scope="scope">
                     <div class="operate">
                         <!--<span v-if="scope.row.status == 1 || scope.row.status == 5 || scope.row.status == 6" @click="editProduct(scope.row)">编辑</span>-->
-                        <span @click="editProduct(scope.row)">编辑</span>
+                        <span v-if="scope.row.status != 2 " @click="editProduct(scope.row)">编辑</span>
                         <span @click="addRemark(scope.row)">备注</span>
                         <span @click="productInfo(scope.row)">详情</span>
                     </div>
