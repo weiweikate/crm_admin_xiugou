@@ -15,7 +15,7 @@
                     </div>
                     <div class="item">
                         <span>仓库类型：</span>
-                        <span>{{!detail.type==1?'自建仓':detail.type==2?'加盟仓':'供应商仓'}}</span>
+                        <span>{{!detail.type==1?'自建仓':detail.type==2?'加盟仓':detail.type==3?'供应商仓':'虚拟仓'}}</span>
                     </div>
                     <div class="item">
                         <span>仓库状态：</span>
@@ -69,15 +69,15 @@
                         <span>仓库报损数：</span>
                         <span>{{detail.lossCount||0}}</span>
                     </div>
-                    <div class="item" v-if="detail.type==3">
+                    <div class="item" v-if="detail.type==3&&detail.type==4">
                         <span>供应商ID：</span>
                         <span>{{detail.supplierCode}}</span>
                     </div>
-                    <div class="item" v-if="detail.type==3">
+                    <div class="item" v-if="detail.type==3&&detail.type==4">
                         <span>供应商名称：</span>
                         <span>{{detail.supplierName}}</span>
                     </div>
-                    <div class="item" v-if="!detail.returnGoods&&detail.type!=3">
+                    <div class="item" v-if="!detail.returnGoods&&detail.type!=3&&detail.type!=4">
                         <span>加盟仓类型：</span>
                         <span v-if="detail.joinWarehouseType==1">百世汇通</span>
                         <span v-if="detail.joinWarehouseType==2">顺丰</span>
