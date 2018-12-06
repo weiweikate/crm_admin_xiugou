@@ -20,8 +20,8 @@
                        <i class="el-icon-plus" style="font-size: 14px">添加视频</i>
                        <div slot="tip" class="el-upload__tip">请控制在5M以内</div>
                    </el-upload>
-                   <div class="img-list fl" v-else style="margin-right: 0px">
-                       <div class="del-mask">删 除</div>
+                   <div class="img-list fl" v-else style="position: relative">
+                       <div class="del-video" @click="form.videoUrl = ''">删 除</div>
                        <video :src="form.videoUrl" style="width: 150px;height: 150px" controls="controls"></video>
                    </div>
                    <div class="sep-video fl"></div>
@@ -346,7 +346,7 @@
                 // const tagSel = this.tagTypeArr[0] ? this.tagTypeArr[0].selected : false;
                 // await this.getAllTags(tagId, 0, tagSel);
                 this.form.videoUrl = resData.videoUrl ? resData.videoUrl : '';
-                this.form.needDeliver = resData.needDeliver ? resData.needDeliver.toString() : '';
+                this.form.needDeliver = resData.needDeliver !== null ? resData.needDeliver.toString() : '';
                 this.form.freightTemplateId = resData.freightTemplateId ? resData.freightTemplateId : '';
                 this.form.upType = resData.upType ? resData.upType.toString() : '';
                 this.form.upTime = resData.upType == 2 ? resData.upTime : '';
@@ -612,6 +612,19 @@
                 width: 150px;
                 height: 150px;
             }
+        }
+        .del-video{
+            z-index: 99;
+            position: absolute;
+            cursor: pointer;
+            left: 0px;
+            top: 0px;
+            width: 150px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            color: #33b4ff;
+            background-color: rgba(0,0,0,0.3);
         }
         .del-mask{
             position: absolute;

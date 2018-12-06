@@ -178,6 +178,7 @@ export default {
             title: '添加属性',
             id: '',
             itemId: '',
+            itemCode: '',
             itype: '',
             delId: '',
             delUrl: 'http://api',
@@ -273,6 +274,7 @@ export default {
         },
         editProperty(row) {
             this.itemId = row.id;
+            this.itemCode = row.code;
             this.title = '编辑属性';
             this.maskForm.name = row.name;
             this.maskForm.type = row.type;
@@ -292,7 +294,10 @@ export default {
                         return this.$message.warning('请添加属性值');
                     }
                     const data = this[formName];
-                    if (this.itemId) data.id = this.itemId;
+                    if (this.itemId) {
+                        data.id = this.itemId;
+                        data.code = this.itemCode;
+                    }
                     const tempArr = [];
                     this.maskForm.values.forEach((v, k) => {
                         const temp = {

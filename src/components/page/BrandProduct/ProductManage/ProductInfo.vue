@@ -73,7 +73,7 @@
                   <el-table-column prop="warehouseStock" label="仓库同步库存" align="center"></el-table-column>
                   <el-table-column prop="sellStock" label="可售库存" align="center"></el-table-column>
               </el-table>
-              <div class="pro-title">图文描述</div>
+              <div class="pro-title mb10">图文描述</div>
               <el-form-item label="商品主图：">
                   <div v-if="info.videoUrl && info.videoUrl!== ''" class="img-list fl" style="margin-right: 0px">
                       <video :src="info.videoUrl" style="width: 150px;height: 150px" controls="controls"></video>
@@ -93,7 +93,7 @@
                   </div>
               </el-form-item>
               <div class="pro-title">物流信息</div>
-              <el-form-item label="运费模板：">{{this.info.freightTemplateName}}</el-form-item>
+              <el-form-item label="运费模板：">{{info.freightTemplateName}}</el-form-item>
               <el-form-item label="不支持配送区域：">
                   <div class="area-list" v-if="info.unSupportsssAreasDataArr && info.unSupportsssAreasDataArr.length !== 0">
                       <el-tag type="primary" v-for="(v, k) in info.unSupportsssAreasDataArr" :key="k">{{v}}</el-tag>
@@ -110,17 +110,18 @@
                   <template v-else>{{info.buyLimit}}</template>
               </el-form-item>
               <el-form-item label="平台服务：">
-                    <template v-if="1">不支持使用优惠卷</template>
-                    <template v-else-if="2">提供发票</template>
-                    <template v-else-if="3">不支持使用优惠卷, 提供发票</template>
-                    <template v-else-if="5">不支持使用优惠卷, 支持7天无理由退换</template>
-                    <template v-else-if="6">提供发票, 支持7天无理由退换</template>
-                    <template v-else-if="7">不支持使用优惠卷, 提供发票, 支持7天无理由退换</template>
+                    <template v-if="info.restrictions == 1">不支持使用优惠券</template>
+                    <template v-else-if="info.restrictions == 2">提供发票</template>
+                    <template v-else-if="info.restrictions == 3">不支持使用优惠券, 提供发票</template>
+                    <template v-else-if="info.restrictions == 4">支持7天无理由退换</template>
+                    <template v-else-if="info.restrictions == 5">不支持使用优惠券, 支持7天无理由退换</template>
+                    <template v-else-if="info.restrictions == 6">提供发票, 支持7天无理由退换</template>
+                    <template v-else-if="info.restrictions == 7">不支持使用优惠券, 提供发票, 支持7天无理由退换</template>
               </el-form-item>
               <el-form-item label="售后保障：">
-                  <template v-if="this.info.afterSaleServiceDays>0">{{this.info.afterSaleServiceDays}}天</template>
+                  <template v-if="info.afterSaleServiceDays>0">{{info.afterSaleServiceDays}}天</template>
               </el-form-item>
-              <el-form-item label="自动下架：">{{this.info.autoUnShelve? '是':'否'}}</el-form-item>
+              <el-form-item label="自动下架：">{{info.autoUnShelve? '是':'否'}}</el-form-item>
               <div class="pro-title">标签信息</div>
               <el-form-item label="已有标签：">
                 <el-tag type="primary" v-for="(v, k) in info.selectedTag" :key="k">{{v}}</el-tag>

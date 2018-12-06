@@ -25,14 +25,14 @@
                 <el-form-item label-width="0px">
                     <el-col :span="11">
                         <el-form-item prop="supplierCode" label="选择供应商">
-                            <el-select v-model="form.supplierCode" placeholder="请选择供应商" @change="selectBrand">
+                            <el-select :disabled="status == 4 || status == 3" v-model="form.supplierCode" placeholder="请选择供应商" @change="selectBrand">
                                 <el-option v-for="(v, k) in supplierArr" :key="k" :label="v.name" :value="v.code"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="11">
                         <el-form-item prop="warehouseType" label="发货仓库">
-                            <el-select v-model="form.warehouseType" placeholder="请选择发货仓库">
+                            <el-select :disabled="status == 4 || status == 3" v-model="form.warehouseType" placeholder="请选择发货仓库">
                                 <el-option v-for="(v, k) in deliveryWarehouseArr" :key="k" :label="v.label" :value="v.value"></el-option>
                             </el-select>
                         </el-form-item>
@@ -41,7 +41,7 @@
                 <el-form-item label-width="0px">
                     <el-col :span="11">
                         <el-form-item prop="type" label="商品类型">
-                            <el-select v-model="form.type" placeholder="请选择商品类型">
+                            <el-select :disabled="status == 4 || status == 3" v-model="form.type" placeholder="请选择商品类型">
                                 <el-option label="普通商品" value="1"></el-option>
                                 <el-option label="内购商品" value="2"></el-option>
                                 <!--<el-option label="虚拟商品" value="3"></el-option>-->
@@ -51,7 +51,7 @@
                     </el-col>
                     <el-col :span="11">
                         <el-form-item prop="businessType" label="贸易类型">
-                            <el-select v-model="form.businessType" @change="changeTradeType" placeholder="请选择贸易类型">
+                            <el-select :disabled="status == 4 || status == 3" v-model="form.businessType" @change="changeTradeType" placeholder="请选择贸易类型">
                                 <el-option label="一般贸易" value="1"></el-option>
                                 <!--<el-option label="跨境保税" value="2"></el-option>-->
                                 <!--<el-option label="海外直邮" value="3"></el-option>-->
@@ -61,9 +61,10 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item prop="brandId" label="品牌">
-                    <el-select class="search-inp" filterable placeholder="请选择品牌" v-model="form.brandId">
+                    <el-select :disabled="status == 4 || status == 3" class="search-inp" filterable placeholder="请选择品牌" v-model="form.brandId">
                         <el-option v-for="(v, k) in brandArr" :key="k" :label="v.name" :value="v.id"></el-option>
                     </el-select>
+                    <!--<el-input :disabled="status == 4" class="search-inp" placeholder="税率" v-model=""></el-input>-->
                 </el-form-item>
                 <div class="pro-title">自然属性</div>
                 <el-form-item v-loading="naturalLoading">
@@ -105,6 +106,7 @@
             return {
                 nav: ['品牌产品管理', '产品管理', '基础参数设置'],
                 prodCode: '',
+                status: '', // 0：删除 1：待发布2：待审核3：已通过4:已上架5：未通过6:已下架
                 cateArr: [],
                 form: {
                     prodCode: '',
@@ -128,7 +130,7 @@
                 tmpParamList: [], // 临时储存属性，刷新使用
                 supplierArr: [], // 供应商列表
                 brandArr: [], // 品牌列表
-                deliveryWarehouseArr: [{ label: '自建仓', value: '1' }, { label: '加盟仓', value: '2' }, { label: '供应商', value: '3' }, { label: '虚拟仓库', value: '4' }], // 发货仓库
+                deliveryWarehouseArr: [{ label: '加盟仓', value: '2' }, { label: '供应商', value: '3' }, { label: '虚拟仓库', value: '4' }], // 发货仓库
                 naturalAttribute: [], // 自然属性列表
                 naturalLoading: false, // 自然属性loading
                 btnLoading: false
@@ -197,6 +199,7 @@
                         this.pageLoading = false;
                         console.log(err);
                     });
+                    this.status = resData.status;
                     await this.getSupplyList();
                     await this.selectBrand(resData.supplierCode);
                     await this.getNaturalList();

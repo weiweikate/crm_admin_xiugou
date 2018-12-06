@@ -45,7 +45,7 @@
                     <div style="margin-top: -40px">
                         <div v-for="p in brand" class="area">
                             <div class="product-item">{{p.name}}</div>
-                            <span>供应产品数：<span @click="toProductList(p,0)"
+                            <span>供应产品数：<span @click="toProductList(p,4)"
                                               class="color-blue">{{p.porductNum}}</span></span>
                         </div>
                     </div>
@@ -110,9 +110,9 @@
                 sessionStorage.setItem('flag', num);
                 this.$router.push({ path: '/productList',
                     query: {
-                        'supplierId': this.id,
+                        'supplierCode': this.code,
                         'brandId': item.brandId,
-                        'flag': num
+                        'flag': num // 0:上架
                     }
                 });
             }

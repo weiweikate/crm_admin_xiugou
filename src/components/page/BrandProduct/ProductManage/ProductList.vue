@@ -3,8 +3,8 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="mb10">
             <el-form :model="form" ref='form' inline label-width="130px">
-                <el-form-item prop="prodSpuCode" label="商品SPU/商品名称">
-                    <el-input v-model.trim="form.prodSpuCode" placeholder="请输入商品SPU/商品名称"></el-input>
+                <el-form-item prop="nameOrCode" label="商品SPU/商品名称">
+                    <el-input v-model.trim="form.nameOrCode" placeholder="请输入商品SPU/商品名称"></el-input>
                 </el-form-item>
                 <!--<el-form-item prop="name" label="商品名称">-->
                     <!--<el-input v-model.trim="form.name" placeholder="请输入商品名称"></el-input>-->
@@ -65,11 +65,11 @@
                 <!--</el-form-item>-->
                 <!--/product/productBrand/findProductBrandList?name=耐克-->
                 <el-form-item prop="brandId" label="品牌">
-                    <el-input v-model.trim="form.brandId" placeholder="模糊下拉搜索"></el-input>
+                    <el-input v-model.trim="form.brandId" placeholder="模糊搜索"></el-input>
                 </el-form-item>
                 <!--findAllSupplier-->
-                <el-form-item prop="suppilerId" label="供应商ID">
-                    <el-input v-model.trim="form.suppilerId" placeholder="模糊下拉搜索"></el-input>
+                <el-form-item prop="supplierCode" label="供应商ID">
+                    <el-input v-model.trim="form.supplierCode" placeholder="模糊搜索"></el-input>
                 </el-form-item>
                 <!--<el-form-item prop="prodWarea" label="商品库存">-->
                     <!--<el-select v-model="form.prodWarea" placeholder="请选择发货方仓">-->
@@ -94,7 +94,7 @@
                 <el-form-item prop="maxPrice" label=""></el-form-item>
                 <el-form-item label=" ">
                     <el-button type="primary" @click="handleClick">搜索</el-button>
-                    <el-button @click="$refs['form'].resetFields()">重置</el-button>
+                    <el-button @click="resetForm">重置</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -170,7 +170,7 @@
                     inWarehouseTotal: '仓库中'
                 },
                 form: {
-                    prodSpuCode: '',
+                    nameOrCode: '',
                     // name: '',
                     feightTpl: '',
                     prodType: '',
@@ -180,7 +180,7 @@
                     // pushStatus: '',
                     deliveryWare: '',
                     brandId: '',
-                    suppilerId: '',
+                    supplierCode: '',
                     prodWarea: '',
                     updateTime: [],
                     minPrice: '',
@@ -193,6 +193,12 @@
             };
         },
         mounted() {
+            const param = this.$route.query;
+            if (param) {
+                this.form.brandId = param.brandId;
+                this.form.supplierCode = param.supplierCode;
+                this.form.paramStatus = param.flag; // 已上架状态
+            }
             this.getFeightList();
             this.getFirstCateList();
             this.handleClick();
@@ -258,7 +264,7 @@
                     checkingTotal: `待审核(${val.checkingTotal})`,
                     inSellingTotal: `出售中(${val.inSellingTotal})`,
                     inWarehouseTotal: `仓库中(${val.inWarehouseTotal})`
-                }
+                };
             },
             // 获取运费模板列表
             getFeightList() {
@@ -286,6 +292,11 @@
             createProd() {
                 this.keepAlive = true;
                 this.$router.push('releaseProduct');
+            },
+            // 重置
+            resetForm() {
+                this.$refs['form'].resetFields();
+                this.form.paramStatus = '';
             }
         },
         // 路由离开钩子
