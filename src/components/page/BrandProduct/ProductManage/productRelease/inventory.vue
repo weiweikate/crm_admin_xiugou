@@ -399,12 +399,14 @@
                     const v = this.priceTable[i];
                     v.stockUnit = this.unit;
                     const reg = /^[+]{0,1}(\d+)$/;
-                    if (v.warehouseStock && v.sellStock != '') {
-                        if (v.sellStock > v.warehouseStock) {
-                            return this.$message.warning('可售库存不能大于仓库同步库存!');
-                        }
-                        if (!reg.test(v.sellStock)) {
-                            return this.$message.warning('请输入正确的可售库存');
+                    if (v.warehouseStock) {
+                        if (v.sellStock && v.sellStock != '') {
+                            if (v.sellStock > v.warehouseStock) {
+                                return this.$message.warning('可售库存不能大于仓库同步库存!');
+                            }
+                            if (!reg.test(v.sellStock)) {
+                                return this.$message.warning('请输入正确的可售库存');
+                            }
                         }
                     }
                 }
