@@ -3,15 +3,15 @@
         <v-breadcrumb :nav="['经销商会员管理','供应商管理','编辑供应商']"></v-breadcrumb>
         <div class="container">
             <div class="supplier-box">
-                <el-form :model="form" ref="form" :rules="rules">
+                <el-form :model="form" ref="form">
                     <el-form-item prop="loginName" label="供应商账号">
                         <el-input placeholder="请输入供应商账号" v-model="form.loginName"></el-input>
                     </el-form-item>
                     <el-form-item label="密码" prop="password">
-                        <el-input placeholder="请输入供应商账号密码" v-model="form.password" type="password" autocomplete="off"></el-input>
+                        <el-input placeholder="若需修改密码请输入，不修改密码可不填写" v-model="form.password" type="password" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="确认密码" prop="confirmPassword">
-                        <el-input placeholder="请再次输入供应商账号密码" v-model="form.confirmPassword" type="password" autocomplete="off"></el-input>
+                        <el-input placeholder="若需修改密码请输入，不修改密码可不填写" v-model="form.confirmPassword" type="password" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item prop="name" label="供应商名称">
                         <el-input placeholder="请输入供应商名称" v-model="form.name"></el-input>
@@ -90,25 +90,6 @@
             vBreadcrumb, icon, region
         },
         data() {
-            const validatePass = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入密码'));
-                } else {
-                    if (this.form.password !== '') {
-                        this.$refs.form.validateField('confirmPassword');
-                    }
-                    callback();
-                }
-            };
-            const validatePass2 = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请再次输入密码'));
-                } else if (value !== this.form.password) {
-                    callback(new Error('两次输入密码不一致!'));
-                } else {
-                    callback();
-                }
-            };
             return {
                 form: {
                     name: '',
@@ -139,14 +120,6 @@
                 secIds: '',
                 brandList: [], // 品牌列表
                 brandIds: [],
-                rules: {
-                    password: [
-                        { required: true, validator: validatePass, trigger: 'blur' }
-                    ],
-                    confirmPassword: [
-                        { required: true, validator: validatePass2, trigger: 'blur' }
-                    ]
-                }
             };
         },
         activated() {
@@ -215,11 +188,11 @@
                     that.$message.warning('请输入供应商账号!');
                     return;
                 }
-                if (!that[form].password) {
+                if (that[form].confirmPassword && !that[form].password) {
                     that.$message.warning('请输入密码!');
                     return;
                 }
-                if (that[form].password !== that[form].confirmPassword) {
+                if (that[form].password && that[form].password !== that[form].confirmPassword) {
                     that.$message.warning('两次密码输入不一致!');
                     return;
                 }
