@@ -399,7 +399,7 @@
                     const v = this.priceTable[i];
                     v.stockUnit = this.unit;
                     const reg = /^[+]{0,1}(\d+)$/;
-                    if (v.sellStock != '') {
+                    if (v.warehouseStock && v.sellStock != '') {
                         if (v.sellStock > v.warehouseStock) {
                             return this.$message.warning('可售库存不能大于仓库同步库存!');
                         }
