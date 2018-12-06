@@ -447,7 +447,16 @@
                 this.status = resData.status;
                 const unitDefault = resData.skuList.length === 0 ? '件' : resData.skuList[0].stockUnit;
                 this.unit = unitDefault || '件';
-                this.priceTable = resData.skuList;
+                if (resData.skuList && resData.skuList.length !== 0) {
+                    resData.skuList.forEach(v => {
+                        v.isEdit = true;
+                        // 如果SKU条形码和SKU编码都有则不可以编辑价格
+                        if (v.barCode && v.supplierSkuCode) {
+                            v.isEdit = false;
+                        }
+                        this.priceTable.push(v);
+                    });
+                }
                 this.tmpParamList = resData.specifies;
                 if (resData.checkStatus) {
                     this.salesAttrArr = [];
