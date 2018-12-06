@@ -25,14 +25,14 @@
                 <el-form-item label-width="0px">
                     <el-col :span="11">
                         <el-form-item prop="supplierCode" label="选择供应商">
-                            <el-select :disabled="status == 4" v-model="form.supplierCode" placeholder="请选择供应商" @change="selectBrand">
+                            <el-select :disabled="status == 4 || status == 3" v-model="form.supplierCode" placeholder="请选择供应商" @change="selectBrand">
                                 <el-option v-for="(v, k) in supplierArr" :key="k" :label="v.name" :value="v.code"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="11">
                         <el-form-item prop="warehouseType" label="发货仓库">
-                            <el-select :disabled="status == 4" v-model="form.warehouseType" placeholder="请选择发货仓库">
+                            <el-select :disabled="status == 4 || status == 3" v-model="form.warehouseType" placeholder="请选择发货仓库">
                                 <el-option v-for="(v, k) in deliveryWarehouseArr" :key="k" :label="v.label" :value="v.value"></el-option>
                             </el-select>
                         </el-form-item>
@@ -41,7 +41,7 @@
                 <el-form-item label-width="0px">
                     <el-col :span="11">
                         <el-form-item prop="type" label="商品类型">
-                            <el-select :disabled="status == 4" v-model="form.type" placeholder="请选择商品类型">
+                            <el-select :disabled="status == 4 || status == 3" v-model="form.type" placeholder="请选择商品类型">
                                 <el-option label="普通商品" value="1"></el-option>
                                 <el-option label="内购商品" value="2"></el-option>
                                 <!--<el-option label="虚拟商品" value="3"></el-option>-->
@@ -51,7 +51,7 @@
                     </el-col>
                     <el-col :span="11">
                         <el-form-item prop="businessType" label="贸易类型">
-                            <el-select :disabled="status == 4" v-model="form.businessType" @change="changeTradeType" placeholder="请选择贸易类型">
+                            <el-select :disabled="status == 4 || status == 3" v-model="form.businessType" @change="changeTradeType" placeholder="请选择贸易类型">
                                 <el-option label="一般贸易" value="1"></el-option>
                                 <!--<el-option label="跨境保税" value="2"></el-option>-->
                                 <!--<el-option label="海外直邮" value="3"></el-option>-->
@@ -61,7 +61,7 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item prop="brandId" label="品牌">
-                    <el-select :disabled="status == 4" class="search-inp" filterable placeholder="请选择品牌" v-model="form.brandId">
+                    <el-select :disabled="status == 4 || status == 3" class="search-inp" filterable placeholder="请选择品牌" v-model="form.brandId">
                         <el-option v-for="(v, k) in brandArr" :key="k" :label="v.name" :value="v.id"></el-option>
                     </el-select>
                     <!--<el-input :disabled="status == 4" class="search-inp" placeholder="税率" v-model=""></el-input>-->
