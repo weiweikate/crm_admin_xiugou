@@ -64,8 +64,8 @@
                     <!--</el-select>-->
                 <!--</el-form-item>-->
                 <!--/product/productBrand/findProductBrandList?name=耐克-->
-                <el-form-item prop="brandId" label="品牌">
-                    <el-input v-model.trim="form.brandId" placeholder="模糊搜索"></el-input>
+                <el-form-item prop="brandName" label="品牌">
+                    <el-input v-model.trim="form.brandName" placeholder="模糊搜索"></el-input>
                 </el-form-item>
                 <!--findAllSupplier-->
                 <el-form-item prop="supplierCode" label="供应商ID">
@@ -179,7 +179,7 @@
                     isProprietary: '',
                     // pushStatus: '',
                     deliveryWare: '',
-                    brandId: '',
+                    brandName: '',
                     supplierCode: '',
                     prodWarea: '',
                     updateTime: [],
