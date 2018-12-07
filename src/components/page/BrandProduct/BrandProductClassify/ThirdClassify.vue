@@ -108,9 +108,10 @@
         </el-dialog>
         <el-dialog title="关联属性" :visible.sync="editPropertyMask" width="700px">
             <el-transfer :titles="['选择区域','选中预览']"
-                         v-model="propertyIds"
+                         v-model="propertyCodes"
                          :data="allPropertyList">
             </el-transfer>
+            <div class="tip">注：同一类型属性不能绑定相同名称的属性</div>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="editSure">确 认</el-button>
                 <el-button @click="editPropertyMask=false">取 消</el-button>
@@ -163,7 +164,7 @@
                 uploadImg: '',
                 propertyMask: false, // 关联属性弹窗
                 editPropertyMask: false, // 编辑关联属性弹窗
-                propertyIds: [],
+                propertyCodes: [],
                 propertyList: [],
                 allPropertyList: [],
                 btnLoading: false,
@@ -316,14 +317,15 @@
                 };
                 request.queryPropertyByCategoryId(data).then(res => {
                     this.propertyList = [];
-                    this.propertyIds = [];
+                    this.propertyCodes = [];
                     res.data.forEach((v, k) => {
                         const type = v.type == 1 ? '自然属性' : '销售属性';
                         const temp = {
-                            label: `${v.name}（` + type + `） ID:${v.propertyCode}`
+                            label: `${v.name}（` + type + `） ID:${v.propertyCode}`,
+                            name: `${v.name}（` + type + `）`
                         };
                         this.propertyList.push(temp);
-                        this.propertyIds.push(v.propertyCode);
+                        this.propertyCodes.push(v.propertyCode);
                     });
                 }).catch(err => {
 
@@ -331,7 +333,7 @@
             },
             propertySure() {
                 const data = {
-                    propertyCodes: this.propertyIds,
+                    propertyCodes: this.propertyCodes,
                     categoryId: this.row.id
                 };
                 this.btnLoading = true;
@@ -347,7 +349,7 @@
             // 删除
             deleteProperty(index) {
                 this.propertyList.splice(index, 1);
-                this.propertyIds.splice(index, 1);
+                this.propertyCodes.splice(index, 1);
             },
             // 编辑关联属性
             editProperty() {
@@ -363,7 +365,8 @@
                         const type = v.type == 1 ? '自然属性' : '销售属性';
                         const temp = {
                             key: v.code,
-                            label: `${v.name}（` + type + `） ID:${v.code}`
+                            label: `${v.name}（` + type + `） ID:${v.code}`,
+                            name: `${v.name}（` + type + `）`
                         };
                         this.allPropertyList.push(temp);
                     });
@@ -372,10 +375,20 @@
             editSure() {
                 this.propertyList = [];
                 this.allPropertyList.forEach((v, k) => {
-                    if (this.propertyIds.join(',').indexOf(v.key) != -1) {
+                    if (this.propertyCodes.join(',').indexOf(v.key) != -1) {
                         this.propertyList.push(v);
                     }
                 });
+                let tempNamesStr = ''; const tempNamesArr = [];
+                this.propertyList.forEach((v, k) => {
+                    tempNamesArr.push(v.name);
+                });
+                tempNamesStr = tempNamesArr.join(',') + ',';
+                for (let i = 0; i < tempNamesArr.length; i++) {
+                    if (tempNamesStr.replace(tempNamesArr[i] + ',', '').indexOf(tempNamesArr[i] + ',') > -1) {
+                        return this.$message.warning('存在重复的属性名');
+                    }
+                }
                 this.editPropertyMask = false;
             }
         }
@@ -475,6 +488,10 @@
         }
         .el-transfer-panel{
             width: 280px;
+        }
+        .tip{
+            font-size: 12px;
+            color: #ff6868;
         }
     }
 </style>
