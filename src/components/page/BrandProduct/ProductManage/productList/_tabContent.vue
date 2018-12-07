@@ -186,6 +186,9 @@ export default {
                         if (restrictions.toString() == 4) {
                             v.tags = ['支持7天无理由退换'];
                         }
+                        if (!v.imgUrl || v.imgUrl == '') {
+                            v.imgUrl = '/static/img/defaultImg.png';
+                        }
                         this.tableData.push(v);
                     });
                 }
