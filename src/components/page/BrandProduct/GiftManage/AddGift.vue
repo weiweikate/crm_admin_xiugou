@@ -664,7 +664,7 @@
             // 获取品牌列表
             getBrandList(val) {
                 if (val) {
-                    request.findBySupplierId({ id: val }).then(res => {
+                    request.findBySupplierCode({ code: val }).then(res => {
                         this.brandArr = res.data;
                     }).catch(err => {
                         console.log(err);
@@ -712,7 +712,7 @@
                     this.tagLoading = false;
                     this.tagArr = [];
                     this.tagTypeArr[key].selected = !this.tagTypeArr[key].selected;
-                    res.data[0].sysTagLibraryVOList.forEach(v => {
+                    res.data[0].sysTagLibraryVOList && res.data[0].sysTagLibraryVOList.forEach(v => {
                         this.tagArr.push({ label: v.name, value: v.id });
                     });
                     this.tagArr.forEach((v, k) => {
@@ -747,7 +747,6 @@
             getProductParam(secId) {
                 this.productParam = [];
                 request.queryProductCategoryParamList({ categoryId: secId ,type:''}).then(res => {
-                    debugger
                     res.data.forEach((v, k) => {
                         v.value = '';
                         this.productParam.push(v);
