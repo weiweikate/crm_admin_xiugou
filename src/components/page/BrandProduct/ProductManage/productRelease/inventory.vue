@@ -45,7 +45,7 @@
                         <div v-else-if="v.type == 1" class="sales-type">
                             <el-checkbox :disabled="status == 4 || status == 3" v-if="v1.defType == 1" v-for="(v1, k1) in v.options" :key="`${k}--${k1}`" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
                             <div class="mt10" v-else>
-                                <el-input :disabled="status == 4 || status == 3" v-model="v1.value" style="width: 215px"></el-input>
+                                <el-input :disabled="status == 4 || status == 3" v-model="v1.label" style="width: 215px"></el-input>
                                 <span v-if="status != 4  && status != 3" class="primary-text" @click="deleteProps(k,k1)">删除</span>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                         <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
                             <el-input :disabled="status == 4 || status == 3" v-if="v1.defType == 1" style="width: 215px" v-model="v1.value"></el-input>
                             <div class="mt10" v-else>
-                                <el-input :disabled="status == 4 || status == 3" v-model="v1.label" style="width: 215px"></el-input>
+                                <el-input :disabled="status == 4 || status == 3" v-model="v1.value" style="width: 215px"></el-input>
                                 <span v-if="status != 4 && status !=3" class="primary-text" @click="deleteProps(k,k1)">删除</span>
                             </div>
                             <template v-if="v1.imgUrl == '' || !v1.imgUrl">
@@ -594,7 +594,8 @@
                     prodCode: this.prodCode
                 };
                 const arr = [];
-                let salesTmpAttrArr = this.salesAttrArr;
+                const salesTmpAttrArr = [...this.salesAttrArr];
+                console.log(salesTmpAttrArr);
                 salesTmpAttrArr.forEach((v, k) => {
                     const obj = {
                         specName: v.name,
@@ -735,7 +736,7 @@
                     inputErrorMessage: '请输入1-20位的名字'
                 }).then(({ value }) => {
                     const item = this.salesAttrArr[index];
-                    item.options.push({ label: value, value: value, defType: 2, imgUrl: '' });
+                    item.options.push({ label: value, value: value, defType: 2, imgUrl: '', oldSpecImg: '', oldSpecValue: '' });
                 }).catch(err => {
                     console.log(err);
                 });
