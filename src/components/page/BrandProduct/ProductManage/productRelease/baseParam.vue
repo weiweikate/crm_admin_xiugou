@@ -157,11 +157,7 @@
                             ...this.form
                         };
                         const attrArr = [];
-                        // 判断提交的的属性值是否含有@符号
-                        let isHasSpeStr = false;
                         this.naturalAttribute.forEach(v => {
-                            // 判断提交的的属性值是否含有@符号
-                            if (v.value.indexOf('@') !== -1 || v.defParam.indexOf('@') !== -1) isHasSpeStr = true;
                             if (v.defParam === '') {
                                 if (v.value !== '') {
                                     attrArr.push({ paramName: v.name, paramValue: v.value });
@@ -172,7 +168,8 @@
                                 }
                             }
                         });
-                        if (isHasSpeStr) return this.$message.warning('输入的属性值不能含有@符号！');
+                        // 判断提交的数据是否含有@
+                        if (JSON.stringify(attrArr).indexOf('@') !== -1) return this.$message.warning('请确保提交的数据不含@符号');
                         this.btnLoading = true;
                         data.paramList = attrArr;
                         data.firstCategoryId = this.cateArr[0].value;
