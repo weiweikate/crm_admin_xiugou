@@ -461,6 +461,7 @@
                 }
                 this.tmpParamList = resData.specifies;
                 if (resData.checkStatus) {
+                    // 已同步仓库
                     this.salesAttrArr = [];
                     const tmp = [];
                     resData.specifies.forEach((v, k) => {
@@ -474,7 +475,9 @@
                                     label: v1.specValue,
                                     value: v1.specValue,
                                     defType: 1,
-                                    imgUrl: v1.specImg
+                                    imgUrl: v1.specImg,
+                                    oldSpecImg: v1.specImg,
+                                    oldSpecValue: v1.specValue
                                 });
                             });
                         }
@@ -591,7 +594,8 @@
                     prodCode: this.prodCode
                 };
                 const arr = [];
-                this.salesAttrArr.forEach((v, k) => {
+                let salesTmpAttrArr = this.salesAttrArr;
+                salesTmpAttrArr.forEach((v, k) => {
                     const obj = {
                         specName: v.name,
                         specValues: []
@@ -601,7 +605,9 @@
                             obj.specValues.push({
                                 specImg: v1.imgUrl,
                                 specName: v.name,
-                                specValue: v1.value === true ? v1.label : v1.value
+                                specValue: v1.value === true ? v1.label : v1.value,
+                                oldSpecImg: v1.oldSpecImg,
+                                oldSpecValue: v1.oldSpecValue === true ? v1.label : v1.oldSpecValue
                             });
                         }
                     });
@@ -632,6 +638,15 @@
                             this.priceTable.push(v);
                         });
                     }
+                    // 如果生成列表成功，则将本次提交的数据作为老数据
+                    this.salesAttrArr.forEach((v, k) => {
+                        v.options.forEach(v1 => {
+                            if (v1.value) {
+                                v1.oldSpecImg = v1.imgUrl;
+                                v1.oldSpecValue = v1.value;
+                            }
+                        });
+                    });
                 }).catch(err => {
                     this.createListLoading = false;
                     console.log(err);
