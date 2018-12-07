@@ -590,6 +590,8 @@
             },
             // 生成列表
             addprodSku() {
+                // 判断提交的的属性值是否含有@符号
+                let isHasSpeStr = false;
                 const data = {
                     prodCode: this.prodCode
                 };
@@ -601,6 +603,8 @@
                         specValues: []
                     };
                     v.options.forEach(v1 => {
+                        // 判断提交的的属性值是否含有@符号
+                        if (v1.value.indexOf('@') !== -1 || v1.label.indexOf('@') !== -1) isHasSpeStr = true;
                         if (v1.value) {
                             obj.specValues.push({
                                 specImg: v1.imgUrl,
@@ -615,6 +619,7 @@
                         arr.push(obj);
                     }
                 });
+                if (isHasSpeStr) return this.$message.warning('输入的属性值不能含有@符号！');
                 this.flag = arr.every(v => {
                     return v.specValues.length === 0;
                 });
