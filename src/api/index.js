@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Loading } from 'element-ui';
 import { Message } from 'element-ui';
+import { getToken } from '@/utils/auth';
 import utils from '../utils/index.js';
 import qs from 'qs';
 
@@ -16,6 +17,8 @@ axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 
 var loading;
 axios.interceptors.request.use(config => {
+    config.headers['token'] = getToken();
+    console.log(config);
     // let receiveData = config.data;
     // 免session
     // let nocheckout = ['/admin/adminLogin/pswLogin'];
