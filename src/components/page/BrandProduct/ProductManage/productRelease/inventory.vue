@@ -595,7 +595,6 @@
                 };
                 const arr = [];
                 const salesTmpAttrArr = [...this.salesAttrArr];
-                console.log(salesTmpAttrArr);
                 salesTmpAttrArr.forEach((v, k) => {
                     const obj = {
                         specName: v.name,
