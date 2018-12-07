@@ -65,9 +65,7 @@
                     }
                     that.type && (data.type = that.type);
                     data.status = that.status;
-                    debugger
                     request[url](data).then(res => {
-                        debugger
                         that.btnLoading = false;
                         this.$message.success(res.msg);
                         this.$emit('msg', false);
