@@ -45,7 +45,7 @@
                         <div v-else-if="v.type == 1" class="sales-type">
                             <el-checkbox :disabled="status == 4 || status == 3" v-if="v1.defType == 1" v-for="(v1, k1) in v.options" :key="`${k}--${k1}`" v-model="v1.value"><span class="over-hidden def-param">{{v1.label}}</span></el-checkbox>
                             <div class="mt10" v-else>
-                                <el-input :disabled="status == 4 || status == 3" v-model="v1.value" style="width: 215px"></el-input>
+                                <el-input :disabled="status == 4 || status == 3" v-model="v1.label" style="width: 215px"></el-input>
                                 <span v-if="status != 4  && status != 3" class="primary-text" @click="deleteProps(k,k1)">删除</span>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                         <div class="img-type" v-for="(v1, k1) in v.options" :key="`${k}-${k1}`">
                             <el-input :disabled="status == 4 || status == 3" v-if="v1.defType == 1" style="width: 215px" v-model="v1.value"></el-input>
                             <div class="mt10" v-else>
-                                <el-input :disabled="status == 4 || status == 3" v-model="v1.label" style="width: 215px"></el-input>
+                                <el-input :disabled="status == 4 || status == 3" v-model="v1.value" style="width: 215px"></el-input>
                                 <span v-if="status != 4 && status !=3" class="primary-text" @click="deleteProps(k,k1)">删除</span>
                             </div>
                             <template v-if="v1.imgUrl == '' || !v1.imgUrl">
@@ -399,12 +399,14 @@
                     const v = this.priceTable[i];
                     v.stockUnit = this.unit;
                     const reg = /^[+]{0,1}(\d+)$/;
-                    if (v.warehouseStock && v.sellStock != '') {
-                        if (v.sellStock > v.warehouseStock) {
-                            return this.$message.warning('可售库存不能大于仓库同步库存!');
-                        }
-                        if (!reg.test(v.sellStock)) {
-                            return this.$message.warning('请输入正确的可售库存');
+                    if (v.warehouseStock) {
+                        if (v.sellStock && v.sellStock != '') {
+                            if (v.sellStock > v.warehouseStock) {
+                                return this.$message.warning('可售库存不能大于仓库同步库存!');
+                            }
+                            if (!reg.test(v.sellStock)) {
+                                return this.$message.warning('请输入正确的可售库存');
+                            }
                         }
                     }
                 }
@@ -459,6 +461,7 @@
                 }
                 this.tmpParamList = resData.specifies;
                 if (resData.checkStatus) {
+                    // 已同步仓库
                     this.salesAttrArr = [];
                     const tmp = [];
                     resData.specifies.forEach((v, k) => {
@@ -472,7 +475,9 @@
                                     label: v1.specValue,
                                     value: v1.specValue,
                                     defType: 1,
-                                    imgUrl: v1.specImg
+                                    imgUrl: v1.specImg,
+                                    oldSpecImg: v1.specImg,
+                                    oldSpecValue: v1.specValue
                                 });
                             });
                         }
@@ -589,7 +594,9 @@
                     prodCode: this.prodCode
                 };
                 const arr = [];
-                this.salesAttrArr.forEach((v, k) => {
+                const salesTmpAttrArr = [...this.salesAttrArr];
+                console.log(salesTmpAttrArr);
+                salesTmpAttrArr.forEach((v, k) => {
                     const obj = {
                         specName: v.name,
                         specValues: []
@@ -599,7 +606,9 @@
                             obj.specValues.push({
                                 specImg: v1.imgUrl,
                                 specName: v.name,
-                                specValue: v1.value === true ? v1.label : v1.value
+                                specValue: v1.value === true ? v1.label : v1.value,
+                                oldSpecImg: v1.oldSpecImg,
+                                oldSpecValue: v1.oldSpecValue === true ? v1.label : v1.oldSpecValue
                             });
                         }
                     });
@@ -630,6 +639,15 @@
                             this.priceTable.push(v);
                         });
                     }
+                    // 如果生成列表成功，则将本次提交的数据作为老数据
+                    this.salesAttrArr.forEach((v, k) => {
+                        v.options.forEach(v1 => {
+                            if (v1.value) {
+                                v1.oldSpecImg = v1.imgUrl;
+                                v1.oldSpecValue = v1.value;
+                            }
+                        });
+                    });
                 }).catch(err => {
                     this.createListLoading = false;
                     console.log(err);
@@ -718,7 +736,7 @@
                     inputErrorMessage: '请输入1-20位的名字'
                 }).then(({ value }) => {
                     const item = this.salesAttrArr[index];
-                    item.options.push({ label: value, value: value, defType: 2, imgUrl: '' });
+                    item.options.push({ label: value, value: value, defType: 2, imgUrl: '', oldSpecImg: '', oldSpecValue: '' });
                 }).catch(err => {
                     console.log(err);
                 });

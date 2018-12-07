@@ -163,9 +163,9 @@
             // 跳到产品列表页
             toProductList(id) {
                 sessionStorage.setItem('brandId', id);
-                sessionStorage.setItem('flag', 2);
+                sessionStorage.setItem('flag', 4);
                 // sessionStorage.removeItem('supplierId');
-                this.$router.push({ path: '/productList', query: { brandId: id, 'flag': 2 }});
+                this.$router.push({ path: '/productList', query: { brandId: id, 'flag': 4 }});
             }
         }
     };

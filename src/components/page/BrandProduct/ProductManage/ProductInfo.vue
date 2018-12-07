@@ -25,7 +25,7 @@
                   <template v-else-if="info.type == 3">海外直邮</template>
                   <template v-else-if="info.type == 4">海淘</template>
               </el-form-item>
-              <el-form-item label="是否自营：">{{info.needDeliver? '是': '否'}}</el-form-item>
+              <!--<el-form-item label="是否自营：">{{info.needDeliver? '是': '否'}}</el-form-item>-->
               <el-form-item label="品牌：">{{info.brandName}}</el-form-item>
               <div class="pro-title">自然属性</div>
               <el-form-item>

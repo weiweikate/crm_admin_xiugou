@@ -297,6 +297,7 @@
             resetForm() {
                 this.$refs['form'].resetFields();
                 this.form.paramStatus = '';
+                this.form.brandId = '';
             }
         },
         // 路由离开钩子
