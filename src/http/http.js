@@ -28,6 +28,7 @@ try {
             url = value[0];
             methods = value[1]['methods'];
         }
+        url = url && url.indexOf('/admin/') > -1 ? url.replace('/admin/','/') : url;
         // 接口方法
         request[v] = function(data = {}) {
             if (methods === 'get') {

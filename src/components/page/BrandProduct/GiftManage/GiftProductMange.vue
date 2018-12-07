@@ -8,7 +8,7 @@
                 <el-table-column prop="spec" label="规格" align="center"></el-table-column>
                 <el-table-column label="操作" align="center" width="150px">
                     <template slot-scope="scope">
-                        <el-checkbox v-model="scope.row.checked" @change="checked=>selectPro(checked,scope.row)" label="选择产品" :value='scope.id'></el-checkbox>
+                        <el-checkbox v-model="scope.row.checked" @change="checked=>selectPro(checked,scope.row)" label="选择产品" :value='scope.id' :disabled="scope.row.stock<=0"></el-checkbox><span class="red" v-if="scope.row.stock<=0">已停用</span>
                     </template>
                 </el-table-column>
             </el-table>
@@ -22,7 +22,7 @@
                     <tr v-for="(v1,k1) in v" :key="k1">
                         <td v-if='k1 == 0' :rowspan="v.length" style="padding:0 10px" >{{k+1}}</td>
                         <td>{{(v1.productName || '')+' '+(v1.specValues || '')}}</td>
-                        <td>产品ID：{{v1.productCode}}</td>
+                        <td>产品ID：{{v1.prodCode}}</td>
                         <td style="min-width:100px">x1</td>
                         <td style="min-width:80px;cursor: pointer;color:#33b4ff" @click="delselectedPro(k,k1)">删除</td>
                     </tr>
@@ -40,6 +40,7 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import * as api from '@/api/BrandProduct/GiftMange/index.js';
 import request from '@/http/http';
+import { deepClone } from "@/assets/js/util/util";
 export default {
     components: { vBreadcrumb },
 
@@ -75,18 +76,18 @@ export default {
             request.findActivityPackageProductAndSpecById({ packageId: this.giftId }).then(res => {
                 res.data.forEach(v => {
                     this.bodyLoading = false;
-                    const itemArr = v.specValues.split(',');
+                    const itemArr = v.specValues?v.specValues.split(','):[];
                     let specWrapArr = [];
-                    let specIdArr = v.productPriceId.split(',');
+                    let skuCode = v.skuCode?v.skuCode.split(','):[];
                     itemArr.forEach((item, index) => {
                         let itemObj = {};
                         itemObj.packageId = v.packageId;
-                        itemObj.productId = v.productId;
-                        itemObj.productCode = v.productCode;
-                        itemObj.productName = v.productName;
+                        // itemObj.productId = v.productId;
+                        itemObj.prodCode = v.prodCode;
+                        // itemObj.productName = v.productName;
                         itemObj.productNumber = 1;
-                        itemObj.productPriceId = specIdArr[index];
-                        itemObj.specValues = item;
+                        itemObj.skuCode = skuCode[index];
+                        itemObj.specValues = item.replace('@','-');
                         specWrapArr.push(itemObj);
                     });
                     this.selectedPro.push(specWrapArr);
@@ -102,8 +103,15 @@ export default {
                 this.$message.warning('请选择产品规格');
                 return;
             }
+            let parms = deepClone(this.selectedPro)
+            parms.forEach(v=>{
+                v.forEach(el=>{
+                    el.specValues = el.specValues.replace('-','@')
+                })
+                
+            })
             const data = {
-                productAndSpecStr: JSON.stringify(this.selectedPro)
+                productAndSpecStr: JSON.stringify(parms).replace('-','@')
             };
             this.btnloading = true;
             request.addActivityPackageProduct(data).then(res => {
@@ -126,10 +134,14 @@ export default {
                 res.data.forEach((v, k) => {
                     const o = {};
                     o.value = `${v.name} 产品ID：${v.prodCode}`;
+                    if(v.stock.length<1){
+                        o.value += '(无库存)'
+                    }
                     o.id = v.id;
-                    o.spec = { specId: v.priceId.split(','), spec: v.spec.split(',') };
-                    o.productId = v.id;
-                    o.productCode = v.prodCode;
+                    o.spec = { skuCode: v.skuCode ? v.skuCode.split(',') : [], spec: v.spec ? v.spec.replace(/@([0-9a-zA-Z\u4e00-\u9fa5]+)@([0-9a-zA-Z\u4e00-\u9fa5]+)@/g,'$1-$2').split(',') : [] };
+                    // o.productId = v.id;
+                    o.prodCode = v.prodCode;
+                    o.stock = v.stock.split(',');
                     o.productName = v.name;
                     tmpArr.push(o);
                 });
@@ -142,13 +154,18 @@ export default {
         handleSelect(item) {
             this.tableData = [];
             this.checkList = [];
-            item.spec.specId.forEach((v, k) => {
+            if(item.stock<=0){
+                this.$message.warning('库存不足，请选择其他产品')
+                return;
+            }
+            item.spec.skuCode.forEach((v, k) => {
                 const specItem = {
                     id: v,
                     spec: item.spec.spec[k],
+                    stock:item.stock[k],
                     checked: false,
-                    productId: item.productId,
-                    productCode: item.productCode,
+                    // productId: item.productId,
+                    prodCode: item.prodCode,
                     productName: item.productName
                 };
                 this.tableData.push(specItem);
@@ -161,21 +178,37 @@ export default {
                 this.$message.warning('请选择产品规格');
                 return;
             }
+            // 礼包重复获取阻止
+            // let tag = false
+            // this.checkList.forEach(v => {
+            //      this.selectedPro.forEach(element => {
+            //         element.forEach(el => {
+            //             if(v.prodCode == el.prodCode){
+            //                 this.$message.warning('同一个礼包不能绑定相同的产品')
+            //                 tag = true
+            //             }
+            //         });
+            //     });
+            // });
+            // if(tag){
+            //     return
+            // }
             // 添加数量
             const tmp = []; // 建立空数组保存便利出来的产品
             this.checkList.forEach((v, k) => {
                 const specItem = {
                     packageId: this.giftId,
-                    productId: v.productId,
-                    productCode: v.productCode,
-                    productName: v.productName,
-                    productNumber: 1,
-                    productPriceId: v.id,
-                    specValues: v.spec
+                    // productId: v.productId,
+                    prodCode: v.prodCode,
+                    // productName: v.productName,
+                    skuCode: v.id,
+                    specValues: v.spec,
+                    productNumber: 1
                 };
                 tmp.push(specItem);
             });
             this.selectedPro.push(tmp);
+            console.log(`this.selectedPro`+this.selectedPro)
         },
         // 删除已选择产品
         delselectedPro(bIndex, mIndex) {
@@ -204,6 +237,7 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+@import '../../../../assets/css/common/common.less';
 .gift-product-mange {
     /deep/.el-input__inner{
         border-radius: 0px;
@@ -233,5 +267,8 @@ export default {
         height: 55px;
       }
   }
+}
+.red{
+    color: @color-red;
 }
 </style>

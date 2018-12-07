@@ -21,7 +21,7 @@
                     {{brand}}
                 </el-form-item>
                 <el-form-item label="产品参数：">
-                    <p v-for="(v, k) in param" :key="k">{{v.param}}：{{v.paramValue}}</p>
+                    <p v-for="(v, k) in param" :key="k">{{v.paramName}}：{{v.paramValue}}</p>
                 </el-form-item>
                 <el-form-item label="产品详情：">
                     <div v-html='content'></div>

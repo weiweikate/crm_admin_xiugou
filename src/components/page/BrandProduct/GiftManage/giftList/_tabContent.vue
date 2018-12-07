@@ -12,7 +12,7 @@
               <el-form-item prop="level" label="可购买层级" >
                   <el-select v-model="form.level" placeholder="请选择用户层级">
                       <el-option label="全部" value=""></el-option>
-                      <el-option :label="item.name" :value="item.id" v-for="(item,index) in levelList" :key="index"></el-option>
+                      <el-option :label="'V'+item.level" :value="item.id" v-for="(item,index) in levelList" :key="index"></el-option>
                   </el-select>
               </el-form-item>
               <el-form-item prop="type" label="礼包类型" >
