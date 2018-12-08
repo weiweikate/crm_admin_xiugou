@@ -35,6 +35,7 @@
                                 <el-input v-model="v.warehouseOrder.markStar" placeholder="请输入备注"></el-input>
                             </el-popover>
                         </div>
+                        <div><el-button @click="sendOut(v)">虚拟发货</el-button></div>
                     </td>
                 </tr>
                 <tr v-for="(value,index) in v.productOrders" :key="index">
@@ -222,6 +223,15 @@
                 request.cancelOrder(data).then(res => {
                     this.$message.success(res.msg);
                     this.getList(1);
+                }).catch(err => {
+
+                });
+            },
+            // 虚拟发货
+            sendOut() {
+                const data = {};
+                request.fictitiousDelivery(data).then(res => {
+
                 }).catch(err => {
 
                 });

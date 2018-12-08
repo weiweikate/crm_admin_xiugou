@@ -15,7 +15,7 @@
                     </div>
                     <div class="item">
                         <span>订单状态</span>
-                        <span>{{statusArr[orderCustomerServiceInfo.warehouseOrderNo-1]}}</span>
+                        <span>{{statusArr[warehouseOrderProduct.status-1]}}</span>
                     </div>
                     <div class="item">
                         <span>售后单号</span>
@@ -42,7 +42,7 @@
                     </div>
                     <div class="item">
                         <span>售后状态</span>
-                        <span>{{orderCustomerServiceInfo.orderNum}}</span>
+                        <span>{{refundStatusArr[orderCustomerServiceInfo.status-1]}}</span>
                     </div>
                     <div class="item">
                         <span>售后单创建时间</span>
@@ -65,58 +65,58 @@
                         </span>
                     </div>
                 </div>
-                <!--<div class="item-wrap">-->
-                    <!--<div class="title">协商记录</div>-->
-                    <!--&lt;!&ndash;售后关闭&ndash;&gt;-->
-                    <!--<div class="item" v-if="exchangeExpress.status==6">-->
-                        <!--<span>用户申请退款金额</span>-->
-                        <!--<span>{{exchangeExpress.orderNum}}</span>-->
-                    <!--</div>-->
-                    <!--<div class="item">-->
-                        <!--<span>售后审核结果</span>-->
-                        <!--<span>{{exchangeExpress.orderNum}}</span>-->
-                    <!--</div>-->
-                    <!--&lt;!&ndash;待商品寄回，售后完成&ndash;&gt;-->
-                    <!--<div class="item" v-if="exchangeExpress.status==2&&exchangeExpress.status==5">-->
-                        <!--<span>审核金额调整</span>-->
-                        <!--<span>{{exchangeExpress.orderNum}}</span>-->
-                    <!--</div>-->
-                    <!--<div class="item" v-if="exchangeExpress.status>=2">-->
-                        <!--<span>售后审核说明</span>-->
-                        <!--<span>{{exchangeExpress.orderNum}}</span>-->
-                    <!--</div>-->
-                    <!--&lt;!&ndash;待仓库确认，待平台处理&ndash;&gt;-->
-                    <!--<div class="item" v-if="exchangeExpress.status==2&&exchangeExpress.status==3&&exchangeExpress.status==4&&exchangeExpress.status==5">-->
-                        <!--<span>退货信息</span>-->
-                        <!--<span>{{exchangeExpress.orderNum}}</span>-->
-                    <!--</div>-->
-                    <!--<div class="item" v-if="exchangeExpress.status!=1">-->
-                        <!--<span>售后审核者</span>-->
-                        <!--<span>{{exchangeExpress.orderNum}}</span>-->
-                    <!--</div>-->
-                    <!--&lt;!&ndash;待仓库确认&ndash;&gt;-->
-                    <!--<div class="item" v-if="exchangeExpress.status==3&&exchangeExpress.status==4&&exchangeExpress.status==5">-->
-                        <!--<span>回寄物流公司</span>-->
-                        <!--<span>{{exchangeExpress.orderNum}}</span>-->
-                    <!--</div>-->
-                    <!--<div class="item" v-if="exchangeExpress.status==3&&exchangeExpress.status==4&&exchangeExpress.status==5">-->
-                        <!--<span>回寄物流单号</span>-->
-                        <!--<span>{{exchangeExpress.orderNum}}</span>-->
-                    <!--</div>-->
-                    <!--&lt;!&ndash;售后完成&ndash;&gt;-->
-                    <!--<div class="item" v-if="exchangeExpress.status==5&&exchangeExpress.status==6">-->
-                        <!--<span>售后处理结果</span>-->
-                        <!--<span>{{exchangeExpress.orderNum}}</span>-->
-                    <!--</div>-->
-                    <!--<div class="item" v-if="exchangeExpress.status==5&&exchangeExpress.status==6">-->
-                        <!--<span>售后处理说明</span>-->
-                        <!--<span>{{exchangeExpress.orderNum}}</span>-->
-                    <!--</div>-->
-                    <!--<div class="item" v-if="exchangeExpress.status==5&&exchangeExpress.status==6">-->
-                        <!--<span>售后处理者</span>-->
-                        <!--<span>{{exchangeExpress.orderNum}}</span>-->
-                    <!--</div>-->
-                <!--</div>-->
+               <!-- <div class="item-wrap">
+                    <div class="title">协商记录</div>
+                    &lt;!&ndash;售后关闭&ndash;&gt;
+                    <div class="item" v-if="exchangeExpress.status==6">
+                        <span>用户申请退款金额</span>
+                        <span>{{exchangeExpress.orderNum}}</span>
+                    </div>
+                    <div class="item">
+                        <span>售后审核结果</span>
+                        <span>{{exchangeExpress.orderNum}}</span>
+                    </div>
+                    &lt;!&ndash;待商品寄回，售后完成&ndash;&gt;
+                    <div class="item" v-if="exchangeExpress.status==2&&exchangeExpress.status==5">
+                        <span>审核金额调整</span>
+                        <span>{{exchangeExpress.orderNum}}</span>
+                    </div>
+                    <div class="item" v-if="exchangeExpress.status>=2">
+                        <span>售后审核说明</span>
+                        <span>{{exchangeExpress.orderNum}}</span>
+                    </div>
+                    &lt;!&ndash;待仓库确认，待平台处理&ndash;&gt;
+                    <div class="item" v-if="exchangeExpress.status==2&&exchangeExpress.status==3&&exchangeExpress.status==4&&exchangeExpress.status==5">
+                        <span>退货信息</span>
+                        <span>{{exchangeExpress.orderNum}}</span>
+                    </div>
+                    <div class="item" v-if="exchangeExpress.status!=1">
+                        <span>售后审核者</span>
+                        <span>{{exchangeExpress.orderNum}}</span>
+                    </div>
+                    &lt;!&ndash;待仓库确认&ndash;&gt;
+                    <div class="item" v-if="exchangeExpress.status==3&&exchangeExpress.status==4&&exchangeExpress.status==5">
+                        <span>回寄物流公司</span>
+                        <span>{{exchangeExpress.orderNum}}</span>
+                    </div>
+                    <div class="item" v-if="exchangeExpress.status==3&&exchangeExpress.status==4&&exchangeExpress.status==5">
+                        <span>回寄物流单号</span>
+                        <span>{{exchangeExpress.orderNum}}</span>
+                    </div>
+                    &lt;!&ndash;售后完成&ndash;&gt;
+                    <div class="item" v-if="exchangeExpress.status==5&&exchangeExpress.status==6">
+                        <span>售后处理结果</span>
+                        <span>{{exchangeExpress.orderNum}}</span>
+                    </div>
+                    <div class="item" v-if="exchangeExpress.status==5&&exchangeExpress.status==6">
+                        <span>售后处理说明</span>
+                        <span>{{exchangeExpress.orderNum}}</span>
+                    </div>
+                    <div class="item" v-if="exchangeExpress.status==5&&exchangeExpress.status==6">
+                        <span>售后处理者</span>
+                        <span>{{exchangeExpress.orderNum}}</span>
+                    </div>
+                </div>-->
             </div>
             <div style="margin-top: 50px" v-if="orderCustomerServiceInfo.status==4&&orderCustomerServiceInfo.status==5">
                 <div class="title">仓库反馈</div>
@@ -149,8 +149,8 @@
             <div class="goods-info">
                 <div class="title">商品信息</div>
                 <el-table border :data="tableData">
-                    <el-table-column prop="" label="商品订单号"></el-table-column>
-                    <el-table-column prop="" label="商品信息">
+                    <el-table-column prop="orderProductNo" label="商品订单号" align="center"></el-table-column>
+                    <el-table-column prop="" label="商品信息" align="center" min-width="400">
                         <template slot-scope="scope">
                             <div class="name">
                                 <img :src="scope.row.specImg" alt="">
@@ -159,12 +159,24 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="" label="SKU编码"></el-table-column>
-                    <el-table-column prop="" label="供应商SKU编码"></el-table-column>
-                    <el-table-column prop="" label="实付单价"></el-table-column>
-                    <el-table-column prop="" label="售后数量"></el-table-column>
-                    <el-table-column prop="" label="一元券"></el-table-column>
-                    <el-table-column prop="" label="实付金额"></el-table-column>
+                    <el-table-column prop="skuCode" label="SKU编码" align="center"></el-table-column>
+                    <el-table-column prop="supplierSkuCode" label="供应商SKU编码" align="center"></el-table-column>
+                    <el-table-column prop="unitPrice" label="实付单价" align="center">
+                        <template slot-scope="scope">
+                            ¥{{scope.row.unitPrice||0}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="quantity" label="售后数量" align="center"></el-table-column>
+                    <el-table-column prop="tokenCoinAmount" label="一元券" align="center">
+                        <template slot-scope="scope">
+                            ¥{{scope.row.tokenCoinAmount||0}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="payAmount" label="实付金额" align="center">
+                        <template slot-scope="scope">
+                            ¥{{scope.row.payAmount||0}}
+                        </template>
+                    </el-table-column>
                 </el-table>
             </div>
             <!--待审核-->
@@ -263,7 +275,9 @@
                 platformRefundAddress: {},
                 refundExpress: {},
                 supplierRefundAddress: {},
-                statusArr: ['待审核', '待商品寄回', '待仓库确认', '待平台处理', '售后完成 ', '售后关闭'], // 状态
+                warehouseOrderProduct: {},
+                statusArr: ['待支付', '待发货', '待收货', '已完成', '交易关闭 '], // 订单状态
+                refundStatusArr: ['待审核', '待商品寄回', '待仓库确认', '待平台处理', '售后完成 ', '售后关闭'], // 售后状态
                 typeArr: ['仅退款', '退货退款 ', '换货'], // 类型
                 btnLoading: false,
                 logicList: [{ label: '顺丰', code: 1 }]
@@ -282,13 +296,24 @@
                 this.tableData = [];
                 request.lookDetail({ serviceNo: this.serviceNo }).then(res => {
                     this.exchangeExpress = res.data;
-                    this.table = res.data.warehouseOrderProduct;
+                    this.tableData = [res.data.warehouseOrderProduct];
                     this.exchangeExpress = res.data.exchangeExpress;
                     this.orderCustomerServiceInfo = res.data.orderCustomerServiceInfo;
                     this.platformRefundAddress = res.data.platformRefundAddress;
                     this.refundExpress = res.data.refundExpress;
                     this.supplierRefundAddress = res.data.supplierRefundAddress;
+                    this.warehouseOrderProduct = res.data.warehouseOrderProduct;
                     this.orderCustomerServiceInfo.imgList = this.orderCustomerServiceInfo.imgList.split(',');
+                    this.tableData.forEach((v, k) => {
+                        const tempTitle = v.specTitle.split(',');
+                        const tempValue = v.specValues.split(',');
+                        v.spec = [];
+                        tempTitle.forEach((v1, k1) => {
+                            const temp = v1 + ':' + tempValue[k1] + '    ';
+                            v.spec.push(temp);
+                        });
+                        v.spec = v.spec.join('  ');
+                    });
                 }).catch(err => {
                     console.log(err);
                 });

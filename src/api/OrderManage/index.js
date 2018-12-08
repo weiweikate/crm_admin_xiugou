@@ -24,6 +24,8 @@ export const queryPayments = '/orderManagement/payments/query';
 export const queryDelivery = '/orderManagement/delivery/query';
 // 订单详情
 export const deliveryNo = ['/orderManagement/delivery/detail', { methods: 'get' }];
+// 虚拟发货
+export const fictitiousDelivery = '/orderManagement/orders/fictitiousDelivery';
 
 // 售后
 // 商家退款
