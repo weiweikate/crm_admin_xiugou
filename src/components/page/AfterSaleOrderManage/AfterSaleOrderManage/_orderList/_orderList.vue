@@ -5,9 +5,19 @@
             <el-table-column prop="warehouseOrderNo" label="仓库订单号" align="center"></el-table-column>
             <el-table-column prop="productName" label="商品名称" align="center"></el-table-column>
             <el-table-column prop="skuCode" label="SKU编码" align="center"></el-table-column>
-            <el-table-column prop="supplierSkuCode" label="供应商SKU编码" align="center"></el-table-column>
+            <el-table-column prop="supplierSkuCode" label="供应商SKU编码" align="center">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.supplierSkuCode">{{scope.row.supplierSkuCode}}</template>
+                    <template v-else>/</template>
+                </template>
+            </el-table-column>
             <el-table-column prop="userPhone" label="用户账号" align="center"></el-table-column>
-            <el-table-column prop="supplierName" label="供应商名称" align="center"></el-table-column>
+            <el-table-column prop="supplierName" label="供应商名称" align="center">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.supplierName">{{scope.row.supplierName}}</template>
+                    <template v-else>/</template>
+                </template>
+            </el-table-column>
             <el-table-column label="售后类型" align="center">
                 <template slot-scope="scope">
                     <template v-if="scope.row.type==1">仅退款</template>
@@ -55,7 +65,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
-                    <el-button type="primary" @click="$router.push({path:'/afterSaleOrderInfo',query:{afterSaleOrderInfoId:scope.row.serviceNo}})" v-if="scope.row.status==1||scope.row.status==4">去处理</el-button>
+                    <el-button type="primary" @click="$router.push({path:'/afterSaleOrderInfo',query:{afterSaleOrderInfoId:scope.row.serviceNo}})" v-if="scope.row.status==1||scope.row.status==3||scope.row.status==4">去处理</el-button>
                     <el-button type="success" @click="$router.push({path:'/afterSaleOrderInfo',query:{afterSaleOrderInfoId:scope.row.serviceNo}})" v-else>查看</el-button>
                 </template>
             </el-table-column>

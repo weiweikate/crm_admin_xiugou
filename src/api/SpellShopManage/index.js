@@ -13,7 +13,7 @@ export const getStoreBonusPageList = ['/store/storeBonus/query', { methods: 'get
 // 分红详情
 export const getDealerBonusList = '/storeBonus/getDealerBonusList'; // 暂时不做
 // 成员列表
-export const getStoreMembers = ['/store/storeUser/query', { methods: 'get' }];
+export const getStoreMembers = '/store/storeUser/query';
 
 // 店铺公告
 // 修改数据

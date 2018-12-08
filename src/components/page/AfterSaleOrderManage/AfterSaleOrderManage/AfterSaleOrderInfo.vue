@@ -180,7 +180,7 @@
                 </el-table>
             </div>
             <!--待审核-->
-            <div class="opr-area" v-if="orderCustomerServiceInfo.status==1">
+            <div class="opr-area" v-if="orderCustomerServiceInfo.type!=1&&orderCustomerServiceInfo.status==1">
                 <div class="title">操作</div>
                 <el-form :model="form">
                     <el-form-item label="售后审核结果">
@@ -190,11 +190,11 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="审核金额调整">
-                        <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~¥20.00区间内调整，其中含运费¥6。66</span>
+                        <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~¥20.00区间内调整，其中含运费¥6.66</span>
                     </el-form-item>
                     <el-form-item label="退货信息" class="back-address">
                         <div class="address-area">
-                            <div class="supplier-address">
+                            <div class="supplier-address" v-if="orderInfo.warehouseType==3">
                                 <el-radio label="1" v-model="form.address">供应商退货地址</el-radio>
                                 <div>{{supplierRefundAddress.receiver}} {{supplierRefundAddress.receiverPhone}}</div>
                                 <div>{{supplierRefundAddress.province}}{{supplierRefundAddress.city}}{{supplierRefundAddress.area}}{{supplierRefundAddress.address}}</div>
@@ -208,7 +208,7 @@
                         </div>
                     </el-form-item>
                     <el-form-item label="售后审核说明">
-                        <el-input v-model="form.remarks"></el-input>
+                        <el-input type="textarea" v-model="form.remarks"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" :loading="btnLoading" @click="submit('form')">提交</el-button>
@@ -216,7 +216,7 @@
                 </el-form>
             </div>
             <!--待平台处理-->
-            <div class="opr-area" v-if="orderCustomerServiceInfo.status==4">
+            <div class="opr-area" v-if="orderCustomerServiceInfo.type==1&&orderCustomerServiceInfo.status==1||orderCustomerServiceInfo.status==3||orderCustomerServiceInfo.status==4">
                 <div class="title">操作</div>
                 <el-form :model="form">
                     <el-form-item label="售后处理结果">
@@ -226,7 +226,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <!--退款-->
-                    <el-form-item label="售后类型">
+                    <el-form-item label="售后类型" v-if="orderCustomerServiceInfo.type==3">
                         <el-radio-group v-model="form.type">
                             <el-radio label="1">换货</el-radio>
                             <el-radio label="2">退货退款</el-radio>
@@ -236,15 +236,15 @@
                         <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~¥20.00区间内调整，其中含运费￥6.66</span>
                     </el-form-item>
                     <el-form-item label="售后处理说明">
-                        <el-input v-model="form.remarks"></el-input>
+                        <el-input type="textarea" v-model="form.remarks"></el-input>
                     </el-form-item>
                     <!--换货-->
-                    <el-form-item label="换货物流公司" v-if="orderCustomerServiceInfo.type==3">
+                    <el-form-item label="换货物流公司" v-if="orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4">
                         <el-select v-model="form.expressCode">
                             <option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.label"></option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="换货物流单号" v-if="orderCustomerServiceInfo.type==3">
+                    <el-form-item label="换货物流单号" v-if="orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4">
                         <el-input v-model="form.expressNo"></el-input>
                     </el-form-item>
                     <el-form-item>
@@ -270,6 +270,7 @@
                 serviceNo: '',
                 tableData: [],
                 // 订单信息
+                orderInfo: {},
                 exchangeExpress: {},
                 orderCustomerServiceInfo: {},
                 platformRefundAddress: {},
@@ -280,11 +281,12 @@
                 refundStatusArr: ['待审核', '待商品寄回', '待仓库确认', '待平台处理', '售后完成 ', '售后关闭'], // 售后状态
                 typeArr: ['仅退款', '退货退款 ', '换货'], // 类型
                 btnLoading: false,
-                logicList: [{ label: '顺丰', code: 1 }]
+                logicList: [{ label: '顺丰', code: 1 }],
+                form: {}
             };
         },
 
-        created() {
+        activated() {
             // 获取订单信息
             this.serviceNo = this.$route.query.afterSaleOrderInfoId;
             this.getInfo();
@@ -295,21 +297,24 @@
             getInfo() {
                 this.tableData = [];
                 request.lookDetail({ serviceNo: this.serviceNo }).then(res => {
-                    this.exchangeExpress = res.data;
+                    this.orderInfo = res.data;
+                    if (res.data.warehouseType && res.data.warehouseType != 3) {
+                        this.form.address = '2';
+                    }
                     this.tableData = [res.data.warehouseOrderProduct];
-                    this.exchangeExpress = res.data.exchangeExpress;
-                    this.orderCustomerServiceInfo = res.data.orderCustomerServiceInfo;
-                    this.platformRefundAddress = res.data.platformRefundAddress;
-                    this.refundExpress = res.data.refundExpress;
-                    this.supplierRefundAddress = res.data.supplierRefundAddress;
+                    this.exchangeExpress = res.data.exchangeExpress || {};
+                    this.orderCustomerServiceInfo = res.data.orderCustomerServiceInfo || {};
+                    this.platformRefundAddress = res.data.platformRefundAddress || {};
+                    this.refundExpress = res.data.refundExpress || {};
+                    this.supplierRefundAddress = res.data.supplierRefundAddress || {};
                     this.warehouseOrderProduct = res.data.warehouseOrderProduct;
-                    this.orderCustomerServiceInfo.imgList = this.orderCustomerServiceInfo.imgList.split(',');
+                    this.orderCustomerServiceInfo.imgList = this.orderCustomerServiceInfo && this.orderCustomerServiceInfo.imgList ? this.orderCustomerServiceInfo.imgList.split(',') : [];
                     this.tableData.forEach((v, k) => {
-                        const tempTitle = v.specTitle.split(',');
-                        const tempValue = v.specValues.split(',');
+                        const tempTitle = v.specTitle.split('@');
+                        const tempValue = v.specValues.substring(1, v.specValues.length - 1).split('@');
                         v.spec = [];
                         tempTitle.forEach((v1, k1) => {
-                            const temp = v1 + ':' + tempValue[k1] + '    ';
+                            const temp = v1 + ':' + tempValue[k1] + '      ';
                             v.spec.push(temp);
                         });
                         v.spec = v.spec.join('  ');
@@ -329,7 +334,12 @@
                 let url = '';
                 const data = this.form;
                 data.serviceNo = this.serviceNo;
-                if (this.orderCustomerServiceInfo.status == 1) { // 待审核
+                const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
+                if (data.adjustAmount && (data.adjustAmount > 20 || !reg.test(data.adjustAmount))) {
+                    return this.$message.warning('请输入正确的处理金额');
+                }
+                if (this.orderCustomerServiceInfo.type != 1 && this.orderCustomerServiceInfo.status == 1) { // 待审核
+                    data.warehouseType = this.orderInfo.warehouseType;
                     if (this.form.result == 1) { // 审核通过
                         url = 'agreeApply';
                     } else { // 审核驳回
@@ -365,6 +375,7 @@
                 this.btnLoading = true;
                 request[url](data).then(res => {
                     this.$message.success(res.msg);
+                    this.getInfo();
                     this.btnLoading = false;
                 }).catch(err => {
                     this.btnLoading = false;
@@ -393,6 +404,12 @@
                     }
                     span:nth-child(2){
                         display: inline-block;
+                    }
+                    img{
+                        width: 100px;
+                        height: 100px;
+                        margin-right: 5px;
+                        vertical-align: top;
                     }
                 }
             }
@@ -462,6 +479,14 @@
                 .tip{
                     margin-top: 30px;
                 }
+            }
+        }
+        .el-textarea{
+            display: inline;
+            .el-textarea__inner{
+                resize: none;
+                width: 600px;
+                height: 100px;
             }
         }
     }

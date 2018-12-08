@@ -42,10 +42,10 @@
                 <el-tab-pane label="退款成功" name="2">
                     <v-orderlist ref="2"></v-orderlist>
                 </el-tab-pane>
-                <el-tab-pane label="退款关闭" name="3">
+                <el-tab-pane label="退款关闭" name="5">
                     <v-orderlist ref="3"></v-orderlist>
                 </el-tab-pane>
-                <el-tab-pane label="退款失败" name="9">
+                <el-tab-pane label="退款失败" name="3">
                     <v-orderlist ref="9"></v-orderlist>
                 </el-tab-pane>
             </el-tabs>
@@ -90,8 +90,8 @@ export default {
         getList() {
             const data = {};
             Object.assign(data, this.form);
-            data.createStartTime = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD') : '';
-            data.createEndTime = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : '';
+            data.createStartTime = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '';
+            data.createEndTime = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : '';
             data.status = this.activeName === 'all' ? '' : this.activeName;
             this.$refs[this.activeName].page.currentPage = 1;
             this.$refs[this.activeName].data = data;

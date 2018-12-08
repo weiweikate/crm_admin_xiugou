@@ -65,9 +65,9 @@
                     <p style="margin-top:10px">
                         <el-button @click="spellShopAcc" type="primary" v-auth="'pindian.shopList.pdzh'">拼店账户</el-button>
                     </p>
-                    <!--<p style="margin-top:10px">-->
-                        <!--<el-button @click="memberManage" type="primary">成员管理</el-button>-->
-                    <!--</p>-->
+                    <p style="margin-top:10px">
+                        <el-button @click="memberManage" type="primary">成员管理</el-button>
+                    </p>
                     <p style="margin-top:10px">
                         <el-button @click="shopAnnouncement" type="primary" v-auth="'pindian.shopList.dpgggl'">店铺公告管理</el-button>
                     </p>

@@ -4,24 +4,34 @@
     <el-card :body-style="{ padding: '20px 60px' }">
         <el-table border :data="tableData">
             <el-table-column prop="nickName" label="用户名" align="center"></el-table-column>
-            <el-table-column prop="bonus" label="贡献度（本次）" align="center">
+            <el-table-column label="贡献度（本次）" align="center">
                 <template slot-scope="scope">
-                    <template>{{scope.row.preBonus}}</template>
+                    <template>{{scope.row.monthContribution||0}}</template>
                 </template>
             </el-table-column>
             <el-table-column prop="totalBonus" label="贡献度（总体）" align="center">
                 <template slot-scope="scope">
-                    <template>{{scope.row.totalBonus}}</template>
+                    <template>{{scope.row.yearContribution||0}}</template>
                 </template>
             </el-table-column>
             <el-table-column label="店铺累计所得分红金" align="center">
                 <template slot-scope="scope">
-                    <template>{{scope.row.dealerTotalBonus}}</template>
+                    <template>{{scope.row.dividendBonus||0}}</template>
                 </template>
             </el-table-column>
         </el-table>
+        <div class="block">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :page-size="page.pageSize"
+                :current-page="page.currentPage"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </div>
     </el-card>
-
   </div>
 </template>
 
@@ -46,31 +56,23 @@ export default {
         this.shopId =
             this.$route.query.recruitShopId ||
             sessionStorage.getItem('recruitShopId');
-        this.getList();
+        this.getList(1);
     },
     methods: {
 
         // 获取数据
-        getList() {
+        getList(val) {
             const data = {
-                storeId: this.shopId
+                storeId: this.shopId,
+                page: val,
+                pageSize: this.page.pageSize
             };
+            this.page.currentPage = val;
             request.getStoreMembers(data).then((res) => {
                 this.tableData = [];
-                for (const i in res.data) {
-                    const item = res.data[i];
-                    if (!item.storeThisTimeBonus) {
-                        item.preBonus = '';
-                    } else {
-                        item.preBonus = Math.floor(item.dealerThisTimeBonus ? item.dealerThisTimeBonus : 0 / item.storeThisTimeBonus);
-                    }
-                    if (!item.storeTotalBonus) {
-                        item.totalBonus = '';
-                    } else {
-                        item.totalBonus = Math.floor(item.dealerTotalBonus ? item.dealerTotalBonus : 0 / item.storeTotalBonus);
-                    }
-                }
-                this.tableData = res.data;
+                if (!res.data) return;
+                this.tableData = res.data.data;
+                this.page.totalPage = res.data.totalNum;
             }).catch((err) => {
                 console.log(err);
             });

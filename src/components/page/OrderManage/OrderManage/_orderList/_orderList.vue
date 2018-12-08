@@ -34,8 +34,8 @@
                                       :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
                                 <el-input v-model="v.warehouseOrder.markStar" placeholder="请输入备注"></el-input>
                             </el-popover>
+                            <el-button v-if="v.warehouseOrder.status==2" type="primary" @click="sendGoods(v)">虚拟发货</el-button>
                         </div>
-                        <div><el-button @click="sendOut(v)">虚拟发货</el-button></div>
                     </td>
                 </tr>
                 <tr v-for="(value,index) in v.productOrders" :key="index">
@@ -87,6 +87,24 @@
                 :total="page.totalPage">
             </el-pagination>
         </div>
+        <!--虚拟发货-->
+        <el-dialog title="虚拟发货" :visible.sync="mask">
+            <el-form :model="form">
+                <el-form-item label="物流单号">
+                    <el-input v-model="form.expressNo" placeholder="请输入物流单号"></el-input>
+                </el-form-item>
+                <el-form-item label="物流公司">
+                    <el-select v-model="form.expressCode">
+                        <option value="">请选择</option>
+                        <option v-for="(v,k) in logicList" :key="k" :label="v.name" :name="v.code"></option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" :loading="btnLoading" @click="sendSure('form')">确 认</el-button>
+                <el-button @click="mask=false">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -120,7 +138,14 @@
                 data: {},
                 statusArr: ['待付款', '已付款', '已发货', '交易完成', '交易关闭'],
                 pushStatusArr: ['无需推送', '未推送', '推送失败', '推送成功'], // 0.无需推送 1.未推送 2.推送失败 3.推送成功
-                warehouseOrderNos: []
+                warehouseOrderNos: [],
+                // 虚拟发货
+                warehouseOrderNo: '',
+                mask: false,
+                btnLoading: false,
+                form: {
+                    expressNo: ''
+                }
             };
         },
         methods: {
@@ -156,6 +181,12 @@
                     console.log(err);
                 });
             },
+            // 物流公司查询
+            getLogic() {
+                request.sysExpressQuery({ page: 1, pageSize: 10000 }).then(res => {
+                    this.logicList = res.data.data;
+                });
+            },
             // 修改星级
             changeColor(v1, v) {
                 const data = {};
@@ -171,17 +202,11 @@
                 });
             },
             // 推送云仓
-            pushCloud(row) {
-                const data = {
-                    warehouseOrderNos: ''
-                };
-                if (row) {
-                    data.warehouseOrderNos = row.warehouseOrder.warehouseOrderNo;
-                } else {
-                    data.warehouseOrderNos = this.warehouseOrderNos.join(',');
-                }
+            pushCloud() {
+                const data = this.warehouseOrderNos;
                 request.orderSendOut(data).then(res => {
                     this.$message.success(res.msg);
+                    this.warehouseOrderNos = '';
                     this.getList(this.page.currentPage);
                 }).catch(err => {
                     console.log(err);
@@ -228,12 +253,36 @@
                 });
             },
             // 虚拟发货
-            sendOut() {
-                const data = {};
+            sendGoods(row) {
+                this.mask = true;
+                this.form.expressNo = '';
+                this.form.expressCode = '';
+                this.warehouseOrderNo = row.warehouseOrder.warehouseOrderNo;
+                // this.getLogic();
+            },
+            sendSure(formName) {
+                const data = this[formName];
+                data.warehouseOrderNo = this.warehouseOrderNo;
+                // this.logicList.forEach((v, k) => {
+                //     if (this.form.expressNo == v.code) {
+                //         data.expressName = v.name;
+                //     }
+                // });
+                data.expressName = '中通速递';
+                data.expressCode = 'ZTO32324';
+                if (!data.expressName || !data.expressNo) {
+                    return this.$message.warning('请输入物流单号和物流公司');
+                }
+                this.btnLoading = true;
                 request.fictitiousDelivery(data).then(res => {
-
+                    this.$message.success(res.msg);
+                    this.mask = false;
+                    this.btnLoading = false;
+                    this.getList(this.page.currentPage);
                 }).catch(err => {
-
+                    console.log(err);
+                    this.btnLoading = false;
+                    this.mask = false;
                 });
             }
         }
@@ -309,7 +358,15 @@
             }
         }
         .block {
-            margin: 20px 0px;
+            margin: 20px 0;
+        }
+        /deep/.el-dialog{
+            .el-input{
+                display: inline;
+                .el-input__inner{
+                    width: 300px
+                }
+            }
         }
     }
 </style>

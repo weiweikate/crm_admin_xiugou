@@ -1,21 +1,41 @@
 <template>
     <div class="refund-order-list" v-loading="pageLoading">
         <el-table border :data="tableData">
-            <el-table-column label="退款单号" align="center"></el-table-column>
-            <el-table-column label="售后单号" align="center"></el-table-column>
-            <el-table-column label="仓库订单号" align="center"></el-table-column>
-            <el-table-column label="用户账号" align="center"></el-table-column>
-            <el-table-column label="退款状态" align="center"></el-table-column>
-            <el-table-column label="退款失败原因" align="center"></el-table-column>
-            <el-table-column label="商品实付金额" align="center"></el-table-column>
-            <el-table-column label="申请退款金额" align="center"></el-table-column>
-            <el-table-column label="实际退款金额" align="center"></el-table-column>
-            <el-table-column label="创建时间" align="center"></el-table-column>
-            <el-table-column label="退款备注" align="center"></el-table-column>
+            <el-table-column prop="refundNo" label="退款单号" align="center"></el-table-column>
+            <el-table-column prop="serviceNo" label="售后单号" align="center"></el-table-column>
+            <el-table-column prop="warehouseOrderNo" label="仓库订单号" align="center"></el-table-column>
+            <el-table-column prop="userPhone" label="用户账号" align="center"></el-table-column>
+            <el-table-column prop="" label="退款状态" align="center">
+                <template slot-scope="scope">{{statusArr[scope.row.status-1]}}</template>
+            </el-table-column>
+            <el-table-column prop="message" label="退款失败原因" align="center">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.message">{{scope.row.message}}</template>
+                    <template v-else>/</template>
+                </template>
+            </el-table-column>
+            <el-table-column prop="payAmount" label="商品实付金额" align="center">
+                <template slot-scope="scope">¥{{scope.row.payAmount||0}}</template>
+            </el-table-column>
+            <el-table-column prop="applyRefundAmount" label="申请退款金额" align="center">
+                <template slot-scope="scope">¥{{scope.row.applyRefundAmount||0}}</template>
+            </el-table-column>
+            <el-table-column prop="refundAmount" label="实际退款金额" align="center">
+                <template slot-scope="scope">¥{{scope.row.refundAmount||0}}</template>
+            </el-table-column>
+            <el-table-column prop="createTime" label="创建时间" align="center">
+                <template slot-scope="scope">¥{{scope.row.createTime|formatDateAll}}</template>
+            </el-table-column>
+            <el-table-column prop="remarks" label="退款备注" align="center">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.remarks">{{scope.row.remarks}}</template>
+                    <template v-else>/</template>
+                </template>
+            </el-table-column>
             <el-table-column label="操作" align="center" min-width="150px">
                 <template slot-scope="scope">
-                    <el-button type="primary" @click="refund(scope.row,1)">手工退款</el-button>
-                    <el-button type="success" @click="refund(scope.row,2)">退款</el-button>
+                    <el-button type="primary" v-if="scope.row.status==1||scope.row.status==3||scope.row.status==4" @click="refund(scope.row,1)">手工退款</el-button>
+                    <el-button type="success" v-if="scope.row.status==1" @click="refund(scope.row,2)">退款</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -58,7 +78,8 @@
                 count: 0,
                 remark: '',
                 row: {},
-                btnLoading: false
+                btnLoading: false,
+                statusArr: ['待退款', '退款成功', '三方退款失败', '平台退款失败', '取消退款(关闭)']// 状态: 1.待退款 2.退款成功 3.三方退款失败 4.平台退款失败 5.取消退款(关闭)
             };
         },
         methods: {
@@ -96,7 +117,7 @@
             // 手工退款
             refundSure() {
                 const data = {
-                    refundNo: this.row.serviceNo,
+                    refundNo: this.row.refundNo,
                     remark: this.remark
                 };
                 this.btnLoading = true;
