@@ -5,16 +5,16 @@
             <div class="currency-title">库存消息提醒设置</div>
             <div class="currency-wrap">
                 <p>
-                    <span class="currency-small-title">库存低于</span>
+                    <span class="currency-small-title">库存小于等于</span>
                     <el-input-number class="input-sty" :min="0" :controls="false" v-model="num1" style="width:150px" placeholder="请输入数值"></el-input-number><span class="point">提示：库存不足</span>
                 </p>
                 <p>
-                    <span class="currency-small-title">库存低于</span>
+                    <span class="currency-small-title">库存小于等于</span>
                     <el-input-number class="input-sty" :min="0" :controls="false" v-model="num2" style="width:150px" placeholder="请输入数值"></el-input-number><span class="point">提示：库存紧张</span>
                 </p>
                 <p>
-                    <span class="currency-small-title">库存低于</span>
-                    <el-input-number class="input-sty" :min="0" :controls="false" v-model="num3" style="width:150px" placeholder="请输入数值"></el-input-number><span class="point">提示：库存为0</span>
+                    <span class="currency-small-title">库存小于等于</span>
+                    <el-input-number disabled class="input-sty" :min="0" :controls="false" v-model="num3" style="width:150px" placeholder="请输入数值"></el-input-number><span class="point">提示：库存为0</span>
                 </p>
                 <div class="btn-group">
                     <el-button :loading="btnLoading" type="primary" @click="submitForm">确认提交</el-button>
@@ -66,8 +66,6 @@
                             this.num1 = v.value;
                         } else if (v.code == 'less_than_stock_tension') {
                             this.num2 = v.value;
-                        } else if (v.code == 'less_than_stock_zero') {
-                            this.num3 = v.value;
                         }
                     });
                     this.bodyLoading = false;

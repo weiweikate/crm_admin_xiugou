@@ -15,7 +15,7 @@
                     </div>
                     <div class="item">
                         <span>仓库类型：</span>
-                        <span>{{!detail.type==1?'自建仓':detail.type==2?'加盟仓':'供应商仓'}}</span>
+                        <span>{{!detail.type==1?'自建仓':detail.type==2?'加盟仓':detail.type==3?'供应商仓':'虚拟仓'}}</span>
                     </div>
                     <div class="item">
                         <span>仓库状态：</span>
@@ -63,21 +63,21 @@
                     </div>
                     <div class="item">
                         <span>仓库品类数：</span>
-                        <span class="color-blue" @click="toProduct(detail)">{{detail.productCount}}</span>
+                        <span class="color-blue" @click="toProduct(detail)">{{detail.productCount||0}}</span>
                     </div>
                     <div class="item">
                         <span>仓库报损数：</span>
-                        <span>{{detail.lossCount}}</span>
+                        <span>{{detail.lossCount||0}}</span>
                     </div>
-                    <div class="item" v-if="detail.type==3">
+                    <div class="item" v-if="detail.type==3&&detail.type==4">
                         <span>供应商ID：</span>
                         <span>{{detail.supplierCode}}</span>
                     </div>
-                    <div class="item" v-if="detail.type==3">
+                    <div class="item" v-if="detail.type==3&&detail.type==4">
                         <span>供应商名称：</span>
                         <span>{{detail.supplierName}}</span>
                     </div>
-                    <div class="item" v-if="!detail.returnGoods&&detail.type!=3">
+                    <div class="item" v-if="!detail.returnGoods&&detail.type!=3&&detail.type!=4">
                         <span>加盟仓类型：</span>
                         <span v-if="detail.joinWarehouseType==1">百世汇通</span>
                         <span v-if="detail.joinWarehouseType==2">顺丰</span>
@@ -86,15 +86,15 @@
                     </div>
                     <div class="item">
                         <span>库存总数：</span>
-                        <span>{{detail.code}}</span>
+                        <span>{{detail.totalStock||0}}</span>
                     </div>
                     <div class="item">
                         <span>剩余仓库库存：</span>
-                        <span>{{detail.code}}</span>
+                        <span>{{detail.remainderStock||0}}</span>
                     </div>
                     <div class="item">
                         <span>冻结库存：</span>
-                        <span>{{detail.code}}</span>
+                        <span>{{detail.freezeStock||0}}</span>
                     </div>
                     <div class="item">
                         <span>备注：</span>
@@ -134,7 +134,7 @@ export default {
         getDetail() {
             const that = this;
             const data = {
-                id: that.id
+                code: that.id
             };
             request.queryRepertoryById(data).then(res => {
                 that.detail = res.data;

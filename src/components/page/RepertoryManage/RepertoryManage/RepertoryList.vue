@@ -35,6 +35,7 @@
                         <el-option value="1" label="自建仓"></el-option>
                         <el-option value="2" label="加盟仓"></el-option>
                         <el-option value="3" label="供应商仓"></el-option>
+                        <el-option value="4" label="虚拟仓"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="">
@@ -55,6 +56,7 @@
                         <template v-if="scope.row.type==1">自建仓</template>
                         <template v-if="scope.row.type==2">加盟仓</template>
                         <template v-if="scope.row.type==3">供应商仓</template>
+                        <template v-if="scope.row.type==4">虚拟仓</template>
                     </template>
                 </el-table-column>
                 <el-table-column label="加盟仓类型" align="center">
@@ -102,7 +104,7 @@
                         <template>{{scope.row.createTime|formatDateAll}}</template>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" min-width="150">
+                <el-table-column label="操作" min-width="200">
                     <template slot-scope="scope">
                         <el-button @click="showInfo(scope.row)" type="primary">详情</el-button>
                         <el-button @click="editRepertory(scope.row)" type="success" v-if="scope.row.status==2">编辑</el-button>
@@ -218,18 +220,18 @@ export default {
         },
         // 查看详情
         showInfo(row) {
-            sessionStorage.setItem('repertoryInfoId', row.id);
+            sessionStorage.setItem('repertoryInfoId', row.code);
             this.$router.push({
                 name: 'repertoryInfo',
-                query: { repertoryInfoId: row.id }
+                query: { repertoryInfoId: row.code }
             });
         },
         // 编辑
         editRepertory(row) {
-            sessionStorage.setItem('repertoryId', row.id);
+            sessionStorage.setItem('repertoryId', row.code);
             this.$router.push({
                 name: 'repertorySet',
-                query: { repertoryId: row.id }
+                query: { repertoryId: row.code }
             });
         },
         // 重置表单
@@ -241,14 +243,16 @@ export default {
         // 停用启用
         openOrClose(row, num) {
             this.mask = true;
-            this.formMask.id = row.id;
+            this.formMask.code = row.code;
             this.formMask.status = row.status;
+            this.formMask.verifyCode = '';
+            this.codeTime = 60;
             this.title = num == 1 ? '停用仓库' : '启用仓库';
         },
         sure(formName) {
             const data = {};
             data.verifyCode = this.formMask.verifyCode;
-            data.warehouseId = this.formMask.id;
+            data.warehouseCode = this.formMask.code;
             if (!data.verifyCode) {
                 return this.$message.warning('请获取验证码');
             }
@@ -278,8 +282,8 @@ export default {
         },
         // 跳转到品类数
         toProduct(row) {
-            sessionStorage.setItem('repertotyId', row.id);
-            this.$router.push({ path: '/repertoryInventory', query: { repertotyId: row.id }});
+            sessionStorage.setItem('repertotyId', row.code);
+            this.$router.push({ path: '/repertoryInventory', query: { repertotyId: row.code }});
         },
         toLoss(row) {
             sessionStorage.setItem('repertotyId', row.id);

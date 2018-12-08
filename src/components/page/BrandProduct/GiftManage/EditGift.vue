@@ -49,8 +49,8 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="供应商">
-                    <el-select @change="getBrandList" v-model="form.supplierId" placeholder="下拉搜索供应商">
-                        <el-option v-for="(v,k) in supplierArr" :key="k" :label="v.name" :value="v.supplierId"></el-option>
+                    <el-select @change="getBrandList" v-model="form.supplierCode" placeholder="下拉搜索供应商">
+                        <el-option v-for="(v,k) in supplierArr" :key="k" :label="v.name" :value="v.supplierCode"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="发货方">
@@ -64,7 +64,7 @@
                 <el-form-item label="产品参数">
                     <div class="product-param">
                         <span v-if='productParam.length == 0'>暂无数据</span>
-                        <span v-else v-for="(v,k) in productParam" :key="k">{{v.param}}：<el-input class="inp-param"
+                        <span v-else v-for="(v,k) in productParam" :key="k">{{v.name}}：<el-input class="inp-param"
                                                                                                   v-model="v.value"></el-input></span>
                     </div>
                 </el-form-item>
@@ -155,7 +155,7 @@
                 <el-form-item>
                     <el-checkbox  v-model="checkedAllUser" @change="selectedAlLevel">全选</el-checkbox>
                     <el-checkbox-group v-model="chectedUser">
-                        <el-checkbox @change="selectSingleUser" v-for="(v,k) in userLevel" :label="v.id" :key="k">{{`v${v.level}`}}</el-checkbox>
+                        <el-checkbox @change="selectSingleUser" v-for="(v,k) in userLevel" :label="v.id" :key="k">v{{v.level}}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <div class="tag-btn-group">
@@ -267,8 +267,8 @@
                     secCategoryId: '',
                     thirdCategoryId: '',
                     brandId: '',
-                    dealDays: '',
-                    supplierId: '',
+                    // dealDays: '',
+                    supplierCode: '',
                     experience: '',
                     stockType: '',
                     sendMode: '',
@@ -403,8 +403,9 @@
                             this.chectedUser.push(v.userLevelId);
                         });
                     }
+                    this.form.packageCode = res.data.packageCode;
                     this.checkedAllUser = this.chectedUser.length === this.userLevel.length;
-                    this.form.stockType = res.data.stockType.toString();
+                    this.form.stockType = res.data.stockType?res.data.stockType.toString():'';
                     this.form.name = res.data.name;
                     this.form.weight = res.data.weight;
                     this.form.experience = res.data.experience;
@@ -419,7 +420,7 @@
                     this.form.thirdCategoryId = Number(res.data.thirdCategoryId);
                     this.proItemArr.push(this.form.thirdCategoryId);
                     this.form.brandId = res.data.brandId;
-                    this.form.supplierId = res.data.supplierId;
+                    this.form.supplierCode = res.data.supplierCode;
                     this.getSupplyList(this.form.brandId);
                     this.form.sendMode = res.data.sendMode.toString();
                     this.form.freightTemplateId = res.data.freightTemplateId;
@@ -443,7 +444,7 @@
                     this.productParam = [];
                     if (res.data.paramValueList && res.data.paramValueList.length !== 0) {
                         res.data.paramValueList.forEach((v, k) => {
-                            this.productParam.push({ param: v.param, id: v.paramId, value: v.paramValue });
+                            this.productParam.push({ name: v.paramName, value: v.paramValue });
                         });
                     }
                     if (res.data.couponList && res.data.couponList.length !== 0) {
@@ -520,7 +521,7 @@
                 }
                 this.form.paramValueList = [];
                 this.productParam.forEach(v => {
-                    this.form.paramValueList.push({ paramId: v.id, paramValue: v.value });
+                    this.form.paramValueList.push({ paramName: v.name, paramValue: v.value });
                 });
                 this.form.imgUrl = this.imgArr[0].originalImg;
                 this.form.imgFileList = this.imgArr;
@@ -737,7 +738,7 @@
             // 获取品牌列表
             getBrandList(val) {
                 if (val) {
-                    request.findBySupplierId({ id: val }).then(res => {
+                    request.findBySupplierCode({ code: val }).then(res => {
                         this.brandArr = res.data;
                     }).catch(err => {
                         console.log(err);
@@ -785,7 +786,7 @@
                     this.tagLoading = false;
                     this.tagArr = [];
                     this.tagTypeArr[key].selected = !this.tagTypeArr[key].selected;
-                    res.data[0].sysTagLibraryVOList.forEach(v => {
+                    res.data[0].sysTagLibraryVOList && res.data[0].sysTagLibraryVOList.forEach(v => {
                         this.tagArr.push({ label: v.name, value: v.id });
                     });
                     this.tagArr.forEach((v, k) => {
@@ -819,7 +820,7 @@
             // 获取产品参数
             getProductParam(secId) {
                 this.productParam = [];
-                request.queryProductCategoryParamList({ id: secId }).then(res => {
+                request.queryProductCategoryParamList({ categoryId: secId ,type:''}).then(res => {
                     res.data.forEach((v, k) => {
                         v.value = '';
                         this.productParam.push(v);

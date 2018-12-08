@@ -28,6 +28,7 @@ try {
             url = value[0];
             methods = value[1]['methods'];
         }
+        url = url && url.indexOf('/admin/') > -1 ? url.replace('/admin/','/') : url;
         // 接口方法
         request[v] = function(data = {}) {
             if (methods === 'get') {
@@ -38,7 +39,7 @@ try {
             return axios[methods](`/admin${url}`, data)
                 .then(res => {
                     // 错误信息拦截
-                    if (res.code === 10009) {
+                    if (res.code === 10009 || res.code === 70009) {
                         MessageBox.confirm(
                             '你已被登出，可以取消继续留在该页面，或者重新登录',
                             '确定登出',

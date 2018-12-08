@@ -22,7 +22,7 @@
                     v-else>--</span>
                 </el-form-item>
                 <el-form-item label="商品库存">
-                    <span v-if="productDetail.stock">{{productDetail.stock}}</span><span v-else>--</span>
+                    <span v-if="productDetail.sellStock">{{productDetail.sellStock}}</span><span v-else>--</span>
                 </el-form-item>
                 <el-form-item prop="startPrice" label="起拍价格" style="margin-top: 30px">
                     ￥
@@ -93,7 +93,7 @@
                 <el-button @click="cancel">取消</el-button>
             </el-form>
         </el-card>
-        <v-chooseproduct v-if="showMask" @getProductInf="productInf" :productId="productDetail.id"
+        <v-chooseproduct v-if="showMask" @getProductInf="productInf" :prodCode="productDetail.id"
                          :searchProductId="productDetail.searchProductId" :searchProductName="productDetail.productName"
                          :activityType="2"></v-chooseproduct>
     </div>
@@ -326,13 +326,8 @@
                         this.time = this.beginTime;
                         data.beginTime = moment(this.time).format('YYYY-MM-DD HH:mm:00'); // 活动开始时间
                         data.endTime = moment(this.endTime).format('YYYY-MM-DD HH:mm:00'); // 活动开始时间
-                        // data.productCode = this.productDetail.productCode; // 产品编号
-                        data.productId = this.productDetail.productId; // 产品ID
-                        // data.productImg = this.productDetail.specImg; // 产品主图url
-                        // data.productName = this.productDetail.productName; // 产品名称
-                        // data.productPrice = this.productDetail.originalPrice; // 产品原价
-                        data.productPriceId = this.productDetail.id; // 产品规格价格编号
-                        // data.productSpec = this.productDetail.spec; // 产品规格
+                        data.prodCode = this.productDetail.prodCode; // 产品ID
+                        data.skuCode = this.productDetail.skuCode; // 产品规格价格编号
                         this.btnLoading = true;
                         request.operatorAddDepreciate(data).then(res => {
                             this.$message.success(res.msg);

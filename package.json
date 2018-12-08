@@ -5,9 +5,9 @@
     "author": "wuchengji",
     "private": true,
     "scripts": {
-        "mock": "node server/mock.js",
+        "mock":"node server/mock.js",
         "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-        "dev:dev": "cross-env proxy=zh webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+        "dev:dev": "cross-env proxy=chen webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
         "dev:mock": "cross-env proxy=mock webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
         "build": "node build/build.js",
         "build:dll": "webpack --config build/webpack.dll.conf.js",

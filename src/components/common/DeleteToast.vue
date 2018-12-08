@@ -32,7 +32,8 @@
             },
             status: {},
             isTopic: {},
-            isProperty: {}
+            isProperty: {},
+            type:''
         },
         components: {
             icon
@@ -62,15 +63,16 @@
                     } else {
                         data.id = that.id;
                     }
+                    that.type && (data.type = that.type);
                     data.status = that.status;
                     request[url](data).then(res => {
                         that.btnLoading = false;
-                        this.$message.success(`操作成功`);
+                        this.$message.success(res.msg);
                         this.$emit('msg', false);
                     }).catch(err => {
-                        this.$message.warning('操作失败');
-                        that.tableLoading = false;
+                        that.btnLoading = false;
                         this.$emit('msg', false);
+                        this.$message.warning(err.msg);
                     });
                 } else {
                     this.$emit('msg', false);

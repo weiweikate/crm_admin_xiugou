@@ -230,6 +230,7 @@
                 }
                 this.navItem = this.tplData.topicNavbarList[0].type;
                 this.id = this.tplData.id;
+                this.code = this.tplData.code;
             }
             if (this.tplData.content == 'edit') {
                 this.topicNavbarList = [
@@ -316,6 +317,7 @@
                 const data = {};
                 if (this.id != '') {
                     data.id = this.id.toString();
+                    data.code = this.code;
                 }
                 data.templateId = 6;
                 data.name = this.pName;

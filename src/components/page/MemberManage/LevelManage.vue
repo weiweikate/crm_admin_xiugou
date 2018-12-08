@@ -207,10 +207,12 @@
             editItem(index, row) {
                 this.title = '编辑层级';
                 this.editMask = true;
-                row.autoUp = row.autoUp.toString();
-                row.allowGroupStore = row.allowGroupStore.toString();
-                row.allowCreateStore = row.allowCreateStore.toString();
-                this.form = row;
+                this.form.name = row.name;
+                this.form.level = row.level;
+                this.form.remark = row.remark;
+                this.form.autoUp = row.autoUp.toString();
+                this.form.allowGroupStore = row.allowGroupStore.toString();
+                this.form.allowCreateStore = row.allowCreateStore.toString();
                 this.id = row.id;
                 this.isUp = true;
             },

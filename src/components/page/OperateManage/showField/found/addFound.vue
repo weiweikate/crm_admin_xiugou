@@ -94,6 +94,7 @@
             return {
                 nav: ['运营管理', '秀场管理', '新建'],
                 id: '',
+                code: '',
                 url: '',
                 form: {
                     userId: '',
@@ -175,6 +176,7 @@
             this.coverImgSize = '';
             this.imageSize = '';
             this.id = '';
+            this.code = '';
             sessionStorage.removeItem('foundId');
             this.linkPosition = [];
             this.fileList2 = [];
@@ -289,6 +291,7 @@
                     this.pageLoading = true;
                     request.findDiscoverArticleById({ id: this.id }).then(res => {
                         this.pageLoading = false;
+                        this.code = res.data.code;
                         this.form.userId = res.data.userId;
                         this.form.categoryId = res.data.categoryId;
                         this.form.title = res.data.title;
@@ -416,6 +419,7 @@
                             codeList: codeArr.join(','),
                             typeList: typeArr.join(','),
                             imgSize: this.imageSize,
+                            code: this.code,
                             coverImgSize: this.coverImgSize
                         };
                         this.btnloading = true;

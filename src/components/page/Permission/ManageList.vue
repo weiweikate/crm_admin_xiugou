@@ -19,7 +19,7 @@
             </el-form>
         </el-card>
         <el-card class="con-card">
-          <el-button type="primary" @click="addManger">新建管理员</el-button>
+          <el-button type="primary" @click="addManger" v-auth="'quanxian.manageList.xjzh'">新建管理员</el-button>
           <el-table v-loading="tableLoading" class="w-table" stripe :data="tableData" :height="height" border style="width: 100%">
               <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
               <el-table-column prop="name" label="管理员姓名" align="center"></el-table-column>
@@ -32,23 +32,23 @@
                   <template v-else-if="scope.row.status == 1">正常</template>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="400" align="center">
+              <el-table-column label="操作" width="500" align="center">
                 <template slot-scope="scope">
-                  <el-button  size="mini" type="primary" @click="editManger(scope.row)">编辑</el-button>
-                  <!--<el-button v-if='scope.row.status == 1' size="mini" type="warning" @click="resetPwd(scope.row)">密码重置</el-button>-->
-                  <!--<el-button size="mini" type="warning" @click="showLog(scope.row)">查看日志</el-button>-->
-                  <!--<el-button v-if='scope.row.status == 0' @click="deleteUser(scope.row)" size="mini" type="danger"  >账号删除</el-button>-->
+                  <el-button  size="mini" type="primary" @click="editManger(scope.row)" v-auth="'quanxian.manageList.bjzh'">编辑</el-button>
+                  <el-button v-if='scope.row.status == 1' size="mini" type="warning" @click="resetPwd(scope.row)">密码重置</el-button>
+                  <!-- <el-button size="mini" type="warning" @click="showLog(scope.row)">查看日志</el-button> -->
+                  <el-button v-if='scope.row.status == 2' @click="deleteUser(scope.row)" size="mini" type="danger">账号删除</el-button>
                   <template >
                     <el-popover placement="top" width="160" v-model="scope.row.visible">
                       <p v-if='scope.row.status == 1'>确定关闭账号？</p>
-                      <p v-if='scope.row.status == 0'>确定开启账号？</p>
+                      <p v-if='scope.row.status == 2'>确定开启账号？</p>
                       <div style="text-align: right; margin: 0">
-                        <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 1' size="mini" type="primary" @click='accountMange(scope.row,0)' >确定</el-button>
-                        <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 0' size="mini" type="primary" @click='accountMange(scope.row,1)' >确定</el-button>
+                        <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 1' size="mini" type="primary" @click='accountMange(scope.row,2)' >确定</el-button>
+                        <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 2' size="mini" type="primary" @click='accountMange(scope.row,1)' >确定</el-button>
                         <el-button size="mini" type="text" @click="scope.row.visible = false">取消</el-button>
                       </div>
-                      <!--<el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 1' size="mini" type="danger" >账号关闭</el-button>
-                      <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 0' size="mini" type="danger">账号开启</el-button>-->
+                      <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 1' size="mini" type="danger" class="ml10">账号关闭</el-button>
+                      <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 2' size="mini" type="danger" class="ml10">账号开启</el-button>
                     </el-popover>
                   </template>
                 </template>
@@ -66,18 +66,21 @@
               </el-pagination>
           </div>
         </el-card>
-        <el-dialog :visible.sync="isShowResetPwd" width="20%">
+        <el-dialog :visible.sync="isShowResetPwd" title="修改密码" width="30%">
             <el-form ref="pwdForm" :rules="rules" :model="pwdForm" inline label-width="100px">
               <el-form-item prop="password" label='密码重置'>
                 <el-input v-model.trim="pwdForm.password"></el-input>
               </el-form-item>
+              <el-form-item prop="checkPassword" label='确认密码'>
+                <el-input v-model.trim="pwdForm.checkPassword"></el-input>
+              </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
               <el-button type="primary" @click="confirmReset('pwdForm')">确 定</el-button>
-              <el-button @click="isShowResetPwd = false">取 消</el-button>
+              <el-button @click="cancelReset('pwdForm')">取 消</el-button>
             </span>
         </el-dialog>
-        <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
+        <delete-toast :id='delId' :url='delUrl' :type='2' :status = '0' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
     </div>
 </template>
 <script>
@@ -93,6 +96,25 @@ export default {
     },
     mixins: [myMixinTable],
     data() {
+        let validatePwd = (rule, value, callback) => {
+            if (value === '' || value === null || value === undefined) {
+                callback(new Error('请输入密码'));
+            } else {
+                if (this.pwdForm.checkPassword !== '') {
+                    this.$refs.pwdForm.validateField('checkPassword');
+                }
+                callback();
+            }
+        }
+        let validateCheckPwd = (rule, value, callback) => {
+            if (value === '' || value === null || value === undefined) {
+                callback(new Error('请再次输入密码'));
+            } else if (value !== this.pwdForm.password) {
+                callback(new Error('两次输入密码不一致!'));
+            } else {
+                callback();
+            }
+        }
         return {
             nav: ['权限管理', '管理员账号管理'],
             isShowResetPwd: false,
@@ -108,14 +130,18 @@ export default {
             pwdForm: {
                 id: '',
                 phone: '',
-                password: ''
+                password: '',
+                checkPassword:''
             },
             tableLoading: false,
             tableData: [],
             height: '',
             rules: {
                 password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' }
+                    { validator: validatePwd, trigger: 'blur' }
+                ],
+                checkPassword: [
+                    { validator: validateCheckPwd, trigger: 'blur' }
                 ]
             }
         };
@@ -130,7 +156,6 @@ export default {
     methods: {
         //  获取数据
         getList(val) {
-            const that = this;
             const data = {};
             data.page = val;
             data.pageSize = this.page.pageSize;
@@ -139,17 +164,17 @@ export default {
             data.url = pApi.manageList;
             this.tableLoading = true;
             request.getMangerList(data).then(res => {
-                that.tableData = [];
+                this.tableData = [];
                 res.data.data.forEach((v, k) => {
                     v.visible = false;
-                    that.tableData.push(v);
+                    this.tableData.push(v);
                 });
-                that.page.totalPage = res.data.totalNum;
-                that.page.currentPage = res.data.currentPage;
-                that.tableLoading = false;
+                this.page.totalPage = res.data.totalNum;
+                this.page.currentPage = res.data.currentPage;
+                this.tableLoading = false;
             }).catch(err => {
                 console.log(err);
-                that.tableLoading = false;
+                this.tableLoading = false;
             });
         },
 
@@ -177,22 +202,19 @@ export default {
 
         // 密码重置
         resetPwd(row) {
-            this.pwdForm = {};
+            this.pwdForm.password = '';
+            this.pwdForm.checkPassword = '';
             this.pwdForm.id = row.id;
-            this.pwdForm.url = pApi.resetPassword;
             this.isShowResetPwd = true;
         },
         confirmReset(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    this.$axios.post(api.resetPassword, this.pwdForm)
+                    request['resetPassword'](this.pwdForm)
                         .then(res => {
-                            if (res.data.code == 200) {
-                                this.$message.success(res.data.data);
-                                this.isShowResetPwd = false;
-                            } else {
-                                this.$message.warning(res.data.msg);
-                            }
+                            this.$message.success('密码重置成功');
+                            this.$refs[formName].resetFields();
+                            this.isShowResetPwd = false;
                         })
                         .catch(err => {
                             console.log(err);
@@ -203,12 +225,16 @@ export default {
                 }
             });
         },
-
+        // 取消重置
+        cancelReset(formName){
+            this.isShowResetPwd = false;
+            this.$refs[formName].resetFields();
+        },
         // 删除用户
         deleteUser(row) {
             this.delId = row.id;
-            this.delUrl = api.deleteAdminUser;
-            this.delUri = pApi.deleteAdminUser;
+            this.delUrl = "updateAdminUser";
+            // this.delUri = pApi.deleteAdminUser;
             this.isShowDelToast = true;
         },
         deleteToast(msg) {
@@ -221,17 +247,18 @@ export default {
             const data = {};
             data.id = row.id;
             data.status = status;
-            data.url = pApi.updateAdminUserStatus;
+            data.type = 1;
+            // data.url = pApi.updateAdminUser[0];
             this.closeBtn = true;
-            this.$axios.post(api.updateAdminUserStatus, data)
+            request['updateAdminUser'](data)
                 .then(res => {
                     this.closeBtn = false;
-                    if (res.data.code == 200) {
-                        this.$message.success(res.data.data);
+                    if (res.code == 10000) {
+                        this.$message.success(res.msg);
                         row.status = status;
                         row.visible = false;
                     } else {
-                        this.$message.warning(res.data.msg);
+                        this.$message.warning(res.msg);
                     }
                 })
                 .catch(err => {

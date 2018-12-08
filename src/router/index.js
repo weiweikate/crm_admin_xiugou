@@ -101,6 +101,7 @@ export const asyncRouterMap = [
                 meta: { title: '产品品牌分类管理' }
             },
             {
+                default: true,
                 name: 'propertyList',
                 path: '/propertyList',
                 component: resolve => require(['../components/page/BrandProduct/PropertyManage/PropertyList.vue'], resolve),
@@ -116,7 +117,7 @@ export const asyncRouterMap = [
                 name: 'productList',
                 path: '/productList',
                 component: resolve => require(['../components/page/BrandProduct/ProductManage/ProductList.vue'], resolve),
-                meta: { title: '产品管理' }
+                meta: { title: '产品管理', noKeepAlive: true }
             },
             {
                 name: 'shippingTemplate',
@@ -391,28 +392,28 @@ export const asyncRouterMap = [
                 name: 'organizeMange',
                 path: '/organizeMange',
                 component: resolve => require(['../components/page/Permission/OrganizeMange/OrganizeMange.vue'], resolve),
-                meta: { title: '组织结构管理', keepAlive: true }
+                meta: { title: '组织结构管理', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'jobsPermissionMange',
                 path: '/jobsPermissionMange',
                 component: resolve => require(['../components/page/Permission/OrganizeMange/JobsPermissionMange.vue'], resolve),
-                meta: { title: '岗位权限管理', keepAlive: true }
+                meta: { title: '岗位权限管理', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'addJobsPermission',
                 path: '/addJobsPermission',
                 component: resolve => require(['../components/page/Permission/OrganizeMange/AddJobsPermission.vue'], resolve),
-                meta: { title: '添加岗位权限', keepAlive: true }
+                meta: { title: '添加岗位权限', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'editJobsPermission',
                 path: '/editJobsPermission',
                 component: resolve => require(['../components/page/Permission/OrganizeMange/AddJobsPermission.vue'], resolve),
-                meta: { title: '编辑岗位权限', keepAlive: true }
+                meta: { title: '编辑岗位权限', noKeepAlive: true }
             },
             {
                 name: 'manageList',
@@ -451,7 +452,7 @@ export const asyncRouterMap = [
                 path: '/repertoryReportList',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryReport/RepertoryReportList.vue'], resolve),
                 meta: { title: '仓库单' }
-            }
+            },
         ]
     },
     {
@@ -579,7 +580,7 @@ export const asyncRouterMap = [
                 name: 'erp',
                 path: '/erp',
                 component: resolve => require(['../components/page/system/erp.vue'], resolve),
-                meta: { title: 'ERP管理', keepAlive: true }
+                meta: { title: 'ERP管理', noKeepAlive: true }
             }
         ]
     },
@@ -731,7 +732,7 @@ export const asyncRouterMap = [
                 name: 'giftInfo',
                 path: '/giftInfo',
                 component: resolve => require(['../components/page/BrandProduct/GiftManage/GiftInfo.vue'], resolve),
-                meta: { title: '礼包详情', keepAlive: true }
+                meta: { title: '礼包详情', noKeepAlive: true }
             },
             {
                 hidden: true,
@@ -849,7 +850,7 @@ export const asyncRouterMap = [
                 name: 'memberDetail',
                 path: '/memberDetail',
                 component: resolve => require(['../components/page/MemberManage/MemberManage/MemberDetail.vue'], resolve),
-                meta: { title: '会员详情', keepAlive: true }
+                meta: { title: '会员详情', noKeepAlive: true }
             },
             {
                 hidden: true,
@@ -969,30 +970,44 @@ export const asyncRouterMap = [
                 hidden: true,
                 name: 'promotionManage',
                 path: '/promotionManage',
-                component: resolve => require(['../components/page/MemberManage/PromotionManage.vue/PromotionManage.vue'], resolve),
+                component: resolve => require(['../components/page/MemberManage/PromotionManage/PromotionManage'], resolve),
                 meta: { title: '晋升设置' }
             },
             {
                 hidden: true,
                 name: 'degradeManage',
                 path: '/degradeManage',
-                component: resolve => require(['../components/page/MemberManage/DegradeManage.vue/DegradeManage.vue'], resolve),
+                component: resolve => require(['../components/page/MemberManage/DegradeManage/DegradeManage'], resolve),
                 meta: { title: '降级设置' }
             },
-
+            // 产品管理
             {
                 hidden: true,
                 name: 'releaseProduct',
                 path: '/releaseProduct',
                 component: resolve => require(['../components/page/BrandProduct/ProductManage/ReleaseProduct.vue'], resolve),
-                meta: { title: '发布产品' }
+                meta: { title: '发布商品', noKeepAlive: true }
             },
             {
                 hidden: true,
-                name: 'editProduct',
-                path: '/editProduct',
-                component: resolve => require(['../components/page/BrandProduct/ProductManage/EditProduct.vue'], resolve),
-                meta: { title: '编辑产品' }
+                name: 'productBaseParam',
+                path: '/productBaseParam',
+                component: resolve => require(['../components/page/BrandProduct/ProductManage/productRelease/baseParam.vue'], resolve),
+                meta: { title: '基础参数编辑', noKeepAlive: true }
+            },
+            {
+                hidden: true,
+                name: 'inventory',
+                path: '/inventory',
+                component: resolve => require(['../components/page/BrandProduct/ProductManage/productRelease/inventory.vue'], resolve),
+                meta: { title: '销售信息编辑', noKeepAlive: true }
+            },
+            {
+                hidden: true,
+                name: 'prodInfo',
+                path: '/prodInfo',
+                component: resolve => require(['../components/page/BrandProduct/ProductManage/productRelease/info.vue'], resolve),
+                meta: { title: '商品详情编辑', noKeepAlive: true }
             },
             {
                 hidden: true,
@@ -1096,14 +1111,14 @@ export const asyncRouterMap = [
                 name: 'addManger',
                 path: '/addManger',
                 component: resolve => require(['../components/page/Permission/AddManger.vue'], resolve),
-                meta: { title: '添加管理员', keepAlive: true }
+                meta: { title: '添加管理员', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'editManger',
                 path: '/editManger',
                 component: resolve => require(['../components/page/Permission/AddManger.vue'], resolve),
-                meta: { title: '编辑管理员', keepAlive: true }
+                meta: { title: '编辑管理员', noKeepAlive: true }
             },
             {
                 hidden: true,
@@ -1535,7 +1550,7 @@ export const asyncRouterMap = [
                 name: 'orderInfo',
                 path: '/orderInfo',
                 component: resolve => require(['../components/page/OrderManage/OrderManage/OrderInfo.vue'], resolve),
-                meta: { title: '订单详情', keepAlive: true }
+                meta: { title: '订单详情', noKeepAlive: true }
             },
             {
                 hidden: true,
@@ -1571,7 +1586,7 @@ export const asyncRouterMap = [
                 name: 'giftOrderInfo',
                 path: '/giftOrderInfo',
                 component: resolve => require(['../components/page/OrderManage/GiftOrderManage/GiftOrderInfo.vue'], resolve),
-                meta: { title: '礼包订单详情', keepAlive: true }
+                meta: { title: '礼包订单详情', noKeepAlive: true }
             },
             {
                 hidden: true,

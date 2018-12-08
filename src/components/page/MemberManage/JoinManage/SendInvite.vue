@@ -16,12 +16,12 @@
                                 <div class="downer">已有人数：{{item.count == null?0 : item.count}}</div>
                             </div>
                         </el-form-item>
-                        <div class="title-item">邀请经销商类型</div>
+                        <div class="title-item">邀请会员类型</div>
                         <el-form-item>
                             <el-radio-group v-model="form.inviteType">
-                                <el-radio label="1">网信经销商</el-radio>
-                                <el-radio label="2">供货经销商</el-radio>
-                                <el-radio label="3">网红经销商</el-radio>
+                                <el-radio label="1">网信会员(普通)</el-radio>
+                                <el-radio label="2">供货会员(G)</el-radio>
+                                <el-radio label="3">网红会员(H)</el-radio>
                             </el-radio-group>
                         </el-form-item>
                         <div class="title-item">邀请有效期</div>

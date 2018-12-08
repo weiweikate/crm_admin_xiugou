@@ -19,7 +19,7 @@
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>店铺ID：{{detail.storeNumber}}</span>
+                            <span>店铺ID：{{detail.showNumber}}</span>
                         </p>
                     </div>
                     <div class="shop-right">
