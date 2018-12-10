@@ -1,36 +1,21 @@
 /*
 * 参数说明：
 * number：要格式化的数字
-* decimals：保留几位小数
-* prefix：前缀
-* thousands_sep：千分位符号
+* places：保留几位小数
+* symbol：前缀
+* thousand：千分位符号
+* decimal：小数点
 * */
-function formatMoney(number, decimals = 2, prefix = '￥', thousands_sep = ',') {
-    if (!number) {
-        return '-';
-    }
-    number = (number + '').replace(/[^0-9+-Ee.]/g, '');
-    let n = !isFinite(+number) ? 0 : +number,
-
-        prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
-        sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
-        dec = '.',
-        s = '',
-        toFixedFix = function (n, prec) {
-            var k = Math.pow(10, prec);
-            return '' + Math.floor(n * k) / k;
-        };
-    s = (prec ? toFixedFix(n, prec) : '' + Math.floor(n)).split('.');
-    let re = /(-?\d+)(\d{3})/;
-    while (re.test(s[0])) {
-        s[0] = s[0].replace(re, '$1' + sep + '$2');
-    }
-
-    if ((s[1] || '').length < prec) {
-        s[1] = s[1] || '';
-        s[1] += new Array(prec - s[1].length + 1).join('0');
-    }
-    return prefix + s.join(dec);
+function formatMoney(number, places, symbol, thousand, decimal) {
+    number = number || 0;
+    places = !isNaN(places = Math.abs(places)) ? places : 2;
+    symbol = symbol !== undefined ? symbol : '￥';
+    thousand = thousand || ',';
+    decimal = decimal || '.';
+    var negative = number < 0 ? '-' : '',
+        i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + '',
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return symbol + negative + (j ? i.substr(0, j) + thousand : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, '$1' + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : '');
 }
 
 export { formatMoney };
