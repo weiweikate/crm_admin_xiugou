@@ -16,8 +16,8 @@
                 <el-form-item prop="deliveryNo" label="发货单号">
                     <el-input style="width:200px" placeholder="请输入发货单号" v-model="form.deliveryNo"></el-input>
                 </el-form-item>
-                <el-form-item prop="warehouseNo" label="仓库订单号">
-                    <el-input style="width:200px" placeholder="请输入仓库订单号" v-model="form.warehouseNo"></el-input>
+                <el-form-item prop="warehouseOrderNo" label="仓库订单号">
+                    <el-input style="width:200px" placeholder="请输入仓库订单号" v-model="form.warehouseOrderNo"></el-input>
                 </el-form-item>
                 <el-form-item prop="status" label="发货单状态">
                     <el-select v-model="form.status" placeholder="全部">
@@ -127,7 +127,7 @@
                     pageSize: this.page.pageSize,
                     status: that.form.status,
                     deliveryNo: that.form.deliveryNo,
-                    warehouseNo: that.form.warehouseNo,
+                    warehouseOrderNo: that.form.warehouseOrderNo,
                     from: this.form.time[0] ? moment(this.form.time[0]).format('YYYY-MM-DD 00:00:00') : '',
                     to: this.form.time[1] ? moment(this.form.time[1]).format('YYYY-MM-DD 23:59:59') : ''
                 };

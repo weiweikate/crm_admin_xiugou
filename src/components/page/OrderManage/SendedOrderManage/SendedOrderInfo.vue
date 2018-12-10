@@ -19,15 +19,15 @@
                     </div>
                     <div class="item">
                         <span>供应商名称</span>
-                        <span>{{orderDelivery.supplierName}}</span>
+                        <span>{{orderDelivery.supplierName||`/`}}</span>
                     </div>
                     <div class="item">
                         <span>物流公司</span>
-                        <span>{{orderProductExpress.expressName}}</span>
+                        <span>{{orderProductExpress[0].expressName}}</span>
                     </div>
                     <div class="item">
                         <span>物流单号</span>
-                        <span>{{orderProductExpress.expressNo}}</span>
+                        <span>{{orderProductExpress[0].expressNo}}</span>
                     </div>
                     <div class="item">
                         <span>物流费用</span>
@@ -77,7 +77,8 @@
                     </el-table-column>
                     <el-table-column prop="skuCode" label="SKU编码" align="center"></el-table-column>
                     <el-table-column prop="supplierSkuCode" label="供应商SKU编码" align="center"></el-table-column>
-                    <el-table-column prop="quantity" label="发货数量" align="center"></el-table-column>
+                    <el-table-column prop="skuNum" label="发货数量" align="center">
+                    </el-table-column>
                 </el-table>
             </div>
         </el-card>
@@ -100,12 +101,12 @@
                 tableData: [],
                 // 订单信息
                 orderDelivery: {},
-                orderProductExpress: {},
+                orderProductExpress: [],
                 platformOrder: {}
             };
         },
 
-        created() {
+        activated() {
             // 获取订单信息
             this.deliveryNo = this.$route.query.sendedOrderInfoId;
             this.getInfo();
@@ -127,6 +128,12 @@
                             v.spec.push(temp);
                         });
                         v.spec = v.spec.join('  ');
+                        v.skuNum = '/';
+                        res.data.orderProductExpress.forEach((v1, k1) => {
+                            if (v1.orderProductNo == v.orderProductNo) {
+                                v.skuNum = v1.skuNum;
+                            }
+                        });
                         this.tableData.push(v);
                     });
                 }).catch(err => {
