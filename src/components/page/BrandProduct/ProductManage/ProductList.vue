@@ -103,7 +103,7 @@
             <el-button @click="$refs[activeName].productStatus(6)">下架</el-button>
             <el-button @click="auditToask = true">审核</el-button>
             <el-button @click="freightToask = true">调整运费模板</el-button>
-            <el-button type="danger">推送云仓</el-button>
+            <el-button type="danger">推送仓库</el-button>
             <el-button type="danger">导出</el-button>
             <el-button @click="createProd" type="danger">创建商品</el-button>
         </el-card>

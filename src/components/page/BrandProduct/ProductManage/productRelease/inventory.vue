@@ -110,8 +110,8 @@
                 <el-form-item label="销售价格">
                     <el-button :disabled="disabled" type="primary" class="mb10" @click="batchPrice = true">批量输入
                     </el-button>
-                    <el-table :data="priceTable" border stripe>
-                        <el-table-column v-if="!flag" prop="propertyValues" label="属性" width="225" align="center">
+                    <el-table :data="priceTable" border stripe header-cell-class-name="require">
+                        <el-table-column v-if="!flag" prop="propertyValues" label="属性" width="225" align="center" class="aaa">
                             <template slot-scope="scope">
                                 {{scope.row.propertyValues.split('@').join('-')}}
                             </template>
@@ -271,7 +271,7 @@
             </el-form>
         </el-card>
         <!--批量添加产品价格-->
-        <el-dialog title="批量操作" :visible.sync="batchPrice" width="30%" :before-close="cancleBatchAdd"
+        <el-dialog title="批量操作" :visible.sync="batchPrice" width="1100px" :before-close="cancleBatchAdd"
                    style="min-width: 500px">
             <el-table :data="batchPriceArr" border stripe>
                 <el-table-column label="原价" align="center">
@@ -331,7 +331,7 @@
                 </el-table-column>
             </el-table>
             <span slot="footer">
-                <el-button type="primary" @click="batchAddPrice">确 定</el-button>
+                <el-button type="primary" @click="batchAddPrice">保 存</el-button>
                 <el-button @click="cancleBatchAdd">取 消</el-button>
             </span>
         </el-dialog>
