@@ -308,32 +308,18 @@
                 let resData = {};
                 await request.findProductDetailsByCode({ code: this.prodCode }).then(res => {
                     resData = res.data || {};
-                    let flatServiceArr = [];
                     const limitServer = resData.restrictions || 0;
-                    switch (limitServer.toString()) {
-                        case '1':
-                            flatServiceArr = [1];
-                            break;
-                        case '2':
-                            flatServiceArr = [2];
-                            break;
-                        case '3':
-                            flatServiceArr = [1, 2];
-                            break;
-                        case '4':
-                            flatServiceArr = [4];
-                            break;
-                        case '5':
-                            flatServiceArr = [1, 4];
-                            break;
-                        case '6':
-                            flatServiceArr = [2, 4];
-                            break;
-                        case '7':
-                            flatServiceArr = [1, 2, 4];
-                            break;
-                    }
-                    resData.flatService = flatServiceArr;
+                    const map = {
+                        0: [4],
+                        1: [1],
+                        2: [2],
+                        3: [1, 2],
+                        4: [4],
+                        5: [1, 4],
+                        6: [2, 4],
+                        7: [1, 2, 4]
+                    };
+                    resData.flatService = map[limitServer];
                     this.form = {
                         ...resData,
                         buyLimit: resData.buyLimit == -1 ? [] : [1],
