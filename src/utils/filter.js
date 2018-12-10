@@ -7,7 +7,7 @@
 * */
 function formatMoney(number, decimals = 2, prefix = '￥', thousands_sep = ',') {
     if (!number) {
-        return '-';
+        return '0.00';
     }
     number = (number + '').replace(/[^0-9+-Ee.]/g, '');
     let n = !isFinite(+number) ? 0 : +number,
