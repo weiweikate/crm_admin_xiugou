@@ -108,7 +108,7 @@ export default {
                 v.forEach(el=>{
                     el.specValues = el.specValues.replace('-','@')
                 })
-                
+
             })
             const data = {
                 productAndSpecStr: JSON.stringify(parms).replace('-','@')

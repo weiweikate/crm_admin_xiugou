@@ -28,8 +28,8 @@
             </el-table-column>
             <el-table-column label="商品售价" align="center">
                 <template slot-scope="scope">
-                    <p>{{scope.row.minPrice || 0 | handleMoney}}</p>
-                    <p>{{scope.row.maxPrice || 0 | handleMoney}}</p>
+                    <p>{{scope.row.minPrice ? (scope.row.minPrice | handleMoney) : '-'}}</p>
+                    <p>{{scope.row.maxPrice ? (scope.row.maxPrice | handleMoney) : '-'}}</p>
                 </template>
             </el-table-column>
             <el-table-column prop="status" label="商品状态" align="center">
@@ -185,6 +185,9 @@ export default {
                         const restrictions = v.restrictions || 0;
                         if (restrictions.toString() == 4) {
                             v.tags = ['支持7天无理由退换'];
+                        }
+                        if (!v.imgUrl || v.imgUrl == '') {
+                            v.imgUrl = '/static/img/defaultImg.png';
                         }
                         this.tableData.push(v);
                     });

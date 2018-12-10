@@ -553,8 +553,10 @@
                 data.paramValueList = this.form.paramValueList;
                 data.videoUrl = this.videoUrl;
                 data.buyLimit = this.purchaseLimit ? this.purchasevalue : -1;
-                data.beginTime = this.setBuyTime[0] === undefined ? '' : utils.formatTime(this.setBuyTime[0]);
-                data.endTime = this.setBuyTime[1] === undefined ? '' : utils.formatTime(this.setBuyTime[1]);
+                if (this.setBuyTime !== null) {
+                    data.beginTime = this.setBuyTime[0] === undefined ? '' : utils.formatTime(this.setBuyTime[0]);
+                    data.endTime = this.setBuyTime[1] === undefined ? '' : utils.formatTime(this.setBuyTime[1]);
+                }
                 data.content= this.imgInfoList.join(',');
                 if (!this.isSetBuTime) {
                     data.beginTime = '';

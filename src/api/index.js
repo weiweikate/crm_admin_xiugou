@@ -18,7 +18,6 @@ axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 var loading;
 axios.interceptors.request.use(config => {
     config.headers['token'] = getToken();
-    console.log(config);
     // let receiveData = config.data;
     // 免session
     // let nocheckout = ['/admin/adminLogin/pswLogin'];

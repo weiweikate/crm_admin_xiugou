@@ -20,10 +20,10 @@
                   <template v-else-if="info.warehouseType == 4">虚拟仓库</template>
               </el-form-item>
               <el-form-item label="贸易类型：">
-                  <template v-if="info.type == 1">一般贸易</template>
-                  <template v-else-if="info.type == 2">跨境保税</template>
-                  <template v-else-if="info.type == 3">海外直邮</template>
-                  <template v-else-if="info.type == 4">海淘</template>
+                  <template v-if="info.businessType == 1">一般贸易</template>
+                  <template v-else-if="info.businessType == 2">跨境保税</template>
+                  <template v-else-if="info.businessType == 3">海外直邮</template>
+                  <template v-else-if="info.businessType == 4">海淘</template>
               </el-form-item>
               <!--<el-form-item label="是否自营：">{{info.needDeliver? '是': '否'}}</el-form-item>-->
               <el-form-item label="品牌：">{{info.brandName}}</el-form-item>

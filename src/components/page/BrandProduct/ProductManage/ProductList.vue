@@ -33,13 +33,13 @@
                         <el-option v-for="(v, k) in firstCateList" :key="k" :value="v.id" :label="v.name"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="isProprietary" label="是否自营">
-                    <el-select v-model="form.isProprietary" placeholder="请选择是否自营">
-                        <el-option value="" label="全部"></el-option>
-                        <el-option value="1" label="是"></el-option>
-                        <el-option value="2" label="否"></el-option>
-                    </el-select>
-                </el-form-item>
+                <!--<el-form-item prop="isProprietary" label="是否自营">-->
+                    <!--<el-select v-model="form.isProprietary" placeholder="请选择是否自营">-->
+                        <!--<el-option value="" label="全部"></el-option>-->
+                        <!--<el-option value="1" label="是"></el-option>-->
+                        <!--<el-option value="2" label="否"></el-option>-->
+                    <!--</el-select>-->
+                <!--</el-form-item>-->
                 <!--<el-form-item prop="pushStatus" label="推送状态">-->
                     <!--<el-select v-model="form.pushStatus" placeholder="请选择推送状态">-->
                         <!--<el-option value="" label="全部"></el-option>-->
@@ -64,8 +64,8 @@
                     <!--</el-select>-->
                 <!--</el-form-item>-->
                 <!--/product/productBrand/findProductBrandList?name=耐克-->
-                <el-form-item prop="brandId" label="品牌">
-                    <el-input v-model.trim="form.brandId" placeholder="模糊搜索"></el-input>
+                <el-form-item prop="brandName" label="品牌">
+                    <el-input v-model.trim="form.brandName" placeholder="模糊搜索"></el-input>
                 </el-form-item>
                 <!--findAllSupplier-->
                 <el-form-item prop="supplierCode" label="供应商ID">
@@ -179,7 +179,7 @@
                     isProprietary: '',
                     // pushStatus: '',
                     deliveryWare: '',
-                    brandId: '',
+                    brandName: '',
                     supplierCode: '',
                     prodWarea: '',
                     updateTime: [],
