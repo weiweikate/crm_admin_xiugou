@@ -116,7 +116,7 @@
                 </el-form-item>
                 <el-form-item prop="flatService" label="平台服务">
                     <el-checkbox-group v-model="form.flatService">
-                        <el-checkbox :label="1">不支持使用优惠券</el-checkbox>
+                        <el-checkbox :label="1">支持使用优惠券</el-checkbox>
                         <el-checkbox :label="2">提供发票</el-checkbox>
                         <el-checkbox :label="4">支持7天无理由退换</el-checkbox>
                     </el-checkbox-group>
@@ -315,7 +315,7 @@
                     resData = res.data || {};
                     const limitServer = resData.restrictions || 0;
                     const map = {
-                        0: [4],
+                        0: [1, 4],
                         1: [1],
                         2: [2],
                         3: [1, 2],
