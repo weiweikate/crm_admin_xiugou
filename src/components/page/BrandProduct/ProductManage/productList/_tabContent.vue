@@ -26,10 +26,10 @@
                     <p>{{scope.row.thirdCategoryName}}</p>
                 </template>
             </el-table-column>
-            <el-table-column label="商品售价" align="center">
+            <el-table-column label="商品售价" align="center" width="180px">
                 <template slot-scope="scope">
-                    <p>{{scope.row.minPrice ? (scope.row.minPrice | handleMoney) : '-'}}</p>
-                    <p>{{scope.row.maxPrice ? (scope.row.maxPrice | handleMoney) : '-'}}</p>
+                    <p>最低价:{{scope.row.minPrice | formatMoney}}</p>
+                    <p>最高价:{{scope.row.maxPrice | formatMoney}}</p>
                 </template>
             </el-table-column>
             <el-table-column prop="status" label="商品状态" align="center">
