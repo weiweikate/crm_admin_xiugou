@@ -53,12 +53,12 @@
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="商品详情">
-                    <draggable v-model="imgInfoList">
+                    <draggable v-model="productDetailPicList">
                         <transition-group>
-                            <div v-for="(v,k) in imgInfoList" class="fl" :key="k">
+                            <div v-for="(v,k) in productDetailPicList" class="fl" :key="k">
                                 <div class="img-list">
-                                    <div @click="handleRemoveImg(k, 'imgInfoList')" class="del-mask">删 除</div>
-                                    <img v-if="v !== ''" :src="v" alt="">
+                                    <div @click="handleRemoveImg(k, 'productDetailPicList')" class="del-mask">删 除</div>
+                                    <img v-if="v.url !== ''" :src="v.url" alt="">
                                 </div>
                             </div>
                         </transition-group>
@@ -219,7 +219,8 @@
                 selectedTagArr: [],
                 tagArr: [],
                 tagName: '',
-                paramList: []
+                paramList: [],
+                productDetailPicList: []
             };
         },
         computed: {
@@ -258,11 +259,15 @@
                         tags.push(obj);
                     });
                 }
+                const content = [];
+                this.productDetailPicList.forEach(item => {
+                    content.push(item.url);
+                });
                 const data = {
                     ...this.form,
                     videoUrl: this.form.videoUrl,
                     imgUrl: this.imgList[0],
-                    content: this.imgInfoList.join(','),
+                    content: content.join(','),
                     needDeliver: this.form.needDeliver,
                     freightTemplateId: this.form.freightTemplateId,
                     undeliveredList: this.unSupportAreasData,
@@ -336,7 +341,15 @@
                     this.pageLoading = false;
                     console.log(err);
                 });
-                this.imgInfoList = resData.content ? resData.content.split(',') : [];
+                // 商品详情图
+                resData.content = resData.content || '';
+                resData.content && resData.content.split(',').forEach((item, index) => {
+                    this.productDetailPicList.push({
+                        name: index,
+                        url: item
+                    });
+                });
+                //this.imgInfoList = resData.content ? resData.content.split(',') : [];
                 await this.getFeightList();
                 let str = '';
                 resData.undeliveredList.forEach(v => {
@@ -451,7 +464,10 @@
             },
             // 上传详情图片成功
             uploadInfoImgSuccess(res, file, fileList) {
-                this.imgInfoList.push(res.data);
+                this.productDetailPicList.push({ name: file.name, url: res.data });
+                this.productDetailPicList.sort((a, b) => {
+                    return a.name > b.name ? 1 : -1;
+                });
             },
             // 移除图片
             handleRemoveImg(index, fileList) {
