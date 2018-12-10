@@ -225,7 +225,7 @@
                             <el-radio label="2">审核驳回</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <!--退款-->
+                    <!--换货-->
                     <el-form-item label="售后类型" v-if="orderCustomerServiceInfo.type==3">
                         <el-radio-group v-model="form.type">
                             <el-radio label="1">换货</el-radio>
@@ -241,7 +241,7 @@
                     <!--换货-->
                     <el-form-item label="换货物流公司" v-if="orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4">
                         <el-select v-model="form.expressCode">
-                            <option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.label"></option>
+                            <el-option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.name"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="换货物流单号" v-if="orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4">
@@ -281,7 +281,7 @@
                 refundStatusArr: ['待审核', '待商品寄回', '待仓库确认', '待平台处理', '售后完成 ', '售后关闭'], // 售后状态
                 typeArr: ['仅退款', '退货退款 ', '换货'], // 类型
                 btnLoading: false,
-                logicList: [{ label: '顺丰', code: 1 }],
+                logicList: [],
                 form: {}
             };
         },
@@ -290,7 +290,7 @@
             // 获取订单信息
             this.serviceNo = this.$route.query.afterSaleOrderInfoId;
             this.getInfo();
-            // this.getLogic();
+            this.getLogic();
         },
         methods: {
             //  获取信息
@@ -314,7 +314,7 @@
                         const tempValue = v.specValues.substring(1, v.specValues.length - 1).split('@');
                         v.spec = [];
                         tempTitle.forEach((v1, k1) => {
-                            const temp = v1 + ':' + tempValue[k1] + '      ';
+                            const temp = v1 + ':' + tempValue[k1] + ' ';
                             v.spec.push(temp);
                         });
                         v.spec = v.spec.join('  ');
@@ -326,6 +326,7 @@
             // 物流公司查询
             getLogic() {
                 request.sysExpressQuery({ page: 1, pageSize: 10000 }).then(res => {
+                    this.logicList = [];
                     this.logicList = res.data.data;
                 });
             },
@@ -334,12 +335,15 @@
                 let url = '';
                 const data = this.form;
                 data.serviceNo = this.serviceNo;
+                data.warehouseType = this.orderInfo.warehouseType;
+                if (!data.result) {
+                    return this.$message.warning('请选择售后处理结果');
+                }
                 const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
                 if (data.adjustAmount && (data.adjustAmount > 20 || !reg.test(data.adjustAmount))) {
                     return this.$message.warning('请输入正确的处理金额');
                 }
                 if (this.orderCustomerServiceInfo.type != 1 && this.orderCustomerServiceInfo.status == 1) { // 待审核
-                    data.warehouseType = this.orderInfo.warehouseType;
                     if (this.form.result == 1) { // 审核通过
                         url = 'agreeApply';
                     } else { // 审核驳回
@@ -359,10 +363,16 @@
                         if (this.form.result == 2) {
                             url = 'refuse';
                         } else {
+                            if (!this.form.type) {
+                                return this.$message.warning('请选择售后类型');
+                            }
                             if (this.form.type == 1) {
                                 url = 'agreeExchange';
+                                if (this.orderInfo.warehouseType == 4 && (!data.expressNo || !data.expressCode)) {
+                                    return this.$message.warning('请输入完整的物流信息');
+                                }
                                 this.logicList.forEach((v, k) => {
-                                    if (this.form.expressNo == v.code) {
+                                    if (this.form.expressCode == v.code) {
                                         data.expressName = v.name;
                                     }
                                 });

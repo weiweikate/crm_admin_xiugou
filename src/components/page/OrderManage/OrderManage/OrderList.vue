@@ -62,12 +62,6 @@
                         <el-option v-for="(v,k) in lockStatusArr" :label="v.label" :value="v.value" :key="k"></el-option>
                     </el-select>
                 </el-form-item>
-                <!--<el-form-item prop="orderStatus" label="订单状态">-->
-                    <!--<el-select v-model="form.orderStatus" placeholder="请选择" @change="changeStatus(2)">-->
-                        <!--<el-option label="全部" value=""></el-option>-->
-                        <!--<el-option v-for="(v,k) in orderStatusArr" :label="v.type" :value="v.id" :key="k">{{v.type}}</el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
                 <el-form-item label=" ">
                     <el-button type="primary" @click="getList(1)">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
@@ -182,7 +176,7 @@ export default {
         };
     },
 
-    activated() {
+    mounted() {
         this.handleClick({ name: 'all' });
     },
 

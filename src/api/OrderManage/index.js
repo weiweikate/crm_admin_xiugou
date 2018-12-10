@@ -12,10 +12,10 @@ export const queryPaymentsOrderPageList = '/orderManagement/payments/query';
 // 订单详情
 export const orderDetail = ['/orderManagement/orders/detail', { methods: 'get' }];
 // 取消订单
-export const cancelOrder = '/orderManagement/orders/{warehouseOrderNo}/cancel';
+export const cancelOrder = '/orderManagement/orders/warehouseOrderNo/cancel';
 // 订单发货
 export const orderSendOut = '/orderManagement/orders/pushToWarehouse';
-export const orderSign = '/orderManagement/orders/markn';
+export const orderSign = '/orderManagement/orders/mark';
 // 支付单列表
 export const queryPayments = '/orderManagement/payments/query';
 // 查询发货单列表

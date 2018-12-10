@@ -28,12 +28,6 @@
                         <el-option v-for="(v,k) in afterSaleStatusArr" :label="v.label" :value="v.value" :key="k"></el-option>
                     </el-select>
                 </el-form-item>
-                <!--<el-form-item prop="afterSaleType" label="售后类型">-->
-                    <!--<el-select v-model="form.afterSaleType" placeholder="请选择" @change="changeStatus(1)">-->
-                      <!--<el-option label="暂不选择" value=""></el-option>-->
-                        <!--<el-option v-for="(v,k) in afterSaleTypeArr" :label="v.type" :value="v.id" :key="k">{{v.type}}</el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
                 <el-form-item label="">
                     <el-button type="primary" @click="getList(1)">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
@@ -42,7 +36,7 @@
         </el-card>
         <el-card style='margin-top:20px;minHeight:90vh;overflow-x: auto;min-width: 1336px' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
-                <el-button type="primary" @click="sendOut" v-auth="'order.orderList.yjts'">导出</el-button>
+                <el-button type="primary">导出</el-button>
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="all">

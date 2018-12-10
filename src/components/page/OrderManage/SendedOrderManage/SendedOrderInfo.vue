@@ -119,8 +119,8 @@
                     this.orderProductExpress = res.data.orderProductExpress ? res.data.orderProductExpress : {};
                     this.platformOrder = res.data.platformOrder ? res.data.platformOrder : {};
                     res.data.warehouseOrderProducts.forEach((v, k) => {
-                        const tempTitle = v.specTitle.split(',');
-                        const tempValue = v.specValues.split(',');
+                        const tempTitle = v.specTitle.split('@');
+                        const tempValue = v.specValues.substring(1, v.specValues.length - 1).split('@');
                         v.spec = [];
                         tempTitle.forEach((v1, k1) => {
                             const temp = v1 + ':' + tempValue[k1] + '    ';

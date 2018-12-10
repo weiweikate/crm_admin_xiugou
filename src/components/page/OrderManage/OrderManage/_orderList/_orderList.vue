@@ -32,7 +32,7 @@
                                             <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star" :style="{color:v.warehouseOrder.starColor}">★</span></span>
                                 <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
                                       :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
-                                <el-input v-model="v.warehouseOrder.markStar" placeholder="请输入备注"></el-input>
+                                <el-input v-model="v.warehouseOrder.remark" placeholder="请输入备注"></el-input>
                             </el-popover>
                             <el-button v-if="v.warehouseOrder.status==2" type="primary" @click="sendGoods(v)">虚拟发货</el-button>
                         </div>
@@ -95,8 +95,8 @@
                 </el-form-item>
                 <el-form-item label="物流公司">
                     <el-select v-model="form.expressCode">
-                        <option value="">请选择</option>
-                        <option v-for="(v,k) in logicList" :key="k" :label="v.name" :name="v.code"></option>
+                        <el-option value="">请选择</el-option>
+                        <el-option v-for="(v,k) in logicList" :key="k" :label="v.name" :value="v.code"></el-option>
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -144,8 +144,10 @@
                 mask: false,
                 btnLoading: false,
                 form: {
-                    expressNo: ''
-                }
+                    expressNo: '',
+                    expressCode: ''
+                },
+                logicList: []
             };
         },
         methods: {
@@ -163,9 +165,10 @@
                             this.markArr[res.data.data[i].warehouseOrder.markStar - 1] == undefined || null
                                 ? '#ccc'
                                 : this.markArr[res.data.data[i].warehouseOrder.markStar - 1].label;
+                        res.data.data[i].warehouseOrder.remark = res.data.data[i].warehouseOrder.platformRemarks;
                         res.data.data[i].productOrders.forEach((v, k) => {
-                            const tempTitle = v.specTitle.split(',');
-                            const tempValue = v.specValues.split(',');
+                            const tempTitle = v.specTitle.split('@');
+                            const tempValue = v.specValues.substring(1, v.specValues.length - 1).split('@');
                             v.spec = [];
                             tempTitle.forEach((v1, k1) => {
                                 const temp = v1 + ':' + tempValue[k1] + '    ';
@@ -184,19 +187,21 @@
             // 物流公司查询
             getLogic() {
                 request.sysExpressQuery({ page: 1, pageSize: 10000 }).then(res => {
-                    this.logicList = res.data.data;
+                    this.logicList = [];
+                    this.logicList = res.data.data || [];
                 });
             },
             // 修改星级
             changeColor(v1, v) {
                 const data = {};
-                data.id = v.id;
-                data.adminStars = v1.value;
-                data.supplierCode = v.supplierCode;
+                data.warehouseOrderNo = v.warehouseOrder.warehouseOrderNo;
+                data.markStatus = v1.value;
+                data.platformRemarks = v.warehouseOrder.remark;
                 request.orderSign(data).then(res => {
                     this.$message.success(res.msg);
-                    v.starColor = v1.label;
+                    v.warehouseOrder.starColor = v1.label;
                     v.isShowPop = false;
+                    v.warehouseOrder.platformRemarks = v.warehouseOrder.remark;
                 }).catch(err => {
                     console.log(err);
                 });
@@ -229,17 +234,6 @@
                     });
                 }
             },
-            // 更改订单状态（单个）
-            changeStatus(row, status) {
-                if (status == 3) {
-                    request.pickUpOrderProduct({ orderProductId: row.id }).then(res => {
-                        this.$message.success(res.data.data);
-                        this.getList(1);
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                }
-            },
             // 取消订单
             cancelOrder(id) {
                 const data = {
@@ -258,21 +252,19 @@
                 this.form.expressNo = '';
                 this.form.expressCode = '';
                 this.warehouseOrderNo = row.warehouseOrder.warehouseOrderNo;
-                // this.getLogic();
+                this.getLogic();
             },
             sendSure(formName) {
                 const data = this[formName];
                 data.warehouseOrderNo = this.warehouseOrderNo;
-                // this.logicList.forEach((v, k) => {
-                //     if (this.form.expressNo == v.code) {
-                //         data.expressName = v.name;
-                //     }
-                // });
-                data.expressName = '中通速递';
-                data.expressCode = 'ZTO32324';
-                if (!data.expressName || !data.expressNo) {
+                if (!data.expressCode || !data.expressNo) {
                     return this.$message.warning('请输入物流单号和物流公司');
                 }
+                this.logicList.forEach((v, k) => {
+                    if (this.form.expressCode == v.code) {
+                        data.expressName = v.name;
+                    }
+                });
                 this.btnLoading = true;
                 request.fictitiousDelivery(data).then(res => {
                     this.$message.success(res.msg);
@@ -366,6 +358,9 @@
                 .el-input__inner{
                     width: 300px
                 }
+            }
+            .el-input__suffix{
+               top:-5px
             }
         }
     }

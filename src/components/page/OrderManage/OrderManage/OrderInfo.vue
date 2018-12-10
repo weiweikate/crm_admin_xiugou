@@ -204,12 +204,12 @@
                             </div>
                         </td>
                         <td :rowspan="v.rows" v-if="k1==0">{{v.skuCode}}</td>
-                        <td :rowspan="v.rows" v-if="k1==0">{{v.supplierSkuCode}}</td>
-                        <td :rowspan="v.rows" v-if="k1==0">¥{{v.unitPrice}}</td>
+                        <td :rowspan="v.rows" v-if="k1==0">{{v.supplierSkuCode||`/`}}</td>
+                        <td :rowspan="v.rows" v-if="k1==0">¥{{v.originalPrice}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">¥{{v.unitPrice}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">{{v.quantity}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">¥{{v.payAmount}}</td>
-                        <td :rowspan="v.rows" v-if="k1==0">{{v.price}}</td>
+                        <td :rowspan="v.rows" v-if="k1==0">{{v.warehouseName}}</td>
                         <td :rowspan="v.expressInfos.rows" v-if="k1%v.expressInfos.rows==0">
                             <span v-if="v.expressInfos[k1/v.expressInfos.rows]&&v.expressInfos[k1/v.expressInfos.rows].expressName">{{v.expressInfos[k1/v.expressInfos.rows].expressName}}</span>
                             <span v-else>/</span>
@@ -290,7 +290,6 @@
                     let invoiceAmount = 0;
                     let payAmount = 0;
                     res.data.productOrders.forEach((v, k) => {
-                        const tempTitle = v.specTitle.split(',');
                         totalAmount += v.totalAmount || 0;
                         freightAmount += v.freightAmount || 0;
                         promotionAmount += v.promotionAmount || 0;
@@ -300,7 +299,8 @@
                         cashPayAmount += v.cashPayAmount || 0;
                         invoiceAmount += v.invoiceAmount || 0;
                         payAmount += v.payAmount || 0;
-                        const tempValue = v.specValues.split(',');
+                        const tempTitle = v.specTitle.split('@');
+                        const tempValue = v.specValues.substring(1, v.specValues.length - 1).split('@');
                         v.spec = [];
                         tempTitle.forEach((v1, k1) => {
                             const temp = v1 + ':' + tempValue[k1] + '    ';
@@ -326,6 +326,7 @@
                         v.rows = (v.customerServiceInfos.length || 1) * (v.expressInfos.length || 1) / this.getMaxDivisor(v.customerServiceInfos.length || 1, v.expressInfos.length || 1);
                         v.customerServiceInfos.rows = v.rows / (v.customerServiceInfos.length || 1);
                         v.expressInfos.rows = v.rows / (v.expressInfos.length || 1);
+                        v.warehouseName = res.data.warehouseName;
                         this.tableData.push(v);
                     });
                     this.payInfo = {
