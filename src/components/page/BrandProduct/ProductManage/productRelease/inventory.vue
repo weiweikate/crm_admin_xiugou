@@ -801,7 +801,7 @@
             },
             // 添加属性值
             addAttrValue(index) {
-                this.$prompt('请输入属性名', null, {
+                this.$prompt('请输入属性名', '', {
                     showCancelButton: true,
                     inputPattern: /\s*\S+?/,
                     inputErrorMessage: '请输入1-20位的名字'
