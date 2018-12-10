@@ -1,5 +1,5 @@
 {
-    "proxy": "yang",
+    "proxy": "dev",
     "env": {
         "qa": {
             "name": "测试环境",

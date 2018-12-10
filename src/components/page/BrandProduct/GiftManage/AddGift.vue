@@ -297,7 +297,6 @@
                     weight: '',
                     freightTemplateId: '',
                     aferServiceDays: '',
-                    content: '',
                     imgFileList: [],
                     restrictions: 0,
                     paramValueList: []
@@ -359,7 +358,7 @@
                 selectedCoupon: [], // 已选中优惠券列表
                 couponList: [], // 优惠券列表
                 tmpCouponList: [], // 暂时存放优惠券列表
-                imgInfoList: [], // 商品详情
+                imgInfoList: [], // 商品详情(图片)
                 couponType: '1'
             };
         },
@@ -968,7 +967,7 @@
                 height: 15px;
                 color: white;
                 background-color: red;
-                z-index: 99999;
+                z-index: 99;
                 line-height: 15px;
                 text-align: center;
                 font-weight: 900;
@@ -1065,6 +1064,35 @@
                 border-color: #409EFF;
                 color: #fff;
             }
+        }
+        .img-list{
+            cursor: pointer;
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 6px;
+            margin: 0 10px 40px 0;
+            overflow: hidden;
+            img {
+                width: 150px;
+                height: 150px;
+            }
+        }
+        .del-mask{
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 150px;
+            height: 150px;
+            line-height: 150px;
+            text-align: center;
+            background-color: rgba(0,0,0,0);
+            color: rgba(0,0,0,0);
+        }
+        .del-mask:hover{
+            z-index: 99;
+            color: #33b4ff;
+            background-color: rgba(0,0,0,0.3);
         }
     }
 </style>
