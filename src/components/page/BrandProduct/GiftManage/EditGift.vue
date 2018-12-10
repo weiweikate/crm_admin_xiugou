@@ -145,12 +145,35 @@
                     <el-input style="width:300px" :maxlength="16" v-model="form.experience" placeholder="请输入经验值"></el-input> 点
                 </el-form-item>
                 <div class="pro-title">产品详情</div>
-                <quill-editor v-model="form.content" ref="myQuillEditor" :options="editorOption"
+                <!-- <quill-editor v-model="form.content" ref="myQuillEditor" :options="editorOption"
                               @change="onEditorChange($event)"></quill-editor>
                 <el-upload :action="uploadImg" multiple :data="uploadData" :on-success='upScuccess' ref="upload"
                            style="display:none">
                     <el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">点击上传</el-button>
-                </el-upload>
+                </el-upload> -->
+                <el-form-item label="商品详情">
+                   <draggable v-model="imgInfoList">
+                       <transition-group>
+                           <div v-for="(v,k) in imgInfoList" class="fl" :key="k">
+                               <div class="img-list">
+                                   <div @click="handleRemoveImg(k, 'imgInfoList')" class="del-mask">删 除</div>
+                                   <img v-if="v !== ''" :src="v" alt="">
+                               </div>
+                           </div>
+                       </transition-group>
+                   </draggable>
+                   <el-upload
+                       class="fl"
+                       :action="uploadImg"
+                       multiple
+                       :before-upload="(file)=>beforeUploadImg(file, 'infoImg')"
+                       :on-success="uploadInfoImgSuccess"
+                       :show-file-list ='false'
+                       list-type="picture-card">
+                       <el-button size="small" type="primary">点击上传</el-button>
+                       <div slot="tip" class="el-upload__tip" style="width: 150px">拖拽图片可更换顺序，请控制在3M以内</div>
+                   </el-upload>
+               </el-form-item>
                 <div class="pro-title">礼包可购买角色设置</div>
                 <el-form-item>
                     <el-checkbox  v-model="checkedAllUser" @change="selectedAlLevel">全选</el-checkbox>
@@ -275,7 +298,6 @@
                     weight: '',
                     freightTemplateId: '',
                     aferServiceDays: '',
-                    content: '',
                     imgFileList: [],
                     restrictions: 0,
                     paramValueList: []
@@ -337,6 +359,7 @@
                 selectedCoupon: [], // 已选中优惠券列表
                 couponList: [], // 优惠券列表
                 tmpCouponList: [], // 暂时存放优惠券列表
+                imgInfoList: [], // 商品详情(图片)
                 couponType: '1'
             };
         },
@@ -382,9 +405,9 @@
 
         mounted() {
             // 为图片ICON绑定事件 getModule 为编辑器的内部属性
-            this.$refs.myQuillEditor.quill
-                .getModule('toolbar')
-                .addHandler('image', this.imgHandler);
+            // this.$refs.myQuillEditor.quill
+            //     .getModule('toolbar')
+            //     .addHandler('image', this.imgHandler);
         },
 
         methods: {
@@ -425,7 +448,7 @@
                     this.form.sendMode = res.data.sendMode.toString();
                     this.form.freightTemplateId = res.data.freightTemplateId;
                     this.form.aferServiceDays = res.data.aferServiceDays.toString();
-                    this.form.content = res.data.content;
+                    this.imgInfoList = res.data.content?res.data.content.split(','):[];
                     this.imgArr = res.data.imgFileList;
                     this.form.restrictions = Number(res.data.restrictions);
                     this.limit.notSupportCoupon = (this.form.restrictions & 1) !== 0;
@@ -534,6 +557,7 @@
                     data.beginTime = this.setBuyTime[0] === undefined ? '' : utils.formatTime(this.setBuyTime[0]);
                     data.endTime = this.setBuyTime[1] === undefined ? '' : utils.formatTime(this.setBuyTime[1]);
                 }
+                data.content= this.imgInfoList.join(',');
                 if (!this.isSetBuTime) {
                     data.beginTime = '';
                     data.endTime = '';
@@ -635,6 +659,50 @@
                     this.$message.error(`${vm.uploadType}插入失败`);
                 }
                 // this.$refs['upload'].clearFiles(); // 插入成功后清除input的内容
+            },
+            // 校验图片大小
+            beforeUploadImg(file, type) {
+                const that = this;
+                const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
+                return new Promise(function(resolve, reject) {
+                    if (!isJPG) reject('请上传图片');
+                    if (type == 'mainImg') {
+                        if (that.imgList.length >= 10) reject('最多上传十张图片');
+                    }
+                    const _URL = window.URL || window.webkitURL;
+                    const image = new Image();
+                    if (type == 'mainImg') {
+                        image.onload = function() {
+                            if (image.width == 800 && image.height == 800) {
+                                that.imageSize = `${image.width}*${image.height}`;
+                                resolve();
+                            } else {
+                                console.log(`${image.width}*${image.height}`);
+                                resolve();
+                                // reject();
+                            }
+                        };
+                    }
+                    resolve();
+                    image.src = _URL.createObjectURL(file);
+                }).then(
+                    () => {
+                        this.$message.warning(`正在上传${file.name}`);
+                        return file;
+                    },
+                    (err = '上传图片尺寸不符合!') => {
+                        this.$message.error(err);
+                        return Promise.reject();
+                    }
+                );
+            },
+            // 上传详情图片成功
+            uploadInfoImgSuccess(res, file, fileList) {
+                this.imgInfoList.push(res.data);
+            },
+            // 移除图片
+            handleRemoveImg(index, fileList) {
+                this[fileList].splice(index, 1);
             },
             // 点击图片ICON触发事件
             imgHandler(state) {
@@ -977,7 +1045,7 @@
                 height: 15px;
                 color: white;
                 background-color: red;
-                z-index: 99999;
+                z-index: 99;
                 line-height: 15px;
                 text-align: center;
                 font-weight: 900;
@@ -1074,6 +1142,35 @@
                 border-color: #409EFF;
                 color: #fff;
             }
+        }
+        .img-list{
+            cursor: pointer;
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 6px;
+            margin: 0 10px 40px 0;
+            overflow: hidden;
+            img {
+                width: 150px;
+                height: 150px;
+            }
+        }
+        .del-mask{
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 150px;
+            height: 150px;
+            line-height: 150px;
+            text-align: center;
+            background-color: rgba(0,0,0,0);
+            color: rgba(0,0,0,0);
+        }
+        .del-mask:hover{
+            z-index: 99;
+            color: #33b4ff;
+            background-color: rgba(0,0,0,0.3);
         }
     }
 </style>
