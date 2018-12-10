@@ -36,7 +36,7 @@
                     </div>
                     <div class="shop-right">
                         <p class="shop-msg">
-                            <span>店铺经验：{{detail.experience||0}}</span>
+                            <span>店铺Exp：{{detail.experience||0}}</span>
                         </p>
                     </div>
                 </div>

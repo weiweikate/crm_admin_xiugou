@@ -174,12 +174,14 @@ export const asyncRouterMap = [
             {
                 name: 'payOrderList',
                 path: '/payOrderList',
+                default: true,
                 component: resolve => require(['../components/page/OrderManage/PayOrderManage/PayOrderList.vue'], resolve),
                 meta: { title: '支付单列表' }
             },
             {
                 name: 'sendedOrderList',
                 path: '/sendedOrderList',
+                default: true,
                 component: resolve => require(['../components/page/OrderManage/SendedOrderManage/SendedOrderList.vue'], resolve),
                 meta: { title: '发货单列表' }
             },
@@ -195,17 +197,20 @@ export const asyncRouterMap = [
         path: '/afterSaleOrder',
         component: Layout,
         name: 'afterSaleOrder',
+        default: true,
         meta: { title: '售后单管理', icon: 'icon-dingdan' },
         children: [
             {
                 name: 'afterSaleOrderList',
                 path: '/afterSaleOrderList',
+                default: true,
                 component: resolve => require(['../components/page/AfterSaleOrderManage/AfterSaleOrderManage/AfterSaleOrderList.vue'], resolve),
                 meta: { title: '售后单列表' }
             },
             {
                 name: 'refundOrderList',
                 path: '/refundOrderList',
+                default: true,
                 component: resolve => require(['../components/page/AfterSaleOrderManage/RefundOrderManage/RefundOrderList.vue'], resolve),
                 meta: { title: '退款单列表' }
             }
@@ -452,7 +457,7 @@ export const asyncRouterMap = [
                 path: '/repertoryReportList',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryReport/RepertoryReportList.vue'], resolve),
                 meta: { title: '仓库单' }
-            },
+            }
         ]
     },
     {
@@ -1717,9 +1722,9 @@ export const asyncRouterMap = [
                 meta: { title: '仓库报损数详情' }
             }
         ]
-    },
+    }
 
-    //{ path: '*', redirect: '/404', hidden: true }
+    // { path: '*', redirect: '/404', hidden: true }
 ];
 
 export const constantRouterMap = [

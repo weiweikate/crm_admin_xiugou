@@ -50,7 +50,7 @@
             <el-form v-model="form" label-width="120px" v-if="index==0">
                 <el-form-item label="所需经验设置">
                     <el-input v-model="form.upgradeExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>点经验值</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--设置必要条件-->
@@ -91,7 +91,7 @@
                 <div class="tip">直接邀请1人则获得</div>
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeDirectPerExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>点</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--设置间接邀请条件-->
@@ -99,7 +99,7 @@
                 <div class="tip">间接邀请1人则获得</div>
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeIndirectPerExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>点</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--设置个人交易额条件-->
@@ -107,7 +107,7 @@
                 <div class="tip">个人交易额增加1元，则获得</div>
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradePerSalesOneExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>点</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--设置直接交易额条件-->
@@ -116,7 +116,7 @@
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeDirectSalesOneExp" placeholder="请输入数值"
                               auto-complete="off"></el-input>
-                    <span>点</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--设置间接交易额条件-->
@@ -125,7 +125,7 @@
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeIndirectSalesOneExp" placeholder="请输入数值"
                               auto-complete="off"></el-input>
-                    <span>点</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--周交易额-->
@@ -137,7 +137,7 @@
                 </el-form-item>
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeWeekSalesNumExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>点</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--周交易频率-->
@@ -149,7 +149,7 @@
                 </el-form-item>
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeWeekSalesFreqExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>点</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--设置一次性交易条件-->
@@ -160,7 +160,7 @@
                 </el-form-item>
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeBuyNumExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>点</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--代币充值-->
@@ -180,7 +180,7 @@
                 <div class="tip">签到，则获得</div>
                 <el-form-item label="经验值">
                     <el-input v-model="form.upSign" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>点</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--分享-->
@@ -188,7 +188,7 @@
                 <h3 class="tip">分享，则获得</h3>
                 <el-form-item label="经验值">
                     <el-input v-model="form.upShare" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>点</span>
+                    <span>点Exp</span>
                 </el-form-item>
                 <el-form-item label="每日可分享">
                     <el-input v-model="form.upShareCount" placeholder="请输入数值" auto-complete="off"></el-input>
@@ -200,11 +200,11 @@
                 <h3 class="tip">每日分享被点击单次可获得</h3>
                 <el-form-item label="经验值">
                     <el-input v-model="form.upShareClick" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>点</span>
+                    <span>点Exp</span>
                 </el-form-item>
                 <el-form-item label="最多可得">
                     <el-input v-model="form.upShareClickCount" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>点</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--奖励金获得-->
@@ -212,7 +212,7 @@
                 <div class="tip">个人获得奖励金加1元，则获得</div>
                 <el-form-item label="经验值">
                     <el-input v-model="form.upAward" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>点</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
