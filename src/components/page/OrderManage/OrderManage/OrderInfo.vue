@@ -198,8 +198,8 @@
                         <td :rowspan="v.rows" v-if="k1==0" style="width: 400px">
                             <div class="name">
                                 <img :src="v.specImg" alt="">
-                                <!--<span class="pro-name color-blue" @click="$router.push({path:'/productInfo',query:{productInfoId:v.productId}})">{{v.productName}}</span>-->
-                                <span class="pro-name">{{v.productName}}</span>
+                                <span class="pro-name color-blue" @click="$router.push({path:'/productInfo',query:{productInfoId:v.productId}})">{{v.productName}}</span>
+                                <!--<span class="pro-name">{{v.productName}}</span>-->
                                 <span class="pro-spec">{{v.spec}}</span>
                             </div>
                         </td>
