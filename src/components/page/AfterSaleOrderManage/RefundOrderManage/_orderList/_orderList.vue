@@ -15,16 +15,16 @@
                 </template>
             </el-table-column>
             <el-table-column prop="payAmount" label="商品实付金额" align="center">
-                <template slot-scope="scope">¥{{scope.row.payAmount||0}}</template>
+                <template slot-scope="scope">{{scope.row.payAmount|formatMoney}}</template>
             </el-table-column>
             <el-table-column prop="applyRefundAmount" label="申请退款金额" align="center">
-                <template slot-scope="scope">¥{{scope.row.applyRefundAmount||0}}</template>
+                <template slot-scope="scope">{{scope.row.applyRefundAmount|formatMoney}}</template>
             </el-table-column>
             <el-table-column prop="refundAmount" label="实际退款金额" align="center">
-                <template slot-scope="scope">¥{{scope.row.refundAmount||0}}</template>
+                <template slot-scope="scope">{{scope.row.refundAmount|formatMoney}}</template>
             </el-table-column>
             <el-table-column prop="createTime" label="创建时间" align="center">
-                <template slot-scope="scope">¥{{scope.row.createTime|formatDateAll}}</template>
+                <template slot-scope="scope">{{scope.row.createTime|formatDateAll}}</template>
             </el-table-column>
             <el-table-column prop="remarks" label="退款备注" align="center">
                 <template slot-scope="scope">
