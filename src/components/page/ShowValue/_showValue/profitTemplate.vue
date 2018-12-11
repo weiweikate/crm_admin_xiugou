@@ -1,65 +1,26 @@
 <template>
     <div class="profit-tpl">
         <div class="item">
-            <el-checkbox v-model="valueX" @change="checked=>changeStatus(checked, 'valueX')">X值{{tplName}}分配比例设置</el-checkbox>
             <p class="small-title">间接分润</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`XJ${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueX" :controls="false" prefix="2" :min="0" placeholder="请输入数值" v-model="v.valueX[0]" class="inp"></el-input-number>
-                <span>%</span>
-            </p>
-            <p class="small-title">直接分润</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`XZ${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueX" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueX[1]" class="inp"></el-input-number>
-                <span>%</span>
-            </p>
-            <p class="small-title">自己</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`XM${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueX" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueX[2]" class="inp"></el-input-number>
+            <p class="level" v-for="(value, key) in form.jj">
+                <span>{{key}}：</span>
+                <el-input placeholder="请输入数值" v-model="form.jj[key]" class="inp"></el-input>
                 <span>%</span>
             </p>
         </div>
         <div class="item">
-            <el-checkbox v-model="valueY" @change="checked=>changeStatus(checked, 'valueY')">Y值{{name}}分配比例设置</el-checkbox>
-            <p class="small-title">间接分润</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`YJ${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueY" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueY[0]" class="inp"></el-input-number>
-                <span>%</span>
-            </p>
             <p class="small-title">直接分润</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`YZ${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueY" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueY[1]" class="inp"></el-input-number>
-                <span>%</span>
-            </p>
-            <p class="small-title">自己</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`YM${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueY" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueY[2]" class="inp"></el-input-number>
+            <p class="level" v-for="(value, key) in form.zj">
+                <span>{{key}}：</span>
+                <el-input placeholder="请输入数值" v-model="form.zj[key]" class="inp"></el-input>
                 <span>%</span>
             </p>
         </div>
         <div class="item">
-            <el-checkbox v-model="valueZ" @change="checked=>changeStatus(checked, 'valueZ')">Z值{{name}}分配比例设置</el-checkbox>
-            <p class="small-title">间接分润</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`ZJ${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueZ" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueZ[0]" class="inp"></el-input-number>
-                <span>%</span>
-            </p>
-            <p class="small-title">直接分润</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`ZZ${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueZ" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueZ[1]" class="inp"></el-input-number>
-                <span>%</span>
-            </p>
             <p class="small-title">自己</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`ZM${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueZ" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueZ[2]" class="inp"></el-input-number>
+            <p class="level" v-for="(value, key) in form.my">
+                <span>{{key}}：</span>
+                <el-input placeholder="请输入数值" v-model="form.my[key]" class="inp"></el-input>
                 <span>%</span>
             </p>
         </div>
@@ -68,12 +29,6 @@
 
 <script>
 export default {
-    props: ['name'],
-    computed: {
-        tplName() {
-            return this.name;
-        }
-    },
     data() {
         return {
             userLevel: [
@@ -85,21 +40,39 @@ export default {
                 { name: 'v5', level: '6', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
                 { name: 'v6', level: '7', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] }
             ],
-            valueX: false,
-            valueY: false,
-            valueZ: false
+            form: {
+                jj: {
+                    v0: '',
+                    v1: '',
+                    v2: '',
+                    v3: '',
+                    v4: '',
+                    v5: '',
+                    v6: ''
+                },
+                zj: {
+                    v0: '',
+                    v1: '',
+                    v2: '',
+                    v3: '',
+                    v4: '',
+                    v5: '',
+                    v6: ''
+                },
+                my: {
+                    v0: '',
+                    v1: '',
+                    v2: '',
+                    v3: '',
+                    v4: '',
+                    v5: '',
+                    v6: ''
+                }
+            }
         };
     },
     methods: {
-        changeStatus(status, val) {
-            if (!status) {
-                for (let i = 0; i < this.userLevel.length; i++) {
-                    for (let j = 0; j < this.userLevel[i][val].length; j++) {
-                        this.userLevel[i][val][j] = 0;
-                    }
-                }
-            }
-        }
+
     }
 };
 </script>
@@ -110,7 +83,7 @@ export default {
     margin-top: 10px;
     .item{
         width: 290px;
-        padding: 25px;
+        padding: 10px 25px;
         margin-right: 10px;
         background-color: #f7f7f7;
         .small-title{
