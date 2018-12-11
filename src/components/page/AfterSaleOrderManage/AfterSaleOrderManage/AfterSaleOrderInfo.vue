@@ -279,7 +279,7 @@
                 refundExpress: {},
                 supplierRefundAddress: {},
                 warehouseOrderProduct: {},
-                statusArr: ['待支付', '待发货', '待收货', '交易完成', '交易关闭 '], // 订单状态
+                statusArr: ['待支付', '已付款', '待收货', '交易完成', '交易关闭 '], // 订单状态
                 refundStatusArr: ['待审核', '待商品寄回', '待仓库确认', '待平台处理', '售后完成 ', '售后关闭'], // 售后状态
                 typeArr: ['仅退款', '退货退款 ', '换货'], // 类型
                 btnLoading: false,
