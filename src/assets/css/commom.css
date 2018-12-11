@@ -75,3 +75,8 @@
 .el-dialog__title {
     color: #ff6868
 }
+label.require:before,.el-table__header th.require .cell:before {
+    content: '*';
+    color: #f56c6c;
+    margin-right: 4px;
+}

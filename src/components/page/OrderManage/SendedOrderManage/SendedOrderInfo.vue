@@ -7,35 +7,35 @@
                     <div class="title">订单基础信息</div>
                     <div class="item">
                         <span>平台订单号</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{platformOrder.platformOrderNo}}</span>
                     </div>
                     <div class="item">
                         <span>仓库订单号</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{orderDelivery.warehouseOrderNo}}</span>
                     </div>
                     <div class="item">
                         <span>发货单号</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{orderDelivery.dispatchNo}}</span>
                     </div>
                     <div class="item">
                         <span>供应商名称</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{orderDelivery.supplierName||`/`}}</span>
                     </div>
                     <div class="item">
                         <span>物流公司</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{orderProductExpress[0].expressName}}</span>
                     </div>
                     <div class="item">
                         <span>物流单号</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{orderProductExpress[0].expressNo}}</span>
                     </div>
                     <div class="item">
                         <span>物流费用</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>¥{{orderDelivery.freightAmount||0}}</span>
                     </div>
                     <div class="item">
                         <span>发货单创建时间</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{orderDelivery.createTime|formatDateAll}}</span>
                     </div>
                 </div>
 
@@ -43,23 +43,23 @@
                     <div class="title">订单收货信息</div>
                     <div class="item">
                         <span>收货人姓名</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{platformOrder.receiver}}</span>
                     </div>
                     <div class="item">
                         <span>收货人联系方式</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{platformOrder.receiverPhone}}</span>
                     </div>
                     <div class="item">
                         <span>收货省市区</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{platformOrder.province}}{{platformOrder.city}}{{platformOrder.area}}</span>
                     </div>
                     <div class="item">
                         <span>收货详细地址</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>{{platformOrder.address}}</span>
                     </div>
                     <div class="item">
                         <span>配送方式</span>
-                        <span>{{orderMsg.orderNum}}</span>
+                        <span>快递</span>
                     </div>
                 </div>
             </div>
@@ -69,15 +69,16 @@
                     <el-table-column label="商品信息" align="center">
                         <template slot-scope="scope">
                             <div class="name">
-                                <img :src="v.specImg" alt="">
-                                <span class="pro-name">{{v.productName}}</span>
-                                <span class="pro-spec">{{v.spec}}</span>
+                                <img :src="scope.row.specImg" alt="">
+                                <span class="pro-name">{{scope.row.productName}}</span>
+                                <span class="pro-spec">{{scope.row.spec}}</span>
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="code" label="SKU编码" align="center"></el-table-column>
-                    <el-table-column prop="code" label="供应商SKU编码" align="center"></el-table-column>
-                    <el-table-column prop="num" label="发货数量" align="center"></el-table-column>
+                    <el-table-column prop="skuCode" label="SKU编码" align="center"></el-table-column>
+                    <el-table-column prop="supplierSkuCode" label="供应商SKU编码" align="center"></el-table-column>
+                    <el-table-column prop="skuNum" label="发货数量" align="center">
+                    </el-table-column>
                 </el-table>
             </div>
         </el-card>
@@ -95,99 +96,45 @@
         mixins: [queryDictonary],
         data() {
             return {
-                nav: ['订单管理', '发货单列表','发货单详情'],
-                detailUrl: '',
-                orderId: '',
-                boolFirst: false,
-                boolsec: false,
-                boolThr: false,
-                boolFor: false,
-                isShowPop: false, // 订单标记颜色是否显示
-                isShowPreferential: false, // 优惠活动
-                isShowWarehouse: false, // 更换提货仓
-                orderStatus: '', // 总订单状态: 1:待支付 2:待发货 3:待收货 4:确认收货 5:已完成 6:退货关闭 7:用户关闭 8:超时关闭
-                // pickedUp: '', // 是否自提状态（1.正常 2.自提完成）
-                markArr: [
-                    { label: 'red', value: '1' },
-                    { label: 'skyblue', value: '2' },
-                    { label: 'lightgreen', value: '3' },
-                    { label: 'orange', value: '4' },
-                    { label: 'purple', value: '5' }
-                ],
+                nav: ['订单管理', '发货单列表', '发货单详情'],
+                deliveryNo: '',
                 tableData: [],
-                warehouseArr: [],
-                orderFreeTime: '',
-                orderFinishTime: '',
-                orderFreePayTime: '',
-                agreeMask: false,
-                productId: '',
-                refundForm: {
-                    returnBalance: '',
-                    returnAmounts: '',
-                    returnTokenCoin: '',
-                    outTradeNo: '',
-                    badReason: '',
-                    scrapReason: '',
-                    hadScrap: false // 是否选择产品报损
-                },
-                payType: '',
-                value: [],
-                // 报损原因
-                reasonList: [],
                 // 订单信息
-                orderMsg: {
-                    starIndex: '', // 标记颜色序号
-                    url: '', // 按钮状态(批量)
-                    sinUrl: '', // 按钮状态(单个)
-                    status: '', // 订单状态
-                    star: '', // 星级
-                    adminRemark: ``, // 备注
-                    nickName: '', // 昵称
-                    phone: '', // 联系方式
-                    receiver: '', // 收货人
-                    recevicePhone: '', // 收货人电话
-                    receiveAddress: '', // 收货地址
-                    buyerRemark: ``, // 卖家备注
-                    storehouseName: '', // 提货点
-                    orderNum: '', // 订单号
-                    createTime: '', // 订单创建时间
-                    payTime: '', // 第三方/平台支付时间
-                    deliveryTime: '', // 确认时间
-                    tradeNo: '', // 第三方支付交易号
-                    sendTime: '', // 发货时间
-                    cancleTime: '', // 取消时间
-                    expressName: '', // 物流公司名称
-                    expressNo: '', // 物流单号
-                    freeTimer: '', // 待支付倒计时
-                    confirmTimer: '' // 待确认倒计时
-                }
+                orderDelivery: {},
+                orderProductExpress: [],
+                platformOrder: {}
             };
         },
 
-        created() {
+        activated() {
             // 获取订单信息
-            this.orderId = this.$route.query.orderInfoId;
+            this.deliveryNo = this.$route.query.sendedOrderInfoId;
             this.getInfo();
         },
         methods: {
             //  获取信息
             getInfo() {
-                request.orderDetail({ id: this.orderId }).then(res => {
-                    this.orderMsg = res.data;
+                request.deliveryNo({ deliveryNo: this.deliveryNo }).then(res => {
                     this.tableData = [];
-                    res.data.orderPayRecord = res.data.orderPayRecord ? res.data.orderPayRecord : {};
-                    res.data.orderProductList.forEach((v, k) => {
-                        if (k == 0) {
-                            v.returnProductList = [{ id: 1, salesStatus: '11' }, { id: 1, salesStatus: '22' }];
-                            v.logicList = [{ id: 1, logicStatus: '11' }];
-                        } else {
-                            v.returnProductList = [{ id: 2, salesStatus: '11' }];
-                            v.logicList = [{ id: 2, logicStatus: '11' }, { id: 2, logicStatus: '22' }];
-                        }
-                        const length = v.returnProductList.length > v.logicList.length ? v.returnProductList.length : v.logicList.length;
-                        v.rows = length;
+                    this.orderDelivery = res.data.orderDelivery ? res.data.orderDelivery : {};
+                    this.orderProductExpress = res.data.orderProductExpress ? res.data.orderProductExpress : {};
+                    this.platformOrder = res.data.platformOrder ? res.data.platformOrder : {};
+                    res.data.warehouseOrderProducts.forEach((v, k) => {
+                        const tempTitle = v.specTitle.split('@');
+                        const tempValue = v.specValues.substring(1, v.specValues.length - 1).split('@');
+                        v.spec = [];
+                        tempTitle.forEach((v1, k1) => {
+                            const temp = v1 + ':' + tempValue[k1] + '    ';
+                            v.spec.push(temp);
+                        });
+                        v.spec = v.spec.join('  ');
+                        v.skuNum = '/';
+                        res.data.orderProductExpress.forEach((v1, k1) => {
+                            if (v1.orderProductNo == v.orderProductNo) {
+                                v.skuNum = v1.skuNum;
+                            }
+                        });
                         this.tableData.push(v);
-                        console.log(this.tableData);
                     });
                 }).catch(err => {
                     console.log(err);
@@ -203,12 +150,13 @@
         }
         .wrap{
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             .item-wrap{
                 .item{
                     font-size: 14px;
                     color: #666666;
                     line-height: 30px;
+                    margin-right: 100px;
                     span:first-child{
                         display: inline-block;
                         width: 100px;

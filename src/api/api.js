@@ -265,7 +265,6 @@ export const findDepartmentById = '/department/findDepartmentById';
 // 编辑部门
 export const updateDepartment = '/department/updateDepartment';
 
-
 // 物流公司查询
 export const sysExpressQuery = ['/config/sysExpress/query', { methods: 'get'}];
 // 停用某物流公司
@@ -284,3 +283,5 @@ export const addERP = '/config/erp/save';
 export const getERPList = ['/config/erp/query', { methods: 'get' }];
 export const getERP = ['/config/erp/get', { methods: 'get' }];
 
+// 导出
+export const downloadOrderList = '/admin/orderManagement/orders/export';

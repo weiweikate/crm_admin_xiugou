@@ -98,7 +98,7 @@
             <el-table-column label="预约购买人数" align="center" min-width="60">
                 <template slot-scope="scope">{{scope.row.reseCount?scope.row.reseCount:'0'}}</template>
             </el-table-column>
-            <el-table-column label="订单实付金额" align="center" min-width="60">
+            <el-table-column label="订单总金额" align="center" min-width="60">
                 <template slot-scope="scope">
                     ￥{{scope.row.payTotal?scope.row.payTotal:'0'}}
                 </template>
