@@ -319,6 +319,11 @@
                         <el-input v-model="scope.row.groupPrice"></el-input>
                     </template>
                 </el-table-column>
+                <el-table-column label="最低支付价" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.minPrice"></el-input>
+                    </template>
+                </el-table-column>
                 <el-table-column label="结算价" align="center">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.settlementPrice"></el-input>
@@ -652,6 +657,7 @@
                     v.v5 = this.batchPriceArr[0].v5;
                     v.v6 = this.batchPriceArr[0].v6;
                     v.groupPrice = this.batchPriceArr[0].groupPrice;
+                    v.minPrice = this.batchPriceArr[0].minPrice;
                     v.settlementPrice = this.batchPriceArr[0].settlementPrice;
                     v.weight = this.batchPriceArr[0].weight;
                     this.$set(this.priceTable, k, v);
