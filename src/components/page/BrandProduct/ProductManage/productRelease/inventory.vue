@@ -107,11 +107,12 @@
                     </el-button>
                 </el-form-item>
                 <div class="pro-title">价格信息</div>
-                <el-form-item label="销售价格">
+                <el-form-item>
+                    <label class="require" slot="label">销售价格</label>
                     <el-button :disabled="disabled" type="primary" class="mb10" @click="batchPrice = true">批量输入
                     </el-button>
-                    <el-table :data="priceTable" border stripe header-cell-class-name="require">
-                        <el-table-column v-if="!flag" prop="propertyValues" label="属性" width="225" align="center" class="aaa">
+                    <el-table :data="priceTable" border stripe :header-cell-class-name="handleTableStar">
+                        <el-table-column v-if="!flag" prop="propertyValues" label="属性" width="225" align="center">
                             <template slot-scope="scope">
                                 {{scope.row.propertyValues.split('@').join('-')}}
                             </template>
@@ -178,8 +179,7 @@
                         </el-table-column>
                         <el-table-column label="最低支付价" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="disabled" :controls="false" :min="0"
-                                                 v-model.number="scope.row.minPrice"></el-input-number>
+                                <el-input :disabled="disabled" v-model.number="scope.row.minPrice"></el-input>
                             </template>
                         </el-table-column>
                         <el-table-column label="重量（kg）" align="center" width="225">
@@ -319,6 +319,11 @@
                         <el-input v-model="scope.row.groupPrice"></el-input>
                     </template>
                 </el-table-column>
+                <el-table-column label="最低支付价" align="center">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.minPrice"></el-input>
+                    </template>
+                </el-table-column>
                 <el-table-column label="结算价" align="center">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.settlementPrice"></el-input>
@@ -427,7 +432,7 @@
                     return false;
                 }
             },
-            canHandle(){
+            canHandle() {
                 if ((this.status !== 3 && this.status !== 4)) {
                     return true;
                 } else {
@@ -477,7 +482,7 @@
                 request.addProducts(data).then(res => {
                     this.subformBtn = false;
                     this.$message.success(res.msg);
-                    this.$router.push({ path: '/prodInfo', query: { prodCode: res.data.prodCode } });
+                    this.$router.push({ path: '/prodInfo', query: { prodCode: res.data.prodCode }});
                 }).catch(err => {
                     this.subformBtn = false;
                     console.log(err);
@@ -652,6 +657,7 @@
                     v.v5 = this.batchPriceArr[0].v5;
                     v.v6 = this.batchPriceArr[0].v6;
                     v.groupPrice = this.batchPriceArr[0].groupPrice;
+                    v.minPrice = this.batchPriceArr[0].minPrice;
                     v.settlementPrice = this.batchPriceArr[0].settlementPrice;
                     v.weight = this.batchPriceArr[0].weight;
                     this.$set(this.priceTable, k, v);
@@ -845,9 +851,13 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null } });
+                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null }});
                 }).catch(() => {
                 });
+            },
+            // 价格表头星号提示
+            handleTableStar({ row, column, rowIndex, columnIndex }) {
+                if (columnIndex !== 11) return 'require';
             }
         }
     };

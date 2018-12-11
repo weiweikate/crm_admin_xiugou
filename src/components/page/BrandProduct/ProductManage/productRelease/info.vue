@@ -76,7 +76,7 @@
                     </el-upload>
                 </el-form-item>
                 <div class="pro-title">物流信息</div>
-                <el-form-item prop="needDeliver" label="是否需要发货">
+                <el-form-item v-if="showDeliver" prop="needDeliver" label="是否需要发货">
                     <el-select v-model="form.needDeliver">
                         <el-option label="是" value="true"></el-option>
                         <el-option label="否" value="false"></el-option>
@@ -117,8 +117,8 @@
                 <el-form-item prop="flatService" label="平台服务">
                     <el-checkbox-group v-model="form.flatService">
                         <el-checkbox :label="1">支持使用优惠券</el-checkbox>
-                        <el-checkbox :label="2">提供发票</el-checkbox>
-                        <el-checkbox :label="4">支持7天无理由退换</el-checkbox>
+                        <el-checkbox :disabled="provideInvoice" :label="2">提供发票</el-checkbox>
+                        <el-checkbox :disabled="provideChange" :label="4">支持7天无理由退换</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item prop="afterSaleServiceDays" label="售后保障">
@@ -209,6 +209,7 @@
                     upType: [{ required: true, message: '请选择上架时间', trigger: 'blur' }],
                     autoUnShelve: [{ required: true, message: '请选择是否自动下架', trigger: 'blur' }]
                 },
+                prodType: '', // 商品类型
                 freightList: [], // 运费模板
                 imgList: [], // 商品主图
                 imgInfoList: [], // 商品详情
@@ -233,6 +234,30 @@
                 } else {
                     return false;
                 }
+            },
+            // 是否显示发货
+            showDeliver() {
+                if (this.prodType == 1 || this.prodType == 2) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            // 是否提供发票
+            provideInvoice() {
+                if (this.prodType == 3) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            // 是否支持七天无理由退换
+            provideChange() {
+                if (this.prodType == 3 || this.prodType == 4) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         },
         created() {
@@ -244,64 +269,68 @@
         methods: {
             // 提交表单
             submitForm() {
-                if (!this.form.upTime) this.form.upTime = [];
-                let restrictions = 0;
-                if (this.form.flatService.includes(1)) restrictions += 1;
-                if (this.form.flatService.includes(2)) restrictions += 2;
-                if (this.form.flatService.includes(4)) restrictions += 4;
-                const tags = [];
-                if (this.selectedTagArr.length !== 0) {
-                    this.selectedTagArr.forEach(v => {
-                        const obj = {
-                            tagName: v.label,
-                            tagId: v.value
-                        };
-                        tags.push(obj);
-                    });
-                }
-                const content = [];
-                this.productDetailPicList.forEach(item => {
-                    content.push(item.url);
-                });
-                const data = {
-                    ...this.form,
-                    videoUrl: this.form.videoUrl,
-                    imgUrl: this.imgList[0],
-                    content: content.join(','),
-                    needDeliver: this.form.needDeliver,
-                    freightTemplateId: this.form.freightTemplateId,
-                    undeliveredList: this.unSupportAreasData,
-                    upType: this.form.upType,
-                    upTime: this.form.upType == '2' ? this.$utils.formatTime(this.form.upTime) : '',
-                    buyLimit: this.form.limitBuyNum,
-                    restrictions: restrictions,
-                    autoUnShelve: this.form.autoUnShelve,
-                    tagList: tags,
-                    prodCode: this.prodCode,
-                    paramList: this.form.paramList,
-                    skuList: this.form.skuList
-                };
-                if (this.imgList.length == 0 || this.imgList.length == 1) {
-                    data.imgFileList = [];
-                } else {
-                    this.imgList.splice(0, 1);
-                    const arr = [];
-                    this.imgList.forEach(v => {
-                        arr.push({
-                            originalImg: v,
-                            smallImg: v
+                this.$refs['form'].validate((valid) => {
+                    if (valid) {
+                        if (!this.form.upTime) this.form.upTime = [];
+                        let restrictions = 0;
+                        if (this.form.flatService.includes(1)) restrictions += 1;
+                        if (this.form.flatService.includes(2)) restrictions += 2;
+                        if (this.form.flatService.includes(4)) restrictions += 4;
+                        const tags = [];
+                        if (this.selectedTagArr.length !== 0) {
+                            this.selectedTagArr.forEach(v => {
+                                const obj = {
+                                    tagName: v.label,
+                                    tagId: v.value
+                                };
+                                tags.push(obj);
+                            });
+                        }
+                        const content = [];
+                        this.productDetailPicList.forEach(item => {
+                            content.push(item.url);
                         });
-                    });
-                    data.imgFileList = arr;
-                }
-                this.subformBtn = true;
-                request.addProducts(data).then(res => {
-                    this.subformBtn = false;
-                    this.$router.push('/productList');
-                    this.$message.success(res.msg);
-                }).catch(err => {
-                    this.subformBtn = false;
-                    console.log(err);
+                        const data = {
+                            ...this.form,
+                            videoUrl: this.form.videoUrl,
+                            imgUrl: this.imgList[0],
+                            content: content.join(','),
+                            needDeliver: this.showDeliver ? this.form.needDeliver : 'false',
+                            freightTemplateId: this.form.freightTemplateId,
+                            undeliveredList: this.unSupportAreasData,
+                            upType: this.form.upType,
+                            upTime: this.form.upType == '2' ? this.$utils.formatTime(this.form.upTime) : '',
+                            buyLimit: this.form.limitBuyNum,
+                            restrictions: restrictions,
+                            autoUnShelve: this.form.autoUnShelve,
+                            tagList: tags,
+                            prodCode: this.prodCode,
+                            paramList: this.form.paramList,
+                            skuList: this.form.skuList
+                        };
+                        if (this.imgList.length == 0 || this.imgList.length == 1) {
+                            data.imgFileList = [];
+                        } else {
+                            this.imgList.splice(0, 1);
+                            const arr = [];
+                            this.imgList.forEach(v => {
+                                arr.push({
+                                    originalImg: v,
+                                    smallImg: v
+                                });
+                            });
+                            data.imgFileList = arr;
+                        }
+                        this.subformBtn = true;
+                        request.addProducts(data).then(res => {
+                            this.subformBtn = false;
+                            this.$router.push('/productList');
+                            this.$message.success(res.msg);
+                        }).catch(err => {
+                            this.subformBtn = false;
+                            console.log(err);
+                        });
+                    }
                 });
             },
             // 获取产品信息
@@ -315,7 +344,7 @@
                     resData = res.data || {};
                     const limitServer = resData.restrictions || 0;
                     const map = {
-                        0: [1, 4],
+                        0: [],
                         1: [1],
                         2: [2],
                         3: [1, 2],
@@ -325,6 +354,7 @@
                         7: [1, 2, 4]
                     };
                     resData.flatService = map[limitServer];
+                    this.prodType = resData.type || 1;
                     this.form = {
                         ...resData,
                         buyLimit: resData.buyLimit == -1 ? [] : [1],
@@ -349,7 +379,7 @@
                         url: item
                     });
                 });
-                //this.imgInfoList = resData.content ? resData.content.split(',') : [];
+                // this.imgInfoList = resData.content ? resData.content.split(',') : [];
                 await this.getFeightList();
                 let str = '';
                 resData.undeliveredList.forEach(v => {
@@ -401,7 +431,7 @@
                 const arr = ['video/mp4', 'video/rmvb', 'video/avi', 'video/mkv', 'video/wmv'];
                 const isVideo = arr.includes(file.type);
                 const size = (file.size || 0) / 1024 / 1024;
-                return new Promise(function (resolve, reject) {
+                return new Promise(function(resolve, reject) {
                     if (!isVideo) reject();
                     if (size > 3) reject();
                     resolve();
@@ -425,7 +455,7 @@
             beforeUploadImg(file, type) {
                 const that = this;
                 const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
-                return new Promise(function (resolve, reject) {
+                return new Promise(function(resolve, reject) {
                     if (!isJPG) reject('请上传图片');
                     if (type == 'mainImg') {
                         if (that.imgList.length >= 10) reject('最多上传十张图片');
@@ -433,7 +463,7 @@
                     const _URL = window.URL || window.webkitURL;
                     const image = new Image();
                     if (type == 'mainImg') {
-                        image.onload = function () {
+                        image.onload = function() {
                             if (image.width == 800 && image.height == 800) {
                                 that.imageSize = `${image.width}*${image.height}`;
                                 resolve();
@@ -476,7 +506,7 @@
             // 显示区域mask
             chooseArea() {
                 this.unSupportMask = true;
-                let arr = this.unSupportAreasData;
+                const arr = this.unSupportAreasData;
                 for (const i in arr) {
                     arr[i].includeAreaName = arr[i].provinceName + ':' + arr[i].cityNames;
                     arr[i].includeArea = arr[i].provinceCode + ':' + arr[i].cityCodes;
@@ -612,7 +642,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null } });
+                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null }});
                 }).catch(() => {
                 });
             }
