@@ -178,8 +178,7 @@
                         </el-table-column>
                         <el-table-column label="最低支付价" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="disabled" :controls="false" :min="0"
-                                                 v-model.number="scope.row.minPrice"></el-input-number>
+                                <el-input :disabled="disabled" v-model.number="scope.row.minPrice"></el-input>
                             </template>
                         </el-table-column>
                         <el-table-column label="重量（kg）" align="center" width="225">
