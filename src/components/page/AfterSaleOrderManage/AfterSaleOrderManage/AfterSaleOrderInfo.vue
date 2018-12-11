@@ -36,7 +36,7 @@
                         <span>售后类型</span>
                         <span>{{typeArr[orderCustomerServiceInfo.type-1]}}</span>
                     </div>
-                    <div class="item" v-if="orderCustomerServiceInfo.status==1&&orderCustomerServiceInfo.status==2">
+                    <div class="item" v-if="orderCustomerServiceInfo.status==1||orderCustomerServiceInfo.status==2">
                         <span>用户申请退款金额</span>
                         <span>{{orderCustomerServiceInfo.applyRefundAmount|formatMoney}}</span>
                     </div>
@@ -119,7 +119,7 @@
                     </div>
                 </div>-->
             </div>
-            <div style="margin-top: 50px" v-if="orderCustomerServiceInfo.status==4&&orderCustomerServiceInfo.status==5">
+            <div style="margin-top: 50px" v-if="orderCustomerServiceInfo.status==4||orderCustomerServiceInfo.status==5">
                 <div class="title">仓库反馈</div>
                 <div class="item" v-if="orderCustomerServiceInfo.refundWarehouseFeedback">
                     <span>退货仓反馈</span>
