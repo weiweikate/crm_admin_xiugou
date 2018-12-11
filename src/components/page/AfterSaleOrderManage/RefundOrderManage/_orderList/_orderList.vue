@@ -1,21 +1,41 @@
 <template>
     <div class="refund-order-list" v-loading="pageLoading">
         <el-table border :data="tableData">
-            <el-table-column label="退款单号" align="center"></el-table-column>
-            <el-table-column label="售后单号" align="center"></el-table-column>
-            <el-table-column label="仓库订单号" align="center"></el-table-column>
-            <el-table-column label="用户账号" align="center"></el-table-column>
-            <el-table-column label="退款状态" align="center"></el-table-column>
-            <el-table-column label="退款失败原因" align="center"></el-table-column>
-            <el-table-column label="商品实付金额" align="center"></el-table-column>
-            <el-table-column label="申请退款金额" align="center"></el-table-column>
-            <el-table-column label="实际退款金额" align="center"></el-table-column>
-            <el-table-column label="创建时间" align="center"></el-table-column>
-            <el-table-column label="退款备注" align="center"></el-table-column>
-            <el-table-column label="操作" align="center">
+            <el-table-column prop="refundNo" label="退款单号" align="center"></el-table-column>
+            <el-table-column prop="serviceNo" label="售后单号" align="center"></el-table-column>
+            <el-table-column prop="warehouseOrderNo" label="仓库订单号" align="center"></el-table-column>
+            <el-table-column prop="userPhone" label="用户账号" align="center"></el-table-column>
+            <el-table-column prop="" label="退款状态" align="center">
+                <template slot-scope="scope">{{statusArr[scope.row.status-1]}}</template>
+            </el-table-column>
+            <el-table-column prop="message" label="退款失败原因" align="center">
                 <template slot-scope="scope">
-                    <el-button type="primary" @click="refund(scope.row.id,1)">手工退款</el-button>
-                    <el-button type="success" @click="refund(scope.row.id,2)">退款</el-button>
+                    <template v-if="scope.row.message">{{scope.row.message}}</template>
+                    <template v-else>/</template>
+                </template>
+            </el-table-column>
+            <el-table-column prop="payAmount" label="商品实付金额" align="center">
+                <template slot-scope="scope">{{scope.row.payAmount|formatMoney}}</template>
+            </el-table-column>
+            <el-table-column prop="applyRefundAmount" label="申请退款金额" align="center">
+                <template slot-scope="scope">{{scope.row.applyRefundAmount|formatMoney}}</template>
+            </el-table-column>
+            <el-table-column prop="refundAmount" label="实际退款金额" align="center">
+                <template slot-scope="scope">{{scope.row.refundAmount|formatMoney}}</template>
+            </el-table-column>
+            <el-table-column prop="createTime" label="创建时间" align="center">
+                <template slot-scope="scope">{{scope.row.createTime|formatDateAll}}</template>
+            </el-table-column>
+            <el-table-column prop="remarks" label="退款备注" align="center">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.remarks">{{scope.row.remarks}}</template>
+                    <template v-else>/</template>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" min-width="150px">
+                <template slot-scope="scope">
+                    <el-button type="primary" v-if="scope.row.status==1||scope.row.status==3||scope.row.status==4" @click="refund(scope.row,1)">手工退款</el-button>
+                    <el-button type="success" v-if="scope.row.status==1" @click="refund(scope.row,2)">退款</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -32,11 +52,11 @@
         </div>
         <el-dialog title="手工退款备注" :visible.sync="mask">
             <el-form>
-                <el-input type="textarea" v-model="remark" placeholder="请输入手工退款账号等信息" @input="inputRemark" maxlength="50"></el-input>
-                <span>{{count}}/50</span>
+                <el-input type="textarea" v-model="remark" placeholder="仅需操作第三方退款金额，余额由系统自动退回，请详细记录手工退款账号等信息。" @input="inputRemark" maxlength="100"></el-input>
+                <span class="count">{{count}}/100</span>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="refundSure">确 认</el-button>
+                <el-button type="primary" :loading="btnLoading" @click="refundSure">确 认</el-button>
                 <el-button @click="mask=false">取 消</el-button>
             </div>
         </el-dialog>
@@ -51,42 +71,15 @@
         mixins: [myMixinTable],
         data() {
             return {
-                w: {
-                    name: '25%',
-                    price: '8%',
-                    num: '8%',
-                    consignee: '12%',
-                    status: '8%',
-                    collection: '12%',
-                    shipper: '8%',
-                    operate: '15%',
-                    minWidth: '100px'
-                },
-                starArr: [
-                    { label: '红色标记', value: '1' },
-                    { label: '蓝色标记', value: '2' },
-                    { label: '绿色标记', value: '3' },
-                    { label: '黄色标记', value: '4' },
-                    { label: '紫色标记', value: '5' }
-                ],
-                markArr: [
-                    { label: 'red', value: '1' },
-                    { label: 'skyblue', value: '2' },
-                    { label: 'lightgreen', value: '3' },
-                    { label: 'orange', value: '4' },
-                    { label: 'purple', value: '5' }
-                ],
                 tableData: [],
                 pageLoading: false,
                 data: {},
-                // returnType状态
-                returnTypeArr: ['退款', '退货', '换货'],
-                // 售后状态
-                afterSaleStatusArr: ['申请中', '已同意', '已拒绝', '发货中', '云仓发货中', '已完成', '已关闭', '超时关闭'],
-                ids: [],
                 mask: false,
                 count: 0,
-                remark: ''
+                remark: '',
+                row: {},
+                btnLoading: false,
+                statusArr: ['待退款', '退款成功', '三方退款失败', '平台退款失败', '取消退款(关闭)']// 状态: 1.待退款 2.退款成功 3.三方退款失败 4.平台退款失败 5.取消退款(关闭)
             };
         },
         methods: {
@@ -96,7 +89,7 @@
                 this.data.size = this.page.pageSize;
                 this.tableData = [];
                 this.pageLoading = true;
-                request.queryOrderPageList(this.data).then(res => {
+                request.queryRefundPage(this.data).then(res => {
                     this.pageLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
@@ -105,89 +98,36 @@
                     console.log(err);
                 });
             },
-            // 修改星级
-            changeColor(v1, v) {
-                const data = {};
-                data.id = v.id;
-                data.adminStars = v1.value;
-                data.adminRemark = v.adminRemark;
-                request.orderSign(data).then(res => {
-                    this.$message.success(res.msg);
-                    v.starColor = v1.label;
-                    v.isShowPop = false;
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            // 跳到售后详情
-            toAfterSale(id) {
-                sessionStorage.setItem('afterSaleOprId', id);
-                this.$router.push({
-                    path: '/afterSaleOpr',
-                    query: { afterSaleOprId: id }
-                });
-            },
-            // 推送云仓
-            pushCloud(row) {
+            refund(row, num) {
                 const data = {
-                    ids: []
+                    serviceNo: row.serviceNo
                 };
-                if (row) {
-                    data.ids.push(row.id);
-                } else {
-                    data.ids = this.ids;
-                }
-                request.orderSendOut(data).then(res => {
-                    this.$message.success(res.msg);
-                    this.getList(this.page.currentPage);
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            // 订单详情
-            orderInfo(row) {
-                sessionStorage.setItem('orderInfoId', row.id);
-                this.$router.push({ name: 'orderInfo', query: { orderInfoId: row.id }});
-            },
-            // 订单多选框
-            orderCheckBox(row) {
-                if (row.checked) {
-                    this.ids.push(row.id);
-                } else {
-                    this.ids.forEach((v, k) => {
-                        if (v == row.id) {
-                            this.ids.splice(k, 1);
-                        }
-                    });
-                }
-            },
-            // 更改订单状态（单个）
-            changeStatus(row, status) {
-                if (status == 3) {
-                    request.pickUpOrderProduct({ orderProductId: row.id }).then(res => {
-                        this.$message.success(res.data.data);
-                        this.getList(1);
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                }
-            },
-            refund(id, num) {
+                this.row = row;
                 if (num == 1) {
                     this.mask = true;
                 } else {
-                    this.refundRequest();
+                    request.refundAmounts(data).then(res => {
+                        this.$message.success(res.msg);
+                    });
                 }
-            },
-            refundRequest() {
-
             },
             inputRemark() {
                 this.count = this.remark.length;
             },
             // 手工退款
             refundSure() {
-                this.refundRequest();
+                const data = {
+                    refundNo: this.row.refundNo,
+                    remark: this.remark
+                };
+                this.btnLoading = true;
+                request.manualRefund(data).then(res => {
+                    this.$message.success(res.msg);
+                    this.mask = false;
+                    this.btnLoading = false;
+                }).catch(err => {
+                    this.btnLoading = false;
+                });
             }
         }
     };
@@ -262,6 +202,17 @@
         }
         .block {
             margin: 20px 0px;
+        }
+        /deep/.el-dialog{
+            .count{
+                position: absolute;
+                right: 30px;
+                top: 155px;
+            }
+            .el-textarea__inner{
+                height: 100px;
+                resize: none;
+            }
         }
     }
 </style>

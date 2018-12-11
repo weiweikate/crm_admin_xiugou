@@ -4,7 +4,6 @@ import App from './App';
 import router from './router';
 import axios from './api/index.js';
 import ElementUI from 'element-ui';
-import vuex from './store/index';
 import vueQuillEditor from 'vue-quill-editor'; // 引入富文本工具
 import echarts from 'echarts';
 import '@/JS/filter.js'; // 全局过滤器
@@ -14,6 +13,12 @@ import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
 import '@/permission'; // permission control
 import store from '@/stores';
+import * as filters from '@/utils/filter'
+
+// 注册全局过滤器
+Object.keys(filters).forEach(key => {
+    Vue.filter(key, filters[key]);
+});
 
 Vue.use(vueQuillEditor);
 import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
