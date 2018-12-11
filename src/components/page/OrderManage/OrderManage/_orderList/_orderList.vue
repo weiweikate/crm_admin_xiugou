@@ -48,21 +48,22 @@
                         </div>
                     </td>
                     <td>
-                        <span>¥{{value.unitPrice}}</span>
+                        <span>{{value.unitPrice | formatMoney}}</span>
                         <span class="num">{{value.quantity}}</span>
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
-                        应付金额：¥{{value.payAmount}}
+                        应付金额：{{value.payAmount | formatMoney}}
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
                         <div>用户账号：{{v.warehouseOrder.userPhone}}</div>
                         <div>收货人姓名：{{v.warehouseOrder.receiver}}</div>
-                        <div>客服备注：{{v.warehouseOrder.platformRemarks}}</div>
+                        <div v-if="v.warehouseOrder.message">用户留言：{{v.warehouseOrder.message}}</div>
+                        <div v-if="v.warehouseOrder.platformRemarks">平台备注：{{v.warehouseOrder.platformRemarks}}</div>
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
                         <div>供应商：{{v.warehouseOrder.supplierName}}</div>
                         <div>发货仓库：{{warehouseArr[v.warehouseOrder.warehouseType-1]}}</div>
-                        <div>推送状态：{{pushStatusArr[v.warehouseOrder.subStatus]}}</div>
+                        <div v-if="v.warehouseOrder.status==2||v.warehouseOrder.status==3">推送状态：{{pushStatusArr[v.warehouseOrder.subStatus]}}</div>
                         <div>锁定状态：{{lockStatusArr[v.warehouseOrder.lockStatus]}}</div>
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">

@@ -43,10 +43,10 @@
                         <template slot-scope="scope">{{scope.row.orderDelivery?scope.row.orderDelivery.warehouseOrderNo:'/'}}</template>
                     </el-table-column>
                     <el-table-column label="供应商名称" align="center">
-                        <template slot-scope="scope">{{scope.row.orderDelivery.supplierName}}</template>
+                        <template slot-scope="scope">{{scope.row.orderDelivery.supplierName || `/`}}</template>
                     </el-table-column>
                     <el-table-column label="物流费用" align="center">
-                        <template slot-scope="scope">¥{{scope.row.orderDelivery.freightAmount||0}}</template>
+                        <template slot-scope="scope">{{scope.row.orderDelivery.freightAmount | formatMoney}}</template>
                     </el-table-column>
                     <el-table-column label="物流公司" align="center">
                         <template slot-scope="scope">
@@ -136,6 +136,9 @@
                 request.queryDelivery(data).then(res => {
                     that.tableLoading = false;
                     if (!res.data.data) return;
+                    res.data.data.forEach((v, k) => {
+                        v.orderProductExpress = v.orderProductExpress[0] ? v.orderProductExpress[0] : {};
+                    });
                     that.tableData = res.data.data;
                     that.page.totalPage = res.data.totalNum;
                 }).catch(error => {

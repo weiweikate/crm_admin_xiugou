@@ -39,11 +39,14 @@
                <el-table-column prop="tradeNo" label="支付单号" align="center"></el-table-column>
                <el-table-column prop="platformOrderNo" label="平台订单号" align="center"></el-table-column>
                <el-table-column prop="userPhone" label="用户账号" align="center"></el-table-column>
-               <el-table-column prop="title" label="账单标题" align="center"></el-table-column>
+               <el-table-column prop="title" label="账单标题" align="center">
+                   <template slot-scope="scope">{{scope.row.title||`/`}}</template>
+               </el-table-column>
                <el-table-column prop="area" label="账单类型" align="center">
                    <template slot-scope="scope">
                        <template v-if="scope.row.type==1">普通账单</template>
-                       <template v-if="scope.row.type==2">充值账单</template>
+                       <template v-else-if="scope.row.type==2">充值账单</template>
+                       <template v-else>/</template>
                    </template>
                </el-table-column>
                <el-table-column label="支付单状态" align="center">
