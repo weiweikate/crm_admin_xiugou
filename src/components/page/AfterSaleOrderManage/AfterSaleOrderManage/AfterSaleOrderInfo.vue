@@ -290,9 +290,9 @@
         activated() {
             // 获取订单信息
             this.serviceNo = this.$route.query.afterSaleOrderInfoId;
+            utils.cleanFormData(this.form);
             this.getInfo();
             this.getLogic();
-            utils.cleanFormData(this.form);
         },
         methods: {
             //  获取信息
