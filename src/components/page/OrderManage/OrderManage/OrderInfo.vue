@@ -238,17 +238,19 @@
                 </table>
             </div>
         </el-card>
+        <product-dialog v-if="mask" :src="src" :mask="mask" ref="product"></product-dialog>
     </div>
 </template>
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import productDialog from '@/components/common/ProductDialog';
     import utils from '@/utils/index.js';
     import { queryDictonary } from '@/JS/commom';
     import request from '@/http/http.js';
 
     export default {
-        components: { vBreadcrumb },
+        components: { vBreadcrumb, productDialog },
         mixins: [queryDictonary],
         data() {
             return {
@@ -379,8 +381,11 @@
                 if (result != '') result = result.slice(0, -1);
                 return result;
             },
-            toH5() {
-
+            toH5(code) {
+                // this.mask = true;
+                this.src = utils.getSrc(code);
+                console.log(this.$refs)
+                // this.$refs.productArea.$refs.area.html(this.src)
             }
         }
     };
