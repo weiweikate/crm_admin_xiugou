@@ -110,8 +110,8 @@
                 <el-form-item label="销售价格">
                     <el-button :disabled="disabled" type="primary" class="mb10" @click="batchPrice = true">批量输入
                     </el-button>
-                    <el-table :data="priceTable" border stripe header-cell-class-name="require">
-                        <el-table-column v-if="!flag" prop="propertyValues" label="属性" width="225" align="center" class="aaa">
+                    <el-table :data="priceTable" border stripe :header-cell-class-name="handleTableStar">
+                        <el-table-column v-if="!flag" prop="propertyValues" label="属性" width="225" align="center">
                             <template slot-scope="scope">
                                 {{scope.row.propertyValues.split('@').join('-')}}
                             </template>
@@ -848,6 +848,10 @@
                     this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null }});
                 }).catch(() => {
                 });
+            },
+            // 价格表头星号提示
+            handleTableStar({ row, column, rowIndex, columnIndex }) {
+                if (columnIndex !== 11) return 'require';
             }
         }
     };
