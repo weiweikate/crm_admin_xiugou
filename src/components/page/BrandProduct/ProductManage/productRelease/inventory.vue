@@ -107,7 +107,8 @@
                     </el-button>
                 </el-form-item>
                 <div class="pro-title">价格信息</div>
-                <el-form-item label="销售价格">
+                <el-form-item>
+                    <label class="require" slot="label">销售价格</label>
                     <el-button :disabled="disabled" type="primary" class="mb10" @click="batchPrice = true">批量输入
                     </el-button>
                     <el-table :data="priceTable" border stripe :header-cell-class-name="handleTableStar">
