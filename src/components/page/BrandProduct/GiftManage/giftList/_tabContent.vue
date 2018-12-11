@@ -242,13 +242,12 @@ export default {
         },
         // 发布礼包
         releaseProduct() {
-            this.$router.push({ name: 'addGift' });
+            this.$router.push({ path: '/Gift' });
         },
         // 编辑礼包
         editProduct(row) {
-            sessionStorage.setItem('giftId', row.id);
             this.$router.push({
-                name: 'editGift',
+                path: '/Gift',
                 query: { giftId: row.id }
             });
         },
@@ -256,7 +255,7 @@ export default {
         priceOfInventory(row) {
             sessionStorage.setItem('priceOfInventoryId', JSON.stringify({ id: row.id, stockType: row.stockType }));
             this.$router.push({
-                name: 'priceOfInventory',
+                path: '/priceOfInventory',
                 query: { priceOfInventoryId: row.id, stockType: row.stockType }
             });
         },
@@ -264,7 +263,7 @@ export default {
         inventoryManage(row) {
             sessionStorage.setItem('discountAddId', row.id);
             this.$router.push({
-                name: 'discountAdd',
+                path: '/discountAdd',
                 query: { discountAddId: row.id }
             });
         },
@@ -272,14 +271,13 @@ export default {
         expMange(row) {
             sessionStorage.setItem('addStockId', JSON.stringify({ id: row.id, name: row.name }));
             this.$router.push({
-                name: 'addStock',
+                path: '/addStock',
                 query: { addStockId: row.id, name: row.name }
             });
         },
         // 查看详情
         productInfo(row) {
             // 查看详情
-            sessionStorage.setItem('giftId', row.id);
             this.$router.push({
                 name: 'giftInfo',
                 query: { giftId: row.id }
@@ -295,7 +293,7 @@ export default {
         },
         // 批量操作
         batchOperate(status) {
-            if (this.multipleSelection.length == 0) {
+            if (this.multipleSelection.length === 0) {
                 this.$message.warning('请选择礼包!');
                 return;
             }
