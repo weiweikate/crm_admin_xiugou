@@ -52,7 +52,7 @@
                         <span class="num">{{value.quantity}}</span>
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
-                        应付金额：{{value.payAmount | formatMoney}}
+                        应付金额：{{value.totalAmount | formatMoney}}
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
                         <div>用户账号：{{v.warehouseOrder.userPhone}}</div>
