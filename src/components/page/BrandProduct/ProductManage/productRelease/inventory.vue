@@ -427,7 +427,7 @@
                     return false;
                 }
             },
-            canHandle(){
+            canHandle() {
                 if ((this.status !== 3 && this.status !== 4)) {
                     return true;
                 } else {
@@ -477,7 +477,7 @@
                 request.addProducts(data).then(res => {
                     this.subformBtn = false;
                     this.$message.success(res.msg);
-                    this.$router.push({ path: '/prodInfo', query: { prodCode: res.data.prodCode } });
+                    this.$router.push({ path: '/prodInfo', query: { prodCode: res.data.prodCode }});
                 }).catch(err => {
                     this.subformBtn = false;
                     console.log(err);
@@ -845,7 +845,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null } });
+                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null }});
                 }).catch(() => {
                 });
             }

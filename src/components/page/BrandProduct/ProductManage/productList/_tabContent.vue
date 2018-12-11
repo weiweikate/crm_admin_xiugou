@@ -28,8 +28,8 @@
             </el-table-column>
             <el-table-column label="商品售价" align="center" width="180px">
                 <template slot-scope="scope">
-                    <p>{{scope.row.minPrice ? `￥${scope.row.minPrice}` : '-'}}</p>
-                    <p>{{scope.row.maxPrice ? `￥${scope.row.maxPrice}`: '-'}}</p>
+                    <p>{{scope.row.minPrice | formatMoney}}</p>
+                    <p>{{scope.row.maxPrice | formatMoney}}</p>
                 </template>
             </el-table-column>
             <el-table-column prop="status" label="商品状态" align="center">
