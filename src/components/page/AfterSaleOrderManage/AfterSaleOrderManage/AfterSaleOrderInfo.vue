@@ -23,7 +23,7 @@
                     </div>
                     <div class="item">
                         <span>供应商名称</span>
-                        <span>{{orderCustomerServiceInfo.supplierName}}</span>
+                        <span>{{orderCustomerServiceInfo.supplierName||`/`}}</span>
                     </div>
                     <div class="item">
                         <span>用户账号</span>
@@ -38,7 +38,7 @@
                     </div>
                     <div class="item" v-if="orderCustomerServiceInfo.status==1&&orderCustomerServiceInfo.status==2">
                         <span>用户申请退款金额</span>
-                        <span>{{orderCustomerServiceInfo.applyRefundAmount}}</span>
+                        <span>{{orderCustomerServiceInfo.applyRefundAmount|formatMoney}}</span>
                     </div>
                     <div class="item">
                         <span>售后状态</span>
@@ -163,18 +163,18 @@
                     <el-table-column prop="supplierSkuCode" label="供应商SKU编码" align="center"></el-table-column>
                     <el-table-column prop="unitPrice" label="实付单价" align="center">
                         <template slot-scope="scope">
-                            ¥{{scope.row.unitPrice||0}}
+                            {{scope.row.unitPrice|formatMoney}}
                         </template>
                     </el-table-column>
                     <el-table-column prop="quantity" label="售后数量" align="center"></el-table-column>
                     <el-table-column prop="tokenCoinAmount" label="一元券" align="center">
                         <template slot-scope="scope">
-                            ¥{{scope.row.tokenCoinAmount||0}}
+                            {{scope.row.tokenCoinAmount|formatMoney}}
                         </template>
                     </el-table-column>
                     <el-table-column prop="payAmount" label="实付金额" align="center">
                         <template slot-scope="scope">
-                            ¥{{scope.row.payAmount||0}}
+                            {{scope.row.payAmount|formatMoney}}
                         </template>
                     </el-table-column>
                 </el-table>
@@ -260,6 +260,7 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import { queryDictonary } from '@/JS/commom';
     import request from '@/http/http.js';
+    import utils from '@/utils/index';
 
     export default {
         components: { vBreadcrumb },
@@ -289,6 +290,7 @@
         activated() {
             // 获取订单信息
             this.serviceNo = this.$route.query.afterSaleOrderInfoId;
+            utils.cleanFormData(this.form);
             this.getInfo();
             this.getLogic();
         },

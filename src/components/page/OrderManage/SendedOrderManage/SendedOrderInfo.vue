@@ -31,7 +31,7 @@
                     </div>
                     <div class="item">
                         <span>物流费用</span>
-                        <span>¥{{orderDelivery.freightAmount||0}}</span>
+                        <span>{{orderDelivery.freightAmount | formatMoney}}</span>
                     </div>
                     <div class="item">
                         <span>发货单创建时间</span>
