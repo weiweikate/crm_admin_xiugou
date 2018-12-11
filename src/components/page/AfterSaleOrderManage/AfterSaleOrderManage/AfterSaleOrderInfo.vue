@@ -15,7 +15,7 @@
                     </div>
                     <div class="item">
                         <span>订单状态</span>
-                        <span>{{statusArr[warehouseOrderProduct.status-1]}}</span>
+                        <span>{{statusArr[orderInfo.status-1]}}</span>
                     </div>
                     <div class="item">
                         <span>售后单号</span>
@@ -54,15 +54,16 @@
                     </div>
                     <div class="item">
                         <span>问题描述</span>
-                        <span>{{orderCustomerServiceInfo.description}}</span>
+                        <span>{{orderCustomerServiceInfo.description||`/`}}</span>
                     </div>
                     <div class="item">
                         <span>图片信息</span>
-                        <span>
+                        <span v-if="orderCustomerServiceInfo.imgList.length">
                             <viewer :images="orderCustomerServiceInfo.imgList">
                                 <img v-for="(item,index) in orderCustomerServiceInfo.imgList" :key="index" :src="item" alt="">
                             </viewer>
                         </span>
+                        <span v-else>/</span>
                     </div>
                 </div>
                <!-- <div class="item-wrap">
@@ -278,7 +279,7 @@
                 refundExpress: {},
                 supplierRefundAddress: {},
                 warehouseOrderProduct: {},
-                statusArr: ['待支付', '待发货', '待收货', '已完成', '交易关闭 '], // 订单状态
+                statusArr: ['待支付', '待发货', '待收货', '交易完成', '交易关闭 '], // 订单状态
                 refundStatusArr: ['待审核', '待商品寄回', '待仓库确认', '待平台处理', '售后完成 ', '售后关闭'], // 售后状态
                 typeArr: ['仅退款', '退货退款 ', '换货'], // 类型
                 btnLoading: false,
