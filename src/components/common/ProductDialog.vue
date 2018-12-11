@@ -1,6 +1,6 @@
 <template>
     <el-dialog title="商品预览"  :visible.sync="mask">
-        <div ref="area"></div>
+        <iframe ref="area"></iframe>
     </el-dialog>
 </template>
 
@@ -9,8 +9,8 @@
         name: 'ProductDialog',
         props: ['src', 'mask'],
         mounted() {
-            // console.log(this.$refs);
-            // this.$refs.productArea.html(this.src);
+            console.log(this.src);
+            this.$refs.area.src = this.src;
         }
     };
 </script>

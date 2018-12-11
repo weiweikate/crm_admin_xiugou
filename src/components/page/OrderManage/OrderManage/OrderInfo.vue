@@ -49,11 +49,12 @@
                     <!--交易关闭-->
                     <div class="item" v-if="warehouseOrder.status==5">
                         <span>关闭时间</span>
-                        <span>{{warehouseOrder.finishTime|formatDateAll}}</span>
+                        <span v-if="warehouseOrder.subStatus==4">{{warehouseOrder.finishTime|formatDateAll}}</span>
+                        <span v-else>{{warehouseOrder.cancelTime|formatDateAll}}</span>
                     </div>
                     <div class="item" v-if="warehouseOrder.status==5">
                         <span>关闭原因</span>
-                        <span>{{subStatusArr[customerServiceInfos.subStatus]}}</span>
+                        <span>{{subStatusArr[warehouseOrder.subStatus]||`/`}}</span>
                     </div>
                 </div>
                 <div class="item-wrap">
@@ -238,7 +239,7 @@
                 </table>
             </div>
         </el-card>
-        <product-dialog v-if="mask" :src="src" :mask="mask" ref="product"></product-dialog>
+        <product-dialog v-show="mask" :src="src" :mask="mask"></product-dialog>
     </div>
 </template>
 
@@ -382,13 +383,12 @@
                 return result;
             },
             toH5(code) {
-                // this.mask = true;
+                this.mask = true;
                 this.src = utils.getSrc(code);
-                console.log(this.$refs)
-                // this.$refs.productArea.$refs.area.html(this.src)
             }
         }
     };
+
 </script>
 <style lang='less'>
     .order-info {
