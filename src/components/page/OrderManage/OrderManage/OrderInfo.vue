@@ -53,7 +53,7 @@
                     </div>
                     <div class="item" v-if="warehouseOrder.status==5">
                         <span>关闭原因</span>
-                        <span>{{subStatusArr[customerServiceInfos.subStatus]}}</span>
+                        <span>{{subStatusArr[warehouseOrder.subStatus]}}</span>
                     </div>
                 </div>
                 <div class="item-wrap">
