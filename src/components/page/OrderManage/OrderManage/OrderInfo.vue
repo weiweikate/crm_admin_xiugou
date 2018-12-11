@@ -201,8 +201,8 @@
                         <td :rowspan="v.rows" v-if="k1==0" style="width: 400px">
                             <div class="name">
                                 <img :src="v.specImg" alt="">
-                                <!--<span class="pro-name color-blue" @click="toH5(v.prodCode)">{{v.productName}}</span>-->
-                                <span class="pro-name">{{v.productName}}</span>
+                                <span class="pro-name color-blue" @click="toH5(v.prodCode)">{{v.productName}}</span>
+                                <!--<span class="pro-name">{{v.productName}}</span>-->
                                 <span class="pro-spec">{{v.spec}}</span>
                             </div>
                         </td>
@@ -378,6 +378,9 @@
                 }
                 if (result != '') result = result.slice(0, -1);
                 return result;
+            },
+            toH5() {
+
             }
         }
     };
