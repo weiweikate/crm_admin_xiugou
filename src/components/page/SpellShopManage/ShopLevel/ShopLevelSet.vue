@@ -22,9 +22,9 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center" minWidth="300">
                     <template slot-scope="scope">
-                        <el-button @click="shopPromotion(scope.row)" type="primary">晋级设置</el-button>
-                        <el-button @click="shopDemotion(scope.row)" type="success">降级设置</el-button>
-                        <el-button @click="editShopLevel(scope.row)" type="warning">编辑</el-button>
+                        <el-button @click="shopPromotion(scope.row)" type="primary" v-auth="'pindian.shopLevelSet.jssz'">晋级设置</el-button>
+                        <el-button @click="shopDemotion(scope.row)" type="success" v-auth="'pindian.shopLevelSet.jjsz'">降级设置</el-button>
+                        <el-button @click="editShopLevel(scope.row)" type="warning" v-auth="'pindian.shopLevelSet.bj'">编辑</el-button>
                         <!--<el-button @click="delItem(scope.row.id)" type="danger">删除</el-button>-->
                     </template>
                 </el-table-column>
@@ -110,13 +110,13 @@
                 });
             },
             // 添加店铺等级
-            addShopLevel() {
-                this.diaTitle = '添加店铺等级';
-                utils.cleanFormData(this.form);
-                this.isShowAddShopLevel = true;
-                this.itype = 'add';
-                this.getMaxLevel();
-            },
+            // addShopLevel() {
+            //     this.diaTitle = '添加店铺等级';
+            //     utils.cleanFormData(this.form);
+            //     this.isShowAddShopLevel = true;
+            //     this.itype = 'add';
+            //     this.getMaxLevel();
+            // },
             // 编辑店铺
             editShopLevel(row) {
                 this.diaTitle = '编辑店铺等级';

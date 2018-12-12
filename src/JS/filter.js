@@ -20,6 +20,7 @@ Vue.filter('formatDateToMinute', function(value) {
     return moment(value).format('YYYY-MM-DD HH:mm');
 });
 Vue.filter('handleMoney', function(val) {
+    if (!val) return '-';
     return `￥${val}`;
 });
 Vue.filter('bankCard', function(value) {

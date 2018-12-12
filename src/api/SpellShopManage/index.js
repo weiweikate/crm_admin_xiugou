@@ -13,7 +13,7 @@ export const getStoreBonusPageList = ['/store/storeBonus/query', { methods: 'get
 // 分红详情
 export const getDealerBonusList = '/storeBonus/getDealerBonusList'; // 暂时不做
 // 成员列表
-export const getStoreMembers = ['/store/storeUser/query', { methods: 'get' }];
+export const getStoreMembers = '/store/storeUser/query';
 
 // 店铺公告
 // 修改数据
@@ -31,3 +31,5 @@ export const getStoreDetail = ['/store/store/getById', { methods: 'get' }];
 export const updateStoreStar = '/store/storeStar/update';
 // 店铺举报列表
 export const getStoreTipOffList = ['/store/storeTipOff/query', { methods: 'get' }];
+// 根据id修改店铺层级
+export const updateShopLevel = ['/store/store/updateLevel', { methods: 'get' }];

@@ -10,18 +10,18 @@ export function getInfo(token) {
     return request['findAdminUserbyId']({ id: token }).then(res => {
         let data = res.data || {};
         // todo 前端白名单 超级管理员权限
-        const phoneArr = ['18258147420', '15869000373', '13735533492', '17601056863', '18667159736', '15715811438'];
+        const phoneArr = ['18458866522'];
         if (phoneArr.includes(data.telephone)) {
             res.data.roles = ['admin'];
         } else {
             res.data.roles = ['user'];
         }
         // 兼容新老版本 如果不存在这个字段则赋予所有页面权限
-        if (!res.data.privateInfo) {
-            res.data._auth = authRouterList;
+        if (!res.data.privilegeInfo) {
+            res.data._auth = [];
         } else {
-            if (typeof res.data.privateInfo === 'string') {
-                res.data._auth = res.data.privateInfo.split(',');
+            if (typeof res.data.privilegeInfo === 'string') {
+                res.data._auth = res.data.privilegeInfo.split(',');
             }
         }
 

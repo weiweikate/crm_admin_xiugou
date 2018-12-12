@@ -29,8 +29,8 @@
                         <el-table-column label="选择" align="center" width="150px">
                             <template slot-scope="scope">
                                 <el-radio @change="selectPro(scope.row)" v-model="chooseId"
-                                          :disabled="scope.row.stock==0" :label="scope.row.id"
-                                          :value='scope.id'>选择<span v-if="scope.row.stock==0"
+                                          :disabled="scope.row.sellStock==0" :label="scope.row.skuCode"
+                                          :value='scope.row.skuCode'>选择<span v-if="scope.row.sellStock==0"
                                                                     class="color-red">(无库存)</span>
                                 </el-radio>
                             </template>
@@ -54,7 +54,7 @@
 
     export default {
         components: {},
-        props: ['productId', 'activityType', 'searchProductId', 'searchProductName'],
+        props: ['prodCode', 'activityType', 'searchProductId', 'searchProductName'],
         data() {
             return {
                 keyWords: '', // 关键字搜索
@@ -82,7 +82,7 @@
             this.keyWords = '';
             this.resultTip = '';
             this.showResult = false;
-            this.chooseId = this.productId;
+            this.chooseId = this.prodCode;
         },
         methods: {
             //  提交表单
@@ -114,10 +114,13 @@
                     }
                 } else {
                     this.noResult = false;
-                    request.queryProductSpecByproductId({ productId: this.keyWordsID }).then(res => {
+                    request.queryByProductCode({ code: this.keyWordsID }).then(res => {
                         if (!res.data) return;
                         this.tableData = [];
-                        this.tableData = res.data;
+                        res.data.forEach((v, k) => {
+                            v.spec = v.propertyValues.replace(/@/g, '');
+                            this.tableData.push(v);
+                        });
                         this.showResult = true;
                     });
                 }
@@ -140,6 +143,7 @@
                         const o = {};
                         o.value = `${v.name} 产品ID：${v.prodCode}`;
                         o.id = v.id;
+                        o.skuCode = v.skuCode;
                         o.productNum = v.productNum;
                         o.flagStatus = v.flagStatus;
                         o.name = v.name;
@@ -152,7 +156,7 @@
             },
             // 模糊查询id
             handleSelect(item) {
-                this.keyWordsID = item.id;
+                this.keyWordsID = item.prodCode;
                 this.productNum = item.productNum;
                 this.flagStatus = item.flagStatus;
                 this.status = item.status;
@@ -161,7 +165,7 @@
             },
             // 选择商品操作
             selectPro(row) {
-                this.chooseId = row.id;
+                this.chooseId = row.skuCode;
                 if (!row.specImg) {
                     row.specImg = row.imgUrl;
                 }

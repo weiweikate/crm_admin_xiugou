@@ -19,7 +19,7 @@
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>店铺ID：{{detail.storeNumber}}</span>
+                            <span>店铺ID：{{detail.showNumber}}</span>
                         </p>
                     </div>
                     <div class="shop-right">
@@ -36,7 +36,7 @@
                     </div>
                     <div class="shop-right">
                         <p class="shop-msg">
-                            <span>店铺经验：{{detail.experience||0}}</span>
+                            <span>店铺Exp：{{detail.experience||0}}</span>
                         </p>
                     </div>
                 </div>

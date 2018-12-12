@@ -64,9 +64,8 @@
                 <span style="margin-left:30px">达成分红次数1次，则获得</span>
             </p>
             <p class="dialog-item">
-                <span class="dialog-title">获得经验值</span>
-                <el-input class="dialog-inp" v-model="form.upgradeBonusNumPerExp" placeholder="请输入数值"></el-input>
-                分
+                <el-input style="margin-left:30px" class="dialog-inp" v-model="form.upgradeBonusNumPerExp" placeholder="请输入数值"></el-input>
+                点Exp
             </p>
             <span slot="footer">
             <el-button type="primary" @click="sure(2)">确 定</el-button>
@@ -79,9 +78,8 @@
                 <span style="margin-left:30px">总交易额增加1元，则增加</span>
             </p>
             <p class="dialog-item">
-                <span class="dialog-title">获得经验值</span>
-                <el-input class="dialog-inp" v-model="form.upgradeTotleSalesAddPerExp" placeholder="请输入数值"></el-input>
-                分
+                <el-input style="margin-left:30px" class="dialog-inp" v-model="form.upgradeTotleSalesAddPerExp" placeholder="请输入数值"></el-input>
+                点Exp
             </p>
             <span slot="footer">
             <el-button type="primary" @click="sure(3)">确 定</el-button>
@@ -97,9 +95,9 @@
                 元
             </p>
             <p class="dialog-item">
-                <span class="dialog-title">获得经验值</span>
+                <span class="dialog-title">获得</span>
                 <el-input class="dialog-inp" v-model="form.upgradeWeekSalesNumExp" placeholder="请输入数值"></el-input>
-                分
+                点Exp
             </p>
             <span slot="footer">
             <el-button type="primary" @click="sure(4)">确 定</el-button>
@@ -115,9 +113,9 @@
                 次
             </p>
             <p class="dialog-item">
-                <span class="dialog-title">获得经验值</span>
+                <span class="dialog-title">获得</span>
                 <el-input class="dialog-inp" v-model="form.upgradeWeekSalesFreqExp" placeholder="请输入数值"></el-input>
-                分
+                点Exp
             </p>
             <span slot="footer">
             <el-button type="primary" @click="sure(5)">确 定</el-button>
@@ -132,9 +130,9 @@
                 元
             </p>
             <p class="dialog-item">
-                <span class="dialog-title">获得经验值</span>
+                <span class="dialog-title">获得</span>
                 <el-input class="dialog-inp" v-model="form.upgradeOrderPriceExp" placeholder="请输入数值"></el-input>
-                分
+                点Exp
             </p>
             <span slot="footer">
             <el-button type="primary" @click="sure(6)">确 定</el-button>
@@ -147,9 +145,8 @@
                 <span style="margin-left:30px">每增加1人则获得</span>
             </p>
             <p class="dialog-item">
-                <span class="dialog-title">获得经验值</span>
-                <el-input class="dialog-inp" v-model="form.upgradeUserAddOneExp" placeholder="请输入数值"></el-input>
-                分
+                <el-input style="margin-left:30px" class="dialog-inp" v-model="form.upgradeUserAddOneExp" placeholder="请输入数值"></el-input>
+                点Exp
             </p>
             <span slot="footer">
             <el-button type="primary" @click="sure(7)">确 定</el-button>

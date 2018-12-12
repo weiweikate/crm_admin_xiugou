@@ -55,3 +55,39 @@ npm run server
 ```
 
 > 
+
+# 组件
+
+## Clipboard 复制
+
+```bash
+import Clipboard from 'clipboard';
+
+<el-button @click="copy" :data-clipboard-text="modalData.secret" id="copy">复制</el-button>
+
+clipboard.on('success', () => {
+    this.$message.success('复制成功');
+});
+```
+
+#路由与权限
+
+需要权限的路由需要在auth.json里配置  如果不需要权限任何人都能访问的话可以在路由配置中加上`default:true`
+
+``` js
+{
+    path: '/logistics',
+    component: Layout,
+    name: 'logistics',
+    meta: { title: '物流管理', icon: 'icon-shezhi' },
+    default: true,
+    children: [
+        {
+            name: 'logisticsCompanyList',
+            path: '/logisticsCompanyList',
+            component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
+            meta: { title: '物流公司列表'}
+        }
+    ]
+}
+```

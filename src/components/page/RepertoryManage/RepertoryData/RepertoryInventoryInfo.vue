@@ -6,7 +6,9 @@
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="name" label="产品名称" align="center"></el-table-column>
                 <el-table-column prop="skuCode" label="商品编码" align="center"></el-table-column>
-                <el-table-column prop="specifyValues" label="规格" align="center"></el-table-column>
+                <el-table-column label="规格" align="center">
+                    <template slot-scope="scope">{{scope.row.specifyValues.replace(/@/g,' ')}}</template>
+                </el-table-column>
                 <el-table-column label="仓库总库存数" align="center">
                     <template slot-scope="scope">{{scope.row.totalCount}}件</template>
                 </el-table-column>
@@ -60,8 +62,8 @@ export default {
         // 获取数据
         getList(val) {
             const data = {
-                productId: this.productId,
-                warehouseId: this.warehouseId,
+                prodCode: this.productId,
+                warehouseCode: this.warehouseId,
                 page: val,
                 pageSize: this.page.pageSize
             };

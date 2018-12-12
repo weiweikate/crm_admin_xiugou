@@ -26,11 +26,16 @@
             <el-table :data="tableData" border :height="height">
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="店铺名称" align="center"></el-table-column>
-                <el-table-column prop="storeNumber" label="店铺ID" align="center"></el-table-column>
+                <el-table-column prop="showNumber" label="店铺ID" align="center"></el-table-column>
+                <el-table-column prop="storeNumber" label="店铺内部编号" align="center"></el-table-column>
                 <el-table-column prop="storeUserName" label="店长" align="center"></el-table-column>
                 <el-table-column prop="storeUserNum" label="招募成员" align="center">
                     <template slot-scope="scope">
-                        <template><span @click="toUserList(scope.row)" class="color-blue">{{scope.row.storeUserNum||0}}</span></template>                    </template>
+                        <template>
+                            <span v-if="hasAuth" @click="toUserList(scope.row)" class="color-blue">{{scope.row.storeUserNum||0}}</span>
+                            <span v-else>{{scope.row.storeUserNum||0}}</span>
+                        </template>
+                    </template>
                 </el-table-column>
                 <el-table-column label="创建时间" align="center">
                     <template slot-scope="scope" v-if='scope.row.createTime'>
@@ -40,7 +45,7 @@
                 <!--<el-table-column prop="id" label="是否开启推荐" align="center"></el-table-column>-->
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button type="primary" @click='showInfo(scope.row)'>查看详情</el-button>
+                        <el-button type="primary" @click='showInfo(scope.row)' v-auth="'pindian.recruitShopManage.ckxq'">查看详情</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -80,7 +85,8 @@ export default {
                 date: ''
             },
             tableData: [],
-            height: ''
+            height: '',
+            hasAuth: ''// 是否有查看下级的权限
         };
     },
     created() {
@@ -89,6 +95,7 @@ export default {
     },
     activated() {
         this.getList(this.page.currentPage);
+        this.hasAuth = this.$oprAuth('vip.memberManage.xjck');
     },
     methods: {
         // 获取数据

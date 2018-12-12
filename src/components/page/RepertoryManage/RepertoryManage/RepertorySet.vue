@@ -8,12 +8,13 @@
                         <el-option value="1" label="自建仓">自建仓</el-option>
                         <el-option value="2" label="加盟仓">加盟仓</el-option>
                         <el-option value="3" label="供应商仓">供应商仓</el-option>
+                        <el-option value="4" label="虚拟仓">虚拟仓</el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="supplierCode" label="供应商ID" v-if="form.type==3">
+                <el-form-item prop="supplierCode" label="供应商ID" v-if="form.type==3||form.type==4">
                     <el-autocomplete class="inp" placeholder="请输入供应商ID" v-model="form.supplierCode" :fetch-suggestions="querySearchAsyncById" @select="handleSelect"></el-autocomplete>
                 </el-form-item>
-                <el-form-item prop="supplierName" label="供应商名称" v-if="form.type==3">
+                <el-form-item prop="supplierName" label="供应商名称" v-if="form.type==3||form.type==4">
                     <el-autocomplete class="inp" placeholder="请输入供应商名称" v-model="form.supplierName" :fetch-suggestions="querySearchAsyncByName" @select="handleSelect"></el-autocomplete>
                 </el-form-item>
                 <el-form-item prop="joinWarehouseType" label="加盟仓类型" v-if="form.type==2">
@@ -231,7 +232,7 @@
                     if (!valid) return;
                     const data = this[formName];
                     if (this.type == 2) {
-                        data.id = this.id;
+                        data.code = this.id;
                     }
                     if (this.form.type == 1) {
                         data.supplierCode = '';
@@ -310,7 +311,7 @@
             },
             getDetail() {
                 const data = {
-                    id: this.id
+                    code: this.id
                 };
                 request.queryRepertoryById(data).then(res => {
                     this.form = res.data;

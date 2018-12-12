@@ -70,6 +70,9 @@ a {
 .el-table tr:hover {
     background: #f6faff;
 }
+.el-table{
+ color: #5a5a5a;
+}
 
 .mgb20 {
     margin-bottom: 20px;

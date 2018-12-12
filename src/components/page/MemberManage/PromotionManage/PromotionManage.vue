@@ -22,6 +22,9 @@
                     <p class="title">邀请推荐维度</p>
                     <el-button type="success" @click="showMask(2)">设置直接邀请条件</el-button>
                     <el-button type="success" @click="showMask(3)">设置间接邀请条件</el-button>
+                    <el-button type="success" @click="showMask(11)">签到</el-button>
+                    <el-button type="success" @click="showMask(12)">分享</el-button>
+                    <el-button type="success" @click="showMask(13)">分享被点击</el-button>
                     <!--<el-button type="success">设置个人活跃条件</el-button>-->
                     <!--<el-button type="success">设置团队活跃条件</el-button>-->
                 </div>
@@ -30,9 +33,10 @@
                     <el-button type="success" @click="showMask(4)">设置个人交易额条件</el-button>
                     <el-button type="success" @click="showMask(5)">设置直接交易额条件</el-button>
                     <el-button type="success" @click="showMask(6)">设置间接交易额条件</el-button>
-                    <el-button type="success" @click="showMask(7)">设置连续交易额条件</el-button>
-                    <el-button type="success" @click="showMask(8)">设置连续交易额频次条件</el-button>
+                    <el-button type="success" @click="showMask(7)">周交易额</el-button>
+                    <el-button type="success" @click="showMask(8)">周交易频率</el-button>
                     <el-button type="success" @click="showMask(9)">设置一次性交易条件</el-button>
+                    <el-button type="success" @click="showMask(14)">奖励金获得</el-button>
                 </div>
                 <!--<div>-->
                     <!--<p class="title">充值</p>-->
@@ -46,7 +50,7 @@
             <el-form v-model="form" label-width="120px" v-if="index==0">
                 <el-form-item label="所需经验设置">
                     <el-input v-model="form.upgradeExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>分</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--设置必要条件-->
@@ -79,71 +83,52 @@
                         <i v-if="k>0" @click="deleteGift(k)" class="el-icon-close"></i>
                     </template>
                     <div class="color-blue" @click="addGift">添加</div>
+                    <div style="font-size: 12px;color: #aaa;margin: 20px 0 0 20px">注：多个升级礼包时，购买其中一个就可以升级</div>
                 </el-form-item>
             </el-form>
             <!--设置直接邀请条件-->
             <el-form v-model="form" label-width="120px" v-if="index==2">
-                <!--<el-form-item label="直接邀请">-->
-                    <!--<el-input v-model="form.upgradeDirectNum" placeholder="请输入人数" auto-complete="off"></el-input>-->
-                    <!--<span>人</span>-->
-                <!--</el-form-item>-->
                 <div class="tip">直接邀请1人则获得</div>
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeDirectPerExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>分</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--设置间接邀请条件-->
             <el-form v-model="form" label-width="120px" v-if="index==3">
-                <!--<el-form-item label="间接邀请">-->
-                    <!--<el-input v-model="form.upgradeIndirectNum" placeholder="请输入人数" auto-complete="off"></el-input>-->
-                    <!--<span>人</span>-->
-                <!--</el-form-item>-->
                 <div class="tip">间接邀请1人则获得</div>
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeIndirectPerExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>分</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--设置个人交易额条件-->
             <el-form v-model="form" label-width="120px" v-if="index==4">
-                <!--<el-form-item label="个人交易额">-->
-                    <!--<el-input v-model="form.upgradePerSalesNum" placeholder="请输入金额" auto-complete="off"></el-input>-->
-                    <!--<span>元</span>-->
-                <!--</el-form-item>-->
                 <div class="tip">个人交易额增加1元，则获得</div>
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradePerSalesOneExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>分</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--设置直接交易额条件-->
             <el-form v-model="form" label-width="120px" v-if="index==5">
-                <!--<el-form-item label="直接代理交易额">-->
-                    <!--<el-input v-model="form.upgradeDirectSalesNum" placeholder="请输入金额" auto-complete="off"></el-input>-->
-                    <!--<span>元</span>-->
-                <!--</el-form-item>-->
                 <div class="tip">直接代理交易额增加1元则获得</div>
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeDirectSalesOneExp" placeholder="请输入数值"
                               auto-complete="off"></el-input>
-                    <span>分</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--设置间接交易额条件-->
             <el-form v-model="form" label-width="120px" v-if="index==6">
-                <!--<el-form-item label="间接代理交易额">-->
-                    <!--<el-input v-model="form.upgradeIndirectSalesNum" placeholder="请输入金额" auto-complete="off"></el-input>-->
-                    <!--<span>元</span>-->
-                <!--</el-form-item>-->
                 <div class="tip">间接代理交易额增加1元则获得</div>
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeIndirectSalesOneExp" placeholder="请输入数值"
                               auto-complete="off"></el-input>
-                    <span>分</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
-            <!--设置连续交易额条件-->
+            <!--周交易额-->
             <el-form v-model="form" label-width="120px" v-if="index==7">
                 <h3 class="tip">每周要求：</h3>
                 <el-form-item label="交易额">
@@ -152,10 +137,10 @@
                 </el-form-item>
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeWeekSalesNumExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>分</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
-            <!--设置连续交易额频次条件-->
+            <!--周交易频率-->
             <el-form v-model="form" label-width="120px" v-if="index==8">
                 <h3 class="tip">每周要求：</h3>
                 <el-form-item label="交易频次">
@@ -164,7 +149,7 @@
                 </el-form-item>
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeWeekSalesFreqExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>分</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--设置一次性交易条件-->
@@ -175,7 +160,7 @@
                 </el-form-item>
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeBuyNumExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>分</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--代币充值-->
@@ -188,6 +173,46 @@
                 <el-form-item label="获得经验值">
                     <el-input v-model="form.upgradeTokenCoinBuyOneExp" placeholder="请输入数值" auto-complete="off"></el-input>
                     <span>分</span>
+                </el-form-item>
+            </el-form>
+            <!--签到-->
+            <el-form v-model="form" label-width="120px" v-if="index==11">
+                <div class="tip">签到，则获得</div>
+                <el-form-item label="经验值">
+                    <el-input v-model="form.upSign" placeholder="请输入数值" auto-complete="off"></el-input>
+                    <span>点Exp</span>
+                </el-form-item>
+            </el-form>
+            <!--分享-->
+            <el-form v-model="form" label-width="120px" v-if="index==12">
+                <h3 class="tip">分享，则获得</h3>
+                <el-form-item label="经验值">
+                    <el-input v-model="form.upShare" placeholder="请输入数值" auto-complete="off"></el-input>
+                    <span>点Exp</span>
+                </el-form-item>
+                <el-form-item label="每日可分享">
+                    <el-input v-model="form.upShareCount" placeholder="请输入数值" auto-complete="off"></el-input>
+                    <span>次</span>
+                </el-form-item>
+            </el-form>
+            <!--分享被点击-->
+            <el-form v-model="form" label-width="120px" v-if="index==13">
+                <h3 class="tip">每日分享被点击单次可获得</h3>
+                <el-form-item label="经验值">
+                    <el-input v-model="form.upShareClick" placeholder="请输入数值" auto-complete="off"></el-input>
+                    <span>点Exp</span>
+                </el-form-item>
+                <el-form-item label="最多可得">
+                    <el-input v-model="form.upShareClickCount" placeholder="请输入数值" auto-complete="off"></el-input>
+                    <span>点Exp</span>
+                </el-form-item>
+            </el-form>
+            <!--奖励金获得-->
+            <el-form v-model="form" label-width="120px" v-if="index==14">
+                <div class="tip">个人获得奖励金加1元，则获得</div>
+                <el-form-item label="经验值">
+                    <el-input v-model="form.upAward" placeholder="请输入数值" auto-complete="off"></el-input>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -210,7 +235,7 @@
             return {
                 nav: ['会员管理', '会员层级管理', '升级设置'],
                 mask: false,
-                title: ['设置升级经验值', '设置必要条件', '设置直接邀请条件', '设置间接邀请条件', '设置个人交易额条件', '设置直接交易额条件', '设置间接交易额条件', '设置连续交易额条件', '设置连续交易额频次条件', '设置一次性交易条件', '代币充值'],
+                title: ['设置升级经验值', '设置必要条件', '设置直接邀请条件', '设置间接邀请条件', '设置个人交易额条件', '设置直接交易额条件', '设置间接交易额条件', '设置连续交易额条件', '设置连续交易额频次条件', '设置一次性交易条件', '代币充值', '签到', '分享', '分享被点击', '奖励金获得'],
                 index: 0,
                 checked: [false, false, false, false, false],
                 form: {
@@ -295,6 +320,18 @@
                     case 10:// 代币充值
                         url = 'updateUserLevelUpTokenCoinBuyById';
                         break;
+                    case 11:// 签到
+                        url = 'updateByLevelId';
+                        break;
+                    case 12:// 分享
+                        url = 'updateByLevelId';
+                        break;
+                    case 13:// 分享被点击
+                        url = 'updateByLevelId';
+                        break;
+                    case 14:// 奖励金获得
+                        url = 'updateByLevelId';
+                        break;
                 }
                 const data = this[formName];
                 data.id = this.id;
@@ -368,6 +405,26 @@
                 } else if (index === 10) {
                     if (!data.upgradeTokenCoinBuyOneExp) data.upgradeTokenCoinBuyOneExp = 0;
                     flag1 = this.isEmpty(data.upgradeTokenCoinBuyOneExp, false);
+                    this.setIsAjax(flag1);
+                } else if (index == 11) {
+                    if (!data.upSign) data.upSign = 0;
+                    flag1 = this.isEmpty(data.upSign, false);
+                    this.setIsAjax(flag1);
+                } else if (index == 12) {
+                    if (!data.upShare) data.upShare = 0;
+                    if (!data.upShareCount) data.upShareCount = 0;
+                    flag1 = this.isEmpty(data.upShare, false);
+                    flag2 = this.isEmpty(data.upShareCount, true);
+                    this.setIsAjax(flag1 && flag2);
+                } else if (index == 13) {
+                    if (!data.upShareClick) data.upShareClick = 0;
+                    if (!data.upShareClickCount) data.upShareClickCount = 0;
+                    flag1 = this.isEmpty(data.upShareClick, false);
+                    flag2 = this.isEmpty(data.upShareClickCount, false);
+                    this.setIsAjax(flag1 && flag2);
+                } else if (index == 14) {
+                    if (!data.upAward) data.upAward = 0;
+                    flag1 = this.isEmpty(data.upAward, false);
                     this.setIsAjax(flag1);
                 }
                 if (this.isAjax) {

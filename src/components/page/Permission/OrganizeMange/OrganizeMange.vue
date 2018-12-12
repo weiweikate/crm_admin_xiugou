@@ -30,8 +30,8 @@
                     <el-form-item prop="manager" label="部门负责人">
                         <el-input v-model="diaForm.manager"></el-input>
                     </el-form-item>
-                    <el-form-item prop="remarks" label="备注说明">
-                        <el-input type="textarea" autosize v-model="diaForm.remarks"></el-input>
+                    <el-form-item prop="remark" label="备注说明">
+                        <el-input type="textarea" autosize v-model="diaForm.remark"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -46,6 +46,7 @@
     import breadcrumb from '../../../common/Breadcrumb';
     import utils from '../../../../utils/index.js';
     import request from '@/http/http.js';
+    import { validateZh } from '@/utils/validate.js';
 
     export default {
         components: {
@@ -59,17 +60,26 @@
                 diaForm: {
                     name: '',
                     manager: '',
-                    remarks: ''
+                    remark: ''
                 },
                 formType: 'add',
                 departId: '',
                 rules: {
-                    departmentName: [{ required: true, message: '请输入部门名称', trigger: 'blur' }],
+                    name: [
+                        { required: true, message: '请输入部门名称', trigger: 'blur' },
+                        { validator: validateZh, trigger: 'blur' }
+                    ],
+                    manager: [
+                        { validator: validateZh, trigger: 'blur' }
+                    ],
+                    remark: [
+                        { max: 16, message: '最多输入180位字符', trigger: 'blur' }
+                    ]
                 },
                 tableData: []
             };
         },
-        activated() {
+        mounted() {
             this.getList();
         },
         methods: {
@@ -106,7 +116,7 @@
                         let data = {
                             name: formData.name,
                             manager: formData.manager,
-                            remarks: formData.remarks
+                            remark: formData.remark
                         };
                         if (this.formType === 'add') {
                             method = 'addDepartment';
@@ -135,8 +145,7 @@
             },
             // 跳转岗位权限
             redirect2Permisson(row) {
-                console.log(1,row.id,row)
-                this.$router.push({ name: 'jobsPermissionMange', params: { id: row.id } });
+                this.$router.push({ name: 'jobsPermissionMange', query: { id: row.id } });
             }
         }
     };

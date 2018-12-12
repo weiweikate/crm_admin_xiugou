@@ -81,14 +81,14 @@
                 </el-form-item>
 
                 <el-form-item label="优惠券说明">
-                    <el-input type="textarea" v-model="form.remarks" placeholder="请输入说明"></el-input>
+                    <el-input type="textarea" v-model="form.remarks" @input="inputCount" maxlength="180" placeholder="请输入说明"></el-input>
+                    <span class="count">{{count}}/180</span>
                 </el-form-item>
 
                 <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">提交</el-button>
                 <el-button @click="cancel">取消</el-button>
             </el-form>
         </el-card>
-        <!--<v-choosebrand v-if="isChooseBrand" :productIds="productIds" :type="type" @chooseProduct="getProductIds"></v-choosebrand>-->
     </div>
 </template>
 
@@ -208,7 +208,8 @@
                 getProducts: {},
                 // 0:没有指定分类 1：全品类 2：多品类 3：单分类 4：多商品 5：但商品
                 categoryType: 0,
-                isOnly: false
+                isOnly: false,
+                count: 0
             };
         },
         activated() {
@@ -242,13 +243,14 @@
                     this.form.value = detail.value;
                     this.form.couponTemplateId = detail.couponTemplateId;
                     this.form.remarks = detail.remarks;
+                    this.count = detail.remarks ? detail.remarks.length : 0;
                     this.categoryType = res.data.categoryType;
                     this.useConditions = detail.useConditions;
                     this.getProducts = {
                         firstCategoryIds: detail.firstCategoryIds,
                         secondCategoryIds: detail.secondCategoryIds,
                         thirdCategoryIds: detail.thirdCategoryIds,
-                        products: detail.productIds,
+                        products: detail.prodCodes,
                         firstCategoryNames: detail.firstCategoryNames,
                         secondCategoryNames: detail.secondCategoryNames,
                         thirdCategoryNames: detail.thirdCategoryNames,
@@ -291,7 +293,7 @@
                         firstCategoryIds: detail.firstCategoryIds,
                         secondCategoryIds: detail.secondCategoryIds,
                         thirdCategoryIds: detail.thirdCategoryIds,
-                        productIds: detail.productIds
+                        productIds: detail.prodCodes
                     };
                     this.productIds = temp;
                 }).catch(error => {
@@ -454,12 +456,12 @@
                                 data.firstCategoryIds = that.productList.firstCategoryIds.join(',');
                                 data.secondCategoryIds = that.productList.secondCategoryIds.join(',');
                                 data.thirdCategoryIds = that.productList.thirdCategoryIds.join(',');
-                                data.productIds = that.productList.products.join(',');
+                                data.prodCodes = that.productList.products.join(',');
                             } else {
                                 data.firstCategoryIds = that.productList.firstCategoryIds;
                                 data.secondCategoryIds = that.productList.secondCategoryIds;
                                 data.thirdCategoryIds = that.productList.thirdCategoryIds;
-                                data.productIds = that.productList.products;
+                                data.prodCodes = that.productList.products;
                             }
                             data.categoryType = 5;
                         } else {
@@ -531,6 +533,9 @@
             // 取消
             cancel() {
                 this.$router.push('/discountCoupon');
+            },
+            inputCount() {
+                this.count = this.form.remarks.length;
             }
         }
     };
@@ -701,8 +706,13 @@
         }
         .el-textarea__inner {
             width: 500px;
-            height: 100px;
+            height: 150px;
             resize: none;
+        }
+        .count{
+            position: absolute;
+            bottom: 0;
+            left: 450px;
         }
     }
 </style>

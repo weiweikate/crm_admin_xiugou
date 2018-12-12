@@ -21,10 +21,13 @@
                     {{brand}}
                 </el-form-item>
                 <el-form-item label="产品参数：">
-                    <p v-for="(v, k) in param" :key="k">{{v.param}}：{{v.paramValue}}</p>
+                    <p v-for="(v, k) in param" :key="k">{{v.paramName}}：{{v.paramValue}}</p>
                 </el-form-item>
                 <el-form-item label="产品详情：">
-                    <div v-html='content'></div>
+                    <!-- <div v-html='content'></div> -->
+                     <div>
+                        <img style="width:200px" v-for="(v,k) in content" :key="k" :src="v"  class="mr10"/>
+                    </div>
                 </el-form-item>
                 <el-form-item label=" ">
                     <el-button type="primary" @click="$router.push('/giftManage')">返 回</el-button>
@@ -69,7 +72,7 @@ export default {
                 this.imgArr = res.data.imgFileList;
                 this.categories = `${res.data.firstCategoryName}-${res.data.secCategoryName}-${res.data.thirdCategoryName}`;
                 this.brand = res.data.brandName;
-                this.content = res.data.content;
+                this.content = res.data.content ? res.data.content.split(',') : [];
                 this.param = res.data.paramValueList;
                 this.video = res.data.videoUrl;
             }).catch(err => {

@@ -13,7 +13,7 @@
             </el-form>
         </el-card>
         <div class="table-block">
-            <el-button type="primary" style="margin-bottom: 20px" @click="addPackage">新建套餐</el-button>
+            <el-button type="primary" style="margin-bottom: 20px" @click="addPackage" v-auth="'yunying.promotionOrderManage.tcgl'">新建套餐</el-button>
             <el-table v-loading="tableLoading" :height="height" border :data="tableData">
                 <el-table-column type="index" label="编号" align="center" width="50"></el-table-column>
                 <el-table-column prop="name" label="套餐名称" align="center"></el-table-column>
@@ -43,10 +43,10 @@
                 </el-table-column>
                 <el-table-column label="操作" min-width="200">
                     <template slot-scope="scope">
-                        <el-button type="success"  @click="addInventory(scope.row)">增加库存</el-button>
-                        <el-button type="primary" @click="buyDetail(scope.row)">购买详情</el-button>
-                        <el-button type="warning" @click="toDetail(scope.row)">查看详情</el-button>
-                        <el-button @click="openOrClose(scope.row,0)" v-if="scope.row.status==1" type="danger">关闭</el-button>
+                        <el-button type="success"  @click="addInventory(scope.row)" v-auth="'yyunying.promotionOrderManage.tcgl.zjkc'">增加库存</el-button>
+                        <el-button type="primary" @click="buyDetail(scope.row)" v-auth="'yunying.promotionOrderManage.tcgl.gmxq'">购买详情</el-button>
+                        <el-button type="warning" @click="toDetail(scope.row)" v-auth="'yunying.promotionOrderManage.tcgl.ckxq'">查看详情</el-button>
+                        <el-button @click="openOrClose(scope.row,0)" v-if="scope.row.status==1" type="danger" v-auth="'yunying.promotionOrderManage.tcgl.gb'">关闭</el-button>
                         <!--<el-button @click="openOrClose(scope.row,1)" v-else type="warning">开启</el-button>-->
                     </template>
                 </el-table-column>

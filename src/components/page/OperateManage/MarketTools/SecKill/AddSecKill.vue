@@ -22,7 +22,7 @@
                     v-else>--</span>
                 </el-form-item>
                 <el-form-item label="商品库存">
-                    <span v-if="productDetail.stock">{{productDetail.stock}}</span><span v-else>--</span>
+                    <span v-if="productDetail.sellStock">{{productDetail.sellStock}}</span><span v-else>--</span>
                 </el-form-item>
                 <el-form-item label="秒杀价" prop="seckillPrice" style="margin-top: 30px">
                     ￥
@@ -66,7 +66,7 @@
                 <el-button @click="cancel">取消</el-button>
             </el-form>
         </el-card>
-        <v-chooseproduct v-if="showMask" @getProductInf="productInf" :productId="productDetail.id"
+        <v-chooseproduct v-if="showMask" @getProductInf="productInf" :prodCode="productDetail.id"
                          :searchProductId="productDetail.searchProductId" :searchProductName="productDetail.productName"
                          :activityType="1"></v-chooseproduct>
     </div>
@@ -214,13 +214,8 @@
                         const data = this.form;
                         data.beginTime = moment(this.form.activityTime[0]).format('YYYY-MM-DD HH:mm:00'); // 活动开始时间
                         data.endTime = moment(this.form.activityTime[1]).format('YYYY-MM-DD HH:mm:00'); // 活动开始时间
-                        // data.productCode = this.productDetail.productCode; // 产品编号
-                        data.productId = this.productDetail.productId; // 产品ID
-                        // data.productImg = this.productDetail.specImg; // 产品主图url
-                        // data.productName = this.productDetail.productName; // 产品名称
-                        // data.productPrice = this.productDetail.originalPrice; // 产品原价
-                        data.productPriceId = this.productDetail.id; // 产品规格价格编号
-                        // data.productSpec = this.productDetail.spec; // 产品规格
+                        data.prodCode = this.productDetail.prodCode; // 产品ID
+                        data.skuCode = this.productDetail.skuCode; // 产品规格价格编号
                         if (!data.limitNumber) data.limitNumber = -1;
                         this.btnLoading = true;
                         request.addOperatorSeckill(data).then(res => {

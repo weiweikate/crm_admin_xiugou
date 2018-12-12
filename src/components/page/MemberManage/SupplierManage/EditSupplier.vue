@@ -4,6 +4,15 @@
         <div class="container">
             <div class="supplier-box">
                 <el-form :model="form" ref="form">
+                    <el-form-item prop="loginName" label="供应商账号">
+                        <el-input placeholder="请输入供应商账号" v-model="form.loginName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码" prop="password">
+                        <el-input placeholder="若需修改密码请输入，不修改密码可不填写" v-model="form.password" type="password" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="确认密码" prop="confirmPassword">
+                        <el-input placeholder="若需修改密码请输入，不修改密码可不填写" v-model="form.confirmPassword" type="password" autocomplete="off"></el-input>
+                    </el-form-item>
                     <el-form-item prop="name" label="供应商名称">
                         <el-input placeholder="请输入供应商名称" v-model="form.name"></el-input>
                     </el-form-item>
@@ -16,7 +25,7 @@
                     <el-form-item prop="userName" label="供应商姓名">
                         <el-input placeholder="请输入供应商姓名" v-model="form.userName"></el-input>
                     </el-form-item>
-                    <el-form-item prop="name" label="联系方式" class="phone-area">
+                    <el-form-item label="联系方式" class="phone-area">
                         <el-input class="small-inp" v-model="first"></el-input>
                         <el-input class="mid-inp" v-model="second"></el-input>
                         <div class="intent">
@@ -44,7 +53,7 @@
                             :data="brandList">
                         </el-transfer>
                     </el-form-item>
-                    <el-form-item label="供应商账号">
+                    <el-form-item label="供应商开户账号">
                         <el-input placeholder="请输入银行名称" v-model="form.bankName"></el-input>
                         <el-input placeholder="请输入开户支行" v-model="form.bankOpening"></el-input>
                     </el-form-item>
@@ -57,6 +66,9 @@
                     <el-form-item prop="endTime" label="供应商结算帐期：">
                         <p>每月15号</p>
                     </el-form-item>
+                    <!--<el-form-item prop="remark" label="备注">-->
+                        <!--<el-input placeholder="备注" v-model="form.remark"></el-input>-->
+                    <!--</el-form-item>-->
                     <div class="submit-btn">
                         <el-button type="primary" :loading="btnLoading" @click="submitForm('form')">确认保存</el-button>
                         <el-button @click="cancel">取消</el-button>
@@ -89,25 +101,29 @@
                     bankName: '',
                     bankOpening: '',
                     bankCard: '',
-                    bankUsername: ''
+                    bankUsername: '',
+                    loginName: '',
+                    password: '',
+                    confirmPassword: '',
+                    remark: ''
                 },
                 first: '',
                 second: '',
                 detailData: [],
                 btnLoading: false,
                 isUp: false, // 添加false，修改true
-                id: '',
+                code: '',
                 address: '',
                 areaDisabled: true,
                 phone: true,
                 // 二级类目ids
                 secIds: '',
                 brandList: [], // 品牌列表
-                brandIds: []
+                brandIds: [],
             };
         },
         activated() {
-            this.id = this.$route.query.supplierEditInfo;
+            this.code = this.$route.query.supplierEditInfo;
             this.address = '';
             this.getBrandList();
         },
@@ -116,7 +132,7 @@
             getDetail() {
                 const that = this;
                 const data = {
-                    id: that.id
+                    code: that.code
                 };
                 that.loading = true;
                 request.findSupplierById(data).then(res => {
@@ -168,16 +184,28 @@
             // 提交表单
             submitForm(form) {
                 const that = this;
+                if (!that[form].loginName) {
+                    that.$message.warning('请输入供应商账号!');
+                    return;
+                }
+                if (that[form].confirmPassword && !that[form].password) {
+                    that.$message.warning('请输入密码!');
+                    return;
+                }
+                if (that[form].password && that[form].password !== that[form].confirmPassword) {
+                    that.$message.warning('两次密码输入不一致!');
+                    return;
+                }
+                if (!that[form].mobile) {
+                    that.$message.warning('请输入联系方式!');
+                    return;
+                }
                 if (!that[form].name) {
                     that.$message.warning('请输入供货商名称!');
                     return;
                 }
                 if (!that[form].userName) {
                     that.$message.warning('请输入供应商姓名!');
-                    return;
-                }
-                if (!that[form].mobile) {
-                    that.$message.warning('请输入联系方式!');
                     return;
                 }
                 if (that.form.country == 1) {

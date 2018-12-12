@@ -14,7 +14,7 @@
                 </el-form>
             </el-card>
         <div class="table-block">
-            <el-button @click="sendInvite" style="margin-bottom: 20px" type="primary">发起邀请</el-button>
+            <el-button @click="sendInvite" style="margin-bottom: 20px" type="primary" v-auth="'vip.joinManage.fqyq'">发起邀请</el-button>
             <template>
                 <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
                     <el-table-column prop="id" label="邀请记录ID" align="center"></el-table-column>
@@ -25,8 +25,8 @@
                     <el-table-column prop="adminName" label="发起者" align="center"></el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="warning" size="small" @click="detailItem(scope.row)">详情</el-button>
-                            <el-button type="danger" size="small" @click="watchItem(scope.row)">查看邀请</el-button>
+                            <el-button type="warning" size="small" @click="detailItem(scope.row)" v-auth="'vip.joinManage.xq'">详情</el-button>
+                            <el-button type="danger" size="small" @click="watchItem(scope.row)" v-auth="'vip.joinManage.ckyq'">查看邀请</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

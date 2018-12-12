@@ -29,6 +29,9 @@
                         <div class="item">注册时间：{{dealer.regTime|formatDateAll}}</div>
                         <div class="item">最近登录时间：{{dealer.lastLoginTime|formatDateAll}}</div>
                     </div>
+                    <div class="item-row">
+                        <div class="item" style="width: 100%;">会员简介：{{dealer.profile}}</div>
+                    </div>
                 </div>
                 <div class="center">
                     <el-button @click="updateBasicInf">修改</el-button>

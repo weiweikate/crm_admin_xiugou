@@ -20,12 +20,43 @@
 .mb10{
     margin-bottom: 10px;
 }
+.ml10{
+    margin-left: 10px;
+}
+.mr10{
+    margin-right: 10px;
+}
+.fl{
+    float: left;
+}
 
 /*溢出隐藏*/
 .over-hidden{
     overflow: hidden;
     text-overflow:ellipsis;
     white-space: nowrap;
+}
+/*多行一溢出隐藏*/
+.over-more-hidden{
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/*蓝色字体超链接*/
+.primary-text{
+    color: #33b4ff;
+    cursor: pointer;
+}
+/*灰色提示信息*/
+.grey-text {
+    color: #ccc;
+    font-size: 12px;
+}
+.href:link, .href:visited{
+    color: #33b4ff;
 }
 
 /*居中*/
@@ -43,4 +74,9 @@
 }
 .el-dialog__title {
     color: #ff6868
+}
+label.require:before,.el-table__header th.require .cell:before {
+    content: '*';
+    color: #f56c6c;
+    margin-right: 4px;
 }

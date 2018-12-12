@@ -7,12 +7,15 @@ import { asyncRouterMap, constantRouterMap } from '@/router';
  * @param route
  */
 function hasPermission(auth, roles, route) {
-    if (route.meta && route.meta.roles) {
+    if (route.hidden) {
+        return true;
+    }
+    else if (route.meta && route.meta.roles) {
         return roles.some(role => route.meta.roles.includes(role));
     } else if (auth.includes(route.name)) {
         return true;
     } else {
-        return true;
+        return false;
     }
 }
 
@@ -23,15 +26,20 @@ function hasPermission(auth, roles, route) {
  */
 function filterAsyncRouter(routes, auth, roles) {
     const res = [];
-    routes.forEach(route => {
-        const tmp = { ...route };
+    const len = routes.length;
+    for (let i = 0; i < len; i++) {
+        const tmp = { ...routes[i] };
+        if (tmp.default) {
+            res.push(tmp);
+            continue;
+        }
         if (hasPermission(auth, roles, tmp)) {
             if (tmp.children) {
                 tmp.children = filterAsyncRouter(tmp.children, auth, roles);
             }
             res.push(tmp);
         }
-    });
+    }
 
     return res;
 }
@@ -59,7 +67,8 @@ const permission = {
                 } else {
                     accessedRouters = filterAsyncRouter(asyncRouterMap, auth, roles);
                 }
-                commit('SET_ROUTERS', accessedRouters);
+                console.log('用户权限', accessedRouters);
+                commit('SET_ROUTERS', accessedRouters.concat([{ path: '*', redirect: '/404', hidden: true }]));
                 resolve();
             });
         }

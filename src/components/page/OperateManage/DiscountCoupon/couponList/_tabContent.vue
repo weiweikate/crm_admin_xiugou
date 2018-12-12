@@ -55,16 +55,16 @@
                 <template slot-scope="scope">
                         <template>
                             <div style="float: left">
-                                <el-button @click="editCoupon(scope.row)" type="primary">编辑</el-button>
+                                <el-button @click="editCoupon(scope.row)" type="primary" v-auth="'yunying.discountCoupon.bj'">编辑</el-button>
                                 <br>
-                                <el-button @click="loseDiscountCoupon(scope.row)" v-if="scope.row.status!=0" type="danger">失效</el-button>
+                                <el-button @click="loseDiscountCoupon(scope.row)" v-if="scope.row.status!=0" type="danger" v-auth="'yunying.discountCoupon.sx'">失效</el-button>
                             </div>
                             <div style="float: left">
-                                <div class="blue" @click="couponData(scope.row)">券数据
+                                <div class="blue" @click="couponData(scope.row)" v-auth="'yunying.discountCoupon.qsj'">券数据
                                 </div>
-                                <div class="blue" @click="couponDetail(scope.row)">查看详情
+                                <div class="blue" @click="couponDetail(scope.row)" v-auth="'yunying.discountCoupon.ckxq'">查看详情
                                 </div>
-                                <div class="blue"  v-if="scope.row.status!=0&&scope.row.totalNumber!=-1" @click="addInventory(scope.row)">增加券库存
+                                <div class="blue"  v-if="scope.row.status!=0&&scope.row.totalNumber!=-1" @click="addInventory(scope.row)" v-auth="'yunying.discountCoupon.zjqkc'">增加券库存
                                 </div>
                             </div>
                             <div style="clear: both"></div>

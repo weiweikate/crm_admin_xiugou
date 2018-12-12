@@ -1,6 +1,6 @@
 <template>
     <div class="tab-content">
-        <el-button @click="addSecKill" class="add-product" type="primary">新建秒杀</el-button>
+        <el-button @click="addSecKill" class="add-product" type="primary" v-auth="'yunying.marketToolsManage.ms.xjms'">新建秒杀</el-button>
         <div class="search-pane">
             <el-form :model="form" ref='form' inline label-width="100px">
                 <el-form-item prop="productName" label="产品名称">
@@ -72,14 +72,18 @@
             <el-table-column label="秒杀商品" min-width="300">
                 <template slot-scope="scope">
                     <div class="product-img">
-                        <img :src="scope.row.specImg">
+                        <img :src="scope.row.imgUrl">
                     </div>
                     <p class="product-inf">{{scope.row.name}}</p>
                     <p class="product-inf" style="margin-top: 25px">原价：￥{{scope.row.originalPrice}}</p>
                     <p class="product-inf">产品ID：{{scope.row.prodCode}}</p>
                 </template>
             </el-table-column>
-            <el-table-column prop="spec" label="规格" align="center" min-width="100"></el-table-column>
+            <el-table-column label="规格" align="center" min-width="100">
+                <template slot-scope="scope">
+                    {{scope.row.propertyValues.replace(/@/g,'')}}
+                </template>
+            </el-table-column>
             <el-table-column label="秒杀价格" align="center" min-width="60">
                 <template slot-scope="scope">
                     ￥{{scope.row.seckillPrice}}
@@ -131,12 +135,12 @@
 
             <el-table-column label="操作" align="center" min-width="100">
                 <template slot-scope="scope">
-                    <el-button style="margin-bottom:10px" type="primary" @click="toDetail(scope.row)">查看</el-button>
+                    <el-button style="margin-bottom:10px" type="primary" @click="toDetail(scope.row)" v-auth="'yunying.marketToolsManage.ms.ck'">查看</el-button>
                     <el-button style="margin-bottom:10px" type="warning" @click="endOrDelete(1,scope.row)"
-                               v-if="scope.row.status == 1||scope.row.status == 2">结束
+                               v-if="scope.row.status == 1||scope.row.status == 2" v-auth="'yunying.marketToolsManage.ms.js'">结束
                     </el-button>
                     <el-button style="margin-bottom:10px" type="danger" @click="endOrDelete(0,scope.row)"
-                               v-if="scope.row.status != 1&&scope.row.status != 2">删除
+                               v-if="scope.row.status != 1&&scope.row.status != 2" v-auth="'yunying.marketToolsManage.ms.sc'">删除
                     </el-button>
                 </template>
             </el-table-column>

@@ -1,112 +1,57 @@
-// 获取礼包全部订单列表
-export const queryAllGiftBagOrderPageList = '/admin/gbGiftBagOrder/queryAllGiftBagOrderPageList';
-// 获取礼包待支付订单列表
-export const queryUnPayGiftBagOrderPageList = '/admin/gbGiftBagOrder/queryUnPayGiftBagOrderPageList';
-// 获取礼包待发货订单列表
-export const queryUnSendOutGiftBagOrderPageList = '/admin/gbGiftBagOrder/queryUnSendOutGiftBagOrderPageList';
-// 获取礼包待确认订单列表
-export const queryUnVerifyGiftBagOrderPageList = '/admin/gbGiftBagOrder/queryUnVerifyGiftBagOrderPageList';
-// 获取礼包已完成订单列表
-export const queryCompletedGiftBagOrderPageList = '/admin/gbGiftBagOrder/queryCompletedGiftBagOrderPageList';
-// 获取礼包已关闭订单列表
-export const queryClosedGiftBagOrderPageList = '/admin/gbGiftBagOrder/queryClosedGiftBagOrderPageList';
-// 获取礼包订单详情列表
-export const getGiftBagOrderDetail = '/admin/gbGiftBagOrder/getGiftBagOrderDetail';
-// 云仓发货
-// export const orderSendOut = '/admin/order/orderSendOut';
-// 星星标记和备注
-// export const orderSign = '/admin/order/orderSign';
-
-// 待提货
-// 待自提订单
-export const queryPickUpByCustomerOrderPageList = '/admin/order/queryPickUpByCustomerOrderPageList';
-// 获取待提货订单详情
-export const getPickUpByCustomerOrderDetail = '/admin/order/getPickUpByCustomerOrderDetail';
-// 获取提货仓列表
-export const queryStoreHouseList = '/admin/order/queryStoreHouseList';
-// 更换提货仓
-export const changeStoreHouse = '/admin/order/changeStoreHouse';
-// 提货按钮(批量)
-export const pickUpGoods = '/admin/order/pickUpGoods';
-// 提货按钮(单个)
-export const pickUpOrderProduct = '/admin/order/pickUpOrderProduct';
-// 订单详情
-export const getOrderDetail = '/admin/order/getOrderDetail';
-
-// 待发货
-// 获取待发货列表
-export const queryUnSendOutOrderPageList = '/admin/order/queryUnSendOutOrderPageList';
-
-// 已完成
-// 获取已完成列表
-export const queryCompletedOrderPageList = '/admin/order/queryCompletedOrderPageList';
-
-// 待支付
-// 获取待支付列表
-export const queryUnPaidOrderPageList = '/admin/order/queryUnPaidOrderPageList';
-
-// 所有订单
-// 获取所有点订单列表
-export const queryAllOrderPageList = '/admin/order/queryAllOrderPageList';
-
-// 已关闭
-export const queryClosedOrderPageList = '/admin/order/queryClosedOrderPageList';
-
-// 待确认
-export const queryWaitReceivingOrderPageList = '/admin/order/queryWaitReceivingOrderPageList';
-
-// 待处理订单
-export const queryPendingOrderPageList = '/admin/order/queryPendingOrderPageList';
-
-// 售后操作
-// 同意换货
-// export const agreeExchange = '/admin/returnProduct/agreeExchange';
-// 拒绝退款
-export const refusalRefund = '/admin/returnProduct/refusalRefund';
-// 换货变退货
-export const exchangeChangeReturn = '/admin/returnProduct/exchangeChangeReturn';
-// 确认退款
-export const confirmRefund = '/admin/returnProduct/confirmRefund';
-// 退货订单详情
-export const findReturnProductInfo = '/admin/returnProduct/findReturnProductInfo';
-// 退货订单详情
-export const sendEcReturnProduct = '/admin/returnProduct/sendEcReturnProduct';
-// --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 export const findLogisticsDetail = ['/order/logistics/findLogisticsDetail', { methods: 'get' }]; // 物流测试
 
 // 订单管理
 // 订单列表
-export const queryOrderPageList = '/order/queryPage';
+export const queryOrderPageList = '/orderManagement/orders/query';
+// 查询发货单列表
+export const queryDeliveryOrderPageList = '/orderManagement/delivery/query';
+// 查询发货单详情
+export const deliveryOrderDetail = ['/orderManagement/delivery/deliveryNo', { methods: 'get' }];
+// 查询支付单列表
+export const queryPaymentsOrderPageList = '/orderManagement/payments/query';
 // 订单详情
-export const orderDetail = '/order/lookDetail';
+export const orderDetail = ['/orderManagement/orders/detail', { methods: 'get' }];
+// 取消订单
+export const cancelOrder = '/orderManagement/orders/warehouseOrderNo/cancel';
 // 订单发货
-// export const orderSendOut = '/order/sendOut';
-export const orderSendOut = '/order/pushCloudStorehouse';
+export const orderSendOut = '/orderManagement/orders/pushToWarehouse';
+export const orderSign = '/orderManagement/orders/mark';
+// 支付单列表
+export const queryPayments = '/orderManagement/payments/query';
+// 查询发货单列表
+export const queryDelivery = '/orderManagement/delivery/query';
+// 订单详情
+export const deliveryNo = ['/orderManagement/delivery/detail', { methods: 'get' }];
 // 虚拟发货
-export const sendGoods = '/order/sendOut';
-export const orderSign = '/order/sign';
+export const fictitiousDelivery = '/orderManagement/orders/fictitiousDelivery';
 
 // 售后
-// 同意申请（第一次同意）
-export const agreeApply = '/order/returnProduct/agreeApply';
-// 已收货并同意换货
-export const agreeExchange = '/order/returnProduct/agreeExchange';
 // 商家退款
 export const businessRefund = '/order/returnProduct/businessRefund';
 // 商家退款
 export const doBusinessRefund = '/order/returnProduct/doBusinessRefund';
-// 换货变退货
-export const exchangeChangeRefund = '/order/returnProduct/exchangeChangeRefund';
-// 查看详情
-export const lookDetail = '/order/returnProduct/lookDetail';
 // 确认退款
 export const makeSureRefund = '/order/returnProduct/makeSureRefund';
-// 退款
-export const refundAmounts = '/order/returnProduct/refundAmounts';
-// 拒绝售后
-export const refuse = '/order/returnProduct/refuse';
 // 云仓换货发货
 export const sendOut = '/order/returnProduct/pushCloudSend';
 // 虚拟发货
 export const sendFictitiousOut = '/order/returnProduct/sendFictitiousOut';
-
+// **********************************************
+// 售后订单列表
+export const queryAfterSalePage = '/order/afterSaleService/queryPage';
+// 同意申请（第一次同意）
+export const agreeApply = '/order/afterSaleService/agreeApply';
+// 换货
+export const agreeExchange = '/order/afterSaleService/agreeExchange';
+// 换货变退货
+export const exchangeChangeRefund = '/order/afterSaleService/exchangeChangeRefund';
+// 查看详情
+export const lookDetail = ['/order/afterSaleService/lookDetail', { methods: 'get' }];
+// 人工退款
+export const manualRefund = '/order/afterSaleService/manualRefund';
+// 退款
+export const refundAmounts = '/order/afterSaleService/refundAmounts';
+// 售后驳回
+export const refuse = '/order/afterSaleService/refuse';
+// 退款单列表
+export const queryRefundPage = '/order/orderRefundInfo/queryPage';

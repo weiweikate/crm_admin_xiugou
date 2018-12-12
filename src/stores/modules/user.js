@@ -1,13 +1,14 @@
 import { login, logout, getInfo } from '@/api/login';
 import { getToken, setToken, removeToken } from '@/utils/auth';
 
-const TokenKey = 'id'; // todo 使用id作为token
+const TokenKey = 'token'; // todo 使用id作为token
 
 const user = {
     state: {
         token: getToken(),
         name: '',
         avatar: '',
+        id: '',
         user: null,
         roles: [],
         auth: []
@@ -27,10 +28,13 @@ const user = {
             state.roles = roles;
         },
         SET_AUTH: (state, data) => {
-            state.auths = data;
+            state.auth = data;
+        },
+        SET_ID: (state, data) => {
+            state.id = data;
         },
         SET_USER: (state, user) => {
-            console.log('SET_USER', user);
+            // console.log('SET_USER', user);
             state.user = user;
         }
     },
@@ -43,6 +47,8 @@ const user = {
                     const data = response.data || {};
                     setToken(data[TokenKey]);
                     commit('SET_TOKEN', data[TokenKey]);
+                    commit('SET_ID', data['id']);
+                    sessionStorage.setItem('ms_userID', data['id']);
                     resolve();
                 }).catch(error => {
                     reject(error);
@@ -53,7 +59,8 @@ const user = {
         // 获取用户信息
         GetInfo({ commit, state }) {
             return new Promise((resolve, reject) => {
-                getInfo(state.token).then(response => {
+                let id = sessionStorage.getItem('ms_userID');
+                getInfo(id).then(response => {
                     const data = response.data;
                     const roles = data.roles || [];
                     if (roles.length > 0) { // 验证返回的roles是否是一个非空数组

@@ -5,7 +5,7 @@
             <div class="wrap">
                 <div>
                     <p class="title">基础设置</p>
-                    <el-button type="success" @click="showMask(0)">每周登录要求</el-button>
+                    <el-button type="success" @click="showMask(0)">登录条件</el-button>
                     <el-button type="success" @click="showMask(1)">每周交易额要求</el-button>
                 </div>
             </div>
@@ -14,20 +14,22 @@
         <el-dialog :title="title[index]" :visible.sync="mask">
             <!--设置降级经验值-->
             <el-form v-model="form" label-width="120px" v-if="index==0">
-                <el-form-item label="扣除经验值">
+                <div class="tip">30天未登录，则每天</div>
+                <el-form-item label="扣除">
                     <el-input v-model="form.demotionWeekNologinExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>分</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
             <!--设置必要条件-->
             <el-form v-model="form" label-width="120px" class="special" v-if="index==1">
+                <div class="tip">每周交易额是否达标</div>
                 <el-form-item label="交易额">
                     <el-input v-model="form.demotionWeekSalesNum" placeholder="请输入金额" auto-complete="off"></el-input>
-                    <span>元</span>
+                    <span>元以内</span>
                 </el-form-item>
-                <el-form-item label="扣除经验值">
+                <el-form-item label="扣除">
                     <el-input v-model="form.demotionWeekSalesNumExp" placeholder="请输入数值" auto-complete="off"></el-input>
-                    <span>分</span>
+                    <span>点Exp</span>
                 </el-form-item>
             </el-form>
 
