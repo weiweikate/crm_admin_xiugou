@@ -54,7 +54,7 @@
                     </div>
                     <div class="item" v-if="warehouseOrder.status==5">
                         <span>关闭原因</span>
-                        <span>{{subStatusArr[warehouseOrder.subStatus]||`/`}}</span>
+                        <span>{{subStatusArr[warehouseOrder.subStatus-1]||`/`}}</span>
                     </div>
                 </div>
                 <div class="item-wrap">

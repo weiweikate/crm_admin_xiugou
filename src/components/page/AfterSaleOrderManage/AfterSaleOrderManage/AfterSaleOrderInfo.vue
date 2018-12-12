@@ -50,7 +50,7 @@
                     </div>
                     <div class="item">
                         <span>申请售后原因</span>
-                        <span>{{orderCustomerServiceInfo.reason}}</span>
+                        <span>{{orderCustomerServiceInfo.reason||`/`}}</span>
                     </div>
                     <div class="item">
                         <span>问题描述</span>
@@ -191,7 +191,7 @@
                             <el-radio label="2">审核驳回</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="审核金额调整" v-if="form.result!=2">
+                    <el-form-item label="审核金额调整" v-if="form.result!=2&&orderCustomerServiceInfo.type!=3">
                         <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~{{warehouseOrderProduct.payAmount|formatMoney}}区间内调整，其中含运费{{warehouseOrderProduct.freightAmount|formatMoney}}</span>
                     </el-form-item>
                     <el-form-item label="退货地址" class="back-address" v-if="form.result!=2">
@@ -267,13 +267,13 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import productDialog from '@/components/common/ProductDialog';
-    import { queryDictonary,myProductDialog } from '@/JS/commom';
+    import { queryDictonary, myProductDialog } from '@/JS/commom';
     import request from '@/http/http.js';
     import utils from '@/utils/index';
 
     export default {
-        components: { vBreadcrumb,productDialog},
-        mixins: [queryDictonary,myProductDialog],
+        components: { vBreadcrumb, productDialog },
+        mixins: [queryDictonary, myProductDialog],
         data() {
             return {
                 nav: ['订单管理', '售后单管理', '售后单列表', '售后单详情'],
@@ -310,9 +310,9 @@
                 this.tableData = [];
                 request.lookDetail({ serviceNo: this.serviceNo }).then(res => {
                     this.orderInfo = res.data;
-                    if (res.data.warehouseType && res.data.warehouseType != 3) {
-                        this.form.address = '2';
-                    }
+                    // if (res.data.warehouseType && res.data.warehouseType != 3) {
+                    //     this.form.address = '2';
+                    // }
                     this.tableData = [res.data.warehouseOrderProduct];
                     this.exchangeExpress = res.data.exchangeExpress || {};
                     this.orderCustomerServiceInfo = res.data.orderCustomerServiceInfo || {};
@@ -378,12 +378,15 @@
                         if (this.form.result == 2) {
                             url = 'refuse';
                         } else {
+                            if (this.checked) {
+                                data.warehouseType = 4;
+                            }
                             if (!this.form.type) {
                                 return this.$message.warning('请选择售后类型');
                             }
                             if (this.form.type == 1) {
                                 url = 'agreeExchange';
-                                if (this.orderInfo.warehouseType == 4 && (!data.expressNo || !data.expressCode)) {
+                                if (data.warehouseType == 4 && (!data.expressNo || !data.expressCode)) {
                                     return this.$message.warning('请输入完整的物流信息');
                                 }
                                 this.logicList.forEach((v, k) => {
