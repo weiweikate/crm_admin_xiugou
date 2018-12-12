@@ -93,7 +93,7 @@
                         <span>{{warehouseOrder.cashPayAmoun | formatMoney}}</span>
                     </div>
                     <div class="item" v-if="warehouseOrder.status!=1">
-                        <span>开票余额</span>
+                        <span>开票金额</span>
                         <span>{{warehouseOrder.invoiceAmount | formatMoney}}</span>
                     </div>
                     <div class="item" v-if="warehouseOrder.status!=1">
