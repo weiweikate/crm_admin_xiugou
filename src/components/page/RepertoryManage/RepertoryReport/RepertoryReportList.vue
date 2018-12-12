@@ -218,20 +218,19 @@ export default {
             this.form.date = [];
             this.getList(this.page.currentPage);
         },
-        // 推送取消
+        // 推送/取消
         sendOrCancel(row, num) {
             this.mask = true;
-            this.id = row.id;
-            // this.status = row.status;
+            this.id = num === 0 ? row.id : row.code;
             this.index = num;
         },
         sure() {
-            this.url = this.index == 0 ? 'syncAsnInfo' : 'cancelNoteById';
+            this.url = this.index === 0 ? 'syncAsnInfo' : 'cancelNoteById';
             const data = {};
-            if (this.index == 0) {
+            if (this.index === 0) {
                 data.noteId = this.id;
             } else {
-                data.id = this.id;
+                data.code = this.id;
             }
             this.btnLoading = true;
             request[this.url](data).then(res => {

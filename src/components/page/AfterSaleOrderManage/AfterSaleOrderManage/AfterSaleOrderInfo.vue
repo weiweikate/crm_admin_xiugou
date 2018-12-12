@@ -241,13 +241,16 @@
                     <el-form-item label="售后处理说明">
                         <el-input type="textarea" v-model="form.remarks"></el-input>
                     </el-form-item>
+                    <el-form-item v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType!=4&&(orderCustomerServiceInfo.type==3&&form.result!=2)">
+                        <el-checkbox v-model="checked" @change="chooseXnSend">虚拟发货</el-checkbox>
+                    </el-form-item>
                     <!--换货-->
-                    <el-form-item label="换货物流公司" v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&(orderCustomerServiceInfo.type==3&&form.result!=2)">
+                    <el-form-item label="换货物流公司" v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&(orderCustomerServiceInfo.type==3&&form.result!=2)||checked">
                         <el-select v-model="form.expressCode">
                             <el-option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.name"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="换货物流单号" v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&(orderCustomerServiceInfo.type==3&&form.result!=2)">
+                    <el-form-item label="换货物流单号" v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&(orderCustomerServiceInfo.type==3&&form.result!=2)||checked">
                         <el-input v-model="form.expressNo"></el-input>
                     </el-form-item>
                     <el-form-item>
@@ -286,7 +289,8 @@
                 typeArr: ['仅退款', '退货退款 ', '换货'], // 类型
                 btnLoading: false,
                 logicList: [],
-                form: {}
+                form: {},
+                checked: false
             };
         },
 
