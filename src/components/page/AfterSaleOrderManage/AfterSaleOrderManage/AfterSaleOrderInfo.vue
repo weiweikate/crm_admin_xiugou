@@ -155,6 +155,7 @@
                         <template slot-scope="scope">
                             <div class="name">
                                 <img :src="scope.row.specImg" alt="">
+                                <!--<span class="pro-name color-blue" @click="toH5(scope.row.prodCode)">{{scope.row.productName}}</span>-->
                                 <span class="pro-name">{{scope.row.productName}}</span>
                                 <span class="pro-spec">{{scope.row.spec}}</span>
                             </div>
@@ -259,18 +260,20 @@
                 </el-form>
             </div>
         </el-card>
+        <product-dialog v-show="mask" :src="src" :mask="mask" @msg="closeMask"></product-dialog>
     </div>
 </template>
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import { queryDictonary } from '@/JS/commom';
+    import productDialog from '@/components/common/ProductDialog';
+    import { queryDictonary,myProductDialog } from '@/JS/commom';
     import request from '@/http/http.js';
     import utils from '@/utils/index';
 
     export default {
-        components: { vBreadcrumb },
-        mixins: [queryDictonary],
+        components: { vBreadcrumb,productDialog},
+        mixins: [queryDictonary,myProductDialog],
         data() {
             return {
                 nav: ['订单管理', '售后单管理', '售后单列表', '售后单详情'],
@@ -510,6 +513,10 @@
                 width: 600px;
                 height: 100px;
             }
+        }
+        .color-blue{
+            color: #33b4ff;
+            cursor: pointer;
         }
     }
 </style>
