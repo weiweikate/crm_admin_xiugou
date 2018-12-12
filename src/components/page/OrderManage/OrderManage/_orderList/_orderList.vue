@@ -52,8 +52,8 @@
                         <span class="num">{{value.quantity}}</span>
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
-                        <div>应付金额：{{v.totalAmount | formatMoney}}</div>
-                        <div>实付金额：{{v.totalAmount | formatMoney}}</div>
+                        <div>应付金额：{{v.warehouseOrder.dueAmount | formatMoney}}</div>
+                        <div v-if="v.warehouseOrder.status!=1">实付金额：{{v.warehouseOrder.payAmount | formatMoney}}</div>
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
                         <div>用户账号：{{v.warehouseOrder.userPhone}}</div>
@@ -168,7 +168,6 @@
                                 ? '#ccc'
                                 : this.markArr[res.data.data[i].warehouseOrder.markStar - 1].label;
                         res.data.data[i].warehouseOrder.remark = res.data.data[i].warehouseOrder.platformRemarks;
-                        let total = 0;
                         res.data.data[i].productOrders.forEach((v, k) => {
                             const tempTitle = v.specTitle.split('@');
                             const tempValue = v.specValues.substring(1, v.specValues.length - 1).split('@');
@@ -178,8 +177,6 @@
                                 v.spec.push(temp);
                             });
                             v.spec = v.spec.join('  ');
-                            total += v.totalAmount;
-                            res.data.data[i].totalAmount = total;
                         });
                     }
                     this.tableData = res.data.data;
