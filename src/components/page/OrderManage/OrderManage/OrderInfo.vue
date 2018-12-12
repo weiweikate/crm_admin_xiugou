@@ -239,7 +239,7 @@
                 </table>
             </div>
         </el-card>
-        <product-dialog v-show="mask" :src="src" :mask="mask"></product-dialog>
+        <product-dialog v-show="mask" :src="src" :mask="mask" @msg="closeMask"></product-dialog>
     </div>
 </template>
 
@@ -385,6 +385,9 @@
             toH5(code) {
                 this.mask = true;
                 this.src = utils.getSrc(code);
+            },
+            closeMask() {
+                this.mask = false;
             }
         }
     };

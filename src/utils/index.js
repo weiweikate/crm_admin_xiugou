@@ -148,7 +148,7 @@ const getSrc = (code) => {
     const href = location.href;
     let first = '';
     if (href.indexOf('sharegoodsmall.com') === -1) { // 本地环境
-        first = 'https://testh5.sharegoodsmall.com/';
+        first = 'http://devh5.sharegoodsmall.com/';
     } else {
         first = first.replace('admin.sharegoodsmall', 'h5.sharegoodsmall');
         const index = first.indexOf('#');
