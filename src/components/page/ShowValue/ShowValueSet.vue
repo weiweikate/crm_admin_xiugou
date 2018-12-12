@@ -37,7 +37,7 @@
                 <p class="grey-text mt10" style="margin-left: 110px">设置时间只能是0点</p>
             </div>
             <div>
-                <el-button :loading="btnLoading" type="primary" @click="beforeSubmit">确 认</el-button>
+                <el-button :loading="btnLoading" type="primary" @click="beforeSubmit">确 认 保 存</el-button>
                 <el-button @click="$router.push('showValueList')">取 消</el-button>
             </div>
         </el-card>
@@ -79,7 +79,9 @@
         },
         methods: {
             // 提交之前判断
-            beforeSubmit() {},
+            beforeSubmit() {
+                this.$refs['showValue'].validForm();
+            },
             // 提交表单
             submitForm() {
                 request[this.url](this.data).then(res => {
