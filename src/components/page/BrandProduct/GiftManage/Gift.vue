@@ -243,7 +243,7 @@ export default {
             isUseUpload: false,
             showSaleTime: false,
             checkedAllUser: false,
-            uploadImg: '',
+            uploadImg: api.uploadImg,
             imgArr: [],
             itemList: [],
             brandArr: [],
