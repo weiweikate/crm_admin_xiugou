@@ -246,13 +246,12 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import productDialog from '@/components/common/ProductDialog';
-    import utils from '@/utils/index.js';
-    import { queryDictonary } from '@/JS/commom';
+    import { queryDictonary, myProductDialog } from '@/JS/commom';
     import request from '@/http/http.js';
 
     export default {
         components: { vBreadcrumb, productDialog },
-        mixins: [queryDictonary],
+        mixins: [queryDictonary, myProductDialog],
         data() {
             return {
                 nav: ['订单管理', '订单详情'],
@@ -268,9 +267,7 @@
                 orderInvoiceInfo: {},
                 warehouseOrder: {},
                 payInfo: {},
-                payType: '',
-                mask: false,
-                src: ''
+                payType: ''
             };
         },
 
@@ -381,13 +378,6 @@
                 }
                 if (result != '') result = result.slice(0, -1);
                 return result;
-            },
-            toH5(code) {
-                this.mask = true;
-                this.src = utils.getSrc(code);
-            },
-            closeMask() {
-                this.mask = false;
             }
         }
     };
