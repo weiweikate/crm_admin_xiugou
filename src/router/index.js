@@ -476,7 +476,7 @@ export const asyncRouterMap = [
                 name: 'showValueList',
                 path: '/showValueList',
                 component: resolve => require(['../components/page/ShowValue/ShowValueList.vue'], resolve),
-                meta: { title: '秀值分配设置' }
+                meta: { title: '秀值分配设置', noKeepAlive: true }
             },
             {
                 name: 'showValueParamSet',
@@ -1633,7 +1633,7 @@ export const asyncRouterMap = [
                 name: 'showValueSet',
                 path: '/showValueSet',
                 component: resolve => require(['../components/page/ShowValue/ShowValueSet.vue'], resolve),
-                meta: { title: '新建利润分配模板' }
+                meta: { title: '新建利润分配模板', noKeepAlive: true }
             },
             {
                 hidden: true,

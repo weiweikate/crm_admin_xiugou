@@ -10,7 +10,7 @@
             <div class="option">
                 <div>综合活跃度占比</div>
                 <div>
-                    设置：综合活跃度 <el-input-number :controls="false" :min="0" :max="100" @input="computedShowBean" @blur="toFixed" v-model="form.valueRate" placeholder="请输入数值"></el-input-number> %
+                    设置：综合活跃度 <el-input-number :controls="false" :min="0" :max="100" @input="computedShowBean" @blur="toFixed" v-model="form.showValueRate" placeholder="请输入数值"></el-input-number> %
                 </div>
             </div>
             <div class="option">
@@ -31,13 +31,13 @@
                 <el-checkbox v-model="isSetTime" @change="changeTimeStatus">
                     <span>设置开启时间</span>
                 </el-checkbox>
-                <el-date-picker :disabled="!isSetTime" v-model="form.startTime" type="datetime" placeholder="请选择开启时间"></el-date-picker>
+                <el-date-picker :disabled="!isSetTime" v-model="form.activeTime" type="datetime" placeholder="请选择开启时间"></el-date-picker>
                 <span>设置结束时间</span>
-                <el-date-picker :disabled="!isSetTime" v-model="form.endTime" type="datetime" placeholder="请选择结束时间"></el-date-picker>
+                <el-date-picker :disabled="!isSetTime" v-model="form.stopTime" type="datetime" placeholder="请选择结束时间"></el-date-picker>
                 <p class="grey-text mt10" style="margin-left: 110px">设置时间只能是0点</p>
             </div>
             <div>
-                <el-button :loading="btnLoading" type="primary" @click="beforeSubmit">确 认 保 存</el-button>
+                <el-button :loading="btnLoading" type="primary" @click="submitForm">确 认 保 存</el-button>
                 <el-button @click="$router.push('showValueList')">取 消</el-button>
             </div>
         </el-card>
@@ -57,10 +57,10 @@
                 url: '',
                 form: {
                     name: '',
-                    valueRate: '',
+                    showValueRate: '',
                     showPeas: '',
-                    startTime: '',
-                    endTime: ''
+                    activeTime: '',
+                    stopTime: ''
                 },
                 data: {}, // 表单数据
                 profitParm: [{ label: '其他1', value: 1 }],
@@ -70,21 +70,38 @@
                 btnLoading: false
             };
         },
-        activated() {
+        mounted() {
             this.id = this.$route.query.showValueTplId;
             this.getInfo();
         },
-        deactivated() {
+        destroyed() {
             this.id = '';
         },
         methods: {
-            // 提交之前判断
-            beforeSubmit() {
-                this.$refs['showValue'].validForm();
-            },
             // 提交表单
             submitForm() {
-                request[this.url](this.data).then(res => {
+                const showValue = this.$refs['showValue'].validForm();
+                const showBean = this.$refs['showBean'].validForm();
+                if (!showValue.status) return this.$message.warning(showValue.msg);
+                if (!showBean.status) return this.$message.warning(showBean.msg);
+                if (this.form.name === '') return this.$message.warning('请输入综合活跃度分配模板名称！');
+                if (this.form.showValueRate === '') return this.$message.warning('请输入综合活跃度占比！');
+                const data = {
+                    id: this.id,
+                    name: this.form.name,
+                    valueRate: this.form.showValueRate,
+                    activeTime: this.form.activeTime ? this.$utils.formatTime(this.form.activeTime) : '',
+                    stopTime: this.form.stopTime ? this.$utils.formatTime(this.form.stopTime) : '',
+                    showValue: JSON.stringify({
+                        xz: { ...showValue.msg },
+                        flow: this.$refs['showValue'].flow
+                    }),
+                    showPeas: JSON.stringify({
+                        xd: { ...showBean.msg },
+                        flow: this.$refs['showBean'].flow
+                    })
+                };
+                request[this.url](data).then(res => {
                     this.$message.success(res.msg);
                     this.$router.push('/showValueList');
                 }).catch(err => {
@@ -92,7 +109,7 @@
                 });
             },
             // 获取信息
-            getInfo() {
+            getInfo: function() {
                 if (this.id === undefined || this.id === '') {
                     this.nav[2] = '新建利润分配模板';
                     this.form.id = '';
@@ -104,72 +121,51 @@
                     this.pageLoading = true;
                     request.queryProfitTemplateById({ id: this.id }).then(res => {
                         this.pageLoading = false;
-                        this.form.name = res.data.name;
-                        this.form.source = res.data.source;
-                        this.form.valueRate = Number(res.data.valueRate);
-                        this.isSetTime = !res.data.startTime;
-                        this.form.startTime = res.data.activeTime || '';
-                        this.form.endTime = res.data.stopTime || '';
-                        res.data.showValueList.forEach((v, k) => {
-                            this.$refs['showValue'].userLevel.forEach((v1, k1) => {
-                                if (v.type == 'X') {
-                                    if (v.shareType == 1) {
-                                        v1.valueX[0] = v[`v${k1}`];
-                                    } else if (v.shareType == 2) {
-                                        v1.valueX[1] = v[`v${k1}`];
-                                    } else {
-                                        v1.valueX[2] = v[`v${k1}`];
-                                    }
-                                } else if (v.type == 'Y') {
-                                    if (v.shareType == 1) {
-                                        v1.valueY[0] = v[`v${k1}`];
-                                    } else if (v.shareType == 2) {
-                                        v1.valueY[1] = v[`v${k1}`];
-                                    } else {
-                                        v1.valueY[2] = v[`v${k1}`];
-                                    }
-                                } else {
-                                    if (v.shareType == 1) {
-                                        v1.valueZ[0] = v[`v${k1}`];
-                                    } else if (v.shareType == 2) {
-                                        v1.valueZ[1] = v[`v${k1}`];
-                                    } else {
-                                        v1.valueZ[2] = v[`v${k1}`];
-                                    }
-                                }
-                                this.$set(this.$refs['showValue'].userLevel, k1, this.$refs['showValue'].userLevel[k1]);
+                        const resData = res.data || {};
+                        // 赋值其他信息
+                        this.form.name = resData.name;
+                        this.form.showValueRate = resData.valueRate || 0;
+                        this.form.showPeas = 100 - (resData.valueRate || 0);
+                        this.form.activeTime = resData.activeTime || '';
+                        this.form.stopTime = resData.stopTime || '';
+                        this.isSetTime = !!resData.activeTime;
+                        // 赋值综合活跃度和秀豆
+                        const showValue = resData.showValueList || [];
+                        const showBeans = resData.showPeasList || [];
+                        const showValueParam = this.$refs['showValue'];
+                        const showBeansParam = this.$refs['showBean'];
+                        if (showValue.length !== 0) {
+                            showValue.forEach(v => {
+                                const obj = {
+                                    v0: v.v0,
+                                    v1: v.v1,
+                                    v2: v.v2,
+                                    v3: v.v3,
+                                    v4: v.v4,
+                                    v5: v.v5
+                                };
+                                if (v.shareType == 1) showValueParam.form.direct = obj;
+                                if (v.shareType == 2) showValueParam.form.indirect = obj;
+                                if (v.shareType == 3) showValueParam.form.oneself = obj;
+                                showValueParam.flow = v.flow ? v.flow.toString() : '';
                             });
-                        });
-                        res.data.showPeasList.forEach((v, k) => {
-                            this.$refs['showBean'].userLevel.forEach((v1, k1) => {
-                                if (v.type == 'X') {
-                                    if (v.shareType == 1) {
-                                        v1.valueX[0] = v[`v${k1}`];
-                                    } else if (v.shareType == 2) {
-                                        v1.valueX[1] = v[`v${k1}`];
-                                    } else {
-                                        v1.valueX[2] = v[`v${k1}`];
-                                    }
-                                } else if (v.type == 'Y') {
-                                    if (v.shareType == 1) {
-                                        v1.valueY[0] = v[`v${k1}`];
-                                    } else if (v.shareType == 2) {
-                                        v1.valueY[1] = v[`v${k1}`];
-                                    } else {
-                                        v1.valueY[2] = v[`v${k1}`];
-                                    }
-                                } else {
-                                    if (v.shareType == 1) {
-                                        v1.valueZ[0] = v[`v${k1}`];
-                                    } else if (v.shareType == 2) {
-                                        v1.valueZ[1] = v[`v${k1}`];
-                                    } else {
-                                        v1.valueZ[2] = v[`v${k1}`];
-                                    }
-                                }
-                                this.$set(this.$refs['showBean'].userLevel, k1, this.$refs['showBean'].userLevel[k1]);
+                        }
+                        if (showBeans.length !== 0) {
+                            showBeans.forEach(v => {
+                                const obj = {
+                                    v0: v.v0,
+                                    v1: v.v1,
+                                    v2: v.v2,
+                                    v3: v.v3,
+                                    v4: v.v4,
+                                    v5: v.v5
+                                };
+                                if (v.shareType == 1) showBeansParam.form.direct = obj;
+                                if (v.shareType == 2) showBeansParam.form.indirect = obj;
+                                if (v.shareType == 3) showBeansParam.form.oneself = obj;
+                                showBeansParam.flow = v.flow ? v.flow.toString() : '';
                             });
-                        });
+                        }
                     }).catch(err => {
                         this.pageLoading = false;
                         console.log(err);
@@ -178,8 +174,8 @@
             },
             // 保留小数
             toFixed() {
-                this.form.valueRate = this.form.valueRate ? this.form.valueRate : 0;
-                this.form.valueRate = this.form.valueRate.toFixed(2);
+                this.form.showValueRate = this.form.showValueRate ? this.form.showValueRate : 0;
+                this.form.showValueRate = this.form.showValueRate.toFixed(2);
             },
             // 计算秀豆占比
             computedShowBean(val) {
@@ -192,8 +188,8 @@
             // 禁用/启用时间
             changeTimeStatus(val) {
                 if (!val) {
-                    this.form.startTime = '';
-                    this.form.endTime = '';
+                    this.form.activeTime = '';
+                    this.form.stopTime = '';
                 }
             }
         }

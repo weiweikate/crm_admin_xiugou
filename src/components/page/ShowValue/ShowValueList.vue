@@ -57,7 +57,7 @@
                 delUri: ''
             };
         },
-        activated() {
+        mounted() {
             this.getList();
         },
         methods: {

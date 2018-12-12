@@ -2,36 +2,36 @@
     <div class="profit-tpl">
         <div class="item">
             <p class="small-title">间接分润</p>
-            <p class="level" v-for="(value, key) in form.jj">
+            <p class="level" v-for="(value, key) in form.direct">
                 <span>{{key}}：</span>
-                <el-input @blur="dealNum(form.jj[key], 'jj', key)" placeholder="请输入数值" v-model="form.jj[key]" class="inp"></el-input>
+                <el-input @blur="dealNum(form.direct[key], 'direct', key)" placeholder="请输入数值" v-model="form.direct[key]" class="inp"></el-input>
                 <span>%</span>
             </p>
-            <el-select v-model="moneyFlow" placeholder="请选择多余流向" class="flow">
+            <el-select v-model="flow" placeholder="请选择多余流向" class="flow">
                 <el-option label="无主资金池" value="1"></el-option>
                 <el-option label="公司利润" value="2"></el-option>
             </el-select>
         </div>
         <div class="item">
             <p class="small-title">直接分润</p>
-            <p class="level" v-for="(value, key) in form.zj">
+            <p class="level" v-for="(value, key) in form.indirect">
                 <span>{{key}}：</span>
-                <el-input @blur="dealNum(form.zj[key], 'zj', key)" placeholder="请输入数值" v-model="form.zj[key]" class="inp"></el-input>
+                <el-input @blur="dealNum(form.indirect[key], 'indirect', key)" placeholder="请输入数值" v-model="form.indirect[key]" class="inp"></el-input>
                 <span>%</span>
             </p>
-            <el-select disabled v-model="moneyFlow" placeholder="请选择多余流向" class="flow">
+            <el-select disabled v-model="flow" placeholder="请选择多余流向" class="flow">
                 <el-option label="无主资金池" value="1"></el-option>
                 <el-option label="公司利润" value="2"></el-option>
             </el-select>
         </div>
         <div class="item">
             <p class="small-title">自己</p>
-            <p class="level" v-for="(value, key) in form.my">
+            <p class="level" v-for="(value, key) in form.oneself">
                 <span>{{key}}：</span>
-                <el-input @blur="dealNum(form.my[key], 'my', key)" placeholder="请输入数值" v-model="form.my[key]" class="inp"></el-input>
+                <el-input @blur="dealNum(form.oneself[key], 'oneself', key)" placeholder="请输入数值" v-model="form.oneself[key]" class="inp"></el-input>
                 <span>%</span>
             </p>
-            <el-select disabled v-model="moneyFlow" placeholder="请选择多余流向" class="flow">
+            <el-select disabled v-model="flow" placeholder="请选择多余流向" class="flow">
                 <el-option label="无主资金池" value="1"></el-option>
                 <el-option label="公司利润" value="2"></el-option>
             </el-select>
@@ -44,35 +44,32 @@ export default {
     data() {
         return {
             form: {
-                jj: {
+                direct: {
                     v0: '',
                     v1: '',
                     v2: '',
                     v3: '',
                     v4: '',
-                    v5: '',
-                    v6: ''
+                    v5: ''
                 },
-                zj: {
+                indirect: {
                     v0: '',
                     v1: '',
                     v2: '',
                     v3: '',
                     v4: '',
-                    v5: '',
-                    v6: ''
+                    v5: ''
                 },
-                my: {
+                oneself: {
                     v0: '',
                     v1: '',
                     v2: '',
                     v3: '',
                     v4: '',
-                    v5: '',
-                    v6: ''
+                    v5: ''
                 }
             },
-            moneyFlow: ''
+            flow: ''
         };
     },
     methods: {
@@ -92,14 +89,23 @@ export default {
             for (const key in this.form) {
                 tmp[key] = [];
                 for (const level in this.form[key]) {
+                    if (this.form[key][level] === '') return {status: false, msg: '输入不能为空!'}; // 判空
                     tmp[key].push(this.form[key][level]);
                 }
             }
-            const arr = [1, 2, 3, 4, 5, 6, 7, 8];
-            const res = arr.every((v, k, arr) => {
-                return v > 0;
-            });
-            console.log(res);
+            const directMax = Number(this.form.direct.v5);
+            const indirectMax = Number(this.form.indirect.v5);
+            const oneselfMax = Number(this.form.oneself.v5);
+            // 判断最高等级项相加是否小于等于100%
+            if (!(directMax + indirectMax + oneselfMax <= 100)) return {status: false, msg: '请确保最高等级项相加小于等于100%!'};
+            // 判断竖向是否是递增
+            for (const key in tmp) {
+                for (let i = 0; i < tmp[key].length - 2; i++) {
+                    const arr = tmp[key];
+                    if (arr[i] > arr[i + 1]) return {status: false, msg: '请确保v0-v5为递增！'};
+                }
+            }
+            return {status: true, msg: this.form};
         }
     }
 };
