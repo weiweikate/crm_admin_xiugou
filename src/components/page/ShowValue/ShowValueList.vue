@@ -32,6 +32,17 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <div class="block">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :page-size="page.pageSize"
+                    :current-page="page.currentPage"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </div>
         </el-card>
         <!--删除弹窗-->
         <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
@@ -63,9 +74,14 @@
         methods: {
             getList() {
                 this.loading = true;
-                request.queryProfitTemplatePageList({}).then(res => {
+                let data = {
+                    page: this.page.currentPage,
+                    pageSize: this.page.totalPage
+                }
+                request.queryProfitTemplatePageList(data).then(res => {
                     this.loading = false;
                     this.tableData = res.data.data || [];
+                    this.page.totalPage = res.data.totalNum;
                 }).catch(err => {
                     this.loading = false;
                     console.log(err);
