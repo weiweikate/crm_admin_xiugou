@@ -10,7 +10,7 @@
             </el-table-column>
             <el-table-column prop="message" label="退款失败原因" align="center">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.message">{{scope.row.message}}</template>
+                    <template v-if="scope.row.message && (scope.row.status==3||scope.row.status==4)">{{scope.row.message}}</template>
                     <template v-else>/</template>
                 </template>
             </el-table-column>
