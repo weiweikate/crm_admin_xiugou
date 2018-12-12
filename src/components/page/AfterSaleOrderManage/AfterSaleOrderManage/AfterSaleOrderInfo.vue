@@ -190,22 +190,24 @@
                             <el-radio label="2">审核驳回</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="审核金额调整">
+                    <el-form-item label="审核金额调整" v-if="form.result!=2">
                         <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~{{warehouseOrderProduct.payAmount|formatMoney}}区间内调整，其中含运费{{warehouseOrderProduct.freightAmount|formatMoney}}</span>
                     </el-form-item>
-                    <el-form-item label="退货信息" class="back-address">
+                    <el-form-item label="退货地址" class="back-address" v-if="form.result!=2">
                         <div class="address-area">
-                            <div class="supplier-address" v-if="orderInfo.warehouseType==3">
-                                <el-radio label="1" v-model="form.address">供应商退货地址</el-radio>
-                                <div>{{supplierRefundAddress.receiver}} {{supplierRefundAddress.receiverPhone}}</div>
-                                <div>{{supplierRefundAddress.province}}{{supplierRefundAddress.city}}{{supplierRefundAddress.area}}{{supplierRefundAddress.address}}</div>
-                            </div>
-                            <div class="plat-address">
-                                <el-radio label="2" v-model="form.address">平台退货地址</el-radio>
-                                <div>{{platformRefundAddress.receiver}} {{platformRefundAddress.receiverPhone}}</div>
-                                <div>{{platformRefundAddress.province}}{{platformRefundAddress.city}}{{platformRefundAddress.area}}{{platformRefundAddress.address}}</div>
-                            </div>
-                            <div class="tip">如需修改，请联系相关人员修改退货信息后再审核</div>
+                            <div>{{supplierRefundAddress.receiver}} {{supplierRefundAddress.receiverPhone}}</div>
+                            <div>{{supplierRefundAddress.province}}{{supplierRefundAddress.city}}{{supplierRefundAddress.area}}{{supplierRefundAddress.address}}</div>
+                            <!-- <div class="supplier-address" v-if="orderInfo.warehouseType==3">
+                                 <el-radio label="1" v-model="form.address">供应商退货地址</el-radio>
+                                 <div>{{supplierRefundAddress.receiver}} {{supplierRefundAddress.receiverPhone}}</div>
+                                 <div>{{supplierRefundAddress.province}}{{supplierRefundAddress.city}}{{supplierRefundAddress.area}}{{supplierRefundAddress.address}}</div>
+                             </div>
+                             <div class="plat-address">
+                                 <el-radio label="2" v-model="form.address">平台退货地址</el-radio>
+                                 <div>{{platformRefundAddress.receiver}} {{platformRefundAddress.receiverPhone}}</div>
+                                 <div>{{platformRefundAddress.province}}{{platformRefundAddress.city}}{{platformRefundAddress.area}}{{platformRefundAddress.address}}</div>
+                             </div>
+                             <div class="tip">如需修改，请联系相关人员修改退货信息后再审核</div>-->
                         </div>
                     </el-form-item>
                     <el-form-item label="售后审核说明">
@@ -227,25 +229,25 @@
                         </el-radio-group>
                     </el-form-item>
                     <!--换货-->
-                    <el-form-item label="售后类型" v-if="orderCustomerServiceInfo.type==3">
+                    <el-form-item label="售后类型" v-if="orderCustomerServiceInfo.type==3&&(orderCustomerServiceInfo.type==3&&form.result!=2)">
                         <el-radio-group v-model="form.type">
                             <el-radio label="1">换货</el-radio>
                             <el-radio label="2">退货退款</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="处理金额调整" v-if="orderCustomerServiceInfo.type==1||orderCustomerServiceInfo.type==2||form.type==2">
+                    <el-form-item label="处理金额调整" v-if="(orderCustomerServiceInfo.type==1||orderCustomerServiceInfo.type==2||form.type==2)&&form.result!=2">
                         <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~{{warehouseOrderProduct.payAmount|formatMoney}}区间内调整，其中含运费{{warehouseOrderProduct.freightAmount|formatMoney}}</span>
                     </el-form-item>
                     <el-form-item label="售后处理说明">
                         <el-input type="textarea" v-model="form.remarks"></el-input>
                     </el-form-item>
                     <!--换货-->
-                    <el-form-item label="换货物流公司" v-if="form.type==1&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4">
+                    <el-form-item label="换货物流公司" v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&(orderCustomerServiceInfo.type==3&&form.result!=2)">
                         <el-select v-model="form.expressCode">
                             <el-option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.name"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="换货物流单号" v-if="form.type==1&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4">
+                    <el-form-item label="换货物流单号" v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&(orderCustomerServiceInfo.type==3&&form.result!=2)">
                         <el-input v-model="form.expressNo"></el-input>
                     </el-form-item>
                     <el-form-item>
@@ -352,12 +354,12 @@
                     } else { // 审核驳回
                         url = 'refuse';
                     }
-                    if (this.orderInfo.warehouseType == 3 && !this.form.address) {
-                        return this.$message.warning('请选择退货地址');
-                    }
-                    if (this.form.address == 1) {
-                        data.warehouseCode = this.orderCustomerServiceInfo.warehouseCode;
-                    }
+                    // if (this.orderInfo.warehouseType == 3 && !this.form.address) {
+                    //     return this.$message.warning('请选择退货地址');
+                    // }
+                    // if (this.form.address == 1) {
+                    //     data.warehouseCode = this.orderCustomerServiceInfo.warehouseCode;
+                    // }
                 } else { // 待平台处理
                     if (this.orderCustomerServiceInfo.type == 1 || this.orderCustomerServiceInfo.type == 2) {
                         if (this.form.result == 2) {

@@ -61,44 +61,44 @@
                     <div class="title">订单支付信息</div>
                     <div class="item">
                         <span>商品总额</span>
-                        <span>{{payInfo.totalAmount | formatMoney}}</span>
+                        <span>{{warehouseOrder.productsAmount | formatMoney}}</span>
                     </div>
                     <div class="item">
                         <span>运费</span>
-                        <span>{{payInfo.freightAmount | formatMoney}}</span>
+                        <span>{{warehouseOrder.freightAmount | formatMoney}}</span>
                     </div>
                     <div class="item">
                         <span>应付金额</span>
-                        <span>{{payInfo.payAmount | formatMoney}}</span>
+                        <span>{{warehouseOrder.dueAmount | formatMoney}}</span>
                     </div>
                     <div class="item">
                         <span>促销优惠</span>
-                        <span>{{payInfo.promotionAmount | formatMoney}}</span>
+                        <span>{{warehouseOrder.promotionAmount | formatMoney}}</span>
                     </div>
                     <div class="item">
                         <span>优惠券</span>
-                        <span>{{payInfo.couponAmount | formatMoney}}</span>
+                        <span>{{warehouseOrder.couponAmount | formatMoney}}</span>
                     </div>
                     <div class="item">
                         <span>一元券</span>
-                        <span>{{payInfo.tokenCoinAmount | formatMoney}}</span>
+                        <span>{{warehouseOrder.tokenCoinAmount | formatMoney}}</span>
                     </div>
                     <!--已付款,已发货，交易完成，交易关闭-->
                     <div class="item" v-if="warehouseOrder.status!=1">
                         <span>余额支付</span>
-                        <span>{{payInfo.accountPayAmount | formatMoney}}</span>
+                        <span>{{warehouseOrder.accountPayAmount | formatMoney}}</span>
                     </div>
                     <div class="item" v-if="warehouseOrder.status!=1">
                         <span>第三方支付</span>
-                        <span>{{payInfo.cashPayAmoun | formatMoney}}</span>
+                        <span>{{warehouseOrder.cashPayAmoun | formatMoney}}</span>
                     </div>
                     <div class="item" v-if="warehouseOrder.status!=1">
                         <span>开票余额</span>
-                        <span>{{payInfo.invoiceAmount | formatMoney}}</span>
+                        <span>{{warehouseOrder.invoiceAmount | formatMoney}}</span>
                     </div>
                     <div class="item" v-if="warehouseOrder.status!=1">
                         <span>实付金额</span>
-                        <span>{{payInfo.payAmount | formatMoney}}</span>
+                        <span>{{warehouseOrder.payAmount | formatMoney}}</span>
                     </div>
                 </div>
                 <div class="item-wrap">
@@ -265,7 +265,6 @@
                 expressInfos: {},
                 orderInvoiceInfo: {},
                 warehouseOrder: {},
-                payInfo: {},
                 payType: '',
                 mask: false,
                 src: ''
@@ -288,25 +287,7 @@
                     this.platformOrder = res.data.platformOrder;
                     this.orderPayInfo = res.data.orderPayInfo;
                     this.tableData = [];
-                    let totalAmount = 0;
-                    let freightAmount = 0;
-                    let promotionAmount = 0;
-                    let couponAmount = 0;
-                    let tokenCoinAmount = 0;
-                    let accountPayAmount = 0;
-                    let cashPayAmount = 0;
-                    let invoiceAmount = 0;
-                    let payAmount = 0;
                     res.data.productOrders.forEach((v, k) => {
-                        totalAmount += v.totalAmount || 0;
-                        freightAmount += v.freightAmount || 0;
-                        promotionAmount += v.promotionAmount || 0;
-                        couponAmount += v.couponAmount || 0;
-                        tokenCoinAmount += v.tokenCoinAmount || 0;
-                        accountPayAmount += v.accountPayAmount || 0;
-                        cashPayAmount += v.cashPayAmount || 0;
-                        invoiceAmount += v.invoiceAmount || 0;
-                        payAmount += v.payAmount || 0;
                         const tempTitle = v.specTitle.split('@');
                         const tempValue = v.specValues.substring(1, v.specValues.length - 1).split('@');
                         v.spec = [];
@@ -337,17 +318,6 @@
                         v.warehouseName = res.data.warehouseName;
                         this.tableData.push(v);
                     });
-                    this.payInfo = {
-                        totalAmount: totalAmount,
-                        freightAmount: freightAmount,
-                        promotionAmount: promotionAmount,
-                        couponAmount: couponAmount,
-                        tokenCoinAmount: tokenCoinAmount,
-                        accountPayAmount: accountPayAmount,
-                        cashPayAmount: cashPayAmount,
-                        invoiceAmount: invoiceAmount,
-                        payAmount: payAmount
-                    };
                     if (res.data.orderPayInfo && res.data.orderPayInfo.payType) {
                         this.payType = this.getType(res.data.orderPayInfo.payType);
                     }
