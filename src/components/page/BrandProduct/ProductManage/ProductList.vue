@@ -21,7 +21,7 @@
                         <el-option value="1" label="普通商品"></el-option>
                         <el-option value="2" label="内购商品"></el-option>
                         <!--<el-option value="3" label="虚拟商品"></el-option>-->
-                        <el-option value="4" label="卡券商品"></el-option>
+                        <!--<el-option value="4" label="卡券商品"></el-option>-->
                     </el-select>
                 </el-form-item>
                 <!--<el-form-item prop="updateUser" label="更新者">-->
@@ -318,6 +318,9 @@
         }
         /deep/.el-input {
             width: 215px;
+        }
+        /deep/.el-pagination__editor.el-input{
+            width: 50px;
         }
         /deep/.el-input-group__prepend{
             padding: 0 5px;
