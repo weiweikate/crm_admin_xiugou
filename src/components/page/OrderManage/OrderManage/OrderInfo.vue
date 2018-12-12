@@ -49,7 +49,7 @@
                     <!--交易关闭-->
                     <div class="item" v-if="warehouseOrder.status==5">
                         <span>关闭时间</span>
-                        <span v-if="customerServiceInfos.subStatus==4">{{warehouseOrder.finishTime|formatDateAll}}</span>
+                        <span v-if="warehouseOrder.subStatus==4">{{warehouseOrder.finishTime|formatDateAll}}</span>
                         <span v-else>{{warehouseOrder.cancelTime|formatDateAll}}</span>
                     </div>
                     <div class="item" v-if="warehouseOrder.status==5">
@@ -202,8 +202,8 @@
                         <td :rowspan="v.rows" v-if="k1==0" style="width: 400px">
                             <div class="name">
                                 <img :src="v.specImg" alt="">
-                                <!--<span class="pro-name color-blue" @click="toH5(v.prodCode)">{{v.productName}}</span>-->
-                                <span class="pro-name">{{v.productName}}</span>
+                                <span class="pro-name color-blue" @click="toH5(v.prodCode)">{{v.productName}}</span>
+                                <!--<span class="pro-name">{{v.productName}}</span>-->
                                 <span class="pro-spec">{{v.spec}}</span>
                             </div>
                         </td>
@@ -239,18 +239,19 @@
                 </table>
             </div>
         </el-card>
+        <product-dialog v-show="mask" :src="src" :mask="mask" @msg="closeMask"></product-dialog>
     </div>
 </template>
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import utils from '@/utils/index.js';
-    import { queryDictonary } from '@/JS/commom';
+    import productDialog from '@/components/common/ProductDialog';
+    import { queryDictonary, myProductDialog } from '@/JS/commom';
     import request from '@/http/http.js';
 
     export default {
-        components: { vBreadcrumb },
-        mixins: [queryDictonary],
+        components: { vBreadcrumb, productDialog },
+        mixins: [queryDictonary, myProductDialog],
         data() {
             return {
                 nav: ['订单管理', '订单详情'],
@@ -352,6 +353,7 @@
             }
         }
     };
+
 </script>
 <style lang='less'>
     .order-info {
