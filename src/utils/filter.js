@@ -7,6 +7,7 @@
 * decimal：小数点
 * */
 function formatMoney(number, places, symbol, thousand, decimal) {
+    if(!number) return '-';
     number = number || 0;
     places = !isNaN(places = Math.abs(places)) ? places : 2;
     symbol = symbol !== undefined ? symbol : '￥';
