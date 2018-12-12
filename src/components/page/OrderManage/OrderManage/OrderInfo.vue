@@ -319,14 +319,14 @@
                         v.expressInfos = [];
                         if (res.data.customerServiceInfos) {
                             res.data.customerServiceInfos.forEach((v1, k1) => {
-                                if (v.warehouseOrderNo == v1.warehouseOrderNo) {
+                                if (v.orderProductNo == v1.orderProductNo) {
                                     v.customerServiceInfos.push(v1);
                                 }
                             });
                         }
                         if (res.data.expressInfos) {
                             res.data.expressInfos.forEach((v1, k1) => {
-                                if (v.warehouseOrderNo == v1.warehouseOrderNo) {
+                                if (v.orderProductNo == v1.orderProductNo) {
                                     v.expressInfos.push(v1);
                                 }
                             });
