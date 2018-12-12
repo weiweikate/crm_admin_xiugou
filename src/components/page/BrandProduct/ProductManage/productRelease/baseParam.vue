@@ -45,7 +45,7 @@
                                 <el-option label="普通商品" value="1"></el-option>
                                 <el-option label="内购商品" value="2"></el-option>
                                 <!--<el-option label="虚拟商品" value="3"></el-option>-->
-                                <el-option label="卡券商品" value="4"></el-option>
+                                <!--<el-option label="卡券商品" value="4"></el-option>-->
                             </el-select>
                         </el-form-item>
                     </el-col>

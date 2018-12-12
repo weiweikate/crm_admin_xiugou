@@ -18,14 +18,14 @@
                         <span>{{payType||`/`}}</span>
                     </div>
                     <!--待付款，交易完成-->
-                    <div class="item" v-if="warehouseOrder.status==1&&warehouseOrder.status==4">
+                    <div class="item" v-if="warehouseOrder.status==1||warehouseOrder.status==4">
                         <span>用户留言</span>
-                        <span>{{warehouseOrder.message}}</span>
+                        <span>{{warehouseOrder.message||`/`}}</span>
                     </div>
                     <!--已发货，交易完成-->
-                    <div class="item" v-if="warehouseOrder.status==3&&warehouseOrder.status==4">
+                    <div class="item" v-if="warehouseOrder.status==3||warehouseOrder.status==4">
                         <span>平台备注</span>
-                        <span>{{warehouseOrder.platformRemarks}}</span>
+                        <span>{{warehouseOrder.platformRemarks||`/`}}</span>
                     </div>
                     <div class="item">
                         <span>下单时间</span>
@@ -49,11 +49,12 @@
                     <!--交易关闭-->
                     <div class="item" v-if="warehouseOrder.status==5">
                         <span>关闭时间</span>
-                        <span>{{warehouseOrder.finishTime|formatDateAll}}</span>
+                        <span v-if="customerServiceInfos.subStatus==4">{{warehouseOrder.finishTime|formatDateAll}}</span>
+                        <span v-else>{{warehouseOrder.cancelTime|formatDateAll}}</span>
                     </div>
                     <div class="item" v-if="warehouseOrder.status==5">
                         <span>关闭原因</span>
-                        <span>{{subStatusArr[customerServiceInfos.subStatus]}}</span>
+                        <span>{{subStatusArr[warehouseOrder.subStatus]||`/`}}</span>
                     </div>
                 </div>
                 <div class="item-wrap">
@@ -108,7 +109,7 @@
                     </div>
                     <!--待付款，交易完成-->
                     <div v-if="orderInvoiceInfo">
-                        <div class="item" v-if="warehouseOrder.status==1&&warehouseOrder.status==4">
+                        <div class="item" v-if="warehouseOrder.status==1||warehouseOrder.status==4">
                             <span>发票类型</span>
                             <span>{{orderInvoiceInfo.type}}</span>
                         </div>
@@ -201,7 +202,7 @@
                         <td :rowspan="v.rows" v-if="k1==0" style="width: 400px">
                             <div class="name">
                                 <img :src="v.specImg" alt="">
-                                <!--<span class="pro-name color-blue" @click="$router.push({path:'/productInfo',query:{productInfoId:v.productId}})">{{v.productName}}</span>-->
+                                <!--<span class="pro-name color-blue" @click="toH5(v.prodCode)">{{v.productName}}</span>-->
                                 <span class="pro-name">{{v.productName}}</span>
                                 <span class="pro-spec">{{v.spec}}</span>
                             </div>
@@ -265,7 +266,9 @@
                 orderInvoiceInfo: {},
                 warehouseOrder: {},
                 payInfo: {},
-                payType: ''
+                payType: '',
+                mask: false,
+                src: ''
             };
         },
 
