@@ -20,7 +20,8 @@
                     <template slot-scope="scope">
                         <span v-if="scope.row.status == 1">待启用</span>
                         <span v-else-if="scope.row.status == 2">启用中</span>
-                        <span v-else>停用</span>
+                        <span v-else-if="scope.row.status == 0">停用</span>
+                        <span v-else>-</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="id" label="操作" align="center" min-width="150px">
@@ -29,6 +30,7 @@
                         <el-button v-else-if="scope.row.status == 2 && scope.row.defuaultTemplate == '0'"  @click="operateTpl(scope.row, '0')" type="primary">取消启用</el-button>
                         <el-button v-if="scope.row.status == '0' && scope.row.defuaultTemplate == '0'" type="warning" @click="editTpl(scope.row)">编辑</el-button>
                         <el-button v-if="scope.row.status == '0' && scope.row.defuaultTemplate == '0'" @click="delItem(scope.$index,scope.row.id)" type="danger">删除</el-button>
+                        <el-button type="success">复制</el-button>
                     </template>
                 </el-table-column>
             </el-table>
