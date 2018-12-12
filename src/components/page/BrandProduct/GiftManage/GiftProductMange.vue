@@ -152,7 +152,7 @@ export default {
                         o.id = v.id;
                         o.spec = {
                             skuCode: v.skuCode ? v.skuCode.split(',') : [],
-                            spec: v.spec ? v.spec.replace(regExpConfig.specialReg, '$1-$2').replace('@', '').split(',') : []
+                            spec: v.spec ? v.spec.split(',').map(item => item.replace(/^@|@$/g, '').replace(/@/g, '-')) : []
                         };
                         // o.productId = v.id;
                         o.prodCode = v.prodCode;
