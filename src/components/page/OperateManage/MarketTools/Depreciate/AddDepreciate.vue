@@ -50,12 +50,12 @@
                         v-model="beginTime"
                         placeholder="选择开始时间">
                     </el-date-picker>
-                    <span style="display: none" v-model="time"></span>
+                    <el-input style="display: none" v-model="time"></el-input>
                 </el-form-item>
-                <el-form-item prop="orderCloseTime" label="设置关闭订单">
+                <!-- <el-form-item prop="orderCloseTime" label="设置关闭订单">
                     <el-input class="small" v-model="form.orderCloseTime"></el-input>
                     <span>分钟未付款自动关闭订单</span>
-                </el-form-item>
+                </el-form-item> -->
                 <div class="spec-item">
                     <el-form-item prop="intervalTime" label="降价幅度">
                         <span>每</span>
@@ -184,9 +184,9 @@
             return {
                 nav: ['运营管理', '营销工具管理', '降价拍', '新建降价拍'],
                 rules: {
-                    orderCloseTime: [
-                        { validator: isInt, trigger: 'blur' }
-                    ],
+                    // orderCloseTime: [
+                    //     { validator: isInt, trigger: 'blur' }
+                    // ],
                     intervalTime: [
                         { validator: isInt, trigger: 'blur' }
                     ],
@@ -215,7 +215,7 @@
                     downPrice: '', // 降价幅度 金额
                     floorPriceTime: '', // 降到底价还允许购买的时间
                     startPrice: '', // 起拍价格
-                    orderCloseTime: '', // 自动关闭订单时间
+                    orderCloseTime: 1, // 自动关闭订单时间
                     totalNumber: '', // 发放总数量
                     limitNumber: ''// 限购数量
                 },
@@ -322,6 +322,7 @@
                         }
                         // 表单提交
                         const data = this.form;
+                        data.orderCloseTime=1;
                         if (!data.limitNumber) data.limitNumber = -1;
                         this.time = this.beginTime;
                         data.beginTime = moment(this.time).format('YYYY-MM-DD HH:mm:00'); // 活动开始时间

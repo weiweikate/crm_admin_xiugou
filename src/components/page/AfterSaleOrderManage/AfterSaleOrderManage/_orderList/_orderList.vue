@@ -106,7 +106,7 @@
                 this.pageLoading = true;
                 request.queryAfterSalePage(this.data).then(res => {
                     this.pageLoading = false;
-                    this.tableData = res.data.data;
+                    this.tableData = res.data?res.data.data:[];
                     this.page.totalPage = res.data.totalNum;
                 }).catch(err => {
                     this.pageLoading = false;
