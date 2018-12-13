@@ -449,8 +449,11 @@
         methods: {
             // 价格向上取整
             ceil(val) {
-                const x = val * 10;
-                return Math.ceil(x) / 10;
+                if (val !== '' && val !== null && val !== undefined) {
+                    const x = val * 10;
+                    return Math.ceil(x) / 10;
+                }
+                return 0;
             },
             // 处理价格自动生成
             handlePrice(row) {
@@ -464,7 +467,7 @@
                     const v5 = row.v0 - 4 * a;
                     const v6 = row.v0 - 4 * a;
                     const groupPrice = row.settlementPrice * 1.3;
-                    if (v1 < groupPrice || v2 < groupPrice || v3 < groupPrice || v4 < groupPrice || v5 < groupPrice) return;
+                    if (v1 < groupPrice || v2 < groupPrice || v3 < groupPrice || v4 < groupPrice || v5 < groupPrice) return this.$message.warning('请输入正确的价格');
                     row.v1 = this.ceil(v1);
                     row.v2 = this.ceil(v2);
                     row.v3 = this.ceil(v3);
@@ -701,8 +704,37 @@
                         v.weight = this.batchPriceArr[0].weight;
                         this.$set(this.priceTable, k, v);
                     });
-                    this.batchPrice = false;
+                } else {
+                    this.priceTable.forEach((v, k) => {
+                        v.originalPrice = this.ceil(this.batchPriceArr[0].originalPrice) ? this.ceil(this.batchPriceArr[0].originalPrice) : v.originalPrice;
+                        v.v0 = this.ceil(this.batchPriceArr[0].v0) ? this.ceil(this.batchPriceArr[0].v0) : v.v0;
+                        v.v1 = this.ceil(this.batchPriceArr[0].v1) ? this.ceil(this.batchPriceArr[0].v1) : v.v1;
+                        v.v2 = this.ceil(this.batchPriceArr[0].v2) ? this.ceil(this.batchPriceArr[0].v2) : v.v2;
+                        v.v3 = this.ceil(this.batchPriceArr[0].v3) ? this.ceil(this.batchPriceArr[0].v3) : v.v3;
+                        v.v4 = this.ceil(this.batchPriceArr[0].v4) ? this.ceil(this.batchPriceArr[0].v4) : v.v4;
+                        v.v5 = this.ceil(this.batchPriceArr[0].v5) ? this.ceil(this.batchPriceArr[0].v5) : v.v5;
+                        v.v6 = this.ceil(this.batchPriceArr[0].v6) ? this.ceil(this.batchPriceArr[0].v6) : v.v6;
+                        v.groupPrice = this.ceil(this.batchPriceArr[0].groupPrice) ? this.ceil(this.batchPriceArr[0].groupPrice) : v.groupPrice;
+                        v.minPrice = this.ceil(this.batchPriceArr[0].minPrice) ? this.ceil(this.batchPriceArr[0].minPrice) : v.minPrice;
+                        v.settlementPrice = this.ceil(this.batchPriceArr[0].settlementPrice) ? this.ceil(this.batchPriceArr[0].settlementPrice) : v.settlementPrice;
+                        v.weight = this.batchPriceArr[0].weight;
+                        this.$set(this.priceTable, k, v);
+                    });
                 }
+                this.batchPrice = false;
+                this.batchPriceArr = [{
+                    originalPrice: '',
+                    v0: '',
+                    v1: '',
+                    v2: '',
+                    v3: '',
+                    v4: '',
+                    v5: '',
+                    v6: '',
+                    groupPrice: '',
+                    settlementPrice: '',
+                    weight: ''
+                }];
             },
             // 生成列表
             addprodSku() {
