@@ -71,7 +71,7 @@
         <el-table v-loading="tableLoading" :height="height" border :data="tableData" @selection-change="handleSelectionChange">
             <el-table-column type="selection" align="center"></el-table-column>
             <el-table-column prop="activityCode" align="center" label="编号" min-width="100"></el-table-column>
-            <el-table-column label="降价拍商品" min-width="300">
+            <el-table-column label="降价拍商品" width="400px">
                 <template slot-scope="scope">
                     <div class="product-img">
                         <img :src="scope.row.imgUrl">

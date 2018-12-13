@@ -52,7 +52,7 @@
         </div>
         <el-dialog title="手工退款备注" :visible.sync="mask">
             <el-form>
-                <el-input type="textarea" v-model="remark" placeholder="仅需操作第三方退款金额，余额由系统自动退回，请详细记录手工退款账号等信息。" @input="inputRemark" maxlength="100"></el-input>
+                <el-input type="textarea" v-model="remarks" placeholder="仅需操作第三方退款金额，余额由系统自动退回，请详细记录手工退款账号等信息。" @input="inputRemark" maxlength="100"></el-input>
                 <span class="count">{{count}}/100</span>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -76,7 +76,7 @@
                 data: {},
                 mask: false,
                 count: 0,
-                remark: '',
+                remarks: '',
                 row: {},
                 btnLoading: false,
                 statusArr: ['待退款', '退款成功', '三方退款失败', '平台退款失败', '取消退款(关闭)']// 状态: 1.待退款 2.退款成功 3.三方退款失败 4.平台退款失败 5.取消退款(关闭)
@@ -105,25 +105,29 @@
                 this.row = row;
                 if (num == 1) {
                     this.mask = true;
+                    this.remarks = '';
+                    this.count = 0;
                 } else {
                     request.refundAmounts(data).then(res => {
                         this.$message.success(res.msg);
+                        this.getList(this.page.currentPage);
                     });
                 }
             },
             inputRemark() {
-                this.count = this.remark.length;
+                this.count = this.remarks.length;
             },
             // 手工退款
             refundSure() {
                 const data = {
                     refundNo: this.row.refundNo,
-                    remark: this.remark
+                    remarks: this.remarks
                 };
                 this.btnLoading = true;
                 request.manualRefund(data).then(res => {
                     this.$message.success(res.msg);
                     this.mask = false;
+                    this.getList(this.page.currentPage);
                     this.btnLoading = false;
                 }).catch(err => {
                     this.btnLoading = false;
@@ -163,7 +167,6 @@
             .name {
                 float: left;
                 position: relative;
-                display: inline-block;
                 height: 100px;
                 text-align: left;
                 img {

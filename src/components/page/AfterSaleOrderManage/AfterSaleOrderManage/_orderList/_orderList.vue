@@ -147,7 +147,6 @@
             .name {
                 float: left;
                 position: relative;
-                display: inline-block;
                 height: 100px;
                 text-align: left;
                 img {

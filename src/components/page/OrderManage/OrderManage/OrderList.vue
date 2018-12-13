@@ -195,7 +195,8 @@ export default {
             const orderStatus = this.form.orderStatus;
             const form = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '';
             const to = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : '';
-            this.downloadOrderList = api.downloadOrderList + '?platformNo=' + platformNo + '&warehouseOrderNo=' + warehouseOrderNo + '&warehouseType=' + warehouseType + '&source=' + source + '&invoiceRequired=' + invoiceRequired + '&userPhone=' + userPhone + '&userPhoneName=' + userPhoneName + '&marker=' + marker + '&pushStatus=' + pushStatus + '&lockStatus=' + lockStatus + '&orderStatus=' + orderStatus + '&form=' + form + '&to=' + to;
+            const warehouseOrderNos = this.$refs[this.activeName].warehouseOrderNos.join(',');
+            this.downloadOrderList = api.downloadOrderList + '?platformNo=' + platformNo + '&warehouseOrderNo=' + warehouseOrderNo + '&warehouseType=' + warehouseType + '&source=' + source + '&invoiceRequired=' + invoiceRequired + '&userPhone=' + userPhone + '&userPhoneName=' + userPhoneName + '&marker=' + marker + '&pushStatus=' + pushStatus + '&lockStatus=' + lockStatus + '&orderStatus=' + orderStatus + '&form=' + form + '&to=' + to + '&warehouseOrderNos=' + warehouseOrderNos;
             this.$refs.exportData.href = this.downloadOrderList;
         },
         // 提交表单
