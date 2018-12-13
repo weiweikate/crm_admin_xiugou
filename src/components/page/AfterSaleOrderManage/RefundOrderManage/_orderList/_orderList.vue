@@ -35,7 +35,7 @@
             <el-table-column label="操作" align="center" min-width="150px">
                 <template slot-scope="scope">
                     <el-button type="primary" v-if="scope.row.status==1||scope.row.status==3||scope.row.status==4" @click="refund(scope.row,1)">手工退款</el-button>
-                    <el-button type="success" v-if="scope.row.status==1" @click="refund(scope.row,2)">退款</el-button>
+                    <el-button type="success" v-if="scope.row.status==1||scope.row.status==3||scope.row.status==4" @click="refund(scope.row,2)">退款</el-button>
                 </template>
             </el-table-column>
         </el-table>

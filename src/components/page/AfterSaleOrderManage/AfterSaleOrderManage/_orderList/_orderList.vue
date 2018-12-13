@@ -56,7 +56,7 @@
             </el-table-column>
             <el-table-column label="售后处理说明" align="center">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.refundWarehouseFeedback">{{scope.row.refundWarehouseFeedback}}</template>
+                    <template v-if="scope.row.secRemarks">{{scope.row.secRemarks}}</template>
                     <template v-else>/</template>
                 </template>
             </el-table-column>
