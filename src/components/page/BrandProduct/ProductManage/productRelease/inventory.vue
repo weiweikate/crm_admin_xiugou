@@ -125,7 +125,7 @@
                         </el-table-column>
                         <el-table-column label="v0" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="disabled" :controls="false" :min="0"
+                                <el-input-number @change="handlePrice(scope.row)" :disabled="disabled" :controls="false" :min="0"
                                                  v-model.number="scope.row.v0"></el-input-number>
                             </template>
                         </el-table-column>
@@ -173,7 +173,7 @@
                         </el-table-column>
                         <el-table-column label="结算价" align="center" width="225">
                             <template slot-scope="scope">
-                                <el-input-number :disabled="disabled" :controls="false" :min="0"
+                                <el-input-number @change="handlePrice(scope.row)" :disabled="disabled" :controls="false" :min="0"
                                                  v-model.number="scope.row.settlementPrice"></el-input-number>
                             </template>
                         </el-table-column>
@@ -192,13 +192,13 @@
                         <el-table-column label="SKU条形码" align="center" width="225">
                             <template slot-scope="scope">
                                 <el-input :disabled="disabled || !scope.row.isEdit"
-                                          v-model="scope.row.barCode"></el-input>
+                                          v-model.trim="scope.row.barCode"></el-input>
                             </template>
                         </el-table-column>
                         <el-table-column label="供应商SKU编码" align="center" width="225">
                             <template slot-scope="scope">
                                 <el-input :disabled="disabled || !scope.row.isEdit"
-                                          v-model="scope.row.supplierSkuCode"></el-input>
+                                          v-model.trim="scope.row.supplierSkuCode"></el-input>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -276,62 +276,62 @@
             <el-table :data="batchPriceArr" border stripe>
                 <el-table-column label="原价" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.originalPrice"></el-input>
+                        <el-input v-model.number="scope.row.originalPrice"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="v0" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.v0"></el-input>
+                        <el-input v-model.number="scope.row.v0"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="v1" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.v1"></el-input>
+                        <el-input v-model.number="scope.row.v1"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="v2" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.v2"></el-input>
+                        <el-input v-model.number="scope.row.v2"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="v3" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.v3"></el-input>
+                        <el-input v-model.number="scope.row.v3"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="v4" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.v4"></el-input>
+                        <el-input v-model.number="scope.row.v4"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="v5" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.v5"></el-input>
+                        <el-input v-model.number="scope.row.v5"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="v6" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.v6"></el-input>
+                        <el-input v-model.number="scope.row.v6"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="拼店价" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.groupPrice"></el-input>
+                        <el-input v-model.number="scope.row.groupPrice"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="最低支付价" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.minPrice"></el-input>
+                        <el-input v-model.number="scope.row.minPrice"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="结算价" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.settlementPrice"></el-input>
+                        <el-input v-model.number="scope.row.settlementPrice"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="重量（kg）" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.weight"></el-input>
+                        <el-input v-model.number="scope.row.weight"></el-input>
                     </template>
                 </el-table-column>
             </el-table>
@@ -447,6 +447,36 @@
             this.getProductInfo();
         },
         methods: {
+            // 价格向上取整
+            ceil(val) {
+                if (val !== '' && val !== null && val !== undefined) {
+                    const x = val * 10;
+                    return Math.ceil(x) / 10;
+                }
+                return 0;
+            },
+            // 处理价格自动生成
+            handlePrice(row) {
+                if (row.settlementPrice !== null && row.settlementPrice !== undefined && row.v0 !== null && row.v0 !== undefined && row.v0 > row.settlementPrice) {
+                    const profit = row.v0 - row.settlementPrice;
+                    const a = profit * 0.7 / 4;
+                    const v1 = row.v0 - a;
+                    const v2 = row.v0 - 2 * a;
+                    const v3 = row.v0 - 3 * a;
+                    const v4 = row.v0 - 4 * a;
+                    const v5 = row.v0 - 4 * a;
+                    const v6 = row.v0 - 4 * a;
+                    const groupPrice = row.settlementPrice * 1.3;
+                    if (v1 < groupPrice || v2 < groupPrice || v3 < groupPrice || v4 < groupPrice || v5 < groupPrice) return this.$message.warning('请输入正确的价格');
+                    row.v1 = this.ceil(v1);
+                    row.v2 = this.ceil(v2);
+                    row.v3 = this.ceil(v3);
+                    row.v4 = this.ceil(v4);
+                    row.v5 = this.ceil(v5);
+                    row.v6 = this.ceil(v6);
+                    row.groupPrice = this.ceil(row.settlementPrice * 1.3);
+                }
+            },
             // 提交表单
             submitForm() {
                 for (let i = 0; i < this.priceTable.length; i++) {
@@ -462,6 +492,7 @@
                     const v = this.priceTable[i];
                     v.stockUnit = this.unit;
                     const reg = /^[+]{0,1}(\d+)$/;
+                    if (v.minPrice < 0) return this.$message.warning('请输入正确的最低支付价！');
                     if (v.warehouseStock) {
                         if (v.sellStock && v.sellStock != '') {
                             if (v.sellStock > v.warehouseStock) {
@@ -647,22 +678,63 @@
             // 批量添加价格
             batchAddPrice() {
                 if (this.priceTable.length === 0) return this.$message.warning('添加失败');
-                this.priceTable.forEach((v, k) => {
-                    v.originalPrice = this.batchPriceArr[0].originalPrice;
-                    v.v0 = this.batchPriceArr[0].v0;
-                    v.v1 = this.batchPriceArr[0].v1;
-                    v.v2 = this.batchPriceArr[0].v2;
-                    v.v3 = this.batchPriceArr[0].v3;
-                    v.v4 = this.batchPriceArr[0].v4;
-                    v.v5 = this.batchPriceArr[0].v5;
-                    v.v6 = this.batchPriceArr[0].v6;
-                    v.groupPrice = this.batchPriceArr[0].groupPrice;
-                    v.minPrice = this.batchPriceArr[0].minPrice;
-                    v.settlementPrice = this.batchPriceArr[0].settlementPrice;
-                    v.weight = this.batchPriceArr[0].weight;
-                    this.$set(this.priceTable, k, v);
-                });
+                if (this.batchPriceArr[0].v0 !== null && this.batchPriceArr[0].v0 !== undefined && this.batchPriceArr[0].v0 !== '' && this.batchPriceArr[0].settlementPrice !== null && this.batchPriceArr[0].settlementPrice !== undefined && this.batchPriceArr[0].settlementPrice !== '') {
+                    const profit = this.batchPriceArr[0].v0 - this.batchPriceArr[0].settlementPrice;
+                    const a = profit * 0.7 / 4;
+                    const v1 = this.batchPriceArr[0].v0 - a;
+                    const v2 = this.batchPriceArr[0].v0 - 2 * a;
+                    const v3 = this.batchPriceArr[0].v0 - 3 * a;
+                    const v4 = this.batchPriceArr[0].v0 - 4 * a;
+                    const v5 = this.batchPriceArr[0].v0 - 4 * a;
+                    const v6 = this.batchPriceArr[0].v0 - 4 * a;
+                    const groupPrice = this.batchPriceArr[0].settlementPrice * 1.3;
+                    if (v1 < groupPrice || v2 < groupPrice || v3 < groupPrice || v4 < groupPrice || v5 < groupPrice) return this.$message.warning('请输入正确的价格');
+                    this.priceTable.forEach((v, k) => {
+                        v.originalPrice = this.batchPriceArr[0].originalPrice;
+                        v.v0 = this.ceil(this.batchPriceArr[0].v0);
+                        v.v1 = this.ceil(v1);
+                        v.v2 = this.ceil(v2);
+                        v.v3 = this.ceil(v3);
+                        v.v4 = this.ceil(v4);
+                        v.v5 = this.ceil(v5);
+                        v.v6 = this.ceil(v6);
+                        v.groupPrice = this.ceil(groupPrice);
+                        v.minPrice = this.ceil(this.batchPriceArr[0].minPrice);
+                        v.settlementPrice = this.ceil(this.batchPriceArr[0].settlementPrice);
+                        v.weight = this.batchPriceArr[0].weight;
+                        this.$set(this.priceTable, k, v);
+                    });
+                } else {
+                    this.priceTable.forEach((v, k) => {
+                        v.originalPrice = this.ceil(this.batchPriceArr[0].originalPrice) ? this.ceil(this.batchPriceArr[0].originalPrice) : v.originalPrice;
+                        v.v0 = this.ceil(this.batchPriceArr[0].v0) ? this.ceil(this.batchPriceArr[0].v0) : v.v0;
+                        v.v1 = this.ceil(this.batchPriceArr[0].v1) ? this.ceil(this.batchPriceArr[0].v1) : v.v1;
+                        v.v2 = this.ceil(this.batchPriceArr[0].v2) ? this.ceil(this.batchPriceArr[0].v2) : v.v2;
+                        v.v3 = this.ceil(this.batchPriceArr[0].v3) ? this.ceil(this.batchPriceArr[0].v3) : v.v3;
+                        v.v4 = this.ceil(this.batchPriceArr[0].v4) ? this.ceil(this.batchPriceArr[0].v4) : v.v4;
+                        v.v5 = this.ceil(this.batchPriceArr[0].v5) ? this.ceil(this.batchPriceArr[0].v5) : v.v5;
+                        v.v6 = this.ceil(this.batchPriceArr[0].v6) ? this.ceil(this.batchPriceArr[0].v6) : v.v6;
+                        v.groupPrice = this.ceil(this.batchPriceArr[0].groupPrice) ? this.ceil(this.batchPriceArr[0].groupPrice) : v.groupPrice;
+                        v.minPrice = this.ceil(this.batchPriceArr[0].minPrice) ? this.ceil(this.batchPriceArr[0].minPrice) : v.minPrice;
+                        v.settlementPrice = this.ceil(this.batchPriceArr[0].settlementPrice) ? this.ceil(this.batchPriceArr[0].settlementPrice) : v.settlementPrice;
+                        v.weight = this.batchPriceArr[0].weight;
+                        this.$set(this.priceTable, k, v);
+                    });
+                }
                 this.batchPrice = false;
+                this.batchPriceArr = [{
+                    originalPrice: '',
+                    v0: '',
+                    v1: '',
+                    v2: '',
+                    v3: '',
+                    v4: '',
+                    v5: '',
+                    v6: '',
+                    groupPrice: '',
+                    settlementPrice: '',
+                    weight: ''
+                }];
             },
             // 生成列表
             addprodSku() {
