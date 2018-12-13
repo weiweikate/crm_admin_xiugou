@@ -7,13 +7,15 @@
                 <el-table-column prop="id" label="编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="秀值分配模板名称" align="center"></el-table-column>
                 <el-table-column prop="activeTime" label="启用时间" align="center">
-                    <template slot-scope="scope" v-if="scope.row.activeTime">
-                        {{scope.row.activeTime | formatDateAll}}
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.activeTime">{{scope.row.activeTime | formatDateAll}}</span>
+                        <span v-else>-</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="stopTime" label="停用时间" align="center">
-                    <template slot-scope="scope" v-if="scope.row.stopTime">
-                        {{scope.row.stopTime | formatDateAll}}
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.stopTime">{{scope.row.stopTime | formatDateAll}}</span>
+                        <span v-else>-</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="status" label="状态" align="center">

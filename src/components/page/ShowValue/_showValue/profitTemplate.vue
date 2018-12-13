@@ -2,9 +2,9 @@
     <div class="profit-tpl">
         <div class="item">
             <p class="small-title">间接分润</p>
-            <p class="level" v-for="(value, key) in form.direct">
+            <p class="level" v-for="(value, key) in form.indirect">
                 <span>{{key}}：</span>
-                <el-input @blur="dealNum(form.direct[key], 'direct', key)" placeholder="请输入数值" v-model="form.direct[key]" class="inp"></el-input>
+                <el-input @blur="dealNum(form.indirect[key], 'indirect', key)" placeholder="请输入数值" v-model="form.indirect[key]" class="inp"></el-input>
                 <span>%</span>
             </p>
             <el-select v-model="flow" placeholder="请选择多余流向" class="flow">
@@ -14,9 +14,9 @@
         </div>
         <div class="item">
             <p class="small-title">直接分润</p>
-            <p class="level" v-for="(value, key) in form.indirect">
+            <p class="level" v-for="(value, key) in form.direct">
                 <span>{{key}}：</span>
-                <el-input @blur="dealNum(form.indirect[key], 'indirect', key)" placeholder="请输入数值" v-model="form.indirect[key]" class="inp"></el-input>
+                <el-input @blur="dealNum(form.direct[key], 'direct', key)" placeholder="请输入数值" v-model="form.direct[key]" class="inp"></el-input>
                 <span>%</span>
             </p>
             <el-select disabled v-model="flow" placeholder="请选择多余流向" class="flow">

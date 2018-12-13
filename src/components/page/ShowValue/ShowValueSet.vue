@@ -144,8 +144,8 @@
                                     v4: v.v4,
                                     v5: v.v5
                                 };
-                                if (v.shareType == 1) showValueParam.form.direct = obj;
-                                if (v.shareType == 2) showValueParam.form.indirect = obj;
+                                if (v.shareType == 1) showValueParam.form.indirect = obj;
+                                if (v.shareType == 2) showValueParam.form.direct = obj;
                                 if (v.shareType == 3) showValueParam.form.oneself = obj;
                                 showValueParam.flow = v.flow ? v.flow.toString() : '';
                             });
@@ -160,8 +160,8 @@
                                     v4: v.v4,
                                     v5: v.v5
                                 };
-                                if (v.shareType == 1) showBeansParam.form.direct = obj;
-                                if (v.shareType == 2) showBeansParam.form.indirect = obj;
+                                if (v.shareType == 1) showBeansParam.form.indirect = obj;
+                                if (v.shareType == 2) showBeansParam.form.direct = obj;
                                 if (v.shareType == 3) showBeansParam.form.oneself = obj;
                                 showBeansParam.flow = v.flow ? v.flow.toString() : '';
                             });
