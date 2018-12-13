@@ -212,7 +212,7 @@
                         </div>
                     </el-form-item>
                     <el-form-item label="售后审核说明">
-                        <el-input type="textarea" v-model="form.remarks"></el-input>
+                        <el-input type="textarea" maxlength="50" v-model="form.remarks"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" :loading="btnLoading" @click="submit('form')">提交</el-button>
@@ -240,7 +240,7 @@
                         <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~{{warehouseOrderProduct.payAmount|formatMoney}}区间内调整，其中含运费{{warehouseOrderProduct.freightAmount|formatMoney}}</span>
                     </el-form-item>
                     <el-form-item label="售后处理说明">
-                        <el-input type="textarea" v-model="form.remarks"></el-input>
+                        <el-input type="textarea" maxlength="50" v-model="form.remarks"></el-input>
                     </el-form-item>
                     <el-form-item v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType!=4&&(orderCustomerServiceInfo.type==3&&form.result!=2)">
                         <el-checkbox v-model="checked" @change="chooseXnSend">虚拟发货</el-checkbox>
