@@ -2,7 +2,7 @@
     <div class="product-order-list" v-loading="pageLoading">
         <el-table v-if="tableData.length==0" border>
             <el-table-column label="商品信息" align="center"></el-table-column>
-            <el-table-column label="单价  元" align="center"></el-table-column>
+            <el-table-column label="单价  数量" align="center"></el-table-column>
             <el-table-column label="订单金额" align="center"></el-table-column>
             <el-table-column label="收货信息" align="center"></el-table-column>
             <el-table-column label="发货信息" align="center"></el-table-column>
@@ -13,7 +13,7 @@
             <thead>
                 <tr>
                     <td>商品信息</td>
-                    <td>单价<span class="marl20">元</span></td>
+                    <td>单价<span class="marl20">数量</span></td>
                     <td>订单金额</td>
                     <td>收货信息</td>
                     <td>发货信息</td>
@@ -62,7 +62,7 @@
                         <div v-if="v.warehouseOrder.platformRemarks">平台备注：{{v.warehouseOrder.platformRemarks}}</div>
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
-                        <div>供应商：{{v.warehouseOrder.supplierName}}</div>
+                        <div v-if="v.warehouseOrder.warehouseType>2">供应商：{{v.warehouseOrder.supplierName}}</div>
                         <div>发货仓库：{{warehouseArr[v.warehouseOrder.warehouseType-1]}}</div>
                         <div v-if="v.warehouseOrder.status==2||v.warehouseOrder.status==3">推送状态：{{pushStatusArr[v.warehouseOrder.subStatus]}}</div>
                         <div>锁定状态：{{lockStatusArr[v.warehouseOrder.lockStatus]}}</div>

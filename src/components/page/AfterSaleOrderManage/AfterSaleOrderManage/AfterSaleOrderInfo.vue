@@ -50,7 +50,7 @@
                     </div>
                     <div class="item">
                         <span>申请售后原因</span>
-                        <span>{{orderCustomerServiceInfo.reason}}</span>
+                        <span>{{orderCustomerServiceInfo.reason||`/`}}</span>
                     </div>
                     <div class="item">
                         <span>问题描述</span>
@@ -155,6 +155,7 @@
                         <template slot-scope="scope">
                             <div class="name">
                                 <img :src="scope.row.specImg" alt="">
+                                <!--<span class="pro-name color-blue" @click="toH5(scope.row.prodCode)">{{scope.row.productName}}</span>-->
                                 <span class="pro-name">{{scope.row.productName}}</span>
                                 <span class="pro-spec">{{scope.row.spec}}</span>
                             </div>
@@ -190,7 +191,7 @@
                             <el-radio label="2">审核驳回</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="审核金额调整" v-if="form.result!=2">
+                    <el-form-item label="审核金额调整" v-if="form.result!=2&&orderCustomerServiceInfo.type!=3">
                         <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~{{warehouseOrderProduct.payAmount|formatMoney}}区间内调整，其中含运费{{warehouseOrderProduct.freightAmount|formatMoney}}</span>
                     </el-form-item>
                     <el-form-item label="退货地址" class="back-address" v-if="form.result!=2">
@@ -241,13 +242,16 @@
                     <el-form-item label="售后处理说明">
                         <el-input type="textarea" v-model="form.remarks"></el-input>
                     </el-form-item>
+                    <el-form-item v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType!=4&&(orderCustomerServiceInfo.type==3&&form.result!=2)">
+                        <el-checkbox v-model="checked" @change="chooseXnSend">虚拟发货</el-checkbox>
+                    </el-form-item>
                     <!--换货-->
-                    <el-form-item label="换货物流公司" v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&(orderCustomerServiceInfo.type==3&&form.result!=2)">
+                    <el-form-item label="换货物流公司" v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&(orderCustomerServiceInfo.type==3&&form.result!=2)||checked">
                         <el-select v-model="form.expressCode">
                             <el-option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.name"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="换货物流单号" v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&(orderCustomerServiceInfo.type==3&&form.result!=2)">
+                    <el-form-item label="换货物流单号" v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&(orderCustomerServiceInfo.type==3&&form.result!=2)||checked">
                         <el-input v-model="form.expressNo"></el-input>
                     </el-form-item>
                     <el-form-item>
@@ -256,18 +260,20 @@
                 </el-form>
             </div>
         </el-card>
+        <product-dialog v-show="mask" :src="src" :mask="mask" @msg="closeMask"></product-dialog>
     </div>
 </template>
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import { queryDictonary } from '@/JS/commom';
+    import productDialog from '@/components/common/ProductDialog';
+    import { queryDictonary, myProductDialog } from '@/JS/commom';
     import request from '@/http/http.js';
     import utils from '@/utils/index';
 
     export default {
-        components: { vBreadcrumb },
-        mixins: [queryDictonary],
+        components: { vBreadcrumb, productDialog },
+        mixins: [queryDictonary, myProductDialog],
         data() {
             return {
                 nav: ['订单管理', '售后单管理', '售后单列表', '售后单详情'],
@@ -286,7 +292,8 @@
                 typeArr: ['仅退款', '退货退款 ', '换货'], // 类型
                 btnLoading: false,
                 logicList: [],
-                form: {}
+                form: {},
+                checked: false
             };
         },
 
@@ -303,9 +310,9 @@
                 this.tableData = [];
                 request.lookDetail({ serviceNo: this.serviceNo }).then(res => {
                     this.orderInfo = res.data;
-                    if (res.data.warehouseType && res.data.warehouseType != 3) {
-                        this.form.address = '2';
-                    }
+                    // if (res.data.warehouseType && res.data.warehouseType != 3) {
+                    //     this.form.address = '2';
+                    // }
                     this.tableData = [res.data.warehouseOrderProduct];
                     this.exchangeExpress = res.data.exchangeExpress || {};
                     this.orderCustomerServiceInfo = res.data.orderCustomerServiceInfo || {};
@@ -371,12 +378,15 @@
                         if (this.form.result == 2) {
                             url = 'refuse';
                         } else {
+                            if (this.checked) {
+                                data.warehouseType = 4;
+                            }
                             if (!this.form.type) {
                                 return this.$message.warning('请选择售后类型');
                             }
                             if (this.form.type == 1) {
                                 url = 'agreeExchange';
-                                if (this.orderInfo.warehouseType == 4 && (!data.expressNo || !data.expressCode)) {
+                                if (data.warehouseType == 4 && (!data.expressNo || !data.expressCode)) {
                                     return this.$message.warning('请输入完整的物流信息');
                                 }
                                 this.logicList.forEach((v, k) => {
@@ -506,6 +516,10 @@
                 width: 600px;
                 height: 100px;
             }
+        }
+        .color-blue{
+            color: #33b4ff;
+            cursor: pointer;
         }
     }
 </style>
