@@ -37,7 +37,7 @@
                         <span>{{orderPayInfo.payTime|formatDateAll}}</span>
                     </div>
                     <!--已发货-->
-                    <div class="item" v-if="warehouseOrder.status==3">
+                    <div class="item" v-if="warehouseOrder.status==3||warehouseOrder.status==4">
                         <span>发货时间</span>
                         <span>{{warehouseOrder.deliverTime|formatDateAll}}</span>
                     </div>
