@@ -281,7 +281,7 @@
                 </el-table-column>
                 <el-table-column label="v0" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.v0"></el-input>
+                        <el-input @change="handlePrice(scope.row)" v-model.number="scope.row.v0"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="v1" align="center">
@@ -326,7 +326,7 @@
                 </el-table-column>
                 <el-table-column label="结算价" align="center">
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.settlementPrice"></el-input>
+                        <el-input @change="handlePrice(scope.row)" v-model.number="scope.row.settlementPrice"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="重量（kg）" align="center">
@@ -457,7 +457,7 @@
             },
             // 处理价格自动生成
             handlePrice(row) {
-                if (row.settlementPrice !== null && row.settlementPrice !== undefined && row.v0 !== null && row.v0 !== undefined && row.v0 > row.settlementPrice) {
+                if (row.settlementPrice !== null && row.settlementPrice !== undefined && row.v0 !== null && row.v0 !== undefined && row.v0 >= row.settlementPrice) {
                     const profit = row.v0 - row.settlementPrice;
                     const a = profit * 0.7 / 4;
                     const v1 = row.v0 - a;
@@ -467,7 +467,7 @@
                     const v5 = row.v0 - 4 * a;
                     const v6 = row.v0 - 4 * a;
                     const groupPrice = row.settlementPrice * 1.3;
-                    if (v1 < groupPrice || v2 < groupPrice || v3 < groupPrice || v4 < groupPrice || v5 < groupPrice) return this.$message.warning('请输入正确的价格');
+                    // if (v1 < groupPrice || v2 < groupPrice || v3 < groupPrice || v4 < groupPrice || v5 < groupPrice) return this.$message.warning('请输入正确的价格');
                     row.v1 = this.ceil(v1);
                     row.v2 = this.ceil(v2);
                     row.v3 = this.ceil(v3);
@@ -678,49 +678,50 @@
             // 批量添加价格
             batchAddPrice() {
                 if (this.priceTable.length === 0) return this.$message.warning('添加失败');
-                if (this.batchPriceArr[0].v0 !== null && this.batchPriceArr[0].v0 !== undefined && this.batchPriceArr[0].v0 !== '' && this.batchPriceArr[0].settlementPrice !== null && this.batchPriceArr[0].settlementPrice !== undefined && this.batchPriceArr[0].settlementPrice !== '') {
-                    const profit = this.batchPriceArr[0].v0 - this.batchPriceArr[0].settlementPrice;
-                    const a = profit * 0.7 / 4;
-                    const v1 = this.batchPriceArr[0].v0 - a;
-                    const v2 = this.batchPriceArr[0].v0 - 2 * a;
-                    const v3 = this.batchPriceArr[0].v0 - 3 * a;
-                    const v4 = this.batchPriceArr[0].v0 - 4 * a;
-                    const v5 = this.batchPriceArr[0].v0 - 4 * a;
-                    const v6 = this.batchPriceArr[0].v0 - 4 * a;
-                    const groupPrice = this.batchPriceArr[0].settlementPrice * 1.3;
-                    if (v1 < groupPrice || v2 < groupPrice || v3 < groupPrice || v4 < groupPrice || v5 < groupPrice) return this.$message.warning('请输入正确的价格');
-                    this.priceTable.forEach((v, k) => {
-                        v.originalPrice = this.batchPriceArr[0].originalPrice;
-                        v.v0 = this.ceil(this.batchPriceArr[0].v0);
-                        v.v1 = this.ceil(v1);
-                        v.v2 = this.ceil(v2);
-                        v.v3 = this.ceil(v3);
-                        v.v4 = this.ceil(v4);
-                        v.v5 = this.ceil(v5);
-                        v.v6 = this.ceil(v6);
-                        v.groupPrice = this.ceil(groupPrice);
-                        v.minPrice = this.ceil(this.batchPriceArr[0].minPrice);
-                        v.settlementPrice = this.ceil(this.batchPriceArr[0].settlementPrice);
-                        v.weight = this.batchPriceArr[0].weight;
-                        this.$set(this.priceTable, k, v);
-                    });
-                } else {
-                    this.priceTable.forEach((v, k) => {
-                        v.originalPrice = this.ceil(this.batchPriceArr[0].originalPrice) ? this.ceil(this.batchPriceArr[0].originalPrice) : v.originalPrice;
-                        v.v0 = this.ceil(this.batchPriceArr[0].v0) ? this.ceil(this.batchPriceArr[0].v0) : v.v0;
-                        v.v1 = this.ceil(this.batchPriceArr[0].v1) ? this.ceil(this.batchPriceArr[0].v1) : v.v1;
-                        v.v2 = this.ceil(this.batchPriceArr[0].v2) ? this.ceil(this.batchPriceArr[0].v2) : v.v2;
-                        v.v3 = this.ceil(this.batchPriceArr[0].v3) ? this.ceil(this.batchPriceArr[0].v3) : v.v3;
-                        v.v4 = this.ceil(this.batchPriceArr[0].v4) ? this.ceil(this.batchPriceArr[0].v4) : v.v4;
-                        v.v5 = this.ceil(this.batchPriceArr[0].v5) ? this.ceil(this.batchPriceArr[0].v5) : v.v5;
-                        v.v6 = this.ceil(this.batchPriceArr[0].v6) ? this.ceil(this.batchPriceArr[0].v6) : v.v6;
-                        v.groupPrice = this.ceil(this.batchPriceArr[0].groupPrice) ? this.ceil(this.batchPriceArr[0].groupPrice) : v.groupPrice;
-                        v.minPrice = this.ceil(this.batchPriceArr[0].minPrice) ? this.ceil(this.batchPriceArr[0].minPrice) : v.minPrice;
-                        v.settlementPrice = this.ceil(this.batchPriceArr[0].settlementPrice) ? this.ceil(this.batchPriceArr[0].settlementPrice) : v.settlementPrice;
-                        v.weight = this.batchPriceArr[0].weight;
-                        this.$set(this.priceTable, k, v);
-                    });
-                }
+                this.priceTable.forEach((v, k) => {
+                    v.originalPrice = this.ceil(this.batchPriceArr[0].originalPrice) ? this.ceil(this.batchPriceArr[0].originalPrice) : v.originalPrice;
+                    v.v0 = this.ceil(this.batchPriceArr[0].v0) ? this.ceil(this.batchPriceArr[0].v0) : v.v0;
+                    v.v1 = this.ceil(this.batchPriceArr[0].v1) ? this.ceil(this.batchPriceArr[0].v1) : v.v1;
+                    v.v2 = this.ceil(this.batchPriceArr[0].v2) ? this.ceil(this.batchPriceArr[0].v2) : v.v2;
+                    v.v3 = this.ceil(this.batchPriceArr[0].v3) ? this.ceil(this.batchPriceArr[0].v3) : v.v3;
+                    v.v4 = this.ceil(this.batchPriceArr[0].v4) ? this.ceil(this.batchPriceArr[0].v4) : v.v4;
+                    v.v5 = this.ceil(this.batchPriceArr[0].v5) ? this.ceil(this.batchPriceArr[0].v5) : v.v5;
+                    v.v6 = this.ceil(this.batchPriceArr[0].v6) ? this.ceil(this.batchPriceArr[0].v6) : v.v6;
+                    v.groupPrice = this.ceil(this.batchPriceArr[0].groupPrice) ? this.ceil(this.batchPriceArr[0].groupPrice) : v.groupPrice;
+                    v.minPrice = this.ceil(this.batchPriceArr[0].minPrice) ? this.ceil(this.batchPriceArr[0].minPrice) : v.minPrice;
+                    v.settlementPrice = this.ceil(this.batchPriceArr[0].settlementPrice) ? this.ceil(this.batchPriceArr[0].settlementPrice) : v.settlementPrice;
+                    v.weight = this.batchPriceArr[0].weight;
+                    this.$set(this.priceTable, k, v);
+                });
+                // if (this.batchPriceArr[0].v0 !== null && this.batchPriceArr[0].v0 !== undefined && this.batchPriceArr[0].v0 !== '' && this.batchPriceArr[0].settlementPrice !== null && this.batchPriceArr[0].settlementPrice !== undefined && this.batchPriceArr[0].settlementPrice !== '') {
+                //     const profit = this.batchPriceArr[0].v0 - this.batchPriceArr[0].settlementPrice;
+                //     const a = profit * 0.7 / 4;
+                //     const v1 = this.batchPriceArr[0].v0 - a;
+                //     const v2 = this.batchPriceArr[0].v0 - 2 * a;
+                //     const v3 = this.batchPriceArr[0].v0 - 3 * a;
+                //     const v4 = this.batchPriceArr[0].v0 - 4 * a;
+                //     const v5 = this.batchPriceArr[0].v0 - 4 * a;
+                //     const v6 = this.batchPriceArr[0].v0 - 4 * a;
+                //     const groupPrice = this.batchPriceArr[0].settlementPrice * 1.3;
+                //     // if (v1 < groupPrice || v2 < groupPrice || v3 < groupPrice || v4 < groupPrice || v5 < groupPrice) return this.$message.warning('请输入正确的价格');
+                //     this.priceTable.forEach((v, k) => {
+                //         v.originalPrice = this.batchPriceArr[0].originalPrice;
+                //         v.v0 = this.ceil(this.batchPriceArr[0].v0);
+                //         v.v1 = this.ceil(v1);
+                //         v.v2 = this.ceil(v2);
+                //         v.v3 = this.ceil(v3);
+                //         v.v4 = this.ceil(v4);
+                //         v.v5 = this.ceil(v5);
+                //         v.v6 = this.ceil(v6);
+                //         v.groupPrice = this.ceil(groupPrice);
+                //         v.minPrice = this.ceil(this.batchPriceArr[0].minPrice);
+                //         v.settlementPrice = this.ceil(this.batchPriceArr[0].settlementPrice);
+                //         v.weight = this.batchPriceArr[0].weight;
+                //         this.$set(this.priceTable, k, v);
+                //     });
+                // } else {
+                //
+                // }
                 this.batchPrice = false;
                 this.batchPriceArr = [{
                     originalPrice: '',
