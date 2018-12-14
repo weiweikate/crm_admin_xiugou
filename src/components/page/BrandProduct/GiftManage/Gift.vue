@@ -86,7 +86,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-checkbox :disabled="form.type == 2" label="不支持退款" v-model="limit.notSupportRetMoney"></el-checkbox>
-                    <el-checkbox disabled label="不支持换货" v-model="limit.notSupportRetChange"></el-checkbox>
+                    <el-checkbox :disabled="form.type == 2" label="不支持换货" v-model="limit.notSupportRetChange"></el-checkbox>
                     <el-checkbox :disabled="form.type == 2" label="不支持退货" v-model="limit.notSupportRetGoods"></el-checkbox>
                 </el-form-item>
                 <hr style="border: 0;height: 1px;background-color: #eee;" />
@@ -243,7 +243,7 @@ export default {
             isUseUpload: false,
             showSaleTime: false,
             checkedAllUser: false,
-            uploadImg: '',
+            uploadImg: api.uploadImg,
             imgArr: [],
             itemList: [],
             brandArr: [],

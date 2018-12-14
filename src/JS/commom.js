@@ -1,4 +1,6 @@
 import request from '@/http/http.js';
+import utils from '@/utils/index.js';
+
 const getUserId = {
     methods: {
         getUserId() {
@@ -194,4 +196,23 @@ const uploadImage = {
         }
     }
 };
-export { getUserId, myMixinTable, queryDictonary, beforeAvatarUpload, uploadImage };
+
+// 商品预览弹窗
+const myProductDialog = {
+    data() {
+        return {
+            mask: false,
+            src: ''
+        };
+    },
+    methods: {
+        toH5(code) {
+            this.mask = true;
+            this.src = utils.getSrc(code);
+        },
+        closeMask() {
+            this.mask = false;
+        }
+    }
+};
+export { getUserId, myMixinTable, queryDictonary, beforeAvatarUpload, uploadImage, myProductDialog };

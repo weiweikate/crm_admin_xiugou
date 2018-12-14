@@ -94,7 +94,7 @@ export default {
                             // itemObj.productName = v.productName;
                             itemObj.productNumber = 1;
                             itemObj.skuCode = skuCode[index];
-                            itemObj.specValues = item.replace('@', '-');
+                            itemObj.specValues = item.replace(/^@|@$/g, '').replace(/@/g, '-');
                             specWrapArr.push(itemObj);
                         });
                         this.selectedPro.push(specWrapArr);
@@ -152,7 +152,7 @@ export default {
                         o.id = v.id;
                         o.spec = {
                             skuCode: v.skuCode ? v.skuCode.split(',') : [],
-                            spec: v.spec ? v.spec.replace(regExpConfig.specialReg, '$1-$2').replace('@', '').split(',') : []
+                            spec: v.spec ? v.spec.split(',').map(item => item.replace(/^@|@$/g, '').replace(/@/g, '-')) : []
                         };
                         // o.productId = v.id;
                         o.prodCode = v.prodCode;
@@ -195,20 +195,20 @@ export default {
                 return;
             }
             // 礼包重复获取阻止
-            // let tag = false
-            // this.checkList.forEach(v => {
-            //      this.selectedPro.forEach(element => {
-            //         element.forEach(el => {
-            //             if(v.prodCode == el.prodCode){
-            //                 this.$message.warning('同一个礼包不能绑定相同的产品')
-            //                 tag = true
-            //             }
-            //         });
-            //     });
-            // });
-            // if(tag){
-            //     return
-            // }
+            let tag = false;
+            this.checkList.forEach(v => {
+                this.selectedPro.forEach(element => {
+                    element.forEach(el => {
+                        if (v.id === el.skuCode) {
+                            this.$message.warning('同一个礼包不能绑定相同的skuCode');
+                            tag = true;
+                        }
+                    });
+                });
+            });
+            if (tag) {
+                return;
+            }
             // 添加数量
             const tmp = []; // 建立空数组保存便利出来的产品
             this.checkList.forEach((v, k) => {

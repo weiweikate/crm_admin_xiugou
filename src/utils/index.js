@@ -1,5 +1,4 @@
-var md5 = require('js-md5');
-var moment = require('moment');
+import moment from 'moment'
 const encryptData = function(data) {
     var tmpData = {};
     for (var k in tmpData) {
@@ -97,16 +96,6 @@ const handleCityIndex = function(regionoption, v1, v2, v3) {
     }
     return cityIndArr;
 };
-
-// 权限判断
-const permissionControl = function(per) {
-    const userPrivilegeList = JSON.parse(localStorage.getItem('privilegeList'));
-    if (userPrivilegeList.indexOf(per) != -1) {
-        return true;
-    } else {
-        return false;
-    }
-};
 // 格式化时间
 const formatTime = function(value, status) {
     if (value == undefined || value == null) {
@@ -139,12 +128,48 @@ const setParam = function(path = '/404', paramName = 'pageDefParam', param = '-1
 const getParam = function(paramName = 'pageDefParam') {
     return this.$route.query[paramName] || this.$store.getters.getPageParam(paramName);
 };
+/**
+ * 跳转h5页面路径
+ * @param code 产品code
+ * @returns {string | *} 参数值
+ */
+const getSrc = (code) => {
+    const href = location.href;
+    let first = '';
+    if (href.indexOf('sharegoodsmall.com') === -1) { // 本地环境
+        first = 'http://devh5.sharegoodsmall.com/';
+    } else {
+        first = first.replace('admin.sharegoodsmall', 'h5.sharegoodsmall');
+        const index = first.indexOf('#');
+        first = first.substring(0, index);
+    }
+    const second = 'product/99/' + code;
+    return first + second;
+};
+/**
+ * 导出请求参数
+ * @param params 参数
+ * @returns {string | *} 参数值
+ */
+const setRequestParams = (params) => {
+    return Object.keys(params).map((key) => {
+        return key+'='+params[key]
+    }).join('&')
+    // var arr=[];
+    // for(var i in params){
+    //   arr.push(i+'='+params[i]);
+    // }
+    // return arr.join('&');
+};
 
-module.exports.encryptData = encryptData;
-module.exports.cleanFormData = cleanFormData;
-module.exports.handleCity = handleCity;
-module.exports.handleCityIndex = handleCityIndex;
-module.exports.pc = permissionControl;
-module.exports.formatTime = formatTime;
-module.exports.setParam = setParam;
-module.exports.getParam = getParam;
+export default {
+    encryptData,
+    cleanFormData,
+    handleCity,
+    handleCityIndex,
+    formatTime,
+    setParam,
+    getParam,
+    getSrc,
+    setRequestParams
+};
