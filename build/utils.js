@@ -1,13 +1,12 @@
 'use strict';
 const path = require('path');
 const config = require('../config');
+const moment = require('moment');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const packageConfig = require('../package.json');
 
 exports.assetsPath = function(_path) {
-    const assetsSubDirectory = process.env.NODE_ENV === 'production'
-        ? config.build.assetsSubDirectory
-        : config.dev.assetsSubDirectory;
+    const assetsSubDirectory = process.env.NODE_ENV === 'production' ? config.build.assetsSubDirectory : config.dev.assetsSubDirectory;
 
     return path.posix.join(assetsSubDirectory, _path);
 };
@@ -99,4 +98,15 @@ exports.createNotifierCallback = () => {
             icon: path.join(__dirname, 'logo.png')
         });
     };
+};
+exports.formatTime = (value, status) => {
+    if (value == undefined || value == null) {
+        return '';
+    }
+    if (status == 1) {
+        return value == '' ? '' : moment(value).format('YYYY-MM-DD');
+    } else if (status == 2) {
+        return value == '' ? '' : moment(value).format('YYYY-MM');
+    }
+    return value == '' ? '' : moment(value).format('YYYY-MM-DD HH:mm:ss');
 };
