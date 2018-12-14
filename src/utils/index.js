@@ -1,5 +1,4 @@
-var md5 = require('js-md5');
-var moment = require('moment');
+import moment from 'moment'
 const encryptData = function(data) {
     var tmpData = {};
     for (var k in tmpData) {
@@ -97,16 +96,6 @@ const handleCityIndex = function(regionoption, v1, v2, v3) {
     }
     return cityIndArr;
 };
-
-// 权限判断
-const permissionControl = function(per) {
-    const userPrivilegeList = JSON.parse(localStorage.getItem('privilegeList'));
-    if (userPrivilegeList.indexOf(per) != -1) {
-        return true;
-    } else {
-        return false;
-    }
-};
 // 格式化时间
 const formatTime = function(value, status) {
     if (value == undefined || value == null) {
@@ -163,20 +152,24 @@ const getSrc = (code) => {
  * @returns {string | *} 参数值
  */
 const setRequestParams = (params) => {
-    var arr=[];
-    for(var i in params){
-      arr.push(i+'='+params[i]);
-    }
-    return arr.join('&');
+    return Object.keys(params).map((key) => {
+        return key+'='+params[key]
+    }).join('&')
+    // var arr=[];
+    // for(var i in params){
+    //   arr.push(i+'='+params[i]);
+    // }
+    // return arr.join('&');
 };
 
-module.exports.encryptData = encryptData;
-module.exports.cleanFormData = cleanFormData;
-module.exports.handleCity = handleCity;
-module.exports.handleCityIndex = handleCityIndex;
-module.exports.pc = permissionControl;
-module.exports.formatTime = formatTime;
-module.exports.setParam = setParam;
-module.exports.getParam = getParam;
-module.exports.getSrc = getSrc;
-module.exports.setRequestParams = setRequestParams;
+export default {
+    encryptData,
+    cleanFormData,
+    handleCity,
+    handleCityIndex,
+    formatTime,
+    setParam,
+    getParam,
+    getSrc,
+    setRequestParams
+};
