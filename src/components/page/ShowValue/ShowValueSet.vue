@@ -55,12 +55,14 @@
                 nav: ['秀值模块', '秀值分配设置', '新建利润分配模板'],
                 id: '',
                 url: '',
+                copy: '', // true: 复制模版
                 form: {
                     name: '',
                     showValueRate: '',
                     showPeas: '',
                     activeTime: '',
-                    stopTime: ''
+                    stopTime: '',
+                    defuaultTemplate: '0'
                 },
                 data: {}, // 表单数据
                 profitParm: [{ label: '其他1', value: 1 }],
@@ -72,10 +74,13 @@
         },
         mounted() {
             this.id = this.$route.query.showValueTplId;
+            this.copy = this.$route.query.copy;
             this.getInfo();
         },
         destroyed() {
-            this.id = '';
+            this.id = null;
+            this.copy = null;
+            this.defuaultTemplate = '';
         },
         methods: {
             // 提交表单
@@ -87,8 +92,9 @@
                 if (this.form.name === '') return this.$message.warning('请输入综合活跃度分配模板名称！');
                 if (this.form.showValueRate === '') return this.$message.warning('请输入综合活跃度占比！');
                 const data = {
-                    id: this.id,
+                    id: this.form.id,
                     name: this.form.name,
+                    defuaultTemplate: this.form.defuaultTemplate,
                     valueRate: this.form.showValueRate,
                     activeTime: this.form.activeTime ? this.$utils.formatTime(this.form.activeTime) : '',
                     stopTime: this.form.stopTime ? this.$utils.formatTime(this.form.stopTime) : '',
@@ -109,7 +115,7 @@
                 });
             },
             // 获取信息
-            getInfo: function() {
+            getInfo() {
                 if (this.id === undefined || this.id === '') {
                     this.nav[2] = '新建利润分配模板';
                     this.form.id = '';
@@ -119,6 +125,12 @@
                     this.url = 'updateProfitTemplateById';
                     this.form.id = this.id;
                     this.pageLoading = true;
+                    // 如果是复制则清空id
+                    if (this.copy) {
+                        this.nav[2] = '复制利润分配模板';
+                        this.form.id = null;
+                        this.url = 'addShowValBeanTemplate';
+                    }
                     request.queryProfitTemplateById({ id: this.id }).then(res => {
                         this.pageLoading = false;
                         const resData = res.data || {};
@@ -128,7 +140,8 @@
                         this.form.showPeas = 100 - (resData.valueRate || 0);
                         this.form.activeTime = resData.activeTime || '';
                         this.form.stopTime = resData.stopTime || '';
-                        this.isSetTime = !!resData.activeTime;
+                        this.form.defuaultTemplate = resData.defuaultTemplate || '0';
+                        this.isSetTime = !!resData.activeTime || !!resData.stopTime;
                         // 赋值综合活跃度和秀豆
                         const showValue = resData.showValueList || [];
                         const showBeans = resData.showPeasList || [];
