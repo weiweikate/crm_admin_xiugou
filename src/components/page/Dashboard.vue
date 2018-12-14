@@ -69,7 +69,7 @@
                                 <span class="r-content">添加品牌</span>
                             </div>
                         </router-link>
-                        <router-link to="/addGift" tag="div" v-auth="'dashboard.shortcut.fblb'">
+                        <router-link to="/Gift" tag="div" v-auth="'dashboard.shortcut.fblb'">
                             <div class="right-content">
                                 <div class="r-ico-wrap"><icon ico='icon-libao' /></div>
                                 <span class="r-content">发布礼包</span>

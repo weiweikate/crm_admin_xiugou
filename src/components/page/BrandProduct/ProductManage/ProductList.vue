@@ -319,6 +319,9 @@
         /deep/.el-input {
             width: 215px;
         }
+        /deep/.el-pagination__editor.el-input{
+            width: 50px;
+        }
         /deep/.el-input-group__prepend{
             padding: 0 5px;
         }

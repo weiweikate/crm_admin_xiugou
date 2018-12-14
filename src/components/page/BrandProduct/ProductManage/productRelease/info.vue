@@ -272,6 +272,8 @@
                 this.$refs['form'].validate((valid) => {
                     if (valid) {
                         if (!this.form.upTime) this.form.upTime = [];
+                        // 如果不是放入仓库则主图必填
+                        if (this.form.upType != 3 && this.imgList.length === 0) return this.$message.warning('请上传商品图片！');
                         let restrictions = 0;
                         if (this.form.flatService.includes(1)) restrictions += 1;
                         if (this.form.flatService.includes(2)) restrictions += 2;

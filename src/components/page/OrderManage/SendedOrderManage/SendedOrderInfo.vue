@@ -23,11 +23,11 @@
                     </div>
                     <div class="item">
                         <span>物流公司</span>
-                        <span>{{orderProductExpress[0].expressName}}</span>
+                        <span>{{orderProductExpress[0]?orderProductExpress[0].expressName:`/`}}</span>
                     </div>
                     <div class="item">
                         <span>物流单号</span>
-                        <span>{{orderProductExpress[0].expressNo}}</span>
+                        <span>{{orderProductExpress[0]?orderProductExpress[0].expressNo:`/`}}</span>
                     </div>
                     <div class="item">
                         <span>物流费用</span>
@@ -70,6 +70,7 @@
                         <template slot-scope="scope">
                             <div class="name">
                                 <img :src="scope.row.specImg" alt="">
+                                <!--<span class="pro-name color-blue" @click="toH5(scope.row.prodCode)">{{scope.row.productName}}</span>-->
                                 <span class="pro-name">{{scope.row.productName}}</span>
                                 <span class="pro-spec">{{scope.row.spec}}</span>
                             </div>
@@ -82,18 +83,19 @@
                 </el-table>
             </div>
         </el-card>
+        <product-dialog v-show="mask" :src="src" :mask="mask" @msg="closeMask"></product-dialog>
     </div>
 </template>
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import utils from '@/utils/index.js';
-    import { queryDictonary } from '@/JS/commom';
+    import productDialog from '@/components/common/ProductDialog';
+    import { queryDictonary, myProductDialog } from '@/JS/commom';
     import request from '@/http/http.js';
 
     export default {
-        components: { vBreadcrumb },
-        mixins: [queryDictonary],
+        components: { vBreadcrumb, productDialog },
+        mixins: [queryDictonary, myProductDialog],
         data() {
             return {
                 nav: ['订单管理', '发货单列表', '发货单详情'],
@@ -209,6 +211,10 @@
                     width: 270px;
                 }
             }
+        }
+        .color-blue{
+            color: #33b4ff;
+            cursor: pointer;
         }
     }
 </style>

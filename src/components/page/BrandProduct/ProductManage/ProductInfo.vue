@@ -47,17 +47,61 @@
                           {{scope.row.propertyValues.split('@').join('-')}}
                       </template>
                   </el-table-column>
-                  <el-table-column prop="originalPrice" label="原价" align="center" width="225"></el-table-column>
-                  <el-table-column prop="v0" label="v0" align="center" width="225"></el-table-column>
-                  <el-table-column prop="v1" label="v1" align="center" width="225"></el-table-column>
-                  <el-table-column prop="v2" label="v2" align="center" width="225"></el-table-column>
-                  <el-table-column prop="v3" label="v3" align="center" width="225"></el-table-column>
-                  <el-table-column prop="v4" label="v4" align="center" width="225"></el-table-column>
-                  <el-table-column prop="v5" label="v5" align="center" width="225"></el-table-column>
-                  <el-table-column prop="v6" label="v6" align="center" width="225"></el-table-column>
-                  <el-table-column prop="groupPrice" label="拼店价" align="center" width="225"></el-table-column>
-                  <el-table-column prop="settlementPrice" label="结算价" align="center" width="225"></el-table-column>
-                  <el-table-column prop="minPrice" label="最低支付价" align="center" width="225"></el-table-column>
+                  <el-table-column prop="originalPrice" label="原价" align="center" width="225">
+                      <template slot-scope="scope">
+                          {{scope.row.originalPrice | formatMoney}}
+                      </template>
+                  </el-table-column>
+                  <el-table-column prop="v0" label="v0" align="center" width="225">
+                      <template slot-scope="scope">
+                          {{scope.row.v0 | formatMoney}}
+                      </template>
+                  </el-table-column>
+                  <el-table-column prop="v1" label="v1" align="center" width="225">
+                      <template slot-scope="scope">
+                          {{scope.row.v1 | formatMoney}}
+                      </template>
+                  </el-table-column>
+                  <el-table-column prop="v2" label="v2" align="center" width="225">
+                      <template slot-scope="scope">
+                          {{scope.row.v2 | formatMoney}}
+                      </template>
+                  </el-table-column>
+                  <el-table-column prop="v3" label="v3" align="center" width="225">
+                      <template slot-scope="scope">
+                          {{scope.row.v3 | formatMoney}}
+                      </template>
+                  </el-table-column>
+                  <el-table-column prop="v4" label="v4" align="center" width="225">
+                      <template slot-scope="scope">
+                          {{scope.row.v4 | formatMoney}}
+                      </template>
+                  </el-table-column>
+                  <el-table-column prop="v5" label="v5" align="center" width="225">
+                      <template slot-scope="scope">
+                          {{scope.row.v5 | formatMoney}}
+                      </template>
+                  </el-table-column>
+                  <el-table-column prop="v6" label="v6" align="center" width="225">
+                      <template slot-scope="scope">
+                          {{scope.row.v6 | formatMoney}}
+                      </template>
+                  </el-table-column>
+                  <el-table-column prop="groupPrice" label="拼店价" align="center" width="225">
+                      <template slot-scope="scope">
+                          {{scope.row.groupPrice | formatMoney}}
+                      </template>
+                  </el-table-column>
+                  <el-table-column prop="settlementPrice" label="结算价" align="center" width="225">
+                      <template slot-scope="scope">
+                          {{scope.row.settlementPrice | formatMoney}}
+                      </template>
+                  </el-table-column>
+                  <el-table-column label="最低支付价" align="center" width="225">
+                      <template slot-scope="scope">
+                          {{scope.row.minPrice | formatMoney}}
+                      </template>
+                  </el-table-column>
                   <el-table-column prop="weight" label="重量（kg）" align="center" width="225"></el-table-column>
                   <el-table-column prop="skuCode" label="SKU编码" align="center" width="225"></el-table-column>
                   <el-table-column prop="barCode" label="SKU条形码" align="center" width="225"></el-table-column>
@@ -110,13 +154,13 @@
                   <template v-else>{{info.buyLimit}}</template>
               </el-form-item>
               <el-form-item label="平台服务：">
-                    <template v-if="info.restrictions == 1">不支持使用优惠券</template>
+                    <template v-if="info.restrictions == 1">支持使用优惠券</template>
                     <template v-else-if="info.restrictions == 2">提供发票</template>
-                    <template v-else-if="info.restrictions == 3">不支持使用优惠券, 提供发票</template>
+                    <template v-else-if="info.restrictions == 3">支持使用优惠券, 提供发票</template>
                     <template v-else-if="info.restrictions == 4">支持7天无理由退换</template>
-                    <template v-else-if="info.restrictions == 5">不支持使用优惠券, 支持7天无理由退换</template>
+                    <template v-else-if="info.restrictions == 5">支持使用优惠券, 支持7天无理由退换</template>
                     <template v-else-if="info.restrictions == 6">提供发票, 支持7天无理由退换</template>
-                    <template v-else-if="info.restrictions == 7">不支持使用优惠券, 提供发票, 支持7天无理由退换</template>
+                    <template v-else-if="info.restrictions == 7">支持使用优惠券, 提供发票, 支持7天无理由退换</template>
               </el-form-item>
               <el-form-item label="售后保障：">
                   <template v-if="info.afterSaleServiceDays>0">{{info.afterSaleServiceDays}}天</template>

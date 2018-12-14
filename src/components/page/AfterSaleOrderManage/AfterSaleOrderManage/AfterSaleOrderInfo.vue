@@ -15,7 +15,7 @@
                     </div>
                     <div class="item">
                         <span>订单状态</span>
-                        <span>{{statusArr[warehouseOrderProduct.status-1]}}</span>
+                        <span>{{statusArr[orderInfo.status-1]}}</span>
                     </div>
                     <div class="item">
                         <span>售后单号</span>
@@ -36,7 +36,7 @@
                         <span>售后类型</span>
                         <span>{{typeArr[orderCustomerServiceInfo.type-1]}}</span>
                     </div>
-                    <div class="item" v-if="orderCustomerServiceInfo.status==1&&orderCustomerServiceInfo.status==2">
+                    <div class="item" v-if="orderCustomerServiceInfo.status==1||orderCustomerServiceInfo.status==2">
                         <span>用户申请退款金额</span>
                         <span>{{orderCustomerServiceInfo.applyRefundAmount|formatMoney}}</span>
                     </div>
@@ -50,19 +50,20 @@
                     </div>
                     <div class="item">
                         <span>申请售后原因</span>
-                        <span>{{orderCustomerServiceInfo.reason}}</span>
+                        <span>{{orderCustomerServiceInfo.reason||`/`}}</span>
                     </div>
                     <div class="item">
                         <span>问题描述</span>
-                        <span>{{orderCustomerServiceInfo.description}}</span>
+                        <span>{{orderCustomerServiceInfo.description||`/`}}</span>
                     </div>
                     <div class="item">
                         <span>图片信息</span>
-                        <span>
+                        <span v-if="orderCustomerServiceInfo.imgList&&orderCustomerServiceInfo.imgList.length">
                             <viewer :images="orderCustomerServiceInfo.imgList">
                                 <img v-for="(item,index) in orderCustomerServiceInfo.imgList" :key="index" :src="item" alt="">
                             </viewer>
                         </span>
+                        <span v-else>/</span>
                     </div>
                 </div>
                <!-- <div class="item-wrap">
@@ -118,7 +119,7 @@
                     </div>
                 </div>-->
             </div>
-            <div style="margin-top: 50px" v-if="orderCustomerServiceInfo.status==4&&orderCustomerServiceInfo.status==5">
+            <div style="margin-top: 50px" v-if="orderCustomerServiceInfo.status==4||orderCustomerServiceInfo.status==5">
                 <div class="title">仓库反馈</div>
                 <div class="item" v-if="orderCustomerServiceInfo.refundWarehouseFeedback">
                     <span>退货仓反馈</span>
@@ -154,6 +155,7 @@
                         <template slot-scope="scope">
                             <div class="name">
                                 <img :src="scope.row.specImg" alt="">
+                                <!--<span class="pro-name color-blue" @click="toH5(scope.row.prodCode)">{{scope.row.productName}}</span>-->
                                 <span class="pro-name">{{scope.row.productName}}</span>
                                 <span class="pro-spec">{{scope.row.spec}}</span>
                             </div>
@@ -189,26 +191,28 @@
                             <el-radio label="2">审核驳回</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="审核金额调整">
-                        <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~¥20.00区间内调整，其中含运费¥6.66</span>
+                    <el-form-item label="审核金额调整" v-if="form.result!=2&&orderCustomerServiceInfo.type!=3">
+                        <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~{{warehouseOrderProduct.payAmount|formatMoney}}区间内调整，其中含运费{{warehouseOrderProduct.freightAmount|formatMoney}}</span>
                     </el-form-item>
-                    <el-form-item label="退货信息" class="back-address">
+                    <el-form-item label="退货地址" class="back-address" v-if="form.result!=2">
                         <div class="address-area">
-                            <div class="supplier-address" v-if="orderInfo.warehouseType==3">
-                                <el-radio label="1" v-model="form.address">供应商退货地址</el-radio>
-                                <div>{{supplierRefundAddress.receiver}} {{supplierRefundAddress.receiverPhone}}</div>
-                                <div>{{supplierRefundAddress.province}}{{supplierRefundAddress.city}}{{supplierRefundAddress.area}}{{supplierRefundAddress.address}}</div>
-                            </div>
-                            <div class="plat-address">
-                                <el-radio label="2" v-model="form.address">平台退货地址</el-radio>
-                                <div>{{platformRefundAddress.receiver}} {{platformRefundAddress.receiverPhone}}</div>
-                                <div>{{platformRefundAddress.province}}{{platformRefundAddress.city}}{{platformRefundAddress.area}}{{platformRefundAddress.address}}</div>
-                            </div>
-                            <div class="tip">如需修改，请联系相关人员修改退货信息后再审核</div>
+                            <div>{{supplierRefundAddress.receiver}} {{supplierRefundAddress.receiverPhone}}</div>
+                            <div>{{supplierRefundAddress.province}}{{supplierRefundAddress.city}}{{supplierRefundAddress.area}}{{supplierRefundAddress.address}}</div>
+                            <!-- <div class="supplier-address" v-if="orderInfo.warehouseType==3">
+                                 <el-radio label="1" v-model="form.address">供应商退货地址</el-radio>
+                                 <div>{{supplierRefundAddress.receiver}} {{supplierRefundAddress.receiverPhone}}</div>
+                                 <div>{{supplierRefundAddress.province}}{{supplierRefundAddress.city}}{{supplierRefundAddress.area}}{{supplierRefundAddress.address}}</div>
+                             </div>
+                             <div class="plat-address">
+                                 <el-radio label="2" v-model="form.address">平台退货地址</el-radio>
+                                 <div>{{platformRefundAddress.receiver}} {{platformRefundAddress.receiverPhone}}</div>
+                                 <div>{{platformRefundAddress.province}}{{platformRefundAddress.city}}{{platformRefundAddress.area}}{{platformRefundAddress.address}}</div>
+                             </div>
+                             <div class="tip">如需修改，请联系相关人员修改退货信息后再审核</div>-->
                         </div>
                     </el-form-item>
                     <el-form-item label="售后审核说明">
-                        <el-input type="textarea" v-model="form.remarks"></el-input>
+                        <el-input type="textarea" maxlength="50" v-model="form.remarks"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" :loading="btnLoading" @click="submit('form')">提交</el-button>
@@ -226,25 +230,28 @@
                         </el-radio-group>
                     </el-form-item>
                     <!--换货-->
-                    <el-form-item label="售后类型" v-if="orderCustomerServiceInfo.type==3">
+                    <el-form-item label="售后类型" v-if="orderCustomerServiceInfo.type==3&&(orderCustomerServiceInfo.type==3&&form.result!=2)">
                         <el-radio-group v-model="form.type">
                             <el-radio label="1">换货</el-radio>
                             <el-radio label="2">退货退款</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="处理金额调整" v-if="orderCustomerServiceInfo.type==1||orderCustomerServiceInfo.type==2">
-                        <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~¥20.00区间内调整，其中含运费￥6.66</span>
+                    <el-form-item label="处理金额调整" v-if="(orderCustomerServiceInfo.type==1||orderCustomerServiceInfo.type==2||form.type==2)&&form.result!=2">
+                        <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~{{warehouseOrderProduct.payAmount|formatMoney}}区间内调整，其中含运费{{warehouseOrderProduct.freightAmount|formatMoney}}</span>
                     </el-form-item>
                     <el-form-item label="售后处理说明">
-                        <el-input type="textarea" v-model="form.remarks"></el-input>
+                        <el-input type="textarea" maxlength="50" v-model="form.remarks"></el-input>
+                    </el-form-item>
+                    <el-form-item v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType!=4&&(orderCustomerServiceInfo.type==3&&form.result!=2)">
+                        <el-checkbox v-model="checked" @change="chooseXnSend">虚拟发货</el-checkbox>
                     </el-form-item>
                     <!--换货-->
-                    <el-form-item label="换货物流公司" v-if="orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4">
+                    <el-form-item label="换货物流公司" v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&(orderCustomerServiceInfo.type==3&&form.result!=2)||checked">
                         <el-select v-model="form.expressCode">
                             <el-option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.name"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="换货物流单号" v-if="orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4">
+                    <el-form-item label="换货物流单号" v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&(orderCustomerServiceInfo.type==3&&form.result!=2)||checked">
                         <el-input v-model="form.expressNo"></el-input>
                     </el-form-item>
                     <el-form-item>
@@ -253,18 +260,20 @@
                 </el-form>
             </div>
         </el-card>
+        <product-dialog v-show="mask" :src="src" :mask="mask" @msg="closeMask"></product-dialog>
     </div>
 </template>
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import { queryDictonary } from '@/JS/commom';
+    import productDialog from '@/components/common/ProductDialog';
+    import { queryDictonary, myProductDialog } from '@/JS/commom';
     import request from '@/http/http.js';
     import utils from '@/utils/index';
 
     export default {
-        components: { vBreadcrumb },
-        mixins: [queryDictonary],
+        components: { vBreadcrumb, productDialog },
+        mixins: [queryDictonary, myProductDialog],
         data() {
             return {
                 nav: ['订单管理', '售后单管理', '售后单列表', '售后单详情'],
@@ -278,12 +287,13 @@
                 refundExpress: {},
                 supplierRefundAddress: {},
                 warehouseOrderProduct: {},
-                statusArr: ['待支付', '待发货', '待收货', '已完成', '交易关闭 '], // 订单状态
+                statusArr: ['待支付', '已付款', '待收货', '交易完成', '交易关闭 '], // 订单状态
                 refundStatusArr: ['待审核', '待商品寄回', '待仓库确认', '待平台处理', '售后完成 ', '售后关闭'], // 售后状态
                 typeArr: ['仅退款', '退货退款 ', '换货'], // 类型
                 btnLoading: false,
                 logicList: [],
-                form: {}
+                form: {},
+                checked: false
             };
         },
 
@@ -300,9 +310,9 @@
                 this.tableData = [];
                 request.lookDetail({ serviceNo: this.serviceNo }).then(res => {
                     this.orderInfo = res.data;
-                    if (res.data.warehouseType && res.data.warehouseType != 3) {
-                        this.form.address = '2';
-                    }
+                    // if (res.data.warehouseType && res.data.warehouseType != 3) {
+                    //     this.form.address = '2';
+                    // }
                     this.tableData = [res.data.warehouseOrderProduct];
                     this.exchangeExpress = res.data.exchangeExpress || {};
                     this.orderCustomerServiceInfo = res.data.orderCustomerServiceInfo || {};
@@ -342,7 +352,7 @@
                     return this.$message.warning('请选择售后处理结果');
                 }
                 const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
-                if (data.adjustAmount && (data.adjustAmount > 20 || !reg.test(data.adjustAmount))) {
+                if (data.adjustAmount && (data.adjustAmount > this.warehouseOrderProduct.payAmount || !reg.test(data.adjustAmount))) {
                     return this.$message.warning('请输入正确的处理金额');
                 }
                 if (this.orderCustomerServiceInfo.type != 1 && this.orderCustomerServiceInfo.status == 1) { // 待审核
@@ -351,9 +361,12 @@
                     } else { // 审核驳回
                         url = 'refuse';
                     }
-                    if (this.form.address == 1) {
-                        data.warehouseCode = this.orderCustomerServiceInfo.warehouseCode;
-                    }
+                    // if (this.orderInfo.warehouseType == 3 && !this.form.address) {
+                    //     return this.$message.warning('请选择退货地址');
+                    // }
+                    // if (this.form.address == 1) {
+                    //     data.warehouseCode = this.orderCustomerServiceInfo.warehouseCode;
+                    // }
                 } else { // 待平台处理
                     if (this.orderCustomerServiceInfo.type == 1 || this.orderCustomerServiceInfo.type == 2) {
                         if (this.form.result == 2) {
@@ -365,12 +378,15 @@
                         if (this.form.result == 2) {
                             url = 'refuse';
                         } else {
+                            if (this.checked) {
+                                data.warehouseType = 4;
+                            }
                             if (!this.form.type) {
                                 return this.$message.warning('请选择售后类型');
                             }
                             if (this.form.type == 1) {
                                 url = 'agreeExchange';
-                                if (this.orderInfo.warehouseType == 4 && (!data.expressNo || !data.expressCode)) {
+                                if (data.warehouseType == 4 && (!data.expressNo || !data.expressCode)) {
                                     return this.$message.warning('请输入完整的物流信息');
                                 }
                                 this.logicList.forEach((v, k) => {
@@ -445,7 +461,6 @@
             .name {
                 float: left;
                 position: relative;
-                display: inline-block;
                 height: 100px;
                 text-align: left;
                 img {
@@ -500,6 +515,10 @@
                 width: 600px;
                 height: 100px;
             }
+        }
+        .color-blue{
+            color: #33b4ff;
+            cursor: pointer;
         }
     }
 </style>

@@ -699,17 +699,10 @@ export const asyncRouterMap = [
             },
             {
                 hidden: true,
-                name: 'addGift',
-                path: '/addGift',
-                component: resolve => require(['../components/page/BrandProduct/GiftManage/AddGift.vue'], resolve),
-                meta: { title: '发布礼包' }
-            },
-            {
-                hidden: true,
-                name: 'editGift',
-                path: '/editGift',
-                component: resolve => require(['../components/page/BrandProduct/GiftManage/EditGift.vue'], resolve),
-                meta: { title: '编辑礼包' }
+                name: 'Gift',
+                path: '/Gift',
+                component: resolve => require(['../components/page/BrandProduct/GiftManage/Gift.vue'], resolve),
+                meta: { title: '编辑礼包', noKeepAlive: true }
             },
             {
                 hidden: true,
