@@ -34,7 +34,7 @@
                         <!--<el-button v-if="scope.row.status == '0' && scope.row.defuaultTemplate == '0'" @click="delItem(scope.$index,scope.row.id)" type="danger">删除</el-button>-->
                         <el-button type="success" @click="copyTpl(scope.row)">复制</el-button>
                     </template>
-                </el-table-column>
+                </el-table-column> 
             </el-table>
             <div class="block">
                 <el-pagination
@@ -80,8 +80,7 @@
                 this.loading = true;
                 const data = {
                     page: this.page.currentPage,
-                    // pageSize: this.page.pageSize
-                    pageSize: 10
+                    pageSize: this.page.pageSize
                 };
                 request.queryProfitTemplatePageList(data).then(res => {
                     this.loading = false;
