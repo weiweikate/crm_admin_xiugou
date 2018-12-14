@@ -158,6 +158,14 @@ const getSrc = (code) => {
     return first + second;
 };
 
+const setRequestParams = (params) => {
+    var arr=[];
+    for(var i in params){
+      arr.push(i+'='+params[i]);
+    }
+    return arr.join('&');
+};
+
 module.exports.encryptData = encryptData;
 module.exports.cleanFormData = cleanFormData;
 module.exports.handleCity = handleCity;
@@ -167,3 +175,4 @@ module.exports.formatTime = formatTime;
 module.exports.setParam = setParam;
 module.exports.getParam = getParam;
 module.exports.getSrc = getSrc;
+module.exports.setRequestParams = setRequestParams;
