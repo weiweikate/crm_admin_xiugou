@@ -84,7 +84,7 @@
                         <span>{{warehouseOrder.tokenCoinAmount | formatMoney}}</span>
                     </div>
                     <!--已付款,已发货，交易完成，交易关闭-->
-                    <div class="item" v-if="warehouseOrder.status!=1">
+                    <!-- <div class="item" v-if="warehouseOrder.status!=1">
                         <span>余额支付</span>
                         <span>{{warehouseOrder.accountPayAmount | formatMoney}}</span>
                     </div>
@@ -95,10 +95,11 @@
                     <div class="item" v-if="warehouseOrder.status!=1">
                         <span>开票金额</span>
                         <span>{{warehouseOrder.invoiceAmount | formatMoney}}</span>
-                    </div>
+                    </div> -->
                     <div class="item" v-if="warehouseOrder.status!=1">
                         <span>实付金额</span>
-                        <span>{{warehouseOrder.payAmount | formatMoney}}</span>
+                        <span v-if="warehouseOrder.subStatus!=1">{{warehouseOrder.payAmount | formatMoney}}</span>
+                        <span v-else>-</span>
                     </div>
                 </div>
                 <div class="item-wrap">

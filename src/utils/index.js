@@ -157,6 +157,18 @@ const getSrc = (code) => {
     const second = 'product/99/' + code;
     return first + second;
 };
+/**
+ * 导出请求参数
+ * @param params 参数
+ * @returns {string | *} 参数值
+ */
+const setRequestParams = (params) => {
+    var arr=[];
+    for(var i in params){
+      arr.push(i+'='+params[i]);
+    }
+    return arr.join('&');
+};
 
 module.exports.encryptData = encryptData;
 module.exports.cleanFormData = cleanFormData;
@@ -167,3 +179,4 @@ module.exports.formatTime = formatTime;
 module.exports.setParam = setParam;
 module.exports.getParam = getParam;
 module.exports.getSrc = getSrc;
+module.exports.setRequestParams = setRequestParams;
