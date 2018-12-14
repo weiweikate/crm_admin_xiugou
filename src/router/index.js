@@ -915,13 +915,6 @@ export const asyncRouterMap = [
             },
             {
                 hidden: true,
-                name: 'integralAccountBalance',
-                path: '/integralAccountBalance',
-                component: resolve => require(['../components/page/MemberManage/UserAccount/IntegralAccountBalance.vue'], resolve),
-                meta: { title: '积分账户收支明细' }
-            },
-            {
-                hidden: true,
                 name: 'withDrawAccount',
                 path: '/withDrawAccount',
                 component: resolve => require(['../components/page/MemberManage/UserAccount/WithDrawAccount.vue'], resolve),
