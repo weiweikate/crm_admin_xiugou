@@ -154,7 +154,7 @@ export default {
             formMask: {},
             title: '启用仓库',
             mask: false,
-            tips: ['确认推送入库单？', '确认取消图库单？'],
+            tips: ['确认推送入库单？', '确认取消入库单？'],
             index: '',
             url: '',
             id: '',
