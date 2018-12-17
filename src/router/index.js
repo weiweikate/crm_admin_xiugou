@@ -1287,13 +1287,13 @@ export const asyncRouterMap = [
                 meta: { title: '红包翻倍周期设置' }
             },
 
-            {
-                hidden: true,
-                name: 'featuredManage',
-                path: '/featuredManage',
-                component: resolve => require(['../components/page/OperateManage/FeaturedManage.vue'], resolve),
-                meta: { title: '推荐位管理' }
-            },
+            // {
+            //     hidden: true,
+            //     name: 'featuredManage',
+            //     path: '/featuredManage',
+            //     component: resolve => require(['../components/page/OperateManage/FeaturedManage.vue'], resolve),
+            //     meta: { title: '推荐位管理' }
+            // },
             {
                 hidden: true,
                 name: 'featured',
@@ -1430,55 +1430,6 @@ export const asyncRouterMap = [
                 path: '/secKillInfo',
                 component: resolve => require(['../components/page/OperateManage/MarketTools/SecKill/SecKillInfo.vue'], resolve),
                 meta: { title: '秒杀详情' }
-            },
-            {
-                hidden: true,
-                name: 'packageList',
-                path: '/packageList',
-                component: resolve => require(['../components/page/OperateManage/MarketTools/Package/PackageList.vue'], resolve),
-                meta: { title: '优惠套餐' }
-            },
-            {
-                hidden: true,
-                name: 'addPackage',
-                path: '/addPackage',
-                component: resolve => require(['../components/page/OperateManage/MarketTools/Package/AddPackage.vue'], resolve),
-                meta: { title: '新建套餐' }
-            },
-            {
-                hidden: true,
-                name: 'editPackage',
-                path: '/editPackage',
-                component: resolve => require(['../components/page/OperateManage/MarketTools/Package/EditPackage.vue'], resolve),
-                meta: { title: '编辑套餐' }
-            },
-            {
-                hidden: true,
-                name: 'packageInfo',
-                path: '/packageInfo',
-                component: resolve => require(['../components/page/OperateManage/MarketTools/Package/PackageInfo.vue'], resolve),
-                meta: { title: '套餐详情' }
-            },
-            {
-                hidden: true,
-                name: 'priceInventory',
-                path: '/priceInventory',
-                component: resolve => require(['../components/page/OperateManage/MarketTools/Package/PriceInventory.vue'], resolve),
-                meta: { title: '价格库存' }
-            },
-            {
-                hidden: true,
-                name: 'packageInventory',
-                path: '/packageInventory',
-                component: resolve => require(['../components/page/OperateManage/MarketTools/Package/PackageInventory.vue'], resolve),
-                meta: { title: '库存管理' }
-            },
-            {
-                hidden: true,
-                name: 'packageProductManege',
-                path: '/packageProductManege',
-                component: resolve => require(['../components/page/OperateManage/MarketTools/Package/PackageProductManage.vue'], resolve),
-                meta: { title: '产品管理' }
             },
             {
                 hidden: true,

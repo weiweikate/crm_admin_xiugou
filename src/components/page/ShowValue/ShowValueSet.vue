@@ -31,9 +31,9 @@
                 <el-checkbox v-model="isSetTime" @change="changeTimeStatus">
                     <span>设置开启时间</span>
                 </el-checkbox>
-                <el-date-picker :disabled="!isSetTime" v-model="form.activeTime" type="datetime" placeholder="请选择开启时间"></el-date-picker>
+                <el-date-picker default-time="[00:00:00]" :disabled="!isSetTime" v-model="form.activeTime" type="datetime" placeholder="请选择开启时间"></el-date-picker>
                 <span>设置结束时间</span>
-                <el-date-picker :disabled="!isSetTime" v-model="form.stopTime" type="datetime" placeholder="请选择结束时间"></el-date-picker>
+                <el-date-picker default-time="[23:59:59]" :disabled="!isSetTime" v-model="form.stopTime" type="datetime" placeholder="请选择结束时间"></el-date-picker>
                 <p class="grey-text mt10" style="margin-left: 110px">设置时间只能是0点</p>
             </div>
             <div>

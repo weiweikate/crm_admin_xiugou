@@ -81,9 +81,7 @@
     import icon from '../../common/ico.vue';
     import region from '../../common/Region';
     import deleteToast from "../../common/DeleteToast";
-    import * as api from '../../../api/OperateManage/DeliveryAddress';
     import utils from '../../../utils/index.js'
-    import * as pApi from '../../../privilegeList/OperateManage/DeliveryAddress';
 
     export default {
         components: {
@@ -139,12 +137,12 @@
         methods: {
             // 权限控制
             pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-                if(this.p.addStoreHouse&&this.p.updateStoreHouse&&this.p.updateStoreHouseDeleteById){
-                    this.isShowOperate=true
-                }
+                // for (const k in this.p) {
+                //     this.p[k] = utils.pc(pApi[k]);
+                // }
+                // if(this.p.addStoreHouse&&this.p.updateStoreHouse&&this.p.updateStoreHouseDeleteById){
+                //     this.isShowOperate=true
+                // }
             },
             // 获取省市区
             getRegion(msg) {
@@ -153,26 +151,26 @@
             },
             //获取列表
             getList() {
-                let that = this;
-                let data = {
-                    url: pApi.queryStoreHouseList
-                };
-                that.tableLoading = true;
-                that.$axios
-                    .post(api.queryStoreHouseList, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.tableLoading = false;
-                            that.tableData = res.data.data;
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.tableLoading = false;
-                        }
-                    })
-                    .catch(err => {
-                        that.tableLoading = false;
-                        console.log(err)
-                    })
+                // let that = this;
+                // let data = {
+                //     url: pApi.queryStoreHouseList
+                // };
+                // that.tableLoading = true;
+                // that.$axios
+                //     .post(api.queryStoreHouseList, data)
+                //     .then(res => {
+                //         if (res.data.code == 200) {
+                //             that.tableLoading = false;
+                //             that.tableData = res.data.data;
+                //         } else {
+                //             that.$message.warning(res.data.msg);
+                //             that.tableLoading = false;
+                //         }
+                //     })
+                //     .catch(err => {
+                //         that.tableLoading = false;
+                //         console.log(err)
+                //     })
             },
             // 添加
             addAddress() {
@@ -212,73 +210,73 @@
             },
             //添加修改确定
             addOrEdit(formName) {
-                let url = "";
-                let data = {};
-                data.contacts = this[formName].contacts;
-                data.telephone = this[formName].telephone;
-                data.country = this[formName].country;
-                data.provinceCode = this.address[0];
-                data.cityCode = this.address[1];
-                data.areaCode = this.address[2];
-                data.address = this[formName].address;
-                if(data.country==1){
-                    if(!this.address[0]||!this.address[1]||!this.address[2]){
-                        this.$message.warning('请选择省市区!');
-                        return
-                    }
-                }
-                if(!data.address){
-                    this.$message.warning('请输入详细地址!');
-                    return
-                }
-                if(!data.contacts){
-                    this.$message.warning('请输入联系人!');
-                    return
-                }
-                if(!data.telephone){
-                    this.$message.warning('请输入联系方式!');
-                    return
-                }else{
-                    let reg = /^(1[3-8]\d{9}|^\d{3}-?\d{8}|^\d{4}-?\d{7})$/;
-                    if (!reg.test(data.telephone)) {
-                        this.$message.warning('请输入正确的联系方式!');
-                        return false
-                    }
-                }
-                if (this.itype == "add") {
-                    url = api.addStoreHouse;
-                    data.url = pApi.addStoreHouse;
-                } else {
-                    url = api.updateStoreHouse;
-                    data.id = this.itemId;
-                    data.url = pApi.updateStoreHouse;
-                }
-                this.btnLoading = true;
-                this.$axios
-                    .post(url, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            this.$message.success(res.data.msg);
-                            this.btnLoading = false;
-                            this.addMask = false;
-                            this.editMask = false;
-                            this.getList(this.page.currentPage);
-                        } else {
-                            this.btnLoading = false;
-                            this.$message.warning(res.data.msg);
-                            this.getList(this.page.currentPage);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                // let url = "";
+                // let data = {};
+                // data.contacts = this[formName].contacts;
+                // data.telephone = this[formName].telephone;
+                // data.country = this[formName].country;
+                // data.provinceCode = this.address[0];
+                // data.cityCode = this.address[1];
+                // data.areaCode = this.address[2];
+                // data.address = this[formName].address;
+                // if(data.country==1){
+                //     if(!this.address[0]||!this.address[1]||!this.address[2]){
+                //         this.$message.warning('请选择省市区!');
+                //         return
+                //     }
+                // }
+                // if(!data.address){
+                //     this.$message.warning('请输入详细地址!');
+                //     return
+                // }
+                // if(!data.contacts){
+                //     this.$message.warning('请输入联系人!');
+                //     return
+                // }
+                // if(!data.telephone){
+                //     this.$message.warning('请输入联系方式!');
+                //     return
+                // }else{
+                //     let reg = /^(1[3-8]\d{9}|^\d{3}-?\d{8}|^\d{4}-?\d{7})$/;
+                //     if (!reg.test(data.telephone)) {
+                //         this.$message.warning('请输入正确的联系方式!');
+                //         return false
+                //     }
+                // }
+                // if (this.itype == "add") {
+                //     url = api.addStoreHouse;
+                //     data.url = pApi.addStoreHouse;
+                // } else {
+                //     url = api.updateStoreHouse;
+                //     data.id = this.itemId;
+                //     data.url = pApi.updateStoreHouse;
+                // }
+                // this.btnLoading = true;
+                // this.$axios
+                //     .post(url, data)
+                //     .then(res => {
+                //         if (res.data.code == 200) {
+                //             this.$message.success(res.data.msg);
+                //             this.btnLoading = false;
+                //             this.addMask = false;
+                //             this.editMask = false;
+                //             this.getList(this.page.currentPage);
+                //         } else {
+                //             this.btnLoading = false;
+                //             this.$message.warning(res.data.msg);
+                //             this.getList(this.page.currentPage);
+                //         }
+                //     })
+                //     .catch(err => {
+                //         console.log(err);
+                //     });
             },
             //删除
             delItem(id) {
-                this.delId = id;
-                this.delUrl = api.updateStoreHouseDeleteById;
-                this.delUri = pApi.updateStoreHouseDeleteById;
-                this.isShowDelToast = true;
+                // this.delId = id;
+                // this.delUrl = api.updateStoreHouseDeleteById;
+                // this.delUri = pApi.updateStoreHouseDeleteById;
+                // this.isShowDelToast = true;
             },
             // 删除弹窗
             deleteToast(msg) {
