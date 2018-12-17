@@ -186,27 +186,6 @@ export const addRechargeRecord = '/admin/rechargeRecord/addRechargeRecord';
 // 通过驳回
 export const updateRechargeRecord = '/admin/rechargeRecord/updateRechargeRecord';
 
-// 实名认证审核
-// 实名审核列表
-export const queryDealerRealnamePageList = '/admin/dealerRealName/queryDealerRealNamePageList';
-// 查询详情
-export const findDealerRealnameInfo = '/admin/dealerRealName/findDealerRealNameInfo';
-// 驳回审核
-export const dismissAudit = '/admin/dealerRealName/dismissAudit';
-
-// 公告通知
-// 公告列表
-export const getNoticeList = '/admin/notice/queryNoticeList';
-// 公告详情
-export const getNoticeDetailById = '/admin/notice/findNoticeDetailById';
-// 发布通知/公告
-export const addNotice = '/admin/notice/addNotice';
-// 修改公告/通知状态
-export const updateNoticeStatus = '/admin/notice/updateNoticeStatus';
-export const getDealerPageList = 'aa';
-export const addTagLibrary = 'aa';
-export const queryTagLibraryList = 'aa';
-export const makeSureOrder = '/order/order/makeSureOrder';
 //* ***************************************************************************************************************************************************************************
 export const uploadImg = '/admin/common/upload/oss'; // 上传图片
 export const addImg = '/common/upload/oss'; // 上传图片

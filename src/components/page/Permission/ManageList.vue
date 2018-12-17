@@ -181,6 +181,7 @@ export default {
         //   重置表单
         resetForm(formName) {
             this.$refs[formName].resetFields();
+            this.getList(1);
         },
 
         // 新建管理员
