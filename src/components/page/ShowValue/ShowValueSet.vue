@@ -31,9 +31,9 @@
                 <el-checkbox v-model="isSetTime" @change="changeTimeStatus">
                     <span>设置开启时间</span>
                 </el-checkbox>
-                <el-date-picker default-time="[00:00:00]" :disabled="!isSetTime" v-model="form.activeTime" type="datetime" placeholder="请选择开启时间"></el-date-picker>
+                <el-date-picker :picker-options="dateOption" default-time="[00:00:00]" :disabled="!isSetTime" v-model="form.activeTime" type="datetime" placeholder="请选择开启时间"></el-date-picker>
                 <span>设置结束时间</span>
-                <el-date-picker default-time="[23:59:59]" :disabled="!isSetTime" v-model="form.stopTime" type="datetime" placeholder="请选择结束时间"></el-date-picker>
+                <el-date-picker :picker-options="dateOption" default-time="[23:59:59]" :disabled="!isSetTime" v-model="form.stopTime" type="datetime" placeholder="请选择结束时间"></el-date-picker>
                 <p class="grey-text mt10" style="margin-left: 110px">设置时间只能是0点</p>
             </div>
             <div>
@@ -67,6 +67,12 @@
                 data: {}, // 表单数据
                 profitParm: [{ label: '其他1', value: 1 }],
                 active: '1',
+                // 判断时间选择器选项是否可以选择
+                dateOption: {
+                    disabledDate(time) {
+                        return time.getTime() <= Date.now();
+                    }
+                },
                 isSetTime: false,
                 pageLoading: false,
                 btnLoading: false
