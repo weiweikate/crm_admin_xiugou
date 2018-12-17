@@ -37,7 +37,7 @@
                         <span>{{orderPayInfo.payTime|formatDateAll}}</span>
                     </div>
                     <!--已发货-->
-                    <div class="item" v-if="warehouseOrder.status==3">
+                    <div class="item" v-if="warehouseOrder.status==3||warehouseOrder.status==4">
                         <span>发货时间</span>
                         <span>{{warehouseOrder.deliverTime|formatDateAll}}</span>
                     </div>
@@ -49,12 +49,12 @@
                     <!--交易关闭-->
                     <div class="item" v-if="warehouseOrder.status==5">
                         <span>关闭时间</span>
-                        <span v-if="customerServiceInfos.subStatus==4">{{warehouseOrder.finishTime|formatDateAll}}</span>
+                        <span v-if="warehouseOrder.subStatus==4">{{warehouseOrder.finishTime|formatDateAll}}</span>
                         <span v-else>{{warehouseOrder.cancelTime|formatDateAll}}</span>
                     </div>
                     <div class="item" v-if="warehouseOrder.status==5">
                         <span>关闭原因</span>
-                        <span>{{subStatusArr[warehouseOrder.subStatus]||`/`}}</span>
+                        <span>{{subStatusArr[warehouseOrder.subStatus-1]||`/`}}</span>
                     </div>
                 </div>
                 <div class="item-wrap">
@@ -93,7 +93,7 @@
                         <span>{{warehouseOrder.cashPayAmoun | formatMoney}}</span>
                     </div>
                     <div class="item" v-if="warehouseOrder.status!=1">
-                        <span>开票余额</span>
+                        <span>开票金额</span>
                         <span>{{warehouseOrder.invoiceAmount | formatMoney}}</span>
                     </div>
                     <div class="item" v-if="warehouseOrder.status!=1">
@@ -239,18 +239,19 @@
                 </table>
             </div>
         </el-card>
+        <product-dialog v-show="mask" :src="src" :mask="mask" @msg="closeMask"></product-dialog>
     </div>
 </template>
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import utils from '@/utils/index.js';
-    import { queryDictonary } from '@/JS/commom';
+    import productDialog from '@/components/common/ProductDialog';
+    import { queryDictonary, myProductDialog } from '@/JS/commom';
     import request from '@/http/http.js';
 
     export default {
-        components: { vBreadcrumb },
-        mixins: [queryDictonary],
+        components: { vBreadcrumb, productDialog },
+        mixins: [queryDictonary, myProductDialog],
         data() {
             return {
                 nav: ['订单管理', '订单详情'],
@@ -265,9 +266,7 @@
                 expressInfos: {},
                 orderInvoiceInfo: {},
                 warehouseOrder: {},
-                payType: '',
-                mask: false,
-                src: ''
+                payType: ''
             };
         },
 
@@ -352,6 +351,7 @@
             }
         }
     };
+
 </script>
 <style lang='less'>
     .order-info {

@@ -34,7 +34,7 @@
             </el-form>
         </el-card>
         <el-card>
-            <el-button type="primary" class="mb10" @click="$router.push({path:'cardMange',query:{status:'add'}})" v-auth="'unying.marketToolsManage.ggk.xzggk'">新增刮刮卡</el-button>
+            <el-button type="primary" class="mb10" @click="$router.push({path:'cardMange',query:{status:'add'}})" v-auth="'yunying.marketToolsManage.ggk.xzggk'">新增刮刮卡</el-button>
             <el-table :data="tableData" border stripe>
                 <el-table-column prop="code" label="编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="刮刮卡名称" align="center"></el-table-column>

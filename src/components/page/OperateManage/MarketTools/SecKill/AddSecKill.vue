@@ -51,10 +51,10 @@
                         <!--placeholder="选择结束时间">-->
                     <!--</el-date-picker>-->
                 <!--</el-form-item>-->
-                <el-form-item label="设置关闭订单" prop="orderCloseTime">
+                <!-- <el-form-item label="设置关闭订单" prop="orderCloseTime">
                     <el-input class="small" v-model="form.orderCloseTime"></el-input>
                     <span>分钟未付款自动关闭订单</span>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="商品发放数量" prop="totalNumber">
                     <el-input class="small" v-model="form.totalNumber"></el-input>
                 </el-form-item>
@@ -146,9 +146,9 @@
             return {
                 nav: ['运营管理', '营销工具管理', '秒杀', '新建秒杀'],
                 rules: {
-                    orderCloseTime: [
-                        { validator: isInt, trigger: 'blur' }
-                    ],
+                    // orderCloseTime: [
+                    //     { validator: isInt, trigger: 'blur' }
+                    // ],
                     seckillPrice: [
                         { validator: isDouble, trigger: 'blur' }
                     ],
@@ -163,7 +163,7 @@
                     activityTime: '', // 活动时间
                     // endTime: '',//结束时间
                     seckillPrice: '', // 秒杀价格
-                    orderCloseTime: '', // 自动关闭订单时间
+                    orderCloseTime: 1, // 自动关闭订单时间
                     totalNumber: '', // 发放总数量
                     limitNumber: ''// 限购数量
                 },
@@ -212,6 +212,7 @@
                         }
                         // 表单提交
                         const data = this.form;
+                        data.orderCloseTime=1;
                         data.beginTime = moment(this.form.activityTime[0]).format('YYYY-MM-DD HH:mm:00'); // 活动开始时间
                         data.endTime = moment(this.form.activityTime[1]).format('YYYY-MM-DD HH:mm:00'); // 活动开始时间
                         data.prodCode = this.productDetail.prodCode; // 产品ID

@@ -43,10 +43,10 @@
                     <v-orderlist ref="2"></v-orderlist>
                 </el-tab-pane>
                 <el-tab-pane label="退款关闭" name="5">
-                    <v-orderlist ref="3"></v-orderlist>
+                    <v-orderlist ref="5"></v-orderlist>
                 </el-tab-pane>
                 <el-tab-pane label="退款失败" name="3">
-                    <v-orderlist ref="9"></v-orderlist>
+                    <v-orderlist ref="3"></v-orderlist>
                 </el-tab-pane>
             </el-tabs>
         </el-card>

@@ -250,7 +250,7 @@ export default {
             data.type = 1;
             // data.url = pApi.updateAdminUser[0];
             this.closeBtn = true;
-            request['updateAdminUser'](data)
+            request['updateDeleteAdminUser'](data)
                 .then(res => {
                     this.closeBtn = false;
                     if (res.code == 10000) {

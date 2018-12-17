@@ -139,6 +139,24 @@ const setParam = function(path = '/404', paramName = 'pageDefParam', param = '-1
 const getParam = function(paramName = 'pageDefParam') {
     return this.$route.query[paramName] || this.$store.getters.getPageParam(paramName);
 };
+/**
+ * 跳转h5页面路径
+ * @param code 产品code
+ * @returns {string | *} 参数值
+ */
+const getSrc = (code) => {
+    const href = location.href;
+    let first = '';
+    if (href.indexOf('sharegoodsmall.com') === -1) { // 本地环境
+        first = 'http://devh5.sharegoodsmall.com/';
+    } else {
+        first = first.replace('admin.sharegoodsmall', 'h5.sharegoodsmall');
+        const index = first.indexOf('#');
+        first = first.substring(0, index);
+    }
+    const second = 'product/99/' + code;
+    return first + second;
+};
 
 module.exports.encryptData = encryptData;
 module.exports.cleanFormData = cleanFormData;
@@ -148,3 +166,4 @@ module.exports.pc = permissionControl;
 module.exports.formatTime = formatTime;
 module.exports.setParam = setParam;
 module.exports.getParam = getParam;
+module.exports.getSrc = getSrc;
