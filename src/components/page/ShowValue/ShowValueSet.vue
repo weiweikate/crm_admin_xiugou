@@ -34,7 +34,7 @@
                 <el-date-picker :picker-options="dateOption" default-time="[00:00:00]" :disabled="!isSetTime" v-model="form.activeTime" type="datetime" placeholder="请选择开启时间"></el-date-picker>
                 <span>设置结束时间</span>
                 <el-date-picker :picker-options="dateOption" default-time="[23:59:59]" :disabled="!isSetTime" v-model="form.stopTime" type="datetime" placeholder="请选择结束时间"></el-date-picker>
-                <p class="grey-text mt10" style="margin-left: 110px">设置时间只能是0点</p>
+                <!--<p class="grey-text mt10" style="margin-left: 110px">设置时间只能是0点</p>-->
             </div>
             <div>
                 <el-button :loading="btnLoading" type="primary" @click="submitForm">确 认 保 存</el-button>
@@ -48,6 +48,7 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import tpl from './_showValue/profitTemplate.vue';
     import request from '@/http/http';
+    import moment from 'moment';
     export default {
         components: { vBreadcrumb, tpl },
         data() {
@@ -70,7 +71,9 @@
                 // 判断时间选择器选项是否可以选择
                 dateOption: {
                     disabledDate(time) {
-                        return time.getTime() <= Date.now();
+                        const currentTime = moment(new Date()).format('YYYY-MM-DD');
+                        const timestamp = new Date(currentTime).getTime() - 86400000;
+                        return time.getTime() < timestamp;
                     }
                 },
                 isSetTime: false,
@@ -113,6 +116,8 @@
                         flow: this.$refs['showBean'].flow
                     })
                 };
+                // 开始时间不能大于当前时间
+                if (data.activeTime && new Date(data.activeTime).getTime() < new Date().getTime()) return this.$message.warning('开始时间不能大于当前时间');
                 request[this.url](data).then(res => {
                     this.$message.success(res.msg);
                     this.$router.push('/showValueList');
@@ -144,10 +149,10 @@
                         this.form.name = resData.name;
                         this.form.showValueRate = resData.valueRate || 0;
                         this.form.showPeas = 100 - (resData.valueRate || 0);
-                        this.form.activeTime = resData.activeTime || '';
-                        this.form.stopTime = resData.stopTime || '';
+                        this.form.activeTime = '';
+                        this.form.stopTime = '';
                         this.form.defuaultTemplate = resData.defuaultTemplate || '0';
-                        this.isSetTime = !!resData.activeTime || !!resData.stopTime;
+                        this.isSetTime = false;
                         // 赋值综合活跃度和秀豆
                         const showValue = resData.showValueList || [];
                         const showBeans = resData.showPeasList || [];
