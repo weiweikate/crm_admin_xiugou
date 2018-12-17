@@ -45,7 +45,7 @@
                 <el-table-column prop="nickname" label="用户昵称" align="center"></el-table-column>
                 <el-table-column prop="phone" label="手机号" align="center"></el-table-column>
                 <el-table-column label="授权层级" align="center">
-                    <template slot-scope="scope" v-if="scope.row.level">{{`v${scope.row.level}`}}</template>
+                    <template slot-scope="scope" v-if="scope.row.level !== null && scope.row.level !== undefined">{{`v${scope.row.level}`}}</template>
                 </el-table-column>
                 <!--<el-table-column prop="day_count" label="本日登录" align="center"></el-table-column>-->
                 <!--<el-table-column prop="month_count" label="本月登录" align="center"></el-table-column>-->
