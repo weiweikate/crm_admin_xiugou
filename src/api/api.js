@@ -198,6 +198,7 @@ export const addOrModifyList = '/config/sysconfig/addOrModifyList'; // 批量新
 export const findAdminUserbyId = ['/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息
 export const loginByCode = '/adminLogin/codeLogin'; // 管理员手机号登录
 export const loginByPwd = '/adminLogin/pswLogin'; // 管理员账号密码登录
+export const updateDeleteAdminUser = '/adminLogin/updateDeleteAdminUser'; // 管理员账号关闭
 export const addManger = '/adminUser/addAdminUser'; // 添加管理员
 export const updateAdminUser = ['/adminUser/updateAdminUser', { methods: 'post' }]; // 编辑管理员
 export const getMangerList = '/adminUser/queryAdminUserPageList'; // 获取管理员列表
@@ -245,15 +246,15 @@ export const findDepartmentById = '/department/findDepartmentById';
 export const updateDepartment = '/department/updateDepartment';
 
 // 物流公司查询
-export const sysExpressQuery = ['/config/sysExpress/query', { methods: 'get'}];
+export const sysExpressQuery = ['/config/sysExpress/query', { methods: 'get' }];
 // 停用某物流公司
-export const disableExpress = ['/config/sysExpress/disable', { methods: 'get'}];
+export const disableExpress = ['/config/sysExpress/disable', { methods: 'get' }];
 // 启用某物流公司
-export const enableExpress = ['/config/sysExpress/enable', { methods: 'get'}];
+export const enableExpress = ['/config/sysExpress/enable', { methods: 'get' }];
 // 添加物流公司
-export const addExpress = ['/config/sysExpress/save', { methods: 'post'}];
+export const addExpress = ['/config/sysExpress/save', { methods: 'post' }];
 // 更新物流公司
-export const updateExpress = ['/config/sysExpress/edit', { methods: 'post'}];
+export const updateExpress = ['/config/sysExpress/edit', { methods: 'post' }];
 
 // ERP接口
 export const updateERPstatus = ['/config/erp/change', { methods: 'get' }];

@@ -29,8 +29,8 @@
                 <el-table-column prop="v4" label="v4价" align="center"></el-table-column>
                 <el-table-column prop="v5" label="v5价" align="center"></el-table-column>
                 <el-table-column prop="v6" label="v6价" align="center"></el-table-column>
-                <el-table-column prop="groupPrice" label="拼店价" align="center"></el-table-column>
                 <el-table-column prop="minPayment" label="最低支付价" align="center"></el-table-column>
+                <el-table-column prop="groupPrice" label="拼店价" align="center"></el-table-column>
                 <el-table-column prop="settlementPrice" label="结算价" align="center"></el-table-column>
             </el-table>
             <div class="set-price">
@@ -141,11 +141,11 @@ export default {
             request
                 .findActivityPackageProductAndSpecByIdAn({ packageId: this.giftId })
                 .then(res => {
-                    let max = res.data.maxPrice;
-                    let min = res.data.minPrice;
+                    const max = res.data.maxPrice;
+                    const min = res.data.minPrice;
                     this.giftName = res.data.packageName;
                     this.priceInterval = [];
-                    let obj = {
+                    const obj = {
                         originPrice: `${min.originalPrice ? min.originalPrice : 0}-${max.originalPrice ? max.originalPrice : 0}`,
                         v0: `${min.v0 ? min.v0 : 0}-${max.v0 ? max.v0 : 0}`,
                         v1: `${min.v1 ? min.v1 : 0}-${max.v1 ? max.v1 : 0}`,
@@ -159,7 +159,7 @@ export default {
                         settlementPrice: `${min.settlementPrice ? min.settlementPrice : 0}-${max.settlementPrice ? max.settlementPrice : 0}`
                     };
                     res.data.productList.forEach(v => {
-                        let tmp = {
+                        const tmp = {
                             name: v.name,
                             ...obj
                         };
@@ -183,7 +183,7 @@ export default {
         },
         // 提交表单
         submitForm() {
-            let stockArr = [];
+            const stockArr = [];
             for (let i = 0; i < this.tableData.length; i++) {
                 if (this.stockType === 2) {
                     if (this.tableData[i].num === undefined) {
@@ -194,7 +194,7 @@ export default {
                         return;
                     }
                 }
-                let obj = {
+                const obj = {
                     id: this.tableData[i].id,
                     totalNumber: this.tableData[i].num,
                     surplusNumber: this.tableData[i].num,

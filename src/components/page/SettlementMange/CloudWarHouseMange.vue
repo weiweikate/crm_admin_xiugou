@@ -78,66 +78,66 @@
 </template>
 
 <script>
-import utils from '@/utils/index.js'
+import utils from '@/utils/index.js';
 import * as api from '@/api/SettlementMange/index.js';
 import vBreadcrumb from '../../common/Breadcrumb.vue';
 export default {
-  components: {vBreadcrumb},
+    components: { vBreadcrumb },
 
-  data () {
-    return {
+    data() {
+        return {
         // id
-        id:'',
-      // 表单
-      form:{
-        name:'',
-        time:[]
-      },
-      table:[{no:123456789,id:1,status:'1'},{no:123456789,id:1,status:'2'}], // 表格信息
-      page: {
-            currentPage: 1,
-            totalPage: 0
-        },
-        // 结算弹出框
-        isShowdia:false,
-        // 结算记录弹出框
-        isShowRecorDia:false,
-        // 结算记录表格
-        recordTable:[{id:1}],
-    };
-  },
+            id: '',
+            // 表单
+            form: {
+                name: '',
+                time: []
+            },
+            table: [{ no: 123456789, id: 1, status: '1' }, { no: 123456789, id: 1, status: '2' }], // 表格信息
+            page: {
+                currentPage: 1,
+                totalPage: 0
+            },
+            // 结算弹出框
+            isShowdia: false,
+            // 结算记录弹出框
+            isShowRecorDia: false,
+            // 结算记录表格
+            recordTable: [{ id: 1 }]
+        };
+    },
 
-  methods: {
+    methods: {
     //   结算记录
-    settleRecord(row){
-        this.isShowRecorDia = true;
-    },
-    //   结算
-    settlement(row){
-        this.id = row.id;
-        this.isShowdia = true;
-    },
-    confirmSett(){
-        this.axios.post().then(res=>{
-        console.log(res.data)
-        })
-    },
-    // 查询表单
-    queryForm(val){
+        settleRecord(row) {
+            this.isShowRecorDia = true;
+        },
+        //   结算
+        settlement(row) {
+            this.id = row.id;
+            this.isShowdia = true;
+        },
+        confirmSett() {
+            this.axios.post().then(res => {
+                console.log(res.data);
+            });
+        },
+        // 查询表单
+        queryForm(val) {
 
-    },
-    // 查看详情 
-    showInfo(row){
-        this.$router.push({name:'invoiceInfo',query:{id:row.id}})
-    },
-    //分页
-    handleSizeChange(val) {},
-    handleCurrentChange(val) {
-        this.page.currentPage = val;
-        this.queryForm(val)
-    },
-  }
-}
+        },
+        // 查看详情
+        showInfo(row) {
+            this.$router.push({ name: 'invoiceInfo', query: { id: row.id }});
+        },
+        // 分页
+        handleSizeChange(val) {},
+        handleCurrentChange(val) {
+            this.page.currentPage = val;
+            this.queryForm(val);
+        }
+    }
+};
 
 </script>
 <style lang='less' scoped>
