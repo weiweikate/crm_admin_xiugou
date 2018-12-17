@@ -567,11 +567,33 @@ export const asyncRouterMap = [
                 component: resolve => require(['../components/page/SettlementMange/supplierSettMange.vue'], resolve),
                 meta: { title: '供应商结算管理' }
             },
+            // {
+            //     name: 'profitDistrMange',
+            //     path: '/profitDistrMange',
+            //     component: resolve => require(['../components/page/SettlementMange/ProfitDistrMange.vue'], resolve),
+            //     meta: { title: '利润分配设置' }
+            // },
+            {
+                name: 'basicRateSetting',
+                path: '/basicRateSetting',
+                default: true,
+                component: resolve => require(['../components/page/SettlementMange/BasicRateSetting.vue'], resolve),
+                meta: { title: '基础费率设置', noKeepAlive: true }
+            },
             {
                 name: 'profitDistrMange',
                 path: '/profitDistrMange',
+                default: true,
                 component: resolve => require(['../components/page/SettlementMange/ProfitDistrMange.vue'], resolve),
                 meta: { title: '利润分配设置' }
+            },
+            {
+                hidden: true,
+                name: 'createProfitTemplate',
+                path: '/createProfitTemplate',
+                default: true,
+                component: resolve => require(['../components/page/SettlementMange/CreateProfitTemplate.vue'], resolve),
+                meta: { title: '创建模板', noKeepAlive: true }
             }
         ]
     },

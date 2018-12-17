@@ -1,5 +1,5 @@
 {
-    "proxy": "qa",
+    "proxy": "jdw",
     "env": {
         "qa": {
             "name": "测试环境",

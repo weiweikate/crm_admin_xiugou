@@ -96,7 +96,7 @@ export default {
     },
     mixins: [myMixinTable],
     data() {
-        let validatePwd = (rule, value, callback) => {
+        const validatePwd = (rule, value, callback) => {
             if (value === '' || value === null || value === undefined) {
                 callback(new Error('请输入密码'));
             } else {
@@ -105,8 +105,8 @@ export default {
                 }
                 callback();
             }
-        }
-        let validateCheckPwd = (rule, value, callback) => {
+        };
+        const validateCheckPwd = (rule, value, callback) => {
             if (value === '' || value === null || value === undefined) {
                 callback(new Error('请再次输入密码'));
             } else if (value !== this.pwdForm.password) {
@@ -114,7 +114,7 @@ export default {
             } else {
                 callback();
             }
-        }
+        };
         return {
             nav: ['权限管理', '管理员账号管理'],
             isShowResetPwd: false,
@@ -131,7 +131,7 @@ export default {
                 id: '',
                 phone: '',
                 password: '',
-                checkPassword:''
+                checkPassword: ''
             },
             tableLoading: false,
             tableData: [],
@@ -226,14 +226,14 @@ export default {
             });
         },
         // 取消重置
-        cancelReset(formName){
+        cancelReset(formName) {
             this.isShowResetPwd = false;
             this.$refs[formName].resetFields();
         },
         // 删除用户
         deleteUser(row) {
             this.delId = row.id;
-            this.delUrl = "updateAdminUser";
+            this.delUrl = 'updateAdminUser';
             // this.delUri = pApi.deleteAdminUser;
             this.isShowDelToast = true;
         },

@@ -111,14 +111,14 @@ export default {
                 this.$message.warning('请选择产品规格');
                 return;
             }
-            const parms = deepClone(this.selectedPro);
-            parms.forEach(v => {
+            const params = deepClone(this.selectedPro);
+            params.forEach(v => {
                 v.forEach(el => {
                     el.specValues = el.specValues.replace('-', '@');
                 });
             });
             const data = {
-                productAndSpecStr: JSON.stringify(parms).replace('-', '@')
+                productAndSpecStr: JSON.stringify(params).replace('-', '@')
             };
             this.btnloading = true;
             request
