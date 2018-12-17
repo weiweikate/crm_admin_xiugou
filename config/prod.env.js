@@ -1,6 +1,6 @@
 'use strict';
-const ut = require('../src/utils/index.js');
-const v = ut.formatTime(new Date());
+const utils = require('../build/utils');
+const v = utils.formatTime(new Date());
 module.exports = {
     NODE_ENV: '"production"',
     EVN_CONFIG: '"prod"',

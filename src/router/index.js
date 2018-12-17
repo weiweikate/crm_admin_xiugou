@@ -1588,13 +1588,6 @@ export const asyncRouterMap = [
             },
             {
                 hidden: true,
-                name: 'afterSaleOpr',
-                path: '/afterSaleOpr',
-                component: resolve => require(['../components/page/OrderManage/OrderManage/AfterSaleOpr.vue'], resolve),
-                meta: { title: '申请操作' }
-            },
-            {
-                hidden: true,
                 name: 'logistics',
                 path: '/logistics',
                 component: resolve => require(['../components/page/OrderManage/OrderManage/Logistics.vue'], resolve),
