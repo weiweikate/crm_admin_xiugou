@@ -254,13 +254,9 @@ export default {
             request['updateDeleteAdminUser'](data)
                 .then(res => {
                     this.closeBtn = false;
-                    if (res.code === 10000) {
-                        this.$message.success(res.msg);
-                        row.status = status;
-                        row.visible = false;
-                    } else {
-                        this.$message.warning(res.msg);
-                    }
+                    this.$message.success(res.msg);
+                    row.status = status;
+                    row.visible = false;
                 })
                 .catch(err => {
                     this.closeBtn = false;
