@@ -5,6 +5,7 @@
     "author": "wuchengji",
     "private": true,
     "scripts": {
+        "precommit": "lint-staged",
         "mock": "node server/mock.js",
         "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
         "dev:dev": "cross-env proxy=chen webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
@@ -15,6 +16,9 @@
         "deploy:dev": "node bin/dev.js --dist=dist --server=/ftp/ops/nginx1/dist",
         "server": "node server/app.js",
         "install2": "yarn"
+    },
+    "lint-staged": {
+        "src/**/*.{js,vue}": ["eslint"]
     },
     "dependencies": {
         "area-data": "5.0.6",
@@ -71,6 +75,8 @@
         "file-loader": "1.1.4",
         "friendly-errors-webpack-plugin": "1.6.1",
         "html-webpack-plugin": "2.30.1",
+        "husky": "^1.2.1",
+        "lint-staged": "^8.1.0",
         "node-notifier": "5.1.2",
         "optimize-css-assets-webpack-plugin": "3.2.0",
         "ora": "1.2.0",

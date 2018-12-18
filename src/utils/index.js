@@ -171,5 +171,5 @@ export default {
     setParam,
     getParam,
     getSrc,
-    setRequestParams
+    setRequestParams,
 };

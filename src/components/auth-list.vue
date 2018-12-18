@@ -151,7 +151,7 @@
                     tmp.push(key);
                 }
                 this.$emit('message', tmp.join(','));
-            }
+            },
         }
     };
 </script>
