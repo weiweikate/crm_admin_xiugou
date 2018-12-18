@@ -38,7 +38,7 @@
                 <div class="price-item" v-for="(v,k) in tableTit" :key="k">
                     <div class="top">{{v.name}}</div>
                     <div class="bot">
-                        <el-input style="width:100%" v-model.number="v.price" :min="0" :controls="false" @change="handlePrice"></el-input>
+                        <el-input style="width:100%" v-model.number="v.price" :min="0" :controls="false" @change="handlePrice(v.name)"></el-input>
                     </div>
                 </div>
             </div>
@@ -303,24 +303,23 @@ export default {
             this.$router.push('giftManage');
         },
         // 处理价格自动生成
-        handlePrice(row) {
-            row = this.tableTit;
+        handlePrice(name) {
+            if (!['v0价', '结算价'].includes(name)) {
+                return;
+            }
+            const row = this.tableTit;
             if (row[10].price !== '' && row[10].price !== null && row[10].price !== undefined) {
-                const groupPriceRoot = row[10].price * 1.5;
-                const groupPrice = groupPriceRoot;
-                row[8].price = this.ceil(groupPrice);
+                const groupPriceRoot = this.ceil(row[10].price * 1.5);
+                row[8].price = this.ceil(groupPriceRoot);
                 if (row[1].price !== '' && row[1].price !== null && row[1].price !== undefined && row[1].price >= row[10].price) {
                     const a = (row[1].price - groupPriceRoot) / 4;
                     if (a < 0) return this.$message.warning('v0价格不能低于拼店价！');
-                    // const profit = row[1].price - row[10].price;
-                    // const a = profit * 0.7 / 4;
                     const v1 = row[1].price - a;
                     const v2 = row[1].price - 2 * a;
                     const v3 = row[1].price - 3 * a;
                     const v4 = row[1].price - 4 * a;
                     const v5 = row[1].price - 4 * a;
                     const v6 = row[1].price - 4 * a;
-                    // if (v1 < groupPrice || v2 < groupPrice || v3 < groupPrice || v4 < groupPrice || v5 < groupPrice) return this.$message.warning('请输入正确的价格');
                     row[1].price = this.ceil(row[1].price);
                     row[2].price = this.ceil(v1);
                     row[3].price = this.ceil(v2);
