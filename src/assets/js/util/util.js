@@ -12,8 +12,8 @@ export function isNull(query, errInfo = '暂无数据') {
 }
 /**
  * 判断参数是否是其中之一
- * @param {*} value 
- * @param {*} validList 
+ * @param {*} value
+ * @param {*} validList
  */
 export function oneOf(value, validList) {
     for (let i = 0; i < validList.length; i++) {
@@ -25,12 +25,13 @@ export function oneOf(value, validList) {
 }
 /**
  * 深度克隆
- * @param {*} obj 
+ * @param {*} obj
  */
 export function deepClone(obj) {
-    var result,
-        oClass = isClass(obj);
-    //确定result的类型
+    var result;
+
+    var oClass = isClass(obj);
+    // 确定result的类型
     if (oClass === 'Object') {
         result = {};
     } else if (oClass === 'Array') {
@@ -38,10 +39,10 @@ export function deepClone(obj) {
     } else {
         return obj;
     }
-    for (let key in obj) {
+    for (const key in obj) {
         var copy = obj[key];
         if (isClass(copy) == 'Object') {
-            result[key] = deepClone(copy); //递归调用
+            result[key] = deepClone(copy); // 递归调用
         } else if (isClass(copy) == 'Array') {
             result[key] = deepClone(copy);
         } else {
@@ -52,7 +53,7 @@ export function deepClone(obj) {
 }
 /**
  * 返回传递给他的任意对象的类
- * @param {*} o 
+ * @param {*} o
  */
 export function isClass(o) {
     if (o === null) return 'Null';
