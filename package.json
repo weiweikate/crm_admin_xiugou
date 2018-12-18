@@ -17,6 +17,7 @@
         "install2": "yarn"
     },
     "dependencies": {
+        "@mr/fe": "0.0.14",
         "area-data": "5.0.6",
         "axios": "0.15.3",
         "babel-polyfill": "6.23.0",
