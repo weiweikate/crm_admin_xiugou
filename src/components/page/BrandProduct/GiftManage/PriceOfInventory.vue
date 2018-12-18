@@ -38,7 +38,7 @@
                 <div class="price-item" v-for="(v,k) in tableTit" :key="k">
                     <div class="top">{{v.name}}</div>
                     <div class="bot">
-                        <el-input-number style="width:100%" v-model="v.price" :min="0" :controls="false" @change="handlePrice"></el-input-number>
+                        <el-input style="width:100%" v-model.number="v.price" :min="0" :controls="false" @change="handlePrice"></el-input>
                     </div>
                 </div>
             </div>
@@ -210,7 +210,8 @@ export default {
                 this.$message.warning('请输入正确的礼包价格!');
                 return;
             } else {
-                if (this.tableTit[8].price && this.tableTit[8].price < this.tableTit[9].price || this.tableTit[9].price < this.tableTit[10].price) {
+                if (this.tableTit[9].price && (this.tableTit[8].price < this.tableTit[9].price || this.tableTit[9].price < this.tableTit[10].price)) {
+                    debugger;
                     this.$message.warning('最低支付价必须小于拼店价且大于结算价!');
                     return;
                 }
