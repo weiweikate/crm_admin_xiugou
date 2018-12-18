@@ -1,25 +1,4 @@
-import moment from 'moment'
-const encryptData = function(data) {
-    var tmpData = {};
-    for (var k in tmpData) {
-        delete tmpData[k];
-    }
-    const key = '&key=juReWeb@key';
-    var itemArr = [];
-    for (const item in data) {
-        if (data[item] != '' && data[item] != undefined) {
-            itemArr.push(item + '=' + data[item]);
-            tmpData[item] = data[item];
-        }
-    }
-    var tmpArr = itemArr.sort().join('&');
-    var res = tmpArr + key;
-    var sign = md5(res);
-    var timestamp = new Date().getTime();
-    tmpData.sign = sign.toUpperCase();
-    tmpData.timestamp = timestamp;
-    return tmpData;
-};
+import moment from 'moment';
 
 // 清除数据
 const cleanFormData = function(form) {
@@ -153,8 +132,8 @@ const getSrc = (code) => {
  */
 const setRequestParams = (params) => {
     return Object.keys(params).map((key) => {
-        return key+'='+params[key]
-    }).join('&')
+        return key + '=' + params[key];
+    }).join('&');
     // var arr=[];
     // for(var i in params){
     //   arr.push(i+'='+params[i]);
@@ -163,7 +142,6 @@ const setRequestParams = (params) => {
 };
 
 export default {
-    encryptData,
     cleanFormData,
     handleCity,
     handleCityIndex,
@@ -171,5 +149,5 @@ export default {
     setParam,
     getParam,
     getSrc,
-    setRequestParams,
+    setRequestParams
 };
