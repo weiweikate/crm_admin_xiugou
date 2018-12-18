@@ -310,7 +310,7 @@ export default {
             const row = this.tableTit;
             if (row[10].price !== '' && row[10].price !== null && row[10].price !== undefined) {
                 const groupPriceRoot = this.ceil(row[10].price * 1.5);
-                row[8].price = this.ceil(groupPriceRoot);
+                row[8].price = groupPriceRoot;
                 if (row[1].price !== '' && row[1].price !== null && row[1].price !== undefined && row[1].price >= row[10].price) {
                     const a = (row[1].price - groupPriceRoot) / 4;
                     if (a < 0) return this.$message.warning('v0价格不能低于拼店价！');
