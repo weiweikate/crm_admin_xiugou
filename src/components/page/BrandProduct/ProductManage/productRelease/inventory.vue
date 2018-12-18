@@ -458,9 +458,8 @@
             // 处理价格自动生成
             handlePrice(row) {
                 if (row.settlementPrice !== '' && row.settlementPrice !== null && row.settlementPrice !== undefined) {
-                    const groupPriceRoot = row.settlementPrice * 1.5;
-                    const groupPrice = groupPriceRoot;
-                    row.groupPrice = this.ceil(groupPrice);
+                    const groupPriceRoot = this.ceil(row.settlementPrice * 1.5);
+                    row.groupPrice = groupPriceRoot;
                     if (row.v0 !== '' && row.v0 !== null && row.v0 !== undefined && row.v0 >= row.settlementPrice) {
                         const a = (row.v0 - groupPriceRoot) / 4;
                         if (a < 0) return this.$message.warning('v0价格不能低于拼店价！');
