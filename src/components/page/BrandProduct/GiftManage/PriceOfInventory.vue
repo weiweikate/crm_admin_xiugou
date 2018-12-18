@@ -38,7 +38,7 @@
                 <div class="price-item" v-for="(v,k) in tableTit" :key="k">
                     <div class="top">{{v.name}}</div>
                     <div class="bot">
-                        <el-input-number style="width:100%" v-model="v.price" :min="0" :controls="false"></el-input-number>
+                        <el-input style="width:100%" v-model.number="v.price" :min="0" :controls="false" @change="handlePrice(v.name)"></el-input>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@ export default {
             spanRow: '16', // 合并行数
             remarkContent: ['当出现相同产品时，填写规格的发放数量之和请勿大于该规格现有库存'], // 备注
             // 表头信息
-            tableTit: [{ name: '原价', price: '' }, { name: 'v0价', price: '' }, { name: 'v1价', price: '' }, { name: 'v2价', price: '' }, { name: 'v3价', price: '' }, { name: 'v4价', price: '' }, { name: 'v5价', price: '' }, { name: 'v6价', price: '' }, { name: '最低支付价', price: '' }, { name: '拼店价', price: '' }, { name: '结算价', price: '' }],
+            tableTit: [{ name: '原价', price: '' }, { name: 'v0价', price: '' }, { name: 'v1价', price: '' }, { name: 'v2价', price: '' }, { name: 'v3价', price: '' }, { name: 'v4价', price: '' }, { name: 'v5价', price: '' }, { name: 'v6价', price: '' }, { name: '拼店价', price: '' }, { name: '最低支付价', price: '' }, { name: '结算价', price: '' }],
             // 表格信息
             tableData: [],
             bodyLoading: false,
@@ -141,11 +141,11 @@ export default {
             request
                 .findActivityPackageProductAndSpecByIdAn({ packageId: this.giftId })
                 .then(res => {
-                    let max = res.data.maxPrice;
-                    let min = res.data.minPrice;
+                    const max = res.data.maxPrice;
+                    const min = res.data.minPrice;
                     this.giftName = res.data.packageName;
                     this.priceInterval = [];
-                    let obj = {
+                    const obj = {
                         originPrice: `${min.originalPrice ? min.originalPrice : 0}-${max.originalPrice ? max.originalPrice : 0}`,
                         v0: `${min.v0 ? min.v0 : 0}-${max.v0 ? max.v0 : 0}`,
                         v1: `${min.v1 ? min.v1 : 0}-${max.v1 ? max.v1 : 0}`,
@@ -159,7 +159,7 @@ export default {
                         settlementPrice: `${min.settlementPrice ? min.settlementPrice : 0}-${max.settlementPrice ? max.settlementPrice : 0}`
                     };
                     res.data.productList.forEach(v => {
-                        let tmp = {
+                        const tmp = {
                             name: v.name,
                             ...obj
                         };
@@ -173,8 +173,8 @@ export default {
                     this.tableTit[5].price = res.data.v4;
                     this.tableTit[6].price = res.data.v5;
                     this.tableTit[7].price = res.data.v6;
-                    this.tableTit[8].price = res.data.minPayment;
-                    this.tableTit[9].price = res.data.groupPrice;
+                    this.tableTit[8].price = res.data.groupPrice;
+                    this.tableTit[9].price = res.data.minPayment;
                     this.tableTit[10].price = res.data.settlementPrice;
                 })
                 .catch(err => {
@@ -183,7 +183,7 @@ export default {
         },
         // 提交表单
         submitForm() {
-            let stockArr = [];
+            const stockArr = [];
             for (let i = 0; i < this.tableData.length; i++) {
                 if (this.stockType === 2) {
                     if (this.tableData[i].num === undefined) {
@@ -194,7 +194,7 @@ export default {
                         return;
                     }
                 }
-                let obj = {
+                const obj = {
                     id: this.tableData[i].id,
                     totalNumber: this.tableData[i].num,
                     surplusNumber: this.tableData[i].num,
@@ -202,15 +202,19 @@ export default {
                 };
                 stockArr.push(obj);
             }
-            let flag = true;
-            if (this.tableTit[1].price >= this.tableTit[2].price && this.tableTit[2].price >= this.tableTit[3].price && this.tableTit[3].price >= this.tableTit[4].price && this.tableTit[4].price >= this.tableTit[5].price && this.tableTit[5].price >= this.tableTit[6].price && this.tableTit[6].price >= this.tableTit[7].price) {
+            let flag = false;
+            if (this.tableTit[0].price >= this.tableTit[1].price && this.tableTit[1].price >= this.tableTit[2].price && this.tableTit[2].price >= this.tableTit[3].price && this.tableTit[3].price >= this.tableTit[4].price && this.tableTit[4].price >= this.tableTit[5].price && this.tableTit[5].price >= this.tableTit[6].price && this.tableTit[6].price >= this.tableTit[7].price && this.tableTit[7].price >= this.tableTit[8].price && this.tableTit[8].price >= this.tableTit[10].price) {
                 flag = true;
-            } else {
-                flag = false;
             }
             if (!flag) {
                 this.$message.warning('请输入正确的礼包价格!');
                 return;
+            } else {
+                if (this.tableTit[9].price && (this.tableTit[8].price < this.tableTit[9].price || this.tableTit[9].price < this.tableTit[10].price)) {
+                    debugger;
+                    this.$message.warning('最低支付价必须小于拼店价且大于结算价!');
+                    return;
+                }
             }
             const data = {
                 id: this.giftId,
@@ -223,8 +227,8 @@ export default {
                 v4: this.tableTit[5].price,
                 v5: this.tableTit[6].price,
                 v6: this.tableTit[7].price,
-                groupPrice: this.tableTit[9].price,
-                minPayment: this.tableTit[8].price,
+                groupPrice: this.tableTit[8].price,
+                minPayment: this.tableTit[9].price,
                 settlementPrice: this.tableTit[10].price
             };
             this.btnloading = true;
@@ -242,8 +246,8 @@ export default {
                         { name: 'v4价', price: '' },
                         { name: 'v5价', price: '' },
                         { name: 'v6价', price: '' },
-                        { name: '最低支付价', price: '' },
                         { name: '拼店价', price: '' },
+                        { name: '最低支付价', price: '' },
                         { name: '结算价', price: '' }
                     ];
                     this.$router.push('giftManage');
@@ -297,6 +301,42 @@ export default {
         // 返回礼包列表
         goBack() {
             this.$router.push('giftManage');
+        },
+        // 处理价格自动生成
+        handlePrice(name) {
+            if (!['v0价', '结算价'].includes(name)) {
+                return;
+            }
+            const row = this.tableTit;
+            if (row[10].price !== '' && row[10].price !== null && row[10].price !== undefined) {
+                const groupPriceRoot = this.ceil(row[10].price * 1.5);
+                row[8].price = groupPriceRoot;
+                if (row[1].price !== '' && row[1].price !== null && row[1].price !== undefined && row[1].price >= row[10].price) {
+                    const a = (row[1].price - groupPriceRoot) / 4;
+                    if (a < 0) return this.$message.warning('v0价格不能低于拼店价！');
+                    const v1 = row[1].price - a;
+                    const v2 = row[1].price - 2 * a;
+                    const v3 = row[1].price - 3 * a;
+                    const v4 = row[1].price - 4 * a;
+                    const v5 = row[1].price - 4 * a;
+                    const v6 = row[1].price - 4 * a;
+                    row[1].price = this.ceil(row[1].price);
+                    row[2].price = this.ceil(v1);
+                    row[3].price = this.ceil(v2);
+                    row[4].price = this.ceil(v3);
+                    row[5].price = this.ceil(v4);
+                    row[6].price = this.ceil(v5);
+                    row[7].price = this.ceil(v6);
+                }
+            }
+        },
+        // 价格向上取整
+        ceil(val) {
+            if (val !== '' && val !== null && val !== undefined) {
+                const x = val * 10;
+                return Math.ceil(x) / 10;
+            }
+            return 0;
         }
     }
 };
