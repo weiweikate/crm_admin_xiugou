@@ -183,7 +183,7 @@ export default {
                 if (tblData.data && tblData.data.length !== 0) {
                     tblData.data.forEach(v => {
                         const restrictions = v.restrictions || 0;
-                        if (restrictions.toString() == 4) {
+                        if (restrictions.toString() === '4' || restrictions.toString() === '5' || restrictions.toString() === '6' || restrictions.toString() === '7') {
                             v.tags = ['支持7天无理由退换'];
                         }
                         if (!v.imgUrl || v.imgUrl == '') {

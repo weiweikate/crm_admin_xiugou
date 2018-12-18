@@ -476,7 +476,7 @@ export const asyncRouterMap = [
                 name: 'showValueList',
                 path: '/showValueList',
                 component: resolve => require(['../components/page/ShowValue/ShowValueList.vue'], resolve),
-                meta: { title: '秀值分配设置' }
+                meta: { title: '秀值分配设置', noKeepAlive: true }
             },
             {
                 name: 'showValueParamSet',
@@ -937,13 +937,6 @@ export const asyncRouterMap = [
             },
             {
                 hidden: true,
-                name: 'integralAccountBalance',
-                path: '/integralAccountBalance',
-                component: resolve => require(['../components/page/MemberManage/UserAccount/IntegralAccountBalance.vue'], resolve),
-                meta: { title: '积分账户收支明细' }
-            },
-            {
-                hidden: true,
                 name: 'withDrawAccount',
                 path: '/withDrawAccount',
                 component: resolve => require(['../components/page/MemberManage/UserAccount/WithDrawAccount.vue'], resolve),
@@ -1316,13 +1309,13 @@ export const asyncRouterMap = [
                 meta: { title: '红包翻倍周期设置' }
             },
 
-            {
-                hidden: true,
-                name: 'featuredManage',
-                path: '/featuredManage',
-                component: resolve => require(['../components/page/OperateManage/FeaturedManage.vue'], resolve),
-                meta: { title: '推荐位管理' }
-            },
+            // {
+            //     hidden: true,
+            //     name: 'featuredManage',
+            //     path: '/featuredManage',
+            //     component: resolve => require(['../components/page/OperateManage/FeaturedManage.vue'], resolve),
+            //     meta: { title: '推荐位管理' }
+            // },
             {
                 hidden: true,
                 name: 'featured',
@@ -1462,55 +1455,6 @@ export const asyncRouterMap = [
             },
             {
                 hidden: true,
-                name: 'packageList',
-                path: '/packageList',
-                component: resolve => require(['../components/page/OperateManage/MarketTools/Package/PackageList.vue'], resolve),
-                meta: { title: '优惠套餐' }
-            },
-            {
-                hidden: true,
-                name: 'addPackage',
-                path: '/addPackage',
-                component: resolve => require(['../components/page/OperateManage/MarketTools/Package/AddPackage.vue'], resolve),
-                meta: { title: '新建套餐' }
-            },
-            {
-                hidden: true,
-                name: 'editPackage',
-                path: '/editPackage',
-                component: resolve => require(['../components/page/OperateManage/MarketTools/Package/EditPackage.vue'], resolve),
-                meta: { title: '编辑套餐' }
-            },
-            {
-                hidden: true,
-                name: 'packageInfo',
-                path: '/packageInfo',
-                component: resolve => require(['../components/page/OperateManage/MarketTools/Package/PackageInfo.vue'], resolve),
-                meta: { title: '套餐详情' }
-            },
-            {
-                hidden: true,
-                name: 'priceInventory',
-                path: '/priceInventory',
-                component: resolve => require(['../components/page/OperateManage/MarketTools/Package/PriceInventory.vue'], resolve),
-                meta: { title: '价格库存' }
-            },
-            {
-                hidden: true,
-                name: 'packageInventory',
-                path: '/packageInventory',
-                component: resolve => require(['../components/page/OperateManage/MarketTools/Package/PackageInventory.vue'], resolve),
-                meta: { title: '库存管理' }
-            },
-            {
-                hidden: true,
-                name: 'packageProductManege',
-                path: '/packageProductManege',
-                component: resolve => require(['../components/page/OperateManage/MarketTools/Package/PackageProductManage.vue'], resolve),
-                meta: { title: '产品管理' }
-            },
-            {
-                hidden: true,
                 name: 'prizePoll',
                 path: '/prizePoll',
                 component: resolve => require(['../components/page/OperateManage/MarketTools/PrizePoll/PrizePoll.vue'], resolve),
@@ -1641,7 +1585,7 @@ export const asyncRouterMap = [
                 name: 'showValueSet',
                 path: '/showValueSet',
                 component: resolve => require(['../components/page/ShowValue/ShowValueSet.vue'], resolve),
-                meta: { title: '新建利润分配模板' }
+                meta: { title: '设置利润分配模板', noKeepAlive: true }
             },
             {
                 hidden: true,

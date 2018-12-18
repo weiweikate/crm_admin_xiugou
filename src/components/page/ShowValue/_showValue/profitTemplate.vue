@@ -1,104 +1,111 @@
 <template>
     <div class="profit-tpl">
         <div class="item">
-            <el-checkbox v-model="valueX" @change="checked=>changeStatus(checked, 'valueX')">X值{{tplName}}分配比例设置</el-checkbox>
             <p class="small-title">间接分润</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`XJ${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueX" :controls="false" prefix="2" :min="0" placeholder="请输入数值" v-model="v.valueX[0]" class="inp"></el-input-number>
+            <p class="level" v-for="(value, key) in form.indirect">
+                <span>{{key}}：</span>
+                <el-input @blur="dealNum(form.indirect[key], 'indirect', key)" placeholder="请输入数值" v-model="form.indirect[key]" class="inp"></el-input>
                 <span>%</span>
             </p>
-            <p class="small-title">直接分润</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`XZ${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueX" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueX[1]" class="inp"></el-input-number>
-                <span>%</span>
-            </p>
-            <p class="small-title">自己</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`XM${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueX" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueX[2]" class="inp"></el-input-number>
-                <span>%</span>
-            </p>
+            <el-select v-model="flow" placeholder="请选择多余流向" class="flow">
+                <el-option label="无主资金池" value="1"></el-option>
+                <el-option label="公司利润" value="2"></el-option>
+            </el-select>
         </div>
         <div class="item">
-            <el-checkbox v-model="valueY" @change="checked=>changeStatus(checked, 'valueY')">Y值{{name}}分配比例设置</el-checkbox>
-            <p class="small-title">间接分润</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`YJ${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueY" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueY[0]" class="inp"></el-input-number>
-                <span>%</span>
-            </p>
             <p class="small-title">直接分润</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`YZ${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueY" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueY[1]" class="inp"></el-input-number>
+            <p class="level" v-for="(value, key) in form.direct">
+                <span>{{key}}：</span>
+                <el-input @blur="dealNum(form.direct[key], 'direct', key)" placeholder="请输入数值" v-model="form.direct[key]" class="inp"></el-input>
                 <span>%</span>
             </p>
-            <p class="small-title">自己</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`YM${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueY" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueY[2]" class="inp"></el-input-number>
-                <span>%</span>
-            </p>
+            <el-select disabled v-model="flow" placeholder="请选择多余流向" class="flow">
+                <el-option label="无主资金池" value="1"></el-option>
+                <el-option label="公司利润" value="2"></el-option>
+            </el-select>
         </div>
         <div class="item">
-            <el-checkbox v-model="valueZ" @change="checked=>changeStatus(checked, 'valueZ')">Z值{{name}}分配比例设置</el-checkbox>
-            <p class="small-title">间接分润</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`ZJ${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueZ" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueZ[0]" class="inp"></el-input-number>
-                <span>%</span>
-            </p>
-            <p class="small-title">直接分润</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`ZZ${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueZ" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueZ[1]" class="inp"></el-input-number>
-                <span>%</span>
-            </p>
             <p class="small-title">自己</p>
-            <p class="level" v-for="(v, k) in userLevel" :key='`ZM${k}`'>
-                <span>{{v.name}}：用</span>
-                <el-input-number :disabled="!valueZ" :controls="false" :min="0" placeholder="请输入数值" v-model="v.valueZ[2]" class="inp"></el-input-number>
+            <p class="level" v-for="(value, key) in form.oneself">
+                <span>{{key}}：</span>
+                <el-input @blur="dealNum(form.oneself[key], 'oneself', key)" placeholder="请输入数值" v-model="form.oneself[key]" class="inp"></el-input>
                 <span>%</span>
             </p>
+            <el-select disabled v-model="flow" placeholder="请选择多余流向" class="flow">
+                <el-option label="无主资金池" value="1"></el-option>
+                <el-option label="公司利润" value="2"></el-option>
+            </el-select>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    props: ['name'],
-    computed: {
-        tplName() {
-            return this.name;
-        }
-    },
     data() {
         return {
-            userLevel: [
-                { name: 'v0', level: '1', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
-                { name: 'v1', level: '2', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
-                { name: 'v2', level: '3', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
-                { name: 'v3', level: '4', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
-                { name: 'v4', level: '5', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
-                { name: 'v5', level: '6', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] },
-                { name: 'v6', level: '7', valueX: [0, 0, 0], valueY: [0, 0, 0], valueZ: [0, 0, 0] }
-            ],
-            valueX: false,
-            valueY: false,
-            valueZ: false
+            form: {
+                direct: {
+                    v0: '',
+                    v1: '',
+                    v2: '',
+                    v3: '',
+                    v4: '',
+                    v5: ''
+                },
+                indirect: {
+                    v0: '',
+                    v1: '',
+                    v2: '',
+                    v3: '',
+                    v4: '',
+                    v5: ''
+                },
+                oneself: {
+                    v0: '',
+                    v1: '',
+                    v2: '',
+                    v3: '',
+                    v4: '',
+                    v5: ''
+                }
+            },
+            flow: ''
         };
     },
     methods: {
-        changeStatus(status, val) {
-            if (!status) {
-                for (let i = 0; i < this.userLevel.length; i++) {
-                    for (let j = 0; j < this.userLevel[i][val].length; j++) {
-                        this.userLevel[i][val][j] = 0;
-                    }
+        // 处理输入的数字
+        dealNum(val, origin, key) {
+            const reg = /^[0-9]+([.]\d{1,3})?$/;
+            if (!reg.test(val)) {
+                this.form[origin][key] = '';
+                this.$message.warning('请输入正确的数字!');
+            } else {
+                this.form[origin][key] = Number(val).toFixed(2);
+            }
+        },
+        // 表单校验
+        validForm() {
+            const tmp = {};
+            for (const key in this.form) {
+                tmp[key] = [];
+                for (const level in this.form[key]) {
+                    if (this.form[key][level] === '') return {status: false, msg: '输入不能为空!'}; // 判空
+                    tmp[key].push(this.form[key][level]);
                 }
             }
+            const directMax = Number(this.form.direct.v5);
+            const indirectMax = Number(this.form.indirect.v5);
+            const oneselfMax = Number(this.form.oneself.v5);
+            // 判断最高等级项相加是否小于等于100%
+            if (!(directMax + indirectMax + oneselfMax <= 100)) return {status: false, msg: '请确保最高等级项相加小于等于100%!'};
+            // 判断竖向是否是递增
+            for (const key in tmp) {
+                for (let i = 0; i < tmp[key].length - 2; i++) {
+                    const arr = tmp[key];
+                    if (arr[i] > arr[i + 1]) return {status: false, msg: '请确保v0-v5为递增！'};
+                }
+            }
+            return {status: true, msg: this.form};
         }
     }
 };
@@ -110,7 +117,7 @@ export default {
     margin-top: 10px;
     .item{
         width: 290px;
-        padding: 25px;
+        padding: 10px 25px;
         margin-right: 10px;
         background-color: #f7f7f7;
         .small-title{
@@ -130,6 +137,10 @@ export default {
             &:not(:first-child){
                 margin-top: 20px;
             }
+        }
+        .flow{
+            width: 150px;
+            margin: 20px 0 0 47px;
         }
     }
 }

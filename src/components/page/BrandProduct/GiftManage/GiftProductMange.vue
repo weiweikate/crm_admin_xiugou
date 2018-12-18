@@ -40,7 +40,6 @@
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-import * as api from '@/api/BrandProduct/GiftMange/index.js';
 import request from '@/http/http';
 import { deepClone } from '@/assets/js/util/util';
 import { regExpConfig } from '@/utils/regConfig.js';
