@@ -17,7 +17,9 @@
                         <div class="box-item h340" v-for="(val,key) in v.detail" :key="key">
                             <div class="item-line" v-for="(item,index) in val" :key="index">
                                 <div v-if="!item.select">
-                                    <div class="line-lebal">{{item.label}}:</div>
+                                    <div class="line-lebal">{{item.label}}:
+                                        <div v-if="item.otherLabel" class='tac'>{{item.otherLabel}}</div>
+                                    </div>
                                     <el-input type="number" @change="validate(item.value)" v-model.trim.number="item.value" :max="100" :min="0" @keyup.native="item.value = Math.abs(item.value)" placeholder="请输入内容" class="w170"></el-input>
                                     <span class="ml5">%</span>
                                 </div>
@@ -113,7 +115,7 @@ export default {
                             { disable: false, select: true, value: 0, name: 'surplusType', index: 0 }
                         ],
                         [
-                            { disable: false, label: '品牌推广奖励金', otherLabel: '活跃度', value: 0, name: 'totalRate', index: 1 },
+                            { disable: false, label: '品牌推广奖励金', otherLabel: '（活跃度）', value: 0, name: 'totalRate', index: 1 },
                             { disable: false, label: '中介代支付费', value: 0, name: 'agencyRate', index: 1 },
                             { disable: false, label: 'v5', value: 0, name: 'v5', index: 1 },
                             { disable: false, label: 'v4', value: 0, name: 'v4', index: 1 },
@@ -445,6 +447,7 @@ export default {
                     display: inline-block;
                     width: 120px;
                     text-align: right;
+                    vertical-align: middle;
                 }
             }
         }
