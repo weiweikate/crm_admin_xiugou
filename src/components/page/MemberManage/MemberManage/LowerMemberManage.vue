@@ -23,7 +23,7 @@
                 <el-form-item prop="levelId" label="用户层级" label-width="120">
                     <el-select v-model="exportForm.levelId" placeholder="全部层级">
                         <el-option label="全部层级" value=""></el-option>
-                        <el-option :label="item.name" :value="item.id" v-for="(item,index) in levelList"
+                        <el-option :label="`v${item.level}`" :value="item.id" v-for="(item,index) in levelList"
                                    :key="index"></el-option>
                     </el-select>
                 </el-form-item>
@@ -162,8 +162,8 @@
                 btnTxt: ''
             };
         },
-        activated() {
-            this.form.upUserid = this.$route.query.memberToLowListPage;
+        mounted() {
+            this.form.upUserCode = this.$route.query.memberToLowListPage;
             this.getList(this.page.currentPage);
             this.getLevelList();
         },
@@ -199,13 +199,13 @@
                 });
             },
             // 跳到下级列表
-            toLower(id) {
-                this.form.upUserid = id;
+            toLower(code) {
+                this.form.upUserCode = code;
                 this.getList(this.page.currentPage);
             },
             // 详情
             detailItem(index, row) {
-                this.$router.push({name: 'memberDetail', query: {memberToInfo: row.id}});
+                this.$router.push({name: 'memberDetail', query: {memberToInfo: row.code}});
             },
             // 关闭,开启
             updateStatusItem(index, id, num) {

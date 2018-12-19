@@ -23,7 +23,7 @@
                 <el-form-item prop="levelId" label="用户层级" label-width="120">
                     <el-select v-model="exportForm.levelId" placeholder="全部层级">
                         <el-option label="全部层级" value=""></el-option>
-                        <el-option :label="item.name" :value="item.id" v-for="(item,index) in levelList"
+                        <el-option :label="`v${item.level}`" :value="item.id" v-for="(item,index) in levelList"
                                    :key="index"></el-option>
                     </el-select>
                 </el-form-item>
@@ -72,7 +72,7 @@
                 <el-table-column label="下级" align="center">
                     <template slot-scope="scope">
                         <span v-if="hasAuth" style="cursor: pointer;color:#ff6868"
-                              @click="toLower(scope.row.id)">{{scope.row.junior}}</span>
+                              @click="toLower(scope.row.code)">{{scope.row.junior}}</span>
                         <span v-else>{{scope.row.junior}}</span>
                     </template>
                 </el-table-column>
@@ -169,7 +169,7 @@ export default {
             hasAuth: ''// 是否有查看下级的权限
         };
     },
-    activated() {
+    mounted() {
         this.getList(this.page.currentPage);
         this.getLevelList();
         this.hasAuth = this.$oprAuth('vip.memberManage.xjck');
@@ -206,12 +206,12 @@ export default {
             });
         },
         // 跳到下级列表
-        toLower(id) {
-            this.$router.push({ name: 'lowerMemberManage', query: { memberToLowListPage: id }});
+        toLower(code) {
+            this.$router.push({ name: 'lowerMemberManage', query: { memberToLowListPage: code }});
         },
         // 详情
         detailItem(index, row) {
-            this.$router.push({ name: 'memberDetail', query: { memberToInfo: row.id }});
+            this.$router.push({ name: 'memberDetail', query: { memberToInfo: row.code }});
         },
         // 关闭,开启
         updateStatusItem(index, id, num) {
