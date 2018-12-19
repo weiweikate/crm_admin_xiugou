@@ -196,8 +196,10 @@
                     </el-form-item>
                     <el-form-item label="退货地址" class="back-address" v-if="form.result!=2">
                         <div class="address-area">
-                            <div>{{supplierRefundAddress.receiver}} {{supplierRefundAddress.receiverPhone}}</div>
-                            <div>{{supplierRefundAddress.province}}{{supplierRefundAddress.city}}{{supplierRefundAddress.area}}{{supplierRefundAddress.address}}</div>
+                            <div>
+                                <div>{{supplierRefundAddress.receiver}} {{supplierRefundAddress.receiverPhone}}</div>
+                                <div>{{supplierRefundAddress.province}}{{supplierRefundAddress.city}}{{supplierRefundAddress.area}}{{supplierRefundAddress.address}}</div>
+                            </div>
                             <!-- <div class="supplier-address" v-if="orderInfo.warehouseType==3">
                                  <el-radio label="1" v-model="form.address">供应商退货地址</el-radio>
                                  <div>{{supplierRefundAddress.receiver}} {{supplierRefundAddress.receiverPhone}}</div>
@@ -358,6 +360,9 @@
                 if (this.orderCustomerServiceInfo.type != 1 && this.orderCustomerServiceInfo.status == 1) { // 待审核
                     if (this.form.result == 1) { // 审核通过
                         url = 'agreeApply';
+                        if(!this.supplierRefundAddress.receiver||!this.supplierRefundAddress.receiverPhone||!this.supplierRefundAddress.address){
+                             return this.$message.warning('退货信息缺失，请完善后再审核');
+                        }
                     } else { // 审核驳回
                         url = 'refuse';
                     }

@@ -5,6 +5,10 @@
     "author": "wuchengji",
     "private": true,
     "scripts": {
+        "precommit": "lint-staged",
+        "lint": "eslint --ext .js,.vue src",
+        "lint:fix": "eslint --fix --ext .js,.vue src",
+        "lint:file": "eslint --fix --ext .js,.vue src/utils/index.js",
         "mock": "node server/mock.js",
         "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
         "dev:dev": "cross-env proxy=chen webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
@@ -14,7 +18,12 @@
         "deploy:test": "node bin/release.js --dist=dist --server=/home/mr/packages/wuchengji/dist",
         "deploy:dev": "node bin/dev.js --dist=dist --server=/ftp/ops/nginx1/dist",
         "server": "node server/app.js",
-        "install2": "yarn"
+        "install2": "npm install --registry=https://registry.npm.taobao.org"
+    },
+    "lint-staged": {
+        "src/**/*.{js,vue}": [
+            "eslint"
+        ]
     },
     "dependencies": {
         "area-data": "5.0.6",
@@ -26,7 +35,7 @@
         "dependencies": "0.0.1",
         "echarts": "4.1.0",
         "element-ui": "2.3.3",
-        "eslint-plugin-html": "4.0.5",
+        "eslint-plugin-html": "^4.0.5",
         "express-http-proxy": "^1.5.0",
         "git-repo-info": "^2.0.0",
         "js-cookie": "^2.2.0",
@@ -53,7 +62,7 @@
     "devDependencies": {
         "autoprefixer": "7.1.2",
         "babel-core": "6.22.1",
-        "babel-eslint": "9.0.0",
+        "babel-eslint": "^9.0.0",
         "babel-helper-vue-jsx-merge-props": "2.0.3",
         "babel-loader": "7.1.1",
         "babel-plugin-syntax-jsx": "6.18.0",
@@ -66,11 +75,13 @@
         "copy-webpack-plugin": "4.0.1",
         "cross-env": "5.2.0",
         "css-loader": "0.28.11",
-        "eslint": "5.5.0",
+        "eslint": "^5.0.0",
         "extract-text-webpack-plugin": "3.0.0",
         "file-loader": "1.1.4",
         "friendly-errors-webpack-plugin": "1.6.1",
         "html-webpack-plugin": "2.30.1",
+        "husky": "^1.2.1",
+        "lint-staged": "^8.1.0",
         "node-notifier": "5.1.2",
         "optimize-css-assets-webpack-plugin": "3.2.0",
         "ora": "1.2.0",

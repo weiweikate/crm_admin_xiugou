@@ -78,7 +78,9 @@
                 if (!list || list.length === 0) return list;
                 list.forEach(item => {
                     item.checked = false;
-                    if (item.name == 'labelManage') { console.log(item.children); }
+                    if (item.name === 'labelManage') {
+                        console.log(item.children);
+                    }
                     this.dealAuth(item.children);
                 });
                 return list;
