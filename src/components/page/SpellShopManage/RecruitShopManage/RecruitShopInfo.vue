@@ -100,7 +100,7 @@ export default {
         //  获取信息
         getInfo() {
             const data = {
-                id: this.shopId
+                storeCode: this.shopId
             };
             request.getStoreDetail(data).then(res => {
                 this.detail = res.data;
