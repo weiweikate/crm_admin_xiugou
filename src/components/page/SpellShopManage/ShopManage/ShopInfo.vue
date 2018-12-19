@@ -43,7 +43,7 @@
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>店长：<span @click="showShopLeader(detail.userId)" class="font-href">{{detail.storeUserName}}</span></span>
+                            <span>店长：<span @click="showShopLeader(detail.userCode)" class="font-href">{{detail.storeUserName}}</span></span>
                             <span class="inf">实名认证</span>
                             <!--<span @click="shopTransfer" class="font-href">店铺转让</span>-->
                         </p>
