@@ -435,7 +435,7 @@
                 const size = (file.size || 0) / 1024 / 1024;
                 return new Promise(function(resolve, reject) {
                     if (!isVideo) reject();
-                    if (size > 3) reject();
+                    if (size > 5.5) reject();
                     resolve();
                 }).then(
                     () => {
