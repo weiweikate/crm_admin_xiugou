@@ -20,7 +20,7 @@
                     <el-radio-group v-model="form.generalize">
                         <el-radio label="">最新</el-radio>
                         <el-radio label="1">精选</el-radio>
-                        <el-radio label="2">热门</el-radio>
+                        <!--<el-radio label="2">热门</el-radio>-->
                         <el-radio label="3">推荐</el-radio>
                     </el-radio-group>
                 </el-form-item>
