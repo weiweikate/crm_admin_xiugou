@@ -64,9 +64,9 @@
                     <el-form-item prop="bankUsername" label="持卡人">
                         <el-input placeholder="请输入持卡人姓名" v-model="form.bankUsername"></el-input>
                     </el-form-item>
-                    <el-form-item prop="endTime" label="供应商结算帐期：">
-                        <p>每月15号</p>
-                    </el-form-item>
+                    <!--<el-form-item prop="endTime" label="供应商结算帐期：">-->
+                        <!--<p>每月15号</p>-->
+                    <!--</el-form-item>-->
                     <!--<el-form-item label="状态" prop="status">-->
                         <!--<el-radio-group v-model="form.status">-->
                             <!--<el-radio :label="1">启用</el-radio>-->
@@ -209,10 +209,10 @@
                     that.$message.warning('请输入供应商姓名!');
                     return;
                 }
-                if (!that[form].mobile) {
-                    that.$message.warning('请输入联系方式!');
-                    return;
-                }
+                // if (!that[form].mobile) {
+                //     that.$message.warning('请输入联系方式!');
+                //     return;
+                // }
                 if (that.form.country == 1) {
                     if (!that.form.provinceCode || !that.form.cityCode || !that.form.areaCode) {
                         that.$message.warning('请选择供应商地址!');
@@ -240,6 +240,10 @@
                 //     that.$message.warning('请输入合法的银行卡号!');
                 //     return;
                 // }
+                if (that.form.bankCard === '') {
+                    that.$message.warning('请输入银行卡号!');
+                    return;
+                }
                 if (!that.form.bankUsername) {
                     that.$message.warning('请输入持卡人姓名!');
                     return;
