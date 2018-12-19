@@ -54,7 +54,7 @@ export default {
         };
     },
 
-    activated() {
+    mounted() {
         this.name = '';
         this.tplId = this.$route.query.topicId || sessionStorage.getItem('topicId');
         this.tpl = '1';

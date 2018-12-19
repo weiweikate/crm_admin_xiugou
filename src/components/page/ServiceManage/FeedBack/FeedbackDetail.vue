@@ -40,8 +40,8 @@
                         处理人：<span v-if="detail.status==1">{{username}}</span><span v-else>{{detail.adminName}}</span>
                     </div>
                     <div style="margin-top: 30px" v-if="detail.status==1">
-                        <el-button type="primary" v-loading="btnLoading" @click="update('reply')" v-auth="'service.feedBack.qrhf'">确认回复</el-button>
-                        <el-button type="success" v-loading="btnLoading" @click="update('update')" v-auth="'service.feedBack.xgwtlx'">修改问题类型</el-button>
+                        <el-button type="primary" :loading="btnLoading" @click="update('reply')" v-auth="'service.feedBack.qrhf'">确认回复</el-button>
+                        <el-button type="success" :loading="btnLoading" @click="update('update')" v-auth="'service.feedBack.xgwtlx'">修改问题类型</el-button>
                         <el-button @click="cancel">取消</el-button>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                 replyContent: ''
             };
         },
-        activated() {
+        mounted() {
             this.id =
                 this.$route.query.id ||
                 JSON.parse(sessionStorage.getItem('feedDetail').id);
