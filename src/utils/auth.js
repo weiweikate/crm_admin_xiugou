@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie';
+import $cookie from '@mr/fe/utils/cookie';
 
 const TokenKey = 'Admin-Token';
 
