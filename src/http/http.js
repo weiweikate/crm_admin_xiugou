@@ -1,6 +1,5 @@
 import HttpUtils from '@mr/fe/http';
 import $cookie from '@mr/fe/utils/cookie';
-import Cookies from 'js-cookie';
 import * as api_1 from '@/api/api.js';
 import * as api_2 from '@/api/BrandProduct/index.js';
 import * as api_3 from '@/api/MemberManage/index.js';
@@ -26,7 +25,7 @@ const http = new HttpUtils({
     // 超时时间
     timeout: 10000,
     _transformRequest: function(config) {
-        config.headers['token'] = Cookies.get('Admin-Token');
+        config.headers['token'] = $cookie.get('Admin-Token');
         return config;
     }
 });

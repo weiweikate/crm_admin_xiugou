@@ -1,21 +1,20 @@
-import Cookies from 'js-cookie';
 import $cookie from '@mr/fe/utils/cookie';
 
 const TokenKey = 'Admin-Token';
 
 export function getToken() {
-    return Cookies.get(TokenKey);
+    return $cookie.get(TokenKey);
 }
 
 export function setToken(token) {
     let value = token + '';
     if (value.length > 0) {
-        return Cookies.set(TokenKey, value);
+        return $cookie.set(TokenKey, value);
     } else {
-        return Cookies.set(TokenKey, '');
+        return $cookie.set(TokenKey, '');
     }
 }
 
 export function removeToken() {
-    return Cookies.remove(TokenKey);
+    return $cookie.remove(TokenKey);
 }
