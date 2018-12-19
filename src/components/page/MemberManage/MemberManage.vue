@@ -44,6 +44,11 @@
                 <el-table-column prop="id" label="用户ID" width="60" align="center"></el-table-column>
                 <el-table-column prop="nickname" label="用户昵称" align="center"></el-table-column>
                 <el-table-column prop="phone" label="手机号" align="center"></el-table-column>
+                <el-table-column label="靓号" align="center">
+                    <template slot-scope="scope">
+                        <el-tag v-if="scope.row.perfectNumberDTOList.length !== 0" v-for="(v, k) in scope.row.perfectNumberDTOList" :key="k">{{v.perfectNumberCode}}</el-tag>
+                    </template>
+                </el-table-column>
                 <el-table-column label="授权层级" align="center">
                     <template slot-scope="scope" v-if="scope.row.level">{{`v${scope.row.level}`}}</template>
                 </el-table-column>

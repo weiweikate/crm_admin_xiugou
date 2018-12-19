@@ -72,7 +72,7 @@
             };
         },
         activated() {
-            this.id = this.$route.query.memberAccMsg.memberId || '';
+            this.code = this.$route.query.memberAccMsg.memberCode || '';
             this.name = this.$route.query.memberAccMsg.nickname || '';
             this.getList();
         },
@@ -80,7 +80,7 @@
             // 获取数据
             getList() {
                 const data = {
-                    userId: this.id,
+                    userCode: this.code,
                     page: this.page.currentPage,
                     pageSize: this.page.pageSize
                 };

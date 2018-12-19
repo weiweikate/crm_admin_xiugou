@@ -72,15 +72,15 @@
             };
         },
         activated() {
-            this.id = this.$route.query.memberAccMsg.memberId || sessionStorage.getItem('memberAccMsg').memberId;
-            this.name = this.$route.query.memberAccMsg.nickname || sessionStorage.getItem('memberAccMsg').nickname;
+            this.code = this.$route.query.memberAccMsg.memberCode;
+            this.name = this.$route.query.memberAccMsg.nickname;
             this.getList();
         },
         methods: {
             // 获取数据
             getList() {
                 const data = {
-                    userId: this.id,
+                    userCode: this.code,
                     page: this.page.currentPage,
                     pageSize: this.page.pageSize
                 };
