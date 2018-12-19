@@ -267,7 +267,7 @@ export default {
         // 查看分享任务人
         showUser(row) {
             if (row.userId) {
-                this.$router.push({ name: 'memberDetail', query: { memberDetail: row.userId }});
+                this.$router.push({ name: 'memberDetail', query: { memberToInfo: row.userId }});
             }
         },
         // 审核
