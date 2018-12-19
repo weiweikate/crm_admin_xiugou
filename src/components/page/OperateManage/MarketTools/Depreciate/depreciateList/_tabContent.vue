@@ -329,7 +329,7 @@
             const winHeight = window.screen.availHeight - 520;
             this.height = winHeight;
         },
-        activated() {
+        mounted() {
             this.getList(this.page.currentPage);
             this.getCreateUserList();// 加载发布人列表
         },
@@ -535,7 +535,6 @@
             margin-top: 10px;
         }
         .product-img {
-            display: inline-block;
             float: left;
             width: 90px;
             height: 90px;

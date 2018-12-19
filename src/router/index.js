@@ -226,14 +226,14 @@ export const asyncRouterMap = [
                 name: 'feedBack',
                 path: '/feedBack',
                 component: resolve => require(['../components/page/ServiceManage/FeedBack.vue'], resolve),
-                meta: { title: '问题反馈' }
+                meta: { title: '问题反馈', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'feedDetail',
                 path: '/feedDetail',
                 component: resolve => require(['../components/page/ServiceManage/FeedBack/FeedbackDetail.vue'], resolve),
-                meta: { title: '问题详情' }
+                meta: { title: '问题详情', noKeepAlive: true }
             }
         ]
     },
@@ -1313,7 +1313,7 @@ export const asyncRouterMap = [
                 name: 'appBannerAdv',
                 path: '/appBannerAdv',
                 component: resolve => require(['../components/page/OperateManage/AdvertisingManage/AppBannerAdv.vue'], resolve),
-                meta: { title: 'app首页Banner广告位' }
+                meta: { title: 'app首页Banner广告位', noKeepAlive: true }
             },
             {
                 hidden: true,
@@ -1393,7 +1393,7 @@ export const asyncRouterMap = [
                 name: 'addProject',
                 path: '/addProject',
                 component: resolve => require(['../components/page/OperateManage/ProjectMange/addProject.vue'], resolve),
-                meta: { title: '专题设置' }
+                meta: { title: '专题设置' , noKeepAlive: true}
             },
 
             {
@@ -1401,7 +1401,7 @@ export const asyncRouterMap = [
                 name: 'depreciate',
                 path: '/depreciate',
                 component: resolve => require(['../components/page/OperateManage/MarketTools/Depreciate/Depreciate.vue'], resolve),
-                meta: { title: '降价拍' }
+                meta: { title: '降价拍' , noKeepAlive: true}
             },
             {
                 hidden: true,
@@ -1422,7 +1422,7 @@ export const asyncRouterMap = [
                 name: 'secKill',
                 path: '/secKill',
                 component: resolve => require(['../components/page/OperateManage/MarketTools/SecKill/SecKill.vue'], resolve),
-                meta: { title: '秒杀' }
+                meta: { title: '秒杀', noKeepAlive: true }
             },
             {
                 hidden: true,
