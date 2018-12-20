@@ -305,6 +305,7 @@
             utils.cleanFormData(this.form);
             this.getInfo();
             this.getLogic();
+            this.checked=false
         },
         methods: {
             //  获取信息
