@@ -318,7 +318,7 @@ export default {
                         name: '用户人数',
                         type: 'pie',
                         radius: '100px',
-                        center: ['55%', '50%'],
+                        center: ['55%', '55%'],
                         data: this.userLevelMsg,
                         label: {
                             // 饼图图形上的文本标签
