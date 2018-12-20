@@ -926,7 +926,7 @@ export const asyncRouterMap = [
                 name: 'tokenAccountBalance',
                 path: '/tokenAccountBalance',
                 component: resolve => require(['../components/page/MemberManage/UserAccount/TokenAccountBalance.vue'], resolve),
-                meta: { title: '代币账户收支明细' }
+                meta: { title: '秀豆账户收支明细' }
             },
             {
                 hidden: true,
