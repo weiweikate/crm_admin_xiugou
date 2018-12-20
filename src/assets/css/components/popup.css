@@ -1,0 +1,89 @@
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.clear {
+  clear: both;
+  content: '';
+  zoom: 1;
+}
+.clear:after {
+  clear: both;
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pwd-mask {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.pwd-mask .box {
+  position: relative;
+  width: 530px;
+  height: 305px;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.pwd-mask .box .mask-title {
+  width: 100%;
+  height: 56px;
+  border-bottom: 1px solid #ccc;
+  padding-left: 45px;
+  box-sizing: border-box;
+  text-align: center;
+  line-height: 56px;
+  color: #ff6868;
+  font-weight: 700;
+}
+.pwd-mask .box .mask-title .ico {
+  position: absolute;
+  top: 16px;
+  left: 228px;
+  color: red;
+  font-size: 20px;
+}
+.pwd-mask .box .mask-content {
+  position: relative;
+  width: 100%;
+  height: 248px;
+  overflow: hidden;
+  padding: 30px 45px 0 45px;
+  box-sizing: border-box;
+}
+.pwd-mask .box .mask-content .del-tip {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px;
+}
+.pwd-mask .box .mask-content .del-btn-group {
+  width: 180px;
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 15%;
+}
+.pwd-mask .box .mask-content .del-btn-group .del-btn {
+  background-color: #ff6868;
+}
