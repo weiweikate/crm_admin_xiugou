@@ -222,7 +222,7 @@
                 </el-form>
             </div>
             <!--待平台处理-->
-            <div class="opr-area" v-if="orderCustomerServiceInfo.type==1&&orderCustomerServiceInfo.status==1||orderCustomerServiceInfo.status==3||orderCustomerServiceInfo.status==4">
+            <div class="opr-area" v-if="(orderCustomerServiceInfo.type==1&&orderCustomerServiceInfo.status==1||orderCustomerServiceInfo.status==3||orderCustomerServiceInfo.status==4)&&orderCustomerServiceInfo.subStatus!=9">
                 <div class="title">操作</div>
                 <el-form :model="form">
                     <el-form-item label="售后处理结果">
