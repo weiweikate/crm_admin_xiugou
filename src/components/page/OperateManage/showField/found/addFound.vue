@@ -3,9 +3,9 @@
         <v-breadcrumb :nav="nav"></v-breadcrumb>
         <el-card v-loading="pageLoading">
             <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-                <el-form-item prop="userId" label="发布者">
-                    <el-select v-model="form.userId">
-                        <el-option v-for="(v, k) in userList" :key="k" :label="v.nickname" :value="v.id"></el-option>
+                <el-form-item prop="userCode" label="发布者">
+                    <el-select v-model="form.userCode">
+                        <el-option v-for="(v, k) in userList" :key="k" :label="v.nickname" :value="v.code"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="categoryId" label="选择分类">
@@ -94,10 +94,10 @@
             return {
                 nav: ['运营管理', '秀场管理', '新建'],
                 id: '',
-                code: '',
                 url: '',
+                code: '',
                 form: {
-                    userId: '',
+                    userCode: '',
                     categoryId: '',
                     title: '',
                     content: '',
@@ -135,7 +135,7 @@
                         { required: true, message: '请输入标题名称', trigger: 'blue' },
                         { min: 1, max: 20, message: '标题的文字不能超过1~20个字符', trigger: 'change' }
                     ],
-                    userId: [
+                    userCode: [
                         { required: true, message: '请输入发布者', trigger: 'blue' }
                     ],
                     categoryId: [
@@ -167,7 +167,7 @@
         },
         deactivated() {
             this.form = {
-                userId: '',
+                userCode: '',
                 categoryId: '',
                 title: '',
                 content: '',
@@ -292,7 +292,7 @@
                     request.findDiscoverArticleById({ id: this.id }).then(res => {
                         this.pageLoading = false;
                         this.code = res.data.code;
-                        this.form.userId = res.data.userId;
+                        this.form.userCode = res.data.userCode;
                         this.form.categoryId = res.data.categoryId;
                         this.form.title = res.data.title;
                         this.form.content = res.data.content;

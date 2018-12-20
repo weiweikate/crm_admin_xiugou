@@ -3,9 +3,9 @@
         <breadcrumb :nav='nav'></breadcrumb>
         <el-card style="margin-bottom: 10px">
             <el-form ref="form" inline :model="form" label-width="120px">
-                <el-form-item prop="no" label="编号">
-                    <el-input v-model="form.no"></el-input>
-                </el-form-item>
+                <!--<el-form-item prop="no" label="编号">-->
+                    <!--<el-input v-model="form.no"></el-input>-->
+                <!--</el-form-item>-->
                 <el-form-item prop="no" label="订单号">
                     <el-input v-model="form.orderNum"></el-input>
                 </el-form-item>
@@ -20,29 +20,26 @@
         <el-card>
             <p class="title">{{name}}的秀值账户明细</p>
             <el-table border :data="tableData" v-loading="tableLoading">
-                <el-table-column prop="serialNo" label="流水号" align="center" min-width="180"></el-table-column>
-                <el-table-column label="收入/支出" align="center" width="200">
+                <el-table-column type="index" label="编号" align="center"></el-table-column>
+                <el-table-column label="类型" align="center" width="200">
                     <template slot-scope="scope">
                         <template v-if="scope.row.biType==1">收入</template>
                         <template v-else >支出</template>
                     </template>
                 </el-table-column>
-                <el-table-column label="金额（元）" align="center" width="200">
+                <el-table-column label="金额（元）" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.biType==1">{{`+${scope.row.balance || 0}`}}</template>
-                        <template v-else >{{`-${scope.row.balance || 0}`}}</template>
+                        <template v-if="scope.row.biType==1">{{`+￥${scope.row.balance || 0}`}}</template>
+                        <template v-else >{{`-￥${scope.row.balance || 0}`}}</template>
                     </template>
                 </el-table-column>
-                <el-table-column label="类型" align="center" width="200">
+                <el-table-column label="说明" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.useType==1">用户收益</template>
-                        <template v-else-if="scope.row.useType==2">提现</template>
-                        <template v-else-if="scope.row.useType==3">消费支出</template>
-                        <template v-else-if="scope.row.useType==4">店主分红</template>
-                        <template v-else-if="scope.row.useType==5">店员分红</template>
-                        <template v-else-if="scope.row.useType==6">销售提成</template>
-                        <template v-else-if="scope.row.useType==7">现金红包</template>
-                        <template v-else-if="scope.row.useType==8">任务奖励</template>
+                        <template v-if="scope.row.useType==1">销售品牌奖励</template>
+                        <template v-else-if="scope.row.useType==2">推广品牌奖励</template>
+                        <template v-else-if="scope.row.useType==3">消费品牌奖励</template>
+                        <template v-else-if="scope.row.useType==4">任务奖励</template>
+                        <template v-else>-</template>
                     </template>
                 </el-table-column>
                 <el-table-column label="时间" align="center" min-width="180">
@@ -93,8 +90,8 @@
             };
         },
         activated() {
-            this.id = this.$route.query.memberAccMsg.memberId || sessionStorage.getItem('memberAccMsg').memberId;
-            this.name = this.$route.query.memberAccMsg.nickname || sessionStorage.getItem('memberAccMsg').nickname;
+            this.code = this.$route.query.memberAccMsg.memberCode;
+            this.name = this.$route.query.memberAccMsg.nickname;
             this.getList();
         },
         methods: {
@@ -102,7 +99,7 @@
             getList(val) {
                 if (!this.form.time) this.form.time = [];
                 const data = {
-                    userId: this.id,
+                    userCode: this.code,
                     page: val,
                     pageSize: this.page.pageSize,
                     beginTime: this.form.time.length === 0 ? '' : this.$utils.formatTime(this.form.time[0]),

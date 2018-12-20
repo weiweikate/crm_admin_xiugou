@@ -65,7 +65,7 @@ export const asyncRouterMap = [
                 name: 'memberManage',
                 path: '/memberManage',
                 component: resolve => require(['../components/page/MemberManage/MemberManage.vue'], resolve),
-                meta: { title: '会员管理' }
+                meta: { title: '会员管理', noKeepAlive: true }
             },
             {
                 name: 'realNameAuthentication',
@@ -186,6 +186,7 @@ export const asyncRouterMap = [
                 meta: { title: '发货单列表' }
             },
             {
+                hidden: true,
                 name: 'giftOrderList',
                 path: '/giftOrderList',
                 component: resolve => require(['../components/page/OrderManage/GiftOrderManage/GiftOrderList.vue'], resolve),
@@ -835,7 +836,6 @@ export const asyncRouterMap = [
                 meta: { title: '招募店铺详情' }
             },
             // 会员管理
-
             {
                 hidden: true,
                 name: 'levelInfo',
@@ -849,7 +849,7 @@ export const asyncRouterMap = [
                 name: 'lowerMemberManage',
                 path: '/lowerMemberManage',
                 component: resolve => require(['../components/page/MemberManage/MemberManage/LowerMemberManage.vue'], resolve),
-                meta: { title: '下级代理' }
+                meta: { title: '下级代理', noKeepAlive: true }
             },
             {
                 hidden: true,
@@ -877,7 +877,7 @@ export const asyncRouterMap = [
                 name: 'memberTree',
                 path: '/memberTree',
                 component: resolve => require(['../components/page/MemberManage/MemberManage/MemberTree.vue'], resolve),
-                meta: { title: '会员树状图' }
+                meta: { title: '会员树状图', noKeepAlive: true }
             },
             {
                 hidden: true,
@@ -947,7 +947,7 @@ export const asyncRouterMap = [
                 name: 'realNameInfo',
                 path: '/realNameInfo',
                 component: resolve => require(['../components/page/MemberManage/RealNameInfo.vue'], resolve),
-                meta: { title: '实名信息' }
+                meta: { title: '实名信息', noKeepAlive: true }
             },
 
             {
