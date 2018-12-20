@@ -112,10 +112,11 @@ export default {
             };
             this.loading = true;
             request.queryFlatAccountByType(data).then(res => {
+                let resData = res.data || {};
                 this.loading = false;
-                this.tableData = res.data.data || [];
-                this.page.totalPage = res.data.totalNum || 0;
-                this.page.currentPage = res.data.currentPage || 0;
+                this.tableData = resData.data || [];
+                this.page.totalPage = resData.totalNum || 0;
+                this.page.currentPage = resData.currentPage || 0;
             }).catch(err => {
                 this.loading = false;
                 console.log(err);

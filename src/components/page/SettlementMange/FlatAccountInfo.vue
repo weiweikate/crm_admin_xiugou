@@ -32,14 +32,14 @@
                     <div @click="goPage('7')" class="card them3">直接上级（销售提成）账户收支明细</div>
                 </el-col>
             </el-row><br/>
-            <!--<el-row>-->
-                <!--<el-col :span="6">-->
-                    <!--<div @click="goPage('9')" class="card them1">秀值（推广提成）收支明细细</div>-->
-                <!--</el-col>-->
-                <!--<el-col :span="6">-->
-                    <!--<div @click="goPage('10')" class="card them2">用户账户（自己）账户收支明细</div>-->
-                <!--</el-col>-->
-            <!--</el-row>-->
+            <el-row>
+                <el-col :span="6">
+                    <div @click="goPage('9')" class="card them1">秀值（推广提成）收支明细细</div>
+                </el-col>
+                <el-col :span="6">
+                    <div @click="goPage('10')" class="card them2">用户账户（自己）账户收支明细</div>
+                </el-col>
+            </el-row>
         </el-card>
 
     </div>

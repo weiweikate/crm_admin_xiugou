@@ -95,8 +95,6 @@
             },
             // 提交表单
             submitForm() {
-                if (!(this.info.upUserid > 0) && this.info.upUserid != '' && this.info.upUserid) return this.$message.warning('请输入正确的会员id');
-                this.closeToask();
                 const data = {};
                 data.code = this.code;
                 data.levelId = this.info.levelId;

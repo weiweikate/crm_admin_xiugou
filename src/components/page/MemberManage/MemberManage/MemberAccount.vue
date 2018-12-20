@@ -64,18 +64,18 @@
                     </div>
                     <span class="spanBtn"  @click="btnClicked(6)">查看详情</span>
                 </li>
-                <!--<li class="Account">-->
-                    <!--<div class="card-title">-->
-                        <!--<icon class="ico" ico='icon-ffffff'/>-->
-                        <!--秀值账户（元）-->
-                    <!--</div>-->
-                    <!--<div class="card-content">-->
-                        <!--<div class="card-amout">-->
-                            <!--秀值账户-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<span class="spanBtn" @click="btnClicked(4)">收支明细</span>-->
-                <!--</li>-->
+                <li class="Account">
+                    <div class="card-title">
+                        <icon class="ico" ico='icon-ffffff'/>
+                        秀值账户（元）
+                    </div>
+                    <div class="card-content">
+                        <div class="card-amout">
+                            秀值账户
+                        </div>
+                    </div>
+                    <span class="spanBtn" @click="btnClicked(4)">收支明细</span>
+                </li>
             </ul>
 
         </div>

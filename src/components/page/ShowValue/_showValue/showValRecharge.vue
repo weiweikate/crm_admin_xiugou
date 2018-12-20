@@ -11,7 +11,7 @@
                 <el-form-item prop="level" label="会员层级">
                     <el-select v-model="form.level">
                         <el-option label="全部" value=""></el-option>
-                        <el-option v-for="(v, k) in userLevel" :key="k" :label="v.name" :value="v.name"></el-option>
+                        <el-option v-for="(v, k) in userLevel" :key="k" :label="`v${v.level}`" :value="v.name"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="payType" label="充值类型">

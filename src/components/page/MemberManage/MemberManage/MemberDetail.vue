@@ -105,8 +105,8 @@
                         <h3>拼店信息</h3>
                     </div>
                     <div class="item-row">
-                        <div class="item" @click="shopInfo(dealer.storeId)" style="cursor: pointer;color: #20a0ff" v-if="dealer.roleType == 1">参与店铺：{{dealer.storeName}}</div>
-                        <div class="item" @click="shopInfo(dealer.storeId)" style="cursor: pointer;color: #20a0ff" v-if="dealer.roleType == 0">开设店铺：{{dealer.storeName}}</div>
+                        <div class="item" @click="shopInfo(dealer.storeCode)" style="cursor: pointer;color: #20a0ff" v-if="dealer.roleType == 1">参与店铺：{{dealer.storeName}}</div>
+                        <div class="item" @click="shopInfo(dealer.storeCode)" style="cursor: pointer;color: #20a0ff" v-if="dealer.roleType == 0">开设店铺：{{dealer.storeName}}</div>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -230,8 +230,8 @@
                 this.isShowEditAuthor = true;
             },
             // 开设店铺信息
-            shopInfo(storeId) {
-                this.$router.push({ name: 'shopInfo', query: { shopInfoId: storeId }});
+            shopInfo(storeCode) {
+                this.$router.push({ name: 'shopInfo', query: { shopInfoId: storeCode }});
             },
             // 页面跳转
             btnClicked(page, paramName) {
