@@ -13,8 +13,9 @@
                 </el-table-column>
                 <el-table-column prop="balance" label="金额（元）" align="center" width="200">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.biType==1">{{`+${scope.row.balance || 0}`}}</template>
-                        <template v-else >{{`-${scope.row.balance || 0}`}}</template>
+                        <template v-if="scope.row.biType==1">{{`+￥${scope.row.balance || 0}`}}</template>
+                        <template v-else-if="scope.row.biType==2" >{{`-￥${scope.row.balance || 0}`}}</template>
+                        <template v-else>-</template>
                     </template>
                 </el-table-column>
                 <el-table-column label="类型" align="center" width="200">
@@ -27,6 +28,8 @@
                         <template v-else-if="scope.row.useType==6">销售提成</template>
                         <template v-else-if="scope.row.useType==7">现金红包</template>
                         <template v-else-if="scope.row.useType==8">任务奖励</template>
+                        <template v-else-if="scope.row.useType==9">消费退款</template>
+                        <template v-else>-</template>
                     </template>
                 </el-table-column>
                 <el-table-column label="时间" align="center" min-width="180">

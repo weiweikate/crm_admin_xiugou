@@ -108,6 +108,7 @@
             getList(val) {
                 const data = {
                     page: val,
+                    pageSize: this.page.pageSize,
                     keyword: this.form.keyword,
                     idCard: this.form.idNumber
                 };
