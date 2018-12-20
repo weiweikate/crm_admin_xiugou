@@ -18,9 +18,14 @@
             <template>
                 <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
                     <el-table-column prop="id" label="邀请记录ID" align="center"></el-table-column>
-                    <el-table-column prop="levelName" label="邀请层级" align="center"></el-table-column>
+                    <el-table-column label="邀请层级" align="center">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.level">{{`v${scope.row.level}`}}</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="createTime" label="邀请时间" align="center">
-                        <template slot-scope="scope">{{scope.row.createTime|formatDateAll}}</template>
+                        <template slot-scope="scope" v-if="scope.row.createTime">{{scope.row.createTime|formatDateAll}}</template>
                     </el-table-column>
                     <el-table-column prop="adminName" label="发起者" align="center"></el-table-column>
                     <el-table-column label="操作" align="center">
