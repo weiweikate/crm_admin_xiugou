@@ -129,7 +129,7 @@
             },
             // 实名认证页面
             realName(row) {
-                this.$router.push({name: 'realNameInfo', query: {memberInfoRealName: row.userId}});
+                this.$router.push({name: 'realNameInfo', query: {memberInfoRealName: row.userCode}});
             },
             // 驳回审核
             async refuseAudit(row) {
