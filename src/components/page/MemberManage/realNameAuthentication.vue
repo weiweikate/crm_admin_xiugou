@@ -134,7 +134,7 @@
             },
             // 驳回审核
             async refuseAudit(row) {
-                this.memberId = row.userCode;
+                this.memberId = row.id;
                 this.freeReason = '';
                 this.reason = '';
                 this.dialogVisible = true;
