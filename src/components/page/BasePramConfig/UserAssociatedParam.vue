@@ -26,6 +26,7 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import request from '@/http/http';
+    import { regExpConfig } from '@/utils/regConfig';
     export default {
         components: { vBreadcrumb },
 
@@ -97,6 +98,8 @@
                         }
                     ]
                 };
+                const regNumRange = /^\d{1,4}$/;
+                if (!regExpConfig.regNum1_4.test(this.num1) || !regExpConfig.regNum1_4.test(this.num2)) return this.$message.warning('请输入正确的天数!');
                 this.btnLoading = true;
                 request.addOrModifyList(data).then(res => {
                     this.$message.success(res.msg);
