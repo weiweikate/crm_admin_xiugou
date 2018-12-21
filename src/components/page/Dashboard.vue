@@ -105,7 +105,7 @@
                                 <span class="r-content">添加供应商</span>
                             </div>
                         </router-link>
-                        <router-link to="" tag="div" v-auth="'dashboard.shortcut.fwmcx'">
+                        <router-link to="/rootsCodeQuery" tag="div" v-auth="'dashboard.shortcut.fwmcx'">
                             <div class="right-content">
                                 <div class="r-ico-wrap"><icon ico='icon-chaxun' /></div>
                                 <span class="r-content">防伪码查询</span>

@@ -28,7 +28,7 @@
               <el-table-column prop="jobName" label="岗位" align="center"></el-table-column>
               <el-table-column prop="status" label="状态" align="center">
                 <template slot-scope="scope">
-                  <template v-if="scope.row.status == 0">关闭</template>
+                  <template v-if="scope.row.status == 2">关闭</template>
                   <template v-else-if="scope.row.status == 1">正常</template>
                 </template>
               </el-table-column>
@@ -234,7 +234,7 @@ export default {
         // 删除用户
         deleteUser(row) {
             this.delId = row.id;
-            this.delUrl = 'updateAdminUser';
+            this.delUrl = 'updateDeleteAdminUser';
             // this.delUri = pApi.deleteAdminUser;
             this.isShowDelToast = true;
         },
