@@ -15,7 +15,7 @@
                 <el-form-item>
                     <span slot="label" style="color: #33b4ff">商品推广</span>
                     <div class="product" v-for="(v, k) in form.discoverArticleProductList">
-                        <img src="https://mr-test-sg.oss-cn-hangzhou.aliyuncs.com/sharegoods/show_item.png" alt="">
+                        <img :src="v.img" alt="">
                         <div class="product-info">
                             <p>{{v.name}}</p>
                             <p>

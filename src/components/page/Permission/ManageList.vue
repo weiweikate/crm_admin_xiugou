@@ -181,6 +181,7 @@ export default {
         //   重置表单
         resetForm(formName) {
             this.$refs[formName].resetFields();
+            this.getList(1);
         },
 
         // 新建管理员
@@ -250,16 +251,12 @@ export default {
             data.type = 1;
             // data.url = pApi.updateAdminUser[0];
             this.closeBtn = true;
-            request['updateAdminUser'](data)
+            request['updateDeleteAdminUser'](data)
                 .then(res => {
                     this.closeBtn = false;
-                    if (res.code == 10000) {
-                        this.$message.success(res.msg);
-                        row.status = status;
-                        row.visible = false;
-                    } else {
-                        this.$message.warning(res.msg);
-                    }
+                    this.$message.success(res.msg);
+                    row.status = status;
+                    row.visible = false;
                 })
                 .catch(err => {
                     this.closeBtn = false;

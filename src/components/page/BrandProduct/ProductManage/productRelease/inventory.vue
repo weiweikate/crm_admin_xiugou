@@ -486,7 +486,7 @@
             submitForm() {
                 for (let i = 0; i < this.priceTable.length; i++) {
                     const price = this.priceTable[i];
-                    if (price.v0 < price.v1 || price.v1 < price.v2 || price.v2 < price.v3 || price.v3 < price.v4 || price.v4 < price.v5 || price.v5 < price.v6 || price.v6 < price.groupPrice || price.groupPrice < price.settlementPrice) {
+                    if (price.originalPrice < price.v0 || price.v0 < price.v1 || price.v1 < price.v2 || price.v2 < price.v3 || price.v3 < price.v4 || price.v4 < price.v5 || price.v5 < price.v6 || price.v6 < price.groupPrice || price.groupPrice < price.settlementPrice) {
                         return this.$message.warning('请输入正确的价格');
                     }
                     if (!price.weight) return this.$message.warning('请输入正确重量');

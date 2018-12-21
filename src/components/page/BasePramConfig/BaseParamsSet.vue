@@ -34,84 +34,84 @@
 </template>
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import request from "@/http/http";
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import request from '@/http/http';
 export default {
     components: { vBreadcrumb },
     data() {
-        var commonCheckReg = (rule, value, callback) => {
+        const commonCheckReg = (rule, value, callback) => {
             if (!value) {
-                return callback(new Error("选项不能为空"));
+                return callback(new Error('选项不能为空'));
             }
             setTimeout(() => {
-            if (!Number.isInteger(value)) {
-                callback(new Error("请输入数字值"));
-            }else{
-                callback()
-            }
+                if (!Number.isInteger(value)) {
+                    callback(new Error('请输入数字值'));
+                } else {
+                    callback();
+                }
             }, 1000);
         };
         return {
-            nav: ["基础参数设置", "交易基础参数设置"],
+            nav: ['基础参数设置', '交易基础参数设置'],
             bodyLoading: false,
             btnLoading: false,
             ruleForm: {
-                activityOrderCancelTime: "", //活动订单关闭时间
-                orderCancleTime: "", //普通订单关闭时间
-                goodsConfirmTime: "", //订单完成超时时间
-                evaluationCancleTime: "", //评价超时时间
-                expressSendTime: "", //售后回寄超时时间
-                afterSaleTimes: "", //售后申请次数
-                afterSaleCancleTime: "" //售后关闭时间
+                activityOrderCancelTime: '', // 活动订单关闭时间
+                orderCancleTime: '', // 普通订单关闭时间
+                goodsConfirmTime: '', // 订单完成超时时间
+                evaluationCancleTime: '', // 评价超时时间
+                expressSendTime: '', // 售后回寄超时时间
+                afterSaleTimes: '', // 售后申请次数
+                afterSaleCancleTime: '' // 售后关闭时间
             },
             rules: {
                 activityOrderCancelTime: [
                     {
                         required: true,
                         validator: commonCheckReg,
-                        trigger: "blur"
+                        trigger: 'blur'
                     }
                 ],
                 orderCancleTime: [
                     {
                         required: true,
                         validator: commonCheckReg,
-                        trigger: "blur"
+                        trigger: 'blur'
                     }
                 ],
                 goodsConfirmTime: [
                     {
                         required: true,
                         validator: commonCheckReg,
-                        trigger: "blur"
+                        trigger: 'blur'
                     }
                 ],
                 evaluationCancleTime: [
                     {
                         required: true,
                         validator: commonCheckReg,
-                        trigger: "blur"
+                        trigger: 'blur'
                     }
                 ],
                 expressSendTime: [
                     {
                         required: true,
                         validator: commonCheckReg,
-                        trigger: "blur"
+                        trigger: 'blur'
                     }
                 ],
                 afterSaleTimes: [
                     {
                         required: true,
                         validator: commonCheckReg,
-                        trigger: "blur"
+                        trigger: 'blur'
                     }
                 ],
                 afterSaleCancleTime: [
                     {
                         required: true,
                         validator: commonCheckReg,
-                        trigger: "blur"
+                        trigger: 'blur'
                     }
                 ]
             }
@@ -124,8 +124,7 @@ export default {
         // 获取数据
         getInfo() {
             const data = {
-                codes:
-                    "time_activity_order_cancel,time_order_cancel,time_goods_confirm,time_express_send,time_evaluation_cancel,times_after_sale,time_after_sale_cancel"
+                codes: 'time_activity_order_cancel,time_order_cancel,time_goods_confirm,time_express_send,time_evaluation_cancel,times_after_sale,time_after_sale_cancel'
             };
             this.bodyLoading = true;
             request
@@ -134,27 +133,25 @@ export default {
                     res.data.forEach(v => {
                         v.value = v.value ^ 0;
                         switch (v.code) {
-                            case "time_activity_order_cancel":
+                            case 'time_activity_order_cancel':
                                 this.ruleForm.activityOrderCancelTime = v.value;
                                 break;
-                            case "time_order_cancel":
-                                this.ruleForm.orderCancleTime = Math.floor(
-                                    v.value / 60
-                                );
+                            case 'time_order_cancel':
+                                this.ruleForm.orderCancleTime = Math.floor(v.value / 60);
                                 break;
-                            case "time_goods_confirm":
+                            case 'time_goods_confirm':
                                 this.ruleForm.goodsConfirmTime = v.value;
                                 break;
-                            case "time_evaluation_cancel":
+                            case 'time_evaluation_cancel':
                                 this.ruleForm.evaluationCancleTime = v.value;
                                 break;
-                            case "time_express_send":
+                            case 'time_express_send':
                                 this.ruleForm.expressSendTime = v.value;
                                 break;
-                            case "times_after_sale":
+                            case 'times_after_sale':
                                 this.ruleForm.afterSaleTimes = v.value;
                                 break;
-                            case "time_after_sale_cancel":
+                            case 'time_after_sale_cancel':
                                 this.ruleForm.afterSaleCancleTime = v.value;
                                 break;
                         }
@@ -173,31 +170,31 @@ export default {
                     const data = {
                         configVOS: [
                             {
-                                code: "time_activity_order_cancel",
+                                code: 'time_activity_order_cancel',
                                 value: this.ruleForm.activityOrderCancelTime
                             },
                             {
-                                code: "time_order_cancel",
+                                code: 'time_order_cancel',
                                 value: this.ruleForm.orderCancleTime * 60
                             },
                             {
-                                code: "time_goods_confirm",
+                                code: 'time_goods_confirm',
                                 value: this.ruleForm.goodsConfirmTime
                             },
                             {
-                                code: "time_express_send",
+                                code: 'time_express_send',
                                 value: this.ruleForm.expressSendTime
                             },
                             {
-                                code: "time_evaluation_cancel",
+                                code: 'time_evaluation_cancel',
                                 value: this.ruleForm.evaluationCancleTime
                             },
                             {
-                                code: "times_after_sale",
+                                code: 'times_after_sale',
                                 value: this.ruleForm.afterSaleTimes
                             },
                             {
-                                code: "time_after_sale_cancel",
+                                code: 'time_after_sale_cancel',
                                 value: this.ruleForm.afterSaleCancleTime
                             }
                         ]
@@ -214,8 +211,8 @@ export default {
                             this.btnLoading = false;
                         });
                 } else {
-                    console.log("error submit!!");
-                    this.$message.warning("请输入合法数据!");
+                    console.log('error submit!!');
+                    this.$message.warning('请输入合法数据!');
                     return false;
                 }
             });

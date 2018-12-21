@@ -179,10 +179,10 @@ export default {
         },
         // 查看店铺详情
         showInfo(row) {
-            sessionStorage.setItem('shopInfoId', row.id);
+            sessionStorage.setItem('shopInfoId', row.storeNumber);
             this.$router.push({
                 name: 'shopInfo',
-                query: { shopInfoId: row.id}
+                query: { shopInfoId: row.storeNumber}
             });
         },
         // 重置表单
@@ -193,10 +193,10 @@ export default {
         },
         // 跳到成员列表
         toUserList(row) {
-            sessionStorage.setItem('recruitShopId', row.id);
+            sessionStorage.setItem('recruitShopId', row.storeNumber);
             this.$router.push({
                 name: 'shopMemberManage',
-                query: { recruitShopId: row.id }
+                query: { recruitShopId: row.storeNumber }
             });
         }
     }

@@ -11,7 +11,7 @@
                 <el-form-item prop="level" label="会员层级">
                     <el-select v-model="form.level">
                         <el-option label="全部" value=""></el-option>
-                        <el-option v-for="(v, k) in userLevel" :key="k" :label="v.name" :value="v.name"></el-option>
+                        <el-option v-for="(v, k) in userLevel" :key="k" :label="`v${v.level}`" :value="v.name"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="payType" label="充值类型">
@@ -266,8 +266,8 @@ export default {
         },
         // 查看分享任务人
         showUser(row) {
-            if (row.userId) {
-                this.$router.push({ name: 'memberDetail', query: { memberToInfo: row.userId }});
+            if (row.userCode) {
+                this.$router.push({ name: 'memberDetail', query: { memberToInfo: row.userCode }});
             }
         },
         // 审核

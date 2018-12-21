@@ -120,8 +120,8 @@ export default {
         },
         // 查看店铺详情
         showInfo(row) {
-            sessionStorage.setItem('recruitShopId', row.id);
-            this.$router.push({ name: 'recruitShopInfo', query: { 'recruitShopId': row.id}});
+            sessionStorage.setItem('recruitShopId', row.storeNumber);
+            this.$router.push({ name: 'recruitShopInfo', query: { 'recruitShopId': row.storeNumber}});
         },
         // 重置表单
         resetForm(formName) {
@@ -131,9 +131,9 @@ export default {
         },
         // 查看招募成员
         toUserList(row) {
-            sessionStorage.setItem('recruitShopId', row.id);
+            sessionStorage.setItem('recruitShopId', row.storeNumber);
             sessionStorage.setItem('groupMoney', row.groupMoney);
-            this.$router.push({ name: 'shopMemberManage', query: { 'recruitShopId': row.id, 'groupMoney': row.groupMoney }});
+            this.$router.push({ name: 'shopMemberManage', query: { 'recruitShopId': row.storeNumber, 'groupMoney': row.groupMoney }});
         }
     }
 };

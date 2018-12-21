@@ -44,7 +44,7 @@
             icon, vBreadcrumb, deleteToast
         },
         activated() {
-            this.id = this.$route.query.memberAccMsg.memberId || sessionStorage.getItem('memberAccMsg').memberId;
+            this.code = this.$route.query.memberAccMsg.memberCode;
             this.getFindBindBankInfoBydealerId();
         },
         data() {
@@ -62,13 +62,13 @@
         methods: {
             getFindBindBankInfoBydealerId() {
                 this.tableLoading = true;
-                request.queryCardByUserId({id: this.id}).then(res=>{
+                request.queryCardByUserId({ code: this.code }).then(res => {
                     this.tableLoading = false;
                     this.card = res.data;
-                }).catch(err=>{
+                }).catch(err => {
                     this.tableLoading = false;
                     console.log(err);
-                })
+                });
             },
             dismiss(id) {
                 this.delId = id;

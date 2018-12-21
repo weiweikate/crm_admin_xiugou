@@ -50,10 +50,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="item-row">
-                    供应商结算帐期：
-                    每月15日
-                </div>
+                <!--<div class="item-row">-->
+                    <!--供应商结算帐期：-->
+                    <!--每月15日-->
+                <!--</div>-->
             </div>
             <div style="margin:50px">
                 <el-button type="primary" @click="backToList">返回列表</el-button>
