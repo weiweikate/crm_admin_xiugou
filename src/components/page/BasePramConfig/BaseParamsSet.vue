@@ -36,12 +36,25 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import request from '@/http/http';
+import { regExpConfig } from '@/utils/regConfig';
 export default {
     components: { vBreadcrumb },
     data() {
         const commonCheckReg = (rule, value, callback) => {
             if (!value) {
                 return callback(new Error('选项不能为空'));
+            }
+            setTimeout(() => {
+                if (!Number.isInteger(value)) {
+                    callback(new Error('请输入数字值'));
+                } else {
+                    callback();
+                }
+            }, 1000);
+        };
+        const checkoutDays = (rule, value, callback) => {
+            if (!regExpConfig.regNum1_4.test(value)) {
+                return callback(new Error('请输入正确的天数'));
             }
             setTimeout(() => {
                 if (!Number.isInteger(value)) {
@@ -82,21 +95,21 @@ export default {
                 goodsConfirmTime: [
                     {
                         required: true,
-                        validator: commonCheckReg,
+                        validator: checkoutDays,
                         trigger: 'blur'
                     }
                 ],
                 evaluationCancleTime: [
                     {
                         required: true,
-                        validator: commonCheckReg,
+                        validator: checkoutDays,
                         trigger: 'blur'
                     }
                 ],
                 expressSendTime: [
                     {
                         required: true,
-                        validator: commonCheckReg,
+                        validator: checkoutDays,
                         trigger: 'blur'
                     }
                 ],
@@ -110,7 +123,7 @@ export default {
                 afterSaleCancleTime: [
                     {
                         required: true,
-                        validator: commonCheckReg,
+                        validator: checkoutDays,
                         trigger: 'blur'
                     }
                 ]
