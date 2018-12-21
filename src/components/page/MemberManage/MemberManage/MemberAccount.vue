@@ -23,23 +23,23 @@
                     </div>
                     <div class="card-content">
                         <div class="card-amout">
-                            代币数：{{accountInfo.bean || 0}}
+                            秀豆账户：{{accountInfo.bean || 0}}
                         </div>
                     </div>
                     <span class="spanBtn" @click="btnClicked(2)">收支明细</span>
                 </li>
-                <li class="UserBonus">
-                    <div class="card-title">
-                        <icon class="ico" ico='icon-xianjindai'/>
-                        收益账户
-                    </div>
-                    <div class="card-content">
-                        <div class="card-amout">
-                            收益账户
-                        </div>
-                    </div>
-                    <span class="spanBtn"  @click="btnClicked(3)">收支明细</span>
-                </li>
+                <!--<li class="UserBonus">-->
+                    <!--<div class="card-title">-->
+                        <!--<icon class="ico" ico='icon-xianjindai'/>-->
+                        <!--收益账户-->
+                    <!--</div>-->
+                    <!--<div class="card-content">-->
+                        <!--<div class="card-amout">-->
+                            <!--收益账户-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<span class="spanBtn"  @click="btnClicked(3)">收支明细</span>-->
+                <!--</li>-->
                 <li class="userCard">
                     <div class="card-title">
                         <icon class="ico" ico='icon-tubiaolunkuo-'/>
@@ -93,20 +93,20 @@
         },
         data() {
             return {
-                id: '',
+                code: '',
                 pageLoading: false,
                 accountInfo: {}
             };
         },
         activated() {
-            this.id = this.$route.query.memberInfoAccount;
+            this.code = this.$route.query.memberInfoAccount;
             this.getQueryDealerAccount();
         },
         methods: {
             btnClicked(id) {
                 const that = this;
                 const memberInfo = {};
-                memberInfo.memberId = that.id;
+                memberInfo.memberCode = that.code;
                 memberInfo.nickname = that.accountInfo.name;
                 switch (id) {
                     case 1:
@@ -132,7 +132,7 @@
             },
             getQueryDealerAccount() {
                 this.pageLoading = true;
-                request.memberAccountListInfo({id: this.id}).then(res => {
+                request.memberAccountListInfo({code: this.code}).then(res => {
                     this.pageLoading = false;
                     this.accountInfo = res.data;
                 }).catch(err => {

@@ -25,16 +25,13 @@
 </template>
 
 <script>
-    import vBreadcrumb from "../../common/Breadcrumb.vue";
-    import icon from "../../common/ico.vue";
-    import * as api from "../../../api/OperateManage/FeaturedManage";
-    import utils from '../../../utils/index.js'
-    import * as pApi from '../../../privilegeList/OperateManage/FeaturedManage';
+    import vBreadcrumb from '../../common/Breadcrumb.vue';
+    import icon from '../../common/ico.vue';
 
     export default {
         components: {
             vBreadcrumb,
-            icon,
+            icon
         },
         data() {
             return {
@@ -46,9 +43,9 @@
 
         methods: {
             toPage(id) {
-                sessionStorage.getItem('pageType',id);
-                this.$router.push({path:'/featuredManage',query:{pageType:id}});
-            },
+                sessionStorage.getItem('pageType', id);
+                this.$router.push({ path: '/featuredManage', query: { pageType: id }});
+            }
         }
     };
 </script>

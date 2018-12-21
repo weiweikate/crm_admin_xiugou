@@ -63,7 +63,7 @@ export default {
         // 获取数据
         getList(val) {
             const data = {
-                storeId: this.shopId,
+                storeCode: this.shopId,
                 page: val,
                 pageSize: this.page.pageSize
             };

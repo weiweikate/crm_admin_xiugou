@@ -142,7 +142,7 @@
             const winHeight = window.screen.availHeight - 520;
             this.height = winHeight;
         },
-        activated() {
+        mounted() {
             this.getList(this.page.currentPage);
             this.getLevelList();
         },

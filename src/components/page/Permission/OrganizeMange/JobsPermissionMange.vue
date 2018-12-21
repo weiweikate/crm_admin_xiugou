@@ -5,8 +5,8 @@
             <el-button type='primary' @click="addRole">添加岗位</el-button>
             <el-table v-loading="tableLoading" class="w-table" stripe :data="tableData" border
                       style="width: 100%">
-                <el-table-column prop="id" label="ID" width="180" align="center"></el-table-column>
-                <el-table-column prop="name" label="角色名称" align="center"></el-table-column>
+                <el-table-column prop="id" label="岗位编号" width="180" align="center"></el-table-column>
+                <el-table-column prop="name" label="岗位名称" align="center"></el-table-column>
                 <el-table-column prop="departmentName" label="部门" align="center"></el-table-column>
                 <el-table-column v-if="isShowOperate" label="操作" align="center">
                     <template slot-scope="scope">

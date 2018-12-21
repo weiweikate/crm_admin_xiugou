@@ -43,9 +43,6 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import deleteToast from '../../common/DeleteToast';
-import * as api from '@/api/OperateManage/SensitiveLibrary.js';
-import * as pApi from '@/privilegeList/OperateManage/SensitiveLibrary.js';
-import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http';
 export default {
@@ -104,7 +101,7 @@ export default {
         delItem(row) {
             this.delId = row.id;
             this.delUrl = 'deleteBadWord';
-            this.delUri = pApi.deleteBadWord;
+            // this.delUri = pApi.deleteBadWord;
             this.isShowDelToast = true;
         },
         // 删除弹窗

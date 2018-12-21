@@ -55,11 +55,11 @@
                         <!--<el-button type="primary" @click="btnClicked('/operateLog')" style="margin-left: 0">用户操作日志-->
                         <!--</el-button>-->
                     <!--</div>-->
-                    <!--<div>-->
-                        <!--<el-button type="primary" @click="btnClicked('memberAccount', 'memberInfoAccount')"-->
-                                   <!--style="margin-left: 0">他的账户-->
-                        <!--</el-button>-->
-                    <!--</div>-->
+                    <div>
+                        <el-button type="primary" @click="btnClicked('memberAccount', 'memberInfoAccount')"
+                                   style="margin-left: 0">他的账户
+                        </el-button>
+                    </div>
                     <div>
                         <el-button type="primary" @click="btnClicked('realNameInfo', 'memberInfoRealName')"
                                    style="margin-left: 0">实名信息{{dealer.realnameStatus == '1'?'(已实名)':''}}
@@ -88,7 +88,7 @@
                     </div>
                     <div class="item-row">
                         <div class="item">授权码：{{dealer.code}}</div>
-                        <div class="item">授权层级：{{dealer.levelName}}</div>
+                        <div class="item">授权层级：{{dealer.level?`v${dealer.level}`: ''}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item">经验值：{{dealer.experience}}</div>
@@ -105,8 +105,8 @@
                         <h3>拼店信息</h3>
                     </div>
                     <div class="item-row">
-                        <div class="item" @click="shopInfo(dealer.storeId)" style="cursor: pointer;color: #20a0ff" v-if="dealer.roleType == 1">参与店铺：{{dealer.storeName}}</div>
-                        <div class="item" @click="shopInfo(dealer.storeId)" style="cursor: pointer;color: #20a0ff" v-if="dealer.roleType == 0">开设店铺：{{dealer.storeName}}</div>
+                        <div class="item" @click="shopInfo(dealer.storeCode)" style="cursor: pointer;color: #20a0ff" v-if="dealer.roleType == 1">参与店铺：{{dealer.storeName}}</div>
+                        <div class="item" @click="shopInfo(dealer.storeCode)" style="cursor: pointer;color: #20a0ff" v-if="dealer.roleType == 0">开设店铺：{{dealer.storeName}}</div>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -143,9 +143,9 @@
             </div>
         </div>
         <!--基础信息修改弹窗-->
-        <edit-basic @msg='basicToast' :dealer='dealer' :id="id" v-if="isShowEditBasic"></edit-basic>
+        <edit-basic @msg='basicToast' :dealer='dealer' :code="code" v-if="isShowEditBasic"></edit-basic>
         <!--授权信息修改弹窗-->
-        <edit-author @msg='authorToast' :dealer='dealer' :id="id" v-if="isShowEditAuthor"></edit-author>
+        <edit-author @msg='authorToast' :dealer='dealer' :code="code" v-if="isShowEditAuthor"></edit-author>
     </div>
 </template>
 
@@ -162,6 +162,7 @@
         },
         data() {
             return {
+                code: '',
                 dealer: {},
                 dynamicTags: [],
                 inputVisible: false,
@@ -181,12 +182,8 @@
                 record: []
             };
         },
-        created() {
-            this.id = this.$route.query.memberToInfo;
-            this.getDetail();
-        },
-        activated() {
-            this.id = this.$route.query.memberToInfo;
+        mounted() {
+            this.code = this.$route.query.memberToInfo;
             this.getDetail();
         },
         methods: {
@@ -207,7 +204,7 @@
             // 获取详情
             getDetail() {
                 const data = {
-                    id: this.id
+                    code: this.code
                 };
                 this.loading = true;
                 request.findDealerById(data).then(res => {
@@ -233,12 +230,12 @@
                 this.isShowEditAuthor = true;
             },
             // 开设店铺信息
-            shopInfo(storeId) {
-                this.$router.push({ name: 'shopInfo', query: { shopInfoId: storeId }});
+            shopInfo(storeCode) {
+                this.$router.push({ name: 'shopInfo', query: { shopInfoId: storeCode }});
             },
             // 页面跳转
             btnClicked(page, paramName) {
-                this.$router.push({ name: page, query: { [paramName]: this.id }});
+                this.$router.push({ name: page, query: { [paramName]: this.code }});
             }
         }
     };

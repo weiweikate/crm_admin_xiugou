@@ -78,7 +78,7 @@
             icon, region
         },
         props: {
-            id: {
+            code: {
                 require: true
             },
             dealer: {
@@ -146,27 +146,27 @@
             },
             // 提交表单
             submitForm(form) {
-                const that = this;
-                const data = {};
-                data.id = that.id;
-                data.address = that.dealer.address;
-                data.headImg = that.dealer.headImg;
-                data.idcard = that.dealer.idcard;
-                data.nickname = that.dealer.nickname;
-                data.phone = that.dealer.phone;
-                data.wechatId = that.dealer.wechatId;
-                data.realname = that.dealer.realname;
-                data.profile = that.dealer.profile;
-                data.updateType = 1;
-                if (that.address) {
-                    data.provinceId = that.address[0];
-                    if (that.address[1]) {
-                        data.cityId = that.address[1];
+                const data = {
+                    code: this.code,
+                    address: this.dealer.address,
+                    headImg: this.dealer.headImg,
+                    idcard: this.dealer.idcard,
+                    nickname: this.dealer.nickname,
+                    phone: this.dealer.phone,
+                    wechatId: this.dealer.wechatId,
+                    realname: this.dealer.realname,
+                    profile: this.dealer.profile,
+                    updateType: 1
+                };
+                if (this.address) {
+                    data.provinceId = this.address[0];
+                    if (this.address[1]) {
+                        data.cityId = this.address[1];
                     } else {
                         data.cityId = '';
                     }
-                    if (that.address[2]) {
-                        data.areaId = that.address[2];
+                    if (this.address[2]) {
+                        data.areaId = this.address[2];
                     } else {
                         data.areaId = '';
                     }
@@ -177,20 +177,20 @@
                 if (this.dealer.nickname.length < 3 || !this.dealer.nickname) {
                     return this.$message.warning('请输入2~16位昵称');
                 }
-                if (that.phone === false || that.idCard === false) {
+                if (this.phone === false || this.idCard === false) {
                     return false;
                 }
-                that.addrPreFix = that.address;
+                this.addrPreFix = this.address;
                 request.updateDealerById(data).then(res => {
-                    that.btnLoading = false;
-                    that.$message.success(res.msg);
-                    that.$emit('msg', false);
+                    this.btnLoading = false;
+                    this.$message.success(res.msg);
+                    this.$emit('msg', false);
                 }).catch(err => {
-                    that.$emit('msg', false);
-                    that.btnLoading = false;
+                    this.$emit('msg', false);
+                    this.btnLoading = false;
                     console.log(err);
                 });
-                that.closeToask();
+                this.closeToask();
             }
         }
     };

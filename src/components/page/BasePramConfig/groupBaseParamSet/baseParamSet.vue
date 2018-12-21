@@ -42,7 +42,7 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import request from '@/http/http';
-
+    import { regExpConfig } from '@/utils/regConfig';
     export default {
         components: { vBreadcrumb },
 
@@ -93,10 +93,12 @@
             submitForm() {
                 const int = /^([1-9]\d*)$/;
                 const reg = /^([1-9]\d*)([.]{1}[1-9]{1,2})?$/;
+                const regNumRange = /^\d{1,4}$/;
                 if (!int.test(this.storeStartNum) || !reg.test(this.storeDeposit) || !reg.test(this.exitDays) || !reg.test(this.reStartShop) || !int.test(this.settleCycle) || this.settleCycle < 0 || this.settleCycle > 28) {
                     this.$message.warning('请输入合法数据!');
                     return;
                 }
+                if (!regExpConfig.regNum1_4.test(this.exitDays) || !regExpConfig.regNum1_4.test(this.reStartShop)) return this.$message.warning('请输入正确的天数!');
                 this.mask = true;
             },
             sure() {

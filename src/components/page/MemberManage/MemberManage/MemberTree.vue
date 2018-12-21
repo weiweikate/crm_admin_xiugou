@@ -74,7 +74,7 @@
                         <div v-show="checked">
                             <div>
                                 <div v-for="(direct,index) in firstList">
-                                    <div class="direct-item" @click="toDetail(direct.id)">
+                                    <div class="direct-item" @click="toDetail(direct.code)">
                                         <img v-if="direct.headImg" :src="direct.headImg" alt="">
                                         <img v-else src="../../../../assets/images/logo.png" alt="">
                                         <span>用户名：{{direct.nickname}}</span>
@@ -87,7 +87,7 @@
                                     <div v-show="direct.checked">
                                         <!--间接代理-->
                                         <div v-for="indirect in direct.secList" class="indirect-area"
-                                             @click="toDetail(indirect.id)">
+                                             @click="toDetail(indirect.code)">
                                             <span>用户名：{{indirect.nickname}}</span>
                                             <span>用户ID：{{indirect.id}}</span><span>授权号：{{indirect.code}}</span>
                                         </div>
@@ -134,12 +134,12 @@
                 loading: false
             };
         },
-        activated() {
+        mounted() {
             this.firstList = [];
             this.lower.totalCount = '';
             this.lower.checked = false;
             this.checked = false;
-            this.id = this.$route.query.memberTreeInfo;
+            this.code = this.$route.query.memberTreeInfo;
             this.getDetail();
         },
         methods: {
@@ -147,21 +147,23 @@
             getDetail() {
                 const that = this;
                 const data = {
-                    id: that.id
+                    code: that.code
                 };
                 that.loading = true;
                 request.findDealerTreeById(data).then(res => {
-                    console.log(res);
-                    res.data.userAndUp.checked = false;
-                    that.dealerAndUp = res.data.userAndUp;
-                    that.upUser = res.data.userDTO;
-                    that.lower.totalCount = res.data.totalCount;
-                    for (const i in res.data.firstList) {
-                        res.data.firstList[i].checked = false;
-                        for (const j in res.data.firstList[i].secList) {
-                            res.data.firstList[i].secList[j].checked = false;
+                    const resData = res.data || {};
+                    if (resData.userAndUp) {
+                        resData.userAndUp.checked = false;
+                        that.dealerAndUp = resData.userAndUp;
+                    }
+                    that.upUser = resData.userDTO;
+                    that.lower.totalCount = resData.totalCount;
+                    for (const i in resData.firstList) {
+                        resData.firstList[i].checked = false;
+                        for (const j in resData.firstList[i].secList) {
+                            resData.firstList[i].secList[j].checked = false;
                         }
-                        that.firstList.push(res.data.firstList[i]);
+                        that.firstList.push(resData.firstList[i]);
                     }
                     that.loading = false;
                 }).catch(err => {
@@ -190,9 +192,8 @@
                 this.firstList[index].checked = !this.firstList[index].checked;
             },
             // 跳到详情页
-            toDetail(id) {
-                localStorage.setItem('memberDetail', id);
-                this.$router.push({ path: '/memberDetail', query: { memberToInfo: id }});
+            toDetail(code) {
+                this.$router.push({ path: '/memberDetail', query: { memberToInfo: code }});
             }
         }
     };
