@@ -2,7 +2,7 @@
     <div class="organize-mange">
         <breadcrumb :nav='nav'></breadcrumb>
         <el-card>
-            <el-button @click="operateDepartment('add')" type="primary" class='add'>添加部门
+            <el-button @click="operateDepartment('add')" type="primary" class='add' v-auth="'quanxian.organizeMange.xjbm'">添加部门
             </el-button>
             <el-table border :data="tableData">
                 <el-table-column prop="id" label="部门编号" align="center" min-width="150"></el-table-column>
@@ -10,10 +10,10 @@
                 <el-table-column prop="manager" label="负责人" align="center" min-width="150"></el-table-column>
                 <el-table-column label="操作" align="center" min-width="250">
                     <template slot-scope="scope">
-                        <el-button @click="operateDepartment('edit',scope.row)"
+                        <el-button @click="operateDepartment('edit',scope.row)" v-auth="'quanxian.organizeMange.bjbm'"
                                    type="primary">编辑
                         </el-button>
-                        <el-button @click="redirect2Permisson(scope.row)"
+                        <el-button @click="redirect2Permisson(scope.row)" v-auth="'quanxian.organizeMange.gwgl'"
                                    type="success">岗位管理
                         </el-button>
                     </template>
@@ -85,7 +85,7 @@
         methods: {
             // 获取数据
             getList() {
-                let data = {};
+                const data = {};
                 request.queryDepartmentList(data)
                     .then(res => {
                         this.tableData = res.data;
@@ -110,10 +110,10 @@
             },
             confirmForm(formName) {
                 this.$refs[formName].validate((valid) => {
-                    let formData = this.diaForm;
+                    const formData = this.diaForm;
                     let method = 'addRole';
                     if (valid) {
-                        let data = {
+                        const data = {
                             name: formData.name,
                             manager: formData.manager,
                             remark: formData.remark
@@ -131,6 +131,7 @@
                                 this.getList();
                             })
                             .catch(err => {
+                                console.log(err);
                                 this.resetForm(formName);
                             });
                     } else {
@@ -145,7 +146,7 @@
             },
             // 跳转岗位权限
             redirect2Permisson(row) {
-                this.$router.push({ name: 'jobsPermissionMange', query: { id: row.id } });
+                this.$router.push({ name: 'jobsPermissionMange', query: { id: row.id }});
             }
         }
     };
