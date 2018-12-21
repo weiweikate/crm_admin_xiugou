@@ -105,7 +105,7 @@
             <el-button @click="freightToask = true">调整运费模板</el-button>
             <el-button type="danger">推送仓库</el-button>
             <el-button type="danger">导出</el-button>
-            <el-button @click="createProd" type="danger">创建商品</el-button>
+            <el-button @click="createProd" type="danger" v-auth="'brand.productList.tjcp'">创建商品</el-button>
         </el-card>
         <el-card>
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">

@@ -1,21 +1,18 @@
 import { asyncRouterMap, constantRouterMap } from '@/router';
-
+import { getAuthRoutes, getNoAuthRoutes } from '@/auth-util';
 /**
  * 通过meta.role判断是否与当前用户权限匹配
  * @param auth
  * @param roles
  * @param route
  */
-function hasPermission(auth, roles, route) {
-    if (route.hidden) {
-        return true;
-    }
-    else if (route.meta && route.meta.roles) {
-        return roles.some(role => route.meta.roles.includes(role));
-    } else if (auth.includes(route.name)) {
-        return true;
-    } else {
+function hasPermission(noAuthRoutes, roles, route) {
+    if (noAuthRoutes.includes(route.name)) {
         return false;
+    } else if (route.meta && route.meta.roles) {
+        return roles.some(role => route.meta.roles.includes(role));
+    } else {
+        return true;
     }
 }
 
@@ -24,7 +21,7 @@ function hasPermission(auth, roles, route) {
  * @param routes asyncRouterMap
  * @param auth
  */
-function filterAsyncRouter(routes, auth, roles) {
+function filterAsyncRouter(routes, noAuthRoutes, roles) {
     const res = [];
     const len = routes.length;
     for (let i = 0; i < len; i++) {
@@ -33,9 +30,9 @@ function filterAsyncRouter(routes, auth, roles) {
             res.push(tmp);
             continue;
         }
-        if (hasPermission(auth, roles, tmp)) {
+        if (hasPermission(noAuthRoutes, roles, tmp)) {
             if (tmp.children) {
-                tmp.children = filterAsyncRouter(tmp.children, auth, roles);
+                tmp.children = filterAsyncRouter(tmp.children, noAuthRoutes, roles);
             }
             res.push(tmp);
         }
@@ -60,12 +57,14 @@ const permission = {
             return new Promise(resolve => {
                 const roles = data.roles;
                 const auth = data._auth;
+                const authRoutes = getAuthRoutes(auth);
+                const noAuthRoutes = getNoAuthRoutes(authRoutes);
                 let accessedRouters;
                 // 超级管理员则赋予所有权限
                 if (roles.includes('admin')) {
                     accessedRouters = asyncRouterMap;
                 } else {
-                    accessedRouters = filterAsyncRouter(asyncRouterMap, auth, roles);
+                    accessedRouters = filterAsyncRouter(asyncRouterMap, noAuthRoutes, roles);
                 }
                 console.log('用户权限', accessedRouters);
                 commit('SET_ROUTERS', accessedRouters.concat([{ path: '*', redirect: '/404', hidden: true }]));
