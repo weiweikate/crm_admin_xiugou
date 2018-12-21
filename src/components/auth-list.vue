@@ -73,17 +73,6 @@
                 changeStatus(auth.split(','), this.list);
                 this.addAuth();
             },
-            // 同步更新
-            updateSync(elem, list) {
-                if (!list || list.length === 0) return;
-                list.forEach(item => {
-                    if (item.router === elem.router) {
-                        item.checked = elem.checked;
-                    }
-                    this.updateSync(elem, item.children);
-                });
-                // return list;
-            },
             // 渲染权限列表
             dealAuth(list) {
                 if (!list || list.length === 0) return list;
@@ -99,7 +88,6 @@
             // 添加/删除权限
             editAuth(status, parent, self, son, grand) {
                 self.checked = status;
-                this.updateSync(self, this.list);
                 // 判断父级元素
                 if (parent && parent.length !== 0) {
                     parent.checked = parent.children.every(v => {
