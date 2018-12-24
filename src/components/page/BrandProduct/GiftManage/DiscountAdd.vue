@@ -39,7 +39,6 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import draggable from 'vuedraggable';
-import * as api from '@/api/BrandProduct/GiftMange/index.js';
 export default {
     components: { draggable, vBreadcrumb },
 

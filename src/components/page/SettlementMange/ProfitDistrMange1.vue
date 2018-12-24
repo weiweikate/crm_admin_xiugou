@@ -1,4 +1,3 @@
-<!-- 利润分配设置  -->
 <template>
     <div class="profit-distr-mange">
         <v-breadcrumb :nav="['结算管理','利润分配设置']"></v-breadcrumb>
@@ -40,7 +39,14 @@
                 </el-table-column>
             </el-table>
             <div class="block">
-                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :page-size="page.pageSize"
+                    :current-page="page.currentPage"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
                 </el-pagination>
             </div>
         </el-card>
@@ -81,18 +87,15 @@ export default {
                 page: val
             };
             this.tabLoading = true;
-            request
-                .querySettleTplList(data)
-                .then(res => {
-                    this.tabLoading = false;
-                    this.tableData = res.data.data;
-                    this.page.currentPage = res.data.currentPage;
-                    this.page.totalPage = res.data.totalNum;
-                })
-                .catch(err => {
-                    this.tabLoading = false;
-                    console.log(err);
-                });
+            request.querySettleTplList(data).then(res => {
+                this.tabLoading = false;
+                this.tableData = res.data.data;
+                this.page.currentPage = res.data.currentPage;
+                this.page.totalPage = res.data.totalNum;
+            }).catch(err => {
+                this.tabLoading = false;
+                console.log(err);
+            });
         },
         //  处理编号
         handleIndex(index) {
@@ -100,14 +103,16 @@ export default {
         },
         // 创建利润模板
         createTpl() {
-            this.$router.push({ name: 'createProfitTemplate' });
+            this.$router.push({ name: 'profitTpl' });
         },
         // 编辑利润模板
         copyTpl(row) {
             const msg = {
-                id: row.id
+                id: row.id,
+                value: '2' // 1：编辑 2：复制
             };
-            this.$router.push({ name: 'createProfitTemplate', query: { settleProfitMsg: JSON.stringify(msg) }});
+            sessionStorage.setItem('settleProfitMsg', JSON.stringify(msg));
+            this.$router.push({ name: 'profitTpl', query: { settleProfitMsg: JSON.stringify(msg) }});
         },
         // 删除
         delItem(index, id) {
@@ -122,8 +127,8 @@ export default {
         }
     }
 };
+
 </script>
 <style lang='less' scoped>
-.profit-distr-mange {
-}
+.profit-distr-mange{}
 </style>

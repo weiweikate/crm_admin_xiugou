@@ -47,6 +47,10 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 }
+/*overflow: auto*/
+.over-auto {
+    overflow: auto;
+}
 
 /*蓝色字体超链接*/
 .primary-text{

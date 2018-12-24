@@ -63,14 +63,16 @@ export const updateUserLevelUpTokenCoinBuyById = '/user/Level/updateUserLevelUpT
 // 修改会员层级晋升
 export const updateByLevelId = '/user/Level/updateByLevelId';
 // 他的账户
-export const memberAccountListInfo = ['/user/account/findByUserId', { methods: 'get' }];
+export const memberAccountListInfo = ['/user/account/findByUserCode', { methods: 'get' }];
 // 现金账户收入明细列表
 export const queryMemCashList = ['/user/account/queryCashList', { methods: 'post' }];
 // 秀豆账户收入明细列表
 export const queryMemBeanList = ['/user/account/showPeasDetail', { methods: 'post' }];
 // 秀值账户收入明细列表
 export const queryMemshowValueList = ['/user/account/showValueDetail', { methods: 'post' }];
+// 待提现收入明细列表
+export const queryWithdrawalList = ['/user/account/queryWithdrawalList', { methods: 'post' }];
 // 银行卡详情
-export const queryCardByUserId = ['/user/account/queryByUserId', { methods: 'get' }];
+export const queryCardByUserId = ['/user/account/queryByUserCode', { methods: 'get' }];
 // 删除银行卡
 export const deleteAccountCardById = ['/user/account/deleteById', { methods: 'get' }];

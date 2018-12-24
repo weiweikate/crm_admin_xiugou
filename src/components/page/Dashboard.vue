@@ -3,7 +3,7 @@
         <breadcrumb :nav='["首页"]'></breadcrumb>
         <el-row :gutter="20">
             <el-col :span="14">
-                <el-card class="top-card clearfix" style='height:450px;overflow:auto' v-auth="'dashboard.data'">
+                <el-card class="top-card clearfix over-auto" style="height: 450px" v-auth="'dashboard.data'">
                     <div slot="header" class="clearfix">
                         <span class="card-title-rect"></span>
                         <span>数据类模块</span>
@@ -11,47 +11,47 @@
                     <div class="top-wrap">
                         <div class="top-card-content">
                             <div class="otitle"><icon class="icon" ico='icon-zhucedengluyonghuming' /> 今日会员注册</div>
-                            <div class="ocontent">{{info.sign}}</div>
+                            <div class="ocontent">{{info.sign || 0}}</div>
                         </div>
                         <div class="top-card-content">
                             <div class="otitle"><icon class="icon" ico='icon-huiyuan' /> 今日晋升会员</div>
-                            <div class="ocontent">{{info.up}}</div>
+                            <div class="ocontent">{{info.up || 0}}</div>
                         </div>
                         <div class="top-card-content">
                             <div class="otitle"><icon class="icon" ico='icon-huiyuanjifenshixiaobaobiao' /> 今日会员激活数</div>
-                            <div class="ocontent">{{info.activation}}</div>
+                            <div class="ocontent">{{info.activation || 0}}</div>
                         </div>
                         <div class="top-card-content">
                             <div class="otitle"><icon class="icon" ico='icon-huiyuanjifenshixiaobaobiao' /> 今日拼店交易总额</div>
-                            <div class="ocontent">{{info.storeTotal}}</div>
+                            <div class="ocontent">{{info.storeTotal || 0}}</div>
                         </div>
                         <div class="top-card-content">
                             <div class="otitle"><icon class="icon" ico='icon-yubeifeiyong'/>今日分红次数</div>
-                            <div class="ocontent">{{info.bonusCount}}</div>
+                            <div class="ocontent">{{info.bonusCount || 0}}</div>
                         </div>
                         <div class="top-card-content">
                             <div class="otitle"><icon class="icon" ico='icon-74wodedingdan'/>今日订单数</div>
-                            <div class="ocontent">{{info.orderNum}}</div>
+                            <div class="ocontent">{{info.orderNum || 0}}</div>
                         </div>
                     </div>
                 </el-card>
             </el-col>
             <el-col :span="10">
-                <el-card class="top-card clearfix" style='height:450px' v-auth="'dashboard.member'">
+                <el-card class="top-card clearfix over-auto" style="height: 450px" v-auth="'dashboard.member'">
                     <div slot="header" class="clearfix">
                         <span class="card-title-rect"></span>
                         <span>会员层级分布图</span>
                     </div>
                     <div class="left-wrap">
-                       <div style="color:#9e9e9e;font-size:14px;width:100%">会员用户总数:{{userNum}}人</div>
-                       <div ref="memberDistr" :style="{width: '450px', height: '350px',margin:'0 auto'}"></div>
+                       <!--<div style="color:#9e9e9e;font-size:14px;width:100%">会员用户总数:{{userNum}}人</div>-->
+                       <div ref="memberDistr" :style="{width: '100%', height: '350px',margin:'0 auto'}"></div>
                     </div>
                 </el-card>
             </el-col>
         </el-row >
         <el-row :gutter="20" style="margin-top:20px;">
             <el-col :span="14">
-                <el-card class="top-card clearfix" v-auth="'dashboard.shortcut'">
+                <el-card class="top-card clearfix over-auto" v-auth="'dashboard.shortcut'">
                     <div slot="header" class="clearfix">
                         <span class="card-title-rect"></span>
                         <span>快捷操作模块</span>
@@ -105,7 +105,7 @@
                                 <span class="r-content">添加供应商</span>
                             </div>
                         </router-link>
-                        <router-link to="" tag="div" v-auth="'dashboard.shortcut.fwmcx'">
+                        <router-link to="/rootsCodeQuery" tag="div" v-auth="'dashboard.shortcut.fwmcx'">
                             <div class="right-content">
                                 <div class="r-ico-wrap"><icon ico='icon-chaxun' /></div>
                                 <span class="r-content">防伪码查询</span>
@@ -145,7 +145,7 @@
                 </el-card>
             </el-col>
             <el-col :span="10">
-                <el-card class="top-card clearfix" v-auth="'dashboard.todo'">
+                <el-card class="top-card clearfix over-auto" v-auth="'dashboard.todo'">
                     <div slot="header" class="clearfix">
                         <span class="card-title-rect"></span>
                         <span>待处理模块</span>
@@ -278,10 +278,10 @@ export default {
             const colorArr = ['#33b4ff', '#ff908f', '#63d1e2', '#f2c56e', '#56cf88', '#ffa51e', '#ff908f', '#63d1e2', '#f2c56e'];
             request.queryLevelGroupUserCount({}).then(res => {
                 res.data.forEach((v, k) => {
-                    this.userLevelName.push(`${v.name}用户`);
+                    this.userLevelName.push(`v${v.level}用户`);
                     this.userLevelMsg.push({
                         value: v.count,
-                        name: `${v.name}用户`,
+                        name: `v${v.level}用户`,
                         itemStyle: { color: colorArr[k] }
                     });
                     this.userNum += v.count;
@@ -294,8 +294,14 @@ export default {
         //  会员层级分布图
         echartsInit() {
             const myChart = this.$echarts.init(this.$refs.memberDistr);
-            const that = this;
             const option = {
+                title: {
+                    text: `会员用户总数:${this.userNum || 0}人`,
+                    textStyle: {
+                        color: '#9e9e9e'
+                    },
+                    x: 'left'
+                },
                 tooltip: {
                     trigger: 'item',
                     formatter: '{a} <br/>{b} : {c} ({d}%)'
@@ -303,14 +309,16 @@ export default {
                 legend: {
                     orient: 'vertical',
                     left: 'left',
+                    top: '30px',
                     data: this.userLevelName,
-                    show: false
+                    show: true
                 },
                 series: [
                     {
                         name: '用户人数',
                         type: 'pie',
-                        radius: '65%',
+                        radius: '100px',
+                        center: ['55%', '55%'],
                         data: this.userLevelMsg,
                         label: {
                             // 饼图图形上的文本标签
@@ -322,9 +330,14 @@ export default {
                                     fontSize: 14
                                 },
                                 formatter(params) {
-                                    return `${params.name}\n\n${params.percent}%`;
+                                    return `${params.name}\n${params.percent}%`;
                                 }
                             }
+                        },
+                        labelLine: {
+                            length: 10,
+                            length2: 20,
+                            smooth: 0.2
                         }
                     }
                 ]

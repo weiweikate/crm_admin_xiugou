@@ -2,7 +2,7 @@
     <div class="app-banner-adv">
         <v-breadcrumb :nav="nav"></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
-            <el-button @click="addItem"  type="primary" style="margin-bottom:20px" v-if="pageType!=10">添加产品
+            <el-button @click="addItem"  type="primary" style="margin-bottom:20px" v-if="pageType!=10">{{addName}}
             </el-button>
             <el-table border :data="tableData">
                 <el-table-column type="index" label="编号" align="center" v-if="pageType!=10" key="0"></el-table-column>
@@ -212,16 +212,25 @@
                 status: '', // 弹出框的数据格式
                 nav: ['运营管理', '广告位管理'], // 导航名称
                 title: '添加banner图片', // 弹窗名称
-                isShowClear: false// 清空确认弹窗
-
+                isShowClear: false,// 清空确认弹窗
+                addName:''//新增按钮名称
             };
         },
-        activated() {
+        mounted() {
             this.status = this.$route.query.appBannerAdvStatus || sessionStorage.getItem('appBannerAdvStatus');
             this.pageType = this.$route.query.appBannerAdvPageType || sessionStorage.getItem('appBannerAdvPageType');
             this.setConfig(this.status, this.pageType);
             this.tableData = [];
             this.getList(this.page.currentPage);
+            if(this.pageType===2){
+                this.addName='新建'
+            }else if(this.pageType===3){
+                this.addName='添加推荐位'
+            }else if(this.pageType===7){
+                this.addName='添加产品'
+            }else{
+                 this.addName='添加banner图片'
+            }
         },
 
         methods: {
@@ -514,7 +523,7 @@
         .tip {
             color: #ff4e4e;
             font-size: 12px;
-            rank: absolute;
+            position: absolute;
             left: 0;
             top: 80%;
         }

@@ -4,13 +4,6 @@
             <el-form :model="bannerForm" label-width="130px">
                 <el-form-item prop="img" label="添加banner" >
                     <el-input class="my-inp" v-model="bannerForm.imgUrl" disabled placeholder="请上传图片"></el-input>
-                    <!--<el-upload class="icon-uploader"-->
-                               <!--:action="uploadImg"-->
-                               <!--:show-file-list="false"-->
-                               <!--:on-success="handleAvatarSuccess"-->
-                               <!--:before-upload="beforeAvatarUpload">-->
-                        <!--<el-button style="width:100px;height:32px" size="small" type="primary">上传</el-button>-->
-                    <!--</el-upload>-->
                     <upload @img="imgBanner"></upload>
                     <span style="color:#fe8080"><br/>建议图片750px*350px</span>
                 </el-form-item>
@@ -45,23 +38,13 @@
                     <el-input v-if="navItem==1" minlength="1" maxlength="6" v-model="v.navName" class="inp" placeholder="请输入"></el-input>
                     <el-date-picker
                         v-else
-                        v-model="v.time"
+                        v-model="v.navName"
                         format="yyyy-MM-dd HH:mm"
                         type="datetime"
                         class="inp"
                         @blur="changeTime"
                         placeholder="选择日期时间">
                     </el-date-picker>
-                    <!--<el-date-picker-->
-                        <!--v-else-->
-                        <!--v-model="v.time"-->
-                        <!--format="yyyy-MM-dd HH:mm"-->
-                        <!--type="datetime"-->
-                        <!--class="inp"-->
-                        <!--:picker-options="pickerOptions[k]"-->
-                        <!--placeholder="选择日期时间">-->
-                    <!--</el-date-picker>-->
-                        <span style="display: none" v-model="v.navName"></span>
                         <span v-if='k>0' @click="delNav(k)" class="del-btn">x</span>
                     </div>
                 </el-form-item>
@@ -84,13 +67,6 @@
                         <div class="del-area">
                             <span @click="delBanner(k,k2)" class="del-btn">x</span>
                         <el-input class="my-inp" v-model="v2.bannerImg" disabled placeholder="请上传图片"></el-input>
-                        <!--<el-upload class="icon-uploader"-->
-                                   <!--:action="uploadImg"-->
-                                   <!--:show-file-list="false"-->
-                                   <!--:on-success="res=>uploadBanner(res,k,k2)"-->
-                                   <!--:before-upload="beforeAvatarUpload">-->
-                            <!--<el-button style="width:100px;height:32px" size="small" type="primary">上传</el-button>-->
-                        <!--</el-upload>-->
                             <upload @img="imgUrl=>img(imgUrl,k,k2)"></upload>
                         <span style="color:#fe8080"><br/>建议图片750px*350px</span>
                         </div>
@@ -137,12 +113,10 @@
     import request from '@/http/http.js';
     import * as api from '@/api/api.js';
     import moment from 'moment';
-    // import { beforeAvatarUpload } from '@/JS/commom';
     import upload from '@/components/common/upload';
 
     export default {
         components: { upload },
-        // mixins: [beforeAvatarUpload],
         props: ['name', 'tplData'],
 
         watch: {
@@ -183,7 +157,6 @@
                 topicNavbarList: [
                     {
                         navName: '',
-                        time: '',
                         type: 1, // 导航属性 1文字 2时间
                         topicBannerProducts: [{ prodCode: '', productType: 2 }],
                         topicNavbarBannerList: [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }]
@@ -205,7 +178,6 @@
             this.topicNavbarList = [
                 {
                     navName: '',
-                    time: '',
                     type: this.navItem,
                     topicBannerProducts: [{ prodCode: '', productType: 2 }],
                     topicNavbarBannerList: [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }]
@@ -219,7 +191,7 @@
                 this.bannerForm.height = this.tplData.height;
                 this.topicNavbarList = this.tplData.topicNavbarList;
                 for (const i in this.topicNavbarList) {
-                    this.topicNavbarList[i].time = new Date(this.topicNavbarList[i].navName);
+                    this.topicNavbarList[i].navName = new Date(this.topicNavbarList[i].navName);
                     // if (i > 0) {
                     //     this.pickerOptions[i] = {
                     //         disabledDate(time) {
@@ -236,7 +208,6 @@
                 this.topicNavbarList = [
                     {
                         navName: '',
-                        time: '',
                         type: this.navItem,
                         topicBannerProducts: [{ prodCode: '', productType: 2 }],
                         topicNavbarBannerList: [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }]
@@ -255,7 +226,6 @@
                 this.topicNavbarList.forEach(function(v, k) {
                     v.type = item;
                     v.navName = '';
-                    v.time = '';
                 });
             },
             // 确认保存
@@ -281,10 +251,8 @@
                         return;
                     }
                     this.topicNavbarList.forEach((v, k) => {
-                        if (v.navName == '' && v.time == '') {
+                        if (v.navName == '' ) {
                             throw '请输入导航';
-                        } if (this.navItem == 2) {
-                            v.navName = moment(v.time).format('YYYY-MM-DD HH:mm');
                         }
                         if (v.topicBannerProducts) {
                             v.topicBannerProducts.forEach((v1, k1) => {
@@ -323,7 +291,17 @@
                 data.remark = this.bannerForm.remark;
                 data.width = this.bannerForm.width;
                 data.height = this.bannerForm.height;
-                data.topicNavbarList = this.topicNavbarList;
+                let tempTopicNavbarList=[];
+                this.topicNavbarList.forEach((v,k) => {
+                    let temp={
+                         topicBannerProducts:v.topicBannerProducts,
+                         navName:moment(v.navName).format('YYYY-MM-DD HH:mm'),
+                         type:v.type,
+                         topicNavbarBannerList:v.topicNavbarBannerList
+                    }
+                    tempTopicNavbarList.push(temp)
+                })
+                data.topicNavbarList =tempTopicNavbarList
                 request.addOrModifyTopic(data).then(res => {
                     this.$message.success(res.msg);
                     this.$router.push('topicManage');
@@ -344,7 +322,6 @@
                 this.topicNavbarList.push(
                     {
                         navName: '',
-                        time: '',
                         type: this.navItem,
                         topicBannerProducts: [{ prodCode: '', productType: 2 }],
                         topicNavbarBannerList: []

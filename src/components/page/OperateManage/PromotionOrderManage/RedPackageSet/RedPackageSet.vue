@@ -20,6 +20,7 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import request from '@/http/http';
+
 export default {
     components: { vBreadcrumb },
 
@@ -70,8 +71,10 @@ export default {
             const reg = /^(0|[1-9]\d*)$/;
             const reg1 = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
             if (!reg.test(this.doubling_period) || !reg1.test(this.increase_probability)) {
-                this.$message.warning('请输入合法数据!');
-                return;
+                return this.$message.warning('请输入合法数据!');
+            }
+            if(this.doubling_period>9999){
+                return this.$message.warning('输入的天数不能大于9999');
             }
             this.btnLoading = true;
             request.addOrModifyList(data).then(res => {

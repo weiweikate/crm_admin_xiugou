@@ -32,18 +32,18 @@ export default {
             nav: ['经销商会员管理', '会员管理', '会员详情', '实名认证'],
             img: [],
             detail: {},
-            id: ''
+            code: ''
         };
     },
-    activated() {
-        this.id = this.$route.query.memberInfoRealName;
+    mounted() {
+        this.code = this.$route.query.memberInfoRealName;
         this.getDetail();
     },
     methods: {
         getDetail() {
             this.img = [];
             const data = {
-                id: this.id
+                code: this.code
             };
             request.findDealerById(data).then(res => {
                 this.detail = res.data;

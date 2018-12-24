@@ -29,7 +29,7 @@ export default {
     },
     data() {
         return {
-            nav: ['运营管理', '发现管理'],
+            nav: ['秀值管理', '秀场管理'],
             list: [
                 {
                     img: 'static/img/show_list.png',
