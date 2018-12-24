@@ -433,9 +433,9 @@
                 const arr = ['video/mp4', 'video/rmvb', 'video/avi', 'video/mkv', 'video/wmv'];
                 const isVideo = arr.includes(file.type);
                 const size = (file.size || 0) / 1024 / 1024;
-                return new Promise(function(resolve, reject) {
+                return new Promise(function (resolve, reject) {
                     if (!isVideo) reject();
-                    if (size > 3) reject();
+                    if (size > 5.5) reject();
                     resolve();
                 }).then(
                     () => {
@@ -457,7 +457,7 @@
             beforeUploadImg(file, type) {
                 const that = this;
                 const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
-                return new Promise(function(resolve, reject) {
+                return new Promise(function (resolve, reject) {
                     if (!isJPG) reject('请上传图片');
                     if (type == 'mainImg') {
                         if (that.imgList.length >= 10) reject('最多上传十张图片');
@@ -465,7 +465,7 @@
                     const _URL = window.URL || window.webkitURL;
                     const image = new Image();
                     if (type == 'mainImg') {
-                        image.onload = function() {
+                        image.onload = function () {
                             if (image.width == 800 && image.height == 800) {
                                 that.imageSize = `${image.width}*${image.height}`;
                                 resolve();
@@ -498,7 +498,11 @@
             uploadInfoImgSuccess(res, file, fileList) {
                 this.productDetailPicList.push({ name: file.name, url: res.data });
                 this.productDetailPicList.sort((a, b) => {
-                    return a.name > b.name ? 1 : -1;
+                    var first = a.name.replace(/[^0-9]/ig, '');
+                    var second = b.name.replace(/[^0-9]/ig, '');
+                    first = first.length > 0 ? parseInt(first) : a.name;
+                    second = second.length > 0 ? parseInt(second) : b.name;
+                    return first > second ? 1 : -1;
                 });
             },
             // 移除图片
@@ -644,7 +648,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null }});
+                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null } });
                 }).catch(() => {
                 });
             }

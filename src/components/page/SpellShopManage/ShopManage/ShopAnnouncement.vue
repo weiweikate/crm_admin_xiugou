@@ -68,7 +68,7 @@
             // 获取数据
             getList() {
                 const data = {
-                    storeId: this.recruitShopId
+                    storeCode: this.recruitShopId
                 };
                 request.queryStoreNoticeList(data).then(res => {
                     this.tableData = [];

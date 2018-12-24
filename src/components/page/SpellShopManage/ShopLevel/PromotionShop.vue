@@ -9,13 +9,13 @@
             <el-button @click="showShareBonus = true" type="success">分红奖励</el-button>
             <el-button @click="showTotalTrans = true" type="success">交易额达标奖励</el-button>
             <el-button @click="showContinTrad = true" type="success">连续交易额达标</el-button>
-            <el-button @click="showContinFrequ = true" type="success">连续交易频率达标</el-button>
+            <!-- <el-button @click="showContinFrequ = true" type="success">连续交易频率达标</el-button> -->
             <el-button @click="showSingleOrder = true" type="success">单笔订单交易额</el-button>
             <p class="small-title">成员纬度</p>
             <el-button @click="showMemberUpStand = true" type="success">人数达标奖励</el-button>
         </el-card>
         <!-- 设置升级经验值 -->
-        <el-dialog title="所需经验值设置" :visible.sync="showupgradeExp" width="30%"open="cleanData">
+        <el-dialog title="所需经验值设置" :visible.sync="showupgradeExp" width="30%" open="cleanData">
             <p class="dialog-item">
                 <span class="dialog-title">所需经验值设置</span>
                 <el-input class="dialog-inp" v-model="form.upgradeExp" placeholder="请输入数值"></el-input>
@@ -26,7 +26,7 @@
         </span>
         </el-dialog>
         <!-- 设置必要条件 -->
-        <el-dialog title="设置必要条件" :visible.sync="showNecessaryConf" width="30%"open="cleanData">
+        <el-dialog title="设置必要条件" :visible.sync="showNecessaryConf" width="30%" open="cleanData">
             <div class="necessary-box">
                 <p class="necessary-title">必要条件:</p>
                 <div class="dialog-nec-item">
@@ -59,7 +59,7 @@
         </span>
         </el-dialog>
         <!-- 分红奖励 -->
-        <el-dialog title="经验值设置" :visible.sync="showShareBonus" width="30%"open="cleanData">
+        <el-dialog title="经验值设置" :visible.sync="showShareBonus" width="30%" open="cleanData">
             <p class="dialog-item">
                 <span style="margin-left:30px">达成分红次数1次，则获得</span>
             </p>
@@ -73,7 +73,7 @@
         </span>
         </el-dialog>
         <!-- 交易额达标奖励 -->
-        <el-dialog title="经验值设置" :visible.sync="showTotalTrans" width="30%"open="cleanData">
+        <el-dialog title="经验值设置" :visible.sync="showTotalTrans" width="30%" open="cleanData">
             <p class="dialog-item">
                 <span style="margin-left:30px">总交易额增加1元，则增加</span>
             </p>
@@ -87,7 +87,7 @@
         </span>
         </el-dialog>
         <!-- 连续交易额达标 -->
-        <el-dialog title="经验值设置" :visible.sync="showContinTrad" width="30%"open="cleanData">
+        <el-dialog title="经验值设置" :visible.sync="showContinTrad" width="30%" open="cleanData">
             <p style="font-size:16px;font-weight:700;margin-left:30px">每周交易额达到：</p>
             <p class="dialog-item">
                 <span class="dialog-title">交易额</span>
@@ -105,7 +105,7 @@
         </span>
         </el-dialog>
         <!-- 连续交易频率达标 -->
-        <el-dialog title="经验值设置" :visible.sync="showContinFrequ" width="30%"open="cleanData">
+        <el-dialog title="经验值设置" :visible.sync="showContinFrequ" width="30%" open="cleanData">
             <p style="font-size:16px;font-weight:700;margin-left:30px">每周交易频次达到：</p>
             <p class="dialog-item">
                 <span class="dialog-title">交易频次</span>
@@ -123,7 +123,7 @@
         </span>
         </el-dialog>
         <!-- 单笔订单交易额 -->
-        <el-dialog title="经验值设置" :visible.sync="showSingleOrder" width="30%"open="cleanData">
+        <el-dialog title="经验值设置" :visible.sync="showSingleOrder" width="30%" open="cleanData">
             <p class="dialog-item">
                 <span class="dialog-title">单笔订单交易额</span>
                 <el-input class="dialog-inp" v-model="form.upgradeOrderPrice" placeholder="请输入数值"></el-input>
@@ -140,7 +140,7 @@
         </span>
         </el-dialog>
         <!-- 人数达标奖励 -->
-        <el-dialog title="经验值设置" :visible.sync="showMemberUpStand" width="30%"open="cleanData">
+        <el-dialog title="经验值设置" :visible.sync="showMemberUpStand" width="30%" open="cleanData">
             <p class="dialog-item">
                 <span style="margin-left:30px">每增加1人则获得</span>
             </p>

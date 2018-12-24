@@ -29,5 +29,7 @@ export const regExpConfig = {
     imgType: /image\/(png|jpg|jpeg|gif)$/, // 上传图片类型
     isChina: /^[\u4e00-\u9fa5]{2,8}$/,
     isNozeroNumber: /^\+?[1-9]\d*$/, // 大于零的正整数
-    float: /^\d+(\.?|(\.\d+)?)$/ // 匹配正整数或者小数 或者0.这个特殊值
+    float: /^\d+(\.?|(\.\d+)?)$/, // 匹配正整数或者小数 或者0.这个特殊值
+    Range: /^(?:[1-9]?\d|100)$/, // 配置概率0-100首尾包含
+    regNum1_4: /^[1-9]\d{0,3}$/ // 匹配四位正整数
 };

@@ -99,6 +99,7 @@
     import icon from '@/components/common/ico';
     import utils from '@/utils/index.js';
     import request from '@/http/http.js';
+    import {regExpConfig} from '@/utils/regConfig.js'
 
     export default {
         components: {
@@ -107,7 +108,6 @@
             icon,
             vMultichoose
         },
-
         data() {
             var checkName = (rule, value, callback) => {
                 if (!value) {
@@ -330,7 +330,7 @@
                         } else {
                             data.useConditions = 0;
                         }
-                        const reg = /^[0-9]{1,5}$/;// 1-5位数字
+                        const reg = regExpConfig.regNum1_4;// 1-4正整数
                         if (!this.isDay) {
                             data.effectiveDays = this.day;
                             if (!data.effectiveDays) {
@@ -340,7 +340,7 @@
                             data.waitDays = 0;
                             data.cycleFlag = 0;
                             if (!reg.test(this.day)) {
-                                this.$message.warning('请输入1-5位数字的周期时间');
+                                this.$message.warning('请输入1-4位数字的周期时间');
                                 return;
                             }
                         } else {
@@ -352,7 +352,7 @@
                                 return;
                             }
                             if (!reg.test(this.waitDays) || !reg.test(this.effectiveDays)) {
-                                this.$message.warning('请输入1-5位数字的周期时间');
+                                this.$message.warning('请输入1-4位数字的周期时间');
                                 return;
                             }
                         }

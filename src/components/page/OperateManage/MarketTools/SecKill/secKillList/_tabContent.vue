@@ -89,7 +89,7 @@
                     ￥{{scope.row.seckillPrice}}
                 </template>
             </el-table-column>
-            <el-table-column prop="totalNumber" label="库存数量" align="center" min-width="60"></el-table-column>
+            <el-table-column prop="totalNumber" label="发放数量" align="center" min-width="60"></el-table-column>
             <el-table-column label="销量" align="center" min-width="60">
                 <template slot-scope="scope">
                     <template>{{scope.row.totalNumber-scope.row.surplusNumber}}</template>
@@ -291,7 +291,7 @@
             this.getList(this.page.currentPage);
             this.getCreateUserList();// 加载发布人列表
         },
-        activated() {
+        mounted() {
             this.getList(this.page.currentPage);
             this.getCreateUserList();// 加载发布人列表
         },
@@ -458,7 +458,6 @@
             margin-top: 10px;
         }
         .product-img {
-            display: inline-block;
             float: left;
             width: 90px;
             height: 90px;

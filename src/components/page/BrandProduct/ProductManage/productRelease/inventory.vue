@@ -457,31 +457,36 @@
             },
             // 处理价格自动生成
             handlePrice(row) {
-                if (row.settlementPrice !== null && row.settlementPrice !== undefined && row.v0 !== null && row.v0 !== undefined && row.v0 >= row.settlementPrice) {
-                    const profit = row.v0 - row.settlementPrice;
-                    const a = profit * 0.7 / 4;
-                    const v1 = row.v0 - a;
-                    const v2 = row.v0 - 2 * a;
-                    const v3 = row.v0 - 3 * a;
-                    const v4 = row.v0 - 4 * a;
-                    const v5 = row.v0 - 4 * a;
-                    const v6 = row.v0 - 4 * a;
-                    const groupPrice = row.settlementPrice * 1.3;
-                    // if (v1 < groupPrice || v2 < groupPrice || v3 < groupPrice || v4 < groupPrice || v5 < groupPrice) return this.$message.warning('请输入正确的价格');
-                    row.v1 = this.ceil(v1);
-                    row.v2 = this.ceil(v2);
-                    row.v3 = this.ceil(v3);
-                    row.v4 = this.ceil(v4);
-                    row.v5 = this.ceil(v5);
-                    row.v6 = this.ceil(v6);
-                    row.groupPrice = this.ceil(row.settlementPrice * 1.3);
+                if (row.settlementPrice !== '' && row.settlementPrice !== null && row.settlementPrice !== undefined) {
+                    const groupPriceRoot = this.ceil(row.settlementPrice * 1.5);
+                    row.groupPrice = groupPriceRoot;
+                    if (row.v0 !== '' && row.v0 !== null && row.v0 !== undefined && row.v0 >= row.settlementPrice) {
+                        const a = (row.v0 - groupPriceRoot) / 4;
+                        if (a < 0) return this.$message.warning('v0价格不能低于拼店价！');
+                        // const profit = row.v0 - row.settlementPrice;
+                        // const a = profit * 0.7 / 4;
+                        const v1 = row.v0 - a;
+                        const v2 = row.v0 - 2 * a;
+                        const v3 = row.v0 - 3 * a;
+                        const v4 = row.v0 - 4 * a;
+                        const v5 = row.v0 - 4 * a;
+                        const v6 = row.v0 - 4 * a;
+                        // if (v1 < groupPrice || v2 < groupPrice || v3 < groupPrice || v4 < groupPrice || v5 < groupPrice) return this.$message.warning('请输入正确的价格');
+                        row.v0 = this.ceil(row.v0);
+                        row.v1 = this.ceil(v1);
+                        row.v2 = this.ceil(v2);
+                        row.v3 = this.ceil(v3);
+                        row.v4 = this.ceil(v4);
+                        row.v5 = this.ceil(v5);
+                        row.v6 = this.ceil(v6);
+                    }
                 }
             },
             // 提交表单
             submitForm() {
                 for (let i = 0; i < this.priceTable.length; i++) {
                     const price = this.priceTable[i];
-                    if (price.v0 < price.v1 || price.v1 < price.v2 || price.v2 < price.v3 || price.v3 < price.v4 || price.v4 < price.v5 || price.v5 < price.v6 || price.v6 < price.groupPrice || price.groupPrice < price.settlementPrice) {
+                    if (price.originalPrice < price.v0 || price.v0 < price.v1 || price.v1 < price.v2 || price.v2 < price.v3 || price.v3 < price.v4 || price.v4 < price.v5 || price.v5 < price.v6 || price.v6 < price.groupPrice || price.groupPrice < price.settlementPrice) {
                         return this.$message.warning('请输入正确的价格');
                     }
                     if (!price.weight) return this.$message.warning('请输入正确重量');

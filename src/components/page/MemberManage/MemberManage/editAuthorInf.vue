@@ -9,12 +9,12 @@
                     </el-form-item>
                     <el-form-item label="授权层级" class="special">
                         <el-select v-model="info.levelId" placeholder="全部层级">
-                            <el-option :label="item.name" :value="item.id" v-for="(item,index) in levelList"
+                            <el-option :label="`v${item.level}`" :value="item.id" v-for="(item,index) in levelList"
                                        :key="index"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="上级代理:" class="special">
-                        <el-input v-model="info.upUserid" @blur="sureUpdate" size="medium"></el-input>
+                        <el-input v-model="info.upUserCode" @blur="sureUpdate" size="medium"></el-input>
                         <span class="tip">请输入上级代理</span>
                     </el-form-item>
                 </el-form>
@@ -51,7 +51,7 @@
             icon
         },
         props: {
-            id: {
+            code: {
                 require: true
             },
             dealer: {
@@ -95,13 +95,10 @@
             },
             // 提交表单
             submitForm() {
-                console.log(this.info.upUserid);
-                if (!(this.info.upUserid > 0) && this.info.upUserid != '' && this.info.upUserid) return this.$message.warning('请输入正确的会员id');
-                this.closeToask();
                 const data = {};
-                data.id = this.id;
+                data.code = this.code;
                 data.levelId = this.info.levelId;
-                data.upUserid = this.info.upUserid;
+                data.upUserCode = this.info.upUserCode;
                 data.updateType = 2;
                 this.btnLoading = true;
                 request.updateDealerById(data).then(res => {

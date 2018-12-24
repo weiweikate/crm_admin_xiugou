@@ -34,7 +34,7 @@
                     <el-button type="success" @click="showMask(5)">设置直接交易额条件</el-button>
                     <el-button type="success" @click="showMask(6)">设置间接交易额条件</el-button>
                     <el-button type="success" @click="showMask(7)">周交易额</el-button>
-                    <el-button type="success" @click="showMask(8)">周交易频率</el-button>
+                    <!--<el-button type="success" @click="showMask(8)">周交易频率</el-button>-->
                     <el-button type="success" @click="showMask(9)">设置一次性交易条件</el-button>
                     <el-button type="success" @click="showMask(14)">奖励金获得</el-button>
                 </div>

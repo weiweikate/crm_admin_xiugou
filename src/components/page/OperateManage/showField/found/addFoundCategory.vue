@@ -3,9 +3,6 @@
         <v-breadcrumb :nav="nav"></v-breadcrumb>
         <el-card v-loading="pageLoading">
             <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-                <el-form-item prop="name" label="分类名称" name="asdasdssa">
-                    <el-input style="width: 210px" v-model="form.name"></el-input>
-                </el-form-item>
                 <el-form-item prop="icon" label="分类图标">
                     <el-upload
                         v-loading="upLoading"
@@ -19,6 +16,9 @@
                         <i v-else class="el-icon-plus"></i>
                     </el-upload>
                     <span class="tip">请上传jpg，jpeg，png格式图片3M以内</span>
+                </el-form-item>
+                <el-form-item prop="name" label="分类名称" name="asdasdssa">
+                    <el-input style="width: 210px" v-model="form.name"></el-input>
                 </el-form-item>
                 <el-form-item label="">
                     <el-button :loading="btnLoading" type="primary" @click="submitForm">保 存</el-button>

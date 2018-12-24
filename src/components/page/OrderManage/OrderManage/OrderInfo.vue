@@ -211,7 +211,7 @@
                         <td :rowspan="v.rows" v-if="k1==0">{{v.skuCode}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">{{v.supplierSkuCode||`/`}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">{{v.originalPrice | formatMoney}}</td>
-                        <td :rowspan="v.rows" v-if="k1==0">{{v.unitPrice | formatMoney}}</td>
+                        <td :rowspan="v.rows" v-if="k1==0">{{v.payAmount/v.quantity | formatMoney}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">{{v.quantity}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">{{v.payAmount | formatMoney}}</td>
                         <td :rowspan="v.rows" v-if="k1==0">{{v.warehouseName}}</td>
@@ -397,7 +397,6 @@
             .name {
                 float: left;
                 position: relative;
-                display: inline-block;
                 height: 100px;
                 text-align: left;
                 img {
