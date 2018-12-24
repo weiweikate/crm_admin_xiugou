@@ -13,8 +13,7 @@ import * as api_10 from '@/api/RepertoryManage/index.js';
 import { Message, MessageBox } from 'element-ui';
 import store from '../stores';
 
-const api = {};
-Object.assign(api, api_1, api_2, api_3, api_4, api_5, api_6, api_7, api_8, api_9, api_10);
+const api = judgeApiRepeat(api_1, api_2, api_3, api_4, api_5, api_6, api_7, api_8, api_9, api_10);
 const list = [];
 const request = {};
 const http = new HttpUtils({
@@ -101,6 +100,28 @@ list.forEach(function(item) {
         });
     };
 });
+function judgeApiRepeat() {
+    const api = {};
+    try {
+        if (arguments.length !== 0) {
+            for (let v = 0; v < arguments.length; v++) {
+                const childKeys = Object.keys(arguments[v]);
+                const apiKeys = Object.keys(api);
+                for (let i = 0; i < apiKeys.length; i++) {
+                    let num = 0;
+                    for (let j = 0; j < childKeys.length; j++) {
+                        if (apiKeys[i] === childKeys[j]) num++;
+                    }
+                    if (num > 0) throw new Error(`api接口文件${apiKeys[i]}名字重复`);
+                }
+                Object.assign(api, arguments[v]);
+            }
+        }
+    } catch (e) {
+        console.log(e);
+    }
+    return api;
+}
 export default request;
 
 // try {
