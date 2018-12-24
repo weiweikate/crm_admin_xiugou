@@ -188,5 +188,3 @@ export const addProducts = ['/product/product/addOrModifyProduct', { methods: 'p
 export const addProductSku = ['/product/sku/addProductSku', { methods: 'post' }]; // 生成列表
 export const findProductDetailsByCode = ['/product/product/findProductDetailsByCode', { methods: 'get' }]; // 获取商品详情
 export const updateProdRemark = ['/product/product/updateRemark', { methods: 'get' }]; // 更新产品备注
-// 成员列表
-export const getStoreMembers = '/store/storeUser/query';
