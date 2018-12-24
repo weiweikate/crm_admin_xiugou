@@ -53,6 +53,7 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import request from '@/http/http';
     import utils from '@/utils/index.js';
+    import {regExpConfig} from '@/utils/regConfig.js'
 
     export default {
         components: { vBreadcrumb },
@@ -69,8 +70,8 @@
                 if (!value) {
                     return callback(new Error('请输入数值'));
                 } else {
-                    const reg = /^[1-9]*[1-9][0-9]*$/;
-                    if (!reg.test(value) || value.length > 12) {
+                    const reg = /^[1-9]\d{0,11}$/;
+                    if (!reg.test(value)) {
                         return callback(new Error('请输入1-12位数字'));
                     } else {
                         callback();
@@ -81,9 +82,9 @@
                 if (!value) {
                     return callback(new Error('请输入数值'));
                 } else {
-                    const reg = /^[1-9]*[1-9][0-9]*$/;
-                    if (!reg.test(value) || value.length > 5) {
-                        return callback(new Error('请输入1-5位数字'));
+                    const reg = regExpConfig.regNum1_4;// 1-4正整数
+                    if (!reg.test(value)) {
+                        return callback(new Error('请输入1-4位数字'));
                     } else {
                         callback();
                     }
