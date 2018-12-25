@@ -1,5 +1,6 @@
 import { login, logout, getInfo } from '@/api/login';
 import { getToken, setToken, removeToken } from '@/utils/auth';
+import { $sessionStore } from '@mr/fe/utils/store';
 
 const TokenKey = 'token'; // todo 使用id作为token
 

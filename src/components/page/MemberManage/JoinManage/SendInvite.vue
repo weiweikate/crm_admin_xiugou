@@ -58,14 +58,13 @@
 <script>
     import icon from '@/components/common/ico';
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import vChoosearea from '@/components/common/chooseBrand.vue';
     import moment from 'moment';
     import request from '@/http/http';
     import { mapGetters } from 'vuex';
 
     export default {
         components: {
-            vBreadcrumb, icon, vChoosearea
+            vBreadcrumb, icon
         },
         computed: {
             ...mapGetters([

@@ -444,6 +444,10 @@
                             if (!data.remindDays) {
                                 this.$message.warning('请输入到期前提醒天数!');
                                 return;
+                            }else{
+                                if(Number(data.remindDays)>Number(data.effectiveDays)){
+                                    return this.$message.warning('到期前提醒天数不能大于周期有效天数')
+                                }
                             }
                         } else {
                             data.remindFlag = 0;
@@ -701,9 +705,6 @@
                 margin-left: 30px;
                 cursor: pointer;
             }
-        }
-        .el-textarea {
-
         }
         .el-textarea__inner {
             width: 500px;

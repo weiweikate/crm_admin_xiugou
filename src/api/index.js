@@ -18,27 +18,6 @@ axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 var loading;
 axios.interceptors.request.use(config => {
     config.headers['token'] = getToken();
-    // let receiveData = config.data;
-    // 免session
-    // let nocheckout = ['/admin/adminLogin/pswLogin'];
-    // let url = '/'+config.url.split(axios.defaults.baseURL)[1];
-    // if(nocheckout.indexOf(url) == -1){
-    //   let sessionId = sessionStorage.getItem('sessionId') || 'adsadsasasasd';
-    //   let sessionPwd = sessionStorage.getItem('sessionPwd') || 'qewqeqeqeqwqe';
-    //   receiveData.sessionId = sessionId;
-    //   receiveData.sessionPwd = sessionPwd;
-    // }
-    // if (config.url != '/admin/ossClient/aliyunOSSUploadImage') {
-    //     if (receiveData.url == undefined) {
-    //         receiveData.url = '/dashboard';
-    //     }
-    // }
-    // if (config.method == 'post') {
-    //     // var sentData = qs.stringify(receiveData);
-    // } else {
-    //     var sentData = receiveData;
-    // }
-    // config.data = sentData;
     return config;
 });
 
