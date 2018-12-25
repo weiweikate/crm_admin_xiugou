@@ -237,39 +237,35 @@ export default {
                 return;
             }
             // 判空
-            try {
-                if (!this.topicNavbarList.length) {
-                    return;
+            for (let i = 0; i < this.topicNavbarList.length; i++) {
+                let v = this.topicNavbarList[i];
+                if (!v.navName) {
+                    return this.$message.warning('请输入导航');
                 }
-                this.topicNavbarList.forEach((v, k) => {
-                    if (v.navName === '') {
-                        throw new Error('请输入导航');
+                if (v.topicBannerProducts) {
+                    for (let j = 0; j < v.topicBannerProducts.length; j++) {
+                        let v1 = v.topicBannerProducts[j];
+                        if (!v1.prodCode) {
+                            return this.$message.warning('请输入产品id');
+                        }
                     }
-                    if (v.topicBannerProducts) {
-                        v.topicBannerProducts.forEach((v1, k1) => {
-                            if (v1.prodCode === '') {
-                                throw new Error('请输入产品id');
+                }
+                if (v.topicNavbarBannerList && v.topicNavbarBannerList.length) {
+                    for (let k = 0; k < v.topicNavbarBannerList.length; k++) {
+                        let v2 = v.topicNavbarBannerList[k];
+                        if (!v2.bannerImg) {
+                            return this.$message.warning('请上传banner图');
+                        }
+                        if (v2.topicBannerProductList && v2.topicBannerProductList.length) {
+                            for (let t = 0; t < v2.topicBannerProductList.length; t++) {
+                                let v3 = v2.topicBannerProductList[t];
+                                if (!v3.prodCode) {
+                                    return this.$message.warning('请输入产品id');
+                                }
                             }
-                        });
+                        }
                     }
-                    if (v.topicNavbarBannerList && v.topicNavbarBannerList.length) {
-                        v.topicNavbarBannerList.forEach((v2, k2) => {
-                            if (v2.bannerImg === '') {
-                                throw new Error('请上传banner图');
-                            }
-                            if (v2.topicBannerProductList && v2.topicBannerProductList.length) {
-                                v2.topicBannerProductList.forEach((v3, k3) => {
-                                    if (v3.prodCode === '') {
-                                        throw new Error('请输入产品id');
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            } catch (error) {
-                this.$message.warning(error);
-                return;
+                }
             }
             const data = {};
             if (this.id !== '') {
@@ -338,8 +334,7 @@ export default {
         },
         //   添加区间banner
         addBanner(index) {
-            this.topicNavbarList[index].topicNavbarBannerList === undefined ? (this.topicNavbarList[index].topicNavbarBannerList = [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }]) : this.topicNavbarList[index].topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [] });
-            // this.topicNavbarList[index].banner.push({img:'',product:[{prodCode:'',type:1}]});
+            this.topicNavbarList[index].topicNavbarBannerList ? this.topicNavbarList[index].topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [] }) : (this.topicNavbarList[index].topicNavbarBannerList = [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }]);
             this.$set(this.topicNavbarList, index, this.topicNavbarList[index]);
         },
         // 删除区间banner
@@ -348,7 +343,7 @@ export default {
         },
         //   添加banner的产品
         addBannerProduct(bIndex, sIndex) {
-            if (this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList === undefined || null) {
+            if (!this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList) {
                 this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList = [];
             }
             this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList.push({ prodCode: '', productType: 1 });
@@ -361,7 +356,7 @@ export default {
         },
         //   添加产品
         addProduct(index) {
-            this.topicNavbarList[index].topicBannerProducts === null ? (this.topicNavbarList[index].topicBannerProducts = [{ prodCode: '', productType: 1 }]) : this.topicNavbarList[index].topicBannerProducts.push({ prodCode: '', productType: 1 });
+            this.topicNavbarList[index].topicBannerProducts ? this.topicNavbarList[index].topicBannerProducts.push({ prodCode: '', productType: 1 }) : (this.topicNavbarList[index].topicBannerProducts = [{ prodCode: '', productType: 1 }]);
             this.$set(this.topicNavbarList, index, this.topicNavbarList[index]);
         },
         //   获取输入字数
