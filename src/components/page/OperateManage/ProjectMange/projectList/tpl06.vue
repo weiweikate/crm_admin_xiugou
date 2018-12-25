@@ -2,12 +2,12 @@
     <div class="tpl-006">
         <div class="banner">
             <el-form :model="bannerForm" label-width="130px">
-                <el-form-item prop="img" label="添加banner" >
+                <el-form-item prop="img" label="添加banner">
                     <el-input class="my-inp" v-model="bannerForm.imgUrl" disabled placeholder="请上传图片"></el-input>
                     <upload @img="imgBanner"></upload>
-                    <span style="color:#fe8080"><br/>建议图片750px*350px</span>
+                    <span style="color:#fe8080"><br />建议图片750px*350px</span>
                 </el-form-item>
-                <el-form-item label=" " >
+                <el-form-item label=" ">
                     <div class="upload-img-show">
                         <i v-if='!bannerForm.imgUrl' class="el-icon-picture-outline"></i>
                         <img v-else-if="bannerForm.imgUrl" :src="bannerForm.imgUrl" alt="">
@@ -35,18 +35,11 @@
 
                 <el-form-item :label="`导航${k+1}`" label-width="130px">
                     <div class="del-area">
-                    <el-input v-if="navItem==1" minlength="1" maxlength="6" v-model="v.navName" class="inp" placeholder="请输入"></el-input>
-                    <el-date-picker
-                        v-else
-                        v-model="v.navName"
-                        format="yyyy-MM-dd HH:mm"
-                        type="datetime"
-                        class="inp"
-                        @blur="changeTime"
-                        placeholder="选择日期时间">
-                    </el-date-picker>
-                    <span v-if='k>0' @click="delNav(k)" class="del-btn">x</span>
-        </div>
+                        <el-input v-if="navItem==1" minlength="1" maxlength="6" v-model="v.navName" class="inp" placeholder="请输入"></el-input>
+                        <el-date-picker v-else v-model="v.navName" format="yyyy-MM-dd HH:mm" type="datetime" class="inp" @blur="changeTime" placeholder="选择日期时间">
+                        </el-date-picker>
+                        <span v-if='k>0' @click="delNav(k)" class="del-btn">x</span>
+                    </div>
                 </el-form-item>
                 <el-form-item v-for="(v1,k1) in v.topicBannerProducts" :key="k1" label='添加产品' label-width="130px">
                     <div class="del-row">
@@ -63,15 +56,15 @@
             </el-form>
             <div class="addBanner" v-for="(v2,k2) in v.topicNavbarBannerList" :key="k2">
                 <el-form label-width="130px">
-                    <el-form-item label="添加banner" >
+                    <el-form-item label="添加banner">
                         <div class="del-area">
                             <span @click="delBanner(k,k2)" class="del-btn">x</span>
-                        <el-input class="my-inp" v-model="v2.bannerImg" disabled placeholder="请上传图片"></el-input>
+                            <el-input class="my-inp" v-model="v2.bannerImg" disabled placeholder="请上传图片"></el-input>
                             <upload @img="imgUrl=>img(imgUrl,k,k2)"></upload>
-                        <span style="color:#fe8080"><br/>建议图片750px*350px</span>
+                            <span style="color:#fe8080"><br />建议图片750px*350px</span>
                         </div>
                     </el-form-item>
-                    <el-form-item label=" " >
+                    <el-form-item label=" ">
                         <div class="upload-img-show">
                             <i v-if='!v2.bannerImg' class="el-icon-picture-outline"></i>
                             <img v-else-if="v2.bannerImg" :src="v2.bannerImg" alt="">
@@ -110,324 +103,438 @@
 </template>
 
 <script>
-    import request from '@/http/http.js';
-    import * as api from '@/api/api.js';
-    import moment from 'moment';
-    import upload from '@/components/common/upload';
+import request from '@/http/http.js';
+import * as api from '@/api/api.js';
+import moment from 'moment';
+import upload from '@/components/common/upload';
 
-    export default {
-        components: { upload },
-        props: ['name', 'tplData'],
+export default {
+    components: { upload },
+    props: ['name', 'tplData'],
 
-        watch: {
-            name(newVal, oldVal) {
-                this.pName = newVal;
-            }
-        },
+    watch: {
+        name(newVal, oldVal) {
+            this.pName = newVal;
+        }
+    },
 
-        data() {
-            return {
-                // 专题id
-                id: '',
-                // 专题code
-                code: '',
-                // 专题名称
-                pName: '',
-                // 上传图片
-                uploadImg: '',
-                // banner
-                bannerForm: {
-                    imgUrl: '',
-                    remark: '',
-                    width: '',
-                    height: ''
+    data() {
+        return {
+            // 专题id
+            id: '',
+            // 专题code
+            code: '',
+            // 专题名称
+            pName: '',
+            // 上传图片
+            uploadImg: '',
+            // banner
+            bannerForm: {
+                imgUrl: '',
+                remark: '',
+                width: '',
+                height: ''
+            },
+            // 导航属性
+            navItem: 1,
+            navList: [
+                {
+                    label: '文字',
+                    value: 1
                 },
-                // 导航属性
-                navItem: 1,
-                navList: [{
-                    label: '文字', value: 1
-                }, {
-                    label: '时间', value: 2
-                }],
-                // 产品类型
-                prodTypeList: [
-                    { label: '秒杀', value: 1 }
-                ],
-                totalNum: 0, // 字数统计
-                topicNavbarList: [
-                    {
-                        navName: '',
-                        type: 1, // 导航属性 1文字 2时间
-                        topicBannerProducts: [{ prodCode: '', productType: 1 }],
-                        topicNavbarBannerList: [{ bannerImg: '', width: '', height: '', topicBannerProductList: [{ prodCode: '', productType: 1 }] }]
-                    }
-                ]
-                // pickerOptions: [{
-                //     disabledDate(time) {
-                //         return time.getTime() < new Date() - 8.64e7;
-                //     }
-                // }]
-            };
-        },
+                {
+                    label: '时间',
+                    value: 2
+                }
+            ],
+            // 产品类型
+            prodTypeList: [{ label: '秒杀', value: 1 }],
+            totalNum: 0, // 字数统计
+            topicNavbarList: [
+                {
+                    navName: '',
+                    type: 1, // 导航属性 1文字 2时间
+                    topicBannerProducts: [{ prodCode: '', productType: 1 }],
+                    topicNavbarBannerList: [{ bannerImg: '', width: '', height: '', topicBannerProductList: [{ prodCode: '', productType: 1 }] }]
+                }
+            ]
+            // pickerOptions: [{
+            //     disabledDate(time) {
+            //         return time.getTime() < new Date() - 8.64e7;
+            //     }
+            // }]
+        };
+    },
 
-        created() {
-            this.uploadImg = api.uploadImg;
-            this.pName = this.name;
-            this.id = '';
-            this.code = '';
+    created() {
+        this.uploadImg = api.uploadImg;
+        this.pName = this.name;
+        this.id = '';
+        this.code = '';
+        this.topicNavbarList = [
+            {
+                navName: '',
+                type: this.navItem,
+                topicBannerProducts: [{ prodCode: '', productType: 1 }],
+                topicNavbarBannerList: [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }]
+            }
+        ];
+        // const that = this;
+        if (this.tplData !== 'add') {
+            this.bannerForm.imgUrl = this.tplData.imgUrl;
+            this.bannerForm.remark = this.tplData.remark;
+            this.bannerForm.width = this.tplData.width;
+            this.bannerForm.height = this.tplData.height;
+            this.topicNavbarList = this.tplData.topicNavbarList;
+            this.navItem = this.tplData.topicNavbarList[0].type;
+            if (this.navItem === 2) {
+                for (const i in this.topicNavbarList) {
+                    this.topicNavbarList[i].navName = new Date(this.topicNavbarList[i].navName);
+                }
+            }
+            this.id = this.tplData.id;
+            this.code = this.tplData.code;
+        }
+        if (this.tplData.content === 'edit') {
             this.topicNavbarList = [
                 {
                     navName: '',
                     type: this.navItem,
                     topicBannerProducts: [{ prodCode: '', productType: 1 }],
-                    topicNavbarBannerList: [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }]
+                    topicNavbarBannerList: [{ bannerImg: '', width: '', height: '', topicBannerProductList: [{ prodCode: '', productType: 1 }] }]
                 }
             ];
-            // const that = this;
-            if (this.tplData != 'add') {
-                this.bannerForm.imgUrl = this.tplData.imgUrl;
-                this.bannerForm.remark = this.tplData.remark;
-                this.bannerForm.width = this.tplData.width;
-                this.bannerForm.height = this.tplData.height;
-                this.topicNavbarList = this.tplData.topicNavbarList;
-                for (const i in this.topicNavbarList) {
-                    this.topicNavbarList[i].navName = new Date(this.topicNavbarList[i].navName);
-                    // if (i > 0) {
-                    //     this.pickerOptions[i] = {
-                    //         disabledDate(time) {
-                    //             return time.getTime() < new Date(that.topicNavbarList[i].time) - 8.64e7;
-                    //         }
-                    //     };
-                    // }
-                }
-                this.navItem = this.tplData.topicNavbarList[0].type;
-                this.id = this.tplData.id;
-                this.code = this.tplData.code;
-            }
-            if (this.tplData.content == 'edit') {
-                this.topicNavbarList = [
-                    {
-                        navName: '',
-                        type: this.navItem,
-                        topicBannerProducts: [{ prodCode: '', productType: 1 }],
-                        topicNavbarBannerList: [{ bannerImg: '', width: '', height: '', topicBannerProductList: [{ prodCode: '', productType: 1 }] }]
-                    }
-                ];
-            }
-        },
+        }
+    },
 
-        methods: {
-            changeTime() {
-                this.$mount();
-            },
-            // 更改导航属性值
-            changeNavType() {
-                const item = this.navItem;
-                this.topicNavbarList.forEach(function(v, k) {
-                    v.type = item;
-                    v.navName = '';
+    methods: {
+        changeTime() {
+            this.$mount();
+        },
+        // 更改导航属性值
+        changeNavType() {
+            const item = this.navItem;
+            this.topicNavbarList.forEach(function(v, k) {
+                v.type = item;
+                v.navName = '';
+            });
+        },
+        // 确认保存
+        submitForm() {
+            // 判空
+            if (this.pName === '') {
+                this.$message.warning('请输入专题名称');
+                return;
+            } else {
+                const reg = /^[A-Za-z_\u4e00-\u9fa5]{2,50}$/;
+                if (!reg.test(this.pName)) {
+                    this.$message.warning('请输入2-50位由汉字字母下划线组成的专题名称');
+                    return;
+                }
+            }
+            if (this.bannerForm.imgUrl === '') {
+                this.$message.warning('请上传banner图');
+                return;
+            }
+            // 判空
+            try {
+                if (!this.topicNavbarList.length) {
+                    return;
+                }
+                this.topicNavbarList.forEach((v, k) => {
+                    if (v.navName === '') {
+                        throw new Error('请输入导航');
+                    }
+                    if (v.topicBannerProducts) {
+                        v.topicBannerProducts.forEach((v1, k1) => {
+                            if (v1.prodCode === '') {
+                                throw new Error('请输入产品id');
+                            }
+                        });
+                    }
+                    if (v.topicNavbarBannerList && v.topicNavbarBannerList.length) {
+                        v.topicNavbarBannerList.forEach((v2, k2) => {
+                            if (v2.bannerImg === '') {
+                                throw new Error('请上传banner图');
+                            }
+                            if (v2.topicBannerProductList && v2.topicBannerProductList.length) {
+                                v2.topicBannerProductList.forEach((v3, k3) => {
+                                    if (v3.prodCode === '') {
+                                        throw new Error('请输入产品id');
+                                    }
+                                });
+                            }
+                        });
+                    }
                 });
-            },
-            // 确认保存
-            submitForm() {
-                // 判空
-                if (this.pName == '') {
-                    this.$message.warning('请输入专题名称');
-                    return;
-                } else {
-                    const reg = /^[A-Za-z_\u4e00-\u9fa5]{2,50}$/;
-                    if (!reg.test(this.pName)) {
-                        this.$message.warning('请输入2-50位由汉字字母下划线组成的专题名称');
-                        return;
-                    }
-                }
-                if (this.bannerForm.imgUrl == '') {
-                    this.$message.warning('请上传banner图');
-                    return;
-                }
-                // 判空
-                try {
-                    if (!this.topicNavbarList.length) {
-                        return;
-                    }
-                    this.topicNavbarList.forEach((v, k) => {
-                        if (v.navName == '') {
-                            throw '请输入导航';
-                        } 
-                        if (v.topicBannerProducts) {
-                            v.topicBannerProducts.forEach((v1, k1) => {
-                                if (v1.prodCode == '') {
-                                    throw '请输入产品id';
-                                }
-                            });
-                        }
-                        if (v.topicNavbarBannerList && v.topicNavbarBannerList.length) {
-                            v.topicNavbarBannerList.forEach((v2, k2) => {
-                                if (v2.bannerImg == '') {
-                                    throw '请上传banner图';
-                                }
-                                if (v2.topicBannerProductList && v2.topicBannerProductList.length) {
-                                    v2.topicBannerProductList.forEach((v3, k3) => {
-                                        if (v3.prodCode == '') {
-                                            throw '请输入产品id';
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-                } catch (error) {
-                    this.$message.warning(error);
-                    return;
-                }
-                const data = {};
-                if (this.id != '') {
-                    data.id = this.id.toString();
-                    data.code = this.code;
-                }
-                data.templateId = 6;
-                data.name = this.pName;
-                data.imgUrl = this.bannerForm.imgUrl;
-                data.remark = this.bannerForm.remark;
-                data.width = this.bannerForm.width;
-                data.height = this.bannerForm.height;
-                let tempTopicNavbarList=[];
-                this.topicNavbarList.forEach((v,k) => {
-                    let temp={
-                         topicBannerProducts:v.topicBannerProducts,
-                         navName:moment(v.navName).format('YYYY-MM-DD HH:mm'),
-                         type:v.type,
-                         topicNavbarBannerList:v.topicNavbarBannerList
-                    }
-                    tempTopicNavbarList.push(temp)
-                })
-                data.topicNavbarList =tempTopicNavbarList
-                request.addOrModifyTopic(data).then(res => {
+            } catch (error) {
+                this.$message.warning(error);
+                return;
+            }
+            const data = {};
+            if (this.id !== '') {
+                data.id = this.id.toString();
+                data.code = this.code;
+            }
+            data.templateId = 6;
+            data.name = this.pName;
+            data.imgUrl = this.bannerForm.imgUrl;
+            data.remark = this.bannerForm.remark;
+            data.width = this.bannerForm.width;
+            data.height = this.bannerForm.height;
+            if (this.navItem === 2) {
+                var tempTopicNavbarList = [];
+                this.topicNavbarList.forEach((v, k) => {
+                    var temp = {
+                        topicBannerProducts: v.topicBannerProducts,
+                        navName: moment(v.navName).format('YYYY-MM-DD HH:mm'),
+                        type: v.type,
+                        topicNavbarBannerList: v.topicNavbarBannerList
+                    };
+                    tempTopicNavbarList.push(temp);
+                });
+                data.topicNavbarList = tempTopicNavbarList;
+            } else {
+                data.topicNavbarList = this.topicNavbarList;
+            }
+            request
+                .addOrModifyTopic(data)
+                .then(res => {
                     this.$message.success(res.msg);
                     this.$router.push('topicManage');
-                }).catch(err => {
+                })
+                .catch(err => {
                     console.log(err);
                 });
-            },
-            //   删除导航下产品
-            delNavProduct(bIndex, sIndex) {
-                this.topicNavbarList[bIndex].topicBannerProducts.splice(sIndex, 1);
-            },
-            // 删除banner下的产品
-            delProduct(bIndex, mIndex, sIndex) {
-                this.topicNavbarList[bIndex].topicNavbarBannerList[mIndex].topicBannerProductList.splice(sIndex, 1);
-            },
-            //   添加导航
-            addNav() {
-                this.topicNavbarList.push(
-                    {
-                        navName: '',
-                        type: this.navItem,
-                        topicBannerProducts: [{ prodCode: '', productType: 1 }],
-                        topicNavbarBannerList: []
-                    }
-                );
-                // const that = this;
-                // if (this.navItem == 2) {
-                //     this.pickerOptions.push({
-                //         disabledDate(time) {
-                //             return time.getTime() < new Date(that.topicNavbarList[that.topicNavbarList.length - 2].time) - 8.64e7;
-                //         }
-                //     });
-                // }
-            },
-            // 删除导航
-            delNav(index) {
-                this.topicNavbarList.splice(index, 1);
-            },
-            //   添加区间banner
-            addBanner(index) {
-                this.topicNavbarList[index].topicNavbarBannerList == undefined ? this.topicNavbarList[index].topicNavbarBannerList = [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }] : this.topicNavbarList[index].topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [] });
-                // this.topicNavbarList[index].banner.push({img:'',product:[{prodCode:'',type:1}]});
-                this.$set(this.topicNavbarList, index, this.topicNavbarList[index]);
-            },
-            // 删除区间banner
-            delBanner(index, bIndex) {
-                this.topicNavbarList[index].topicNavbarBannerList.splice(bIndex, 1);
-            },
-            //   添加banner的产品
-            addBannerProduct(bIndex, sIndex) {
-                if (this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList == undefined || null) {
-                    this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList = [];
-                }
-                this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList.push({ prodCode: '', productType: 1 });
-                this.$set(this.topicNavbarList, bIndex, this.topicNavbarList[bIndex]);
-            },
-            //  上传banner
-            uploadBanner(res, bIndex, sIndex) {
-                this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].bannerImg = res.data;
-                this.$set(this.topicNavbarList, bIndex, this.topicNavbarList[bIndex]);
-            },
-            //   添加产品
-            addProduct(index) {
-                this.topicNavbarList[index].topicBannerProducts == null ? this.topicNavbarList[index].topicBannerProducts = [{ prodCode: '', productType: 1 }] : this.topicNavbarList[index].topicBannerProducts.push({ prodCode: '', productType: 1 });
-                this.$set(this.topicNavbarList, index, this.topicNavbarList[index]);
-            },
-            //   获取输入字数
-            getFontNum() {
-                this.totalNum = this.bannerForm.remark.length;
-            },
-            //  上传头部banner成功回调
-            handleAvatarSuccess(res) {
-                this.bannerForm.imgUrl = res.data;
-            },
-            // 取消
-            cancel() {
-                this.$router.push('/topicManage');
-            },
-            imgBanner(imgUrl) {
-                this.bannerForm.imgUrl = imgUrl[0];
-                this.bannerForm.width = imgUrl[1];
-                this.bannerForm.height = imgUrl[2];
-            },
-            img(imgUrl, bIndex, sIndex) {
-                this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].bannerImg = imgUrl[0];
-                this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].width = imgUrl[1];
-                this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].height = imgUrl[2];
-                this.$set(this.topicNavbarList, bIndex, this.topicNavbarList[bIndex]);
+        },
+        //   删除导航下产品
+        delNavProduct(bIndex, sIndex) {
+            this.topicNavbarList[bIndex].topicBannerProducts.splice(sIndex, 1);
+        },
+        // 删除banner下的产品
+        delProduct(bIndex, mIndex, sIndex) {
+            this.topicNavbarList[bIndex].topicNavbarBannerList[mIndex].topicBannerProductList.splice(sIndex, 1);
+        },
+        //   添加导航
+        addNav() {
+            this.topicNavbarList.push({
+                navName: '',
+                type: this.navItem,
+                topicBannerProducts: [{ prodCode: '', productType: 1 }],
+                topicNavbarBannerList: []
+            });
+            // const that = this;
+            // if (this.navItem == 2) {
+            //     this.pickerOptions.push({
+            //         disabledDate(time) {
+            //             return time.getTime() < new Date(that.topicNavbarList[that.topicNavbarList.length - 2].time) - 8.64e7;
+            //         }
+            //     });
+            // }
+        },
+        // 删除导航
+        delNav(index) {
+            this.topicNavbarList.splice(index, 1);
+        },
+        //   添加区间banner
+        addBanner(index) {
+            this.topicNavbarList[index].topicNavbarBannerList === undefined ? (this.topicNavbarList[index].topicNavbarBannerList = [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }]) : this.topicNavbarList[index].topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [] });
+            // this.topicNavbarList[index].banner.push({img:'',product:[{prodCode:'',type:1}]});
+            this.$set(this.topicNavbarList, index, this.topicNavbarList[index]);
+        },
+        // 删除区间banner
+        delBanner(index, bIndex) {
+            this.topicNavbarList[index].topicNavbarBannerList.splice(bIndex, 1);
+        },
+        //   添加banner的产品
+        addBannerProduct(bIndex, sIndex) {
+            if (this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList === undefined || null) {
+                this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList = [];
             }
-        }
-    };
-
-</script>
-<style lang='less'>
-    .tpl-006{
-        .my-inp{width: 215px;}
-        .banner{width: 585px;height: 280px;background-color: #f7f7f7;padding: 20px 0;box-sizing: border-box;}
-        .icon-uploader{float: right;margin-right: 103px;width: 100px;}
-        .el-upload--text {width: 100px;height: 35px;border: none;}
-        .upload-img-show{width: 350px;height: 160px;border: 1px solid #dfdfdf;border-radius: 5px;background-color: #fff;text-align: center;line-height: 160px;font-size: 54px;color: #eee;overflow: hidden;
-            img{width: 100%;height: 100%;}
-        }
-        .tip{height: 170px;width: 585px;background-color: #f7f7f7;margin: 10px 0;padding: 20px 0;
-            .text-area{position: relative;width: 350px;
-                .total-num{position:absolute;bottom: 0px;right: 10px;color: #dfdfdf;}
-            }
-        }
-        .inp{width: 300px}
-        .prod-type{width: 100px;margin-left: 10px}
-        .nav{width: 585px;background-color: #f7f7f7;margin: 10px 0;padding: 20px 0;overflow: hidden;
-            .addBanner{width: 100%;border-top: 1px dashed #ddd;border-bottom: 1px dashed #ddd;padding: 20px 0;}
-        }
-        .add-banner-btn{cursor: pointer; height: 65px;width: 90%;border: 1px solid #ddd;margin: 20px auto 0;line-height: 65px;background-color: #fff;text-align: center;
-            span{color: #33b4ff;font-size: 14px;}
-        }
-        .add-nav{width: 585px;height: 105px; background-color: #f7f7f7;overflow: hidden;
-            .add-nav-btn{cursor: pointer; height: 65px;width: 90%;border: 1px solid #ddd;margin: 20px auto 0;line-height: 65px;background-color: #fff;text-align: center;
-                span{color: #33b4ff;font-size: 14px;}
-            }
-        }
-        .del-row{position: relative;
-            .del-btn{position: absolute;top:-10px;right: 145px;width: 25px;height: 25px;border-radius: 50%;background-color: #c6c6c6;text-align: center;line-height: 25px;color: #fff;z-index: 99;cursor: pointer;}
-        }
-        .submit-btn{margin-top: 20px}
-        .del-area{position: relative;
-            .del-btn{position: absolute;top:0;right: 20px;width: 25px;height: 25px;border-radius: 50%;background-color: #c6c6c6;text-align: center;line-height: 25px;color: #fff;z-index: 99;cursor: pointer;}
+            this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].topicBannerProductList.push({ prodCode: '', productType: 1 });
+            this.$set(this.topicNavbarList, bIndex, this.topicNavbarList[bIndex]);
+        },
+        //  上传banner
+        uploadBanner(res, bIndex, sIndex) {
+            this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].bannerImg = res.data;
+            this.$set(this.topicNavbarList, bIndex, this.topicNavbarList[bIndex]);
+        },
+        //   添加产品
+        addProduct(index) {
+            this.topicNavbarList[index].topicBannerProducts === null ? (this.topicNavbarList[index].topicBannerProducts = [{ prodCode: '', productType: 1 }]) : this.topicNavbarList[index].topicBannerProducts.push({ prodCode: '', productType: 1 });
+            this.$set(this.topicNavbarList, index, this.topicNavbarList[index]);
+        },
+        //   获取输入字数
+        getFontNum() {
+            this.totalNum = this.bannerForm.remark.length;
+        },
+        //  上传头部banner成功回调
+        handleAvatarSuccess(res) {
+            this.bannerForm.imgUrl = res.data;
+        },
+        // 取消
+        cancel() {
+            this.$router.push('/topicManage');
+        },
+        imgBanner(imgUrl) {
+            this.bannerForm.imgUrl = imgUrl[0];
+            this.bannerForm.width = imgUrl[1];
+            this.bannerForm.height = imgUrl[2];
+        },
+        img(imgUrl, bIndex, sIndex) {
+            this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].bannerImg = imgUrl[0];
+            this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].width = imgUrl[1];
+            this.topicNavbarList[bIndex].topicNavbarBannerList[sIndex].height = imgUrl[2];
+            this.$set(this.topicNavbarList, bIndex, this.topicNavbarList[bIndex]);
         }
     }
+};
+</script>
+<style lang='less'>
+.tpl-006 {
+    .my-inp {
+        width: 215px;
+    }
+    .banner {
+        width: 585px;
+        height: 280px;
+        background-color: #f7f7f7;
+        padding: 20px 0;
+        box-sizing: border-box;
+    }
+    .icon-uploader {
+        float: right;
+        margin-right: 103px;
+        width: 100px;
+    }
+    .el-upload--text {
+        width: 100px;
+        height: 35px;
+        border: none;
+    }
+    .upload-img-show {
+        width: 350px;
+        height: 160px;
+        border: 1px solid #dfdfdf;
+        border-radius: 5px;
+        background-color: #fff;
+        text-align: center;
+        line-height: 160px;
+        font-size: 54px;
+        color: #eee;
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .tip {
+        height: 170px;
+        width: 585px;
+        background-color: #f7f7f7;
+        margin: 10px 0;
+        padding: 20px 0;
+        .text-area {
+            position: relative;
+            width: 350px;
+            .total-num {
+                position: absolute;
+                bottom: 0px;
+                right: 10px;
+                color: #dfdfdf;
+            }
+        }
+    }
+    .inp {
+        width: 300px;
+    }
+    .prod-type {
+        width: 100px;
+        margin-left: 10px;
+    }
+    .nav {
+        width: 585px;
+        background-color: #f7f7f7;
+        margin: 10px 0;
+        padding: 20px 0;
+        overflow: hidden;
+        .addBanner {
+            width: 100%;
+            border-top: 1px dashed #ddd;
+            border-bottom: 1px dashed #ddd;
+            padding: 20px 0;
+        }
+    }
+    .add-banner-btn {
+        cursor: pointer;
+        height: 65px;
+        width: 90%;
+        border: 1px solid #ddd;
+        margin: 20px auto 0;
+        line-height: 65px;
+        background-color: #fff;
+        text-align: center;
+        span {
+            color: #33b4ff;
+            font-size: 14px;
+        }
+    }
+    .add-nav {
+        width: 585px;
+        height: 105px;
+        background-color: #f7f7f7;
+        overflow: hidden;
+        .add-nav-btn {
+            cursor: pointer;
+            height: 65px;
+            width: 90%;
+            border: 1px solid #ddd;
+            margin: 20px auto 0;
+            line-height: 65px;
+            background-color: #fff;
+            text-align: center;
+            span {
+                color: #33b4ff;
+                font-size: 14px;
+            }
+        }
+    }
+    .del-row {
+        position: relative;
+        .del-btn {
+            position: absolute;
+            top: -10px;
+            right: 145px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: #c6c6c6;
+            text-align: center;
+            line-height: 25px;
+            color: #fff;
+            z-index: 99;
+            cursor: pointer;
+        }
+    }
+    .submit-btn {
+        margin-top: 20px;
+    }
+    .del-area {
+        position: relative;
+        .del-btn {
+            position: absolute;
+            top: 0;
+            right: 20px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: #c6c6c6;
+            text-align: center;
+            line-height: 25px;
+            color: #fff;
+            z-index: 99;
+            cursor: pointer;
+        }
+    }
+}
 </style>
