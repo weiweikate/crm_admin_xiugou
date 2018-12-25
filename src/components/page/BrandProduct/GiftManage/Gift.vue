@@ -856,7 +856,7 @@ export default {
         getProductParam(secId) {
             this.productParam = [];
             request
-                .queryProductCategoryParamList({ categoryId: secId, type: '' })
+                .queryProductCategoryParamList({ categoryId: secId, type: '1' })
                 .then(res => {
                     res.data.forEach((v, k) => {
                         v.value = '';
