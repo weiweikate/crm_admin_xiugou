@@ -187,7 +187,7 @@
         components: { draggable, chooseArea, vBreadcrumb },
         data() {
             return {
-                nav: ['品牌产品管理', '产品管理', '商品详情编辑'],
+                nav: ['产品管理', '商品详情编辑'],
                 unSupportMask: false,
                 pageLoading: false,
                 subformBtn: false,

@@ -104,7 +104,7 @@
         components: { vBreadcrumb },
         data() {
             return {
-                nav: ['品牌产品管理', '产品管理', '基础参数设置'],
+                nav: ['产品管理', '基础参数设置'],
                 prodCode: '',
                 status: '', // 0：删除 1：待发布2：待审核3：已通过4:已上架5：未通过6:已下架
                 cateArr: [],

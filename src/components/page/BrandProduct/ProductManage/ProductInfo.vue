@@ -189,7 +189,7 @@ export default {
 
     data() {
         return {
-            nav: ['品牌产品管理', '产品管理', '产品详情'],
+            nav: ['产品管理', '产品详情'],
             prodCode: '',
             loading: false,
             info: {}
