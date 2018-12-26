@@ -317,7 +317,8 @@
                             tagList: tags,
                             prodCode: this.prodCode,
                             paramList: this.form.paramList,
-                            skuList: this.form.skuList
+                            skuList: this.form.skuList,
+                            thirdStep: true
                         };
                         if (this.imgList.length == 0 || this.imgList.length == 1) {
                             data.imgFileList = [];

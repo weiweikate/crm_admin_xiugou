@@ -512,7 +512,8 @@
                 const data = {
                     prodCode: this.prodCode,
                     skuList: this.priceTable,
-                    paramList: this.form.paramList
+                    paramList: this.form.paramList,
+                    thirdStep: false
                 };
                 this.subformBtn = true;
                 request.addProducts(data).then(res => {
