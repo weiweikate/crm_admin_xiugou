@@ -321,6 +321,13 @@ export const asyncRouterMap = [
                 path: '/marketToolsManage',
                 component: resolve => require(['../components/page/OperateManage/MarketTools/MarketToolsManage.vue'], resolve),
                 meta: { title: '营销工具管理' }
+            },
+            {
+                name: 'expManage',
+                path: '/expManage',
+                default: true,
+                component: resolve => require(['../components/page/Experience/index.vue'], resolve),
+                meta: { title: '经验值专区管理' }
             }
         ]
     },
@@ -498,14 +505,15 @@ export const asyncRouterMap = [
         component: Layout,
         name: 'logistics',
         meta: { title: '物流管理', icon: 'icon-shezhi' },
+        default: true,
         children: [
-            // {
-            //     hidden: true,
-            //     name: 'logisticsArea',
-            //     path: '/logisticsArea',
-            //     component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
-            //     meta: { title: '地区列表'}
-            // },
+            {
+                // hidden: true,
+                name: 'logisticsArea',
+                path: '/logisticsArea',
+                component: resolve => require(['../components/page/Logistics/logisticsArea.vue'], resolve),
+                meta: { title: '地区列表'}
+            },
             {
                 name: 'logisticsCompanyList',
                 path: '/logisticsCompanyList',
@@ -1614,7 +1622,27 @@ export const asyncRouterMap = [
                 component: resolve => require(['../components/page/demo.vue'], resolve),
                 meta: { title: 'demo' }
             },
-
+            {
+                hidden: true,
+                name: 'expAdd',
+                path: '/expAdd',
+                component: resolve => require(['../components/page/Experience/expAdd.vue'], resolve),
+                meta: { title: '经验值活动添加' }
+            },
+            {
+                hidden: true,
+                name: 'expEdit',
+                path: '/expEdit/:id/:status',
+                component: resolve => require(['../components/page/Experience/expEdit.vue'], resolve),
+                meta: { title: '经验值活动编辑' }
+            },
+            {
+                hidden: true,
+                name: 'expDetail',
+                path: '/expDetail/:id',
+                component: resolve => require(['../components/page/Experience/expDetail.vue'], resolve),
+                meta: { title: '经验值活动详情' }
+            },
             {
                 hidden: true,
                 name: 'repertorySet',
