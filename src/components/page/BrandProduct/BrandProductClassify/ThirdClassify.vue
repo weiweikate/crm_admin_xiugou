@@ -1,6 +1,6 @@
 <template>
     <div class="second-classify">
-        <v-breadcrumb :nav="['品牌产品管理','产品品类分类管理',superiorName,name]"></v-breadcrumb>
+        <v-breadcrumb :nav="['产品管理','分类管理',superiorName,name]"></v-breadcrumb>
         <div class="table-block">
             <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加三级类目</el-button>
             <template>
@@ -328,7 +328,7 @@
                         this.propertyCodes.push(v.propertyCode);
                     });
                 }).catch(err => {
-
+                    console.log(err);
                 });
             },
             propertySure() {
@@ -343,6 +343,7 @@
                     this.btnLoading = false;
                     this.getList(this.page.currentPage);
                 }).catch(err => {
+                    console.log(err);
                     this.btnLoading = false;
                 });
             },

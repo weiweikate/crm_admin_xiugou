@@ -1,6 +1,6 @@
 <template>
     <div class="brand-manage">
-        <v-breadcrumb :nav="['品牌产品管理','品牌管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['产品管理','品牌管理']"></v-breadcrumb>
         <el-card style="margin:10px 0 20px">
             <el-form ref="form" :inline="true" :model="form">
                 <el-form-item prop="name" label="品牌名称" label-width="120">
