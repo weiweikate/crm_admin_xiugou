@@ -189,6 +189,7 @@
                         data.firstCategoryId = this.cateArr[0].value;
                         data.secCategoryId = this.cateArr[1].value;
                         data.thirdCategoryId = this.cateArr[2].value;
+                        data.thirdStep = false;
                         request.addProducts(data).then(res => {
                             this.btnLoading = false;
                             this.$message.success(res.msg);
