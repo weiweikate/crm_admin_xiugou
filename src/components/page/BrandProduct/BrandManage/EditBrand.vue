@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-breadcrumb :nav="['品牌产品管理','品牌管理','编辑品牌']"></v-breadcrumb>
+        <v-breadcrumb :nav="['产品管理','品牌管理','编辑品牌']"></v-breadcrumb>
         <div class="container">
             <div class="brand-box">
                 <el-form :model="form" ref="form" :rules="rules">
@@ -126,6 +126,7 @@
                     that.form = res.data;
                     that.form.status = that.form.status.toString();
                 }).catch(error => {
+                    console.log(error);
                     that.loading = false;
                 });
             },

@@ -4,8 +4,6 @@ export const addImg='/admin/ossClient/aliyunOSSUploadImage';
 export const getCategoryList = '/admin/productCategory/queryProductCategoryPageList';
 // 根据类目查询品牌列表
 export const queryCategoryBrandCid = 'admin/categoryBrand/queryCategoryBrandCid';
-// 获取用户层级列表
-export const getDealerLevelList = '/admin/giftBag/queryUserLevel ';
 // 获取供应商列表
 export const querySupplierBrandPageList = '/admin/supplierBrand/querySupplierBrandPageList';
 // 获取所有标签
@@ -62,8 +60,6 @@ export const updateGiftBag = '/admin/giftBag/updateGiftBag';
 export const queryCouponListByGiftBagId = '/admin/giftBag/queryCouponListByGiftBagId';
 // 根据id删除礼包优惠券
 export const deleteCouponByCouponId = '/admin/giftBag/deleteCouponByCouponId';
-// 获取优惠券列表
-export const queryCouponList = '/admin/giftBag/queryCouponList';
 // 添加优惠券
 export const couponControl = '/admin/giftBag/couponControl';
 

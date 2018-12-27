@@ -30,10 +30,10 @@
                     <div class="sep-video fl"></div>
                     <draggable v-model="imgList">
                         <transition-group>
-                            <div v-for="(v,k) in imgList" class="fl" :key="k">
+                            <div v-for="(v,k) in imgList" class="fl" :key="v.url + k">
                                 <div v-if="v !== '' && v" class="img-list">
                                     <div @click="handleRemoveImg(k, 'imgList')" class="del-mask">删 除</div>
-                                    <img :src="v" alt="">
+                                    <img v-if="v.url !== ''" :src="v.url" alt="">
                                 </div>
                             </div>
                         </transition-group>
@@ -174,12 +174,20 @@
     import * as api from '@/api/api.js';
     import draggable from 'vuedraggable';
     import chooseArea from '@/components/common/chooseArea';
-
+    // 图片名字排序
+    function sortName(a, b) {
+        let first = a.name.replace(/[^0-9]/ig, '');
+        let second = b.name.replace(/[^0-9]/ig, '');
+        first = first.length > 0 ? parseInt(first.substr(-5)) : a.name;
+        second = second.length > 0 ? parseInt(second.substr(-5)) : b.name;
+        // console.log(first,second)
+        return first - second;
+    }
     export default {
         components: { draggable, chooseArea, vBreadcrumb },
         data() {
             return {
-                nav: ['品牌产品管理', '产品管理', '商品详情编辑'],
+                nav: ['产品管理', '商品详情编辑'],
                 unSupportMask: false,
                 pageLoading: false,
                 subformBtn: false,
@@ -222,6 +230,7 @@
                 tagName: '',
                 paramList: [],
                 productDetailPicList: []
+
             };
         },
         computed: {
@@ -295,7 +304,7 @@
                         const data = {
                             ...this.form,
                             videoUrl: this.form.videoUrl,
-                            imgUrl: this.imgList[0],
+                            imgUrl: this.imgList.length === 0 ? '' : this.imgList[0].url,
                             content: content.join(','),
                             needDeliver: this.showDeliver ? this.form.needDeliver : 'false',
                             freightTemplateId: this.form.freightTemplateId,
@@ -308,7 +317,8 @@
                             tagList: tags,
                             prodCode: this.prodCode,
                             paramList: this.form.paramList,
-                            skuList: this.form.skuList
+                            skuList: this.form.skuList,
+                            thirdStep: true
                         };
                         if (this.imgList.length == 0 || this.imgList.length == 1) {
                             data.imgFileList = [];
@@ -317,8 +327,8 @@
                             const arr = [];
                             this.imgList.forEach(v => {
                                 arr.push({
-                                    originalImg: v,
-                                    smallImg: v
+                                    originalImg: v.url,
+                                    smallImg: v.url
                                 });
                             });
                             data.imgFileList = arr;
@@ -392,11 +402,17 @@
                 this.unSupportsssAreasData = cArr;
                 const arr = [];
                 if (resData.imgUrl && resData.imgUrl !== '') {
-                    arr.push(resData.imgUrl);
+                    arr.push({
+                        name: '1',
+                        url: resData.imgUrl
+                    });
                 }
                 if (resData.imgFileList && resData.imgFileList.length !== 0) {
                     resData.imgFileList.forEach(v => {
-                        arr.push(v.originalImg);
+                        arr.push({
+                            name: '1',
+                            url: v.originalImg
+                        });
                     });
                 }
                 this.imgList = arr;
@@ -433,7 +449,7 @@
                 const arr = ['video/mp4', 'video/rmvb', 'video/avi', 'video/mkv', 'video/wmv'];
                 const isVideo = arr.includes(file.type);
                 const size = (file.size || 0) / 1024 / 1024;
-                return new Promise(function (resolve, reject) {
+                return new Promise(function(resolve, reject) {
                     if (!isVideo) reject();
                     if (size > 5.5) reject();
                     resolve();
@@ -457,7 +473,7 @@
             beforeUploadImg(file, type) {
                 const that = this;
                 const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
-                return new Promise(function (resolve, reject) {
+                return new Promise(function(resolve, reject) {
                     if (!isJPG) reject('请上传图片');
                     if (type == 'mainImg') {
                         if (that.imgList.length >= 10) reject('最多上传十张图片');
@@ -465,7 +481,7 @@
                     const _URL = window.URL || window.webkitURL;
                     const image = new Image();
                     if (type == 'mainImg') {
-                        image.onload = function () {
+                        image.onload = function() {
                             if (image.width == 800 && image.height == 800) {
                                 that.imageSize = `${image.width}*${image.height}`;
                                 resolve();
@@ -492,18 +508,13 @@
             // 上传主图图片成功
             uploadImgSuccess(res, file, fileList) {
                 if (this.imgList.length >= 10) return this.$message.error('最多上传十张图片');
-                this.imgList.push(res.data);
+                this.imgList.push({ name: file.name, url: res.data });
+                this.imgList.sort(sortName);
             },
             // 上传详情图片成功
             uploadInfoImgSuccess(res, file, fileList) {
                 this.productDetailPicList.push({ name: file.name, url: res.data });
-                this.productDetailPicList.sort((a, b) => {
-                    var first = a.name.replace(/[^0-9]/ig, '');
-                    var second = b.name.replace(/[^0-9]/ig, '');
-                    first = first.length > 0 ? parseInt(first) : a.name;
-                    second = second.length > 0 ? parseInt(second) : b.name;
-                    return first > second ? 1 : -1;
-                });
+                this.productDetailPicList.sort(sortName);
             },
             // 移除图片
             handleRemoveImg(index, fileList) {
@@ -522,7 +533,12 @@
             // 选择区域
             chooseUnSupportArea(getArea) {
                 this.unSupportMask = false;
-                if (getArea.length === 0 || !getArea) return;
+                if (getArea === false) return;
+                if (getArea.length === 0) {
+                    this.unSupportAreasData = [];
+                    this.unSupportsssAreasData = [];
+                    return;
+                }
                 getArea.forEach(v => {
                     v.prodCode = this.prodCode;
                 });
@@ -648,7 +664,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null } });
+                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null }});
                 }).catch(() => {
                 });
             }

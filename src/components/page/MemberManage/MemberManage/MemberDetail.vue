@@ -26,8 +26,8 @@
                         <div class="item">地址信息 ：{{dealer.province}}{{dealer.city}}{{dealer.area}}{{dealer.address}}</div>
                     </div>
                     <div class="item-row">
-                        <div class="item">注册时间：{{dealer.regTime|formatDateAll}}</div>
-                        <div class="item">最近登录时间：{{dealer.lastLoginTime|formatDateAll}}</div>
+                        <div class="item">注册时间：{{dealer.regTime | formatDateAll}}</div>
+                        <div class="item">最近登录时间：{{dealer.lastLoginTime | formatDateAll}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item" style="width: 100%;">会员简介：{{dealer.profile}}</div>
