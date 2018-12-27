@@ -43,8 +43,5 @@ export const updateBatchProductStatus = '/admin/product/updateBatchProductStatus
 // 编辑产品
 export const updateProduct = '/admin/product/updateProduct';
 
-// 获取用户层级列表
-export const getDealerLevelList = '/admin/giftBag/queryUserLevel ';
-
 // 根据二级分类查询参数
 export const infoParmByCategoryIdList = '/admin/infoParm/infoParmByCategoryIdList';

@@ -122,7 +122,7 @@ export const getLevelListWithDealerCount = '/admin/dealerLevel/getLevelListWithD
 // 发起——授权渠道
 export const getStatusONList = '/admin/permitChannel/getStatusONList';
 // 发起——授权品牌
-export const getList = '/admin/brand/getList';
+// export const getList = '/admin/brand/getList';
 // 发起——根据品牌获取品类
 export const getProductCategoryList = '/admin/productCategory/queryProductCategoryByBrandId';
 // 晋级设置
@@ -130,15 +130,15 @@ export const promotionManage = '/promotionManage';
 // 降级设置
 export const degradeManage = '/degradeManage';
 // 经销商加盟管理
-// 发起经销商接口
-export const addInvite = '/admin/invite/addInvite';
+
 // 经销商列表接口
 export const getInvitePageList = '/admin/invite/queryInvitePageList';
 // 查看用户邀请详情
 export const findInviteInfo = '/admin/invite/findInviteInfo';
 // 生成邀请二维码
 export const createWxQrcode = '/admin/invite/createWxQrcode';
-
+// 导出
+export const downloadCouponList = ['/user/coupon/downloadCouponList', { methods: 'get' }];
 // 经销商会员管理
 
 // 关闭用户
@@ -228,8 +228,6 @@ export const queryFeedbackList = '/userFeedback/queryFeedbackList';
 export const findFeedbackById = ['/userFeedback/findFeedbackDetailById', { methods: 'get' }];
 // 修改反馈详情
 export const updateFeedback = '/userFeedback/updateDetailById';
-// 券数据导出
-export const downloadCouponList = '/admin/user/coupon/downloadCouponList';
 // 添加岗位
 export const addRole = '/role/addRole';
 // 根据id查询岗位
@@ -255,6 +253,32 @@ export const enableExpress = ['/config/sysExpress/enable', { methods: 'get' }];
 export const addExpress = ['/config/sysExpress/save', { methods: 'post' }];
 // 更新物流公司
 export const updateExpress = ['/config/sysExpress/edit', { methods: 'post' }];
+
+// 获取地区列表
+export const queryAreaList = ['/area/query', { methods: 'get' }];
+// 地区启用停用
+export const disabledArea = ['/area/disable', { methods: 'get' }];
+export const enabledArea = ['/area/enable', { methods: 'get' }];
+// 添加地区
+export const addArea = ['/area/save', { methods: 'post' }];
+// 编辑地区
+export const editArea = ['/area/edit', { methods: 'post' }];
+
+// 经验值活动相关
+// 获取经验活动列表
+export const queryExpPageList = ['/operator/activityexperience/queryPageList', { methods: 'post' }];
+// 获取经验活动详情
+export const queryExpByCode = ['/admin/operator/activityexperience/queryByCode', { methods: 'get' }];
+// 获取经验活动中的产品列表
+export const queryActivityProdPageList = ['/admin/operator/activityexperience/queryActivityProdPageList', { methods: 'post' }];
+// 更新活动说明
+export const updateExpRemark = ['/operator/activityexperience/updateExperienceRemark', { methods: 'get' }];
+// 删除经验活动
+export const delExpActive = ['/operator/activityexperience/delExperience', { methods: 'get' }];
+// 删除经验活动中的产品
+export const delExpActivePro = ['/operator/activityexperience/addOrModifyExperience', { methods: 'get' }];
+// 活动可用产品列表
+export const queryActivityProductList = ['/product/product/queryActivityProductList', { methods: 'get' }];
 
 // ERP接口
 export const updateERPstatus = ['/config/erp/change', { methods: 'get' }];

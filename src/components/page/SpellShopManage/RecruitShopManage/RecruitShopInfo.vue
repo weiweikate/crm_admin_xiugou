@@ -54,17 +54,9 @@
                     </div>
                 </div>
                 <div class="avatar-wrap">
-                    <!--<el-upload :show-file-list='false' :on-success='uploadSuccess'-->
-                               <!--action="/admin/ossClient/aliyunOSSUploadImage">-->
-                        <!--<img v-if='detail.headUrl == ""' src="../../../../assets/images/avatar.jpg" alt="">-->
-                        <!--<img v-else :src="detail.headUrl" alt="">-->
-                    <!--</el-upload>-->
                     <img v-if='!detail.headUrl' src="../../../../assets/images/avatar.jpg" alt="">
                     <img v-else :src="detail.headUrl" alt="">
                 <p style="font-size:14px">店铺头像</p>
-                <!--<p style="margin-top:10px">-->
-                    <!--<el-button @click="memberManage" type="primary">成员管理</el-button>-->
-                <!--</p>-->
             </div>
         </div>
     </el-card>
