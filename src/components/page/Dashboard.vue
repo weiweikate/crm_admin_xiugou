@@ -225,15 +225,17 @@
             width="800px">
             <el-date-picker type="daterange" v-model="activeDate" start-placeholder="开始时间" end-placeholder="结束时间" class="vam"></el-date-picker>
             <el-button type="primary" @click="getOldUserActNum">搜索</el-button>
-            <el-button @click="activeDate = []">重置</el-button>
+            <el-button @click="()=>{activeDate = [];getOldUserActNum()}">重置</el-button>
             <el-table v-loading="tableLoading" :data="oldUserActiveNum" class="mt10" border stripe>
                 <el-table-column fixed="left" prop="level" label="用户层级" align="center">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.level">{{`v${scope.row.level}`}}</span>
+                        <span v-if="scope.row.level !== null && scope.row.level !== '总计'">{{`v${scope.row.level}`}}</span>
+                        <span v-else-if="scope.row.level !== null && scope.row.level === '总计'">{{scope.row.level}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="totalNum" label="总人数" align="center"></el-table-column>
-                <el-table-column v-for="(v, k) in dateNum" :key="k" :prop="v.time" :label="v.time" align="center"></el-table-column>
+                <el-table-column prop="num" label="新老用户总计" align="center"></el-table-column>
+                <el-table-column width="120px" v-for="(v, k) in dateNum" :key="k" :prop="v.day" :label="v.day" align="center"></el-table-column>
+                <el-table-column fixed="right" prop="total" label="老用户总计" align="center"></el-table-column>
             </el-table>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="closeMask">确 定</el-button>
@@ -263,7 +265,7 @@ export default {
             'user'
         ]),
         dateNum() {
-            return this.oldUserActiveNum.length === 0 ? [] : !this.oldUserActiveNum[0].date || this.oldUserActiveNum[0].date.length === 0 ? [] : this.oldUserActiveNum[0].date;
+            return this.oldUserActiveNum.length === 0 ? [] : !this.oldUserActiveNum[0].counts || this.oldUserActiveNum[0].counts.length === 0 ? [] : this.oldUserActiveNum[0].counts;
         }
     },
     data() {
@@ -278,17 +280,7 @@ export default {
             activeDate: [], // 老用户激活时间
             tableLoading: false,
             // 老用户激活列表
-            oldUserActiveNum: [
-                {
-                    level: '1',
-                    totalNum: 100,
-                    date: [
-                        { time: '2018-1-1', num: '60' },
-                        { time: '2018-1-2', num: '66' },
-                        { time: '2018-1-3', num: '89' }
-                    ]
-                }
-            ]
+            oldUserActiveNum: []
         };
     },
     created() {
@@ -401,17 +393,47 @@ export default {
                 startTime: this.activeDate.length === 0 ? '' : this.$utils.formatTime(this.activeDate[0], 1),
                 endTime: this.activeDate.length === 0 ? '' : this.$utils.formatTime(this.activeDate[1], 1)
             };
-            console.log(data);
-            const arr = this.oldUserActiveNum;
-            if (arr.length !== 0) {
-                arr.forEach(v => {
-                    if (v.date && v.date.length !== 0) {
-                        v.date.forEach(ele => {
-                            v[ele.time] = ele.num;
-                        });
-                    }
-                });
-            }
+            this.tableLoading = true;
+            request.countSignUsers(data).then(res => {
+                this.tableLoading = false;
+                const arr = res.data || [];
+                if (arr.length !== 0) {
+                    arr.forEach(v => {
+                        if (v.counts && v.counts.length !== 0) {
+                            v.counts.forEach(ele => {
+                                v[ele.day] = ele.num;
+                            });
+                        }
+                    });
+                }
+                // 统计人数
+                const totalObj = {
+                    level: '总计',
+                    num: 0,
+                    total: 0
+                };
+                if (arr.length !== 0) {
+                    const count = arr[0].counts || [];
+                    const len = count.length;
+                    arr[0].counts.forEach(v => {
+                        totalObj[v.day] = 0;
+                    });
+                    arr.forEach(v => {
+                        totalObj.num += v.num || 0;
+                        totalObj.total += v.total || 0;
+                        if (v.counts && v.counts.length !== 0) {
+                            v.counts.forEach(ele => {
+                                totalObj[ele.day] += ele.num || 0;
+                            });
+                        }
+                    });
+                }
+                arr.push(totalObj);
+                this.oldUserActiveNum = arr;
+            }).catch(err => {
+                this.tableLoading = false;
+                console.log(err);
+            });
         },
         // 关闭用户激活数量显示弹窗
         closeMask() {
