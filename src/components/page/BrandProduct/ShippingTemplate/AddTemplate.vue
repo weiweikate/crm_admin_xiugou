@@ -35,7 +35,7 @@
                                         <template>
                                             <div v-for="(item,index) in scope.row.freightTemplateInfoDetailList" :key="index">
                                                 <span v-if="item.provinceName=='中国'">中国</span>
-                                                <span v-else>{{item.provinceName}}:{{item.citysName}}</span>
+                                                <span v-else>{{item.provinceName}}:{{item.cityNames}}</span>
                                             </div>
                                         </template>
                                     </template>
@@ -80,7 +80,7 @@
                                         <template>
                                             <div v-for="(item,index) in scope.row.freightTemplateInfoDetailList" :key="index">
                                                 <span v-if="item.provinceName=='中国'">中国</span>
-                                                <span v-else>{{item.provinceName}}:{{item.citysName}}</span>
+                                                <span v-else>{{item.provinceName}}:{{item.cityNames}}</span>
                                             </div>
                                         </template>
                                     </template>
@@ -275,12 +275,36 @@ export default {
             this.isMask[num] = true;
             this.$set(this.isMask, num, this.isMask[num]);
             if (num === 0) {
-                this.chooseData = this.freightTableData;
-                this.preData = this.freightTableData[index];
+                this.chooseData = this.resetTableData(this.freightTableData, 0);
+                this.preData = this.resetTableData(this.freightTableData[index], 1);
             } else {
-                this.chooseData = this.freeShippingTableData;
-                this.preData = this.freeShippingTableData[index];
+                this.chooseData = this.resetTableData(this.freeShippingTableData, 0);
+                this.preData = this.resetTableData(this.freeShippingTableData[index], 1);
             }
+            console.log(this.preData);
+            console.log(this.chooseData);
+            // chooseArea=[
+            //     {cityCodes: "310100,310200",
+            //      cityNames: "市辖区,县",
+            //      provinceCode: "310000",
+            //      provinceName: "上海市"
+            //      }]
+        },
+        // 重构表格数据，供区域选择数据回显
+        resetTableData(arr, num) {
+            const tempArr = [];
+            if (num === 0) {
+                arr.forEach((v, k) => {
+                    v.freightTemplateInfoDetailList.forEach((v1, k1) => {
+                        tempArr.push(v1);
+                    });
+                });
+            } else {
+                arr.freightTemplateInfoDetailList.forEach((v1, k1) => {
+                    tempArr.push(v1);
+                });
+            }
+            return tempArr;
         },
         // 删除地区
         // index索引
@@ -299,8 +323,6 @@ export default {
             this.$set(this.isMask, 0, this.isMask[0]);
             this.freightTableData[this.tableIndex].freightTemplateInfoDetailList = [];
             if (getArea) {
-                let includeAreaName = '';
-                let includeArea = '';
                 for (const i in getArea) {
                     const tempItem = {
                         provinceCode: getArea[i].provinceCode,
@@ -311,29 +333,23 @@ export default {
                     this.freightTableData[this.tableIndex].freightTemplateInfoDetailList.push(tempItem);
                 }
             }
-            console.log(this.freightTableData)
+            console.log(this.freightTableData);
         },
         // 选择区域
         chooseShippingToast(getArea) {
             this.isMask[1] = false;
             this.$set(this.isMask, 1, this.isMask[1]);
-            this.tableData[this.tableIndex].freightTemplateInfoDetailList = [];
+            this.freeShippingTableData[this.tableIndex].freightTemplateInfoDetailList = [];
             if (getArea) {
-                let includeAreaName = '';
-                let includeArea = '';
                 for (const i in getArea) {
-                    includeAreaName += getArea[i].provinceName + ':' + getArea[i].cityNames + ',';
-                    includeArea += getArea[i].provinceCode + ':' + getArea[i].cityCodes + ',';
                     const tempItem = {
                         provinceCode: getArea[i].provinceCode,
                         cityCodes: getArea[i].cityCodes,
                         provinceName: getArea[i].provinceName,
                         cityNames: getArea[i].cityNames
                     };
-                    this.tableData[this.tableIndex].freightTemplateInfoDetailList.push(tempItem);
+                    this.freeShippingTableData[this.tableIndex].freightTemplateInfoDetailList.push(tempItem);
                 }
-                this.tableData[this.tableIndex].includeAreaName = includeAreaName.slice(0, -1);
-                this.tableData[this.tableIndex].includeArea = includeArea.slice(0, -1);
             }
         },
         // 添加地区
