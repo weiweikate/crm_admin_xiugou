@@ -113,7 +113,6 @@
 <script>
     import request from '@/http/http.js';
     import { myMixinTable } from '@/JS/commom';
-    import moment from 'moment';
 
     export default {
         mixins: [myMixinTable],
@@ -134,12 +133,12 @@
                     { label: 'purple', value: '5' }
                 ],
                 lockStatusArr: ['未锁定', '已锁定', '无需锁定'], // 锁定状态: 0.未锁定 1.已锁定 2.无需锁定
-                warehouseArr: ['自建仓', '加盟仓', '供应商仓', '虚拟仓'], // 仓库类型: 0. 1.自建仓 2.加盟仓，3.供应商仓
+                warehouseArr: ['自建仓', '加盟仓', '虚拟仓', '供应商仓'], // 仓库类型:  1.自建仓 2.加盟仓，3.虚拟仓 4.供应商仓
                 tableData: [],
                 pageLoading: false,
                 data: {},
                 statusArr: ['待付款', '已付款', '已发货', '交易完成', '交易关闭'],
-                pushStatusArr: ['无需推送', '未推送', '推送失败', '推送成功'], // 0.无需推送 1.未推送 2.推送失败 3.推送成功
+                pushStatusArr: ['无需推送', '等待推送', '推送失败', '推送成功'], // 0.无需推送 1.未推送 2.推送失败 3.推送成功
                 warehouseOrderNos: [],
                 // 虚拟发货
                 warehouseOrderNo: '',
@@ -164,7 +163,7 @@
                     this.pageLoading = false;
                     for (const i in res.data.data) {
                         res.data.data[i].warehouseOrder.starColor =
-                            this.markArr[res.data.data[i].warehouseOrder.markStar - 1] == undefined || null
+                            this.markArr[res.data.data[i].warehouseOrder.markStar - 1] === undefined || null
                                 ? '#ccc'
                                 : this.markArr[res.data.data[i].warehouseOrder.markStar - 1].label;
                         res.data.data[i].warehouseOrder.remark = res.data.data[i].warehouseOrder.platformRemarks;
@@ -230,7 +229,7 @@
                     this.warehouseOrderNos.push(row.warehouseOrder.warehouseOrderNo);
                 } else {
                     this.warehouseOrderNos.forEach((v, k) => {
-                        if (v == row.warehouseOrder.warehouseOrderNo) {
+                        if (v === row.warehouseOrder.warehouseOrderNo) {
                             this.warehouseOrderNos.splice(k, 1);
                         }
                     });
@@ -263,7 +262,7 @@
                     return this.$message.warning('请输入物流单号和物流公司');
                 }
                 this.logicList.forEach((v, k) => {
-                    if (this.form.expressCode == v.code) {
+                    if (this.form.expressCode === v.code) {
                         data.expressName = v.name;
                     }
                 });
