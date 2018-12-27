@@ -34,7 +34,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="getList(1)" type="primary">查询</el-button>
-                    <el-button @click="exportData" type="primary">导出</el-button>
+                    <!--<el-button @click="exportData" type="primary">导出</el-button>-->
                     <!--<el-button @click="resetForm('form')">重置</el-button>-->
                 </el-form-item>
             </el-form>
