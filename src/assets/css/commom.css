@@ -32,6 +32,9 @@
 .fl{
     float: left;
 }
+.vam{
+    vertical-align: middle;
+}
 
 /*溢出隐藏*/
 .over-hidden{

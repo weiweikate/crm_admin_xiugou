@@ -17,7 +17,7 @@
                             <div class="otitle"><icon class="icon" ico='icon-huiyuan' /> 今日晋升会员</div>
                             <div class="ocontent">{{info.up || 0}}</div>
                         </div>
-                        <div class="top-card-content">
+                        <div class="top-card-content" style="cursor: pointer" @click="getOldUserActNum">
                             <div class="otitle"><icon class="icon" ico='icon-huiyuanjifenshixiaobaobiao' /> 今日会员激活数</div>
                             <div class="ocontent">{{info.activation || 0}}</div>
                         </div>
@@ -217,6 +217,29 @@
         </el-row>
         <act-account-code @status='isShowCode' v-if="isShowActAccCode"></act-account-code>
         <act-account-pwd @status='isShowPwd' v-if="isShowActAccPwd"></act-account-pwd>
+        <!--老用户数据激活弹窗-->
+        <el-dialog
+            title="用户激活数量"
+            :visible.sync="oldUserNumMask"
+            :before-close="closeMask"
+            width="800px">
+            <el-date-picker type="daterange" v-model="activeDate" start-placeholder="开始时间" end-placeholder="结束时间" class="vam"></el-date-picker>
+            <el-button type="primary" @click="getOldUserActNum">搜索</el-button>
+            <el-button @click="activeDate = []">重置</el-button>
+            <el-table v-loading="tableLoading" :data="oldUserActiveNum" class="mt10" border stripe>
+                <el-table-column fixed="left" prop="level" label="用户层级" align="center">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.level">{{`v${scope.row.level}`}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="totalNum" label="总人数" align="center"></el-table-column>
+                <el-table-column v-for="(v, k) in dateNum" :key="k" :prop="v.time" :label="v.time" align="center"></el-table-column>
+            </el-table>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="closeMask">确 定</el-button>
+                <el-button @click="closeMask">取 消</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -238,16 +261,34 @@ export default {
     computed: {
         ...mapGetters([
             'user'
-        ])
+        ]),
+        dateNum() {
+            return this.oldUserActiveNum.length === 0 ? [] : !this.oldUserActiveNum[0].date || this.oldUserActiveNum[0].date.length === 0 ? [] : this.oldUserActiveNum[0].date;
+        }
     },
     data() {
         return {
             isShowActAccPwd: false,
             isShowActAccCode: false,
+            oldUserNumMask: false,
             info: {},
             userLevelName: [],
             userLevelMsg: [],
-            userNum: ''
+            userNum: '',
+            activeDate: [], // 老用户激活时间
+            tableLoading: false,
+            // 老用户激活列表
+            oldUserActiveNum: [
+                {
+                    level: '1',
+                    totalNum: 100,
+                    date: [
+                        { time: '2018-1-1', num: '60' },
+                        { time: '2018-1-2', num: '66' },
+                        { time: '2018-1-3', num: '89' }
+                    ]
+                }
+            ]
         };
     },
     created() {
@@ -351,6 +392,31 @@ export default {
         },
         isShowPwd(msg) {
             this.isShowActAccPwd = false;
+        },
+        // 获取老用户激活数据
+        getOldUserActNum() {
+            this.oldUserNumMask = true;
+            this.activeDate = this.activeDate ? this.activeDate : [];
+            const data = {
+                startTime: this.activeDate.length === 0 ? '' : this.$utils.formatTime(this.activeDate[0], 1),
+                endTime: this.activeDate.length === 0 ? '' : this.$utils.formatTime(this.activeDate[1], 1)
+            };
+            console.log(data);
+            const arr = this.oldUserActiveNum;
+            if (arr.length !== 0) {
+                arr.forEach(v => {
+                    if (v.date && v.date.length !== 0) {
+                        v.date.forEach(ele => {
+                            v[ele.time] = ele.num;
+                        });
+                    }
+                });
+            }
+        },
+        // 关闭用户激活数量显示弹窗
+        closeMask() {
+            this.activeDate = [];
+            this.oldUserNumMask = false;
         }
     }
 };
