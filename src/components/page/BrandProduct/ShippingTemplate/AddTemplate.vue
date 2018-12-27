@@ -297,8 +297,6 @@ export default {
         chooseFreightToast(getArea) {
             this.isMask[0] = false;
             this.$set(this.isMask, 0, this.isMask[0]);
-            console.log(this.tableIndex);
-            console.log(getArea);
             this.freightTableData[this.tableIndex].freightTemplateInfoDetailList = [];
             if (getArea) {
                 let includeAreaName = '';
@@ -313,6 +311,7 @@ export default {
                     this.freightTableData[this.tableIndex].freightTemplateInfoDetailList.push(tempItem);
                 }
             }
+            console.log(this.freightTableData)
         },
         // 选择区域
         chooseShippingToast(getArea) {
@@ -350,7 +349,7 @@ export default {
             this.rows[num] = this.rows[num] + 1;
             if (num === 0) {
                 this.freightTableData.push({
-                    includeAreaName: '',
+                    freightTemplateInfoDetailList: [],
                     startUnit: '',
                     startPrice: '',
                     nextUnit: '',
@@ -358,7 +357,7 @@ export default {
                 });
             } else {
                 this.freeShippingTableData.push({
-                    includeAreaName: '',
+                    freightTemplateInfoDetailList: [],
                     style: 0,
                     price: '',
                     quality: ''
