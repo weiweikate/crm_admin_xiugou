@@ -217,13 +217,12 @@ export const asyncRouterMap = [
         name: 'logistics',
         meta: { title: '物流管理', icon: 'icon-shezhi' },
         children: [
-            // {
-            //     hidden: true,
-            //     name: 'logisticsArea',
-            //     path: '/logisticsArea',
-            //     component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
-            //     meta: { title: '地区列表'}
-            // },
+            {
+                name: 'logisticsArea',
+                path: '/logisticsArea',
+                component: resolve => require(['../components/page/Logistics/logisticsArea.vue'], resolve),
+                meta: { title: '地区列表' }
+            },
             {
                 name: 'shippingTemplate',
                 path: '/shippingTemplate',
@@ -511,28 +510,6 @@ export const asyncRouterMap = [
                 path: '/showValReCharge',
                 component: resolve => require(['../components/page/ShowValue/ShowValReCharge.vue'], resolve),
                 meta: { title: '秀值账户充值', roles: ['admin'] }
-            }
-        ]
-    },
-    {
-        path: '/logistics',
-        component: Layout,
-        name: 'logistics',
-        meta: { title: '物流管理', icon: 'icon-shezhi' },
-        default: true,
-        children: [
-            {
-                // hidden: true,
-                name: 'logisticsArea',
-                path: '/logisticsArea',
-                component: resolve => require(['../components/page/Logistics/logisticsArea.vue'], resolve),
-                meta: { title: '地区列表'}
-            },
-            {
-                name: 'logisticsCompanyList',
-                path: '/logisticsCompanyList',
-                component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
-                meta: { title: '物流公司列表' }
             }
         ]
     },
