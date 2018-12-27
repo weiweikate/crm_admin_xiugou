@@ -32,7 +32,12 @@
                             <el-table :data="freightTableData" border>
                                 <el-table-column label="配送地区" align="center">
                                     <template slot-scope="scope">
-                                        <template>{{scope.row.includeAreaName}}</template>
+                                        <template>
+                                            <div v-for="(item,index) in scope.row.freightTemplateInfoDetailList" :key="index">
+                                                <span v-if="item.provinceName=='中国'">中国</span>
+                                                <span v-else>{{item.provinceName}}:{{item.citysName}}</span>
+                                            </div>
+                                        </template>
                                     </template>
                                 </el-table-column>
                                 <el-table-column :label="title[form.calcType-1].unit" align="center" width="120">
@@ -72,7 +77,12 @@
                             <el-table :data="freeShippingTableData" border v-if="form.style==1">
                                 <el-table-column label="配送地区" align="center">
                                     <template slot-scope="scope">
-                                        <template>{{scope.row.includeAreaName}}</template>
+                                        <template>
+                                            <div v-for="(item,index) in scope.row.freightTemplateInfoDetailList" :key="index">
+                                                <span v-if="item.provinceName=='中国'">中国</span>
+                                                <span v-else>{{item.provinceName}}:{{item.citysName}}</span>
+                                            </div>
+                                        </template>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="设置包邮条件" align="left" width="450">
@@ -167,9 +177,9 @@ export default {
             freeShippingSetting: [[{ value: 0, label: '重量' }, { value: 1, label: '金额' }, { value: 2, label: '重量+金额' }], [{ value: 0, label: '件数' }, { value: 1, label: '金额' }, { value: 2, label: '件数+金额' }]],
             units: ['kg', '件'],
             // 运费计算表格数据
-            freightTableData: [{ includeAreaName: '中国', startUnit: '', startPrice: '', nextUnit: '', nextPirce: '' }],
+            freightTableData: [{ freightTemplateInfoDetailList: [{ provinceName: '中国' }], startUnit: '', startPrice: '', nextUnit: '', nextPirce: '' }],
             // 指定条件包邮表格数据
-            freeShippingTableData: [{ includeAreaName: '中国', style: 0, price: '', quality: '' }],
+            freeShippingTableData: [{ freightTemplateInfoDetailList: [{ provinceName: '中国' }], style: 0, price: '', quality: '' }],
             rows: [0, 0],
             isMask: [false, false]
         };
@@ -284,8 +294,30 @@ export default {
             this.rows[num] = this.rows[num] - 1;
         },
         // 选择区域
-        chooseAreaToast(getArea) {
-            this.isShowArea = false;
+        chooseFreightToast(getArea) {
+            this.isMask[0] = false;
+            this.$set(this.isMask, 0, this.isMask[0]);
+            console.log(this.tableIndex);
+            console.log(getArea);
+            this.freightTableData[this.tableIndex].freightTemplateInfoDetailList = [];
+            if (getArea) {
+                let includeAreaName = '';
+                let includeArea = '';
+                for (const i in getArea) {
+                    const tempItem = {
+                        provinceCode: getArea[i].provinceCode,
+                        cityCodes: getArea[i].cityCodes,
+                        provinceName: getArea[i].provinceName,
+                        cityNames: getArea[i].cityNames
+                    };
+                    this.freightTableData[this.tableIndex].freightTemplateInfoDetailList.push(tempItem);
+                }
+            }
+        },
+        // 选择区域
+        chooseShippingToast(getArea) {
+            this.isMask[1] = false;
+            this.$set(this.isMask, 1, this.isMask[1]);
             this.tableData[this.tableIndex].freightTemplateInfoDetailList = [];
             if (getArea) {
                 let includeAreaName = '';
@@ -353,33 +385,6 @@ export default {
                 count--;
             }
             return count === 0;
-        },
-        // 选择区域
-        chooseArea() {
-            this.unSupportMask = true;
-            this.chooseData = this.form.unSupportAreas;
-        },
-        // 选择区域
-        chooseUnSupportArea(getArea) {
-            this.unSupportMask = false;
-            if (getArea) {
-                this.form.unSupportAreas = [];
-                let includeAreaName = '';
-                let includeArea = '';
-                for (const i in getArea) {
-                    includeAreaName += getArea[i].provinceName + ':' + getArea[i].cityNames + ',';
-                    includeArea += getArea[i].provinceCode + ':' + getArea[i].cityCodes + ',';
-                    const tempItem = {
-                        provinceCode: getArea[i].provinceCode,
-                        cityCodes: getArea[i].cityCodes,
-                        provinceName: getArea[i].provinceName,
-                        cityNames: getArea[i].cityNames,
-                        includeAreaName: includeAreaName.slice(0, -1),
-                        includeArea: includeArea.slice(0, -1)
-                    };
-                    this.form.unSupportAreas.push(tempItem);
-                }
-            }
         }
     }
 };
