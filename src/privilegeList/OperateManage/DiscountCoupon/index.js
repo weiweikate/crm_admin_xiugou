@@ -17,8 +17,6 @@ export const discountCouponDealerPageList = '/admin/discountCouponDealer/discoun
 // 批量失效卷数据
 export const loseBatchDiscountCouponDealer = '/admin/discountCouponDealer/loseBatchDiscountCouponDealer';
 
-// 查询经销商层级列表
-export const getDealerLevelList='/admin/dealerLevel/getList';
 //获取一级类目
 export const getFirstList='/admin/productCategory/queryProductCategoryName';
 //获取二级类目
