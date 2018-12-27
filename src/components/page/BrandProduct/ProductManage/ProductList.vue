@@ -42,7 +42,7 @@
                 <!--</el-form-item>-->
                 <!--<el-form-item prop="pushStatus" label="推送状态">-->
                     <!--<el-select v-model="form.pushStatus" placeholder="请选择推送状态">-->
-                        <!--<el-option value="" label="全部"></el-option>-->
+                        <!--<el-option value="" label="全部"></el -option>-->
                         <!--<el-option value="1" label="未推送"></el-option>-->
                         <!--<el-option value="2" label="推送成功"></el-option>-->
                         <!--<el-option value="3" label="推送失败"></el-option>-->
@@ -52,8 +52,8 @@
                     <el-select v-model="form.deliveryWare" placeholder="请选择发货方仓">
                         <el-option value="" label="全部"></el-option>
                         <el-option value="2" label="加盟仓"></el-option>
-                        <el-option value="3" label="供应商"></el-option>
-                        <el-option value="4" label="虚拟仓库"></el-option>
+                        <el-option value="3" label="虚拟仓库"></el-option>
+                        <el-option value="4" label="供应商"></el-option>
                     </el-select>
                 </el-form-item>
                 <!--<el-form-item prop="deliveryWare" label="商品来源">-->
