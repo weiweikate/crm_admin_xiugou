@@ -180,14 +180,14 @@
         let second = b.name.replace(/[^0-9]/ig, '');
         first = first.length > 0 ? parseInt(first.substr(-5)) : a.name;
         second = second.length > 0 ? parseInt(second.substr(-5)) : b.name;
-        //console.log(first,second)
+        // console.log(first,second)
         return first - second;
     }
     export default {
         components: { draggable, chooseArea, vBreadcrumb },
         data() {
             return {
-                nav: ['品牌产品管理', '产品管理', '商品详情编辑'],
+                nav: ['产品管理', '商品详情编辑'],
                 unSupportMask: false,
                 pageLoading: false,
                 subformBtn: false,
@@ -304,7 +304,7 @@
                         const data = {
                             ...this.form,
                             videoUrl: this.form.videoUrl,
-                            imgUrl: this.imgList[0].url,
+                            imgUrl: this.imgList.length === 0 ? '' : this.imgList[0].url,
                             content: content.join(','),
                             needDeliver: this.showDeliver ? this.form.needDeliver : 'false',
                             freightTemplateId: this.form.freightTemplateId,
@@ -317,7 +317,8 @@
                             tagList: tags,
                             prodCode: this.prodCode,
                             paramList: this.form.paramList,
-                            skuList: this.form.skuList
+                            skuList: this.form.skuList,
+                            thirdStep: true
                         };
                         if (this.imgList.length == 0 || this.imgList.length == 1) {
                             data.imgFileList = [];
@@ -448,7 +449,7 @@
                 const arr = ['video/mp4', 'video/rmvb', 'video/avi', 'video/mkv', 'video/wmv'];
                 const isVideo = arr.includes(file.type);
                 const size = (file.size || 0) / 1024 / 1024;
-                return new Promise(function (resolve, reject) {
+                return new Promise(function(resolve, reject) {
                     if (!isVideo) reject();
                     if (size > 5.5) reject();
                     resolve();
@@ -472,7 +473,7 @@
             beforeUploadImg(file, type) {
                 const that = this;
                 const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
-                return new Promise(function (resolve, reject) {
+                return new Promise(function(resolve, reject) {
                     if (!isJPG) reject('请上传图片');
                     if (type == 'mainImg') {
                         if (that.imgList.length >= 10) reject('最多上传十张图片');
@@ -480,7 +481,7 @@
                     const _URL = window.URL || window.webkitURL;
                     const image = new Image();
                     if (type == 'mainImg') {
-                        image.onload = function () {
+                        image.onload = function() {
                             if (image.width == 800 && image.height == 800) {
                                 that.imageSize = `${image.width}*${image.height}`;
                                 resolve();
@@ -532,7 +533,12 @@
             // 选择区域
             chooseUnSupportArea(getArea) {
                 this.unSupportMask = false;
-                if (getArea.length === 0 || !getArea) return;
+                if (getArea === false) return;
+                if (getArea.length === 0) {
+                    this.unSupportAreasData = [];
+                    this.unSupportsssAreasData = [];
+                    return;
+                }
                 getArea.forEach(v => {
                     v.prodCode = this.prodCode;
                 });
@@ -658,7 +664,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null } });
+                    this.$router.push({ path: '/releaseProduct', query: { prodCode: this.prodCode || null }});
                 }).catch(() => {
                 });
             }

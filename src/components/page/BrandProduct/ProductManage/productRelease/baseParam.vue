@@ -104,7 +104,7 @@
         components: { vBreadcrumb },
         data() {
             return {
-                nav: ['品牌产品管理', '产品管理', '基础参数设置'],
+                nav: ['产品管理', '基础参数设置'],
                 prodCode: '',
                 status: '', // 0：删除 1：待发布2：待审核3：已通过4:已上架5：未通过6:已下架
                 cateArr: [],
@@ -189,6 +189,7 @@
                         data.firstCategoryId = this.cateArr[0].value;
                         data.secCategoryId = this.cateArr[1].value;
                         data.thirdCategoryId = this.cateArr[2].value;
+                        data.thirdStep = false;
                         request.addProducts(data).then(res => {
                             this.btnLoading = false;
                             this.$message.success(res.msg);

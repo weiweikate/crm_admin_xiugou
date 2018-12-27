@@ -289,3 +289,5 @@ export const getERP = ['/config/erp/get', { methods: 'get' }];
 
 // 导出
 export const downloadOrderList = '/admin/orderManagement/orders/export';
+// 统计老用户注册数量
+export const countSignUsers = '/user/countSignUsers';
