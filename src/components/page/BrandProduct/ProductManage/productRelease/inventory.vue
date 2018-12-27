@@ -171,15 +171,15 @@
                                                  v-model.number="scope.row.groupPrice"></el-input-number>
                             </template>
                         </el-table-column>
+                        <el-table-column label="最低支付价" align="center" width="225">
+                            <template slot-scope="scope">
+                                <el-input :disabled="disabled" v-model.number="scope.row.minPrice"></el-input>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="结算价" align="center" width="225">
                             <template slot-scope="scope">
                                 <el-input-number @change="handlePrice(scope.row)" :disabled="disabled" :controls="false" :min="0"
                                                  v-model.number="scope.row.settlementPrice"></el-input-number>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="最低支付价" align="center" width="225">
-                            <template slot-scope="scope">
-                                <el-input :disabled="disabled" v-model.number="scope.row.minPrice"></el-input>
                             </template>
                         </el-table-column>
                         <el-table-column label="重量（kg）" align="center" width="225">
@@ -205,7 +205,7 @@
                 </el-form-item>
                 <div class="pro-title">库存信息 <span class="grey-text">注：可售库存不编辑默认全部可售</span></div>
                 <el-form-item label="库存信息">
-                    <el-table v-if="!flag" :data="priceTable" border stripe>
+                    <el-table v-if="!flag" :data="priceTable" border stripe :header-cell-class-name="handleTableStarStock">
                         <el-table-column prop="propertyValues" label="属性" align="center">
                             <template slot-scope="scope">
                                 {{scope.row.propertyValues.split('@').join('-')}}
@@ -367,7 +367,7 @@
         mixins: [beforeAvatarUpload],
         data() {
             return {
-                nav: ['品牌产品管理', '产品管理', '销售信息编辑'],
+                nav: ['产品管理', '销售信息编辑'],
                 status: '', // 0：删除 1：待发布2：待审核3：已通过4:已上架5：未通过6:已下架
                 pageLoading: false,
                 salesLoading: false,
@@ -512,7 +512,8 @@
                 const data = {
                     prodCode: this.prodCode,
                     skuList: this.priceTable,
-                    paramList: this.form.paramList
+                    paramList: this.form.paramList,
+                    thirdStep: false
                 };
                 this.subformBtn = true;
                 request.addProducts(data).then(res => {
@@ -634,8 +635,9 @@
                         'el-select',
                         {
                             style: {
-                                display: 'block',
-                                width: '100%'
+                                display: 'inline-block',
+                                width: '50%',
+                                vertical: 'top'
                             },
                             attrs: {
                                 value: this.unit,
@@ -935,7 +937,11 @@
             },
             // 价格表头星号提示
             handleTableStar({ row, column, rowIndex, columnIndex }) {
-                if (columnIndex !== 11) return 'require';
+                if (columnIndex !== 10) return 'require';
+            },
+            // 库存表头星号提示
+            handleTableStarStock({ row, column, rowIndex, columnIndex }) {
+                if (columnIndex == 1) return 'require';
             }
         }
     };

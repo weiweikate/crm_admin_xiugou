@@ -1,6 +1,6 @@
 <template>
     <div class="property-list">
-        <v-breadcrumb :nav="['品牌产品管理','属性管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['产品管理','属性管理']"></v-breadcrumb>
         <el-card style="margin:10px 0 20px">
             <el-form ref="form" :inline="true" :model="form">
                 <el-form-item prop="date" label="更新时间">
@@ -242,6 +242,7 @@ export default {
                 this.page.totalPage = res.data.totalNum;
                 this.tableLoading = false;
             }).catch(err => {
+                console.log(err);
                 this.tableLoading = false;
             });
         },
@@ -314,6 +315,7 @@ export default {
                         this.mask = false;
                         this.getList(this.page.currentPage);
                     }).catch(err => {
+                        console.log(err);
                         this.btnLoading = false;
                     });
                 }
@@ -358,7 +360,7 @@ export default {
                 this.$message.success(res.msg);
                 this.getList(this.page.currentPage);
             }).catch(err => {
-
+                console.log(err);
             });
         }
     }
