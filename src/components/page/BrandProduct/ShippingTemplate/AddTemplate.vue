@@ -56,8 +56,8 @@
                                 </el-table-column>
                                 <el-table-column label="操作" align="center" width="200">
                                     <template slot-scope="scope" v-if="scope.$index!=0">
-                                        <el-button type="primary" @click="editAddress(scope.$index)">编辑</el-button>
-                                        <el-button type="success" @click="delItem(scope.row,scope.$index)">删除</el-button>
+                                        <el-button type="primary" @click="editAddress(scope.$index,0)">编辑</el-button>
+                                        <el-button type="success" @click="delItem(scope.$index,0)">删除</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -77,7 +77,7 @@
                                 <el-table-column label="设置包邮条件" align="left" width="450">
                                     <template slot-scope="scope">
                                         <el-select v-model="scope.row.style" placeholder="请选择">
-                                            <el-option v-for="(item,index) in freeShippingSetting" :key="index" :label="item.label" :value="item.value">
+                                            <el-option v-for="(item,index) in freeShippingSetting[form.calcType-1]" :key="index" :label="item.label" :value="item.value">
                                             </el-option>
                                         </el-select>
                                         <template v-if="scope.row.style==1">
@@ -86,19 +86,19 @@
                                         </template>
                                         <template v-else-if="scope.row.style==2">
                                             <span>满</span>
-                                            <el-input class="mini-inp" v-model="scope.row.quality"></el-input><span>件，</span>
+                                            <el-input class="mini-inp" v-model="scope.row.quality"></el-input><span>{{units[form.calcType-1]}}，</span>
                                             <el-input class="mini-inp" v-model="scope.row.price"></el-input><span>元包邮</span>
                                         </template>
                                         <template v-else>
                                             <span>满</span>
-                                            <el-input class="mini-inp" v-model="scope.row.quality"></el-input><span>件包邮</span>
+                                            <el-input class="mini-inp" v-model="scope.row.quality"></el-input><span>{{units[form.calcType-1]}}包邮</span>
                                         </template>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="操作" align="center" width="200">
                                     <template slot-scope="scope">
-                                        <el-button type="primary" @click="editAddress(scope.$index)">编辑</el-button>
-                                        <el-button type="success" v-if="scope.$index!=0" @click="delItem(scope.row,scope.$index)">删除</el-button>
+                                        <el-button type="primary" @click="editAddress(scope.$index,1)">编辑</el-button>
+                                        <el-button type="success" v-if="scope.$index!=0" @click="delItem(scope.$index,1)">删除</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -113,7 +113,10 @@
             </div>
         </div>
         <!--选择区域-->
-        <choose-area @getArea='chooseAreaToast' :index="tableIndex" :chooseData="chooseData" :preData="preData" v-if="isShowArea"></choose-area>
+        <!-- 运费计算 -->
+        <choose-area @getArea='chooseFreightToast' :index="tableIndex" :chooseData="chooseData" :preData="preData" v-if="isMask[0]"></choose-area>
+        <!-- 设置包邮条件 -->
+        <choose-area @getArea='chooseShippingToast' :index="tableIndex" :chooseData="chooseData" :preData="preData" v-if="isMask[1]"></choose-area>
     </div>
 
 </template>
@@ -153,21 +156,20 @@ export default {
                 status: '1',
                 style: '1'
             },
-            checked: false,
-            tableData: [],
             tableIndex: '0',
             btnLoading: false,
-            address: '',
             includeArea: '', // 所有省市区zicode以英文逗号隔开存储
             // 表头根据计费方式变化
             title: [{ unit: '首重(kg)', nextUnit: '续重(kg)' }, { unit: '首件(件)', nextUnit: '续件(件)' }],
             // 设置包邮条件
-            freeShippingSetting: [{ value: 0, label: '件数' }, { value: 1, label: '金额' }, { value: 2, label: '件数+金额' }],
+            freeShippingSetting: [[{ value: 0, label: '重量' }, { value: 1, label: '金额' }, { value: 2, label: '重量+金额' }], [{ value: 0, label: '件数' }, { value: 1, label: '金额' }, { value: 2, label: '件数+金额' }]],
+            units: ['kg', '件'],
             // 运费计算表格数据
             freightTableData: [{ includeAreaName: '中国', startUnit: '', startPrice: '', nextUnit: '', nextPirce: '' }],
             // 指定条件包邮表格数据
-            freeShippingTableData: [{ includeAreaName: '中国', style: 1, price: '', quality: '' }],
-            rows: [0, 0]
+            freeShippingTableData: [{ includeAreaName: '中国', style: 0, price: '', quality: '' }],
+            rows: [0, 0],
+            isMask: [false, false]
         };
     },
     mounted() {},
@@ -253,18 +255,30 @@ export default {
                 }
             });
         },
-        // 编辑区域
-        editAddress(index) {
-            const that = this;
-            that.isShowArea = true;
-            that.tableIndex = index;
-            that.chooseData = that.tableData;
-            that.preData = that.tableData[index];
+        // 编辑地区
+        // index索引
+        // num:0运费计算  1设置包邮条件
+        editAddress(index, num) {
+            this.tableIndex = index;
+            this.isMask[num] = true;
+            if (num === 0) {
+                this.chooseData = this.freightTableData;
+                this.preData = this.freightTableData[index];
+            } else {
+                this.chooseData = this.freeShippingTableData;
+                this.preData = this.freeShippingTableData[index];
+            }
         },
-        // 删除制定省市运费设置
-        delItem(row, index) {
-            this.tableData.splice(index, 1);
-            this.rows = this.rows - 1;
+        // 删除地区
+        // index索引
+        // num:0运费计算  1设置包邮条件
+        delItem(index, num) {
+            if (num === 0) {
+                this.freightTableData.splice(index, 1);
+            } else {
+                this.freeShippingTableData.splice(index, 1);
+            }
+            this.rows[num] = this.rows[num] - 1;
         },
         // 选择区域
         chooseAreaToast(getArea) {
@@ -293,6 +307,8 @@ export default {
         addSetting(num) {
             if (this.isRowEmpty(num)) {
                 this.addRow(num);
+            } else {
+                this.$message.warning('请输入完整的设置信息');
             }
         },
         addRow(num) {
@@ -308,7 +324,7 @@ export default {
             } else {
                 this.freeShippingTableData.push({
                     includeAreaName: '',
-                    style: 1,
+                    style: 0,
                     price: '',
                     quality: ''
                 });
@@ -317,20 +333,25 @@ export default {
         // 判断表格的值是否为空
         isRowEmpty(num) {
             const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
-            console.log(this.rows[num]);
             let data = {};
             if (num === 0) {
                 data = this.freightTableData[this.rows[num]];
             } else {
                 data = this.freeShippingTableData[this.rows[num]];
             }
-            console.log(data);
+            let count = 0;
             for (let key in data) {
-                console.log(data[key]);
                 if (!data[key]) {
-                    return false;
+                    count++;
                 }
             }
+            if (num === 1 && data.style !== 2) {
+                // 设置包邮条件时前两种状态各有一个值始终为空
+                count--;
+            }
+            console.log(data);
+            console.log(count);
+            return count === 0;
         },
         // 选择区域
         chooseArea() {
