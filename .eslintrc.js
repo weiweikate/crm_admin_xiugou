@@ -38,7 +38,7 @@ module.exports = {
             'properties': 'always'
         }],
         'comma-dangle': [2, 'never'],
-        'comma-spacing': [2, {
+        'comma-spacing': [1, {
             'before': false,
             'after': true
         }],
