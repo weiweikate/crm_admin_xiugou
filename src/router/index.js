@@ -378,6 +378,7 @@ export const asyncRouterMap = [
                 meta: { title: '拼店结算周期设置' }
             },
             {
+                hidden: true,
                 name: 'backAddress',
                 path: '/backAddress',
                 component: resolve => require(['../components/page/BasePramConfig/BackAddress.vue'], resolve),
