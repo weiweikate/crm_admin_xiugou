@@ -52,7 +52,7 @@
         <el-dialog :title="dialogTitle" :visible.sync="dialog">
             <el-form :model="singleArea" :rules="rules" label-width="120px" label-position="left" ref="ruleArea">
                 <el-form-item label="地区名称" prop="name">
-                    <el-input v-model="singleArea.name" ></el-input>
+                    <el-input v-model.trim="singleArea.name" ></el-input>
                 </el-form-item>
                 <el-form-item label="上级地区" prop="fatherName">
                     <el-input v-model="singleArea.fatherName" disabled="disabled" placeholder="无需输入，自动获取" ></el-input>
