@@ -28,6 +28,7 @@
                             </el-radio-group>
                         </el-form-item>
                         <el-form-item prop="freight" class="express-area" label="运费计算">
+                            <input style="display:none" v-model="form.freight">
                             <el-table :data="freightTableData" border>
                                 <el-table-column label="配送地区" align="center">
                                     <template slot-scope="scope">
@@ -154,7 +155,8 @@ export default {
                 calcType: '1',
                 freightType: '1',
                 status: '1',
-                style: '1'
+                style: '1',
+                freight: '1'
             },
             tableIndex: '0',
             btnLoading: false,
@@ -261,6 +263,7 @@ export default {
         editAddress(index, num) {
             this.tableIndex = index;
             this.isMask[num] = true;
+            this.$set(this.isMask, num, this.isMask[num]);
             if (num === 0) {
                 this.chooseData = this.freightTableData;
                 this.preData = this.freightTableData[index];
@@ -332,7 +335,7 @@ export default {
         },
         // 判断表格的值是否为空
         isRowEmpty(num) {
-            const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
+            // const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
             let data = {};
             if (num === 0) {
                 data = this.freightTableData[this.rows[num]];
@@ -340,8 +343,8 @@ export default {
                 data = this.freeShippingTableData[this.rows[num]];
             }
             let count = 0;
-            for (let key in data) {
-                if (!data[key]) {
+            for (const key in data) {
+                if (data[key] === '') {
                     count++;
                 }
             }
@@ -349,8 +352,6 @@ export default {
                 // 设置包邮条件时前两种状态各有一个值始终为空
                 count--;
             }
-            console.log(data);
-            console.log(count);
             return count === 0;
         },
         // 选择区域
