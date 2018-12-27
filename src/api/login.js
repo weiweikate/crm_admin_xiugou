@@ -8,9 +8,9 @@ export function login(data) {
 
 export function getInfo(token) {
     return request['findAdminUserbyId']({ id: token }).then(res => {
-        let data = res.data || {};
+        let data = res.data || {}, telephone = data.id === 0 || data.id === 1 ? [data.telephone] : [];
         // todo 前端白名单 超级管理员权限
-        const phoneArr = ['18458866522'];
+        const phoneArr = [].concat(telephone);
         if (phoneArr.includes(data.telephone)) {
             res.data.roles = ['admin'];
         } else {

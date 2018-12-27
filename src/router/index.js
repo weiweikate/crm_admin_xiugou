@@ -465,31 +465,31 @@ export const asyncRouterMap = [
         path: '/showValue',
         component: Layout,
         name: 'showValue',
-        meta: { title: '秀值模块', icon: 'icon-shezhi' },
+        meta: { title: '秀值模块', icon: 'icon-shezhi', roles: ['admin'] },
         children: [
             {
                 name: 'taskHome',
                 path: '/taskHome',
                 component: resolve => require(['../components/page/ShowValue/TaskHome.vue'], resolve),
-                meta: { title: '现金分享任务管理' }
+                meta: { title: '现金分享任务管理', roles: ['admin'] }
             },
             {
                 name: 'showValueList',
                 path: '/showValueList',
                 component: resolve => require(['../components/page/ShowValue/ShowValueList.vue'], resolve),
-                meta: { title: '秀值分配设置', noKeepAlive: true }
+                meta: { title: '秀值分配设置', noKeepAlive: true, roles: ['admin'] }
             },
             {
                 name: 'showValueParamSet',
                 path: '/showValueParamSet',
                 component: resolve => require(['../components/page/ShowValue/ShowValueParamSet.vue'], resolve),
-                meta: { title: '秀值参数设置' }
+                meta: { title: '秀值参数设置', roles: ['admin'] }
             },
             {
                 name: 'showValReCharge',
                 path: '/showValReCharge',
                 component: resolve => require(['../components/page/ShowValue/ShowValReCharge.vue'], resolve),
-                meta: { title: '秀值账户充值' }
+                meta: { title: '秀值账户充值', roles: ['admin'] }
             }
         ]
     },
@@ -579,14 +579,13 @@ export const asyncRouterMap = [
                 path: '/basicRateSetting',
                 default: true,
                 component: resolve => require(['../components/page/SettlementMange/BasicRateSetting.vue'], resolve),
-                meta: { title: '基础费率设置', noKeepAlive: true }
+                meta: { title: '基础费率设置', noKeepAlive: true, roles: ['admin'] }
             },
             {
                 name: 'profitDistrMange',
                 path: '/profitDistrMange',
-                default: true,
                 component: resolve => require(['../components/page/SettlementMange/ProfitDistrMange.vue'], resolve),
-                meta: { title: '利润分配设置' }
+                meta: { title: '利润分配设置', roles: ['admin'] }
             },
             {
                 hidden: true,
@@ -1408,7 +1407,7 @@ export const asyncRouterMap = [
                 name: 'addProject',
                 path: '/addProject',
                 component: resolve => require(['../components/page/OperateManage/ProjectMange/addProject.vue'], resolve),
-                meta: { title: '专题设置' , noKeepAlive: true}
+                meta: { title: '专题设置', noKeepAlive: true }
             },
 
             {
@@ -1416,7 +1415,7 @@ export const asyncRouterMap = [
                 name: 'depreciate',
                 path: '/depreciate',
                 component: resolve => require(['../components/page/OperateManage/MarketTools/Depreciate/Depreciate.vue'], resolve),
-                meta: { title: '降价拍' , noKeepAlive: true}
+                meta: { title: '降价拍', noKeepAlive: true }
             },
             {
                 hidden: true,
@@ -1716,3 +1715,4 @@ asyncRouterMap.forEach(item => {
 });
 
 export const authRouterList = tmp;
+
