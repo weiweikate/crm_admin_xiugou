@@ -1408,7 +1408,7 @@ export const asyncRouterMap = [
                 name: 'addProject',
                 path: '/addProject',
                 component: resolve => require(['../components/page/OperateManage/ProjectMange/addProject.vue'], resolve),
-                meta: { title: '专题设置' , noKeepAlive: true}
+                meta: { title: '专题设置', noKeepAlive: true}
             },
 
             {
@@ -1416,7 +1416,7 @@ export const asyncRouterMap = [
                 name: 'depreciate',
                 path: '/depreciate',
                 component: resolve => require(['../components/page/OperateManage/MarketTools/Depreciate/Depreciate.vue'], resolve),
-                meta: { title: '降价拍' , noKeepAlive: true}
+                meta: { title: '降价拍', noKeepAlive: true}
             },
             {
                 hidden: true,

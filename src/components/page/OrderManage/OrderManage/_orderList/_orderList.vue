@@ -245,7 +245,7 @@
                     this.$message.success(res.msg);
                     this.getList(1);
                 }).catch(err => {
-
+                    console.log(err);
                 });
             },
             // 虚拟发货
