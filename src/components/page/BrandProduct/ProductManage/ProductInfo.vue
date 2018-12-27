@@ -14,10 +14,10 @@
                   <template v-else-if="info.type == 4">卡券商品</template>
               </el-form-item>
               <el-form-item label="发货仓库：">
-                  <template v-if="info.warehouseType == 1">自建仓</template>
-                  <template v-else-if="info.warehouseType == 2">加盟仓</template>
+                  <!--<template v-if="info.warehouseType == 1">自建仓</template>-->
+                  <template v-if="info.warehouseType == 2">加盟仓</template>
                   <template v-else-if="info.warehouseType == 3">虚拟仓库</template>
-                  <template v-else-if="info.warehouseType == 4">供应商</template>
+                  <!--<template v-else-if="info.warehouseType == 4">供应商</template>-->
               </el-form-item>
               <el-form-item label="贸易类型：">
                   <template v-if="info.businessType == 1">一般贸易</template>

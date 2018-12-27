@@ -53,7 +53,7 @@
                         <el-option value="" label="全部"></el-option>
                         <el-option value="2" label="加盟仓"></el-option>
                         <el-option value="3" label="虚拟仓库"></el-option>
-                        <el-option value="4" label="供应商"></el-option>
+                        <!--<el-option value="4" label="供应商"></el-option>-->
                     </el-select>
                 </el-form-item>
                 <!--<el-form-item prop="deliveryWare" label="商品来源">-->

@@ -32,10 +32,10 @@
                 <el-form-item prop="type" label="仓库类别">
                     <el-select v-model="form.type" placeholder="请选择仓库类别">
                         <el-option value="" label="全部"></el-option>
-                        <el-option value="1" label="自建仓"></el-option>
+                        <!--<el-option value="1" label="自建仓"></el-option>-->
                         <el-option value="2" label="加盟仓"></el-option>
                         <el-option value="3" label="虚拟仓"></el-option>
-                        <el-option value="4" label="供应商仓"></el-option>
+                        <!--<el-option value="4" label="供应商仓"></el-option>-->
                     </el-select>
                 </el-form-item>
                 <el-form-item label="">
@@ -53,10 +53,10 @@
                 <el-table-column prop="code" label="仓库编码" align="center"></el-table-column>
                 <el-table-column prop="type" label="仓库类型" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.type==1">自建仓</template>
+                        <!--<template v-if="scope.row.type==1">自建仓</template>-->
                         <template v-if="scope.row.type==2">加盟仓</template>
                         <template v-if="scope.row.type==3">虚拟仓</template>
-                        <template v-if="scope.row.type==4">供应商仓</template>
+                        <!--<template v-if="scope.row.type==4">供应商仓</template>-->
                     </template>
                 </el-table-column>
                 <el-table-column label="加盟仓类型" align="center">
