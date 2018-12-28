@@ -66,12 +66,12 @@ export default {
             preChooseData: [], // 当前行所有数据
             // allChooseProvinceCodes代表表格中所有选中的省，allCityCodes,allCityNames代表所以市
             allChooseProvinceCodes: [],
-            allCityCodes: '',
-            allCityNames: '',
+            allCityCodes: [],
+            allCityNames: [],
             // preChooseProvinceCodes代表编辑表格当前行中所有选中的省，preCityCodes,preCityNames代表所以市
             preChooseProvinceCodes: [],
-            preCityCodes: '',
-            preCityNames: '',
+            preCityCodes: [],
+            preCityNames: [],
             loading: false
         };
     },
@@ -91,19 +91,23 @@ export default {
     },
 
     methods: {
-        // 将表格中获取到的数据封装成[{provinceCode:**,provinceName:**,cityCodes:'',cityNames:''}]的格式，供回显数据使用
+        // 将表格中获取到的数据封装成[{provinceCode:**,provinceName:**,cityCodes:[],cityNames:[]}]的格式，供回显数据使用
         // allChooseProvinceIds代表表格中所有选中的省，allCityCodes,allCityNames代表所以市
         // preChooseProvinceIds代表编辑表格当前行中所有选中的省，preCityCodes,preCityNames代表所以市
         // num 0:全部数据 1:当前数据
         getAllData(data, num) {
             const tempProvinceCodes = [];
-            let tempCityCodes = '';
-            let tempCityNames = '';
+            const tempCityCodes = [];
+            const tempCityNames = [];
             data.forEach((v, k) => {
-                if (v.provinceName !== '中国') {
-                    tempProvinceCodes.push(v.provinceCode);
-                    tempCityCodes += v.cityCodes + ',';
-                    tempCityNames += v.cityNames + ',';
+                tempProvinceCodes.push(v.provinceCode);
+                v.cityCodes = this.stringToArray(v.cityCodes);
+                v.cityNames = this.stringToArray(v.cityNames);
+                if (v.cityCodes.length) {
+                    v.cityCodes.forEach((v1, k1) => {
+                        tempCityCodes.push(v1);
+                        tempCityNames.push(v.cityNames[k1]);
+                    });
                 }
             });
             num === 0 ? (this.allChooseData = data) : (this.preChooseData = data);
@@ -143,10 +147,7 @@ export default {
                                 cityNames: [], // 省对应市name
                                 checkedCities: [] // 省对应选中的市的列表
                             };
-                            let tempCode = res.data[i][j].code;
-                            if (typeof res.data[i][j].code !== 'string') {
-                                tempCode = res.data[i][j].code.toString();
-                            }
+                            const tempCode = this.numberToString(res.data[i][j].code);
                             // 数据回显
                             for (const a in that.allChooseData) {
                                 if (that.allChooseData[a].provinceCode === tempCode) {
@@ -172,7 +173,6 @@ export default {
                             temp.provinceCheck.push(tempProvinceCheck);
                         }
                         that.checkAll.push(temp);
-                        console.log(that.checkAll);
                         const tempArea = {
                             name: arr[i],
                             code: i,
@@ -222,8 +222,8 @@ export default {
                         }
                         that.checkAll[index].provinceCheck[k].cityDisabled[kk] = false;
                         // 数据回显
-                        const tempCode = v.code;
-                        code = typeof code === 'string' ? code : code.toString();
+                        const tempCode = this.numberToString(v.code);
+                        code = this.numberToString(code);
                         if (that.allChooseProvinceCodes.indexOf(code) !== -1) {
                             if (that.allCityCodes.indexOf(tempCode) !== -1) {
                                 that.checkAll[index].provinceCheck[k].cityCheck[kk] = true;
@@ -250,9 +250,9 @@ export default {
                                     that.handelChooseData('all', tempProvinceCode, index, k, tempCode, v.name);
                                     that.handelChooseData('pre', tempProvinceCode, index, k, tempCode, v.name);
                                     if (that.allCityCodes.indexOf(tempCode) === -1) {
-                                        that.allCityCodes += tempCode + ',';
-                                        that.preCityCodes += tempCode + ',';
-                                        that.preCityNames += v.name + ',';
+                                        that.allCityCodes.push(tempCode);
+                                        that.preCityCodes.push(tempCode);
+                                        that.preCityNames.push(v.name);
                                     }
                                 }
                                 that.checkAll[index].provinceCheck[k].isChecked = true;
@@ -321,10 +321,9 @@ export default {
         },
         // 省对应的全选操作
         handleCheckAll(val, k, index) {
-            const that = this;
-            that.getCityList(val.code, 'checked', index, k, val.name);
-            that.areaCheckedAll(index);
-            that.checkAll[index].provinceCheck[k].isIndeterminate = false;
+            this.getCityList(val.code, 'checked', index, k, val.name);
+            this.areaCheckedAll(index);
+            this.checkAll[index].provinceCheck[k].isIndeterminate = false;
         },
         expandItem(val, k, index) {
             this.expandCode = val.code;
@@ -343,9 +342,9 @@ export default {
                 that.handelChooseData('all', tempProvinceCode, index, k, tempCode, city.name);
                 that.handelChooseData('pre', tempProvinceCode, index, k, tempCode, city.name);
                 if (that.allCityCodes.indexOf(tempCode) === -1) {
-                    that.allCityCodes += tempCode + ',';
-                    that.preCityCodes += tempCode + ',';
-                    that.preCityNames += city.name + ',';
+                    that.allCityCodes.push(tempCode);
+                    that.preCityCodes.push(tempCode);
+                    that.preCityNames.push(city.name);
                 }
             } else {
                 // 取消选中
@@ -376,11 +375,11 @@ export default {
             tempProvinceCode = typeof tempProvinceCode === 'string' ? tempProvinceCode : tempProvinceCode.toString();
             if (tempChooseData.length) {
                 tempChooseData.forEach(function(v, k1) {
-                    if (tempChooseProvinceCodes.indexOf(tempProvinceCode) != -1) {
+                    if (tempChooseProvinceCodes.indexOf(tempProvinceCode) !== -1) {
                         if (v.provinceCode === tempProvinceCode) {
                             if (v.cityCodes.indexOf(tempCode) === -1) {
-                                v.cityCodes += tempCode + ',';
-                                v.cityNames += name + ',';
+                                v.cityCodes.push(tempCode);
+                                v.cityNames.push(name);
                             }
                         }
                     } else {
@@ -420,21 +419,17 @@ export default {
         handelDeleteData(tempCode, name) {
             const that = this;
             that.allChooseData.forEach(function(v, k) {
-                if (v.provinceName !== '中国') {
-                    that.deleteData(v.cityCodes, tempCode);
-                    that.deleteData(v.cityNames, name);
-                    if (!v.cityCodes.split(',').length) {
-                        that.allChooseData.splice(k, 1);
-                    }
+                that.deleteData(v.cityCodes, tempCode);
+                that.deleteData(v.cityNames, name);
+                if (!v.cityCodes.length) {
+                    that.allChooseData.splice(k, 1);
                 }
             });
             that.preChooseData.forEach(function(v, k) {
-                if (v.provinceName !== '中国') {
-                    that.deleteData(v.cityCodes, tempCode);
-                    that.deleteData(v.cityNames, name);
-                    if (!v.cityCodes.split(',').length) {
-                        that.preChooseData.splice(k, 1);
-                    }
+                that.deleteData(v.cityCodes, tempCode);
+                that.deleteData(v.cityNames, name);
+                if (!v.cityCodes.length) {
+                    that.preChooseData.splice(k, 1);
                 }
             });
             that.deleteData(that.allCityCodes, tempCode);
@@ -442,7 +437,6 @@ export default {
             that.deleteData(that.preCityNames, name);
         },
         deleteData(arr, code) {
-            console.log(arr);
             arr = typeof arr === 'string' ? arr.split(',') : arr;
             for (const i in arr) {
                 if (arr[i] === code) {
@@ -452,7 +446,9 @@ export default {
         },
         // 区域全选
         areaCheckedAll(index) {
-            if (index === 8) return;
+            if (index === 8) {
+                return;
+            }
             const that = this;
             let count = 0;
             let disCount = 0;
@@ -473,19 +469,17 @@ export default {
         // 确认取消操作
         closeToask(opr) {
             const tempList = [];
-            console.log(this.preChooseData);
             for (const i in this.preChooseData) {
                 if (this.preChooseData[i].cityNames.length) {
                     const temp = {
                         provinceCode: this.preChooseData[i].provinceCode,
                         provinceName: this.preChooseData[i].provinceName,
-                        cityCodes: this.preChooseData[i].cityCodes,
-                        cityNames: this.preChooseData[i].cityNames
+                        cityCodes: this.preChooseData[i].cityCodes.join(','),
+                        cityNames: this.preChooseData[i].cityNames.join(',')
                     };
                     tempList.push(temp);
                 }
             }
-
             if (opr) {
                 this.$emit('getArea', tempList);
             } else {
@@ -495,6 +489,10 @@ export default {
         // 数字转字符串
         numberToString(param) {
             return typeof param === 'number' ? param.toString() : param;
+        },
+        // 字符串转数组
+        stringToArray(param) {
+            return typeof param === 'string' ? param.split(',') : param;
         }
     }
 };
