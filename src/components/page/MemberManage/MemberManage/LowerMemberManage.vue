@@ -23,7 +23,7 @@
                 <el-form-item prop="levelId" label="用户层级" label-width="120">
                     <el-select v-model="exportForm.levelId" placeholder="全部层级">
                         <el-option label="全部层级" value=""></el-option>
-                        <el-option :label="item.name" :value="item.id" v-for="(item,index) in levelList"
+                        <el-option :label="`v${item.level}`" :value="item.id" v-for="(item,index) in levelList"
                                    :key="index"></el-option>
                     </el-select>
                 </el-form-item>
@@ -34,7 +34,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="getList(1)" type="primary">查询</el-button>
-                    <el-button @click="exportData" type="primary">导出</el-button>
+                    <!--<el-button @click="exportData" type="primary">导出</el-button>-->
                     <!--<el-button @click="resetForm('form')">重置</el-button>-->
                 </el-form-item>
             </el-form>
@@ -70,7 +70,7 @@
                     <el-table-column label="下级" align="center">
                         <template slot-scope="scope">
                         <span style="cursor: pointer;color:#ff6868"
-                              @click="toLower(scope.row.id)">{{scope.row.junior}}</span>
+                              @click="toLower(scope.row.code)">{{scope.row.junior}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column label="状态" align="center">
@@ -162,8 +162,8 @@
                 btnTxt: ''
             };
         },
-        activated() {
-            this.form.upUserid = this.$route.query.memberToLowListPage;
+        mounted() {
+            this.form.upUserCode = this.$route.query.memberToLowListPage;
             this.getList(this.page.currentPage);
             this.getLevelList();
         },
@@ -199,13 +199,13 @@
                 });
             },
             // 跳到下级列表
-            toLower(id) {
-                this.form.upUserid = id;
+            toLower(code) {
+                this.form.upUserCode = code;
                 this.getList(this.page.currentPage);
             },
             // 详情
             detailItem(index, row) {
-                this.$router.push({name: 'memberDetail', query: {memberToInfo: row.id}});
+                this.$router.push({name: 'memberDetail', query: {memberToInfo: row.code}});
             },
             // 关闭,开启
             updateStatusItem(index, id, num) {
@@ -239,6 +239,7 @@
                     that.tipsMask = false;
                     that.getList(that.page.currentPage);
                 }).catch(err => {
+                    console.log(err);
                     that.btnLoading = false;
                 });
             },
@@ -262,25 +263,25 @@
                     data.cityId = '';
                     data.areaId = '';
                 }
-                that.$axios
-                    .post(api.exportDealerListExcel, data, { responseType: 'blob' })
-                    .then(res => {
-                        var data = res.data;
-                        if (!data) {
-                            return;
-                        }
-                        const url = window.URL.createObjectURL(new Blob([data]));
-                        const link = document.createElement('a');
-                        link.style.display = 'none';
-                        link.href = url;
-                        const time = moment(new Date()).format('YYYYMMDDHHmmss');
-                        link.setAttribute('download', '会员列表' + time + '.xlsx');
-                        document.body.appendChild(link);
-                        link.click();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                // that.$axios
+                //     .post(api.exportDealerListExcel, data, { responseType: 'blob' })
+                //     .then(res => {
+                //         var data = res.data;
+                //         if (!data) {
+                //             return;
+                //         }
+                //         const url = window.URL.createObjectURL(new Blob([data]));
+                //         const link = document.createElement('a');
+                //         link.style.display = 'none';
+                //         link.href = url;
+                //         const time = moment(new Date()).format('YYYYMMDDHHmmss');
+                //         link.setAttribute('download', '会员列表' + time + '.xlsx');
+                //         document.body.appendChild(link);
+                //         link.click();
+                //     })
+                //     .catch(err => {
+                //         console.log(err);
+                //     });
             },
             //   重置表单
             resetForm(formName) {

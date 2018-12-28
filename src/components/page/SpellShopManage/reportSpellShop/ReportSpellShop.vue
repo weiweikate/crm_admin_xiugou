@@ -43,8 +43,6 @@
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-import * as api from '@/api/OperateManage/ReportSpellShop.js';
-import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 
@@ -89,9 +87,9 @@ export default {
         },
         // 举报店铺
         reportShop(row) {
-            sessionStorage.setItem('shopInfoId', row.storeId);
+            sessionStorage.setItem('shopInfoId', row.storeCode);
             sessionStorage.setItem('status', 1);
-            this.$router.push({ name: 'shopInfo', query: { shopInfoId: row.storeId, status: 1 }});
+            this.$router.push({ name: 'shopInfo', query: { shopInfoId: row.storeCode, status: 1 }});
         }
     }
 };

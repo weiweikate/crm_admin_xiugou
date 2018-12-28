@@ -17,6 +17,9 @@
 .mt10{
     margin-top: 10px;
 }
+.mt15{
+    margin-top: 15px;
+}
 .mb10{
     margin-bottom: 10px;
 }
@@ -28,6 +31,9 @@
 }
 .fl{
     float: left;
+}
+.vam{
+    vertical-align: middle;
 }
 
 /*溢出隐藏*/
@@ -43,6 +49,10 @@
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+}
+/*overflow: auto*/
+.over-auto {
+    overflow: auto;
 }
 
 /*蓝色字体超链接*/

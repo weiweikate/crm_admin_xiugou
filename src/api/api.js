@@ -122,7 +122,7 @@ export const getLevelListWithDealerCount = '/admin/dealerLevel/getLevelListWithD
 // 发起——授权渠道
 export const getStatusONList = '/admin/permitChannel/getStatusONList';
 // 发起——授权品牌
-export const getList = '/admin/brand/getList';
+// export const getList = '/admin/brand/getList';
 // 发起——根据品牌获取品类
 export const getProductCategoryList = '/admin/productCategory/queryProductCategoryByBrandId';
 // 晋级设置
@@ -130,15 +130,15 @@ export const promotionManage = '/promotionManage';
 // 降级设置
 export const degradeManage = '/degradeManage';
 // 经销商加盟管理
-// 发起经销商接口
-export const addInvite = '/admin/invite/addInvite';
+
 // 经销商列表接口
 export const getInvitePageList = '/admin/invite/queryInvitePageList';
 // 查看用户邀请详情
 export const findInviteInfo = '/admin/invite/findInviteInfo';
 // 生成邀请二维码
 export const createWxQrcode = '/admin/invite/createWxQrcode';
-
+// 导出
+export const downloadCouponList = ['/user/coupon/downloadCouponList', { methods: 'get' }];
 // 经销商会员管理
 
 // 关闭用户
@@ -186,27 +186,6 @@ export const addRechargeRecord = '/admin/rechargeRecord/addRechargeRecord';
 // 通过驳回
 export const updateRechargeRecord = '/admin/rechargeRecord/updateRechargeRecord';
 
-// 实名认证审核
-// 实名审核列表
-export const queryDealerRealnamePageList = '/admin/dealerRealName/queryDealerRealNamePageList';
-// 查询详情
-export const findDealerRealnameInfo = '/admin/dealerRealName/findDealerRealNameInfo';
-// 驳回审核
-export const dismissAudit = '/admin/dealerRealName/dismissAudit';
-
-// 公告通知
-// 公告列表
-export const getNoticeList = '/admin/notice/queryNoticeList';
-// 公告详情
-export const getNoticeDetailById = '/admin/notice/findNoticeDetailById';
-// 发布通知/公告
-export const addNotice = '/admin/notice/addNotice';
-// 修改公告/通知状态
-export const updateNoticeStatus = '/admin/notice/updateNoticeStatus';
-export const getDealerPageList = 'aa';
-export const addTagLibrary = 'aa';
-export const queryTagLibraryList = 'aa';
-export const makeSureOrder = '/order/order/makeSureOrder';
 //* ***************************************************************************************************************************************************************************
 export const uploadImg = '/admin/common/upload/oss'; // 上传图片
 export const addImg = '/common/upload/oss'; // 上传图片
@@ -219,6 +198,7 @@ export const addOrModifyList = '/config/sysconfig/addOrModifyList'; // 批量新
 export const findAdminUserbyId = ['/adminUser/findAdminUserById', { methods: 'get' }]; // 获取管理员信息
 export const loginByCode = '/adminLogin/codeLogin'; // 管理员手机号登录
 export const loginByPwd = '/adminLogin/pswLogin'; // 管理员账号密码登录
+export const updateDeleteAdminUser = ['/adminUser/updateDeleteAdminUser', { methods: 'get' }]; // 管理员账号关闭/开启
 export const addManger = '/adminUser/addAdminUser'; // 添加管理员
 export const updateAdminUser = ['/adminUser/updateAdminUser', { methods: 'post' }]; // 编辑管理员
 export const getMangerList = '/adminUser/queryAdminUserPageList'; // 获取管理员列表
@@ -248,8 +228,6 @@ export const queryFeedbackList = '/userFeedback/queryFeedbackList';
 export const findFeedbackById = ['/userFeedback/findFeedbackDetailById', { methods: 'get' }];
 // 修改反馈详情
 export const updateFeedback = '/userFeedback/updateDetailById';
-// 券数据导出
-export const downloadCouponList = '/admin/user/coupon/downloadCouponList';
 // 添加岗位
 export const addRole = '/role/addRole';
 // 根据id查询岗位
@@ -266,15 +244,15 @@ export const findDepartmentById = '/department/findDepartmentById';
 export const updateDepartment = '/department/updateDepartment';
 
 // 物流公司查询
-export const sysExpressQuery = ['/config/sysExpress/query', { methods: 'get'}];
+export const sysExpressQuery = ['/config/sysExpress/query', { methods: 'get' }];
 // 停用某物流公司
-export const disableExpress = ['/config/sysExpress/disable', { methods: 'get'}];
+export const disableExpress = ['/config/sysExpress/disable', { methods: 'get' }];
 // 启用某物流公司
-export const enableExpress = ['/config/sysExpress/enable', { methods: 'get'}];
+export const enableExpress = ['/config/sysExpress/enable', { methods: 'get' }];
 // 添加物流公司
-export const addExpress = ['/config/sysExpress/save', { methods: 'post'}];
+export const addExpress = ['/config/sysExpress/save', { methods: 'post' }];
 // 更新物流公司
-export const updateExpress = ['/config/sysExpress/edit', { methods: 'post'}];
+export const updateExpress = ['/config/sysExpress/edit', { methods: 'post' }];
 
 // ERP接口
 export const updateERPstatus = ['/config/erp/change', { methods: 'get' }];
@@ -285,3 +263,5 @@ export const getERP = ['/config/erp/get', { methods: 'get' }];
 
 // 导出
 export const downloadOrderList = '/admin/orderManagement/orders/export';
+// 统计老用户注册数量
+export const countSignUsers = '/user/countSignUsers';

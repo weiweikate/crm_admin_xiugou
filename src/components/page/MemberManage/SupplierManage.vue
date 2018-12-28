@@ -146,8 +146,6 @@
     import vBreadcrumb from '../../common/Breadcrumb.vue';
     import icon from '../../common/ico.vue';
     import region from '../../common/Region';
-    import * as api from '../../../api/MemberManage/SupplierManage/index';
-    import * as pApi from '../../../privilegeList/MemberManage/SupplierManage/index.js';
     import moment, { min } from 'moment';
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http';

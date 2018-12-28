@@ -33,8 +33,6 @@
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-import * as api from '@/api/BrandProduct/ProductMange/index.js';
-import * as pApi from '@/privilegeList/BrandProduct/ProductMange/index.js';
 import request from '@/http/http';
 export default {
     components: {

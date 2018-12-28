@@ -83,10 +83,10 @@
             </el-table-column>
             <el-table-column prop="warehouseType" label="发货方仓" align="center">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.warehouseType == 1 ">自建仓</span>
-                    <span v-else-if="scope.row.warehouseType == 2">加盟仓</span>
-                    <span v-else-if="scope.row.warehouseType == 3">供应商</span>
-                    <span v-else-if="scope.row.warehouseType == 4">虚拟仓库</span>
+                    <!--<span v-if="scope.row.warehouseType == 1 ">自建仓</span>-->
+                    <span v-if="scope.row.warehouseType == 2">加盟仓</span>
+                    <span v-else-if="scope.row.warehouseType == 3">虚拟仓库</span>
+                    <!--<span v-else-if="scope.row.warehouseType == 4">供应商</span>-->
                     <span v-else>-</span>
                 </template>
             </el-table-column>
@@ -183,7 +183,7 @@ export default {
                 if (tblData.data && tblData.data.length !== 0) {
                     tblData.data.forEach(v => {
                         const restrictions = v.restrictions || 0;
-                        if (restrictions.toString() == 4) {
+                        if (restrictions.toString() === '4' || restrictions.toString() === '5' || restrictions.toString() === '6' || restrictions.toString() === '7') {
                             v.tags = ['支持7天无理由退换'];
                         }
                         if (!v.imgUrl || v.imgUrl == '') {

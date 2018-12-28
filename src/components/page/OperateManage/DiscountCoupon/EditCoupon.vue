@@ -100,6 +100,7 @@
     import * as pApi from '@/privilegeList/OperateManage/DiscountCoupon/index.js';
     import utils from '@/utils/index.js';
     import request from '@/http/http.js';
+    import {regExpConfig} from '@/utils/regConfig.js'
 
     export default {
         components: {
@@ -411,7 +412,7 @@
                             data.useConditions = 0;
                         }
                         data.id = this.id;
-                        const reg = /^[0-9]{1,5}$/;// 1-5位数字
+                        const reg = regExpConfig.regNum1_4;// 1-4正整数
                         if (!this.isDay) {
                             data.effectiveDays = this.day;
                             if (!data.effectiveDays) {
@@ -421,7 +422,7 @@
                             data.waitDays = 0;
                             data.cycleFlag = 0;
                             if (!reg.test(this.day)) {
-                                this.$message.warning('请输入1-5位数字的周期时间');
+                                this.$message.warning('请输入1-4位数字的周期时间');
                                 return;
                             }
                         } else {
@@ -433,7 +434,7 @@
                                 return;
                             }
                             if (!reg.test(this.waitDays) || !reg.test(this.effectiveDays)) {
-                                this.$message.warning('请输入1-5位数字的周期时间');
+                                this.$message.warning('请输入1-4位数字的周期时间');
                                 return;
                             }
                         }
@@ -443,6 +444,10 @@
                             if (!data.remindDays) {
                                 this.$message.warning('请输入到期前提醒天数!');
                                 return;
+                            }else{
+                                if(Number(data.remindDays)>Number(data.effectiveDays)){
+                                    return this.$message.warning('到期前提醒天数不能大于周期有效天数')
+                                }
                             }
                         } else {
                             data.remindFlag = 0;
@@ -700,9 +705,6 @@
                 margin-left: 30px;
                 cursor: pointer;
             }
-        }
-        .el-textarea {
-
         }
         .el-textarea__inner {
             width: 500px;

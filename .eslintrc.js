@@ -38,7 +38,7 @@ module.exports = {
             'properties': 'always'
         }],
         'comma-dangle': [2, 'never'],
-        'comma-spacing': [2, {
+        'comma-spacing': [1, {
             'before': false,
             'after': true
         }],
@@ -47,7 +47,7 @@ module.exports = {
         'curly': [2, 'multi-line'],
         'dot-location': [2, 'property'],
         'eol-last': 1,
-        'eqeqeq': [2, 'allow-null'],
+        'eqeqeq': [1, 'allow-null'],
         'generator-star-spacing': [2, {
             'before': true,
             'after': true
@@ -174,7 +174,7 @@ module.exports = {
         'space-before-blocks': [2, 'always'],
         'space-before-function-paren': [1, 'never'],
         'space-in-parens': [2, 'never'],
-        'space-infix-ops': 2,
+        'space-infix-ops': 1,
         'space-unary-ops': [2, {
             'words': true,
             'nonwords': false

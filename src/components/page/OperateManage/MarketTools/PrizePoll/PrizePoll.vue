@@ -228,8 +228,6 @@
 
 <script>
     import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-    import * as api from "@/api/OperateManage/MarketToolsManage/index.js";
-    import * as pApi from "@/privilegeList/OperateManage/MarketToolsManage/index.js";
     import utils from "@/utils/index.js";
     import moment from 'moment'
 
@@ -382,23 +380,23 @@
 
             // 权限控制
             pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-                if (!this.p.updateOperActivityPackageStatusById_1 && !this.p.updateOperActivityPackageStatusById_2 && !this.p.updateOperActivityPackageStatusById_3 && !this.p.updateOperActivityPackageStatusById_4 && !this.p.addPackageProduct && !this.p.updatePackageSpecValueStock && !this.p.updateOperActivityPackagePriceAndStock && !this.findOperActivityPackageDetailsById && !this.p.updateOperActivityPackage) {
-                    this.showOpr = false
-                }
+                // for (const k in this.p) {
+                //     this.p[k] = utils.pc(pApi[k]);
+                // }
+                // if (!this.p.updateOperActivityPackageStatusById_1 && !this.p.updateOperActivityPackageStatusById_2 && !this.p.updateOperActivityPackageStatusById_3 && !this.p.updateOperActivityPackageStatusById_4 && !this.p.addPackageProduct && !this.p.updatePackageSpecValueStock && !this.p.updateOperActivityPackagePriceAndStock && !this.findOperActivityPackageDetailsById && !this.p.updateOperActivityPackage) {
+                //     this.showOpr = false
+                // }
             },
             //获取发布人列表
             getCreateUserList() {
-                this.$axios
-                    .post(api.operatorqueyByStatus, {})
-                    .then(res => {
-                        this.createUserList = [];
-                        this.createUserList = res.data.data;
-                    })
-                    .catch(err => {
-                    });
+                // this.$axios
+                //     .post(api.operatorqueyByStatus, {})
+                //     .then(res => {
+                //         this.createUserList = [];
+                //         this.createUserList = res.data.data;
+                //     })
+                //     .catch(err => {
+                //     });
             },
             //   提交表单
             submitForm(val) {
@@ -413,18 +411,18 @@
                 data.status = this.status;
                 this.page.currentPage = val;
                 this.tableLoading = true;
-                this.$axios
-                    .post(api.queryOperActivityPackagePageList, data)
-                    .then(res => {
-                        this.tableData = [];
-                        this.tableData = res.data.data.data;
-                        this.page.totalPage = res.data.data.resultCount;
-                        this.tableLoading = false;
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        this.tableLoading = false;
-                    });
+                // this.$axios
+                //     .post(api.queryOperActivityPackagePageList, data)
+                //     .then(res => {
+                //         this.tableData = [];
+                //         this.tableData = res.data.data.data;
+                //         this.page.totalPage = res.data.data.resultCount;
+                //         this.tableLoading = false;
+                //     })
+                //     .catch(err => {
+                //         console.log(err);
+                //         this.tableLoading = false;
+                //     });
             },
             //   重置表单
             resetForm(formName) {
@@ -450,60 +448,60 @@
             },
             // 产品上架/下架/审核/提交审核
             packageStatus(row, status) {
-                let data = {};
-                data.id = row.id;
-                if (row.status == 6 || row.status == 8) {
-                    data.status = 7
-                } else if (row.status == 7) {
-                    if (status == 4) {
-                        data.status = 9
-                    } else {
-                        data.status = 8
-                    }
-                } else {
-                    data.status = status;
-                }
-                if (status == 2) {//提交审核
-                    data.url = pApi.updateOperActivityPackageStatusById_1
-                } else if (status == 3 || status == 4) {//通过驳回审核
-                    data.url = pApi.updateOperActivityPackageStatusById_2
-                } else if (status == 5) {//套餐上架
-                    data.url = pApi.updateOperActivityPackageStatusById_3
-                } else {//套餐下架
-                    data.url = pApi.updateOperActivityPackageStatusById_4
-                }
-                this.$axios
-                    .post(api.updateOperActivityPackageStatusById, data)
-                    .then(res => {
-                        this.$message.success(res.data.msg);
-                        this.submitForm(this.page.currentPage)
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                // let data = {};
+                // data.id = row.id;
+                // if (row.status == 6 || row.status == 8) {
+                //     data.status = 7
+                // } else if (row.status == 7) {
+                //     if (status == 4) {
+                //         data.status = 9
+                //     } else {
+                //         data.status = 8
+                //     }
+                // } else {
+                //     data.status = status;
+                // }
+                // if (status == 2) {//提交审核
+                //     data.url = pApi.updateOperActivityPackageStatusById_1
+                // } else if (status == 3 || status == 4) {//通过驳回审核
+                //     data.url = pApi.updateOperActivityPackageStatusById_2
+                // } else if (status == 5) {//套餐上架
+                //     data.url = pApi.updateOperActivityPackageStatusById_3
+                // } else {//套餐下架
+                //     data.url = pApi.updateOperActivityPackageStatusById_4
+                // }
+                // this.$axios
+                //     .post(api.updateOperActivityPackageStatusById, data)
+                //     .then(res => {
+                //         this.$message.success(res.data.msg);
+                //         this.submitForm(this.page.currentPage)
+                //     })
+                //     .catch(err => {
+                //         console.log(err);
+                //     });
             },
             batchOperate(status) {
-                let arr = [];
-                for (let i in this.multipleSelection) {
-                    let temp = {
-                        id: this.multipleSelection[i],
-                        status: status
-                    };
-                    arr.push(temp)
-                }
-                this.$axios
-                    .post(api.batchDeleteOperActivityPackage, {paramStr: JSON.stringify(arr)})
-                    .then(res => {
-                        this.$message.success(res.data.msg);
-                        this.isShowPop = false;
-                        this.isDownPop = false;
-                        this.submitForm(this.page.currentPage);
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        this.isShowPop = false;
-                        this.isDownPop = false;
-                    });
+                // let arr = [];
+                // for (let i in this.multipleSelection) {
+                //     let temp = {
+                //         id: this.multipleSelection[i],
+                //         status: status
+                //     };
+                //     arr.push(temp)
+                // }
+                // this.$axios
+                //     .post(api.batchDeleteOperActivityPackage, {paramStr: JSON.stringify(arr)})
+                //     .then(res => {
+                //         this.$message.success(res.data.msg);
+                //         this.isShowPop = false;
+                //         this.isDownPop = false;
+                //         this.submitForm(this.page.currentPage);
+                //     })
+                //     .catch(err => {
+                //         console.log(err);
+                //         this.isShowPop = false;
+                //         this.isDownPop = false;
+                //     });
             },
             // 添加库存
             addInventory(row) {
@@ -532,7 +530,7 @@
                     let data = {
                         id: this.id,
                         freezeNumber: this.number,
-                        url: pApi.operatorUpdateDepreciatelist_3
+                        // url: pApi.operatorUpdateDepreciatelist_3
                     };
                     this.changeStatus(data)
                 }
@@ -550,7 +548,7 @@
             //保存
             submit(formName, index) {
                 let url;
-                switch (index) {
+                // switch (index) {
                     //     case 0://设置升级经验值
                     //         url = api.updateDealerLevelUpgradeExpById;
                     //         break;
@@ -584,7 +582,7 @@
                     //     case 10://代币充值
                     //         url = api.updateDealerLevelUpgradeTokenCoinBuyById;
                     //         break;
-                }
+                // }
                 let data = this[formName];
                 data.id = this.id;
                 let flag1 = true, flag2 = true, flag3 = true, flag4 = true;
@@ -648,15 +646,15 @@
                     flag2 = this.isEmpty(data.upgradeTokenCoinBuyOneExp, false);
                     this.setIsAjax(flag2);
                 }
-                if (this.isAjax) {
-                    this.$axios.post(url, data)
-                        .then((res) => {
-                            this.$message.success(res.data.msg);
-                            this.mask = false;
-                        }).catch((err) => {
-                        console.log(err);
-                    });
-                }
+                // if (this.isAjax) {
+                //     this.$axios.post(url, data)
+                //         .then((res) => {
+                //             this.$message.success(res.data.msg);
+                //             this.mask = false;
+                //         }).catch((err) => {
+                //         console.log(err);
+                //     });
+                // }
             },
 
             // 模糊查询
@@ -666,24 +664,24 @@
                 }
                 this.keyWordsID = '';
                 //activityType:1秒杀 2降价拍 3优惠套餐
-                this.$axios.post(api.queryProductByNameOrCode, {
-                    condition: queryString,
-                    activityType: 1
-                }).then(res => {
-                    let tmpArr = [];
-                    res.data.data.forEach((v, k) => {
-                        let o = {};
-                        o.value = `${v.name} 产品ID：${v.prodCode}`;
-                        o.id = v.id;
-                        o.productNum = v.productNum;
-                        o.flagStatus = v.flagStatus;
-                        o.name = v.name;
-                        o.status = v.status;
-                        o.prodCode = v.prodCode;
-                        tmpArr.push(o);
-                    });
-                    cb(tmpArr)
-                })
+                // this.$axios.post(api.queryProductByNameOrCode, {
+                //     condition: queryString,
+                //     activityType: 1
+                // }).then(res => {
+                //     let tmpArr = [];
+                //     res.data.data.forEach((v, k) => {
+                //         let o = {};
+                //         o.value = `${v.name} 产品ID：${v.prodCode}`;
+                //         o.id = v.id;
+                //         o.productNum = v.productNum;
+                //         o.flagStatus = v.flagStatus;
+                //         o.name = v.name;
+                //         o.status = v.status;
+                //         o.prodCode = v.prodCode;
+                //         tmpArr.push(o);
+                //     });
+                //     cb(tmpArr)
+                // })
             },
             // 模糊查询id
             handleSelect(item) {
@@ -691,32 +689,32 @@
             },
             //获取所有优惠券
             getAllCoupon(){
-                this.$axios
-                    .post(api.getDiscountCouponPage, {pageSize:10000})
-                    .then(res => {
-                        this.couponList=res.data.data.data;
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        this.tableLoading = false;
-                    });
+                // this.$axios
+                //     .post(api.getDiscountCouponPage, {pageSize:10000})
+                //     .then(res => {
+                //         this.couponList=res.data.data.data;
+                //     })
+                //     .catch(err => {
+                //         console.log(err);
+                //         this.tableLoading = false;
+                //     });
             },
             //显示优惠券库存
             showCouponInfo(name){
-                this.$axios
-                    .post(api.queryDiscountCouponList, {condition:name})
-                    .then(res => {
-                        if(res.data.data[0].totalNumber==-1){
-                            this.inventory='无限';
-                        }else{
-                            this.inventory=res.data.data[0].totalNumber+'张';
-                        }
-
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        this.tableLoading = false;
-                    });
+                // this.$axios
+                //     .post(api.queryDiscountCouponList, {condition:name})
+                //     .then(res => {
+                //         if(res.data.data[0].totalNumber==-1){
+                //             this.inventory='无限';
+                //         }else{
+                //             this.inventory=res.data.data[0].totalNumber+'张';
+                //         }
+                //
+                //     })
+                //     .catch(err => {
+                //         console.log(err);
+                //         this.tableLoading = false;
+                //     });
             },
             //跳转到冻结库存活动页面
             toBlockStockActivity(){

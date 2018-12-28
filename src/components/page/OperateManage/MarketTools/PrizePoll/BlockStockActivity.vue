@@ -38,8 +38,6 @@
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import * as api from '@/api/OperateManage/MarketToolsManage/index.js';
-    import * as pApi from '@/privilegeList/OperateManage/MarketToolsManage/index.js';
     import utils from '@/utils/index.js';
     import moment from 'moment';
 
@@ -69,36 +67,29 @@
         },
 
         activated() {
-            this.pControl();
             this.submitForm(1);
         },
 
         methods: {
 
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-            },
             //   提交表单
             submitForm(val) {
-                const data = {};
-                data.page = val;
-                this.page.currentPage = val;
-                this.tableLoading = true;
-                this.$axios
-                    .post(api.queryOperActivityPackagePageList, data)
-                    .then(res => {
-                        this.tableData = [];
-                        this.tableData = res.data.data.data;
-                        this.page.totalPage = res.data.data.resultCount;
-                        this.tableLoading = false;
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        this.tableLoading = false;
-                    });
+                // const data = {};
+                // data.page = val;
+                // this.page.currentPage = val;
+                // this.tableLoading = true;
+                // this.$axios
+                //     .post(api.queryOperActivityPackagePageList, data)
+                //     .then(res => {
+                //         this.tableData = [];
+                //         this.tableData = res.data.data.data;
+                //         this.page.totalPage = res.data.data.resultCount;
+                //         this.tableLoading = false;
+                //     })
+                //     .catch(err => {
+                //         console.log(err);
+                //         this.tableLoading = false;
+                //     });
             },
             // 分页
             handleSizeChange(val) {

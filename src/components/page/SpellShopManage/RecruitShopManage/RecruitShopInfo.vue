@@ -43,7 +43,7 @@
                 <div class="shop-wrap">
                     <div class="shop-left">
                         <p class="shop-msg">
-                            <span>店长：<span @click="showShopLeader(detail.userId)" class="font-href">{{detail.storeUserName}}</span></span>
+                            <span>店长：<span @click="showShopLeader(detail.userCode)" class="font-href">{{detail.storeUserName}}</span></span>
                             <span class="inf">实名认证</span>
                         </p>
                     </div>
@@ -54,17 +54,9 @@
                     </div>
                 </div>
                 <div class="avatar-wrap">
-                    <!--<el-upload :show-file-list='false' :on-success='uploadSuccess'-->
-                               <!--action="/admin/ossClient/aliyunOSSUploadImage">-->
-                        <!--<img v-if='detail.headUrl == ""' src="../../../../assets/images/avatar.jpg" alt="">-->
-                        <!--<img v-else :src="detail.headUrl" alt="">-->
-                    <!--</el-upload>-->
                     <img v-if='!detail.headUrl' src="../../../../assets/images/avatar.jpg" alt="">
                     <img v-else :src="detail.headUrl" alt="">
                 <p style="font-size:14px">店铺头像</p>
-                <!--<p style="margin-top:10px">-->
-                    <!--<el-button @click="memberManage" type="primary">成员管理</el-button>-->
-                <!--</p>-->
             </div>
         </div>
     </el-card>
@@ -100,7 +92,7 @@ export default {
         //  获取信息
         getInfo() {
             const data = {
-                id: this.shopId
+                storeCode: this.shopId
             };
             request.getStoreDetail(data).then(res => {
                 this.detail = res.data;

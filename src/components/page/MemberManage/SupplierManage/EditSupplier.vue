@@ -63,9 +63,9 @@
                     <el-form-item prop="bankUsername" label="持卡人">
                         <el-input placeholder="请输入持卡人姓名" v-model="form.bankUsername"></el-input>
                     </el-form-item>
-                    <el-form-item prop="endTime" label="供应商结算帐期：">
-                        <p>每月15号</p>
-                    </el-form-item>
+                    <!--<el-form-item prop="endTime" label="供应商结算帐期：">-->
+                        <!--<p>每月15号</p>-->
+                    <!--</el-form-item>-->
                     <!--<el-form-item prop="remark" label="备注">-->
                         <!--<el-input placeholder="备注" v-model="form.remark"></el-input>-->
                     <!--</el-form-item>-->
@@ -119,7 +119,7 @@
                 // 二级类目ids
                 secIds: '',
                 brandList: [], // 品牌列表
-                brandIds: [],
+                brandIds: []
             };
         },
         activated() {
@@ -196,10 +196,10 @@
                     that.$message.warning('两次密码输入不一致!');
                     return;
                 }
-                if (!that[form].mobile) {
-                    that.$message.warning('请输入联系方式!');
-                    return;
-                }
+                // if (!that[form].mobile) {
+                //     that.$message.warning('请输入联系方式!');
+                //     return;
+                // }
                 if (!that[form].name) {
                     that.$message.warning('请输入供货商名称!');
                     return;
@@ -235,6 +235,10 @@
                 //     that.$message.warning('请输入合法的银行卡号!');
                 //     return;
                 // }
+                if (that.form.bankCard === '') {
+                    that.$message.warning('请输入银行卡号!');
+                    return;
+                }
                 if (!that.form.bankUsername) {
                     that.$message.warning('请输入持卡人姓名!');
                     return;
