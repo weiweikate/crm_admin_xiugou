@@ -80,7 +80,6 @@ export default {
         this.getAllData(this.chooseData, 0);
         // 获取表格当前行信息
         this.getAllData(this.preData, 1);
-        console.log(this.preChooseData);
         if (this.isSingleLine) {
             this.preChooseData = this.allChooseData;
             this.preChooseProvinceCodes = this.allChooseProvinceCodes;
@@ -100,10 +99,10 @@ export default {
             const tempCityCodes = [];
             const tempCityNames = [];
             data.forEach((v, k) => {
-                tempProvinceCodes.push(v.provinceCode);
-                v.cityCodes = this.stringToArray(v.cityCodes);
-                v.cityNames = this.stringToArray(v.cityNames);
-                if (v.cityCodes.length) {
+                if (v.provinceName !== '中国') {
+                    tempProvinceCodes.push(v.provinceCode);
+                    v.cityCodes = this.stringToArray(v.cityCodes);
+                    v.cityNames = this.stringToArray(v.cityNames);
                     v.cityCodes.forEach((v1, k1) => {
                         tempCityCodes.push(v1);
                         tempCityNames.push(v.cityNames[k1]);
@@ -419,17 +418,21 @@ export default {
         handelDeleteData(tempCode, name) {
             const that = this;
             that.allChooseData.forEach(function(v, k) {
-                that.deleteData(v.cityCodes, tempCode);
-                that.deleteData(v.cityNames, name);
-                if (!v.cityCodes.length) {
-                    that.allChooseData.splice(k, 1);
+                if (v.provinceName !== '中国') {
+                    that.deleteData(v.cityCodes, tempCode);
+                    that.deleteData(v.cityNames, name);
+                    if (!v.cityCodes.length) {
+                        that.allChooseData.splice(k, 1);
+                    }
                 }
             });
             that.preChooseData.forEach(function(v, k) {
-                that.deleteData(v.cityCodes, tempCode);
-                that.deleteData(v.cityNames, name);
-                if (!v.cityCodes.length) {
-                    that.preChooseData.splice(k, 1);
+                if (v.provinceName !== '中国') {
+                    that.deleteData(v.cityCodes, tempCode);
+                    that.deleteData(v.cityNames, name);
+                    if (!v.cityCodes.length) {
+                        that.preChooseData.splice(k, 1);
+                    }
                 }
             });
             that.deleteData(that.allCityCodes, tempCode);

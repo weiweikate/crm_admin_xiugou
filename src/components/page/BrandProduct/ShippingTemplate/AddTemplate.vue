@@ -35,7 +35,7 @@
                                         <template>
                                             <div v-for="(item,index) in scope.row.freightTemplateInfoDetailList" :key="index">
                                                 <span v-if="item.provinceName=='中国'">中国</span>
-                                                <span v-else>{{item.provinceName}}:{{typeof item.cityNames=='string'?item.cityNames:item.cityNames.join(',')}}</span>
+                                                <span v-else>{{item.tableData}}</span>
                                             </div>
                                         </template>
                                     </template>
@@ -79,8 +79,7 @@
                                     <template slot-scope="scope">
                                         <template>
                                             <div v-for="(item,index) in scope.row.freightTemplateInfoDetailList" :key="index">
-                                                <span v-if="item.provinceName=='中国'">中国</span>
-                                                <span v-else>{{item.provinceName}}:{{typeof item.cityNames=='string'?item.cityNames:item.cityNames.join(',')}}</span>
+                                                <span>{{item.tableData}}</span>
                                             </div>
                                         </template>
                                     </template>
@@ -125,9 +124,9 @@
         </div>
         <!--选择区域-->
         <!-- 运费计算 -->
-        <choose-area @getArea='chooseFreightToast' :index="tableIndex[0]" :chooseData="chooseData" :preData="preData" v-if="isMask[0]"></choose-area>
+        <choose-area @getArea='chooseFreightToast' :index="tableIndex" :chooseData="chooseData" :preData="preData" v-if="isMask[0]"></choose-area>
         <!-- 设置包邮条件 -->
-        <choose-area @getArea='chooseShippingToast' :index="tableIndex[1]" :chooseData="chooseData" :preData="preData" v-if="isMask[1]"></choose-area>
+        <choose-area @getArea='chooseShippingToast' :index="tableIndex" :chooseData="chooseData" :preData="preData" v-if="isMask[1]"></choose-area>
     </div>
 
 </template>
@@ -137,23 +136,15 @@ import icon from '@/components/common/ico.vue';
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import region from '@/components/common/Region';
 import chooseArea from '@/components/common/chooseArea';
-import chooseAreas from '@/components/common/chooseArea1';
 import request from '@/http/http.js';
 import { regExpConfig } from '@/utils/regConfig.js';
 
 export default {
-    components: { vBreadcrumb, icon, region, chooseArea, chooseAreas },
+    components: { vBreadcrumb, icon, region, chooseArea },
     data() {
-        var checkName = (rule, value, callback) => {
-            if (!value) {
-                return callback(new Error('模版名称不能为空'));
-            } else {
-                callback();
-            }
-        };
         return {
             rules: {
-                name: [{ validator: checkName, trigger: 'blur', required: true, message: '请选择仓库类型' }],
+                name: [{ trigger: 'blur', required: true, message: '请输入模版名称' }],
                 status: [{ trigger: 'blur', required: true, message: '请选择状态' }],
                 freightType: [{ trigger: 'blur', required: true, message: '请选择是否包邮' }],
                 calcType: [{ trigger: 'blur', required: true, message: '请选择计费方式' }],
@@ -165,14 +156,13 @@ export default {
             form: {
                 name: '',
                 calcType: '1', // 1重量  2件数  3体积
-                freightType: '1',
+                freightType: '1', // 1自定义运费 2平台承担运费
                 status: '1',
                 style: '1',
                 freight: '1'
             },
-            tableIndex: [0, 0],
+            tableIndex: 0,
             btnLoading: false,
-            includeArea: '', // 所有省市区zicode以英文逗号隔开存储
             // 表头根据计费方式变化
             title: [{ unit: '首重(kg)', nextUnit: '续重(kg)' }, { unit: '首件(件)', nextUnit: '续件(件)' }],
             // 设置包邮条件
@@ -182,77 +172,47 @@ export default {
             freightTableData: [{ freightTemplateInfoDetailList: [{ provinceName: '中国' }], startUnit: '', startPrice: '', nextUnit: '', nextPirce: '' }],
             // 指定条件包邮表格数据
             freeShippingTableData: [],
-            rows: [0, 0],
-            isMask: [false, false]
+            rows: [0, -1],
+            isMask: [false, false],
+            isTwodecimal: regExpConfig.isTwodecimal, // 非负数，保留小数点后两位
+            isNozeroTwodecimal: regExpConfig.isNozeroTwodecimal, // 正数，保留小数点后两位
+            isNozeroNumber: regExpConfig.isNozeroNumber // 正整数
         };
     },
     mounted() {},
     methods: {
         submitForm(formName) {
             const that = this;
-            that.$refs[formName].validate(valid => {
-                if (!valid) {
-                    return;
-                } else {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
                     const data = that.form;
-                    const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
-                    let flag = true;
-                    const list = [];
-                    const temp = {
-                        startUnit: that.startUnit,
-                        startPrice: that.startPrice,
-                        nextUnit: that.nextUnit,
-                        nextPirce: that.nextPirce,
-                        freightTemplateInfoDetailList: [
-                            {
-                                provinceCode: '',
-                                cityCodes: '',
-                                provinceName: '',
-                                cityNames: ''
-                            }
-                        ]
-                    };
-                    let flag1 = true;
-                    if (this.form.freightType !== 2) {
-                        if (temp.startUnit === '' || temp.startPrice === '' || temp.nextUnit === '' || temp.nextPirce === '') {
-                            this.$message.warning('请填写完整的运费设置!');
-                            flag1 = false;
-                        } else {
-                            if (reg.test(temp.startUnit) && reg.test(temp.startPrice) && reg.test(temp.nextUnit) && reg.test(temp.nextPirce)) {
-                                flag1 = true;
-                            } else {
-                                that.$message.warning('请输入合法数据');
-                                flag1 = false;
+                    // 自定义运费
+                    if (this.form.freightType === '1') {
+                        for (let i = 0; i < this.freightTableData.length; i++) {
+                            if (this.regTableData(this.freightTableData[i], 0) === 2) {
+                                return this.$message.warning('请输入完整的设置信息');
+                            } else if (this.regTableData(this.freightTableData[i], 0) === 1) {
+                                return this.$message.warning('请输入合法数据');
                             }
                         }
-                        list.push(temp);
-                        that.tableData.forEach((v, k) => {
-                            const tableTemp = {
-                                freightTemplateInfoDetailList: v.freightTemplateInfoDetailList,
-                                startUnit: v.startUnit,
-                                startPrice: v.startPrice,
-                                nextUnit: v.nextUnit,
-                                nextPirce: v.nextPirce
-                            };
-                            if (!v.freightTemplateInfoDetailList.length || v.startUnit === '' || v.startPrice === '' || v.nextUnit === '' || v.nextPirce === '') {
-                                this.$message.warning('请填写完整的运费设置!');
-                                flag = false;
+                        // 指定条件包邮 1是 2否
+                        if (this.form.style === '1') {
+                            if (this.freeShippingTableData.length === 0) {
+                                return this.$message.warning('请设置指定条件包邮');
                             } else {
-                                if (reg.test(v.startUnit) && reg.test(v.startPrice) && reg.test(v.nextUnit) && reg.test(v.nextPirce)) {
-                                    flag = true;
-                                } else {
-                                    that.$message.warning('请输入合法数据');
-                                    flag = false;
+                                for (let i = 0; i < this.freeShippingTableData.length; i++) {
+                                    if (this.regTableData(this.freeShippingTableData[i], 1) === 2) {
+                                        return this.$message.warning('请输入完整的设置信息');
+                                    } else if (this.regTableData(this.freeShippingTableData[i], 1) === 1) {
+                                        return this.$message.warning('请输入合法数据');
+                                    }
                                 }
                             }
-                            list.push(tableTemp);
-                        });
-                        data.freightTemplateInfoList = list;
+                        }
                     } else {
                         data.freightTemplateInfoList = [];
                         data.freightFreePrice = '';
                     }
-                    if (!flag || !flag1) return;
                     this.btnLoading = true;
                     request
                         .addFreightTemplate(data)
@@ -273,15 +233,14 @@ export default {
         changeCalcType() {
             this.freeShippingTableData = [];
             this.freightTableData = [{ freightTemplateInfoDetailList: [{ provinceName: '中国' }], startUnit: '', startPrice: '', nextUnit: '', nextPirce: '' }];
-            this.tableIndex = [0, 0];
-            this.rows = [0, 0];
+            this.tableIndex = 0;
+            this.rows = [0, -1];
         },
         // 编辑地区
         // index索引
         // num:0运费计算  1设置包邮条件
         editAddress(index, num) {
-            this.tableIndex[num] = index;
-            this.$set(this.tableIndex, num, this.tableIndex[num]);
+            this.tableIndex = index;
             this.isMask[num] = true;
             this.$set(this.isMask, num, this.isMask[num]);
             if (num === 0) {
@@ -324,15 +283,16 @@ export default {
             this.isMask[0] = false;
             this.$set(this.isMask, 0, this.isMask[0]);
             if (getArea) {
-                this.freightTableData[this.tableIndex[0]].freightTemplateInfoDetailList = [];
+                this.freightTableData[this.tableIndex].freightTemplateInfoDetailList = [];
                 for (const i in getArea) {
                     const tempItem = {
                         provinceCode: getArea[i].provinceCode,
                         cityCodes: getArea[i].cityCodes,
                         provinceName: getArea[i].provinceName,
-                        cityNames: getArea[i].cityNames
+                        cityNames: getArea[i].cityNames,
+                        tableData: getArea[i].provinceName + ':' + getArea[i].cityNames
                     };
-                    this.freightTableData[this.tableIndex[0]].freightTemplateInfoDetailList.push(tempItem);
+                    this.freightTableData[this.tableIndex].freightTemplateInfoDetailList.push(tempItem);
                 }
             }
         },
@@ -341,27 +301,30 @@ export default {
             this.isMask[1] = false;
             this.$set(this.isMask, 1, this.isMask[1]);
             if (getArea) {
-                this.freeShippingTableData[this.tableIndex[0]].freightTemplateInfoDetailList = [];
+                this.freeShippingTableData[this.tableIndex].freightTemplateInfoDetailList = [];
                 for (const i in getArea) {
                     const tempItem = {
                         provinceCode: getArea[i].provinceCode,
                         cityCodes: getArea[i].cityCodes,
                         provinceName: getArea[i].provinceName,
-                        cityNames: getArea[i].cityNames
+                        cityNames: getArea[i].cityNames,
+                        tableData: getArea[i].provinceName + ':' + getArea[i].cityNames
                     };
-                    this.freeShippingTableData[this.tableIndex[0]].freightTemplateInfoDetailList.push(tempItem);
+
+                    this.freeShippingTableData[this.tableIndex].freightTemplateInfoDetailList.push(tempItem);
                 }
             }
         },
         // 添加地区
         // num:0运费计算  1设置包邮条件
         addSetting(num) {
-            if (num === 1 && this.rows[num] === 0) {
+            if (num === 1 && this.rows[num] === -1) {
                 this.addRow(num);
             } else {
-                if (this.regTableData(num) === 1) {
+                const data = num === 0 ? this.freightTableData[this.rows[num]] : this.freeShippingTableData[this.rows[num]];
+                if (this.regTableData(data, num) === 1) {
                     this.$message.warning('请输入合法数据');
-                } else if (this.regTableData(num) === 2) {
+                } else if (this.regTableData(data, num) === 2) {
                     this.$message.warning('请输入完整的设置信息');
                 } else {
                     this.addRow(num);
@@ -389,55 +352,11 @@ export default {
         },
         // 判断表格的值是否为空及其数据的合法
         // num:0运费计算  1设置包邮条件
-        regTableData(num) {
-            const isTwodecimal = regExpConfig.isTwodecimal; // 非负数，保留小数点后两位
-            const isNozeroTwodecimal = regExpConfig.isNozeroNumber; // 正数，保留小数点后两位
-            const isNozeroNumber = regExpConfig.isNozeroNumber; // 正整数
-            let data = {};
-            if (num === 0) {
-                data = this.freightTableData[this.rows[num]];
-            } else {
-                data = this.freeShippingTableData[this.rows[num]];
-            }
+        regTableData(data, num) {
             let count = 0;
             for (const key in data) {
-                console.log(data);
-                if (data[key] === '' || !data[key].freightTemplateInfoDetailList.length) {
+                if (data[key] === '' || !data['freightTemplateInfoDetailList'].length) {
                     count++;
-                } else {
-                    if (num === 0) {
-                        // 首件续件：正整数；首重续重：正数，保留小数点后两位;首费续费:非负数，保留小数点后两位；
-                        if (this.calcType === 1 && (!isNozeroTwodecimal.test(data.startUnit) || !isNozeroTwodecimal.test(data.nextUnit))) {
-                            // 重量
-                            return 1;
-                        } else if (this.calcType === 2 && (!isNozeroNumber.test(data.startUnit) || !isNozeroNumber.test(data.nextUnit))) {
-                            // 件数
-                            return 1;
-                        }
-                        if (!isTwodecimal.test(data.startPrice) || !isTwodecimal.test(data.nextPirce)) {
-                            return 1;
-                        }
-                    } else {
-                        if (this.calcType === 1) {
-                            if (data.style === 0 && !isNozeroTwodecimal.test(data.quality)) {
-                                // 重量
-                                return 1;
-                            } else if (data.style === 1 && !isNozeroTwodecimal.test(data.price)) {
-                                return 1;
-                            } else if (data.style === 2 && (!isNozeroTwodecimal.test(data.price) || !isNozeroTwodecimal.test(data.quality))) {
-                                return 1;
-                            }
-                        } else {
-                            if (data.style === 0 && !isNozeroNumber.test(data.quality)) {
-                                // 件数
-                                return 1;
-                            } else if (data.style === 1 && !isNozeroTwodecimal.test(data.price)) {
-                                return 1;
-                            } else if (data.style === 2 && (!isNozeroTwodecimal.test(data.price) || !isNozeroTwodecimal.test(data.quality))) {
-                                return 1;
-                            }
-                        }
-                    }
                 }
             }
             if (num === 1 && data.style !== 2) {
@@ -446,6 +365,45 @@ export default {
             }
             if (count !== 0) {
                 return 2;
+            }
+            for (const key in data) {
+                if (data[key] === '' || !data['freightTemplateInfoDetailList'].length) {
+                    count++;
+                } else {
+                    if (num === 0) {
+                        // 首件续件：正整数；首重续重：正数，保留小数点后两位;首费续费:非负数，保留小数点后两位；
+                        if (this.form.calcType === '1' && (!this.isNozeroTwodecimal.test(data.startUnit) || !this.isNozeroTwodecimal.test(data.nextUnit))) {
+                            // 重量
+                            return 1;
+                        } else if (this.form.calcType === '2' && (!this.isNozeroNumber.test(data.startUnit) || !this.isNozeroNumber.test(data.nextUnit))) {
+                            // 件数
+                            return 1;
+                        }
+                        if (!this.isTwodecimal.test(data.startPrice) || !this.isTwodecimal.test(data.nextPirce)) {
+                            return 1;
+                        }
+                    } else {
+                        if (this.form.calcType === '1') {
+                            if (data.style === 0 && !this.isNozeroTwodecimal.test(data.quality)) {
+                                // 重量
+                                return 1;
+                            } else if (data.style === 1 && !this.isNozeroTwodecimal.test(data.price)) {
+                                return 1;
+                            } else if (data.style === 2 && (!this.isNozeroTwodecimal.test(data.price) || !this.isNozeroTwodecimal.test(data.quality))) {
+                                return 1;
+                            }
+                        } else {
+                            if (data.style === 0 && !this.isNozeroNumber.test(data.quality)) {
+                                // 件数
+                                return 1;
+                            } else if (data.style === 1 && !this.isNozeroTwodecimal.test(data.price)) {
+                                return 1;
+                            } else if (data.style === 2 && (!this.isNozeroTwodecimal.test(data.price) || !this.isNozeroTwodecimal.test(data.quality))) {
+                                return 1;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
