@@ -88,7 +88,7 @@
                     </div>
                     <div class="item-row">
                         <div class="item">授权码：{{dealer.code}}</div>
-                        <div class="item">授权层级：{{dealer.level?`v${dealer.level}`: ''}}</div>
+                        <div class="item">授权层级：{{dealer.level !== undefined && dealer.level !== null?`v${dealer.level}`: ''}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item">经验值：{{dealer.experience}}</div>

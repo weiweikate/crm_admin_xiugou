@@ -377,6 +377,7 @@ export const asyncRouterMap = [
                 meta: { title: '拼店结算周期设置' }
             },
             {
+                hidden: true,
                 name: 'backAddress',
                 path: '/backAddress',
                 component: resolve => require(['../components/page/BasePramConfig/BackAddress.vue'], resolve),
@@ -580,7 +581,7 @@ export const asyncRouterMap = [
                 path: '/basicRateSetting',
                 default: true,
                 component: resolve => require(['../components/page/SettlementMange/BasicRateSetting.vue'], resolve),
-                meta: { title: '基础费率设置', noKeepAlive: true }
+                meta: { title: '基础费率设置', noKeepAlive: true, roles: ['admin'] }
             },
             {
                 name: 'profitDistrMange',

@@ -5,10 +5,10 @@
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
                 <el-form-item prop="type" label="仓库类型">
                     <el-select v-model="form.type" placeholder="请选择仓库类型" class="inp">
-                        <el-option value="1" label="自建仓">自建仓</el-option>
+                        <!--<el-option value="1" label="自建仓">自建仓</el-option>-->
                         <el-option value="2" label="加盟仓">加盟仓</el-option>
-                        <el-option value="3" label="供应商仓">供应商仓</el-option>
-                        <el-option value="4" label="虚拟仓">虚拟仓</el-option>
+                        <el-option value="3" label="虚拟仓">虚拟仓</el-option>
+                        <!--<el-option value="4" label="供应商仓">供应商仓</el-option>-->
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="supplierCode" label="供应商ID" v-if="form.type==3||form.type==4">
