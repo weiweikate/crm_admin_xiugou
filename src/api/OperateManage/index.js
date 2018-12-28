@@ -187,3 +187,23 @@ export const queryByCodeList = '/scratch/scratchCard/queryByCodeList';
 export const updateScratchCardById = ['/scratch/scratchCard/updateById', { methods: 'get' }];
 // 修改
 export const updateScratchCard = '/scratch/scratchCard/updateScratchCard';
+
+/** ************  经验值活动  *****************/
+// 获取经验活动列表
+export const queryExpPageList = ['/operator/activityexperience/queryPageList', { methods: 'post' }];
+// 获取经验活动详情
+export const queryExpByCode = ['/admin/operator/activityexperience/queryByCode', { methods: 'get' }];
+// 获取经验活动中的产品列表
+export const queryActivityProdPageList = ['/admin/operator/activityexperience/queryActivityProdPageList', { methods: 'post' }];
+// 更新活动说明
+export const updateExpRemark = ['/operator/activityexperience/updateExperienceRemark', { methods: 'get' }];
+// 查询活动说明
+export const queryExpRemark = ['/operator/activityexperience/queryDefaultRemark', { methods: 'get' }];
+// 删除经验活动
+export const delExpActive = ['/operator/activityexperience/delExperience', { methods: 'get' }];
+// 删除经验活动中的产品
+export const delExpActivePro = ['/operator/activityexperience/addOrModifyExperience', { methods: 'get' }];
+// 活动可用产品列表
+export const queryActivityProductList = ['/product/product/queryActivityProductList', { methods: 'post' }];
+// 获取优惠券信息
+export const getCouponById = ['/admin/coupon/findById', { methods: 'get' }];

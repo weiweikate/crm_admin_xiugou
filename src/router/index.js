@@ -321,6 +321,13 @@ export const asyncRouterMap = [
                 path: '/marketToolsManage',
                 component: resolve => require(['../components/page/OperateManage/MarketTools/MarketToolsManage.vue'], resolve),
                 meta: { title: '营销工具管理' }
+            },
+            {
+                name: 'expManage',
+                path: '/expManage',
+                default: true,
+                component: resolve => require(['../components/page/OperateManage/Experience/index.vue'], resolve),
+                meta: { title: '经验值专区管理' }
             }
         ]
     },
@@ -1408,7 +1415,7 @@ export const asyncRouterMap = [
                 name: 'addProject',
                 path: '/addProject',
                 component: resolve => require(['../components/page/OperateManage/ProjectMange/addProject.vue'], resolve),
-                meta: { title: '专题设置' , noKeepAlive: true}
+                meta: { title: '专题设置', noKeepAlive: true }
             },
 
             {
@@ -1416,7 +1423,7 @@ export const asyncRouterMap = [
                 name: 'depreciate',
                 path: '/depreciate',
                 component: resolve => require(['../components/page/OperateManage/MarketTools/Depreciate/Depreciate.vue'], resolve),
-                meta: { title: '降价拍' , noKeepAlive: true}
+                meta: { title: '降价拍', noKeepAlive: true }
             },
             {
                 hidden: true,
@@ -1494,6 +1501,20 @@ export const asyncRouterMap = [
                 path: '/activityUse',
                 component: resolve => require(['../components/page/OperateManage/MarketTools/ScratchCards/activityUse'], resolve),
                 meta: { title: '当前活动使用' }
+            },
+            {
+                hidden: true,
+                name: 'expAddOrEdit',
+                path: '/expAddOrEdit',
+                component: resolve => require(['../components/page/OperateManage/Experience/expAdd.vue'], resolve),
+                meta: { title: '经验值活动添加编辑', 'noKeepAlive': true }
+            },
+            {
+                hidden: true,
+                name: 'expDetail',
+                path: '/expDetail',
+                component: resolve => require(['../components/page/OperateManage/Experience/expDetail.vue'], resolve),
+                meta: { title: '经验值活动详情', 'noKeepAlive': true }
             },
             // {
             //     name: 'labelManage',
