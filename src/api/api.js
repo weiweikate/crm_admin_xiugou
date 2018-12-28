@@ -122,7 +122,7 @@ export const getLevelListWithDealerCount = '/admin/dealerLevel/getLevelListWithD
 // 发起——授权渠道
 export const getStatusONList = '/admin/permitChannel/getStatusONList';
 // 发起——授权品牌
-export const getList = '/admin/brand/getList';
+// export const getList = '/admin/brand/getList';
 // 发起——根据品牌获取品类
 export const getProductCategoryList = '/admin/productCategory/queryProductCategoryByBrandId';
 // 晋级设置
@@ -130,15 +130,15 @@ export const promotionManage = '/promotionManage';
 // 降级设置
 export const degradeManage = '/degradeManage';
 // 经销商加盟管理
-// 发起经销商接口
-export const addInvite = '/admin/invite/addInvite';
+
 // 经销商列表接口
 export const getInvitePageList = '/admin/invite/queryInvitePageList';
 // 查看用户邀请详情
 export const findInviteInfo = '/admin/invite/findInviteInfo';
 // 生成邀请二维码
 export const createWxQrcode = '/admin/invite/createWxQrcode';
-
+// 导出
+export const downloadCouponList = ['/user/coupon/downloadCouponList', { methods: 'get' }];
 // 经销商会员管理
 
 // 关闭用户
@@ -228,8 +228,6 @@ export const queryFeedbackList = '/userFeedback/queryFeedbackList';
 export const findFeedbackById = ['/userFeedback/findFeedbackDetailById', { methods: 'get' }];
 // 修改反馈详情
 export const updateFeedback = '/userFeedback/updateDetailById';
-// 券数据导出
-export const downloadCouponList = '/admin/user/coupon/downloadCouponList';
 // 添加岗位
 export const addRole = '/role/addRole';
 // 根据id查询岗位
@@ -265,3 +263,5 @@ export const getERP = ['/config/erp/get', { methods: 'get' }];
 
 // 导出
 export const downloadOrderList = '/admin/orderManagement/orders/export';
+// 统计老用户注册数量
+export const countSignUsers = '/user/countSignUsers';
