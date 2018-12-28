@@ -1,7 +1,3 @@
-// 获取一二级类目列表
-export const getCategoryList = '/admin/productCategory/queryProductCategoryPageList';
-// 获取用户层级列表
-export const getDealerLevelList = '/admin/giftBag/queryUserLevel ';
 // 获取所有标签
 export const queryTagLibraryList = '/admin/tagLibrary/queryTagLibraryList';
 
@@ -52,8 +48,6 @@ export const updateGiftBag = '/admin/giftBag/updateGiftBag';
 export const queryCouponListByGiftBagId = '/admin/giftBag/queryCouponListByGiftBagId';
 // 根据id删除礼包优惠券
 export const deleteCouponByCouponId = '/admin/giftBag/deleteCouponByCouponId';
-// 获取优惠券列表
-export const queryCouponList = '/admin/giftBag/queryCouponList';
 // 添加优惠券
 export const couponControl = '/admin/giftBag/couponControl';
 // 添加新标签
@@ -158,8 +152,6 @@ export const queryProductSpecStockDetailsList = '/product/productSpecStock/query
 export const addProductSpecStock = ['/product/productSpecStock/addProductSpecStock', { methods: 'post' }]; // 添加产品库存
 export const updateProductSpecStock = ['/product/productSpecStock/updateProductSpecStock', { methods: 'post' }]; // 修改产品库存
 export const findProductDetailsById = ['/product/product/findProductDetailsById', { methods: 'get' }]; // 查看产品详情
-export const querySysTagLibraryList = ['/config/sysTagLibrary/querySysTagLibraryList', { methods: 'post' }]; // 查询标签列表
-export const addSysTagLibrary = ['/config/sysTagLibrary/addSysTagLibrary', { methods: 'post' }]; // 添加新的标签
 export const queryActivityPackagePageList = ['/operator/activityPackage/queryActivityPackagePageList', { methods: 'post' }]; // 分页查询礼包列表
 export const addActivityPackage = ['/operator/activityPackage/addActivityPackage', { methods: 'post' }]; // 添加礼包
 export const findActivityPackageById = ['/operator/activityPackage/findActivityPackageById', { methods: 'get' }]; // 查询礼包信息
@@ -185,7 +177,7 @@ export const updateCategoryPropertyStatus = '/product/productProperty/updateStat
 export const queryPropertyByCategoryId = ['/product/categoryProperty/queryByCategoryId', { methods: 'get' }];
 // 绑定类目与属性
 export const bindCategoryProperty = '/product/categoryProperty/bind';
-//-----------------------------------------------------------------------------------------2018-11-29 产品重构-----------
+// -----------------------------------------------------------------------------------------2018-11-29 产品重构-----------
 export const queryProdList = ['/product/product/queryProductPageList', { methods: 'post' }]; // 查询产品列表
 export const findProductSupplierList = ['/product/productSupplier/findProductBrandList', { methods: 'post' }]; // 查询供应商列表
 export const batchUpdateProductStatus = ['/product/product/batchUpdateProductStatus', { methods: 'post' }]; // 批量删除下架产品

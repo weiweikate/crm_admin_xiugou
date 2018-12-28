@@ -26,8 +26,8 @@
                         <div class="item">地址信息 ：{{dealer.province}}{{dealer.city}}{{dealer.area}}{{dealer.address}}</div>
                     </div>
                     <div class="item-row">
-                        <div class="item">注册时间：{{dealer.regTime|formatDateAll}}</div>
-                        <div class="item">最近登录时间：{{dealer.lastLoginTime|formatDateAll}}</div>
+                        <div class="item">注册时间：{{dealer.regTime | formatDateAll}}</div>
+                        <div class="item">最近登录时间：{{dealer.lastLoginTime | formatDateAll}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item" style="width: 100%;">会员简介：{{dealer.profile}}</div>
@@ -88,7 +88,7 @@
                     </div>
                     <div class="item-row">
                         <div class="item">授权码：{{dealer.code}}</div>
-                        <div class="item">授权层级：{{dealer.level?`v${dealer.level}`: ''}}</div>
+                        <div class="item">授权层级：{{dealer.level !== undefined && dealer.level !== null?`v${dealer.level}`: ''}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item">经验值：{{dealer.experience}}</div>

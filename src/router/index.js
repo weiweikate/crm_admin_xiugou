@@ -92,13 +92,13 @@ export const asyncRouterMap = [
         path: '/brand',
         component: Layout,
         name: 'brand',
-        meta: { title: '品牌产品管理', icon: 'icon-fenlei' },
+        meta: { title: '产品管理', icon: 'icon-fenlei' },
         children: [
             {
                 name: 'brandProductClassify',
                 path: '/brandProductClassify',
                 component: resolve => require(['../components/page/BrandProduct/BrandProductClassify/BrandProductClassify.vue'], resolve),
-                meta: { title: '产品品牌分类管理' }
+                meta: { title: '分类管理' }
             },
             {
                 default: true,
@@ -118,12 +118,6 @@ export const asyncRouterMap = [
                 path: '/productList',
                 component: resolve => require(['../components/page/BrandProduct/ProductManage/ProductList.vue'], resolve),
                 meta: { title: '产品管理', noKeepAlive: true }
-            },
-            {
-                name: 'shippingTemplate',
-                path: '/shippingTemplate',
-                component: resolve => require(['../components/page/BrandProduct/ShippingTemplate/ShippingTemplate.vue'], resolve),
-                meta: { title: '运费模板' }
             }
         ]
     },
@@ -169,7 +163,7 @@ export const asyncRouterMap = [
                 name: 'orderList',
                 path: '/orderList',
                 component: resolve => require(['../components/page/OrderManage/OrderManage/OrderList.vue'], resolve),
-                meta: { title: '订单管理' }
+                meta: { title: '订单列表' }
             },
             {
                 name: 'payOrderList',
@@ -199,7 +193,7 @@ export const asyncRouterMap = [
         component: Layout,
         name: 'afterSaleOrder',
         default: true,
-        meta: { title: '售后单管理', icon: 'icon-dingdan' },
+        meta: { title: '售后管理', icon: 'icon-dingdan' },
         children: [
             {
                 name: 'afterSaleOrderList',
@@ -214,6 +208,33 @@ export const asyncRouterMap = [
                 default: true,
                 component: resolve => require(['../components/page/AfterSaleOrderManage/RefundOrderManage/RefundOrderList.vue'], resolve),
                 meta: { title: '退款单列表' }
+            }
+        ]
+    },
+    {
+        path: '/logistics',
+        component: Layout,
+        name: 'logistics',
+        meta: { title: '物流管理', icon: 'icon-shezhi' },
+        children: [
+            // {
+            //     hidden: true,
+            //     name: 'logisticsArea',
+            //     path: '/logisticsArea',
+            //     component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
+            //     meta: { title: '地区列表'}
+            // },
+            {
+                name: 'shippingTemplate',
+                path: '/shippingTemplate',
+                component: resolve => require(['../components/page/BrandProduct/ShippingTemplate/ShippingTemplate.vue'], resolve),
+                meta: { title: '运费模板' }
+            },
+            {
+                name: 'logisticsCompanyList',
+                path: '/logisticsCompanyList',
+                component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
+                meta: { title: '物流公司列表' }
             }
         ]
     },
@@ -364,6 +385,7 @@ export const asyncRouterMap = [
                 meta: { title: '拼店结算周期设置' }
             },
             {
+                hidden: true,
                 name: 'backAddress',
                 path: '/backAddress',
                 component: resolve => require(['../components/page/BasePramConfig/BackAddress.vue'], resolve),
@@ -472,52 +494,31 @@ export const asyncRouterMap = [
         path: '/showValue',
         component: Layout,
         name: 'showValue',
-        meta: { title: '秀值模块', icon: 'icon-shezhi' },
+        meta: { title: '秀值模块', icon: 'icon-shezhi', roles: ['admin'] },
         children: [
             {
                 name: 'taskHome',
                 path: '/taskHome',
                 component: resolve => require(['../components/page/ShowValue/TaskHome.vue'], resolve),
-                meta: { title: '现金分享任务管理' }
+                meta: { title: '现金分享任务管理', roles: ['admin'] }
             },
             {
                 name: 'showValueList',
                 path: '/showValueList',
                 component: resolve => require(['../components/page/ShowValue/ShowValueList.vue'], resolve),
-                meta: { title: '秀值分配设置', noKeepAlive: true }
+                meta: { title: '秀值分配设置', noKeepAlive: true, roles: ['admin'] }
             },
             {
                 name: 'showValueParamSet',
                 path: '/showValueParamSet',
                 component: resolve => require(['../components/page/ShowValue/ShowValueParamSet.vue'], resolve),
-                meta: { title: '秀值参数设置' }
+                meta: { title: '秀值参数设置', roles: ['admin'] }
             },
             {
                 name: 'showValReCharge',
                 path: '/showValReCharge',
                 component: resolve => require(['../components/page/ShowValue/ShowValReCharge.vue'], resolve),
-                meta: { title: '秀值账户充值' }
-            }
-        ]
-    },
-    {
-        path: '/logistics',
-        component: Layout,
-        name: 'logistics',
-        meta: { title: '物流管理', icon: 'icon-shezhi' },
-        children: [
-            // {
-            //     hidden: true,
-            //     name: 'logisticsArea',
-            //     path: '/logisticsArea',
-            //     component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
-            //     meta: { title: '地区列表'}
-            // },
-            {
-                name: 'logisticsCompanyList',
-                path: '/logisticsCompanyList',
-                component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
-                meta: { title: '物流公司列表' }
+                meta: { title: '秀值账户充值', roles: ['admin'] }
             }
         ]
     },
@@ -558,6 +559,7 @@ export const asyncRouterMap = [
                 meta: { title: '平台账户收入明细' }
             },
             {
+                hidden: true,
                 name: 'depositPayment',
                 path: '/depositPayment',
                 component: resolve => require(['../components/page/SettlementMange/DepositPayment.vue'], resolve),
@@ -570,6 +572,7 @@ export const asyncRouterMap = [
             //     meta: { title: '收益金比例设置' }
             // },
             {
+                hidden: true,
                 name: 'supplierSettMange',
                 path: '/supplierSettMange',
                 component: resolve => require(['../components/page/SettlementMange/supplierSettMange.vue'], resolve),
@@ -586,14 +589,13 @@ export const asyncRouterMap = [
                 path: '/basicRateSetting',
                 default: true,
                 component: resolve => require(['../components/page/SettlementMange/BasicRateSetting.vue'], resolve),
-                meta: { title: '基础费率设置', noKeepAlive: true }
+                meta: { title: '基础费率设置', noKeepAlive: true, roles: ['admin'] }
             },
             {
                 name: 'profitDistrMange',
                 path: '/profitDistrMange',
-                default: true,
                 component: resolve => require(['../components/page/SettlementMange/ProfitDistrMange.vue'], resolve),
-                meta: { title: '利润分配设置' }
+                meta: { title: '利润分配设置', roles: ['admin'] }
             },
             {
                 hidden: true,
@@ -1737,3 +1739,4 @@ asyncRouterMap.forEach(item => {
 });
 
 export const authRouterList = tmp;
+

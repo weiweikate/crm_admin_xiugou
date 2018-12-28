@@ -14,7 +14,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="上级代理:" class="special">
-                        <el-input v-model="info.upUserid" @blur="sureUpdate" size="medium"></el-input>
+                        <el-input v-model="info.upUserCode" @blur="sureUpdate" size="medium"></el-input>
                         <span class="tip">请输入上级代理</span>
                     </el-form-item>
                 </el-form>
@@ -98,7 +98,7 @@
                 const data = {};
                 data.code = this.code;
                 data.levelId = this.info.levelId;
-                data.upUserCode = this.info.upUserid;
+                data.upUserCode = this.info.upUserCode;
                 data.updateType = 2;
                 this.btnLoading = true;
                 request.updateDealerById(data).then(res => {

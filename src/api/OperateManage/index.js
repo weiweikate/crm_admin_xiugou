@@ -28,16 +28,12 @@ export const addCouponStock = '/coupon/addStock';
 export const queryUserCouponList = '/user/coupon/queryUserCouponList';
 // 券数据批量删除
 export const bathVaildCoupon = '/user/coupon/bathVaildCoupon';
-// 导出
-export const downloadCouponList = ['/user/coupon/downloadCouponList', { methods: 'get' }];
 // 失效优惠券
 export const deleteCouponById = ['/coupon/deleteById', { methods: 'get' }];
 // 通过id查询优惠券信息
 export const findCouponById = ['/coupon/findById', { methods: 'get' }];
 // 查询运费模板
 export const queryTemplateList = ['/coupon/template/queryTemplateList', { methods: 'get' }];
-// 查询产品列表
-export const queryProductList = '/product/product/queryProductList';
 
 // 帮助中心
 // 问题类目列表
@@ -134,8 +130,6 @@ export const removeByTypeId = '/config/sysTagLibrary/removeByTypeId';
 export const removeByTypeIds = '/config/sysTagLibrary/removeByTypeIds';
 // 删除标签
 export const removeTags = '/config/sysTagLibrary/removeTags';
-// 添加标签类型
-export const addSysTagType = '/config/sysTagType/addSysTagLibrary';
 // 查询标签类型列表
 export const querySysTagTypePageList = '/config/sysTagType/querySysTagTypePageList';
 // 修改标签状态
