@@ -13,7 +13,7 @@ import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
 import '@/permission'; // permission control
 import store from '@/stores';
-import * as filters from '@/utils/filter'
+import * as filters from '@/utils/filter';
 
 // 注册全局过滤器
 Object.keys(filters).forEach(key => {
@@ -67,6 +67,9 @@ Vue.prototype.$oprAuth = function (value) {
 };
 /** 权限指令**/
 Vue.directive('auth', {
+    inserted: function (el) {
+
+    },
     bind: function (el, binding, vnode) {
         // 获取按钮权限
         const value = binding.value;
@@ -79,16 +82,31 @@ Vue.directive('auth', {
         if (roles.includes('admin')) {
             return;
         }
+        // 解决权限模块闪现问题
+        try {
+            el.style.display = 'none';
+        } catch (e) {
+            console.log(e);
+        }
+
         if (!auth.includes(value)) {
 
             setTimeout(function () {
                 try {
                     el.parentNode.removeChild(el);
-                }
-                catch (e) {
+                } catch (e) {
                     console.log(e);
                 }
             }, 10);
+        } else {
+            setTimeout(function () {
+                try {
+                    el.style.display = 'block';
+                } catch (e) {
+                    console.log(e);
+                }
+            }, 10);
+
         }
     }
 });
