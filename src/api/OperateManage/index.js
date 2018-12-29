@@ -186,9 +186,9 @@ export const updateScratchCard = '/scratch/scratchCard/updateScratchCard';
 // 获取经验活动列表
 export const queryExpPageList = ['/operator/activityexperience/queryPageList', { methods: 'post' }];
 // 获取经验活动详情
-export const queryExpByCode = ['/admin/operator/activityexperience/queryByCode', { methods: 'get' }];
+export const queryExpByCode = ['/operator/activityexperience/queryByCode', { methods: 'get' }];
 // 获取经验活动中的产品列表
-export const queryActivityProdPageList = ['/admin/operator/activityexperience/queryActivityProdPageList', { methods: 'post' }];
+export const queryActivityProdPageList = ['/operator/activityexperience/queryActivityProdPageList', { methods: 'post' }];
 // 更新活动说明
 export const updateExpRemark = ['/operator/activityexperience/updateExperienceRemark', { methods: 'get' }];
 // 查询活动说明
@@ -196,8 +196,10 @@ export const queryExpRemark = ['/operator/activityexperience/queryDefaultRemark'
 // 删除经验活动
 export const delExpActive = ['/operator/activityexperience/delExperience', { methods: 'get' }];
 // 删除经验活动中的产品
-export const delExpActivePro = ['/operator/activityexperience/addOrModifyExperience', { methods: 'get' }];
+export const addOrModifyExperience = ['/operator/activityexperience/addOrModifyExperience', { methods: 'post' }];
 // 活动可用产品列表
 export const queryActivityProductList = ['/product/product/queryActivityProductList', { methods: 'post' }];
 // 获取优惠券信息
-export const getCouponById = ['/admin/coupon/findById', { methods: 'get' }];
+export const getCouponById = ['/coupon/findById', { methods: 'get' }];
+// 验证活动商品
+export const checkActivityProduct = ['/operator/activityExperienceProd/checkActivityProduct', { methods: 'get' }];

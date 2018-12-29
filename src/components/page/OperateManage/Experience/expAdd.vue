@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-breadcrumb :nav="['运营管理','经验值专区管理','添加活动']"></v-breadcrumb>
+        <v-breadcrumb :nav="['运营管理','经验值专区管理','添加编辑活动']"></v-breadcrumb>
 
         <el-card class="mt20">
             <div class="title">活动信息</div>
@@ -44,18 +44,18 @@
                         <el-checkbox v-model="checkCoupon">备选项</el-checkbox>
                     </label>
                     <div class="el-form-item__content" style="margin-left: 100px;">
-                        <el-input placeholder="请输入优惠券ID" v-on:change="getCoupon" v-model="form.couponId" style="width: 300px;"></el-input>
+                        <el-input placeholder="请输入优惠券ID" v-on:change="verifyCoupon" v-model="form.couponId" style="width: 300px;"></el-input>
                         <span style="color:red">无效id</span>
                         <div class="coupon-name"></div>
                         <div class="coupon-regular mt10" v-if="checkCoupon">
-                            每 <el-input style="width: 100px;" v-model="form.startPrice" :disabled="true"></el-input> 元，赠送优惠券
-                            <el-input-number
-                                :controls="false"
-                                :min="1" :precision="0"
-                                style="width: 100px;text-align: left"
-                                @change="couponCountCheck"
-                                v-model="form.startCount"
-                            ></el-input-number> 张
+                            每  <el-input style="width: 100px;" v-model="form.rules[0].startPrice" :disabled="true"></el-input> 元，赠送优惠券
+                                <el-input-number
+                                    :controls="false"
+                                    :min="1" :precision="0"
+                                    style="width: 100px;text-align: left"
+                                    @change="couponCountCheck"
+                                    v-model="form.startCount"
+                                ></el-input-number> 张
                             <div class="mt10">
                                 单笔订单最多可赠送优惠券数量
                                 <el-input-number
@@ -86,7 +86,7 @@
             </el-form>
 
             <div class="title mt20">活动商品</div>
-            <el-button type="danger" size="big" @click="addGoodDialog = true">添加商品</el-button>
+            <el-button type="danger" size="big" @click="showAddGoodDialog">添加商品</el-button>
             <el-button type="danger" size="big" @click="importDialog = true">批量导入</el-button>
 
             <el-table
@@ -94,7 +94,7 @@
                 border
                 style="width: 100%;margin-top: 20px;">
                 <el-table-column
-                    prop="date"
+                    prop="spuCode"
                     label="SPU编码"
                     width="180">
                 </el-table-column>
@@ -104,29 +104,25 @@
                     width="180">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="minPrice"
                     label="V0价">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="saleStock"
                     label="可售库存">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="productStatus"
                     label="商品状态">
                     <template slot-scope="scope">
-                        <div v-if="scope.row.status === 0">已上架</div>
-                        <div v-if="scope.row.status === 1">待上架</div>
-                        <div v-if="scope.row.status === 2">已下架</div>
-                        <div v-if="scope.row.status === 3">待发布</div>
-                        <div v-if="scope.row.status === 4">已删除</div>
-                        <div v-if="scope.row.status === 5">待审核</div>
+                        {{goodStatus[scope.row.productStatus]}}
+                        <div class="red">{{scope.row.errMsg}}</div>
                     </template>
                 </el-table-column>
                 <el-table-column
                     label="操作">
                     <template slot-scope="scope">
-                        <el-button type="primary">删除</el-button>
+                        <el-button type="primary" @click="removeSelectGoods(scope.$index, scope.row.spuCode)" v-if="selectGoods.includes(scope.row.spuCode)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -143,10 +139,7 @@
             <el-form :model="searchForm" :inline="true">
                 <el-form-item>
                     <el-select v-model="searchForm.type" placeholder="商品类型" style="width: 120px;">
-                        <el-option label="普通商品" :value="1"></el-option>
-                        <el-option label="内购商品" :value="2"></el-option>
-                        <el-option label="虚拟商品" :value="3"></el-option>
-                        <el-option label="卡券商品" :value="4"></el-option>
+                        <el-option :label="brand.value" :value="brand.key" v-for="brand in brands" :key="brand.key"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item>
@@ -165,14 +158,16 @@
                 </el-form-item>
                 <el-button type="danger" @click="getList(1)">搜索</el-button>
             </el-form>
-            <div class="dialog-body">
+            <div class="dialog-body" v-loading="searchLoading">
                 <div class="dialog-good-item" v-for="(item,index) in searchGoods" @click="toggleGoodChecked(index)">
                     <img :src="item.imgUrl || '/static/img/defaultImg.png'" alt="good img">
+                    <div class="dialog-good-name">{{item.name}}</div>
                     <div class="dialog-good-shade" v-if="item.checked">已选中</div>
                 </div>
+                <div v-if="searchGoods.length === 0">商品不存在或该商品不满足使用条件</div>
             </div>
             <div class="dialog-footer" style="text-align: left" slot="footer">
-                <el-button type="primary" @click="addGoods" size="big">确 定</el-button>
+                <el-button type="primary" @click="verifyGoods('add')" size="big">确 定</el-button>
                 <el-button @click="addGoodDialog = false" size="big">取 消</el-button>
                 <el-pagination
                     style="float: right;"
@@ -193,12 +188,25 @@
             请输入商品SPU编码，多个商品SPU编码换行输入
             <el-input type="textarea" :rows="20" v-model="importInput"></el-input>
             <div class="dialog-footer" slot="footer">
-                <el-button type="primary" @click="addGoods" size="big">确 定</el-button>
+                <el-button type="primary" @click="verifyGoods('import')" size="big">确 定</el-button>
                 <el-button @click="closeImportDialog" size="big">取 消</el-button>
             </div>
         </el-dialog>
         <!-- 批量导入E -->
 
+        <!-- 添加导入商品异常弹窗 S -->
+        <el-dialog title="商品添加失败" :visible.sync="errorDialog" center @close="closeErrorSpuGoodsDialog">
+            红字的为SPU导入失败异常原因, 关闭窗口后剔除错误商品
+            <div class="err-list">
+                <div class="err-item" v-for="item in checkActivityProductRes">
+                    <span class="err-item-code">{{item.spuCode}}</span><span class="inline red">{{item.errMsg}}</span>
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="errorDialog = false">确定</el-button>
+            </span>
+        </el-dialog>
+        <!-- 添加导入商品异常弹窗 E -->
     </div>
 </template>
 <script>
@@ -218,18 +226,36 @@
         },
         data() {
             return {
+                goodStatus: {
+                    0: '已删除',
+                    1: '待发布',
+                    2: '待审核',
+                    3: '已通过',
+                    4: '已上架',
+                    5: '已驳回',
+                    6: '已下架'
+                },
+                brands: [
+                    { key: 1, value: '普通商品' },
+                    { key: 2, value: '内购商品' },
+                    { key: 3, value: '虚拟商品' },
+                    { key: 4, value: '卡券商品' }
+                ],
                 rules: {
                     name: [{ required: true, message: '请输入活动名称', trigger: 'blur' }, { min: 1, max: 30, message: '活动名称长度在1-30之间' }],
                     time: [{ required: true, message: '请选择活动时间', trigger: 'blur' }]
                 },
+                searchLoading: false,
                 type: 'add',
                 importInput: '', // 批量导入内容
                 addGoodDialog: false, // 添加商品弹窗
                 importDialog: false, // 导入弹窗
+                errorDialog: false, // 商品添加失败弹窗
                 checkCoupon: false, // 是否选用优惠券
                 categories: [], // 一级类目
                 brandList: [], // 品牌列表
                 couponData: {}, // 输入优惠券ID并且失焦时去获取这个id的数据
+                tableData: [],
                 searchForm: {
                     type: '',
                     firstCategoryId: '',
@@ -252,43 +278,15 @@
                     startTime: '',
                     endTime: '',
                     maxCount: 0,
-                    prods: [
-                        {
-                            imgUrl: '',
-                            name: '',
-                            spuCode: '',
-                            status: 0
-                        }
-                    ],
+                    spuCodes: [],
                     startCount: 0,
                     startPrice: 0
                 },
-                searchGoods: []
+                searchGoods: [],
+                checkActivityProductRes: [], // 添加商品的校验结果
+                addGoodsList: [],
+                selectGoods: []
             };
-        },
-        computed: {
-            importList() {
-                let list = [];
-                if (this.importInput) {
-                    list = this.importInput.replace(/\r|\n|\s|\./g, ',').split(',').filter(function(item) {
-                        return item !== '';
-                    });
-                } else if (this.searchGoods.length > 0) {
-                    this.searchGoods.forEach(item => {
-                        if (item.checked) list.push(item);
-                    });
-                }
-                return list;
-            },
-            selectGoods() {
-                const arr = [];
-                this.searchGoods.forEach(item => {
-                    if (item.checked) {
-                        arr.push(item.prodCode);
-                    }
-                });
-                return arr;
-            }
         },
         methods: {
             // 添加区间
@@ -316,10 +314,12 @@
                     this.$message.warning(`第 ${index + 1} 行区间的 ${type} 不能为空`);
                     return false;
                 }
+                // 实际上el组件已做处理
                 if (val <= 0) {
                     this.$message.warning(`区间${type}必须大于0`);
                     return false;
                 }
+                // 第一个区间特殊处理
                 if (index === 0) {
                     if (rules[index + 1] && !this.compare(val, rules[index + 1][field])) {
                         this.$message.warning(`第 ${index + 2} 行区间 ${type} 必须大于第 ${index + 1} 行区间 ${type} ,请确认各个区间的 ${type} 是否正确`);
@@ -333,11 +333,16 @@
                 return true;
             },
             // 验证优惠券
-            getCoupon() {
-                console.log(this.couponData);
+            verifyCoupon() {
+                request.getCouponById({ id: this.form.couponId}).then(res => {
+                    this.couponInfo = res.data;
+                }).catch(res => {
+                    this.$message.warning(res.msg);
+                });
             },
             // 优惠券赠送数验证
             couponCountCheck() {
+                if (!this.checkCoupon) return true;
                 if (!this.form.startCount) {
                     this.form.maxCount = '';
                     this.$message.warning('请先填写满足条件赠送优惠券数');
@@ -353,23 +358,126 @@
                 }
                 return true;
             },
-            // 添加商品
-            addGoods() {
-                console.log(this.importList);
+            // 展示添加商品弹窗 如果查询结果为空 就调一次查询
+            showAddGoodDialog() {
+                this.addGoodDialog = true;
+                if (!this.searchGoods.length) {
+                    this.getList(1);
+                }
             },
+            // 关闭错误商品弹窗后剔除问题商品 同时展示没问题商品
+            closeErrorSpuGoodsDialog() {
+                const list = this.getErrorSpuGoodsList(this.checkActivityProductRes);
+                this.selectGoods = this.mergeArr(this.selectGoods, this.getImportList());
+                if (list.length) {
+                    this.selectGoods = this.selectGoods.filter((item) => {
+                        return !list.includes(item + '');
+                    });
+                }
+                this.showAddGoods(this.checkActivityProductRes);
+            },
+            // 获取不通过校验的商品列表
+            getErrorSpuGoodsList(data) {
+                const goods = data;
+                const list = [];
+                goods.forEach(item => {
+                    if (item.errMsg) {
+                        list.push(item.spuCode);
+                    }
+                });
+                return list;
+            },
+            // 合并数组(去重)
+            mergeArr(arr1, arr2) {
+                return Array.from(new Set(arr1.concat(arr2)));
+            },
+            getImportList() {
+                let imporList = [];
+                if (this.importInput) {
+                    imporList = this.importInput.replace(/\r|\n|\s|\./g, ',').split(',').filter(function(item) {
+                        return item !== '';
+                    });
+                }
+                return imporList;
+            },
+            // 选择以及批量导出的商品需要先做校验 参数用来区分是批量还是搜索的
+            verifyGoods(type) {
+                let imporList = this.getImportList();
+                const data = {
+                    activityCode: this.type === 'add' ? '' : this.form.activityCode, //  如果是添加则传空 编辑的话要带上
+                    spuCodes: type === 'add' ? this.selectGoods : imporList
+                };
+                if (!data.spuCodes.length) return this.$message.warning('请至少提供一个商品');
+                request.checkActivityProduct(data).then(res => {
+                    this.checkActivityProductRes = res.data || [];
+                    const errSpuCodes = this.getErrorSpuGoodsList(res.data);
+                    // 如果校验不通过 根据返回结果的errMsg去除不符合结果的商品
+                    if (errSpuCodes.length) {
+                        this.errorDialog = true;
+                    } else {
+                        // 校验通过后展示添加的商品
+                        this.showAddGoods(res.data);
+                    }
+                    const dialog = type === 'add' ? 'addGoodDialog' : 'importDialog';
+                    this[dialog] = false;
+                }).catch(res => {});
+            },
+            // 展示添加商品
+            showAddGoods(data) {
+                const arr = [];
+                const existProds = [];
+                this.tableData.forEach(item => {
+                    existProds.push(item.spuCode);
+                });
+                data.forEach(item => {
+                    if (!item.errMsg && !existProds.includes(item.spuCode)) {
+                        arr.push(item);
+                    }
+                });
+                this.tableData = this.tableData.concat(arr);
+            },
+            // 删除添加的产品
+            removeSelectGoods(index, spuCode) {
+                this.tableData.splice(index, 1);
+                this.selectGoods = this.selectGoods.filter(item => {
+                    return item !== spuCode;
+                });
+                this.searchGoods = [];
+            },
+            // 添加商品查询接口
             getList(page) {
                 const data = {
                     ...this.searchForm,
                     page: page,
                     pageSize: this.page.pageSize
                 };
+                this.searchLoading = true;
                 request.queryActivityProductList(data).then(res => {
-                    this.searchGoods = res.data.data;
+                    this.searchLoading = false;
+                    const data = res.data.data;
+                    data.forEach(item => {
+                        if (this.selectGoods.indexOf(item.prodCode) >= 0) {
+                            item.checked = true;
+                        }
+                    });
+                    this.searchGoods = data;
+                    this.initSelectGoods();
                     this.page.totalPage = res.data.totalNum;
                     this.page.currentPage = res.data.currentPage;
                 }).catch(res => {
+                    this.searchLoading = false;
                     this.$message.warning(res.msg);
                 });
+            },
+            // 搜索选择的商品列表
+            initSelectGoods() {
+                const arr = [];
+                this.searchGoods.forEach(item => {
+                    if (item.checked && !this.selectGoods.includes(item.prodCode)) {
+                        arr.push(item.prodCode);
+                    }
+                });
+                this.selectGoods = this.selectGoods.concat(arr);
             },
             // 获取一级类目
             getProdCatList() {
@@ -401,18 +509,19 @@
             },
             closeImportDialog() {
                 this.importDialog = false;
-                this.importInput = '';
-                this.importList = [];
             },
+            // 选中搜索商品
             toggleGoodChecked(index) {
                 this.$set(this.searchGoods[index], 'checked', !this.searchGoods[index].checked);
-                console.log(this.selectGoods);
+                this.initSelectGoods();
             },
             // 初始化接口参数
             initParams() {
                 const data = {
                     ...this.form
                 };
+                data.spuCodes = this.selectGoods;
+                data.startPrice = this.form.rules[0].startPrice;
                 const t = this.form.time;
                 if (t && t.length) {
                     data.startTime = t[0];
@@ -420,7 +529,7 @@
                 }
                 return data;
             },
-            // 校验输入内容
+            // 校验区间内容
             validateInputs() {
                 let valid = true;
                 const rules = this.form.rules;
@@ -436,7 +545,9 @@
                 this.$refs['form'].validate(valid => {
                     if (valid && this.validateInputs()) {
                         const params = this.initParams();
-                        console.log(params);
+                        request.addOrModifyExperience(params).then(res => {
+                            console.log(res);
+                        }).catch(res => {});
                     } else {
                         return false;
                     }

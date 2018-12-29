@@ -77,12 +77,7 @@
                             width="100"
                             label="商品状态">
                             <template slot-scope="scope">
-                                <div v-if="scope.row.productStatus === 0">已上架</div>
-                                <div v-if="scope.row.productStatus === 1">待上架</div>
-                                <div v-if="scope.row.productStatus === 2">已下架</div>
-                                <div v-if="scope.row.productStatus === 3">待发布</div>
-                                <div v-if="scope.row.productStatus === 4">已删除</div>
-                                <div v-if="scope.row.productStatus === 5">待审核</div>
+                                {{goodStatus[scope.row.productStatus]}}
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -128,6 +123,14 @@
         name: 'ExpAdd',
         data() {
             return {
+                goodStatus: {
+                    0: '已上架',
+                    1: '待上架',
+                    2: '已下架',
+                    3: '待发布',
+                    4: '已删除',
+                    5: '待审核'
+                },
                 loading: false,
                 tableLoading: false,
                 form: {},
