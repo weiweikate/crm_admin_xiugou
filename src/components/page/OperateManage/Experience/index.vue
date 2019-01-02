@@ -88,6 +88,7 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center" width="300">
                     <template slot-scope="scope">
+                        <!-- todo 0：删除1：未开始  2：进行中3：已结束 -->
                         <el-button type="warning" size="small" @click="showActive(scope.row)">查看</el-button>
                         <!--  活动未开始|进行中才能编辑 -->
                         <el-button type="primary" size="small" @click="editActive(scope.row)" v-if="[1,2].includes(scope.row.status)">编辑</el-button>

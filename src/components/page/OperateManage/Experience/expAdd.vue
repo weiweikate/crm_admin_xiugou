@@ -2,7 +2,7 @@
     <div>
         <v-breadcrumb :nav="['运营管理','经验值专区管理','添加编辑活动']"></v-breadcrumb>
 
-        <el-card class="mt20">
+        <el-card class="mt20" v-loading="loading">
             <div class="title">活动信息</div>
             <el-form ref="form" :model="form" label-width="100px" :rules="rules">
                 <el-form-item prop="name" label="活动名称">
@@ -44,9 +44,13 @@
                         <el-checkbox v-model="checkCoupon">备选项</el-checkbox>
                     </label>
                     <div class="el-form-item__content" style="margin-left: 100px;">
-                        <el-input placeholder="请输入优惠券ID" v-on:change="verifyCoupon" v-model="form.couponId" style="width: 300px;"></el-input>
-                        <span style="color:red">无效id</span>
-                        <div class="coupon-name"></div>
+                        <el-input placeholder="请输入优惠券ID" v-on:change="getCouponById" v-model="form.couponId" style="width: 300px;"></el-input>
+                        <span class="coupon-err" v-if="couponInfo">
+                            <span v-if="couponInfo.status === 0">已失效</span>
+                            <span v-if="couponInfo.totalNumber === 0">可发放数量不足</span>
+                        </span>
+                        <span class="coupon-err" v-else>优惠券不存在</span>
+                        <div class="coupon-name" v-if="couponInfo">{{couponInfo.name}}</div>
                         <div class="coupon-regular mt10" v-if="checkCoupon">
                             每  <el-input style="width: 100px;" v-model="form.rules[0].startPrice" :disabled="true"></el-input> 元，赠送优惠券
                                 <el-input-number
@@ -96,33 +100,61 @@
                 <el-table-column
                     prop="spuCode"
                     label="SPU编码"
+                    align="center"
                     width="180">
                 </el-table-column>
                 <el-table-column
                     prop="name"
                     label="商品名称"
+                    align="center"
                     width="180">
                 </el-table-column>
                 <el-table-column
                     prop="minPrice"
+                    align="center"
+                    width="100"
                     label="V0价">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.minPrice === scope.row.maxPrice">￥{{scope.row.minPrice || '0.00'}}</span>
+                        <span v-else>￥{{scope.row.minPrice || '0.00'}} ~ ￥{{scope.row.maxPrice || '0.00'}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="saleStock"
+                    align="center"
+                    width="100"
                     label="可售库存">
                 </el-table-column>
                 <el-table-column
                     prop="productStatus"
+                    align="center"
+                    width="120"
                     label="商品状态">
                     <template slot-scope="scope">
                         {{goodStatus[scope.row.productStatus]}}
                         <div class="red">{{scope.row.errMsg}}</div>
                     </template>
                 </el-table-column>
+                <!-- 编辑状态切活动为进行中时显示 -->
                 <el-table-column
+                    v-if="type === 'edit' && form.status === activityStatus.ing"
+                    prop="status"
+                    align="center"
+                    label="状态"
+                    width="120"
+                >
+                    <template slot-scope="scope">
+                        {{goodActiveStatus[scope.row.status]}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    align="center"
                     label="操作">
                     <template slot-scope="scope">
-                        <el-button type="primary" @click="removeSelectGoods(scope.$index, scope.row.spuCode)" v-if="selectGoods.includes(scope.row.spuCode)">删除</el-button>
+                        <!-- todo 如果是添加的商品或是编辑未开始活动(form.status = 1)的情况下展示 -->
+                        <el-button type="danger" @click="removeSelectGoods(scope.$index, scope.row.spuCode)" v-if="selectGoods.includes(scope.row.spuCode) ||  form.status === activityStatus.waiting">删除</el-button>
+                        <!-- todo 如果是活动已开始(form.status = 2) 显示停用按钮  如果已停用(0:停用，1:正常)则不允许再操作 -->
+                        <el-button type="warning" :disabled="scope.row.status === 0" @click="closeProduct(scope.row.spuCode)" v-if="showCloseBtn(scope.row.spuCode)">关闭</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -213,6 +245,7 @@
     import vBreadcrumb from '../../../common/Breadcrumb.vue';
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http';
+    import moment from 'moment';
 
     export default {
         name: 'ExpAdd',
@@ -235,6 +268,17 @@
                     5: '已驳回',
                     6: '已下架'
                 },
+                goodActiveStatus: {
+                    1: '已开启',
+                    0: '已关闭'
+                },
+                // 0：删除1：未开始  2：进行中3：已结束
+                activityStatus: {
+                    'delete': 0,
+                    'waiting': 1,
+                    'ing': 2,
+                    'end': 3
+                },
                 brands: [
                     { key: 1, value: '普通商品' },
                     { key: 2, value: '内购商品' },
@@ -246,6 +290,7 @@
                     time: [{ required: true, message: '请选择活动时间', trigger: 'blur' }]
                 },
                 searchLoading: false,
+                loading: false,
                 type: 'add',
                 importInput: '', // 批量导入内容
                 addGoodDialog: false, // 添加商品弹窗
@@ -254,8 +299,9 @@
                 checkCoupon: false, // 是否选用优惠券
                 categories: [], // 一级类目
                 brandList: [], // 品牌列表
-                couponData: {}, // 输入优惠券ID并且失焦时去获取这个id的数据
+                couponInfo: {}, // 输入优惠券ID并且失焦时去获取这个id的数据
                 tableData: [],
+                originTableSpuCodes: [],
                 searchForm: {
                     type: '',
                     firstCategoryId: '',
@@ -289,6 +335,34 @@
             };
         },
         methods: {
+            showCloseBtn(spuCode) {
+                return this.type === 'edit' && this.form.status === this.activityStatus.ing && this.originTableSpuCodes.includes(spuCode);
+            },
+            // 关闭活动商品
+            closeProduct(spuCode) {
+                this.$confirm('确定关闭该商品?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    const data = {
+                        activityCode: this.form.activityCode,
+                        spuCode: spuCode
+                    };
+                    request.closeProduct(data).then(res => {
+                        this.$message({
+                            type: 'success',
+                            message: res.msg
+                        });
+                        this.getExpActiveGoods();
+                    }).catch(res => {})
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消'
+                    });
+                });
+            },
             // 添加区间
             addRegular() {
                 if (this.form.rules.length >= 5) return this.$message.warning('区间数量已达上限');
@@ -333,8 +407,8 @@
                 return true;
             },
             // 验证优惠券
-            verifyCoupon() {
-                request.getCouponById({ id: this.form.couponId}).then(res => {
+            getCouponById() {
+                request.getCouponById({ id: this.form.couponId }).then(res => {
                     this.couponInfo = res.data;
                 }).catch(res => {
                     this.$message.warning(res.msg);
@@ -343,6 +417,10 @@
             // 优惠券赠送数验证
             couponCountCheck() {
                 if (!this.checkCoupon) return true;
+                if (!this.couponInfo) {
+                    this.$message.warning('填写的优惠券不存在');
+                    return false;
+                }
                 if (!this.form.startCount) {
                     this.form.maxCount = '';
                     this.$message.warning('请先填写满足条件赠送优惠券数');
@@ -402,10 +480,10 @@
             },
             // 选择以及批量导出的商品需要先做校验 参数用来区分是批量还是搜索的
             verifyGoods(type) {
-                let imporList = this.getImportList();
+                const importList = this.getImportList();
                 const data = {
                     activityCode: this.type === 'add' ? '' : this.form.activityCode, //  如果是添加则传空 编辑的话要带上
-                    spuCodes: type === 'add' ? this.selectGoods : imporList
+                    spuCodes: type === 'add' ? this.selectGoods : importList
                 };
                 if (!data.spuCodes.length) return this.$message.warning('请至少提供一个商品');
                 request.checkActivityProduct(data).then(res => {
@@ -512,8 +590,22 @@
             },
             // 选中搜索商品
             toggleGoodChecked(index) {
-                this.$set(this.searchGoods[index], 'checked', !this.searchGoods[index].checked);
+                const item = this.searchGoods[index];
+                this.$set(item, 'checked', !item.checked);
                 this.initSelectGoods();
+                !item.checked && this.removeGoodByCode(item.prodCode);
+            },
+            // 取消选中后删除表中对应的商品
+            removeGoodByCode(spuCode) {
+                let targetIndex = null;
+                this.tableData.forEach((item, index) => {
+                    if (item.spuCode === spuCode) {
+                        targetIndex = index;
+                    }
+                });
+                if (targetIndex) {
+                    this.tableData.splice(targetIndex, 1);
+                }
             },
             // 初始化接口参数
             initParams() {
@@ -521,6 +613,14 @@
                     ...this.form
                 };
                 data.spuCodes = this.selectGoods;
+                // todo 如果活动未开始 spuCodes未活动商品表中的所有
+                if (this.form.status === this.activityStatus.waiting) {
+                    const arr = [];
+                    this.tableData.forEach(item => {
+                        arr.push(item.spuCode);
+                    });
+                    data.spuCodes = arr;
+                }
                 data.startPrice = this.form.rules[0].startPrice;
                 const t = this.form.time;
                 if (t && t.length) {
@@ -529,13 +629,18 @@
                 }
                 return data;
             },
-            // 校验区间内容
-            validateInputs() {
+            // 校验提交参数
+            validateParams() {
                 let valid = true;
                 const rules = this.form.rules;
                 for (let i = 0, len = rules.length; i < len; i++) {
                     valid = this.rulesInputValidate(i, 'startPrice') && this.rulesInputValidate(i, 'rate');
                     if (!valid) return valid;
+                }
+                // 必须添加活动商品
+                if (!this.selectGoods.length) {
+                    this.$message.warning('请添加活动商品');
+                    return false;
                 }
                 valid = this.couponCountCheck();
                 return valid;
@@ -543,20 +648,72 @@
             // 提交添加活动
             onSubmit() {
                 this.$refs['form'].validate(valid => {
-                    if (valid && this.validateInputs()) {
+                    if (valid && this.validateParams()) {
                         const params = this.initParams();
                         request.addOrModifyExperience(params).then(res => {
-                            console.log(res);
+                            this.$message.success(res.msg);
+                            this.$router.push({ path: '/expManage' });
                         }).catch(res => {});
                     } else {
                         return false;
                     }
                 });
+            },
+            // 如果是编辑 获取经验值活动信息
+            getExpActiveDetail(activityCode) {
+                this.loading = true;
+                request.queryExpByCode({ code: activityCode }).then(res => {
+                    this.loading = false;
+                    const data = Object.assign({}, res.data);
+                    const startTime = moment(data.startTime).format('YYYY-MM-DD HH:mm:ss');
+                    const endTime = moment(data.endTime).format('YYYY-MM-DD HH:mm:ss');
+                    data.startTime = startTime;
+                    data.endTime = endTime;
+                    data.time = [startTime, endTime];
+                    this.form = data;
+                    this.tableLoading = true;
+                    this.activityCode = res.data.activityCode;
+                    // 获取优惠券信息
+                    data.couponId && this.getCouponById(data.couponId);
+                    // 获取活动商品列表
+                    this.getExpActiveGoods();
+                }).catch(res => {
+                    this.loading = false;
+                    this.$message.warning(res.msg);
+                });
+            },
+            // 获取编辑状态下的活动商品列表
+            getExpActiveGoods() {
+                const data = {
+                    activityCode: this.form.activityCode,
+                    page: 1,
+                    pageSize: 2000
+                };
+                request.queryActivityProdPageList(data).then(res => {
+                    const data = res.data.data || [];
+                    this.tableLoading = false;
+                    this.tableData = data;
+                    const codes = [];
+                    data.forEach(item => {
+                        codes.push(item.spuCode);
+                    });
+                    this.originTableSpuCodes = codes;
+                }).catch(res => {
+                    this.tableLoading = false;
+                    this.$message.warning(res.msg);
+                });
             }
         },
         mounted() {
             const type = this.$route.query.type;
+            const activityCode = this.$route.query.id;
             this.type = type || 'add';
+
+            // 获取编辑信息
+            if (type === 'edit') {
+                if (!activityCode || activityCode === 'undefined' || activityCode === 'null') return this.$message.warning('错误的活动id');
+                this.getExpActiveDetail(activityCode);
+            }
             this.getProdCatList();
             this.getProductBrandList();
         },

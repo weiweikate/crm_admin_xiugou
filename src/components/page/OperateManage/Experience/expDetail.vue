@@ -56,8 +56,8 @@
                             width="100"
                             label="V0价">
                             <template slot-scope="scope">
-                                <span v-if="scope.row.minPrice === scope.row.maxPrice">{{scope.row.minPrice}}</span>
-                                <span v-else>{{scope.row.minPrice}} ~ {{scope.row.maxPrice}}</span>
+                                <span v-if="scope.row.minPrice === scope.row.maxPrice">￥{{scope.row.minPrice || '0.00'}}</span>
+                                <span v-else>￥{{scope.row.minPrice || '0.00'}} ~ ￥{{scope.row.maxPrice || '0.00'}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -85,8 +85,7 @@
                             width="100"
                             label="状态">
                             <template slot-scope="scope">
-                                <div v-if="scope.row.status === 0">开启</div>
-                                <div v-if="scope.row.status === 1">删除</div>
+                                {{goodActiveStatus[scope.row.status]}}
                             </template>
                         </el-table-column>
                     </el-table>
@@ -124,12 +123,17 @@
         data() {
             return {
                 goodStatus: {
-                    0: '已上架',
-                    1: '待上架',
-                    2: '已下架',
-                    3: '待发布',
-                    4: '已删除',
-                    5: '待审核'
+                    0: '已删除',
+                    1: '待发布',
+                    2: '待审核',
+                    3: '已通过',
+                    4: '已上架',
+                    5: '已驳回',
+                    6: '已下架'
+                },
+                goodActiveStatus: {
+                    1: '已开启',
+                    0: '已关闭'
                 },
                 loading: false,
                 tableLoading: false,

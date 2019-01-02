@@ -203,3 +203,5 @@ export const queryActivityProductList = ['/product/product/queryActivityProductL
 export const getCouponById = ['/coupon/findById', { methods: 'get' }];
 // 验证活动商品
 export const checkActivityProduct = ['/operator/activityExperienceProd/checkActivityProduct', { methods: 'get' }];
+// 关闭活动商品
+export const closeProduct = ['/operator/activityExperienceProd/closeProduct', { methods: 'get' }];
