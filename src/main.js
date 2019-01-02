@@ -84,7 +84,7 @@ Vue.directive('auth', {
         }
         // 解决权限模块闪现问题
         try {
-            el.style.display = 'none';
+            el.style.opacity = '0';
         } catch (e) {
             console.log(e);
         }
@@ -101,7 +101,7 @@ Vue.directive('auth', {
         } else {
             setTimeout(function () {
                 try {
-                    el.style.display = 'block';
+                    el.style.opacity = '1';
                 } catch (e) {
                     console.log(e);
                 }
