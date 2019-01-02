@@ -306,6 +306,10 @@ export default {
             });
         },
         // 提交
+        // orderCustomerServiceInfo.type 订单类型 1仅退款 2退货退款 3换货
+        // orderCustomerServiceInfo.status 售后状态 1待审核 3待仓库确认 4待平台处理
+        // type 售后类型 1换货 2退货退款
+        // result 售后处理结果 1审核通过 2审核驳回
         submit(formName) {
             let url = '';
             const data = this.form;
@@ -320,7 +324,7 @@ export default {
             }
             if (this.orderCustomerServiceInfo.type !== 1 && this.orderCustomerServiceInfo.status === 1) {
                 // 待审核
-                if (this.form.result === 1) {
+                if (this.form.result === '1') {
                     // 审核通过
                     url = 'agreeApply';
                     if (!this.supplierRefundAddress.receiver || !this.supplierRefundAddress.receiverPhone || !this.supplierRefundAddress.address) {
@@ -330,22 +334,16 @@ export default {
                     // 审核驳回
                     url = 'refuse';
                 }
-                // if (this.orderInfo.warehouseType == 3 && !this.form.address) {
-                //     return this.$message.warning('请选择退货地址');
-                // }
-                // if (this.form.address == 1) {
-                //     data.warehouseCode = this.orderCustomerServiceInfo.warehouseCode;
-                // }
             } else {
                 // 待平台处理
                 if (this.orderCustomerServiceInfo.type === 1 || this.orderCustomerServiceInfo.type === 2) {
-                    if (this.form.result === 2) {
+                    if (this.form.result === '2') {
                         url = 'refuse';
                     } else {
                         url = 'refundAmounts';
                     }
                 } else {
-                    if (this.form.result === 2) {
+                    if (this.form.result === '2') {
                         url = 'refuse';
                     } else {
                         if (this.checked) {
@@ -354,7 +352,7 @@ export default {
                         if (!this.form.type) {
                             return this.$message.warning('请选择售后类型');
                         }
-                        if (this.form.type === 1) {
+                        if (this.form.type === '1') {
                             url = 'agreeExchange';
                             if (data.warehouseType === 4 && (!data.expressNo || !data.expressCode)) {
                                 return this.$message.warning('请输入完整的物流信息');
