@@ -1508,7 +1508,7 @@ export const asyncRouterMap = [
                 hidden: true,
                 name: 'expAddOrEdit',
                 path: '/expAddOrEdit',
-                component: resolve => require(['../components/page/OperateManage/Experience/expAdd.vue'], resolve),
+                component: resolve => require(['../components/page/OperateManage/Experience/expAddOrEdit.vue'], resolve),
                 meta: { title: '经验值活动添加编辑', 'noKeepAlive': true }
             },
             {

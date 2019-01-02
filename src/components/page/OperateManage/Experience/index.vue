@@ -69,10 +69,7 @@
                 </el-table-column>
                 <el-table-column prop="status" label="活动状态" width="100" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.status === 0">删除</template>
-                        <template v-if="scope.row.status === 1">未开始</template>
-                        <template v-if="scope.row.status === 2">进行中</template>
-                        <template v-if="scope.row.status === 3">已结束</template>
+                        {{activeStatus[scope.row.status]}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="createTime" label="创建时间" width="150" align="center">
@@ -133,6 +130,12 @@
         mixins: [myMixinTable],
         data() {
             return {
+                activeStatus: {
+                    0: '删除',
+                    1: '未开始',
+                    2: '进行中',
+                    3: '已结束'
+                },
                 tableLoading: false,
                 tableData: [],
                 form: {

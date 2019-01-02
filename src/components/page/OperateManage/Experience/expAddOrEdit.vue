@@ -95,6 +95,7 @@
 
             <el-table
                 :data="tableData"
+                v-loading="tableLoading"
                 border
                 style="width: 100%;margin-top: 20px;">
                 <el-table-column
@@ -126,6 +127,13 @@
                     label="可售库存">
                 </el-table-column>
                 <el-table-column
+                    v-if="form.status === activityStatus.ing"
+                    prop="saleNum"
+                    align="center"
+                    width="100"
+                    label="销量">
+                </el-table-column>
+                <el-table-column
                     prop="productStatus"
                     align="center"
                     width="120"
@@ -144,7 +152,7 @@
                     width="120"
                 >
                     <template slot-scope="scope">
-                        {{goodActiveStatus[scope.row.status]}}
+                        {{goodActiveStatus[scope.row.status] || '已开启'}}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -534,7 +542,7 @@
                     this.searchLoading = false;
                     const data = res.data.data;
                     data.forEach(item => {
-                        if (this.selectGoods.indexOf(item.prodCode) >= 0) {
+                        if (this.selectGoods.includes(item.prodCode)) {
                             item.checked = true;
                         }
                     });
@@ -613,7 +621,7 @@
                     ...this.form
                 };
                 data.spuCodes = this.selectGoods;
-                // todo 如果活动未开始 spuCodes未活动商品表中的所有
+                // todo 如果活动未开始 spuCodes为活动商品表中的所有 否则的话就是添加的部分
                 if (this.form.status === this.activityStatus.waiting) {
                     const arr = [];
                     this.tableData.forEach(item => {
@@ -638,7 +646,7 @@
                     if (!valid) return valid;
                 }
                 // 必须添加活动商品
-                if (!this.selectGoods.length) {
+                if (!this.tableData.length) {
                     this.$message.warning('请添加活动商品');
                     return false;
                 }
