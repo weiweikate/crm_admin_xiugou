@@ -74,7 +74,7 @@
                     </div>
                 </div>
             </div>
-            <div style="margin-top: 50px" v-if="orderCustomerServiceInfo.status==4||orderCustomerServiceInfo.status==5">
+            <div style="margin-top: 50px" v-if="(orderCustomerServiceInfo.status==4||orderCustomerServiceInfo.status==5)&&(orderCustomerServiceInfo.refundWarehouseFeedback||orderCustomerServiceInfo.sendWarehouseFeedback)">
                 <div class="title">仓库反馈</div>
                 <div class="item" v-if="orderCustomerServiceInfo.refundWarehouseFeedback">
                     <span>退货仓反馈</span>
