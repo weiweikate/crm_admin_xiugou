@@ -97,7 +97,7 @@ export const findFreightTemplateById = ['/product/freightTemplate/findById', { m
 // 根据分区获取省市区
 export const getProvinceListGroupByDistrict = ['/config/sysArea/getProvinceListGroupByDistrict', { methods: 'get' }];
 // 删除运费模板接口
-export const deleteFreightTemplateById = ['/product/freightTemplate/deleteById', { methods: 'get' }];
+export const deleteFreightTemplateById = ['/product/freightTemplate/updateById', { methods: 'get' }];
 
 // 品牌管理
 // 产品品牌列表

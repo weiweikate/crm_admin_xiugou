@@ -12,7 +12,7 @@
                             <span class="name">{{v.name}}<span v-if="v.hasExemption==1">（已指定条件包邮）</span></span>
                         </td>
                         <td colspan="3" class="right">
-                            <span>{{v.createAdmin}}</span>
+                            <span>{{v.adminName}}</span>
                             <span class="time">更新于 {{v.updateTime|formatDateAll}}</span>
                             <el-button type="primary" v-if="v.status==0" @click="openOrClose(v.id,0)">启用</el-button>
                             <el-button type="danger" v-if="v.status==1" @click="openOrClose(v.id,1)">停用</el-button>
@@ -20,25 +20,32 @@
                             <el-button type="warning" @click="delItem(v.id)">删除</el-button>
                         </td>
                     </tr>
-                    <tr class="table-header">
-                        <td>配送地址</td>
-                        <td>{{tableHeader[v.calcType-1].unit}}</td>
-                        <td>首费(元)</td>
-                        <td>{{tableHeader[v.calcType-1].nextUnit}}</td>
-                        <td>续费(元)</td>
-                    </tr>
-                    <tr v-for="(v1,k1) in v.freightTemplateInfoList" :key="k1">
-                        <td class="city">
-                            <div v-for="(v2,k2) in v1.freightTemplateInfoDetailList" :key="k2">
-                                <span>{{v2.provinceName}}:</span>
-                                <span>{{v2.cityNames}}</span>
-                            </div>
-                        </td>
-                        <td>{{v1.startUnit}}</td>
-                        <td>{{v1.startPrice}}</td>
-                        <td>{{v1.nextUnit}}</td>
-                        <td>{{v1.nextPirce}}</td>
-                    </tr>
+                    <template v-if="v.freightType==2">
+                        <tr>
+                            <td colspan="5">平台承担运费</td>
+                        </tr>
+                    </template>
+                    <template v-else>
+                        <tr class="table-header">
+                            <td>配送地址</td>
+                            <td>{{tableHeader[v.calcType-1].unit}}</td>
+                            <td>首费(元)</td>
+                            <td>{{tableHeader[v.calcType-1].nextUnit}}</td>
+                            <td>续费(元)</td>
+                        </tr>
+                        <tr v-for="(v1,k1) in v.freightTemplateInfoList" :key="k1">
+                            <td>
+                                <div class="city" v-for="(v2,k2) in v1.freightTemplateInfoDetailList" :key="k2" :title="v2.cityNames">
+                                    <span>{{v2.provinceName}}</span>
+                                    <span v-if="v2.provinceName!='中国'">:{{v2.cityNames}}</span>
+                                </div>
+                            </td>
+                            <td>{{v1.startUnit}}</td>
+                            <td>{{v1.startPrice}}</td>
+                            <td>{{v1.nextUnit}}</td>
+                            <td>{{v1.nextPirce}}</td>
+                        </tr>
+                    </template>
                 </table>
                 <div class="block">
                     <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
@@ -47,13 +54,13 @@
             </template>
         </div>
         <!--删除弹窗-->
-        <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
+        <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' :status='-1' v-if="isShowDelToast"></delete-toast>
         <!-- 停用启用修改弹窗 -->
         <el-dialog title="温馨提示" :visible.sync="tipMask">
             <div class="tip-content">
                 <div class="tip-info">{{tipInfo[index]}}</div>
                 <div>
-                    <el-button type="primary" @click="sure">确认</el-button>
+                    <el-button type="primary" :loading="btnLoading" @click="sure">确认</el-button>
                     <el-button type="success" @click="tipMask=false">取消</el-button>
                 </div>
             </div>
@@ -98,10 +105,11 @@ export default {
                 { id: 3, name: '名字3', type: 1, adminName: 'cc', updateTime: 15000000000, status: 1, style: 2, freightList: [{ city: '中国', unit: 1, unitPrice: 1, nextUnit: 1, nextUnitPrice: 1 }, { city: '杭州市', unit: 1, unitPrice: 10, nextUnit: 1, nextUnitPrice: 8 }] }
             ], */
             tableHeader: [{ unit: '首重(kg)', nextUnit: '续重(kg)' }, { unit: '首体积(m³)', nextUnit: '续体积(m³)' }, { unit: '首件(件)', nextUnit: '续件(件)' }],
-            tipInfo: ['确认停用？', '确认启用？', '存在商品使用该运费模板，调整后立即生效'],
+            tipInfo: ['确认启用？', '确认停用？', '存在商品使用该运费模板，调整后立即生效'],
             index: 0,
             tipMask: false,
-            id: ''
+            id: '',
+            btnLoading: false
         };
     },
     created() {},
@@ -162,6 +170,7 @@ export default {
         },
         // 停用启用
         openOrClose(id, index) {
+            this.id = id;
             this.index = index;
             this.tipMask = true;
         },
@@ -171,13 +180,30 @@ export default {
                 // 修改
                 this.toEditPage(this.id);
             } else {
-                console.log(111)
+                const data = {
+                    id: this.id,
+                    status: 1-this.index
+                };
+                this.btnLoading = true;
+                request
+                    .deleteFreightTemplateById(data)
+                    .then(res => {
+                        this.$message.success(res.msg);
+                        this.getList(this.page.currentPage);
+                        this.tipMask = false;
+                        this.btnLoading = false;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        this.tipMask = false;
+                        this.btnLoading = false;
+                    });
             }
         },
         // 跳转到编辑页面
         toEditPage(id) {
             sessionStorage.setItem('templateId', id);
-            this.$router.push({ path: '/editTemplate', query: { templateId: id }});
+            this.$router.push({ path: '/editTemplate', query: { templateId: id } });
         }
     }
 };
@@ -254,7 +280,7 @@ export default {
         color: #606266;
         border: 1px solid #ebeef5;
         border-collapse: collapse;
-        margin-bottom: 20px;
+        margin-bottom: 50px;
         line-height: 23px;
         td {
             border: 1px solid #ebeef5;
@@ -286,7 +312,10 @@ export default {
             }
         }
         .city {
-            width: 600px;
+            width: 500px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     }
 }

@@ -100,11 +100,11 @@ export default {
             const tempCityNames = [];
             data.forEach((v, k) => {
                 if (v.provinceName !== '中国') {
-                    tempProvinceCodes.push(v.provinceCode);
+                    tempProvinceCodes.push(this.numberToString(v.provinceCode));
                     v.cityCodes = this.stringToArray(v.cityCodes);
                     v.cityNames = this.stringToArray(v.cityNames);
                     v.cityCodes.forEach((v1, k1) => {
-                        tempCityCodes.push(v1);
+                        tempCityCodes.push(this.numberToString(v1));
                         tempCityNames.push(v.cityNames[k1]);
                     });
                 }
@@ -149,7 +149,7 @@ export default {
                             const tempCode = this.numberToString(res.data[i][j].code);
                             // 数据回显
                             for (const a in that.allChooseData) {
-                                if (that.allChooseData[a].provinceCode === tempCode) {
+                                if (this.numberToString(that.allChooseData[a].provinceCode) === tempCode) {
                                     tempProvinceCheck.isChecked = true;
                                     tempProvinceCheck.cityCodes = that.allChooseData[a].cityCodes;
                                     tempProvinceCheck.cityNames = that.allChooseData[a].cityNames;
@@ -160,7 +160,7 @@ export default {
                                         }
                                     } else {
                                         for (const p in that.preChooseData) {
-                                            if (that.preChooseData[p].provinceCode === tempCode) {
+                                            if (this.numberToString(that.preChooseData[p].provinceCode) === tempCode) {
                                                 if (that.preChooseData[p].cityCodes.length < that.allChooseData[a].cityCodes.length) {
                                                     tempProvinceCheck.isDisabled = true;
                                                 }
