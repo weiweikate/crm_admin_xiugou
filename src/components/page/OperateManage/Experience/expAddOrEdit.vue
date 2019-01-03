@@ -615,8 +615,12 @@
             toggleGoodChecked(index) {
                 const item = this.searchGoods[index];
                 this.$set(item, 'checked', !item.checked);
-                this.initSelectGoods();
-                !item.checked && this.removeGoodByCode(item.prodCode);
+                if (!item.checked) {
+                    this.selectGoods.splice(this.selectGoods.indexOf(item.prodCode), 1);
+                    this.removeGoodByCode(item.prodCode);
+                } else {
+                    this.initSelectGoods();
+                }
             },
             // 取消选中后删除表中对应的商品
             removeGoodByCode(spuCode) {
@@ -626,7 +630,7 @@
                         targetIndex = index;
                     }
                 });
-                if (targetIndex >= 0) {
+                if (targetIndex !== null && targetIndex >= 0) {
                     this.tableData.splice(targetIndex, 1);
                 }
             },
