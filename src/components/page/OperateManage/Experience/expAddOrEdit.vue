@@ -108,7 +108,7 @@
                     prop="name"
                     label="商品名称"
                     align="center"
-                    width="180">
+                    width="250">
                 </el-table-column>
                 <el-table-column
                     prop="minPrice"
@@ -160,7 +160,7 @@
                     label="操作">
                     <template slot-scope="scope">
                         <!-- todo 如果是添加的商品或是编辑未开始活动(form.status = 1)的情况下展示 -->
-                        <el-button type="danger" @click="removeSelectGoods(scope.$index, scope.row.spuCode)" v-if="selectGoods.includes(scope.row.spuCode) ||  form.status === activityStatus.waiting">删除</el-button>
+                        <el-button type="danger" @click="removeSelectGoods(scope.$index, scope.row.spuCode)" v-if="showDelBtn(scope.row.spuCode)">删除</el-button>
                         <!-- todo 如果是活动已开始(form.status = 2) 显示停用按钮  如果已停用(0:停用，1:正常)则不允许再操作 -->
                         <el-button type="warning" :disabled="scope.row.status === 0" @click="closeProduct(scope.row.spuCode)" v-if="showCloseBtn(scope.row.spuCode)">关闭</el-button>
                     </template>
@@ -346,6 +346,9 @@
             showCloseBtn(spuCode) {
                 return this.type === 'edit' && this.form.status === this.activityStatus.ing && this.originTableSpuCodes.includes(spuCode);
             },
+            showDelBtn(spuCode) {
+                return this.selectGoods.includes(spuCode) || this.form.status === this.activityStatus.waiting;
+            },
             // 关闭活动商品
             closeProduct(spuCode) {
                 this.$confirm('确定关闭该商品?', '提示', {
@@ -363,7 +366,7 @@
                             message: res.msg
                         });
                         this.getExpActiveGoods();
-                    }).catch(res => {})
+                    }).catch(res => {});
                 }).catch(() => {
                     this.$message({
                         type: 'info',
@@ -520,7 +523,8 @@
                         arr.push(item);
                     }
                 });
-                this.tableData = this.tableData.concat(arr);
+                // 新增的放前面
+                this.tableData = arr.concat(this.tableData);
             },
             // 删除添加的产品
             removeSelectGoods(index, spuCode) {
@@ -537,12 +541,16 @@
                     page: page,
                     pageSize: this.page.pageSize
                 };
+                // 活动进行中传活动code可以筛除已有的商品
+                if (this.form.status === this.activityStatus.ing) {
+                    data.activityCode = this.form.activityCode || '';
+                }
                 this.searchLoading = true;
                 request.queryActivityProductList(data).then(res => {
                     this.searchLoading = false;
                     const data = res.data.data;
                     data.forEach(item => {
-                        if (this.selectGoods.includes(item.prodCode)) {
+                        if (this.selectGoods.includes(item.prodCode) || this.originTableSpuCodes.includes(item.prodCode)) {
                             item.checked = true;
                         }
                     });
@@ -658,10 +666,14 @@
                 this.$refs['form'].validate(valid => {
                     if (valid && this.validateParams()) {
                         const params = this.initParams();
+                        this.loading = true;
                         request.addOrModifyExperience(params).then(res => {
+                            this.loading = false;
                             this.$message.success(res.msg);
                             this.$router.push({ path: '/expManage' });
-                        }).catch(res => {});
+                        }).catch(res => {
+                            this.loading = false;
+                        });
                     } else {
                         return false;
                     }

@@ -80,6 +80,12 @@ export const asyncRouterMap = [
                 meta: { title: '供应商管理' }
             },
             {
+                name: 'expList',
+                path: '/expList',
+                component: resolve => require(['../components/page/MemberManage/expList.vue'], resolve),
+                meta: { title: '经验值列表' }
+            },
+            {
                 hidden: true,
                 name: 'accountRecharge',
                 path: '/accountRecharge',
@@ -894,6 +900,13 @@ export const asyncRouterMap = [
                 path: '/showMsg',
                 component: resolve => require(['../components/page/MemberManage/MemberManage/showMsg.vue'], resolve),
                 meta: { title: '店铺信息' }
+            },
+            {
+                hidden: true,
+                name: 'memberExp',
+                path: '/memberExp',
+                component: resolve => require(['../components/page/MemberManage/MemberManage/MemberExp.vue'], resolve),
+                meta: { title: '经验值查看' }
             },
             {
                 hidden: true,

@@ -52,6 +52,11 @@
                 <el-table-column label="授权层级" align="center">
                     <template slot-scope="scope" v-if="scope.row.level !== null && scope.row.level !== undefined">{{`v${scope.row.level}`}}</template>
                 </el-table-column>
+                <el-table-column label="当前经验值" align="center" prop="experience" width="100">
+                    <template slot-scope="scope">
+                        <router-link :to="`/memberExp?code=${scope.row.code}`">{{scope.row.experience || 0}}</router-link>
+                    </template>
+                </el-table-column>
                 <!--<el-table-column prop="day_count" label="本日登录" align="center"></el-table-column>-->
                 <!--<el-table-column prop="month_count" label="本月登录" align="center"></el-table-column>-->
                 <el-table-column label="最近登录时间" align="center">
