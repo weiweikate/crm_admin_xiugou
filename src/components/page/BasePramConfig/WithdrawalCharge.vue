@@ -72,7 +72,7 @@ export default {
             const data = {
                 codes: 'service_charge,min_balance,when_less_than_balance,case_service_charge'
             };
-            request.queryConfig(data).then(res => {
+            request.queryWithdrawConfigMsg(data).then(res => {
                 this.pageLoading = false;
                 res.data.forEach(v => {
                     if (v.code == 'service_charge') {
@@ -145,7 +145,7 @@ export default {
                 ]
             };
             this.btnLoading = true;
-            request.addOrModifyList(data).then(res => {
+            request.saveWithdrawConfigMsg(data).then(res => {
                 this.$message.success(res.msg);
                 this.btnLoading = false;
             }).catch(err => {
