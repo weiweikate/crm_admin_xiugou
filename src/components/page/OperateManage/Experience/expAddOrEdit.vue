@@ -37,7 +37,7 @@
                 </el-form-item>
 
                 <!-- 可选是否赠送优惠券S -->
-                <div class="el-form-item el-form-item--small">
+                <div class="el-form-item el-form-item--small" v-loading="couponLoading">
                     <label
                         class="el-form-item__label"
                         style="width: 100px;">
@@ -82,8 +82,8 @@
                     <el-date-picker
                         v-model="form.time"
                         type="datetimerange"
-                        format="yyyy-MM-dd HH:mm:ss"
                         value-format="yyyy-MM-dd HH:mm:ss"
+                        :default-time="['00:00:00', '23:59:59']"
                     >
                     </el-date-picker>
                 </el-form-item>
@@ -177,18 +177,21 @@
         <el-dialog title="选择商品" :visible.sync="addGoodDialog" custom-class="add-goods-dialog" center>
 
             <el-form :model="searchForm" :inline="true">
-                <el-form-item>
+                <el-form-item label="商品类型">
                     <el-select v-model="searchForm.type" placeholder="商品类型" style="width: 120px;">
+                        <el-option label="全部" value="">全部</el-option>
                         <el-option :label="brand.value" :value="brand.key" v-for="brand in brands" :key="brand.key"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item>
+                <el-form-item label="一级分类">
                     <el-select v-model="searchForm.firstCategoryId" placeholder="一级分类" style="width: 120px;">
+                        <el-option label="全部" value="">全部</el-option>
                         <el-option :label="cat.name" :value="cat.id" v-for="cat in categories" :key="cat.id"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item>
+                <el-form-item label="品牌">
                     <el-select v-model="searchForm.brandId" placeholder="品牌" style="width: 120px;">
+                        <el-option label="全部" value="">全部</el-option>
                         <el-option :label="brand.name" :value="brand.id" v-for="brand in brandList" :key="brand.id"></el-option>
                     </el-select>
                 </el-form-item>
@@ -204,7 +207,7 @@
                     <div class="dialog-good-name">{{item.name}}</div>
                     <div class="dialog-good-shade" v-if="item.checked">已选中</div>
                 </div>
-                <div v-if="searchGoods.length === 0">商品不存在或该商品不满足使用条件</div>
+                <div v-if="searchGoods.length === 0">空空如也~</div>
             </div>
             <div class="dialog-footer" style="text-align: left" slot="footer">
                 <el-button type="primary" @click="verifyGoods('add')" size="big">确 定</el-button>
@@ -298,6 +301,7 @@
                     time: [{ required: true, message: '请选择活动时间', trigger: 'blur' }]
                 },
                 searchLoading: false,
+                couponLoading: false,
                 loading: false,
                 type: 'add',
                 importInput: '', // 批量导入内容
@@ -419,9 +423,12 @@
             },
             // 验证优惠券
             getCouponById() {
+                this.couponLoading = true;
                 request.getCouponById({ id: this.form.couponId }).then(res => {
+                    this.couponLoading = false;
                     this.couponInfo = res.data;
                 }).catch(res => {
+                    this.couponLoading = false;
                     this.$message.warning(res.msg);
                 });
             },

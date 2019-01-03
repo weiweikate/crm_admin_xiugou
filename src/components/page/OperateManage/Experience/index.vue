@@ -10,20 +10,17 @@
                     <el-form-item prop="status" label="活动状态">
                         <el-select v-model="form.status" placeholder="全部">
                             <el-option label="全部" value="">全部</el-option>
-                            <el-option label="删除" :value="0">删除</el-option>
-                            <el-option label="未开始" :value="1">未开始</el-option>
-                            <el-option label="进行中" :value="2">进行中</el-option>
-                            <el-option label="已结束" :value="3">已结束</el-option>
+                            <el-option :label="value" :value="key" v-for="(value, key) in activeStatus" :key="key">{{value}}</el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item prop="activeTime" label="活动时间" label-width="120">
                         <el-date-picker
                             v-model="form.activeTime"
                             type="datetimerange"
-                            format="yyyy-MM-dd"
-                            value-format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd HH:mm:ss"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
+                            :default-time="['00:00:00', '23:59:59']"
                         >
                         </el-date-picker>
                     </el-form-item>
@@ -34,10 +31,10 @@
                         <el-date-picker
                             v-model="form.updateTime"
                             type="datetimerange"
-                            format="yyyy-MM-dd"
-                            value-format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd HH:mm:ss"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
+                            :default-time="['00:00:00', '23:59:59']"
                         >
                         </el-date-picker>
                     </el-form-item>
@@ -131,7 +128,6 @@
         data() {
             return {
                 activeStatus: {
-                    0: '删除',
                     1: '未开始',
                     2: '进行中',
                     3: '已结束'
