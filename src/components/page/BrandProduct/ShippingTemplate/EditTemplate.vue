@@ -1,6 +1,6 @@
 <template>
     <div class="shipping">
-        <v-breadcrumb :nav="['品牌产品管理','运费模板','添加模板']"></v-breadcrumb>
+        <v-breadcrumb :nav="['物流管理','运费模板','编辑模板']"></v-breadcrumb>
         <div class="container">
             <div class="shipping-box">
                 <el-form :model="form" ref="form" :rules="rules">
@@ -161,7 +161,7 @@ export default {
                 hasExemption: '1',
                 freight: '1'
             },
-            freightType: '1', // 初始是否包邮
+            freightType: '0', // 初始是否包邮
             tableIndex: 0,
             btnLoading: false,
             // 表头根据计费方式变化
@@ -170,7 +170,7 @@ export default {
             conditionSetting: [[{ value: 1, label: '重量' }, { value: 2, label: '金额' }, { value: 3, label: '重量+金额' }], [{ value: 1, label: '件数' }, { value: 2, label: '金额' }, { value: 3, label: '件数+金额' }]],
             units: ['kg', '件'],
             // 运费计算表格数据
-            freightTemplateInfoList: [{ freightTemplateInfoDetailList: [{ provinceName: '中国', provinceCode: '-1' }], startUnit: '', startPrice: '', nextUnit: '', nextPirce: '' }],
+            freightTemplateInfoList: [{ freightTemplateInfoDetailList: [{ provinceName: '中国', provinceCode: -1 }], startUnit: '', startPrice: '', nextUnit: '', nextPirce: '' }],
             // 指定条件包邮表格数据
             conditionInfos: [],
             rows: [0, -1],
@@ -180,7 +180,7 @@ export default {
             isNozeroNumber: regExpConfig.isNozeroNumber // 正整数
         };
     },
-    mounted() {
+    created() {
         this.id = this.$route.query.templateId || sessionStorage.getItem('templateId');
         this.getDetail();
     },
@@ -198,24 +198,30 @@ export default {
                     this.form = res.data;
                     this.form.calcType = this.numberToString(this.form.calcType);
                     this.form.freightType = this.numberToString(this.form.freightType);
-                    this.form.status = this.numberToString(this.form.status);
+                    this.form.status = res.data.status === 1 ? '1' : '0';
                     this.form.hasExemption = this.numberToString(this.form.hasExemption);
                     this.form.freight = this.numberToString(this.form.freight);
-                    res.data.freightTemplateInfoList.forEach((v, k) => {
-                        v.freightTemplateInfoDetailList.forEach((v1, k1) => {
-                            if (v1.provinceCode !== '-1') {
-                                v1.tableData = v1.provinceName + ':' + v1.cityNames;
-                            }
-                        });
-                    });
-                    this.freightTemplateInfoList = res.data.freightTemplateInfoList;
-                    res.data.conditionInfos.forEach((v, k) => {
-                        v.freightTemplateInfoDetailList.forEach((v1, k1) => {
-                            v1.tableData = v1.provinceName + ':' + v1.cityNames;
-                        });
-                    });
-                    this.conditionInfos = res.data.conditionInfos;
+
                     this.form.freight = 1;
+                    if (this.form.freightType === '1') {
+                        this.freightType = 1;
+                        res.data.freightTemplateInfoList.forEach((v, k) => {
+                            v.freightTemplateInfoDetailList.forEach((v1, k1) => {
+                                if (v1.provinceCode !== '-1') {
+                                    v1.tableData = v1.provinceName + ':' + v1.cityNames;
+                                }
+                            });
+                        });
+                        this.freightTemplateInfoList = res.data.freightTemplateInfoList;
+                    }
+                    if (this.form.hasExemption === '1') {
+                        res.data.conditionInfos.forEach((v, k) => {
+                            v.freightTemplateInfoDetailList.forEach((v1, k1) => {
+                                v1.tableData = v1.provinceName + ':' + v1.cityNames;
+                            });
+                        });
+                        this.conditionInfos = res.data.conditionInfos;
+                    }
                 })
                 .catch(err => {
                     console.log(err);
@@ -287,7 +293,7 @@ export default {
         // 切换计费方式,表格数据清空
         changeCalcType() {
             this.conditionInfos = [];
-            this.freightTemplateInfoList = [{ freightTemplateInfoDetailList: [{ provinceName: '中国', provinceCode: '-1', type: 0 }], startUnit: '', startPrice: '', nextUnit: '', nextPirce: '' }];
+            this.freightTemplateInfoList = [{ freightTemplateInfoDetailList: [{ provinceName: '中国', provinceCode: -1, type: 0 }], startUnit: '', startPrice: '', nextUnit: '', nextPirce: '' }];
             this.tableIndex = 0;
             this.rows = [0, -1];
         },

@@ -520,7 +520,7 @@ export default {
         background-color: rgba(0, 0, 0, 0.2);
         .box {
             position: relative;
-            width: 870px;
+            width: 800px;
             background-color: #fff;
             border-radius: 10px;
             overflow: hidden;
