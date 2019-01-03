@@ -14,7 +14,7 @@
                         <td colspan="3" class="right">
                             <span>{{v.adminName}}</span>
                             <span class="time">更新于 {{v.updateTime|formatDateAll}}</span>
-                            <el-button type="primary" v-if="v.status==0" @click="openOrClose(v.id,0)">启用</el-button>
+                            <el-button type="primary" v-if="v.status==2" @click="openOrClose(v.id,0)">启用</el-button>
                             <el-button type="danger" v-if="v.status==1" @click="openOrClose(v.id,1)">停用</el-button>
                             <el-button type="success" @click="editItem(v.id,v.num,2)">修改</el-button>
                             <el-button type="warning" @click="delItem(v.id)">删除</el-button>
@@ -54,7 +54,7 @@
             </template>
         </div>
         <!--删除弹窗-->
-        <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' :status='-1' v-if="isShowDelToast"></delete-toast>
+        <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' :status='0' v-if="isShowDelToast"></delete-toast>
         <!-- 停用启用修改弹窗 -->
         <el-dialog title="温馨提示" :visible.sync="tipMask">
             <div class="tip-content">
@@ -182,7 +182,7 @@ export default {
             } else {
                 const data = {
                     id: this.id,
-                    status: 1-this.index
+                    status: 1 + this.index
                 };
                 this.btnLoading = true;
                 request
@@ -203,7 +203,7 @@ export default {
         // 跳转到编辑页面
         toEditPage(id) {
             sessionStorage.setItem('templateId', id);
-            this.$router.push({ path: '/editTemplate', query: { templateId: id } });
+            this.$router.push({ path: '/editTemplate', query: { templateId: id }});
         }
     }
 };

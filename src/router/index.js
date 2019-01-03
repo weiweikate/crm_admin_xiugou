@@ -704,14 +704,14 @@ export const asyncRouterMap = [
                 name: 'addTemplate',
                 path: '/addTemplate',
                 component: resolve => require(['../components/page/BrandProduct/ShippingTemplate/AddTemplate.vue'], resolve),
-                meta: { title: '添加模板' }
+                meta: { title: '添加模板', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'editTemplate',
                 path: '/editTemplate',
                 component: resolve => require(['../components/page/BrandProduct/ShippingTemplate/EditTemplate.vue'], resolve),
-                meta: { title: '编辑模板' }
+                meta: { title: '编辑模板', noKeepAlive: true }
             },
             {
                 hidden: true,
@@ -1408,7 +1408,7 @@ export const asyncRouterMap = [
                 name: 'addProject',
                 path: '/addProject',
                 component: resolve => require(['../components/page/OperateManage/ProjectMange/addProject.vue'], resolve),
-                meta: { title: '专题设置' , noKeepAlive: true}
+                meta: { title: '专题设置', noKeepAlive: true }
             },
 
             {
@@ -1416,7 +1416,7 @@ export const asyncRouterMap = [
                 name: 'depreciate',
                 path: '/depreciate',
                 component: resolve => require(['../components/page/OperateManage/MarketTools/Depreciate/Depreciate.vue'], resolve),
-                meta: { title: '降价拍' , noKeepAlive: true}
+                meta: { title: '降价拍', noKeepAlive: true }
             },
             {
                 hidden: true,
