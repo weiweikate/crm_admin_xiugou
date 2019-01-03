@@ -626,7 +626,7 @@
                         targetIndex = index;
                     }
                 });
-                if (targetIndex) {
+                if (targetIndex >= 0) {
                     this.tableData.splice(targetIndex, 1);
                 }
             },
