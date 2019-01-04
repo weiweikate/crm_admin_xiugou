@@ -38,12 +38,8 @@
 
                 <!-- 可选是否赠送优惠券S -->
                 <div class="el-form-item el-form-item--small" v-loading="couponLoading">
-                    <label
-                        class="el-form-item__label"
-                        style="width: 100px;">
-                        <el-checkbox v-model="checkCoupon">备选项</el-checkbox>
-                    </label>
-                    <div class="el-form-item__content" style="margin-left: 100px;">
+                    <!--活动进行中-->
+                    <el-form-item label="活动优惠券" prop="couponId" v-if="form.status === activityStatus.ing">
                         <el-input placeholder="请输入优惠券ID" v-on:change="getCouponById" v-model="form.couponId" style="width: 300px;"></el-input>
                         <span class="coupon-err" v-if="couponInfo">
                             <span v-if="couponInfo.status === 0">已失效</span>
@@ -51,8 +47,30 @@
                         </span>
                         <span class="coupon-err" v-else>优惠券不存在</span>
                         <div class="coupon-name" v-if="couponInfo">{{couponInfo.name}}</div>
-                        <div class="coupon-regular mt10" v-if="checkCoupon">
-                            每  <el-input style="width: 100px;" v-model="form.rules[0].startPrice" :disabled="true"></el-input> 元，赠送优惠券
+                        <div class="coupon-regular mt10" v-if="couponInfo">
+                            每{{form.rules[0].startPrice}}元，赠送优惠券 {{form.startCount}} 张
+                            <div class="mt10">
+                                单笔订单最多可赠送优惠券数量： {{form.maxCount}}张
+                            </div>
+                        </div>
+                    </el-form-item>
+                    <!--活动未开始-->
+                    <div v-else>
+                        <label
+                            class="el-form-item__label"
+                            style="width: 100px;">
+                            <el-checkbox v-model="checkCoupon">活动优惠券</el-checkbox>
+                        </label>
+                        <div class="el-form-item__content" style="margin-left: 100px;">
+                            <el-input placeholder="请输入优惠券ID" v-on:change="getCouponById" v-model="form.couponId" style="width: 300px;"></el-input>
+                            <span class="coupon-err" v-if="couponInfo">
+                            <span v-if="couponInfo.status === 0">已失效</span>
+                            <span v-if="couponInfo.totalNumber === 0">可发放数量不足</span>
+                        </span>
+                            <span class="coupon-err" v-else>优惠券不存在</span>
+                            <div class="coupon-name" v-if="couponInfo">{{couponInfo.name}}</div>
+                            <div class="coupon-regular mt10" v-if="checkCoupon">
+                                每  <el-input style="width: 100px;" v-model="form.rules[0].startPrice" :disabled="true"></el-input> 元，赠送优惠券
                                 <el-input-number
                                     :controls="false"
                                     :min="1" :precision="0"
@@ -60,21 +78,21 @@
                                     @change="couponCountCheck"
                                     v-model="form.startCount"
                                 ></el-input-number> 张
-                            <div class="mt10">
-                                单笔订单最多可赠送优惠券数量
-                                <el-input-number
+                                <div class="mt10">
+                                    单笔订单最多可赠送优惠券数量
+                                    <el-input-number
                                         :controls="false"
                                         :min="1"
                                         :precision="0"
                                         style="width: 100px;text-align: left"
                                         v-model="form.maxCount"
                                         @change="couponCountCheck"
-                                 >
-                                 </el-input-number> 张
+                                    >
+                                    </el-input-number> 张
+                                </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <!-- 可选是否赠送优惠券E -->
 
@@ -298,7 +316,8 @@
                 ],
                 rules: {
                     name: [{ required: true, message: '请输入活动名称', trigger: 'blur' }, { min: 1, max: 30, message: '活动名称长度在1-30之间' }],
-                    time: [{ required: true, message: '请选择活动时间', trigger: 'blur' }]
+                    time: [{ required: true, message: '请选择活动时间', trigger: 'blur' }],
+                    couponId: [{ required: true, message: '请输入优惠券', trigger: 'blur' }]
                 },
                 searchLoading: false,
                 couponLoading: false,
@@ -426,7 +445,7 @@
                 this.couponLoading = true;
                 request.getCouponById({ id: this.form.couponId }).then(res => {
                     this.couponLoading = false;
-                    this.couponInfo = res.data;
+                    this.couponInfo = res.data || '';
                 }).catch(res => {
                     this.couponLoading = false;
                     this.$message.warning(res.msg);
@@ -555,13 +574,15 @@
                 this.searchLoading = true;
                 request.queryActivityProductList(data).then(res => {
                     this.searchLoading = false;
-                    const data = res.data.data;
-                    data.forEach(item => {
-                        if (this.selectGoods.includes(item.prodCode) || this.originTableSpuCodes.includes(item.prodCode)) {
-                            item.checked = true;
-                        }
-                    });
-                    this.searchGoods = data;
+                    const resData = res.data || {};
+                    if (resData.data && resData.data.length !== 0) {
+                        resData.data.forEach(item => {
+                            if (this.selectGoods.includes(item.prodCode) || this.originTableSpuCodes.includes(item.prodCode)) {
+                                item.checked = true;
+                            }
+                        });
+                    }
+                    this.searchGoods = resData.data;
                     this.initSelectGoods();
                     this.page.totalPage = res.data.totalNum;
                     this.page.currentPage = res.data.currentPage;
@@ -721,8 +742,8 @@
                     pageSize: 2000
                 };
                 request.queryActivityProdPageList(data).then(res => {
-                    const data = res.data.data || [];
                     this.tableLoading = false;
+                    const data = res.data.data || [];
                     this.tableData = data;
                     const codes = [];
                     data.forEach(item => {
