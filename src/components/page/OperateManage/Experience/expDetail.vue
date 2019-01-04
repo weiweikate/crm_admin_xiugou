@@ -168,7 +168,7 @@
                 });
             },
             getCouponById(couponId) {
-                request.getCouponById({ id: couponId}).then(res => {
+                request.getCouponById({ id: couponId }).then(res => {
                     this.couponInfo = res.data;
                 }).catch(res => {
                     this.$message.warning(res.msg);
@@ -184,7 +184,9 @@
                     this.form = data;
                     this.tableLoading = true;
                     this.activityCode = res.data.activityCode;
-                    this.getCouponById(data.couponId);
+                    if (data.couponId) {
+                        this.getCouponById(data.couponId);
+                    }
                     this.getList();
                 }).catch(res => {
                     this.loading = false;
