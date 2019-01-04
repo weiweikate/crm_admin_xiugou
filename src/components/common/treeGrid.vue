@@ -238,6 +238,7 @@
                                 this.$set(this.initItems[index + childIndex + 1], 'isShow', true);
                                 this.$set(this.initItems[index + childIndex + 1], 'expanded', false);
                             });
+                            this.open(index, item);
                         }
                     }
                 } else {
@@ -258,8 +259,12 @@
                 if (!item.children) return;
                 item.children.forEach((child, childIndex) => {
                     child.isShow = true;
-                    if (child.children && child.expanded) {
-                        this.open(index + childIndex + 1, child);
+                    if (child.children.length) {
+                        // 原有点击一级展开一级  现在改为点击一级展开下面所有。 this.open(index + childIndex + 1, child);
+                        const toggleIndex = this.getItemIndex(child);
+                        if (toggleIndex >= 0) {
+                            this.toggle(toggleIndex);
+                        }
                     }
                 });
             },
@@ -273,6 +278,15 @@
                         }
                     });
                 }
+            },
+            getItemIndex(item) {
+                let index = null;
+                this.initItems.forEach((_item, _index) => {
+                    if (_item.id === item.id) {
+                        index = _index;
+                    }
+                });
+                return index;
             },
             itemShowList() {
                 const obj = {};
