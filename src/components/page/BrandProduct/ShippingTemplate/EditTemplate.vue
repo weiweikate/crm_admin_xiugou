@@ -10,7 +10,7 @@
                     <el-form-item prop="status" label="状态">
                         <el-radio-group v-model="form.status">
                             <el-radio label="1">启用</el-radio>
-                            <el-radio label="0">关闭</el-radio>
+                            <el-radio label="2">关闭</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item prop="freightType" label="是否包邮">
@@ -23,8 +23,8 @@
                         <el-form-item prop="calcType" label="计费方式">
                             <el-radio-group v-model="form.calcType" :disabled="freightType==1" @change="changeCalcType">
                                 <el-radio label="1">按重量</el-radio>
-                                <el-radio label="2">按件数</el-radio>
-                                <el-radio label="3" disabled="">按体积</el-radio>
+                                <el-radio label="3">按件数</el-radio>
+                                <el-radio label="2" disabled="">按体积</el-radio>
                             </el-radio-group>
                         </el-form-item>
                         <el-form-item prop="freight" class="express-area" label="运费计算">
@@ -86,8 +86,8 @@
                                 </el-table-column>
                                 <el-table-column label="设置包邮条件" align="left" width="450">
                                     <template slot-scope="scope">
-                                        <el-select v-model="scope.row.style" placeholder="请选择">
-                                            <el-option v-for="(item,index) in freeShippingSetting[form.calcType-1]" :key="index" :label="item.label" :value="item.value">
+                                        <el-select v-model="scope.row.type" placeholder="请选择">
+                                            <el-option v-for="(item,index) in conditionSetting[form.calcType-1]" :key="index" :label="item.label" :value="item.value">
                                             </el-option>
                                         </el-select>
                                         <template v-if="scope.row.type==2">
@@ -96,12 +96,12 @@
                                         </template>
                                         <template v-else-if="scope.row.type==3">
                                             <span>满</span>
-                                            <el-input class="mini-inp" v-model="scope.row.quality"></el-input><span>{{units[form.calcType-1]}}，</span>
+                                            <el-input class="mini-inp" v-model="scope.row.unit"></el-input><span>{{units[form.calcType-1]}}，</span>
                                             <el-input class="mini-inp" v-model="scope.row.price"></el-input><span>元包邮</span>
                                         </template>
                                         <template v-else>
                                             <span>满</span>
-                                            <el-input class="mini-inp" v-model="scope.row.quality"></el-input><span>{{units[form.calcType-1]}}包邮</span>
+                                            <el-input class="mini-inp" v-model="scope.row.unit"></el-input><span>{{units[form.calcType-1]}}包邮</span>
                                         </template>
                                     </template>
                                 </el-table-column>
@@ -165,12 +165,12 @@ export default {
             tableIndex: 0,
             btnLoading: false,
             // 表头根据计费方式变化
-            title: [{ unit: '首重(kg)', nextUnit: '续重(kg)' }, { unit: '首件(件)', nextUnit: '续件(件)' }],
+            title: [{ unit: '首重(kg)', nextUnit: '续重(kg)' }, { unit: '首体积(m³)', nextUnit: '续体积(m³)' }, { unit: '首件(件)', nextUnit: '续件(件)' }],
             // 设置包邮条件
-            conditionSetting: [[{ value: 1, label: '重量' }, { value: 2, label: '金额' }, { value: 3, label: '重量+金额' }], [{ value: 1, label: '件数' }, { value: 2, label: '金额' }, { value: 3, label: '件数+金额' }]],
-            units: ['kg', '件'],
+            conditionSetting: [[{ value: 1, label: '重量' }, { value: 2, label: '金额' }, { value: 3, label: '重量+金额' }], [{ value: 1, label: 'm³' }, { value: 2, label: '金额' }, { value: 3, label: 'm³+金额' }], [{ value: 1, label: '件数' }, { value: 2, label: '金额' }, { value: 3, label: '件数+金额' }]],
+            units: ['kg', 'm³', '件'],
             // 运费计算表格数据
-            freightTemplateInfoList: [{ freightTemplateInfoDetailList: [{ provinceName: '中国', provinceCode: -1 }], startUnit: '', startPrice: '', nextUnit: '', nextPirce: '' }],
+            freightTemplateInfoList: [{ freightTemplateInfoDetailList: [{ provinceName: '中国', provinceCode: -1, type: 0 }], startUnit: '', startPrice: '', nextUnit: '', nextPirce: '' }],
             // 指定条件包邮表格数据
             conditionInfos: [],
             rows: [0, -1],
@@ -198,7 +198,7 @@ export default {
                     this.form = res.data;
                     this.form.calcType = this.numberToString(this.form.calcType);
                     this.form.freightType = this.numberToString(this.form.freightType);
-                    this.form.status = res.data.status === 1 ? '1' : '0';
+                    this.form.status = this.numberToString(this.form.status);
                     this.form.hasExemption = this.numberToString(this.form.hasExemption);
                     this.form.freight = this.numberToString(this.form.freight);
 
@@ -273,13 +273,13 @@ export default {
                         }
                     } else {
                         data.freightTemplateInfoList = [];
+                        data.hasExemption = 0;
                     }
                     this.btnLoading = true;
                     request
                         .addFreightTemplate(data)
                         .then(res => {
                             this.$message.success(res.msg);
-                            this.form.freightType = '1';
                             this.$router.push('/shippingTemplate');
                             this.btnLoading = false;
                         })
@@ -418,11 +418,11 @@ export default {
         regTableData(data, num) {
             let count = 0;
             for (const key in data) {
-                if (data[key] === '' || !data['freightTemplateInfoDetailList'].length) {
+                if (data[key] === '' || data[key] === 'null' || !data['freightTemplateInfoDetailList'].length) {
                     count++;
                 }
             }
-            if (num === 1 && data.style !== 2) {
+            if (num === 1 && data.type !== 3 && !data.id) {
                 // 设置包邮条件时前两种状态各有一个值始终为空
                 count--;
             }
@@ -438,7 +438,7 @@ export default {
                         if (this.form.calcType === '1' && (!this.isNozeroTwodecimal.test(data.startUnit) || !this.isNozeroTwodecimal.test(data.nextUnit))) {
                             // 重量
                             return 1;
-                        } else if (this.form.calcType === '2' && (!this.isNozeroNumber.test(data.startUnit) || !this.isNozeroNumber.test(data.nextUnit))) {
+                        } else if (this.form.calcType === '3' && (!this.isNozeroNumber.test(data.startUnit) || !this.isNozeroNumber.test(data.nextUnit))) {
                             // 件数
                             return 1;
                         }
@@ -446,22 +446,20 @@ export default {
                             return 1;
                         }
                     } else {
-                        if (this.form.calcType === '1') {
-                            if (data.type === 1 && !this.isNozeroTwodecimal.test(data.unit)) {
+                        if (data.type === 1) {
+                            if (this.form.calcType === '1' && !this.isNozeroTwodecimal.test(data.unit)) {
                                 // 重量
                                 return 1;
-                            } else if (data.type === 2 && !this.isNozeroTwodecimal.test(data.price)) {
-                                return 1;
-                            } else if (data.type === 3 && (!this.isNozeroTwodecimal.test(data.price) || !this.isNozeroTwodecimal.test(data.unit))) {
+                            }
+                            if (this.form.calcType === '3' && !this.isNozeroNumber.test(data.unit)) {
+                                // 件数
                                 return 1;
                             }
                         } else {
-                            if (data.type === 1 && !this.isNozeroNumber.test(data.unit)) {
-                                // 件数
+                            if (data.type === 2 && !this.isNozeroTwodecimal.test(data.price)) {
                                 return 1;
-                            } else if (data.type === 2 && !this.isNozeroTwodecimal.test(data.price)) {
-                                return 1;
-                            } else if (data.type === 3 && (!this.isNozeroTwodecimal.test(data.price) || !this.isNozeroTwodecimal.test(data.unit))) {
+                            }
+                            if (data.type === 3 && (!this.isNozeroTwodecimal.test(data.price) || !this.isNozeroTwodecimal.test(data.unit))) {
                                 return 1;
                             }
                         }

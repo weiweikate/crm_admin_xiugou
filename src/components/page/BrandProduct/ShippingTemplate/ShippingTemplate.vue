@@ -7,17 +7,19 @@
                 <div v-if="tableData.length==0" class="nodata">暂无模板~</div>
                 <table v-else v-for="(v,k) in tableData" :key="k" class="table-area">
                     <tr>
-                        <td colspan="2" class="left">
-                            <span>id:{{v.id}}</span>
-                            <span class="name">{{v.name}}<span v-if="v.hasExemption==1">（已指定条件包邮）</span></span>
-                        </td>
-                        <td colspan="3" class="right">
-                            <span>{{v.adminName}}</span>
-                            <span class="time">更新于 {{v.updateTime|formatDateAll}}</span>
-                            <el-button type="primary" v-if="v.status==2" @click="openOrClose(v.id,0)">启用</el-button>
-                            <el-button type="danger" v-if="v.status==1" @click="openOrClose(v.id,1)">停用</el-button>
-                            <el-button type="success" @click="editItem(v.id,v.num,2)">修改</el-button>
-                            <el-button type="warning" @click="delItem(v.id)">删除</el-button>
+                        <td colspan="5" class="header-info">
+                            <div class="left">
+                                <span>id:{{v.id}}</span>
+                                <span class="name">{{v.name}}<span v-if="v.hasExemption==1">（已指定条件包邮）</span></span>
+                            </div>
+                            <div class="right">
+                                <span>{{v.adminName}}</span>
+                                <span class="time">更新于 {{v.updateTime|formatDateAll}}</span>
+                                <el-button type="primary" v-if="v.status==2" @click="openOrClose(v.id,0)">启用</el-button>
+                                <el-button type="danger" v-if="v.status==1" @click="openOrClose(v.id,1)">停用</el-button>
+                                <el-button type="success" @click="editItem(v.id,v.num,2)">修改</el-button>
+                                <el-button type="warning" @click="delItem(v.id)">删除</el-button>
+                            </div>
                         </td>
                     </tr>
                     <template v-if="v.freightType==2">
@@ -287,16 +289,19 @@ export default {
             padding: 8px;
             text-align: center;
         }
+        .header-info{
+            text-align: left
+        }
         .left {
+            float: left;
             text-align: left;
-            border: none;
             .name {
                 margin-left: 20px;
             }
         }
         .right {
+            float: right;
             text-align: right;
-            border: none;
             padding-right: 20px;
             .time {
                 margin: 0 20px 0 10px;
