@@ -77,11 +77,11 @@ export default {
                 res.data.forEach(v => {
                     if (v.code == 'service_charge') {
                         this.charge = v.value;
-                        this.isSelectWithCharge = v.status == 1;
+                        this.withSet = 'minBalance';
                     } else if (v.code == 'min_balance') {
                         this.minBalance = v.value;
                         if (v.status == 1) {
-                            this.withSet = 'minBalance';
+                            this.isSelectWithCharge = v.status == 1;
                         }
                     } else if (v.code == 'when_less_than_balance') {
                         this.less = v.value;
@@ -119,14 +119,14 @@ export default {
                         name: '手续费',
                         value: this.charge,
                         value_type: 1,
-                        status: this.isSelectWithCharge ? 1 : 0
+                        status: this.withSet == 'minBalance' ? 1 : 0
                     },
                     {
                         code: 'min_balance',
                         name: '最低提现金额',
                         value: this.minBalance,
                         value_type: 1,
-                        status: this.withSet == 'minBalance' ? 1 : 0
+                        status: this.isSelectWithCharge ? 1 : 0
                     },
                     {
                         code: 'when_less_than_balance',
