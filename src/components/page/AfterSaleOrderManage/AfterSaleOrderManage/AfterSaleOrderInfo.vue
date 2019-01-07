@@ -66,72 +66,27 @@
                         <span v-else>/</span>
                     </div>
                 </div>
-               <!-- <div class="item-wrap">
+                <div class="item-wrap">
                     <div class="title">协商记录</div>
-                    &lt;!&ndash;售后关闭&ndash;&gt;
-                    <div class="item" v-if="exchangeExpress.status==6">
-                        <span>用户申请退款金额</span>
-                        <span>{{exchangeExpress.orderNum}}</span>
+                    <div class="item records-item" v-for="(v,k) in records" :key="k">
+                        <div>{{v.operatorName}}<span>{{v.createTime|formatDateAll}}</span></div>
+                        <div>{{v.content}}</div>
                     </div>
-                    <div class="item">
-                        <span>售后审核结果</span>
-                        <span>{{exchangeExpress.orderNum}}</span>
-                    </div>
-                    &lt;!&ndash;待商品寄回，售后完成&ndash;&gt;
-                    <div class="item" v-if="exchangeExpress.status==2&&exchangeExpress.status==5">
-                        <span>审核金额调整</span>
-                        <span>{{exchangeExpress.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="exchangeExpress.status>=2">
-                        <span>售后审核说明</span>
-                        <span>{{exchangeExpress.orderNum}}</span>
-                    </div>
-                    &lt;!&ndash;待仓库确认，待平台处理&ndash;&gt;
-                    <div class="item" v-if="exchangeExpress.status==2&&exchangeExpress.status==3&&exchangeExpress.status==4&&exchangeExpress.status==5">
-                        <span>退货信息</span>
-                        <span>{{exchangeExpress.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="exchangeExpress.status!=1">
-                        <span>售后审核者</span>
-                        <span>{{exchangeExpress.orderNum}}</span>
-                    </div>
-                    &lt;!&ndash;待仓库确认&ndash;&gt;
-                    <div class="item" v-if="exchangeExpress.status==3&&exchangeExpress.status==4&&exchangeExpress.status==5">
-                        <span>回寄物流公司</span>
-                        <span>{{exchangeExpress.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="exchangeExpress.status==3&&exchangeExpress.status==4&&exchangeExpress.status==5">
-                        <span>回寄物流单号</span>
-                        <span>{{exchangeExpress.orderNum}}</span>
-                    </div>
-                    &lt;!&ndash;售后完成&ndash;&gt;
-                    <div class="item" v-if="exchangeExpress.status==5&&exchangeExpress.status==6">
-                        <span>售后处理结果</span>
-                        <span>{{exchangeExpress.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="exchangeExpress.status==5&&exchangeExpress.status==6">
-                        <span>售后处理说明</span>
-                        <span>{{exchangeExpress.orderNum}}</span>
-                    </div>
-                    <div class="item" v-if="exchangeExpress.status==5&&exchangeExpress.status==6">
-                        <span>售后处理者</span>
-                        <span>{{exchangeExpress.orderNum}}</span>
-                    </div>
-                </div>-->
+                </div>
             </div>
-            <div style="margin-top: 50px" v-if="orderCustomerServiceInfo.status==4||orderCustomerServiceInfo.status==5">
+            <div style="margin-top: 50px" v-if="(orderCustomerServiceInfo.status==4||orderCustomerServiceInfo.status==5)&&(orderCustomerServiceInfo.refundWarehouseFeedback||orderCustomerServiceInfo.sendWarehouseFeedback)">
                 <div class="title">仓库反馈</div>
                 <div class="item" v-if="orderCustomerServiceInfo.refundWarehouseFeedback">
                     <span>退货仓反馈</span>
                     <span>{{orderCustomerServiceInfo.refundWarehouseFeedback}}</span>
-                   <div>
-                       <div>
-                           物流公司：{{refundExpress.expressName}}
-                       </div>
-                       <div>
-                           物流单号：{{refundExpress.expressNo}}
-                       </div>
-                   </div>
+                    <div>
+                        <div>
+                            物流公司：{{refundExpress.expressName}}
+                        </div>
+                        <div>
+                            物流单号：{{refundExpress.expressNo}}
+                        </div>
+                    </div>
                 </div>
 
                 <div class="item" v-if="orderCustomerServiceInfo.sendWarehouseFeedback">
@@ -267,51 +222,54 @@
 </template>
 
 <script>
-    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import productDialog from '@/components/common/ProductDialog';
-    import { queryDictonary, myProductDialog } from '@/JS/commom';
-    import request from '@/http/http.js';
-    import utils from '@/utils/index';
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import productDialog from '@/components/common/ProductDialog';
+import { queryDictonary, myProductDialog } from '@/JS/commom';
+import request from '@/http/http.js';
+import utils from '@/utils/index';
 
-    export default {
-        components: { vBreadcrumb, productDialog },
-        mixins: [queryDictonary, myProductDialog],
-        data() {
-            return {
-                nav: ['订单管理', '售后单管理', '售后单列表', '售后单详情'],
-                serviceNo: '',
-                tableData: [],
-                // 订单信息
-                orderInfo: {},
-                exchangeExpress: {},
-                orderCustomerServiceInfo: {},
-                platformRefundAddress: {},
-                refundExpress: {},
-                supplierRefundAddress: {},
-                warehouseOrderProduct: {},
-                statusArr: ['待支付', '已付款', '待收货', '交易完成', '交易关闭 '], // 订单状态
-                refundStatusArr: ['待审核', '待商品寄回', '待仓库确认', '待平台处理', '售后完成 ', '售后关闭'], // 售后状态
-                typeArr: ['仅退款', '退货退款 ', '换货'], // 类型
-                btnLoading: false,
-                logicList: [],
-                form: {},
-                checked: false
-            };
-        },
+export default {
+    components: { vBreadcrumb, productDialog },
+    mixins: [queryDictonary, myProductDialog],
+    data() {
+        return {
+            nav: ['订单管理', '售后单管理', '售后单列表', '售后单详情'],
+            serviceNo: '',
+            tableData: [],
+            // 订单信息
+            orderInfo: {},
+            exchangeExpress: {},
+            orderCustomerServiceInfo: {},
+            platformRefundAddress: {},
+            refundExpress: {},
+            supplierRefundAddress: {},
+            warehouseOrderProduct: {},
+            statusArr: ['待支付', '已付款', '待收货', '交易完成', '交易关闭 '], // 订单状态
+            refundStatusArr: ['待审核', '待商品寄回', '待仓库确认', '待平台处理', '售后完成 ', '售后关闭'], // 售后状态
+            typeArr: ['仅退款', '退货退款 ', '换货'], // 类型
+            btnLoading: false,
+            logicList: [],
+            form: {},
+            checked: false,
+            records: {} // 售后协商记录
+        };
+    },
 
-        activated() {
-            // 获取订单信息
-            this.serviceNo = this.$route.query.afterSaleOrderInfoId;
-            utils.cleanFormData(this.form);
-            this.getInfo();
-            this.getLogic();
-            this.checked=false
-        },
-        methods: {
-            //  获取信息
-            getInfo() {
-                this.tableData = [];
-                request.lookDetail({ serviceNo: this.serviceNo }).then(res => {
+    activated() {
+        // 获取订单信息
+        this.serviceNo = this.$route.query.afterSaleOrderInfoId;
+        utils.cleanFormData(this.form);
+        this.getInfo();
+        this.getLogic();
+        this.checked = false;
+    },
+    methods: {
+        //  获取信息
+        getInfo() {
+            this.tableData = [];
+            request
+                .lookDetail({ serviceNo: this.serviceNo })
+                .then(res => {
                     this.orderInfo = res.data;
                     // if (res.data.warehouseType && res.data.warehouseType != 3) {
                     //     this.form.address = '2';
@@ -323,6 +281,7 @@
                     this.refundExpress = res.data.refundExpress || {};
                     this.supplierRefundAddress = res.data.supplierRefundAddress || {};
                     this.warehouseOrderProduct = res.data.warehouseOrderProduct;
+                    this.records = res.data.records;
                     this.orderCustomerServiceInfo.imgList = this.orderCustomerServiceInfo && this.orderCustomerServiceInfo.imgList ? this.orderCustomerServiceInfo.imgList.split(',') : [];
                     this.tableData.forEach((v, k) => {
                         const tempTitle = v.specTitle.split('@');
@@ -334,197 +293,213 @@
                         });
                         v.spec = v.spec.join('  ');
                     });
-                }).catch(err => {
+                })
+                .catch(err => {
                     console.log(err);
                 });
-            },
-            // 物流公司查询
-            getLogic() {
-                request.sysExpressQuery({ page: 1, pageSize: 10000 }).then(res => {
-                    this.logicList = [];
-                    this.logicList = res.data.data;
-                });
-            },
-            // 提交
-            submit(formName) {
-                let url = '';
-                const data = this.form;
-                data.serviceNo = this.serviceNo;
-                data.warehouseType = this.orderInfo.warehouseType;
-                if (!data.result) {
-                    return this.$message.warning('请选择售后处理结果');
+        },
+        // 物流公司查询
+        getLogic() {
+            request.sysExpressQuery({ page: 1, pageSize: 10000 }).then(res => {
+                this.logicList = [];
+                this.logicList = res.data.data;
+            });
+        },
+        // 提交
+        // orderCustomerServiceInfo.type 订单类型 1仅退款 2退货退款 3换货
+        // orderCustomerServiceInfo.status 售后状态 1待审核 3待仓库确认 4待平台处理
+        // type 售后类型 1换货 2退货退款
+        // result 售后处理结果 1审核通过 2审核驳回
+        submit(formName) {
+            let url = '';
+            const data = this.form;
+            data.serviceNo = this.serviceNo;
+            data.warehouseType = this.orderInfo.warehouseType;
+            if (!data.result) {
+                return this.$message.warning('请选择售后处理结果');
+            }
+            const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
+            if (data.adjustAmount && (data.adjustAmount > this.warehouseOrderProduct.payAmount || !reg.test(data.adjustAmount))) {
+                return this.$message.warning('请输入正确的处理金额');
+            }
+            if (this.orderCustomerServiceInfo.type !== 1 && this.orderCustomerServiceInfo.status === 1) {
+                // 待审核
+                if (this.form.result === '1') {
+                    // 审核通过
+                    url = 'agreeApply';
+                    if (!this.supplierRefundAddress.receiver || !this.supplierRefundAddress.receiverPhone || !this.supplierRefundAddress.address) {
+                        return this.$message.warning('退货信息缺失，请完善后再审核');
+                    }
+                } else {
+                    // 审核驳回
+                    url = 'refuse';
                 }
-                const reg = /^(0|[1-9]\d*)([.]{1}[0-9]{1,2})?$/;
-                if (data.adjustAmount && (data.adjustAmount > this.warehouseOrderProduct.payAmount || !reg.test(data.adjustAmount))) {
-                    return this.$message.warning('请输入正确的处理金额');
-                }
-                if (this.orderCustomerServiceInfo.type != 1 && this.orderCustomerServiceInfo.status == 1) { // 待审核
-                    if (this.form.result == 1) { // 审核通过
-                        url = 'agreeApply';
-                        if(!this.supplierRefundAddress.receiver||!this.supplierRefundAddress.receiverPhone||!this.supplierRefundAddress.address){
-                             return this.$message.warning('退货信息缺失，请完善后再审核');
-                        }
-                    } else { // 审核驳回
+            } else {
+                // 待平台处理
+                if (this.orderCustomerServiceInfo.type === 1 || this.orderCustomerServiceInfo.type === 2) {
+                    if (this.form.result === '2') {
                         url = 'refuse';
-                    }
-                    // if (this.orderInfo.warehouseType == 3 && !this.form.address) {
-                    //     return this.$message.warning('请选择退货地址');
-                    // }
-                    // if (this.form.address == 1) {
-                    //     data.warehouseCode = this.orderCustomerServiceInfo.warehouseCode;
-                    // }
-                } else { // 待平台处理
-                    if (this.orderCustomerServiceInfo.type == 1 || this.orderCustomerServiceInfo.type == 2) {
-                        if (this.form.result == 2) {
-                            url = 'refuse';
-                        } else {
-                            url = 'refundAmounts';
-                        }
                     } else {
-                        if (this.form.result == 2) {
-                            url = 'refuse';
-                        } else {
-                            if (this.checked) {
-                                data.warehouseType = 4;
+                        url = 'refundAmounts';
+                    }
+                } else {
+                    if (this.form.result === '2') {
+                        url = 'refuse';
+                    } else {
+                        if (this.checked) {
+                            data.warehouseType = 4;
+                        }
+                        if (!this.form.type) {
+                            return this.$message.warning('请选择售后类型');
+                        }
+                        if (this.form.type === '1') {
+                            url = 'agreeExchange';
+                            if (data.warehouseType === 4 && (!data.expressNo || !data.expressCode)) {
+                                return this.$message.warning('请输入完整的物流信息');
                             }
-                            if (!this.form.type) {
-                                return this.$message.warning('请选择售后类型');
-                            }
-                            if (this.form.type == 1) {
-                                url = 'agreeExchange';
-                                if (data.warehouseType == 4 && (!data.expressNo || !data.expressCode)) {
-                                    return this.$message.warning('请输入完整的物流信息');
+                            this.logicList.forEach((v, k) => {
+                                if (this.form.expressCode === v.code) {
+                                    data.expressName = v.name;
                                 }
-                                this.logicList.forEach((v, k) => {
-                                    if (this.form.expressCode == v.code) {
-                                        data.expressName = v.name;
-                                    }
-                                });
-                            } else {
-                                url = 'exchangeChangeRefund';
-                            }
+                            });
+                        } else {
+                            url = 'exchangeChangeRefund';
                         }
                     }
                 }
-                this.btnLoading = true;
-                request[url](data).then(res => {
+            }
+            this.btnLoading = true;
+            request[url](data)
+                .then(res => {
                     this.$message.success(res.msg);
                     this.getInfo();
                     this.btnLoading = false;
-                }).catch(err => {
+                })
+                .catch(err => {
+                    console.log(err)
                     this.btnLoading = false;
                 });
-            }
-        }
-    };
-</script>
-<style lang='less'>
-    .after-info {
-        .title{
-            margin-bottom: 10px;
-        }
-        .wrap{
-            display: flex;
-            justify-content: flex-start;
-            .item-wrap{
-                margin-right: 100px;
-                .item{
-                    font-size: 14px;
-                    color: #666666;
-                    line-height: 30px;
-                    span:first-child{
-                        display: inline-block;
-                        width: 115px;
-                    }
-                    span:nth-child(2){
-                        display: inline-block;
-                    }
-                    img{
-                        width: 100px;
-                        height: 100px;
-                        margin-right: 5px;
-                        vertical-align: top;
-                    }
-                }
-            }
-        }
-        .goods-info{
-            margin-top: 50px;
-            .table-area{
-                font-size:12px;
-                width: 100%;
-                color:#606266;
-                border: 1px solid #ebeef5;
-                border-collapse: collapse;
-                margin-bottom: 20px;
-                line-height: 23px;
-                td {
-                    border: 1px solid #ebeef5;
-                    padding: 8px;
-                    text-align: center;
-                }
-            }
-            .name {
-                float: left;
-                position: relative;
-                height: 100px;
-                text-align: left;
-                img {
-                    position: absolute;
-                    width: 100px;
-                    height: 100px;
-                    border-radius: 5px;
-                    border: 1px solid #eee;
-                }
-                .pro-name {
-                    position: absolute;
-                    top: 5px;
-                    left: 115px;
-                    width: 270px;
-                }
-                .pro-spec {
-                    position: absolute;
-                    left: 115px;
-                    bottom:5px;
-                    width: 270px;
-                }
-            }
-        }
-        .opr-area{
-            margin-top: 20px;
-            .tip{
-                color: #8c939d;
-                margin-left: 10px;
-            }
-            .el-input,.el-input__inner{
-                width: 360px;
-            }
-            .back-address{
-                .address-area{
-                    display: flex;
-                }
-                .supplier-address,.plat-address{
-                    div{
-                        margin-left: 25px;
-                    }
-                    margin-right: 50px;
-                }
-                .tip{
-                    margin-top: 30px;
-                }
-            }
-        }
-        .el-textarea{
-            display: inline;
-            .el-textarea__inner{
-                resize: none;
-                width: 600px;
-                height: 100px;
-            }
-        }
-        .color-blue{
-            color: #33b4ff;
-            cursor: pointer;
         }
     }
+};
+</script>
+<style lang='less'>
+.after-info {
+    .title {
+        margin-bottom: 10px;
+    }
+    .wrap {
+        display: flex;
+        justify-content: flex-start;
+        .item-wrap {
+            margin-right: 100px;
+            .item {
+                font-size: 14px;
+                color: #666666;
+                line-height: 30px;
+                span:first-child {
+                    display: inline-block;
+                    width: 115px;
+                }
+                span:nth-child(2) {
+                    display: inline-block;
+                }
+                img {
+                    width: 100px;
+                    height: 100px;
+                    margin-right: 5px;
+                    vertical-align: top;
+                }
+            }
+            .records-item {
+                margin-bottom: 10px;
+                span {
+                    margin-left: 10px;
+                    color: #aaa;
+                    width: 200px !important;
+                }
+            }
+        }
+    }
+    .goods-info {
+        margin-top: 50px;
+        .table-area {
+            font-size: 12px;
+            width: 100%;
+            color: #606266;
+            border: 1px solid #ebeef5;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            line-height: 23px;
+            td {
+                border: 1px solid #ebeef5;
+                padding: 8px;
+                text-align: center;
+            }
+        }
+        .name {
+            float: left;
+            position: relative;
+            height: 100px;
+            text-align: left;
+            img {
+                position: absolute;
+                width: 100px;
+                height: 100px;
+                border-radius: 5px;
+                border: 1px solid #eee;
+            }
+            .pro-name {
+                position: absolute;
+                top: 5px;
+                left: 115px;
+                width: 270px;
+            }
+            .pro-spec {
+                position: absolute;
+                left: 115px;
+                bottom: 5px;
+                width: 270px;
+            }
+        }
+    }
+    .opr-area {
+        margin-top: 20px;
+        .tip {
+            color: #8c939d;
+            margin-left: 10px;
+        }
+        .el-input,
+        .el-input__inner {
+            width: 360px;
+        }
+        .back-address {
+            .address-area {
+                display: flex;
+            }
+            .supplier-address,
+            .plat-address {
+                div {
+                    margin-left: 25px;
+                }
+                margin-right: 50px;
+            }
+            .tip {
+                margin-top: 30px;
+            }
+        }
+    }
+    .el-textarea {
+        display: inline;
+        .el-textarea__inner {
+            resize: none;
+            width: 600px;
+            height: 100px;
+        }
+    }
+    .color-blue {
+        color: #33b4ff;
+        cursor: pointer;
+    }
+}
 </style>

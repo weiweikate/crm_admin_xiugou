@@ -23,7 +23,7 @@
                     <el-input v-model="form.warehouseOrderNo" placeholder="请输入仓库订单号"></el-input>
                 </el-form-item>
                 <el-form-item prop="status" label="售后状态">
-                    <el-select v-model="form.status" placeholder="请选择" @change="changeStatus(1)">
+                    <el-select v-model="form.status" placeholder="请选择">
                       <el-option label="暂不选择" value=""></el-option>
                         <el-option v-for="(v,k) in afterSaleStatusArr" :label="v.label" :value="v.value" :key="k"></el-option>
                     </el-select>
@@ -78,7 +78,7 @@ export default {
             afterSaleStatusArr: [// 售后状态
                 { label: '待审核', value: '1' },
                 { label: '待商品寄回', value: '2' },
-                // { label: '待仓库确认', value: '3' },
+                { label: '待仓库确认', value: '3' },
                 { label: '待平台处理', value: '4' },
                 { label: '售后完成', value: '5' },
                 { label: '售后关闭', value: '6' }
@@ -92,7 +92,7 @@ export default {
                 serviceNo: '', // 售后单号
                 warehouseOrderNo: '', // 仓库级订单号
                 userPhone: '', // 用户账号
-                status: '', // 推送状态
+                status: '' // 推送状态
             },
             formData: {}
         };
@@ -107,8 +107,8 @@ export default {
         getList() {
             const data = {};
             Object.assign(data, this.form);
-            data.createStartTime = this.dateRange.length != 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '';
-            data.createEndTime = this.dateRange.length != 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : '';
+            data.createStartTime = this.dateRange.length !== 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '';
+            data.createEndTime = this.dateRange.length !== 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : '';
             data.type = this.activeName === 'all' ? '' : this.activeName;
             this.$refs[this.activeName].page.currentPage = 1;
             this.$refs[this.activeName].data = data;

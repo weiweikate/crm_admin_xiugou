@@ -6,8 +6,8 @@ import Layout from '../components/common/Home.vue';
 Vue.use(Router);
 
 /**
- * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
- * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
+ * hidden: true                  if `hidden:true` will not show in the sidebar(default is false)
+ * alwaysShow: true              if set true, will always show the root menu, whatever its child routes length
  *                                if not set alwaysShow, only more than one route under the children
  *                                it will becomes nested mode, otherwise not show the root menu
  * redirect: noredirect           if `redirect:noredirect` will no redirect in the breadcrumb
@@ -223,13 +223,12 @@ export const asyncRouterMap = [
         name: 'logistics',
         meta: { title: '物流管理', icon: 'icon-shezhi' },
         children: [
-            // {
-            //     hidden: true,
-            //     name: 'logisticsArea',
-            //     path: '/logisticsArea',
-            //     component: resolve => require(['../components/page/Logistics/logisticsCompanyList.vue'], resolve),
-            //     meta: { title: '地区列表'}
-            // },
+            {
+                name: 'logisticsArea',
+                path: '/logisticsArea',
+                component: resolve => require(['../components/page/Logistics/logisticsArea.vue'], resolve),
+                meta: { title: '地区列表' }
+            },
             {
                 name: 'shippingTemplate',
                 path: '/shippingTemplate',
@@ -480,19 +479,19 @@ export const asyncRouterMap = [
                 name: 'repertoryList',
                 path: '/repertoryList',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryManage/RepertoryList.vue'], resolve),
-                meta: { title: '仓库管理' }
+                meta: { title: '仓库管理', noKeepAlive: true }
             },
             {
                 name: 'areaSet',
                 path: '/areaSet',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryAreaSet/AreaSet.vue'], resolve),
-                meta: { title: '区域设置' }
+                meta: { title: '区域设置', noKeepAlive: true }
             },
             {
                 name: 'repertoryReportList',
                 path: '/repertoryReportList',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryReport/RepertoryReportList.vue'], resolve),
-                meta: { title: '仓库单' }
+                meta: { title: '仓库单', noKeepAlive: true }
             }
         ]
     },
@@ -1651,20 +1650,19 @@ export const asyncRouterMap = [
                 component: resolve => require(['../components/page/demo.vue'], resolve),
                 meta: { title: 'demo' }
             },
-
             {
                 hidden: true,
                 name: 'repertorySet',
                 path: '/repertorySet',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryManage/RepertorySet.vue'], resolve),
-                meta: { title: '仓库设置' }
+                meta: { title: '仓库设置', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'repertoryInfo',
                 path: '/repertoryInfo',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryManage/RepertoryInfo.vue'], resolve),
-                meta: { title: '仓库详情' }
+                meta: { title: '仓库详情', noKeepAlive: true }
             },
 
             {
@@ -1672,42 +1670,42 @@ export const asyncRouterMap = [
                 name: 'repertoryReportSet',
                 path: '/repertoryReportSet',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryReport/RepertoryReportSet.vue'], resolve),
-                meta: { title: '入库单设置' }
+                meta: { title: '入库单设置', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'repertoryReportInfo',
                 path: '/repertoryReportInfo',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryReport/RepertoryReportInfo.vue'], resolve),
-                meta: { title: '入库单详情' }
+                meta: { title: '入库单详情', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'repertoryInventory',
                 path: '/repertoryInventory',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryData/RepertoryInventory.vue'], resolve),
-                meta: { title: '仓库存货数' }
+                meta: { title: '仓库存货数', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'repertoryInventoryInfo',
                 path: '/repertoryInventoryInfo',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryData/RepertoryInventoryInfo.vue'], resolve),
-                meta: { title: '仓库存货数详情' }
+                meta: { title: '仓库存货数详情', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'repertoryBad',
                 path: '/repertoryBad',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryData/RepertoryBad.vue'], resolve),
-                meta: { title: '仓库报损数' }
+                meta: { title: '仓库报损数', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'repertoryBadInfo',
                 path: '/repertoryBadInfo',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryData/RepertoryBadInfo.vue'], resolve),
-                meta: { title: '仓库报损数详情' }
+                meta: { title: '仓库报损数详情', noKeepAlive: true }
             }
         ]
     }
