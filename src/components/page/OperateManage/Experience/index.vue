@@ -51,9 +51,9 @@
             <router-link to="/expAddOrEdit?type=add"><el-button type="primary">添加活动</el-button></router-link>
 
             <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%;margin-top:20px;">
-                <el-table-column prop="id" label="ID" align="center"></el-table-column>
+                <el-table-column prop="activityCode" label="活动ID" align="center" width="150"></el-table-column>
                 <el-table-column prop="name" label="活动名称" width="100" align="center"></el-table-column>
-                <el-table-column prop="couponId" label="券ID" align="center"></el-table-column>
+                <el-table-column prop="couponId" label="券ID" width="150" align="center"></el-table-column>
                 <el-table-column prop="startTime" label="开始时间" width="150" align="center">
                     <template slot-scope="scope">
                         {{scope.row.startTime | formatDateAll}}
