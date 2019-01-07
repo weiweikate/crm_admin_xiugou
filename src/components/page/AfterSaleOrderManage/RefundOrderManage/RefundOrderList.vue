@@ -31,7 +31,7 @@
                 </el-form-item>
             </el-form>
         </el-card>
-        <el-card style='margin-top:20px;minHeight:90vh;overflow-x: auto;min-width: 1336px' :body-style="{ padding: '20px 50px' }">
+        <el-card style='margin-top:20px;minHeight:90vh;' :body-style="{ padding: '20px 50px' }">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="all">
                     <v-orderlist ref="all"></v-orderlist>
@@ -114,10 +114,6 @@ export default {
 </script>
 <style lang='less'>
 .product-list {
-    .el-card__body{
-        overflow-x: auto;
-        min-width: 1336px;
-    }
   .el-tabs__active-bar {
     background-color: #ff1e30;
   }

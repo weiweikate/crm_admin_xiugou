@@ -1,5 +1,5 @@
 <template>
-    <div class="product-list">
+    <div class="after-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="query-panue" :body-style="{ padding: '20px 20px'}">
             <el-form :model="form" ref="form" inline label-width="120px">
@@ -34,7 +34,7 @@
                 </el-form-item>
             </el-form>
         </el-card>
-        <el-card style='margin-top:20px;minHeight:90vh;overflow-x: auto;min-width: 1336px' :body-style="{ padding: '20px 50px' }">
+        <el-card style='margin-top:20px;minHeight:90vh;' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
                 <el-button type="primary">导出</el-button>
             </div>
@@ -130,11 +130,7 @@ export default {
 };
 </script>
 <style lang='less'>
-.product-list {
-    .el-card__body{
-        overflow-x: auto;
-        min-width: 1336px;
-    }
+.after-list {
   .el-tabs__active-bar {
     background-color: #ff1e30;
   }
