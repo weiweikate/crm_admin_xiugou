@@ -254,6 +254,16 @@ export const addExpress = ['/config/sysExpress/save', { methods: 'post' }];
 // 更新物流公司
 export const updateExpress = ['/config/sysExpress/edit', { methods: 'post' }];
 
+// 获取地区列表
+export const queryAreaList = ['/area/query', { methods: 'get' }];
+// 地区启用停用
+export const disabledArea = ['/area/disable', { methods: 'get' }];
+export const enabledArea = ['/area/enable', { methods: 'get' }];
+// 添加地区
+export const addArea = ['/area/save', { methods: 'post' }];
+// 编辑地区
+export const editArea = ['/area/edit', { methods: 'post' }];
+
 // ERP接口
 export const updateERPstatus = ['/config/erp/change', { methods: 'get' }];
 export const updateERP = '/config/erp/save';
