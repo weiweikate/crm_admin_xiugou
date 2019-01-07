@@ -203,20 +203,20 @@
                     <el-form-item label="售后处理说明">
                         <el-input type="textarea" maxlength="50" v-model="form.remarks"></el-input>
                     </el-form-item>
-                    <!-- 审核通过 虚拟仓 换货 -->
-                    <el-form-item v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType!=4&&form.result!=2">
+                    <!-- 审核通过 虚拟仓 换货 hasAuth测试true线上false-->
+                    <el-form-item v-if="form.type!=2&&orderInfo.warehouseType!=4&&form.result!=2&&hasAuth">
                         <el-checkbox v-model="checked" @change="chooseXnSend">虚拟发货</el-checkbox>
                     </el-form-item>
                     <!--换货-->
-                    <template v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&form.result!=2||checked">
+                    <template v-if="form.type!=2&&form.result!=2&&(orderInfo.warehouseType==4||checked)">
                         <el-form-item label="换货物流公司">
                         <el-select v-model="form.expressCode">
                             <el-option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.name"></el-option>
                         </el-select>
-                    </el-form-item>
-                    <el-form-item label="换货物流单号">
-                        <el-input v-model="form.expressNo"></el-input>
-                    </el-form-item>
+                        </el-form-item>
+                        <el-form-item label="换货物流单号">
+                            <el-input v-model="form.expressNo"></el-input>
+                        </el-form-item>
                     </template>
                     <el-form-item>
                         <el-button type="primary" :loading="btnLoading" @click="submit('form')">提交</el-button>
@@ -258,7 +258,8 @@ export default {
             logicList: [],
             form: {},
             checked: false,
-            records: {} // 售后协商记录
+            records: {}, // 售后协商记录
+            hasAuth: ''// 是否虚拟发货的权限，用于区分测试与开发环境，测试true 开发false
         };
     },
 
@@ -269,6 +270,8 @@ export default {
         this.getInfo();
         this.getLogic();
         this.checked = false;
+        this.hasAuth = this.$oprAuth('xnfh');
+        console.log(this.hasAuth)
     },
     methods: {
         //  获取信息
