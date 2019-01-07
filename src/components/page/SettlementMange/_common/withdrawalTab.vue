@@ -3,7 +3,7 @@
         <el-table :data="table" v-loading="pageLoading" border>
             <el-table-column prop='withdrawNum' label="提现编号" align="center"></el-table-column>
             <el-table-column prop='userName' label="申请人" align="center"></el-table-column>
-            <el-table-column prop='withdrawBalance' label="申请提现金额" align="center">
+            <el-table-column prop='totalBalance' label="申请提现金额" align="center">
                 <template slot-scope="scope">
                     <span style="color:red">{{scope.row.withdrawBalance || 0 | handleMoney}}</span>
                 </template>
@@ -177,7 +177,7 @@ export default {
         },
         // 账户明细
         accountMsg(row) {
-            this.$router.push({ path: '/cashAccountBalance', query: { memberAccMsg: {memberId: row.id, nickname: row.userName || ''} }});
+            this.$router.push({ path: '/cashAccountBalance', query: { memberAccMsg: {memberCode: row.userCode, nickname: row.userName || ''} }});
         },
         // 审核
         audit(row, status) {
