@@ -37,25 +37,8 @@
                 </el-form-item>
 
                 <!-- 可选是否赠送优惠券S -->
-                <div class="el-form-item el-form-item--small" v-loading="couponLoading">
-                    <!--活动进行中-->
-                    <el-form-item label="活动优惠券" prop="couponId" v-if="form.status === activityStatus.ing">
-                        <el-input placeholder="请输入优惠券ID" v-on:change="getCouponById" v-model="form.couponId" style="width: 300px;"></el-input>
-                        <span class="coupon-err" v-if="couponInfo">
-                            <span v-if="couponInfo.status === 0">已失效</span>
-                            <span v-if="couponInfo.totalNumber === 0">可发放数量不足</span>
-                        </span>
-                        <span class="coupon-err" v-else>优惠券不存在</span>
-                        <div class="coupon-name" v-if="couponInfo">{{couponInfo.name}}</div>
-                        <div class="coupon-regular mt10" v-if="couponInfo">
-                            每{{form.rules[0].startPrice}}元，赠送优惠券 {{form.startCount}} 张
-                            <div class="mt10">
-                                单笔订单最多可赠送优惠券数量： {{form.maxCount}}张
-                            </div>
-                        </div>
-                    </el-form-item>
-                    <!--活动未开始-->
-                    <div v-else>
+                <!-- 如果活动进行中并且未添加优惠券则不展示 -->
+                <div class="el-form-item el-form-item--small" v-loading="couponLoading" v-if="showCoupon">
                         <label
                             class="el-form-item__label"
                             style="width: 100px;">
@@ -92,7 +75,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
                 </div>
                 <!-- 可选是否赠送优惠券E -->
 
@@ -256,7 +238,7 @@
         <!-- 批量导入E -->
 
         <!-- 添加导入商品异常弹窗 S -->
-        <el-dialog title="商品添加失败" :visible.sync="errorDialog" center @close="closeErrorSpuGoodsDialog">
+        <el-dialog title="商品添加失败" :visible.sync="errorDialog" center @close="mergeImportSpuGoods">
             红字的为SPU导入失败异常原因, 关闭窗口后剔除错误商品
             <div class="err-list">
                 <div class="err-item" v-for="item in checkActivityProductRes">
@@ -282,7 +264,11 @@
         watch: {
             'form.couponId': {
                 handler() {
-                    this.checkCoupon = !!this.form.couponId;
+                    const check = !!this.form.couponId;
+                    this.checkCoupon = check;
+                    if (this.form.status === this.activityStatus.ing && !check) {
+                        this.showCoupon = false;
+                    }
                 }
             }
         },
@@ -328,6 +314,7 @@
                 importDialog: false, // 导入弹窗
                 errorDialog: false, // 商品添加失败弹窗
                 checkCoupon: false, // 是否选用优惠券
+                showCoupon: true, // 活动进行中时是否显示优惠券相关
                 categories: [], // 一级类目
                 brandList: [], // 品牌列表
                 couponInfo: {}, // 输入优惠券ID并且失焦时去获取这个id的数据
@@ -458,6 +445,14 @@
                     this.$message.warning('填写的优惠券不存在');
                     return false;
                 }
+                if (this.couponInfo.status === 0) {
+                    this.$message.warning('填写的优惠券已失效');
+                    return false;
+                }
+                if (this.couponInfo.totalNumber === 0) {
+                    this.$message.warning('填写的优惠券可发放数量不足');
+                    return false;
+                }
                 if (!this.form.startCount) {
                     this.form.maxCount = '';
                     this.$message.warning('请先填写满足条件赠送优惠券数');
@@ -480,8 +475,8 @@
                     this.getList(1);
                 }
             },
-            // 关闭错误商品弹窗后剔除问题商品 同时展示没问题商品
-            closeErrorSpuGoodsDialog() {
+            // 处理批量导入中的商品 同时展示没问题商品
+            mergeImportSpuGoods() {
                 const list = this.getErrorSpuGoodsList(this.checkActivityProductRes);
                 this.selectGoods = this.mergeArr(this.selectGoods, this.getImportList());
                 if (list.length) {
@@ -531,6 +526,7 @@
                         this.errorDialog = true;
                     } else {
                         // 校验通过后展示添加的商品
+                        this.mergeImportSpuGoods();
                         this.showAddGoods(res.data);
                     }
                     const dialog = type === 'add' ? 'addGoodDialog' : 'importDialog';
