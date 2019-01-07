@@ -35,7 +35,7 @@
                             <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)" :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
                             <el-input v-model="v.warehouseOrder.remark" placeholder="请输入备注"></el-input>
                         </el-popover>
-                        <el-button v-if="v.warehouseOrder.status==2" type="primary" @click="sendGoods(v)">虚拟发货</el-button>
+                        <el-button v-if="v.warehouseOrder.status==2" v-auth="order.orderList.xnfh" type="primary" @click="sendGoods(v)">虚拟发货</el-button>
                     </div>
                 </td>
             </tr>
