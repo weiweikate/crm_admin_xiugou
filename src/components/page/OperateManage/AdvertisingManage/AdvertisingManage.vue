@@ -43,6 +43,9 @@
                 <!--<div class="item yellow" @click="toPage(4,12)">-->
                     <!--登录首页头图展示位-->
                 <!--</div>-->
+                 <!-- <div class="item yellow" @click="toPage(1,13)" v-auth="'yunying.advertisingManage.xctjt'">
+                    首页秒杀管理
+                </div> -->
             </div>
         </div>
     </div>
