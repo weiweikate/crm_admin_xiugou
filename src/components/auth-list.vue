@@ -3,14 +3,14 @@
         <ul class="auth-list">
             <li class="auth-item" v-for="(item,index) in list" :key="item.name">
                 <div class="auth-title first">
-                    <el-checkbox border size="medium" @change="checked=>editAuth(checked, null, item, item.children)"
+                    <el-checkbox :disabled="disabled" border size="medium" @change="checked=>editAuth(checked, null, item, item.children)"
                                  :label="item.title" :value="item.checked"></el-checkbox>
                 </div>
                 <div class="auth-content">
                     <ul class="auth-list">
                         <li class="auth-item second" v-for="(son,index) in item.children" :key="son.name">
                             <div class="auth-title">
-                                <el-checkbox @change="checked=>editAuth(checked, item, son, son.children)"
+                                <el-checkbox :disabled="disabled" @change="checked=>editAuth(checked, item, son, son.children)"
                                              :label="son.title + ' : '" :value="son.checked"></el-checkbox>
                             </div>
                             <div class="auth-content" style="">
@@ -18,7 +18,7 @@
                                     <li class="auth-item third" v-for="(grandson,index) in son.children"
                                         :key="grandson.name">
                                         <div class="auth-title">
-                                            <el-checkbox @change="checked=>editAuth(checked, son, grandson, null, item)"
+                                            <el-checkbox :disabled="disabled" @change="checked=>editAuth(checked, son, grandson, null, item)"
                                                          :label="grandson.title"
                                                          :value="grandson.checked"></el-checkbox>
                                         </div>
@@ -36,6 +36,23 @@
 </template>
 <script>
     const defAuthlist = require('@/auth.json');
+
+    function filterAsyncRouter(routes) {
+        const res = [];
+        const len = routes.length;
+        for (let i = 0; i < len; i++) {
+            const tmp = { ...routes[i] };
+            const needAuth = tmp.roles && tmp.roles.includes('admin');
+            if (!needAuth) {
+                if (tmp.children) {
+                    tmp.children = filterAsyncRouter(tmp.children);
+                }
+                res.push(tmp);
+            }
+
+        }
+        return res;
+    }
 
     function changeStatus(auth, list) {
         const res = [];
@@ -57,7 +74,8 @@
     export default {
         name: 'AuthList',
         props: {
-            auth: ''
+            auth: '',
+            disabled: false
         },
         data() {
             return {
@@ -65,7 +83,10 @@
             };
         },
         mounted() {
-            this.list = this.dealAuth(defAuthlist);
+            const roles = this.$store.getters.roles;
+            const isAdmin = roles.includes('admin');
+            const authList = isAdmin ? defAuthlist : filterAsyncRouter(defAuthlist);
+            this.list = this.dealAuth(authList);
         },
         methods: {
             // 手动更新权限check状态
@@ -78,9 +99,6 @@
                 if (!list || list.length === 0) return list;
                 list.forEach(item => {
                     item.checked = false;
-                    if (item.name === 'labelManage') {
-                        console.log(item.children);
-                    }
                     this.dealAuth(item.children);
                 });
                 return list;

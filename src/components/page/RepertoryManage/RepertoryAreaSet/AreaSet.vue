@@ -83,7 +83,6 @@
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-import moment from 'moment';
 import request from '@/http/http.js';
 
 export default {
@@ -109,7 +108,7 @@ export default {
             title: ['', '发货仓', '退货仓']
         };
     },
-    activated() {
+    mounted() {
         this.getList();
     },
     methods: {
@@ -137,7 +136,7 @@ export default {
         },
         // 模糊搜索
         querySearchAsync(queryString, cb) {
-            if (queryString == '') {
+            if (queryString === '') {
                 return;
             }
             request.findWarehouseLike({ 'keyword': this.formMask.code, type: this.type }).then(res => {
@@ -186,7 +185,7 @@ export default {
         // 查看全部
         watchAll(row, num) {
             this.allData = [];
-            this.allData = num == 1 ? row.sendList ? row.sendList : [] : row.returnList ? row.returnList : [];
+            this.allData = num === 1 ? row.sendList ? row.sendList : [] : row.returnList ? row.returnList : [];
             this.tempAllData = [];
             this.tempAllData.push(...this.allData);
             this.allMask = true;
@@ -199,7 +198,7 @@ export default {
         upOrDown(num, index) {
             const _this = this.tempAllData[index];
             const tempArr = [];
-            if (num == 0) {
+            if (num === 0) {
                 tempArr.push(_this);
                 this.tempAllData.splice(index, 1);
                 const newArr = tempArr.concat(this.tempAllData);

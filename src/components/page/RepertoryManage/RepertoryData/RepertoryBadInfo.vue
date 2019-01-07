@@ -14,30 +14,25 @@
         </el-card>
         <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
             <el-table :data="tableData" border>
-                <el-table-column prop="name" label="产品名称" align="center"></el-table-column>
-                <el-table-column prop="id" label="商品编码" align="center"></el-table-column>
-                <el-table-column prop="code" label="颜色" align="center"></el-table-column>
-                <el-table-column prop="type" label="版本" align="center"></el-table-column>
-                <el-table-column prop="supplierId" label="规格" align="center"></el-table-column>
-                <el-table-column prop="supplierId" label="类型" align="center"></el-table-column>
-                <el-table-column prop="supplierId" label="订单号" align="center"></el-table-column>
+                <el-table-column type="index" label="序号" align="center"></el-table-column>
+                <el-table-column prop="serviceNo" label="售后单号" align="center"></el-table-column>
+                <el-table-column prop="warehouseOrderNo" label="仓库订单号" align="center"></el-table-column>
+                <el-table-column prop="productName" label="产品名称" align="center"></el-table-column>
+                <el-table-column prop="skuCode" label="商品SKU编码" align="center"></el-table-column>
+                <template v-for='(v,k) in headData'>
+                    <el-table-column :show-overflow-tooltip="true" :prop="v.value" :label="v.name" :key="k" align="center">
+                    </el-table-column>
+                </template>
                 <el-table-column label="报损时间" align="center">
-                    <template slot-scope="scope">{{scope.row.time|formatDateAll}}</template>
+                    <template slot-scope="scope">{{scope.row.updateTime|formatDateAll}}</template>
                 </el-table-column>
                 <el-table-column label="报损数" align="center">
-                    <template slot-scope="scope">{{scope.row.num}}件</template>
+                    <template slot-scope="scope">{{scope.row.defectiveQuantity||0}}件</template>
                 </el-table-column>
                 <el-table-column prop="remark" label="备注" align="center"></el-table-column>
             </el-table>
             <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
+                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
                 </el-pagination>
             </div>
         </el-card>
@@ -46,10 +41,9 @@
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
+import moment from 'moment';
 import request from '@/http/http.js';
-import utils from '@/utils/index.js';
 
 export default {
     components: { vBreadcrumb },
@@ -62,29 +56,50 @@ export default {
             tableData: [],
             form: {
                 date: []
-            }
+            },
+            warehouseCode: '',
+            prodCode: '',
+            headData: [] // 规格表头
         };
     },
-    activated() {
+    mounted() {
+        this.prodCode = this.$route.query.repertoryInfoId || sessionStorage.getItem('repertoryInfoId');
+        this.warehouseCode = this.$route.query.warehouseCode || sessionStorage.getItem('warehouseCode');
         this.getList(this.page.currentPage);
     },
     methods: {
         // 获取数据
         getList(val) {
             const data = {
-                startTime: this.form.date ? utils.formatTime(this.form.createTime[0], 1) : '',
-                endTime: this.form.date ? utils.formatTime(this.form.createTime[1], 1) : '',
+                prodCode: this.prodCode,
+                warehouseCode: this.warehouseCode,
+                startTime: this.form.date[0] ? moment(this.form.date[0]).format('YYYY-MM-DD 00:00:00') : '',
+                endTime: this.form.date[1] ? moment(this.form.date[0]).format('YYYY-MM-DD 23:59:59') : '',
                 page: val,
                 pageSize: this.page.pageSize
             };
             this.page.currentPage = val;
             request
-                .getStoreList(data)
+                .stockLossDetail(data)
                 .then(res => {
                     this.tableData = [];
                     if (!res.data) return;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
+                    res.data.data.forEach((v, k) => {
+                        this.headData = [];
+                        if (!v.specTitle || !v.specValue) return;
+                        const specs = v.specTitle.split('-');
+                        const specValues = v.specValue.split('-');
+                        specs.forEach((v1, k1) => {
+                            const temp = {
+                                value: v1,
+                                name: v1
+                            };
+                            this.headData.push(temp);
+                            this.tableData[k][v1] = specValues[k1];
+                        });
+                    });
                 })
                 .catch(error => {
                     console.log(error);
@@ -93,6 +108,7 @@ export default {
         //   重置表单
         resetForm(formName) {
             this.$refs[formName].resetFields();
+            this.form.date = [];
             this.getList(1);
         }
     }
@@ -128,6 +144,5 @@ export default {
             margin-right: 30px;
         }
     }
-
 }
 </style>

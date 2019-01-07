@@ -222,7 +222,7 @@ export default {
                 that.info = '确定关闭？';
             }
             if (status == 3) {
-                that.info = '确定删除"' + row.name + '"关键词？';
+                that.info = '确定删除"' + row.wordName + '"关键词？';
             }
             that.status = status;
             that.id = row.id;

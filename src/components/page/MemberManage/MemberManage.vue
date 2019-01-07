@@ -21,7 +21,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="levelId" label="用户层级" label-width="120">
-                    <el-select v-model="exportForm.levelId" placeholder="全部层级">
+                    <el-select v-model="form.levelId" placeholder="全部层级">
                         <el-option label="全部层级" value=""></el-option>
                         <el-option :label="`v${item.level}`" :value="item.id" v-for="(item,index) in levelList"
                                    :key="index"></el-option>
@@ -159,7 +159,9 @@ export default {
             form: {
                 condition: '',
                 phone: '',
-                userType: ''
+                userType: '',
+                levelId: '',
+                idcard: ''
             },
             exportForm: {
                 levelId: ''
