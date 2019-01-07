@@ -1,5 +1,5 @@
 <template>
-    <div class="product-list">
+    <div class="order-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="query-panue" :body-style="{ padding: '20px 20px'}">
             <el-form :model="form" ref="form" inline label-width="120px">
@@ -62,7 +62,7 @@
                 </el-form-item>
             </el-form>
         </el-card>
-        <el-card style='margin-top:20px;minHeight:90vh;overflow-x: auto;min-width: 1336px' :body-style="{ padding: '20px 50px' }">
+        <el-card style='margin-top:20px;minHeight:90vh;' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
                 <el-button type="danger" @click="sendOut" v-auth="'order.orderList.yjts'">推送云仓</el-button>
                 <a ref="exportData" @click="downloadOrderData">
@@ -238,11 +238,7 @@ export default {
 };
 </script>
 <style lang='less'>
-.product-list {
-    .el-card__body {
-        overflow-x: auto;
-        min-width: 1336px;
-    }
+.order-list {
     .el-tabs__active-bar {
         background-color: #ff1e30;
     }

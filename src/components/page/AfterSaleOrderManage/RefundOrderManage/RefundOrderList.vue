@@ -1,5 +1,5 @@
 <template>
-    <div class="product-list">
+    <div class="order-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="query-panue" :body-style="{ padding: '20px 20px'}">
             <el-form :model="form" ref="form" inline label-width="120px">
@@ -113,7 +113,7 @@ export default {
 };
 </script>
 <style lang='less'>
-.product-list {
+.order-list {
   .el-tabs__active-bar {
     background-color: #ff1e30;
   }
