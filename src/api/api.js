@@ -57,21 +57,21 @@ export const getAllgetAllActivety = '/admin/securityCodeTemplate/getSecurityCode
 export const productionSecurityCode = '/securityCode/securityCodeRecord/productionSecurityCode';
 //
 // 查看管理员操作日志
-export const getMangerLog = '/admin/logAdminuser/getPage';
+export const getMangerLog = '/logAdminuser/getPage';
 // 重置登陆密码
-export const resetPassword = '/admin/adminUser/resetPassword';
+export const resetPassword = '/adminUser/resetPassword';
 // 开启/关闭管理员账号
-export const updateAdminUserStatus = '/admin/adminUser/updateAdminUserStatus';
+export const updateAdminUserStatus = '/adminUser/updateAdminUserStatus';
 // 删除管理员账号
-export const deleteAdminUser = '/admin/adminUser/deleteUpdateAdminUser';
+export const deleteAdminUser = '/adminUser/deleteUpdateAdminUser';
 // 查询权限三级模块列表
-export const queryPrivilegeList = '/admin/privilege/queryPrivilegeList';
+export const queryPrivilegeList = '/privilege/queryPrivilegeList';
 // 添加权限
-export const addPrivilege = '/admin/privilege/addPrivilege';
+export const addPrivilege = '/privilege/addPrivilege';
 // 获取一级模块列表
-export const queryTopMenuList = '/admin/privilege/queryTopMenuList';
+export const queryTopMenuList = '/privilege/queryTopMenuList';
 // 新增功能模块
-export const addFunctionModule = '/admin/privilege/addFunctionModule';
+export const addFunctionModule = '/privilege/addFunctionModule';
 
 // 品牌产品管理
 // 获取一二级类目列表

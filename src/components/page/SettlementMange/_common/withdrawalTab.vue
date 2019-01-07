@@ -38,7 +38,7 @@
                     <el-button @click="audit(scope.row,2)" v-if='scope.row.status == 1' type="warning">驳回</el-button>
                     <el-button :loading="btnloading" @click="record(scope.row)" v-if='scope.row.status == 2' type="warning">打款记录</el-button>
                     <!--<el-button :loading="refReaBtnLoading" @click="showRefuseReason(scope.row)" v-if='scope.row.status == 3' type="danger">查看驳回理由</el-button>-->
-                    <el-button :loading="refReaBtnLoading" @click="audit(scope.row,2)" v-if='scope.row.status == 3' type="danger">查看驳回理由</el-button>
+                    <el-button :loading="refReaBtnLoading" @click="showRefuseReason(scope.row)" v-if='scope.row.status == 3' type="danger">查看驳回理由</el-button>
                 </template>
             </el-table-column>
         </el-table>

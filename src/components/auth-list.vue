@@ -3,14 +3,14 @@
         <ul class="auth-list">
             <li class="auth-item" v-for="(item,index) in list" :key="item.name">
                 <div class="auth-title first">
-                    <el-checkbox border size="medium" @change="checked=>editAuth(checked, null, item, item.children)"
+                    <el-checkbox :disabled="disabled" border size="medium" @change="checked=>editAuth(checked, null, item, item.children)"
                                  :label="item.title" :value="item.checked"></el-checkbox>
                 </div>
                 <div class="auth-content">
                     <ul class="auth-list">
                         <li class="auth-item second" v-for="(son,index) in item.children" :key="son.name">
                             <div class="auth-title">
-                                <el-checkbox @change="checked=>editAuth(checked, item, son, son.children)"
+                                <el-checkbox :disabled="disabled" @change="checked=>editAuth(checked, item, son, son.children)"
                                              :label="son.title + ' : '" :value="son.checked"></el-checkbox>
                             </div>
                             <div class="auth-content" style="">
@@ -18,7 +18,7 @@
                                     <li class="auth-item third" v-for="(grandson,index) in son.children"
                                         :key="grandson.name">
                                         <div class="auth-title">
-                                            <el-checkbox @change="checked=>editAuth(checked, son, grandson, null, item)"
+                                            <el-checkbox :disabled="disabled" @change="checked=>editAuth(checked, son, grandson, null, item)"
                                                          :label="grandson.title"
                                                          :value="grandson.checked"></el-checkbox>
                                         </div>
@@ -57,7 +57,8 @@
     export default {
         name: 'AuthList',
         props: {
-            auth: ''
+            auth: '',
+            disabled: false
         },
         data() {
             return {
