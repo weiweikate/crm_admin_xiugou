@@ -46,7 +46,7 @@
                     <el-table-column prop="nickname" label="用户昵称" align="center"></el-table-column>
                     <el-table-column prop="phone" label="手机号" align="center"></el-table-column>
                     <el-table-column label="授权层级" align="center">
-                        <template slot-scope="scope">{{scope.row.levelName}}级</template>
+                        <template slot-scope="scope" v-if="scope.row.level !== undefined && scope.row.level !== null">{{`v${scope.row.level}`}}</template>
                     </el-table-column>
                     <el-table-column label="最近登录时间" align="center">
                         <template slot-scope="scope">
