@@ -78,7 +78,7 @@ export default {
             afterSaleStatusArr: [// 售后状态
                 { label: '待审核', value: '1' },
                 { label: '待商品寄回', value: '2' },
-                // { label: '待仓库确认', value: '3' },
+                { label: '待仓库确认', value: '3' },
                 { label: '待平台处理', value: '4' },
                 { label: '售后完成', value: '5' },
                 { label: '售后关闭', value: '6' }
