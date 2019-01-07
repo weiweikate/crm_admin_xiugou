@@ -37,6 +37,23 @@
 <script>
     const defAuthlist = require('@/auth.json');
 
+    function filterAsyncRouter(routes) {
+        const res = [];
+        const len = routes.length;
+        for (let i = 0; i < len; i++) {
+            const tmp = { ...routes[i] };
+            const needAuth = tmp.roles && tmp.roles.includes('admin');
+            if (!needAuth) {
+                if (tmp.children) {
+                    tmp.children = filterAsyncRouter(tmp.children);
+                }
+                res.push(tmp);
+            }
+
+        }
+        return res;
+    }
+
     function changeStatus(auth, list) {
         const res = [];
         if (!list.length) {
@@ -66,7 +83,10 @@
             };
         },
         mounted() {
-            this.list = this.dealAuth(defAuthlist);
+            const roles = this.$store.getters.roles;
+            const isAdmin = roles.includes('admin');
+            const authList = isAdmin ? defAuthlist : filterAsyncRouter(defAuthlist);
+            this.list = this.dealAuth(authList);
         },
         methods: {
             // 手动更新权限check状态
@@ -79,9 +99,6 @@
                 if (!list || list.length === 0) return list;
                 list.forEach(item => {
                     item.checked = false;
-                    if (item.name === 'labelManage') {
-                        console.log(item.children);
-                    }
                     this.dealAuth(item.children);
                 });
                 return list;

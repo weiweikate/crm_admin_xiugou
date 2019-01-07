@@ -136,7 +136,7 @@
                     </el-table-column>
                 </el-table>
             </div>
-            <!--待审核-->
+            <!--待审核  type：售后类型 2退货退款，3换货 status:订单状态 1待审核-->
             <div class="opr-area" v-if="orderCustomerServiceInfo.type!=1&&orderCustomerServiceInfo.status==1">
                 <div class="title">操作</div>
                 <el-form :model="form">
@@ -146,9 +146,11 @@
                             <el-radio label="2">审核驳回</el-radio>
                         </el-radio-group>
                     </el-form-item>
+                    <!-- 审核通过，退货退款 -->
                     <el-form-item label="审核金额调整" v-if="form.result!=2&&orderCustomerServiceInfo.type!=3">
                         <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~{{warehouseOrderProduct.payAmount|formatMoney}}区间内调整，其中含运费{{warehouseOrderProduct.freightAmount|formatMoney}}</span>
                     </el-form-item>
+                    <!-- 审核通过 -->
                     <el-form-item label="退货地址" class="back-address" v-if="form.result!=2">
                         <div class="address-area">
                             <div>
@@ -177,7 +179,8 @@
                 </el-form>
             </div>
             <!--待平台处理-->
-            <div class="opr-area" v-if="(orderCustomerServiceInfo.type==1&&orderCustomerServiceInfo.status==1||orderCustomerServiceInfo.status==3||orderCustomerServiceInfo.status==4)&&orderCustomerServiceInfo.subStatus!=9">
+            <!-- 1 仅退款待审核状态， 2 其他类型待平台处理状态 且从未发货   substatus为9代表发过货-->
+            <div class="opr-area" v-if="(orderCustomerServiceInfo.type==1&&orderCustomerServiceInfo.status==1||orderCustomerServiceInfo.status==4)&&orderCustomerServiceInfo.subStatus!=9">
                 <div class="title">操作</div>
                 <el-form :model="form">
                     <el-form-item label="售后处理结果">
@@ -186,31 +189,35 @@
                             <el-radio label="2">审核驳回</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <!--换货-->
-                    <el-form-item label="售后类型" v-if="orderCustomerServiceInfo.type==3&&(orderCustomerServiceInfo.type==3&&form.result!=2)">
+                    <!--换货 审核通过-->
+                    <el-form-item label="售后类型" v-if="orderCustomerServiceInfo.type==3&&form.result!=2">
                         <el-radio-group v-model="form.type">
                             <el-radio label="1">换货</el-radio>
                             <el-radio label="2">退货退款</el-radio>
                         </el-radio-group>
                     </el-form-item>
+                    <!-- 1 仅退款  2 退货退款 审核通过 -->
                     <el-form-item label="处理金额调整" v-if="(orderCustomerServiceInfo.type==1||orderCustomerServiceInfo.type==2||form.type==2)&&form.result!=2">
                         <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~{{warehouseOrderProduct.payAmount|formatMoney}}区间内调整，其中含运费{{warehouseOrderProduct.freightAmount|formatMoney}}</span>
                     </el-form-item>
                     <el-form-item label="售后处理说明">
                         <el-input type="textarea" maxlength="50" v-model="form.remarks"></el-input>
                     </el-form-item>
-                    <el-form-item v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType!=4&&(orderCustomerServiceInfo.type==3&&form.result!=2)">
+                    <!-- 审核通过 虚拟仓 换货 hasAuth测试true线上false-->
+                    <el-form-item v-if="form.type!=2&&orderInfo.warehouseType!=4&&form.result!=2&&hasAuth">
                         <el-checkbox v-model="checked" @change="chooseXnSend">虚拟发货</el-checkbox>
                     </el-form-item>
                     <!--换货-->
-                    <el-form-item label="换货物流公司" v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&(orderCustomerServiceInfo.type==3&&form.result!=2)||checked">
+                    <template v-if="form.type!=2&&form.result!=2&&(orderInfo.warehouseType==4||checked)">
+                        <el-form-item label="换货物流公司">
                         <el-select v-model="form.expressCode">
                             <el-option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.name"></el-option>
                         </el-select>
-                    </el-form-item>
-                    <el-form-item label="换货物流单号" v-if="form.type!=2&&orderCustomerServiceInfo.type==3&&orderInfo.warehouseType==4&&(orderCustomerServiceInfo.type==3&&form.result!=2)||checked">
-                        <el-input v-model="form.expressNo"></el-input>
-                    </el-form-item>
+                        </el-form-item>
+                        <el-form-item label="换货物流单号">
+                            <el-input v-model="form.expressNo"></el-input>
+                        </el-form-item>
+                    </template>
                     <el-form-item>
                         <el-button type="primary" :loading="btnLoading" @click="submit('form')">提交</el-button>
                     </el-form-item>
@@ -251,7 +258,8 @@ export default {
             logicList: [],
             form: {},
             checked: false,
-            records: {} // 售后协商记录
+            records: {}, // 售后协商记录
+            hasAuth: ''// 是否虚拟发货的权限，用于区分测试与开发环境，测试true 开发false
         };
     },
 
@@ -262,6 +270,8 @@ export default {
         this.getInfo();
         this.getLogic();
         this.checked = false;
+        this.hasAuth = this.$oprAuth('xnfh');
+        console.log(this.hasAuth)
     },
     methods: {
         //  获取信息

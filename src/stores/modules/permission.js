@@ -52,14 +52,18 @@ const permission = {
                 const auth = data._auth;
                 const adminRoutes = getAdminRoutes(asyncRouterMap);
                 const noAuthRoutes = getNoAuthRoutes(auth);
+                const dashboard = noAuthRoutes.indexOf('dashboard');
                 let accessedRouters;
+                if (dashboard > -1) {
+                    noAuthRoutes.splice(dashboard, 1);
+                }
                 // 超级管理员则赋予所有权限
                 if (roles.includes('admin')) {
                     accessedRouters = asyncRouterMap;
                 } else {
                     let tmp = noAuthRoutes.concat(adminRoutes);
                     console.log('没权限的路由：', tmp);
-                    accessedRouters = filterAsyncRouter(asyncRouterMap, tmp);
+                    accessedRouters = filterAsyncRouter(asyncRouterMap, noAuthRoutes);
                 }
                 console.log('用户权限', accessedRouters);
                 commit('SET_ROUTERS', accessedRouters.concat([{ path: '*', redirect: '/404', hidden: true }]));
