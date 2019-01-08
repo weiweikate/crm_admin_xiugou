@@ -283,9 +283,7 @@
                 margin: 0px 10px 0px 20px;
                 font-size: 14px;
             }
-            .el-checkbox {
-                margin-left: 20px;
-            }
+
             .avatar {
                 z-index: 100;
                 position: absolute;
