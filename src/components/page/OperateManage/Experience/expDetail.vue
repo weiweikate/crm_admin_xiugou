@@ -10,13 +10,13 @@
                 <el-form-item label="活动规则">
                     <div class="regular-list" v-if="form.rules">
                         <div class="regular-item mb10" v-for="(item,index) in form.rules">
-                            购满买{{item.startPrice}}元，经验值翻{{item.rate}}倍
+                            购买满{{item.startPrice}}元，经验值翻{{item.rate}}倍
                         </div>
                     </div>
                 </el-form-item>
 
                 <!-- 可选是否赠送优惠券S -->
-                <el-form-item label="活动优惠券" v-if="form.coupons"  class="border-dash">
+                <el-form-item label="活动优惠券" class="border-dash">
                     <span>{{form.couponId}}</span>
                     <span style="color:red;display: inline-block;margin-left: 15px;" v-if="couponInfo.status === 0">已失效</span>
                     <span style="color:red;display: inline-block;margin-left: 15px;" v-if="couponInfo.totalNumber === 0">可发放数量不足</span>
