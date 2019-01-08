@@ -61,7 +61,7 @@
                     </el-checkbox>
                     <div style="margin: 15px 0;"></div>
                     <el-checkbox-group v-model="checkedUsers" @change="handleCheckedUsersChange">
-                        <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{item.name}}
+                        <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{`V`+item.level}}
                         </el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
@@ -390,7 +390,7 @@
                                 this.$message.warning('请输入到期前提醒天数!');
                                 return;
                             } else {
-                                if (Number(data.remindDays) > Number(data.effectiveDays)) {
+                                if (utils.stringToNumber(data.remindDays) > utils.stringToNumber(data.effectiveDays)) {
                                     return this.$message.warning('到期前提醒天数不能大于周期有效天数');
                                 }
                             }

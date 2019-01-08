@@ -99,7 +99,6 @@
 </template>
 
 <script>
-import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 
@@ -163,7 +162,7 @@ export default {
                     if (res.data.data[i].couponUserLevelList) {
                         const userLevelIds = [];
                         for (const j in res.data.data[i].couponUserLevelList) {
-                            userLevelIds.push(res.data.data[i].couponUserLevelList[j].name);
+                            userLevelIds.push('V' + res.data.data[i].couponUserLevelList[j].userLevelId);
                         }
                         res.data.data[i].userLevelIds = userLevelIds.join(',');
                     }
@@ -288,7 +287,6 @@ export default {
             margin-top: 10px;
         }
         .product-img {
-            display: inline-block;
             float: left;
             width: 80px;
             height: 80px;
