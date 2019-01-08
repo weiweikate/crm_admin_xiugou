@@ -105,7 +105,7 @@ export default {
         },
         //  点击tab选项卡
         handleClick(tab) {
-            this.resetForm('form');
+            // this.resetForm('form');
             this.activeName = tab.name;
             this.getList();
         }
