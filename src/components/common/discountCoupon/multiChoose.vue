@@ -236,6 +236,9 @@
                 this.checkedList = [];
                 this.checkAll = false;
                 this.param = '';
+                this.firstCategoryId = '';
+                this.secondCategoryId = '';
+                this.thirdCategoryId = '';
             },
             // 获取一级类目
             getFirst() {
@@ -529,7 +532,7 @@
                     .then(res => {
                         that.productList = res.data;
                         res.data.forEach(function(v, k) {
-                            if (that.productTagIds.indexOf(v.prodCode) !== -1 || that.thirdChecked[index]) {
+                            if (that.productTagIds.indexOf(v.prodCode) !== -1 || that.thirdChecked[index] || (that.thirdIndex === 0 || that.thirdIndex) && that.thirdChecked[that.thirdIndex]) {
                                 that.productChecked[k] = true;
                             } else {
                                 that.productChecked[k] = false;
@@ -646,7 +649,6 @@
             },
             // 移除标签
             deleteTags(num, item, isTag) {
-                //  console.log('222:'+item)
                 const classifyIds = []; // 选择框数据ids
                 const tagIds = num === 1 ? this.firstTagIds : num === 2 ? this.secondTagIds : num === 3 ? this.thirdTagIds : this.productTagIds;
                 const tag = num === 1 ? this.firstClassifyTags : num === 2 ? this.secondClassifyTags : num === 3 ? this.thirdClassifyTags : this.productTags;

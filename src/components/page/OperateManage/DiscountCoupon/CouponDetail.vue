@@ -73,6 +73,7 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import request from '@/http/http.js';
+    import utils from '@/utils/index.js';
 
     export default {
         components: {
@@ -116,16 +117,16 @@
                     let count = 0;
                     const arr = userLevelId.split(',');
                     for (const i in res.data) {
-                        const name = res.data[i].name;
+                        const level = 'V' + res.data[i].level;
                         for (const j in arr) {
-                            if (arr[j] == res.data[i].id) {
+                            if (utils.stringToNumber(arr[j]) === utils.stringToNumber(res.data[i].id)) {
                                 count++;
-                                this.users.push(name);
+                                this.users.push(level);
                             }
                         }
                     }
                     this.users = this.users.join(',');
-                    if (count == res.data.length) this.allUser = true;
+                    if (count === res.data.length) this.allUser = true;
                 }).catch(error => {
                     console.log(error);
                 });
