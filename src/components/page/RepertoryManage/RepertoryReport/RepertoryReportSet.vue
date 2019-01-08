@@ -148,7 +148,7 @@
                     }
                 }
             };
-            var isMobile = (rule, value, callback) => {
+            /* var isMobile = (rule, value, callback) => {
                 if (!value) {
                     return callback(new Error('请输入退货仓联系方式'));
                 } else {
@@ -159,7 +159,7 @@
                         callback();
                     }
                 }
-            };
+            }; */
             var isMobile2 = (rule, value, callback) => {
                 if (value) {
                     const reg = /^((0\d{2,3}-?\d{7,8})|(1[3-8]\d{9}))$/;
@@ -172,7 +172,7 @@
                     callback();
                 }
             };
-            var isCode = (rule, value, callback) => {
+            /* var isCode = (rule, value, callback) => {
                 if (value) {
                     const reg = /^[0-9]*$/;
                     if (!reg.test(value)) {
@@ -183,7 +183,7 @@
                 } else {
                     callback();
                 }
-            };
+            }; */
             return {
                 nav: ['云仓仓库管理', '入库单', '新建入库单'],
                 id: '',
@@ -254,9 +254,9 @@
                 'user'
             ])
         },
-        activated() {
+        mounted() {
             this.id = this.$route.query.reportId || sessionStorage.getItem('reportId');
-            this.type = this.$route.query.type == 'add' ? 1 : 2;
+            this.type = this.$route.query.type === 'add' ? 1 : 2;
             this.getInfo();
         },
         methods: {
@@ -294,7 +294,7 @@
                 this.$refs[formName].validate((valid) => {
                     if (!valid) return;
                     const data = this.form;
-                    if (this.status == 2) {
+                    if (this.status === 2) {
                         data.id = this.id;
                     }
                     if (!this.chooseLists.length || this.chooseLists[0].skuList.length === 0) {
@@ -326,7 +326,7 @@
             },
             getInfo() {
                 this.resetValue();
-                if (this.type == 1) {
+                if (this.type === 1) {
                     this.nav[2] = '新建入库单';
                 } else {
                     this.nav[2] = '编辑入库单';
@@ -389,7 +389,7 @@
                 this.$router.push('/repertoryReportList');
             },
             querySearchAsync(queryString, cb) {
-                if (queryString == '') {
+                if (queryString === '') {
                     return;
                 }
                 request.findWarehouseLike({ 'keyword': this.form.receiveWarehouseName }).then(res => {
@@ -408,7 +408,7 @@
                 });
             },
             handleSelect(item) {
-                if (this.form.receiveWarehouseCode != item.code) {
+                if (this.form.receiveWarehouseCode !== item.code) {
                     this.chooseLists = [{ prodCode: '', productId: '', skuList: [] }];
                     this.prodCode = '';
                     this.prodCodes = [];
@@ -439,7 +439,7 @@
                         }
                     }
                 });
-                if (count == 0) {
+                if (count === 0) {
                     this.chooseLists.splice(this.isIndex, 1);
                     this.prodCodes.splice(this.isIndex, 1);
                 }
@@ -463,7 +463,7 @@
                 };
                 let flag = true;
                 this.prodCodes.forEach((v, k) => {
-                    if (row.prodCode == v) {
+                    if (row.prodCode === v) {
                         this.isIndex = k;
                         flag = false;
                     }
@@ -481,9 +481,9 @@
                 request.SKUList(data).then(res => {
                     res.data.data.forEach((v, k) => {
                         this.prodCodes.forEach((v1, k1) => {
-                            if (v1 == row.prodCode) {
+                            if (v1 === row.prodCode) {
                                 this.chooseLists[k1].skuList.forEach((v2, k2) => {
-                                    if (v2.skuCode == v.skuCode) {
+                                    if (v2.skuCode === v.skuCode) {
                                         v.estimateCount = this.chooseLists[k1].skuList[k2].estimateCount;
                                     }
                                 });

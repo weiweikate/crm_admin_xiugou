@@ -179,7 +179,7 @@
                 const data = {
                     ids: company.id
                 };
-                request.disableExpress(data).then( res => {
+                request.disableExpress(data).then(res => {
                     this.getList(this.page.currentPage);
                 }).catch(res => {
 
@@ -270,7 +270,6 @@
                 this.getList(1);
             },
             search() {
-                console.log(this.searchFields);
                 this.getList(1);
             },
             getList(page) {
@@ -280,9 +279,13 @@
                     code: f.code || '',
                     expressNum: f.expressNum || '',
                     status: f.status || '',
-                    start: f.time[0],
-                    end: f.time[1]
+                    start: '',
+                    end: ''
                 };
+                if (f.time && f.time.length) {
+                    data.start = f.time[0];
+                    data.end = f.time[1];
+                }
                 request.sysExpressQuery(data).then(res => {
                     const data = res.data;
                     this.tableData = data.data;
@@ -291,7 +294,7 @@
             }
         },
         mounted() {
-            this.getList();
+            this.getList(1);
         }
     };
 </script>

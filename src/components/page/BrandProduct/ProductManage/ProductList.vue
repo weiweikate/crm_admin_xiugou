@@ -195,9 +195,10 @@
         mounted() {
             const param = this.$route.query;
             if (param) {
-                this.form.brandId = param.brandId;
-                this.form.supplierCode = param.supplierCode;
-                this.form.paramStatus = param.flag; // 已上架状态
+                this.form.thirdCategoryId = param.thirdCatId || '';
+                this.form.brandId = param.brandId || '';
+                this.form.supplierCode = param.supplierCode || '';
+                this.form.paramStatus = param.flag || ''; // 已上架状态
             }
             this.getFeightList();
             this.getFirstCateList();
@@ -298,6 +299,7 @@
                 this.$refs['form'].resetFields();
                 this.form.paramStatus = '';
                 this.form.brandId = '';
+                this.form.thirdCatId = '';
             }
         },
         // 路由离开钩子

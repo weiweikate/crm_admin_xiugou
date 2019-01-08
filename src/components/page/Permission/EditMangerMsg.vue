@@ -12,7 +12,7 @@
                     <p>所在岗位：{{jobName}}</p>
                     <p>直接上级：{{immediateSuperior}}</p>
                     <span>权限信息</span>
-                    <p>默认权限：<el-tag style="margin-right:5px" v-for="(v,k) in privilege" :key="k">{{v}}</el-tag></p>
+                    <authList disabled="true" :auth="auth" ref="auth"></authList>
                     <div class="avatar"><img :src="face" alt=""></div>
                     <el-upload
                         class="avatar"
@@ -65,10 +65,12 @@ import breadcrumb from '@/components/common/Breadcrumb';
 import icon from '@/components/common/ico';
 import * as api from '@/api/api.js';
 import request from '@/http/http';
+import authList from '@/components/auth-list.vue';
 import { mapGetters } from 'vuex';
 export default {
     components: {
         breadcrumb,
+        authList,
         icon
     },
     computed: {
@@ -87,9 +89,11 @@ export default {
             deptmentName: '',
             jobName: '',
             immediateSuperior: '',
-            privilege: [],
+            auth: '',
             face: '',
             id: '',
+            timer: null, // 定时器
+            codeTime: 0,
             form: {
                 phone: '',
                 code: '',
@@ -113,10 +117,8 @@ export default {
             this.jobName = res.data.jobName;
             this.immediateSuperior = res.data.immediateSuperior;
             this.face = res.data.face;
-            this.privilege = [];
-            res.data.adminUserPrivilegeList.forEach((v, k) => {
-                this.privilege.push(v.name);
-            });
+            this.auth = res.data.privilegeInfo || '';
+            this.$refs.auth.updateStatus(this.auth);
         }).catch(err => {
             console.log(err);
         });
@@ -124,7 +126,12 @@ export default {
     methods: {
     //  修改信息
         editPwd() {
-            this.form = {};
+            this.form = {
+                phone: '',
+                code: '',
+                password: '',
+                repeatPwd: ''
+            };
             this.isShowEditPwd = true;
         },
         confirmEditPwd(formName) {
@@ -164,19 +171,18 @@ export default {
         },
         //  获取验证码
         getCode() {
-            if (this.form.phone == '') {
-                this.$message.warning('请输入手机号');
-                return;
+            if (!this.form.phone) {
+                return this.$message.warning('请输入手机号');
             }
             const data = {};
             const that = this;
             this.code = false;
             this.codeTime = 60;
-            let timer = setInterval(function() {
+            this.timer = setInterval(function() {
                 that.codeTime--;
                 if (that.codeTime <= 0) {
                     that.code = true;
-                    clearInterval(timer);
+                    clearInterval(that.timer);
                 }
             }, 1000);
             data.phone = this.form.phone;
@@ -194,6 +200,7 @@ export default {
     width: 100%;
     height: 80vh;
     padding: 50px 100px;
+    overflow-y: auto;
     box-sizing: border-box;
     .detail-msg {
       position: relative;

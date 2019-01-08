@@ -137,6 +137,10 @@
                     this.$message.warning('请输入等级名称!');
                     return;
                 }
+                if (!data.level) {
+                    this.$message.warning('请输入层级!');
+                    return;
+                }
                 if (!data.autoUpgrade) {
                     this.$message.warning('请选择是否自动晋级!');
                     return;

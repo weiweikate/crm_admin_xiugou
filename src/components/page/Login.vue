@@ -1,6 +1,6 @@
 <template>
     <div class="login-wrap">
-        <div class="ms-title">CRM系统后台登录</div>
+        <div class="ms-title">秀购运营中心</div>
         <div class="ms-login">
             <el-tabs class="tab" v-model="loginType" type="card" @tab-click="tabClick">
                 <el-tab-pane label="账号登录" name="first">

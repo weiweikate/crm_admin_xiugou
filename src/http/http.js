@@ -55,7 +55,7 @@ Object.keys(api).forEach(function(name) {
 });
 // 生成API接口
 list.forEach(function(item) {
-    const name = item.name; const url = item.uri; const method = item.methods || 'post'; const action = item.action || '';
+    const name = item.name; const url = item.uri.replace(/\/\//g, '/'); const method = item.methods || 'post'; const action = item.action || '';
     request[name] = function(params, config = {}) {
         return new Promise((resolve, reject) => {
             console.log(`[开始请求:${action}] : ${url}`);

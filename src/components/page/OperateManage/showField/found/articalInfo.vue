@@ -13,7 +13,7 @@
                     <div v-html="form.content"></div>
                 </el-form-item>
                 <el-form-item>
-                    <span slot="label" style="color: #33b4ff">商品推广</span>
+                    <span slot="label">商品推广</span>
                     <div class="product" v-for="(v, k) in form.discoverArticleProductList">
                         <img :src="v.img" alt="">
                         <div class="product-info">
@@ -46,17 +46,17 @@ export default {
             form: {}
         };
     },
-    activated(){
+    activated() {
         this.id = this.$route.query.foundInfoId || sessionStorage.getItem('foundInfoId');
         this.getInfo();
     },
     methods: {
-        getInfo(){
-            request.findDiscoverArticleById({id: this.id}).then(res=>{
+        getInfo() {
+            request.findDiscoverArticleById({ id: this.id }).then(res => {
                 this.form = res.data;
-            }).catch(err=>{
+            }).catch(err => {
                 console.log(err);
-            })
+            });
         }
     }
 };
