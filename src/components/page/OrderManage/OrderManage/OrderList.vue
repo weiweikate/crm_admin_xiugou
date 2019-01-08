@@ -170,8 +170,7 @@ export default {
                 userPhoneName: '', // 收货人姓名
                 marker: '', // 标记
                 pushStatus: '', // 推送状态
-                lockStatus: '', // 锁定状态
-                orderStatus: '' // 订单状态
+                lockStatus: '' // 锁定状态
             },
             formData: {}
         };
@@ -194,7 +193,7 @@ export default {
                 marker: this.form.marker,
                 pushStatus: this.form.pushStatus,
                 lockStatus: this.form.lockStatus,
-                orderStatus: this.form.orderStatus,
+                orderStatus: this.activeName === 'all' ? '' : this.activeName,
                 form: this.dateRange.length !== 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '',
                 to: this.dateRange.length !== 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 00:00:00') : '',
                 warehouseOrderNos: this.$refs[this.activeName].warehouseOrderNos.join(',')
