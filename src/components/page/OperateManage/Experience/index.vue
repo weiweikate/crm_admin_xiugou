@@ -105,7 +105,8 @@
         </el-card>
         <el-dialog title="活动规则说明" :visible.sync="activeRegularDialog" center>
             <div class="dialog-body">
-                <el-input type="textarea" :rows="10" v-model="regular"></el-input>
+                <el-input type="textarea" :maxlength="300" :rows="10" v-model="regular"></el-input>
+                <div style="text-align: right">{{regular.length}}/300</div>
             </div>
             <div class="dialog-footer" style="text-align: left" slot="footer">
                 <el-button type="primary" @click="activeRemark" size="big">确 定</el-button>

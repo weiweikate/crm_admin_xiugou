@@ -228,7 +228,7 @@
                     <div class="dialog-good-name">{{item.name}}</div>
                     <div class="dialog-good-shade" v-if="item.checked">已选中</div>
                 </div>
-                <div v-if="searchGoods.length === 0">空空如也~</div>
+                <div v-if="searchGoods.length === 0" style="text-align: center;">暂无符合条件的商品，请先确定商品状态</div>
             </div>
             <div class="dialog-footer" style="text-align: left" slot="footer">
                 <el-button type="primary" @click="verifyGoods('add')" size="big">确 定</el-button>
@@ -451,9 +451,8 @@
                     this.$message.warning(`第 ${index + 1} 行区间的 ${type} 不能为空`);
                     return false;
                 }
-                // 实际上el组件已做处理
-                if (val <= 0) {
-                    this.$message.warning(`区间${type}必须大于0`);
+                if (val <= 1 && field === 'rate') {
+                    this.$message.warning(`第 ${index + 1} 行区间${type}必须大于1`);
                     return false;
                 }
                 // 第一个区间特殊处理
@@ -562,7 +561,7 @@
                         return item !== '';
                     });
                 }
-                return imporList;
+                return this.mergeArr(imporList, []);
             },
             // 选择以及批量导出的商品需要先做校验 参数用来区分是批量还是搜索的
             verifyGoods(type) {
@@ -575,6 +574,7 @@
                 if (!data.spuCodes.length) return this.$message.warning('请至少提供一个商品');
                 request.checkActivityProduct(data).then(res => {
                     this.checkActivityProductRes = res.data || [];
+                    this.importInput = '';
                     const errSpuCodes = this.getErrorSpuGoodsList(res.data);
                     // 如果校验不通过 根据返回结果的errMsg去除不符合结果的商品
                     if (errSpuCodes.length) {
