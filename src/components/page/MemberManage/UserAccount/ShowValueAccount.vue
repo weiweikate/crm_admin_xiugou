@@ -29,7 +29,7 @@
                 </el-table-column>
                 <el-table-column label="金额（元）" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.biType==1">{{`+￥${scope.row.balance || 0}`}}</template>
+                        <template v-if="scope.row.recordType==1">{{`+￥${scope.row.balance || 0}`}}</template>
                         <template v-else >{{`-￥${scope.row.balance || 0}`}}</template>
                     </template>
                 </el-table-column>
