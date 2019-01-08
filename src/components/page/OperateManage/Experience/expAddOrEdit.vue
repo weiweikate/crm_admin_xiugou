@@ -16,9 +16,10 @@
                                     :controls="false"
                                     v-model.number="item.startPrice"
                                     style="width: 100px;"
-                                    :min="1"
+                                    :min="0.01"
                                     :max="999999999"
                                     :precision="2"
+                                    :disabled="isActivityIng"
                                     @change="rulesInputValidate(index, 'startPrice')"
                                     >
                                 </el-input-number> 元，经验值翻
@@ -27,6 +28,7 @@
                                     v-model="item.rate"
                                     style="width:100px;text-align: left;" :min="1"
                                     :max="999999999"
+                                    :disabled="isActivityIng"
                                     :precision="2"
                                     @change="rulesInputValidate(index, 'rate')"
                                 >
@@ -57,6 +59,7 @@
                                 <el-input-number
                                     :controls="false"
                                     :min="1" :precision="0"
+                                    :max="999999999"
                                     style="width: 100px;text-align: left"
                                     @change="couponCountCheck"
                                     v-model="form.startCount"
@@ -67,6 +70,7 @@
                                         :controls="false"
                                         :min="1"
                                         :precision="0"
+                                        :max="999999999"
                                         style="width: 100px;text-align: left"
                                         v-model="form.maxCount"
                                         @change="couponCountCheck"
@@ -77,9 +81,26 @@
                         </div>
                 </div>
                 <!-- 可选是否赠送优惠券E -->
-
                 <el-form-item prop="time" label="活动时间" label-width="120">
+                    <div v-if="isActivityIng">
+                        <el-date-picker
+                            v-model="form.startTime"
+                            value-format="yyyy-MM-dd HH:mm:ss"
+                            type="datetime"
+                            :disabled="true"
+                            placeholder="开始时间">
+                        </el-date-picker> -
+                        <el-date-picker
+                            v-model="form.endTime"
+                            value-format="yyyy-MM-dd HH:mm:ss"
+                            type="datetime"
+                            :picker-options="pickerOption"
+                            placeholder="结束时间">
+                        </el-date-picker>
+                    </div>
                     <el-date-picker
+                        v-else
+                        :editable="false"
                         v-model="form.time"
                         type="datetimerange"
                         value-format="yyyy-MM-dd HH:mm:ss"
@@ -127,7 +148,7 @@
                     label="可售库存">
                 </el-table-column>
                 <el-table-column
-                    v-if="form.status === activityStatus.ing"
+                    v-if="isActivityIng"
                     prop="saleNum"
                     align="center"
                     width="100"
@@ -145,7 +166,7 @@
                 </el-table-column>
                 <!-- 编辑状态切活动为进行中时显示 -->
                 <el-table-column
-                    v-if="type === 'edit' && form.status === activityStatus.ing"
+                    v-if="type === 'edit' && isActivityIng"
                     prop="status"
                     align="center"
                     label="状态"
@@ -162,7 +183,7 @@
                         <!-- todo 如果是添加的商品或是编辑未开始活动(form.status = 1)的情况下展示 -->
                         <el-button type="danger" @click="removeSelectGoods(scope.$index, scope.row.spuCode)" v-if="showDelBtn(scope.row.spuCode)">删除</el-button>
                         <!-- todo 如果是活动已开始(form.status = 2) 显示停用按钮  如果已停用(0:停用，1:正常)则不允许再操作 -->
-                        <el-button type="warning" :disabled="scope.row.status === 0" @click="closeProduct(scope.row.spuCode)" v-if="showCloseBtn(scope.row.spuCode)">关闭</el-button>
+                        <el-button type="warning" :disabled="scope.row.status === 0" @click="closeProduct(scope.row.spuCode, scope.$index)" v-if="showCloseBtn(scope.row.spuCode)">关闭</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -266,10 +287,31 @@
                 handler() {
                     const check = !!this.form.couponId;
                     this.checkCoupon = check;
-                    if (this.form.status === this.activityStatus.ing && !check) {
-                        this.showCoupon = false;
-                    }
                 }
+            }
+        },
+        computed: {
+            isActivityIng() {
+                return this.form.status === this.activityStatus.ing;
+            },
+            isActivityWaiting() {
+                return this.form.status === this.activityStatus.waiting;
+            },
+            pickerOption() {
+                let _ = this;
+                return {
+                    disabledDate(time) {
+                        return time.getTime() < Date.parse(_.form.startTime);
+                    }
+                };
+            },
+            // 活动进行中时是否显示优惠券相关
+            showCoupon() {
+                const hasCoupon = !!this.couponInfo.id;
+                if (this.isActivityIng && !hasCoupon) {
+                    return false;
+                }
+                return true;
             }
         },
         data() {
@@ -278,9 +320,9 @@
                     0: '已删除',
                     1: '待发布',
                     2: '待审核',
-                    3: '已通过',
+                    3: '待上架',
                     4: '已上架',
-                    5: '已驳回',
+                    5: '待发布',
                     6: '已下架'
                 },
                 goodActiveStatus: {
@@ -314,7 +356,6 @@
                 importDialog: false, // 导入弹窗
                 errorDialog: false, // 商品添加失败弹窗
                 checkCoupon: false, // 是否选用优惠券
-                showCoupon: true, // 活动进行中时是否显示优惠券相关
                 categories: [], // 一级类目
                 brandList: [], // 品牌列表
                 couponInfo: {}, // 输入优惠券ID并且失焦时去获取这个id的数据
@@ -354,13 +395,13 @@
         },
         methods: {
             showCloseBtn(spuCode) {
-                return this.type === 'edit' && this.form.status === this.activityStatus.ing && this.originTableSpuCodes.includes(spuCode);
+                return this.type === 'edit' && this.isActivityIng && this.originTableSpuCodes.includes(spuCode);
             },
             showDelBtn(spuCode) {
-                return this.selectGoods.includes(spuCode) || this.form.status === this.activityStatus.waiting;
+                return this.selectGoods.includes(spuCode) || this.isActivityWaiting;
             },
             // 关闭活动商品
-            closeProduct(spuCode) {
+            closeProduct(spuCode, $index) {
                 this.$confirm('确定关闭该商品?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -375,7 +416,8 @@
                             type: 'success',
                             message: res.msg
                         });
-                        this.getExpActiveGoods();
+                        // 设置关闭
+                        this.tableData[$index].status = 0;
                     }).catch(res => {});
                 }).catch(() => {
                     this.$message({
@@ -429,8 +471,10 @@
             },
             // 验证优惠券
             getCouponById() {
+                const couponId = this.form.couponId;
+                if (!couponId) return;
                 this.couponLoading = true;
-                request.getCouponById({ id: this.form.couponId }).then(res => {
+                request.getCouponById({ id: couponId }).then(res => {
                     this.couponLoading = false;
                     this.couponInfo = res.data || '';
                 }).catch(res => {
@@ -440,7 +484,17 @@
             },
             // 优惠券赠送数验证
             couponCountCheck() {
-                if (!this.checkCoupon) return true;
+                // 活动未开始时优惠券为可选  开始后如果之前有优惠券则必填
+                if (!this.isActivityIng) {
+                    if (!this.checkCoupon) {
+                        return true;
+                    }
+                } else {
+                    if (this.couponInfo.id && !this.checkCoupon) {
+                        this.$message.warning('优惠券不能为空');
+                        return false;
+                    }
+                }
                 if (!this.couponInfo) {
                     this.$message.warning('填写的优惠券不存在');
                     return false;
@@ -517,6 +571,7 @@
                     activityCode: this.type === 'add' ? '' : this.form.activityCode, //  如果是添加则传空 编辑的话要带上
                     spuCodes: type === 'add' ? this.selectGoods : importList
                 };
+                if (type === 'import' && data.spuCodes.length > 100) return this.$message.warning('批量导入上限为100个');
                 if (!data.spuCodes.length) return this.$message.warning('请至少提供一个商品');
                 request.checkActivityProduct(data).then(res => {
                     this.checkActivityProductRes = res.data || [];
@@ -564,7 +619,7 @@
                     pageSize: this.page.pageSize
                 };
                 // 活动进行中传活动code可以筛除已有的商品
-                if (this.form.status === this.activityStatus.ing) {
+                if (this.isActivityIng) {
                     data.activityCode = this.form.activityCode || '';
                 }
                 this.searchLoading = true;
@@ -602,8 +657,9 @@
                 const data = {
                     fatherId: 0,
                     level: 1,
+                    status: 1,
                     page: 1,
-                    pageSize: 100
+                    pageSize: 500
                 };
                 request.queryProductCategoryList(data).then(res => {
                     this.categories = res.data.data;
@@ -614,10 +670,9 @@
             // 获取品牌列表
             getProductBrandList() {
                 const data = {
-                    fatherId: 0,
-                    level: 1,
+                    status: 1,
                     page: 1,
-                    pageSize: 100
+                    pageSize: 500
                 };
                 request.getProductBrandList(data).then(res => {
                     this.brandList = res.data.data;
@@ -658,7 +713,7 @@
                 };
                 data.spuCodes = this.selectGoods;
                 // todo 如果活动未开始 spuCodes为活动商品表中的所有 否则的话就是添加的部分
-                if (this.form.status === this.activityStatus.waiting) {
+                if (this.isActivityWaiting) {
                     const arr = [];
                     this.tableData.forEach(item => {
                         arr.push(item.spuCode);
@@ -667,7 +722,7 @@
                 }
                 data.startPrice = this.form.rules[0].startPrice;
                 const t = this.form.time;
-                if (t && t.length) {
+                if (!this.isActivityIng && t && t.length) {
                     data.startTime = t[0];
                     data.endTime = t[1];
                 }
@@ -694,6 +749,12 @@
                 this.$refs['form'].validate(valid => {
                     if (valid && this.validateParams()) {
                         const params = this.initParams();
+                        if (Date.parse(params.startTime) >= Date.parse(params.endTime)) {
+                            return this.$message.warning('开始时间必须小于结束时间');
+                        }
+                        if (this.isActivityIng && !params.endTime) {
+                            return this.$message.warning('结束时间不能为空');
+                        }
                         this.loading = true;
                         request.addOrModifyExperience(params).then(res => {
                             this.loading = false;
