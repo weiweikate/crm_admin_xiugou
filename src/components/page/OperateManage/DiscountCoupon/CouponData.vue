@@ -67,13 +67,6 @@
                         <template v-else-if='scope.row.status == 3'>未激活</template>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作">
-                    <template slot-scope="scope">
-                        <el-button v-if="scope.row.status == 1" @click="productInfo(scope.row)" type="primary">
-                            订单详情
-                        </el-button>
-                    </template>
-                </el-table-column>
             </el-table>
             <div class="block">
                 <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
@@ -98,12 +91,12 @@
 
 
 <script>
-import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import moment from "moment";
-import { myMixinTable } from "@/JS/commom";
-import request from "@/http/http.js";
-import * as api from "@/api/api.js";
-import utils from "@/utils/index.js";
+import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+import moment from 'moment';
+import { myMixinTable } from '@/JS/commom';
+import request from '@/http/http.js';
+import * as api from '@/api/api.js';
+import utils from '@/utils/index.js';
 
 export default {
     components: {
@@ -112,13 +105,13 @@ export default {
     mixins: [myMixinTable],
     data() {
         return {
-            nav: ["运营管理", "优惠券设置", "优惠券管理", "券数据"],
+            nav: ['运营管理', '优惠券设置', '优惠券管理', '券数据'],
             // 权限控制
 
             form: {
-                getDate: "",
-                date: "",
-                status: ""
+                getDate: '',
+                date: '',
+                status: ''
             },
             tableData: [],
             tableLoading: false,
@@ -129,14 +122,12 @@ export default {
                 totalPage: 0
             },
             id: {}, // 传参
-            downloadCouponList: "" // 导出接口地址
+            downloadCouponList: '' // 导出接口地址
         };
     },
 
     activated() {
-        this.id =
-            this.$route.query.couponDataId ||
-            sessionStorage.getItem("couponDataId");
+        this.id = this.$route.query.couponDataId || sessionStorage.getItem('couponDataId');
         this.getList(1);
         this.downloadCouponData();
     },
@@ -146,21 +137,12 @@ export default {
             const params = {
                 status: this.form.status,
                 couponConfigId: this.id,
-                receiveStartTime: this.form.getDate
-                    ? moment(this.form.getDate[0]).format("YYYY-MM-DD")
-                    : "",
-                receiveEndTime: this.form.getDate
-                    ? moment(this.form.getDate[1]).format("YYYY-MM-DD")
-                    : "",
-                availableStartTime: this.form.date
-                    ? moment(this.form.date[0]).format("YYYY-MM-DD")
-                    : "",
-                availableEndTime: this.form.date
-                    ? moment(this.form.date[1]).format("YYYY-MM-DD")
-                    : ""
+                receiveStartTime: this.form.getDate ? moment(this.form.getDate[0]).format('YYYY-MM-DD') : '',
+                receiveEndTime: this.form.getDate ? moment(this.form.getDate[1]).format('YYYY-MM-DD') : '',
+                availableStartTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
+                availableEndTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : ''
             };
-            this.downloadCouponList =
-                api.downloadCouponList + "?" + utils.setRequestParams(params);
+            this.downloadCouponList = api.downloadCouponList + '?' + utils.setRequestParams(params);
             this.$refs.exportData.href = this.downloadCouponList;
         },
         //   提交表单
@@ -170,18 +152,10 @@ export default {
                 pageSize: this.page.pageSize,
                 status: this.form.status,
                 couponConfigId: this.id,
-                receiveStartTime: this.form.getDate
-                    ? moment(this.form.getDate[0]).format("YYYY-MM-DD")
-                    : "",
-                receiveEndTime: this.form.getDate
-                    ? moment(this.form.getDate[1]).format("YYYY-MM-DD")
-                    : "",
-                availableStartTime: this.form.date
-                    ? moment(this.form.date[0]).format("YYYY-MM-DD")
-                    : "",
-                availableEndTime: this.form.date
-                    ? moment(this.form.date[1]).format("YYYY-MM-DD")
-                    : ""
+                receiveStartTime: this.form.getDate ? moment(this.form.getDate[0]).format('YYYY-MM-DD') : '',
+                receiveEndTime: this.form.getDate ? moment(this.form.getDate[1]).format('YYYY-MM-DD') : '',
+                availableStartTime: this.form.date ? moment(this.form.date[0]).format('YYYY-MM-DD') : '',
+                availableEndTime: this.form.date ? moment(this.form.date[1]).format('YYYY-MM-DD') : ''
             };
             this.page.currentPage = val;
             this.tableLoading = true;
@@ -201,8 +175,8 @@ export default {
         },
         //   重置表单
         resetForm(formName) {
-            this.form.date = "";
-            this.form.getDate = "";
+            this.form.date = '';
+            this.form.getDate = '';
             this.$refs[formName].resetFields();
             this.getList(1);
         },
@@ -214,22 +188,13 @@ export default {
                 that.multipleSelection.push(v.id);
             });
         },
-
-        // 查看详情
-        productInfo(row) {
-            sessionStorage.setItem("orderInfoId", row.orderId);
-            this.$router.push({
-                name: "orderInfo",
-                query: { orderInfoId: row.orderId }
-            });
-        },
         // 批量操作
         batchOperate() {
             const data = {};
             data.ids = this.multipleSelection;
             if (!data.ids.length) {
                 this.isShowPop = false;
-                return this.$message.warning("请选择要失效的优惠券");
+                return this.$message.warning('请选择要失效的优惠券');
             }
             request
                 .bathVaildCoupon(data)
