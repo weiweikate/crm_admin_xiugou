@@ -238,30 +238,5 @@ export default {
         float: right;
         margin-top: 10px;
     }
-    .product-img {
-        display: inline-block;
-        float: left;
-        width: 80px;
-        height: 80px;
-        border: 1px solid #ddd;
-        overflow: hidden;
-        img {
-            width: 60px;
-            height: 60px;
-            margin: 10px;
-        }
-    }
-    .product-name {
-        float: left;
-        width: 75%;
-        height: auto;
-        margin: 5px 0 0 20px;
-    }
-    .product-id {
-        float: left;
-        width: 75%;
-        height: auto;
-        margin: 20px 0 0 20px;
-    }
 }
 </style>

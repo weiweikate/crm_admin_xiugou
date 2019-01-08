@@ -1,6 +1,6 @@
 <template>
     <div class="tab-content">
-        <el-table v-loading="tableLoading" :height="height" border :data="tableData">
+        <el-table v-loading="tableLoading" border :data="tableData">
             <el-table-column type="index" label="编号" align="center" width="50"></el-table-column>
             <el-table-column prop="name" label="券名称" align="center"></el-table-column>
             <el-table-column label="券类型" align="center">
@@ -109,7 +109,6 @@ export default {
 
     data() {
         return {
-            height: '',
             status: '',
             tableData: [],
             tableLoading: false,
@@ -123,8 +122,6 @@ export default {
         };
     },
     created() {
-        const winHeight = window.screen.availHeight - 520;
-        this.height = winHeight;
     },
     activated() {
         this.getList(this.page.currentPage);
@@ -162,7 +159,7 @@ export default {
                     if (res.data.data[i].couponUserLevelList) {
                         const userLevelIds = [];
                         for (const j in res.data.data[i].couponUserLevelList) {
-                            userLevelIds.push('V' + res.data.data[i].couponUserLevelList[j].userLevelId);
+                            userLevelIds.push('V' + res.data.data[i].couponUserLevelList[j].level);
                         }
                         res.data.data[i].userLevelIds = userLevelIds.join(',');
                     }
@@ -246,11 +243,6 @@ export default {
                 this.tableLoading = false;
             });
         }
-    },
-    filters: {
-        formatPrice(val) {
-            return `￥${val}`;
-        }
     }
 };
 </script>
@@ -285,30 +277,6 @@ export default {
         .block {
             float: right;
             margin-top: 10px;
-        }
-        .product-img {
-            float: left;
-            width: 80px;
-            height: 80px;
-            border: 1px solid #ddd;
-            overflow: hidden;
-            img {
-                width: 60px;
-                height: 60px;
-                margin: 10px;
-            }
-        }
-        .product-name {
-            float: left;
-            width: 75%;
-            height: auto;
-            margin: 5px 0 0 20px;
-        }
-        .product-id {
-            float: left;
-            width: 75%;
-            height: auto;
-            margin: 20px 0 0 20px;
         }
         .mask{
             width: 100%;

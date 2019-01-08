@@ -515,7 +515,7 @@
                             data.firstCategoryIds = firstCategoryIds.length ? firstCategoryIds.join(',') : '';
                             data.secondCategoryIds = secondCategoryIds.length ? secondCategoryIds.join(',') : '';
                             data.thirdCategoryIds = thirdCategoryIds.length ? thirdCategoryIds.join(',') : '';
-                            data.productIds = productIds.length ? productIds.join(',') : '';
+                            data.prodCodes = productIds.length ? productIds.join(',') : '';
                             if (that.productList.checkAll) {
                                 data.categoryType = 1; // 全品类
                                 data.firstCategoryIds = -1;
