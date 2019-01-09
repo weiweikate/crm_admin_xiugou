@@ -21,10 +21,12 @@
                 </el-table-column>
                 <el-table-column label="类型" align="center" width="200">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.useType==1">销售品牌奖励</template>
-                        <template v-else-if="scope.row.useType==2">推广品牌奖励</template>
-                        <template v-else-if="scope.row.useType==3">消费品牌奖励</template>
-                        <template v-else-if="scope.row.useType==4">任务奖励</template>
+                        <template v-if="scope.row.useType==1">注册赠送</template>
+                        <template v-else-if="scope.row.useType==2">活动赠送</template>
+                        <template v-else-if="scope.row.useType==3">商品购买抵扣</template>
+                        <template v-else-if="scope.row.useType==4">兑换一元券</template>
+                        <template v-else-if="scope.row.useType==5">签到</template>
+                        <template v-else-if="scope.row.useType==6">任务</template>
                         <template v-else>-</template>
                     </template>
                 </el-table-column>
