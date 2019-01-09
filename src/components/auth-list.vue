@@ -9,9 +9,8 @@
             :default-expanded-keys="expandedKeys"
             node-key="name">
             <span class="custom-tree-node" slot-scope="{ node, data }">
-                <span>{{data.title}} </span>
-                <el-tag :type="renderType(data)"
-                        size="mini">{{data | renderTag}}</el-tag>
+                <span>{{data.title}} <el-tag type="danger" size="mini" v-if="data.note">{{data.note}}</el-tag></span>
+                <el-tag :type="renderType(data)" size="mini">{{data | renderTag}}</el-tag>
             </span>
         </el-tree>
     </div>
@@ -26,6 +25,7 @@
         for (let i = 0; i < len; i++) {
             const tmp = { ...routes[i] };
             const needAuth = tmp.roles && tmp.roles.includes('admin');
+            tmp.note = needAuth ? '机密模块' : '';
             callback && callback(tmp);
             if (!needAuth || admin) {
                 if (tmp.children) {
@@ -37,6 +37,7 @@
         }
         return res;
     }
+
     export default {
         name: 'AuthList',
         props: {
@@ -108,7 +109,7 @@
                 });
                 this.$refs.tree.setCheckedKeys(keys);
                 noCheckedKeys.forEach((key) => {
-                    this.$refs.tree.setChecked(key,false,false)
+                    this.$refs.tree.setChecked(key, false, false);
                 });
             }
         }

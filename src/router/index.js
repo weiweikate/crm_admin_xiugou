@@ -1721,6 +1721,12 @@ export const constantRouterMap = [
         component: resolve => require(['../components/page/404.vue'], resolve)
     },
     {
+        name: '403',
+        path: '/403',
+        hidden: true,
+        component: resolve => require(['../components/page/404.vue'], resolve)
+    },
+    {
         name: 'login',
         path: '/login',
         hidden: true,

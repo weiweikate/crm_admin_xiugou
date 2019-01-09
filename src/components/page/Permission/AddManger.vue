@@ -9,7 +9,7 @@
                         <el-input class="add-mange-inp" v-model="form.name"></el-input>
                     </el-form-item>
                     <el-form-item prop="telephone" label="手机号">
-                        <el-input class="add-mange-inp" v-model="form.telephone"></el-input>
+                        <el-input class="add-mange-inp" v-model="form.telephone" :disabled="!IS_ADD"></el-input>
                     </el-form-item>
                     <div class="avatar">
                         <img v-if="form.face" :src="form.face">
@@ -106,6 +106,11 @@
             this.uploadImg = api.uploadImg;
             this.getDepartmentList();
             this.initAction();
+        },
+        computed: {
+            IS_ADD() {
+                return this.$route.query.id === undefined;
+            }
         },
         methods: {
             beforeUpload() {

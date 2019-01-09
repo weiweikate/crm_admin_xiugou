@@ -37,12 +37,16 @@ function filterAsyncRouter(routes, noAuthRoutes) {
 const permission = {
     state: {
         routers: constantRouterMap,
-        addRouters: []
+        addRouters: [],
+        noAuthRoutes: []
     },
     mutations: {
         SET_ROUTERS: (state, routers) => {
             state.addRouters = routers;
             state.routers = constantRouterMap.concat(routers);
+        },
+        SET_NOAUTHROUTES: (state, routes) => {
+            state.noAuthRoutes = routes;
         }
     },
     actions: {
@@ -67,6 +71,7 @@ const permission = {
                 }
                 console.log('用户权限', accessedRouters);
                 commit('SET_ROUTERS', accessedRouters.concat([{ path: '*', redirect: '/404', hidden: true }]));
+                commit('SET_NOAUTHROUTES',noAuthRoutes)
                 resolve();
             });
         }
