@@ -81,9 +81,7 @@
                 <!--<el-table-column prop="style" label="渠道" width="100"></el-table-column>-->
                 <el-table-column label="下级" align="center">
                     <template slot-scope="scope">
-                        <span v-if="hasAuth" style="cursor: pointer;color:#ff6868"
-                              @click="toLower(scope.row.code)">{{scope.row.junior}}</span>
-                        <span v-else>{{scope.row.junior}}</span>
+                        <span>{{scope.row.junior}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="状态" align="center">
@@ -216,10 +214,6 @@ export default {
             }).catch(err => {
                 console.log(err);
             });
-        },
-        // 跳到下级列表
-        toLower(code) {
-            this.$router.push({ name: 'lowerMemberManage', query: { memberToLowListPage: code }});
         },
         // 详情
         detailItem(index, row) {
