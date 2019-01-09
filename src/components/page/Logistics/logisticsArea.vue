@@ -150,16 +150,6 @@
                         type: 'primary',
                         text: '添加下级地区',
                         trigger: 'addArea'
-                    }, {
-                        type: 'danger',
-                        text: '停用',
-                        trigger: 'toggleAreaStatus',
-                        bind: {
-                            bingColumn: 'status',
-                            bindValue: 1,
-                            text: '启用',
-                            type: 'success'
-                        }
                     }],
                     width: '150'
                 }],
