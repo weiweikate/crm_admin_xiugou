@@ -119,9 +119,8 @@
             initAction() {
                 const id = this.$route.query.id;
                 // 修改
-                if (id) {
+                if (!this.IS_ADD) {
                     request.findAdminUserbyId({ id: id }).then(res => {
-                        console.log('findAdminUserbyId', res);
                         let data = res.data || {};
                         this.form = {
                             id: data.id,

@@ -39,8 +39,10 @@ router.beforeEach((to, from, next) => {
                     });
                 });
             } else {
+                const roles = store.getters.roles || [];
                 const noAuthRoutes = store.getters.noAuthRoutes || [];
-                if (noAuthRoutes.indexOf(to.name) > -1) {
+                // 当前用户不是超级管理员需判断路由权限
+                if (roles.indexOf('admin') === -1 && noAuthRoutes.indexOf(to.name) > -1) {
                     next(`/403`);
                 } else {
                     next();
