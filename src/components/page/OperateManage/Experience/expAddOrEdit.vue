@@ -259,7 +259,7 @@
         <!-- 批量导入E -->
 
         <!-- 添加导入商品异常弹窗 S -->
-        <el-dialog title="商品添加失败" :visible.sync="errorDialog" center @close="mergeImportSpuGoods">
+        <el-dialog title="商品添加失败" :visible.sync="errorDialog" center @close="dealErrSpuGoods">
             红字的为SPU导入失败异常原因, 关闭窗口后剔除错误商品
             <div class="err-list">
                 <div class="err-item" v-for="item in checkActivityProductRes">
@@ -528,8 +528,8 @@
                     this.getList(1);
                 }
             },
-            // 处理批量导入中的商品 同时展示没问题商品
-            mergeImportSpuGoods() {
+            // 处理校验异常的商品 在选中列表中剔除错误商品 同时展示没问题商品
+            dealErrSpuGoods() {
                 const list = this.getErrorSpuGoodsList(this.checkActivityProductRes);
                 this.selectGoods = this.mergeArr(this.selectGoods, this.getImportList());
                 if (list.length) {
@@ -538,6 +538,7 @@
                     });
                 }
                 this.showAddGoods(this.checkActivityProductRes);
+                this.getList(this.page.currentPage);
             },
             // 获取不通过校验的商品列表
             getErrorSpuGoodsList(data) {
@@ -581,7 +582,7 @@
                         this.errorDialog = true;
                     } else {
                         // 校验通过后展示添加的商品
-                        this.mergeImportSpuGoods();
+                        this.dealErrSpuGoods();
                         this.showAddGoods(res.data);
                     }
                     const dialog = type === 'add' ? 'addGoodDialog' : 'importDialog';
