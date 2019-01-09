@@ -34,8 +34,8 @@
             </el-table-column>
             <el-table-column label="操作" align="center" min-width="150px">
                 <template slot-scope="scope">
-                    <el-button type="primary" v-if="scope.row.status==1||scope.row.status==3||scope.row.status==4" @click="refund(scope.row,1)">手工退款</el-button>
-                    <el-button type="success" v-if="scope.row.status==1||scope.row.status==3||scope.row.status==4" @click="refund(scope.row,2)">退款</el-button>
+                    <el-button type="primary" v-if="(scope.row.status==1||scope.row.status==3||scope.row.status==4)&&scope.row.serviceStatus!=6" @click="refund(scope.row,1)">手工退款</el-button>
+                    <el-button type="success" v-if="(scope.row.status==1||scope.row.status==3||scope.row.status==4)&&scope.row.serviceStatus!=6" @click="refund(scope.row,2)">退款</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -66,7 +66,6 @@
 <script>
     import request from '@/http/http.js';
     import { myMixinTable } from '@/JS/commom';
-    import moment from 'moment';
     export default {
         mixins: [myMixinTable],
         data() {
@@ -91,7 +90,7 @@
                 this.pageLoading = true;
                 request.queryRefundPage(this.data).then(res => {
                     this.pageLoading = false;
-                    this.tableData = res.data?res.data.data:[];
+                    this.tableData = res.data ? res.data.data : [];
                     this.page.totalPage = res.data.totalNum;
                 }).catch(err => {
                     this.pageLoading = false;
@@ -103,7 +102,7 @@
                     serviceNo: row.serviceNo
                 };
                 this.row = row;
-                if (num == 1) {
+                if (num === 1) {
                     this.mask = true;
                     this.remarks = '';
                     this.count = 0;
@@ -131,6 +130,7 @@
                     this.btnLoading = false;
                 }).catch(err => {
                     this.btnLoading = false;
+                    console.log(err);
                 });
             }
         }
