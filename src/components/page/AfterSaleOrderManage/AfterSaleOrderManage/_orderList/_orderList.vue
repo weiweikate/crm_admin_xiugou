@@ -65,8 +65,8 @@
             </el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
-                    <el-button type="primary" @click="$router.push({path:'/afterSaleOrderInfo',query:{afterSaleOrderInfoId:scope.row.serviceNo}})" v-if="scope.row.status==1||scope.row.status==4">去处理</el-button>
-                    <el-button type="success" @click="$router.push({path:'/afterSaleOrderInfo',query:{afterSaleOrderInfoId:scope.row.serviceNo}})" v-else>查看</el-button>
+                    <el-button v-auth="'afterSaleOrder.afterSaleOrderList.qcl'" type="primary" @click="$router.push({path:'/afterSaleOrderInfo',query:{afterSaleOrderInfoId:scope.row.serviceNo}})" v-if="scope.row.status==1||scope.row.status==4">去处理</el-button>
+                    <el-button v-auth="'afterSaleOrder.afterSaleOrderList.ck'" type="success" @click="$router.push({path:'/afterSaleOrderInfo',query:{afterSaleOrderInfoId:scope.row.serviceNo}})" v-else>查看</el-button>
                 </template>
             </el-table-column>
         </el-table>
