@@ -263,10 +263,10 @@ export default {
                         type: '产品',
                         id: 1
                     },
-                    {
+                    /*  {
                         type: '专题',
                         id: 2
-                    },
+                    }, */
                     {
                         type: '降价拍',
                         id: 3
@@ -278,11 +278,11 @@ export default {
                     {
                         type: '礼包',
                         id: 5
-                    },
-                    {
+                    }
+                    /* {
                         type: '链接',
                         id: 10
-                    }
+                    } */
                 ];
             } else if (pageType === 11) {
                 this.linkTypeList = [
