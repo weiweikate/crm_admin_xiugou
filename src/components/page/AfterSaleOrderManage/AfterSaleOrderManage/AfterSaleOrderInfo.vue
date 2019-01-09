@@ -76,28 +76,19 @@
             </div>
             <div style="margin-top: 50px" v-if="(orderCustomerServiceInfo.status==4||orderCustomerServiceInfo.status==5)&&(orderCustomerServiceInfo.refundWarehouseFeedback||orderCustomerServiceInfo.sendWarehouseFeedback)">
                 <div class="title">仓库反馈</div>
-                <div class="item" v-if="orderCustomerServiceInfo.refundWarehouseFeedback">
+                <div class="item warehouse" v-if="orderCustomerServiceInfo.refundWarehouseFeedback">
                     <span>退货仓反馈</span>
-                    <span>{{orderCustomerServiceInfo.refundWarehouseFeedback}}</span>
-                    <div>
-                        <div>
-                            物流公司：{{refundExpress.expressName}}
-                        </div>
-                        <div>
-                            物流单号：{{refundExpress.expressNo}}
-                        </div>
-                    </div>
+                    <span class="warehouse-content">{{orderCustomerServiceInfo.refundWarehouseFeedback}}</span>
                 </div>
 
-                <div class="item" v-if="orderCustomerServiceInfo.sendWarehouseFeedback">
+                <div class="item warehouse" v-if="orderCustomerServiceInfo.sendWarehouseFeedback">
                     <span>发货仓反馈</span>
-                    <span>{{orderCustomerServiceInfo.sendWarehouseFeedback}}</span>
-                    <div>
+                    <div class="warehouse-logic">
                         <div>
-                            物流公司：{{exchangeExpress.expressName}}
+                            换货物流公司：{{exchangeExpress.expressName}}
                         </div>
                         <div>
-                            物流单号：{{exchangeExpress.expressNo}}
+                            换货物流单号：{{exchangeExpress.expressNo}}
                         </div>
                     </div>
                 </div>
@@ -210,9 +201,9 @@
                     <!--换货-->
                     <template v-if="form.type!=2&&form.result!=2&&(orderInfo.warehouseType==4||checked)">
                         <el-form-item label="换货物流公司">
-                        <el-select v-model="form.expressCode">
-                            <el-option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.name"></el-option>
-                        </el-select>
+                            <el-select v-model="form.expressCode">
+                                <el-option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.name"></el-option>
+                            </el-select>
                         </el-form-item>
                         <el-form-item label="换货物流单号">
                             <el-input v-model="form.expressNo"></el-input>
@@ -259,7 +250,7 @@ export default {
             form: {},
             checked: false,
             records: {}, // 售后协商记录
-            hasAuth: ''// 是否虚拟发货的权限，用于区分测试与开发环境，测试true 开发false
+            hasAuth: '' // 是否虚拟发货的权限，用于区分测试与开发环境，测试true 开发false
         };
     },
 
@@ -271,7 +262,7 @@ export default {
         this.getLogic();
         this.checked = false;
         this.hasAuth = this.$oprAuth('xnfh');
-        console.log(this.hasAuth)
+        console.log(this.hasAuth);
     },
     methods: {
         //  获取信息
@@ -386,7 +377,7 @@ export default {
                     this.btnLoading = false;
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.log(err);
                     this.btnLoading = false;
                 });
         }
@@ -510,6 +501,16 @@ export default {
     .color-blue {
         color: #33b4ff;
         cursor: pointer;
+    }
+    .warehouse {
+        font-size: 14px;
+        .warehouse-content {
+            margin-left: 30px;
+        }
+        .warehouse-logic {
+            margin-left: 120px;
+            margin-top: -19px;
+        }
     }
 }
 </style>
