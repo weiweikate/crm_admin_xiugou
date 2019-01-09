@@ -12,7 +12,7 @@
                         <template v-else >-</template>
                     </template>
                 </el-table-column>
-                <el-table-column label="金额（元）" align="center" width="200">
+                <el-table-column label="秀豆（枚）" align="center" width="200">
                     <template slot-scope="scope">
                         <template v-if="scope.row.biType==1">{{`+￥${scope.row.balance || 0}`}}</template>
                         <template v-else-if="scope.row.biType==2">{{`-￥${scope.row.balance || 0}`}}</template>
