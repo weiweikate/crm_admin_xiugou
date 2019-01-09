@@ -7,15 +7,15 @@
                 <el-table-column prop="serialNo" label="流水号" align="center" min-width="180"></el-table-column>
                 <el-table-column label="收入/支出" align="center" width="200">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.biType==1">收入</template>
-                        <template v-else-if="scope.row.biType==2">支出</template>
+                        <template v-if="scope.row.usType==1">收入</template>
+                        <template v-else-if="scope.row.usType==2">支出</template>
                         <template v-else >-</template>
                     </template>
                 </el-table-column>
                 <el-table-column label="秀豆（枚）" align="center" width="200">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.biType==1">{{`+￥${scope.row.balance || 0}`}}</template>
-                        <template v-else-if="scope.row.biType==2">{{`-￥${scope.row.balance || 0}`}}</template>
+                        <template v-if="scope.row.usType==1">{{`+￥${scope.row.balance || 0}`}}</template>
+                        <template v-else-if="scope.row.usType==2">{{`-￥${scope.row.balance || 0}`}}</template>
                         <template v-else >-</template>
                     </template>
                 </el-table-column>
