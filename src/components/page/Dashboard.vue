@@ -186,27 +186,27 @@
                             <span class='l-title'>优惠套餐审核</span>
                             <span class="l-content">{{info.discountPackageCheck}}</span>
                         </router-link>
-                        <router-link tag="div" to="/orderList" class='left-content' v-auth="'dashboard.todo.tkss'">
+                        <router-link tag="div" to="/afterSaleOrderList" class='left-content' v-auth="'dashboard.todo.tkss'">
                             <div class="ico-wrap"><icon ico='icon-tuikuan' /></div>
                             <span class='l-title'>退款审核</span>
                             <span class="l-content">{{info.refund}}</span>
                         </router-link>
-                        <router-link tag="div" to="/orderList" class='left-content' v-auth="'dashboard.todo.tkthss'">
+                        <router-link tag="div" to="/afterSaleOrderList" class='left-content' v-auth="'dashboard.todo.tkthss'">
                             <div class="ico-wrap"><icon ico='icon-dulituihuodingdan' /></div>
                             <span class='l-title'>退货退款审核</span>
                             <span class="l-content">{{info.refunds}}</span>
                         </router-link>
-                        <router-link tag="div" to="/orderList" class='left-content' v-auth="'dashboard.todo.hhss'">
+                        <router-link tag="div" to="/afterSaleOrderList" class='left-content' v-auth="'dashboard.todo.hhss'">
                             <div class="ico-wrap"><icon ico='icon-tuihuanhuodingdan' /></div>
                             <span class='l-title'>换货审核</span>
                             <span class="l-content">{{info.exchange}}</span>
                         </router-link>
-                        <router-link tag="div" to="/orderList" class='left-content' v-auth="'dashboard.todo.tkthqr'">
+                        <router-link tag="div" to="/afterSaleOrderList" class='left-content' v-auth="'dashboard.todo.tkthqr'">
                             <div class="ico-wrap"><icon ico='icon-chaxun' /></div>
                             <span class='l-title'>退货退款确认</span>
                             <span class="l-content">{{info.refundsCheck}}</span>
                         </router-link>
-                        <router-link tag="div" to="/orderList" class='left-content' v-auth="'dashboard.todo.hhqr'">
+                        <router-link tag="div" to="/afterSaleOrderList" class='left-content' v-auth="'dashboard.todo.hhqr'">
                             <div class="ico-wrap"><icon ico='icon-dingdan' /></div>
                             <span class='l-title'>换货确认</span>
                             <span class="l-content">{{info.exchangeCheck}}</span>
