@@ -197,7 +197,7 @@
 
 
         <!-- 添加商品S -->
-        <el-dialog title="选择商品" :visible.sync="addGoodDialog" custom-class="add-goods-dialog" center>
+        <el-dialog title="选择商品" :visible.sync="addGoodDialog" custom-class="add-goods-dialog" center top="50px">
 
             <el-form :model="searchForm" :inline="true">
                 <el-form-item label="商品类型">
@@ -820,6 +820,7 @@
             }
         },
         mounted() {
+            this.page.pageSize = 18;
             const type = this.$route.query.type;
             const activityCode = this.$route.query.id;
             this.type = type || 'add';
