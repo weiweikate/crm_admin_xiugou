@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <transition name="bounce">
-            <div v-if="isShowTitle" class="logo">欢迎进入后台管理系统</div>
+            <div v-if="isShowTitle" class="logo">欢迎进入秀购运营中心</div>
         </transition>
         <!-- 折叠按钮 -->
         <div class="collapse-btn" :class="{'btn-color':!isShowTitle}" @click="collapseChage">
@@ -82,7 +82,7 @@ export default {
         handleCommand(command) {
             if (command === 'loginout') {
                 this.$store.dispatch('FedLogOut').then(() => {
-                    this.$router.push('/login');
+                    location.reload();
                 });
             } else if (command === 'editMangerMsg') {
                 sessionStorage.setItem('editMangerMsg', 'admin');

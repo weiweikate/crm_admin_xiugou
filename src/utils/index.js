@@ -15,27 +15,27 @@ const cleanFormData = function(form) {
 //  三级联动
 const handleCity = function(regionoption, v1, v2, v3) {
     var cityArr = [];
-    for (var i in regionoption) {
-        if (regionoption[i].value == v1) {
+    for (const i in regionoption) {
+        if (regionoption[i].value === v1) {
             cityArr.push(regionoption[i].label);
         }
     }
-    for (var i in regionoption) {
-        for (var z in regionoption[i].children) {
+    for (const i in regionoption) {
+        for (const z in regionoption[i].children) {
             if (
-                regionoption[i].children[z].value == v2 &&
-                v2 != undefined
+                regionoption[i].children[z].value === v2 &&
+                v2 !== undefined
             ) {
                 cityArr.push(regionoption[i].children[z].label);
             }
         }
     }
-    for (var y in regionoption) {
-        for (var z in regionoption[y].children) {
-            for (var i in regionoption[y].children[z].children) {
+    for (const y in regionoption) {
+        for (const z in regionoption[y].children) {
+            for (const i in regionoption[y].children[z].children) {
                 if (
-                    regionoption[y].children[z].children[i].value == v3 &&
-                    v3 != undefined
+                    regionoption[y].children[z].children[i].value === v3 &&
+                    v3 !== undefined
                 ) {
                     cityArr.push(regionoption[y].children[z].children[i].label);
                 }
@@ -46,27 +46,27 @@ const handleCity = function(regionoption, v1, v2, v3) {
 };
 const handleCityIndex = function(regionoption, v1, v2, v3) {
     var cityIndArr = [];
-    for (var i in regionoption) {
-        if (v1.indexOf(regionoption[i].label) != -1) {
+    for (const i in regionoption) {
+        if (v1.indexOf(regionoption[i].label) !== -1) {
             cityIndArr.push(regionoption[i].value);
         }
     }
-    for (var i in regionoption) {
-        for (var z in regionoption[i].children) {
+    for (const i in regionoption) {
+        for (const z in regionoption[i].children) {
             if (
-                regionoption[i].children[z].label == v2 &&
-                v2 != undefined
+                regionoption[i].children[z].label === v2 &&
+                v2 !== undefined
             ) {
                 cityIndArr.push(regionoption[i].children[z].value);
             }
         }
     }
-    for (var y in regionoption) {
-        for (var z in regionoption[y].children) {
-            for (var i in regionoption[y].children[z].children) {
+    for (const y in regionoption) {
+        for (const z in regionoption[y].children) {
+            for (const i in regionoption[y].children[z].children) {
                 if (
-                    regionoption[y].children[z].children[i].label == v3 &&
-                    v3 != undefined
+                    regionoption[y].children[z].children[i].label === v3 &&
+                    v3 !== undefined
                 ) {
                     cityIndArr.push(regionoption[y].children[z].children[i].value);
                 }
@@ -77,15 +77,15 @@ const handleCityIndex = function(regionoption, v1, v2, v3) {
 };
 // 格式化时间
 const formatTime = function(value, status) {
-    if (value == undefined || value == null) {
+    if (value === undefined || value === null) {
         return '';
     }
-    if (status == 1) {
-        return value == '' ? '' : moment(value).format('YYYY-MM-DD');
-    } else if (status == 2) {
-        return value == '' ? '' : moment(value).format('YYYY-MM');
+    if (status === 1) {
+        return value === '' ? '' : moment(value).format('YYYY-MM-DD');
+    } else if (status === 2) {
+        return value === '' ? '' : moment(value).format('YYYY-MM');
     }
-    return value == '' ? '' : moment(value).format('YYYY-MM-DD HH:mm:ss');
+    return value === '' ? '' : moment(value).format('YYYY-MM-DD HH:mm:ss');
 };
 /**
  * 页面跳转缓存参数
@@ -140,6 +140,10 @@ const setRequestParams = (params) => {
     // }
     // return arr.join('&');
 };
+// 字符串转数字
+const stringToNumber = (param) => {
+    return typeof param === 'string' ? Number(param) : param;
+};
 
 export default {
     cleanFormData,
@@ -149,5 +153,6 @@ export default {
     setParam,
     getParam,
     getSrc,
-    setRequestParams
+    setRequestParams,
+    stringToNumber
 };

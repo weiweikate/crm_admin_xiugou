@@ -23,13 +23,13 @@
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column label="类型" align="center" width="200">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.biType==1">收入</template>
-                        <template v-else >支出</template>
+                        <template v-if="scope.row.recordType==1">收入</template>
+                        <template v-else >-</template>
                     </template>
                 </el-table-column>
                 <el-table-column label="金额（元）" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.biType==1">{{`+￥${scope.row.balance || 0}`}}</template>
+                        <template v-if="scope.row.recordType==1">{{`+￥${scope.row.balance || 0}`}}</template>
                         <template v-else >{{`-￥${scope.row.balance || 0}`}}</template>
                     </template>
                 </el-table-column>

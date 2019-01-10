@@ -20,7 +20,7 @@
                     <el-table-column prop="id" label="邀请记录ID" align="center"></el-table-column>
                     <el-table-column label="邀请层级" align="center">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.level">{{`v${scope.row.level}`}}</span>
+                            <span v-if="scope.row.level !== undefined && scope.row.level !== null">{{`v${scope.row.level}`}}</span>
                             <span v-else>-</span>
                         </template>
                     </el-table-column>

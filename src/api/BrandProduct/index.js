@@ -177,7 +177,7 @@ export const updateCategoryPropertyStatus = '/product/productProperty/updateStat
 export const queryPropertyByCategoryId = ['/product/categoryProperty/queryByCategoryId', { methods: 'get' }];
 // 绑定类目与属性
 export const bindCategoryProperty = '/product/categoryProperty/bind';
-//-----------------------------------------------------------------------------------------2018-11-29 产品重构-----------
+// -----------------------------------------------------------------------------------------2018-11-29 产品重构-----------
 export const queryProdList = ['/product/product/queryProductPageList', { methods: 'post' }]; // 查询产品列表
 export const findProductSupplierList = ['/product/productSupplier/findProductBrandList', { methods: 'post' }]; // 查询供应商列表
 export const batchUpdateProductStatus = ['/product/product/batchUpdateProductStatus', { methods: 'post' }]; // 批量删除下架产品

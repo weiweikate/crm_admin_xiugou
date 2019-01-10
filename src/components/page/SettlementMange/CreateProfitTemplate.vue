@@ -58,7 +58,7 @@
                 </el-row>
                 <el-row style="margin-top:20px">
                     <el-button :loading="btnLoading" @click="beforeSubmit" type="primary">确认保存</el-button>
-                    <el-button @click="$router.replace('profitDistrMange')">取消</el-button>
+                    <el-button @click="$router.push('profitDistrMange')">取消</el-button>
                 </el-row>
             </el-card>
         </div>
@@ -76,6 +76,8 @@ export default {
             nav: ['结算管理', '利润分配设置', '创建模板'],
             btnLoading: false,
             pageLoading: false,
+            startTime: '',
+            endTime: '',
             id: '', // 模版ID
             rules: {
                 name: [{ required: true, message: '请输入模版名称', trigger: 'blur' }]
@@ -299,8 +301,8 @@ export default {
                     this.params.type = res.data.type; // 模版类型：1.通用模版，2.普通模版
                     // this.params.createAdmin = res.data.createAdmin; // 创建人ID
                     // this.params.createTime = res.data.createTime; // 创建时间
-                    this.params.startTime = res.data.startTime; // 开始时间
-                    this.params.endTime = res.data.endTime; // 结束时间
+                    this.params.startTime = new Date(res.data.startTime); // 开始时间
+                    this.params.endTime = new Date(res.data.endTime); // 结束时间
                     // this.params.updateTime = res.data.updateTime; // 修改时间
                     // this.params.status = res.data.status; // 状态：0.停用，1.待启用 2.启用中
                     const details = res.data.details;
@@ -392,12 +394,18 @@ export default {
         },
         //  提交表单
         submitForm(data) {
-            request.addProfitTpl(data).then(res => {
-                this.$message.success(res.msg);
-                this.$router.replace('profitDistrMange');
-            }).catch(err => {
-                console.log(err);
-            });
+            this.btnLoading = true;
+            request
+                .addProfitTpl(data)
+                .then(res => {
+                    this.$message.success(res.msg);
+                    this.$router.push('profitDistrMange');
+                    this.btnLoading = false;
+                })
+                .catch(err => {
+                    console.log(err);
+                    this.btnLoading = false;
+                });
         }
     },
     components: {

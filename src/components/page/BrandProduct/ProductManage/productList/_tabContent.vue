@@ -116,9 +116,9 @@
                 <template slot-scope="scope">
                     <div class="operate">
                         <!--<span v-if="scope.row.status == 1 || scope.row.status == 5 || scope.row.status == 6" @click="editProduct(scope.row)">编辑</span>-->
-                        <span v-if="scope.row.status != 2 " @click="editProduct(scope.row)">编辑</span>
-                        <span @click="addRemark(scope.row)">备注</span>
-                        <span @click="productInfo(scope.row)">详情</span>
+                        <span v-if="scope.row.status != 2 " @click="editProduct(scope.row)" v-auth="'brand.productList.cpbj'">编辑</span>
+                        <span @click="addRemark(scope.row)" v-auth="'brand.productList.cpbz'">备注</span>
+                        <span @click="productInfo(scope.row)" v-auth="'brand.productList.cpxq'">详情</span>
                     </div>
                 </template>
             </el-table-column>
