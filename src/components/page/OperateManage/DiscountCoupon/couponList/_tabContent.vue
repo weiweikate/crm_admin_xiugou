@@ -1,7 +1,7 @@
 <template>
     <div class="tab-content">
         <el-table v-loading="tableLoading" border :data="tableData">
-            <el-table-column type="index" label="编号" align="center" width="50"></el-table-column>
+            <el-table-column prop="id" label="ID" align="center" width="50"></el-table-column>
             <el-table-column prop="name" label="券名称" align="center"></el-table-column>
             <el-table-column label="券类型" align="center">
                 <template slot-scope="scope">
