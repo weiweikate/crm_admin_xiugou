@@ -1,5 +1,4 @@
 import HttpUtils from '@mr/fe/http';
-import $cookie from '@mr/fe/utils/cookie';
 import * as api_1 from '@/api/api.js';
 import * as api_2 from '@/api/BrandProduct/index.js';
 import * as api_3 from '@/api/MemberManage/index.js';
@@ -12,6 +11,7 @@ import * as api_9 from '@/api/ShowValue/index.js';
 import * as api_10 from '@/api/RepertoryManage/index.js';
 import { Message, MessageBox } from 'element-ui';
 import store from '../stores';
+import { getToken } from '@/utils/auth';
 
 const api = judgeApiRepeat(api_1, api_2, api_3, api_4, api_5, api_6, api_7, api_8, api_9, api_10);
 const list = [];
@@ -24,7 +24,7 @@ const http = new HttpUtils({
     // 超时时间
     timeout: 10000,
     _transformRequest: function(config) {
-        config.headers['token'] = $cookie.get('Admin-Token');
+        config.headers['token'] = getToken();
         return config;
     }
 });
@@ -55,7 +55,7 @@ Object.keys(api).forEach(function(name) {
 });
 // 生成API接口
 list.forEach(function(item) {
-    const name = item.name; const url = item.uri; const method = item.methods || 'post'; const action = item.action || '';
+    const name = item.name; const url = item.uri.replace(/\/\//g, '/'); const method = item.methods || 'post'; const action = item.action || '';
     request[name] = function(params, config = {}) {
         return new Promise((resolve, reject) => {
             console.log(`[开始请求:${action}] : ${url}`);

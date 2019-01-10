@@ -204,7 +204,7 @@ export default {
     box-sizing: border-box;
     .detail-msg {
       position: relative;
-      width: 760px;
+      width: 900px;
       height: auto;
       padding: 0px 45px;
       box-sizing: border-box;

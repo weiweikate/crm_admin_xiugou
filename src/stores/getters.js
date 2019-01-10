@@ -3,7 +3,7 @@ const getters = {
     getPageParam(state) {
         // 拉取本地缓存的页面信息
         state.pageInfo = JSON.parse(sessionStorage.getItem('pageMsg'));
-        return function(paramName) {
+        return function (paramName) {
             return state.pageInfo[paramName];
         };
     },
@@ -16,6 +16,7 @@ const getters = {
     roles: state => state.user.roles,
     auth: state => state.user.auth,
     permission_routers: state => state.permission.routers,
-    addRouters: state => state.permission.addRouters
+    addRouters: state => state.permission.addRouters,
+    noAuthRoutes: state => state.permission.noAuthRoutes
 };
 export default getters;

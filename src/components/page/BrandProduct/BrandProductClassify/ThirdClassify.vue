@@ -291,15 +291,11 @@
             },
             // 跳转产品列表页
             goProduct(row) {
-                sessionStorage.setItem('firstCategoryId', row.classId);
-                sessionStorage.setItem('secCategoryId', row.fatherId);
-                sessionStorage.setItem('thirdCatId', row.id);
-                sessionStorage.setItem('flag', 2);
                 this.$router.push({ name: 'productList', query: {
                     firstCategoryId: row.classId,
                     secCategoryId: row.fatherId,
                     thirdCatId: row.id,
-                    flag: 2
+                    flag: 4
                 }});
             },
             // 跳转到产品详细参数

@@ -21,7 +21,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="levelId" label="用户层级" label-width="120">
-                    <el-select v-model="exportForm.levelId" placeholder="全部层级">
+                    <el-select v-model="form.levelId" placeholder="全部层级">
                         <el-option label="全部层级" value=""></el-option>
                         <el-option :label="`v${item.level}`" :value="item.id" v-for="(item,index) in levelList"
                                    :key="index"></el-option>
@@ -52,6 +52,11 @@
                 <el-table-column label="授权层级" align="center">
                     <template slot-scope="scope" v-if="scope.row.level !== null && scope.row.level !== undefined">{{`v${scope.row.level}`}}</template>
                 </el-table-column>
+                <el-table-column label="当前经验值" align="center" prop="experience" width="100">
+                    <template slot-scope="scope">
+                        <router-link :to="`/memberExp?code=${scope.row.code}`">{{scope.row.experience || 0}}</router-link>
+                    </template>
+                </el-table-column>
                 <!--<el-table-column prop="day_count" label="本日登录" align="center"></el-table-column>-->
                 <!--<el-table-column prop="month_count" label="本月登录" align="center"></el-table-column>-->
                 <el-table-column label="最近登录时间" align="center">
@@ -76,9 +81,7 @@
                 <!--<el-table-column prop="style" label="渠道" width="100"></el-table-column>-->
                 <el-table-column label="下级" align="center">
                     <template slot-scope="scope">
-                        <span v-if="hasAuth" style="cursor: pointer;color:#ff6868"
-                              @click="toLower(scope.row.code)">{{scope.row.junior}}</span>
-                        <span v-else>{{scope.row.junior}}</span>
+                        <span>{{scope.row.junior}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="状态" align="center">
@@ -159,7 +162,9 @@ export default {
             form: {
                 condition: '',
                 phone: '',
-                userType: ''
+                userType: '',
+                levelId: '',
+                idcard: ''
             },
             exportForm: {
                 levelId: ''
@@ -209,10 +214,6 @@ export default {
             }).catch(err => {
                 console.log(err);
             });
-        },
-        // 跳到下级列表
-        toLower(code) {
-            this.$router.push({ name: 'lowerMemberManage', query: { memberToLowListPage: code }});
         },
         // 详情
         detailItem(index, row) {

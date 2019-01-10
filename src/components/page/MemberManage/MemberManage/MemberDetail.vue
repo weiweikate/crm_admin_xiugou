@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="center">
-                    <el-button @click="updateBasicInf">修改</el-button>
+                    <el-button @click="updateBasicInf" v-auth="'vip.memberDetail.jcxxxg'">修改</el-button>
                 </div>
                 <div class="right">
                     <div>
@@ -42,12 +42,12 @@
                         <img class="img" v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('lowerMemberManage', 'memberToLowListPage')">
+                        <el-button type="primary" @click="btnClicked('lowerMemberManage', 'memberToLowListPage')" v-auth="'vip.memberDetail.xjdl'">
                             下级代理({{dealer.junior || 0}})
                         </el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('memberTree', 'memberTreeInfo')"
+                        <el-button type="primary" @click="btnClicked('memberTree', 'memberTreeInfo')" v-auth="'vip.memberDetail.ckhyszt'"
                                    style="margin-left: 0">查看会员树状图
                         </el-button>
                     </div>
@@ -56,17 +56,17 @@
                         <!--</el-button>-->
                     <!--</div>-->
                     <div>
-                        <el-button type="primary" @click="btnClicked('memberAccount', 'memberInfoAccount')"
+                        <el-button type="primary" @click="btnClicked('memberAccount', 'memberInfoAccount')" v-auth="'vip.memberDetail.tdzh'"
                                    style="margin-left: 0">他的账户
                         </el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('realNameInfo', 'memberInfoRealName')"
+                        <el-button type="primary" @click="btnClicked('realNameInfo', 'memberInfoRealName')" v-auth="'vip.memberDetail.smxx'"
                                    style="margin-left: 0">实名信息{{dealer.realnameStatus == '1'?'(已实名)':''}}
                         </el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="$router.push('showMsg')"
+                        <el-button type="primary" @click="$router.push('showMsg')" v-auth="'vip.memberDetail.dpxx'"
                                    style="margin-left: 0">店铺信息
                         </el-button>
                     </div>
@@ -95,7 +95,7 @@
                     </div>
                 </div>
                 <div class="center">
-                    <el-button @click="updateAuthorInf">修改</el-button>
+                    <el-button @click="updateAuthorInf" v-auth="'vip.memberDetail.sqxxxg'">修改</el-button>
                 </div>
                 <div class="clearfix"></div>
             </div>

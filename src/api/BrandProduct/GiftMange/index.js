@@ -1,5 +1,5 @@
 // 上传图片
-export const addImg='/admin/ossClient/aliyunOSSUploadImage';
+export const addImg = '/admin/ossClient/aliyunOSSUploadImage';
 // 获取一二级类目列表
 export const getCategoryList = '/admin/productCategory/queryProductCategoryPageList';
 // 根据类目查询品牌列表
@@ -33,7 +33,7 @@ export const queryProductSpecById = '/admin/giftBag/queryProductSpecById';
 // 添加礼包产品
 export const addGiftBagProduct = '/admin/giftBag/addGiftBagProduct';
 // 获取礼包产品信息
-export const queryGiftBagProductById = '/admin/giftBag/queryGiftBagProductById'
+export const queryGiftBagProductById = '/admin/giftBag/queryGiftBagProductById';
 // 根据id删除产品礼包信息
 export const deleteGiftBagProductById = '/admin/giftBag/deleteGiftBagProductById';
 // 价格添加

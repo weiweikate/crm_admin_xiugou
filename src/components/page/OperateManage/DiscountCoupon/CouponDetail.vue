@@ -42,7 +42,7 @@
                 </el-form-item>
                 <el-form-item label="可用品类:">
                     <div style="margin-left: 71px">
-                        <div class="classify-item" v-if="detail.firstCategoryNames!='全品类'" :title="detail.firstCategoryNames">一级类目：{{detail.firstCategoryNames}}</div>
+                        <div class="classify-item" v-if="detail.firstCategoryNames && detail.firstCategoryNames!='全品类'" :title="detail.firstCategoryNames">一级类目：{{detail.firstCategoryNames}}</div>
                         <div class="classify-item" v-else>{{detail.firstCategoryNames}}</div>
                         <div class="classify-item" v-if="detail.secondCategoryNames" :title="detail.secondCategoryNames">二级类目：{{detail.secondCategoryNames}}</div>
                         <div class="classify-item" v-if="detail.thirdCategoryNames" :title="detail.thirdCategoryNames">三级类目：{{detail.thirdCategoryNames}}</div>
@@ -73,6 +73,7 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import request from '@/http/http.js';
+    import utils from '@/utils/index.js';
 
     export default {
         components: {
@@ -116,16 +117,16 @@
                     let count = 0;
                     const arr = userLevelId.split(',');
                     for (const i in res.data) {
-                        const name = res.data[i].name;
+                        const level = 'V' + res.data[i].level;
                         for (const j in arr) {
-                            if (arr[j] == res.data[i].id) {
+                            if (utils.stringToNumber(arr[j]) === utils.stringToNumber(res.data[i].id)) {
                                 count++;
-                                this.users.push(name);
+                                this.users.push(level);
                             }
                         }
                     }
                     this.users = this.users.join(',');
-                    if (count == res.data.length) this.allUser = true;
+                    if (count === res.data.length) this.allUser = true;
                 }).catch(error => {
                     console.log(error);
                 });

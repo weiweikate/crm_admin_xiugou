@@ -9,7 +9,7 @@
                         <el-input class="add-mange-inp" v-model="form.name"></el-input>
                     </el-form-item>
                     <el-form-item prop="telephone" label="手机号">
-                        <el-input class="add-mange-inp" v-model="form.telephone"></el-input>
+                        <el-input class="add-mange-inp" v-model="form.telephone" :disabled="!IS_ADD"></el-input>
                     </el-form-item>
                     <div class="avatar">
                         <img v-if="form.face" :src="form.face">
@@ -107,6 +107,11 @@
             this.getDepartmentList();
             this.initAction();
         },
+        computed: {
+            IS_ADD() {
+                return this.$route.query.id === undefined;
+            }
+        },
         methods: {
             beforeUpload() {
 
@@ -114,9 +119,8 @@
             initAction() {
                 const id = this.$route.query.id;
                 // 修改
-                if (id) {
+                if (!this.IS_ADD) {
                     request.findAdminUserbyId({ id: id }).then(res => {
-                        console.log('findAdminUserbyId', res);
                         let data = res.data || {};
                         this.form = {
                             id: data.id,
@@ -283,9 +287,7 @@
                 margin: 0px 10px 0px 20px;
                 font-size: 14px;
             }
-            .el-checkbox {
-                margin-left: 20px;
-            }
+
             .avatar {
                 z-index: 100;
                 position: absolute;

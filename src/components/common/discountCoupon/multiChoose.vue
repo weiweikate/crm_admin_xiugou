@@ -90,6 +90,7 @@
 <script>
     import icon from '@/components/common/ico';
     import request from '@/http/http.js';
+    import utils from '@/utils/index.js';
 
     export default {
         components: {
@@ -140,10 +141,12 @@
         watch: {
             getProducts(params) {
                 this.resetValue();
+                // 一级类目：全品类，非全品类
                 if (params.firstCategoryIds) {
-                    if (params.firstCategoryIds !== -1) {
+                    // -1是全品类
+                    if (params.firstCategoryIds !== '-1') {
                         if (params.firstCategoryIds.indexOf(',') === -1) {
-                            this.firstTagIds = this.firstCategoryIds = [Number(params.firstCategoryIds)];
+                            this.firstTagIds = this.firstCategoryIds = [utils.stringToNumber(params.firstCategoryIds)];
                             this.firstCategoryNames = [params.firstCategoryNames];
                         } else {
                             this.firstTagIds = this.firstCategoryIds = this.toNumber(params.firstCategoryIds.split(','));
@@ -159,9 +162,10 @@
                 } else {
                     this.firstCategoryNames = this.firstTagIds = this.firstCategoryIds = [];
                 }
+                // 二级类目
                 if (params.secondCategoryIds) {
                     if (params.secondCategoryIds.indexOf(',') === -1) {
-                        this.secondTagIds = this.secondCategoryIds = [Number(params.secondCategoryIds)];
+                        this.secondTagIds = this.secondCategoryIds = [utils.stringToNumber(params.secondCategoryIds)];
                         this.secondCategoryNames = [params.secondCategoryNames];
                     } else {
                         this.secondTagIds = this.secondCategoryIds = this.toNumber(params.secondCategoryIds.split(','));
@@ -173,9 +177,10 @@
                 } else {
                     this.secondCategoryNames = this.secondTagIds = this.secondCategoryIds = [];
                 }
+                // 三级类目
                 if (params.thirdCategoryIds) {
                     if (params.thirdCategoryIds.indexOf(',') === -1) {
-                        this.thirdTagIds = this.thirdCategoryIds = [Number(params.thirdCategoryIds)];
+                        this.thirdTagIds = this.thirdCategoryIds = [utils.stringToNumber(params.thirdCategoryIds)];
                         this.thirdCategoryNames = [params.thirdCategoryNames];
                     } else {
                         this.thirdTagIds = this.thirdCategoryIds = this.toNumber(params.thirdCategoryIds.split(','));
@@ -187,6 +192,7 @@
                 } else {
                     this.thirdCategoryNames = this.thirdTagIds = this.thirdCategoryIds = [];
                 }
+                // 产品
                 if (params.products) {
                     if (params.products.indexOf(',') === -1) {
                         this.productTagIds = this.products = [params.products];
@@ -199,7 +205,7 @@
                 } else {
                     this.productTags = this.productTagIds = this.products = [];
                 }
-                this.getFirst();
+                this.getFirst();// 默认加载一级类目
             }
         },
         created() {
@@ -236,6 +242,9 @@
                 this.checkedList = [];
                 this.checkAll = false;
                 this.param = '';
+                this.firstCategoryId = '';
+                this.secondCategoryId = '';
+                this.thirdCategoryId = '';
             },
             // 获取一级类目
             getFirst() {
@@ -265,6 +274,7 @@
                             } else {
                                 that.firstChecked[k] = false;
                             }
+                            // 全品类
                             if (that.checkAll) {
                                 that.firstCategoryNames.push(v.name);
                                 that.firstTagIds.push(v.id);
@@ -273,7 +283,7 @@
                             }
                         });
                         that.loading = false;
-                        that.isFirstAllCheck();
+                        that.isFirstAllCheck();// 判断品类是否全选
                     })
                     .catch(error => {
                         console.log(error);
@@ -529,7 +539,8 @@
                     .then(res => {
                         that.productList = res.data;
                         res.data.forEach(function(v, k) {
-                            if (that.productTagIds.indexOf(v.prodCode) !== -1 || that.thirdChecked[index]) {
+                            // 该产品已单一选中或者其父类全选
+                            if (that.productTagIds.indexOf(v.prodCode) !== -1 || that.thirdChecked[index] || that.thirdIndex !== '' && that.thirdChecked[that.thirdIndex]) {
                                 that.productChecked[k] = true;
                             } else {
                                 that.productChecked[k] = false;
@@ -646,7 +657,6 @@
             },
             // 移除标签
             deleteTags(num, item, isTag) {
-                //  console.log('222:'+item)
                 const classifyIds = []; // 选择框数据ids
                 const tagIds = num === 1 ? this.firstTagIds : num === 2 ? this.secondTagIds : num === 3 ? this.thirdTagIds : this.productTagIds;
                 const tag = num === 1 ? this.firstClassifyTags : num === 2 ? this.secondClassifyTags : num === 3 ? this.thirdClassifyTags : this.productTags;
@@ -704,11 +714,11 @@
                     products.push(v.prodCode);
                 });
                 const productList = {
-                    firstCategoryIds: firstCategoryIds,
-                    secondCategoryIds: secondCategoryIds,
-                    thirdCategoryIds: thirdCategoryIds,
-                    products: products,
-                    checkAll: this.checkAll
+                    firstCategoryIds: firstCategoryIds,// 一级
+                    secondCategoryIds: secondCategoryIds,// 二级
+                    thirdCategoryIds: thirdCategoryIds,// 三级
+                    products: products,// 产品
+                    checkAll: this.checkAll// 全品类
                 };
                 this.$emit('getProductIds', JSON.stringify(productList));
             },
@@ -716,7 +726,7 @@
             toNumber(arr) {
                 const newArr = [];
                 for (const i in arr) {
-                    newArr.push(Number(arr[i]));
+                    newArr.push(utils.stringToNumber(arr[i]));
                 }
                 return newArr;
             }

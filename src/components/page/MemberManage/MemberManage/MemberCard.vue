@@ -9,7 +9,7 @@
                            {{item.bankName}}
                         </div>
                         <div class="cardType">
-                            {{item.cardType == 1? '储蓄卡': '信用卡'}}
+                            {{item.cardType}}
                         </div>
                     </div>
                     <div class="card-num" v-if="item.cardNo">

@@ -34,7 +34,7 @@
                         </el-checkbox>
                         <div style="margin: 15px 0;"></div>
                         <el-checkbox-group v-model="checkedUsers" @change="handleCheckedUsersChange">
-                            <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{item.name}}
+                            <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{`V`+item.level}}
                             </el-checkbox>
                         </el-checkbox-group>
                         <div style="margin-left: 112px" v-if="index==0">
@@ -69,11 +69,8 @@
 <script>
     import icon from '@/components/common/ico';
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import region from '@/components/common/Region';
     import moment from 'moment';
-    import utils from '@/utils/index';
     import request from '@/http/http.js';
-    import * as api from '@/api/api.js';
     import chooseArea from '@/components/common/chooseArea';
 
     export default {
@@ -159,7 +156,7 @@
                 this.notRegist = false;
                 this.newRegist = false;
                 this.index = this.$route.query.isNotice || sessionStorage.getItem('isNotice');
-                this.form.type = this.index == 0 ? 100 : 200;
+                this.form.type = this.index === 0 ? 100 : 200;
             },
             // 取消
             cancel() {
@@ -172,7 +169,7 @@
             },
             // 推送方式
             changeStyle() {
-                if (this.form.pushType == 1) {
+                if (this.form.pushType === 1) {
                     this.dateDisabled = true;
                 } else {
                     this.dateDisabled = false;
@@ -205,7 +202,7 @@
                 let result = '';
                 for (const i in this.users) {
                     for (const j in value) {
-                        if (this.users[i].id == value[j].id) {
+                        if (this.users[i].id === value[j].id) {
                             result += this.users[i].id + ',';
                         }
                     }
@@ -220,7 +217,7 @@
                 this.index = num;
                 this.info[num].checked = true;
                 this.info[1 - num].checked = false;
-                this.form.type = num == 0 ? 100 : 200;
+                this.form.type = num === 0 ? 100 : 200;
                 this.isIndeterminate = false;
                 this.checkAll = false;
                 this.getLevelList();
@@ -257,6 +254,7 @@
                             this.btnLoading = false;
                         }).catch(err => {
                             this.btnLoading = false;
+                            console.log(err);
                         });
                     }
                 });

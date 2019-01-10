@@ -161,7 +161,7 @@ export default {
             btnLoading: false
         };
     },
-    activated() {
+    mounted() {
         this.getList(this.page.currentPage);
     },
     methods: {

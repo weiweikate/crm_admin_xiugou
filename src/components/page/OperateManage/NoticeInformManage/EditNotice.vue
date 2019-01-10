@@ -31,7 +31,7 @@
                         </el-checkbox>
                         <div style="margin: 15px 0;"></div>
                         <el-checkbox-group v-model="checkedUsers" @change="handleCheckedUsersChange">
-                            <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{item.name}}
+                            <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{`V`+item.level}}
                             </el-checkbox>
                         </el-checkbox-group>
                         <div style="margin-left: 112px">
@@ -66,12 +66,10 @@
 <script>
     import icon from '@/components/common/ico';
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import region from '@/components/common/Region';
     import moment from 'moment';
-    import utils from '@/utils/index';
     import request from '@/http/http.js';
-    import * as api from '@/api/api.js';
     import chooseArea from '@/components/common/chooseArea';
+    import utils from '@/utils/index.js';
 
     export default {
         components: {
@@ -153,12 +151,12 @@
                         let count = 0;
                         this.form.userLevel = '';
                         for (const i in resData.data) {
-                            const name = resData.data[i].name;
+                            const level = 'V' + resData.data[i].level;
                             this.users = resData.data;
                             for (const j in arr) {
-                                if (arr[j] == resData.data[i].id) {
+                                if (utils.stringToNumber(arr[j]) === utils.stringToNumber(resData.data[i].id)) {
                                     count++;
-                                    if (this.checkedUsers.indexOf(name) == -1) {
+                                    if (this.checkedUsers.indexOf(level) === -1) {
                                         this.checkedUsers.push(resData.data[i]);
                                         this.form.userLevel += resData.data[i].id + ',';
                                     }
@@ -171,13 +169,13 @@
                                 }
                             }
                         }
-                        if (count == resData.data.length) {
+                        if (count === resData.data.length) {
                             this.checkAll = true;
                             this.isIndeterminate = false;
                         } else {
                             this.isIndeterminate = true;
                         }
-                        if (count == 0) {
+                        if (count === 0) {
                             this.isIndeterminate = false;
                         }
                     }).catch(err => {
@@ -186,6 +184,7 @@
                     this.loading = false;
                 }).catch(err => {
                     this.loading = false;
+                    console.log(err);
                 });
             },
             formData() {
@@ -230,7 +229,7 @@
                 let result = '';
                 for (const i in this.users) {
                     for (const j in value) {
-                        if (this.users[i].id == value[j].id) {
+                        if (this.users[i].id === value[j].id) {
                             result += this.users[i].id + ',';
                         }
                     }
@@ -254,20 +253,20 @@
                             params.endTime = moment(this.form.date[1]).format('YYYY-MM-DD HH:mm:ss');
                         }
                         if (params.userLevel) {
-                            if (params.userLevel[params.userLevel.length - 1] == ',') {
+                            if (params.userLevel[params.userLevel.length - 1] === ',') {
                                 params.userLevel = params.userLevel.slice(0, -1);
                             }
                         }
-                        if (this.newRegist && params.userLevel.indexOf('new') == -1) {
+                        if (this.newRegist && params.userLevel.indexOf('new') === -1) {
                             params.userLevel += ',' + 'new' + ',';
                         }
-                        if (this.notRegist && params.userLevel.indexOf('no') == -1) {
+                        if (this.notRegist && params.userLevel.indexOf('no') === -1) {
                             params.userLevel += ',' + 'no' + ',';
                         }
-                        if (params.userLevel.indexOf('new') != -1 && !this.newRegist) {
+                        if (params.userLevel.indexOf('new') !== -1 && !this.newRegist) {
                             params.userLevel = params.userLevel.replace('new', '');
                         }
-                        if (params.userLevel.indexOf('no') != -1 && !this.notRegist) {
+                        if (params.userLevel.indexOf('no') !== -1 && !this.notRegist) {
                             params.userLevel = params.userLevel.replace('no', '');
                         }
                         if (!params.userLevel) {
@@ -276,10 +275,10 @@
                         }
                         params.id = this.id;
                         params.userLevel = params.userLevel.replace(',,', ',');
-                        if (params.userLevel[params.userLevel.length - 1] == ',') {
+                        if (params.userLevel[params.userLevel.length - 1] === ',') {
                             params.userLevel = params.userLevel.slice(0, -1);
                         }
-                        if (params.userLevel[0] == ',') {
+                        if (params.userLevel[0] === ',') {
                             params.userLevel = params.userLevel.slice(1);
                         }
                         this.btnLoading = true;
@@ -289,6 +288,7 @@
                             this.btnLoading = false;
                         }).catch(err => {
                             this.btnLoading = false;
+                            console.log(err);
                         });
                     }
                 });
