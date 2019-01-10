@@ -211,6 +211,7 @@ export default {
             this.$refs[this.activeName].page.currentPage = 1;
             this.$refs[this.activeName].data = data;
             this.$refs[this.activeName].getList(this.page.currentPage);
+            this.$refs[this.activeName].warehouseOrderNos=[];
         },
         //  重置表单
         resetForm(formName) {
