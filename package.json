@@ -26,7 +26,7 @@
         ]
     },
     "dependencies": {
-        "@mr/fe": "0.0.20",
+        "@mr/fe": "0.0.21",
         "area-data": "5.0.6",
         "axios": "0.15.3",
         "babel-polyfill": "6.23.0",
