@@ -35,9 +35,9 @@
               <el-table-column label="操作" width="500" align="center">
                 <template slot-scope="scope">
                   <el-button  size="mini" type="primary" @click="editManger(scope.row)" v-auth="'quanxian.manageList.bjzh'">编辑</el-button>
-                  <el-button v-if='scope.row.status == 1' size="mini" type="warning" @click="resetPwd(scope.row)">密码重置</el-button>
+                  <el-button v-if='scope.row.status == 1' size="mini" type="warning" @click="resetPwd(scope.row)" v-auth="'quanxian.manageList.mmcz'">密码重置</el-button>
                   <!-- <el-button size="mini" type="warning" @click="showLog(scope.row)">查看日志</el-button> -->
-                  <el-button v-if='scope.row.status == 2' @click="deleteUser(scope.row)" size="mini" type="danger">账号删除</el-button>
+                  <el-button v-if='scope.row.status == 2' @click="deleteUser(scope.row)" size="mini" type="danger" v-auth="'quanxian.manageList.sczh'">账号删除</el-button>
                   <template >
                     <el-popover placement="top" width="160" v-model="scope.row.visible">
                       <p v-if='scope.row.status == 1'>确定关闭账号？</p>
@@ -47,8 +47,8 @@
                         <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 2' size="mini" type="primary" @click='accountMange(scope.row,1)' >确定</el-button>
                         <el-button size="mini" type="text" @click="scope.row.visible = false">取消</el-button>
                       </div>
-                      <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 1' size="mini" type="danger" class="ml10">账号关闭</el-button>
-                      <el-button slot="reference" :loading="closeBtn" v-if='scope.row.status == 2' size="mini" type="danger" class="ml10">账号开启</el-button>
+                      <el-button v-auth="'quanxian.manageList.kqgb'" slot="reference" :loading="closeBtn" v-if='scope.row.status == 1' size="mini" type="danger" class="ml10">账号关闭</el-button>
+                      <el-button v-auth="'quanxian.manageList.kqgb'" slot="reference" :loading="closeBtn" v-if='scope.row.status == 2' size="mini" type="danger" class="ml10">账号开启</el-button>
                     </el-popover>
                   </template>
                 </template>

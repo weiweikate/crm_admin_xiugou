@@ -48,8 +48,8 @@
 
         <el-card style="margin-top: 20px;">
             <el-button type="primary" @click="activeRegularDialog = true">活动规则</el-button>
-            <router-link to="/expAddOrEdit?type=add" class="el-button el-button--primary el-button--small">添加活动</router-link>
-
+            <router-link to="/expAddOrEdit?type=add" class="el-button el-button--primary el-button--small" v-auth="'yunying.expManage.tj'">添加活动</router-link>
+            
             <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%;margin-top:20px;">
                 <el-table-column prop="activityCode" label="活动ID" align="center" width="150"></el-table-column>
                 <el-table-column prop="name" label="活动名称" width="100" align="center"></el-table-column>
@@ -83,11 +83,11 @@
                 <el-table-column label="操作" align="center" width="300">
                     <template slot-scope="scope">
                         <!-- todo 0：删除1：未开始  2：进行中3：已结束 -->
-                        <el-button type="warning" size="small" @click="showActive(scope.row)">查看</el-button>
+                        <el-button type="warning" size="small" @click="showActive(scope.row)" v-auth="'yunying.expManage.ck'">查看</el-button>
                         <!--  活动未开始|进行中才能编辑 -->
-                        <el-button type="primary" size="small" @click="editActive(scope.row)" v-if="[1,2].includes(scope.row.status)">编辑</el-button>
+                        <el-button type="primary" size="small" @click="editActive(scope.row)" v-if="[1,2].includes(scope.row.status)" v-auth="'yunying.expManage.bj'">编辑</el-button>
                         <!--  活动未开始才能删除 -->
-                        <el-button type="danger"  size="small" @click="delExpActive(scope.$index,scope.row)" v-if="scope.row.status === 1">删除</el-button>
+                        <el-button type="danger"  size="small" @click="delExpActive(scope.$index,scope.row)" v-if="scope.row.status === 1" v-auth="'yunying.expManage.sc'">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
