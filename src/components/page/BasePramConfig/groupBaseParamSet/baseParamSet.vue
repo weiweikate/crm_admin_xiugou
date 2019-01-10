@@ -8,7 +8,7 @@
                 <el-input v-model="storeStartNum" class="input-sty"></el-input>
                 <span class="point">人</span><br/>
                 <span class="currency-small-title">拼店保证金设置</span><br/>
-                <el-input v-model="storeDeposit" class="input-sty"></el-input>
+                <el-input v-model="storeDeposit" class="input-sty" disabled></el-input>
                 <span class="point">元</span><br/>
                 <span class="currency-small-title">结算周期</span><br/>
                 <span class="point">每月 </span>
