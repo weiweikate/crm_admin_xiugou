@@ -189,9 +189,6 @@
                         data.firstCategoryId = this.cateArr[0].value;
                         data.secCategoryId = this.cateArr[1].value;
                         data.thirdCategoryId = this.cateArr[2].value;
-                        data.restrictions = 7;
-                        data.upType = 3;
-                        data.autoUnShelve = false;
                         data.thirdStep = false;
                         request.addProducts(data).then(res => {
                             this.btnLoading = false;
@@ -257,6 +254,9 @@
                     // this.pageLoading = false;
                 } else {
                     this.form.prodCode = '';
+                    this.form.restrictions = 7;
+                    this.form.upType = 3;
+                    this.form.autoUnShelve = false;
                     await this.getSupplyList();
                     await this.getNaturalList();
                     this.pageLoading = false;
