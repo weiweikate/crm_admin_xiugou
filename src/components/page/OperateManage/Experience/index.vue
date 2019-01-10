@@ -228,7 +228,7 @@
             // 获取活动规则说明
             getRemark() {
                 request.queryExpRemark().then(res => {
-                    this.regular = res.data;
+                    this.regular = res.data || '';
                 }).catch(res => {
                     this.$message.warning(res.msg);
                 });

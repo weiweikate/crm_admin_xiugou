@@ -26,7 +26,7 @@
                                 <el-input-number
                                     :controls="false"
                                     v-model="item.rate"
-                                    style="width:100px;text-align: left;" :min="1"
+                                    style="width:100px;text-align: left;" :min="1.01"
                                     :max="999999999"
                                     :disabled="isActivityIng"
                                     :precision="2"
