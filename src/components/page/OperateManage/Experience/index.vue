@@ -48,7 +48,7 @@
 
         <el-card style="margin-top: 20px;">
             <el-button type="primary" @click="activeRegularDialog = true">活动规则</el-button>
-            <router-link to="/expAddOrEdit?type=add"><el-button type="primary">添加活动</el-button></router-link>
+            <router-link to="/expAddOrEdit?type=add" class="el-button el-button--primary el-button--small">添加活动</router-link>
 
             <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%;margin-top:20px;">
                 <el-table-column prop="activityCode" label="活动ID" align="center" width="150"></el-table-column>
