@@ -47,7 +47,7 @@
                             <el-checkbox v-model="checkCoupon">活动优惠券</el-checkbox>
                         </label>
                         <div class="el-form-item__content" style="margin-left: 100px;">
-                            <el-input placeholder="请输入优惠券ID" v-on:change="getCouponById" v-model="form.couponId" style="width: 300px;"></el-input>
+                            <el-input placeholder="请输入优惠券ID" v-on:blur="getCouponById" v-model="form.couponId" style="width: 300px;"></el-input>
                             <span class="coupon-err" v-if="couponInfo">
                             <span v-if="couponInfo.status === 0">已失效</span>
                             <span v-if="couponInfo.totalNumber === 0">可发放数量不足</span>
@@ -487,8 +487,12 @@
             // 优惠券赠送数验证
             couponCountCheck() {
                 // 活动未开始时优惠券为可选  开始后如果之前有优惠券则必填
-                if (this.couponInfo.id && !this.checkCoupon) {
+                if (this.isActivityIng && this.couponInfo.id && !this.checkCoupon) {
                     this.$message.warning('优惠券不能为空');
+                    return false;
+                }
+                if (this.checkCoupon && !this.form.couponId) {
+                    this.$message.warning('已勾选优惠券但是未填优惠券ID');
                     return false;
                 }
                 if (!this.checkCoupon) {
@@ -718,6 +722,9 @@
                     ...this.form
                 };
                 data.spuCodes = this.selectGoods;
+                if (!this.isActivityIng && !this.checkCoupon) {
+                    data.couponId = '';
+                }
                 // todo 如果活动未开始 spuCodes为活动商品表中的所有 否则的话就是添加的部分
                 if (this.isActivityWaiting) {
                     const arr = [];
