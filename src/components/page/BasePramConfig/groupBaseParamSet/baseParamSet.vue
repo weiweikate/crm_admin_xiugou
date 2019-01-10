@@ -7,9 +7,9 @@
                 <span class="currency-small-title">拼店招募开启人数设置</span><br/>
                 <el-input v-model="storeStartNum" class="input-sty"></el-input>
                 <span class="point">人</span><br/>
-                <!--<span class="currency-small-title">拼店保证金设置</span><br/>
+                <span class="currency-small-title">拼店保证金设置</span><br/>
                 <el-input v-model="storeDeposit" class="input-sty"></el-input>
-                <span class="point">元</span><br/>-->
+                <span class="point">元</span><br/>
                 <span class="currency-small-title">结算周期</span><br/>
                 <span class="point">每月 </span>
                 <el-input v-model="settleCycle" class="input-sty"></el-input>
@@ -94,7 +94,7 @@
                 const int = /^([1-9]\d*)$/;
                 const reg = /^([1-9]\d*)([.]{1}[1-9]{1,2})?$/;
                 const regNumRange = /^\d{1,4}$/;
-                if (!int.test(this.storeStartNum) || !reg.test(this.storeDeposit) || !reg.test(this.exitDays) || !reg.test(this.reStartShop) || !int.test(this.settleCycle) || this.settleCycle < 0 || this.settleCycle > 28) {
+                if (!int.test(this.storeStartNum) || !reg.test(this.exitDays) || !reg.test(this.reStartShop) || !int.test(this.settleCycle) || this.settleCycle < 0 || this.settleCycle > 28) {
                     this.$message.warning('请输入合法数据!');
                     return;
                 }
