@@ -390,7 +390,8 @@
                 searchGoods: [],
                 checkActivityProductRes: [], // 添加商品的校验结果
                 addGoodsList: [],
-                selectGoods: []
+                selectGoods: [],
+                importList: []
             };
         },
         methods: {
@@ -398,7 +399,7 @@
                 return this.type === 'edit' && this.isActivityIng && this.originTableSpuCodes.includes(spuCode);
             },
             showDelBtn(spuCode) {
-                return this.selectGoods.includes(spuCode) || this.isActivityWaiting;
+                return this.selectGoods.includes(spuCode) || this.importList.includes(spuCode) || this.isActivityWaiting;
             },
             // 关闭活动商品
             closeProduct(spuCode, $index) {
@@ -484,15 +485,12 @@
             // 优惠券赠送数验证
             couponCountCheck() {
                 // 活动未开始时优惠券为可选  开始后如果之前有优惠券则必填
-                if (!this.isActivityIng) {
-                    if (!this.checkCoupon) {
-                        return true;
-                    }
-                } else {
-                    if (this.couponInfo.id && !this.checkCoupon) {
-                        this.$message.warning('优惠券不能为空');
-                        return false;
-                    }
+                if (this.couponInfo.id && !this.checkCoupon) {
+                    this.$message.warning('优惠券不能为空');
+                    return false;
+                }
+                if (!this.checkCoupon) {
+                    return true;
                 }
                 if (!this.couponInfo) {
                     this.$message.warning('填写的优惠券不存在');
@@ -531,7 +529,7 @@
             // 处理校验异常的商品 在选中列表中剔除错误商品 同时展示没问题商品
             dealErrSpuGoods() {
                 const list = this.getErrorSpuGoodsList(this.checkActivityProductRes);
-                this.selectGoods = this.mergeArr(this.selectGoods, this.getImportList());
+                this.selectGoods = this.mergeArr(this.selectGoods, this.getImportListByInput());
                 if (list.length) {
                     this.selectGoods = this.selectGoods.filter((item) => {
                         return !list.includes(item + '');
@@ -555,7 +553,7 @@
             mergeArr(arr1, arr2) {
                 return Array.from(new Set(arr1.concat(arr2)));
             },
-            getImportList() {
+            getImportListByInput() {
                 let imporList = [];
                 if (this.importInput) {
                     imporList = this.importInput.replace(/\r|\n|\s|\./g, ',').split(',').filter(function(item) {
@@ -566,7 +564,7 @@
             },
             // 选择以及批量导出的商品需要先做校验 参数用来区分是批量还是搜索的
             verifyGoods(type) {
-                const importList = this.getImportList();
+                let importList = this.getImportListByInput();
                 const data = {
                     activityCode: this.type === 'add' ? '' : this.form.activityCode, //  如果是添加则传空 编辑的话要带上
                     spuCodes: type === 'add' ? this.selectGoods : importList
@@ -580,11 +578,16 @@
                     // 如果校验不通过 根据返回结果的errMsg去除不符合结果的商品
                     if (errSpuCodes.length) {
                         this.errorDialog = true;
+                        importList = importList.filter(item => {
+                            return !errSpuCodes.includes(item);
+                        });
                     } else {
                         // 校验通过后展示添加的商品
                         this.dealErrSpuGoods();
                         this.showAddGoods(res.data);
                     }
+                    // 保留成功导入的spu记录
+                    this.importList = this.mergeArr(this.importList, importList);
                     const dialog = type === 'add' ? 'addGoodDialog' : 'importDialog';
                     this[dialog] = false;
                 }).catch(res => {});

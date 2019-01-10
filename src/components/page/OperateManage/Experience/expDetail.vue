@@ -16,7 +16,7 @@
                 </el-form-item>
 
                 <!-- 可选是否赠送优惠券S -->
-                <el-form-item label="活动优惠券" class="border-dash">
+                <el-form-item label="活动优惠券" v-if="form.couponId" class="border-dash">
                     <span>{{form.couponId}}</span>
                     <span style="color:red;display: inline-block;margin-left: 15px;" v-if="couponInfo.status === 0">已失效</span>
                     <span style="color:red;display: inline-block;margin-left: 15px;" v-if="couponInfo.totalNumber === 0">可发放数量不足</span>
