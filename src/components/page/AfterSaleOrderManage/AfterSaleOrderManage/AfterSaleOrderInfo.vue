@@ -348,14 +348,14 @@ export default {
                         url = 'refuse';
                     } else {
                         if (this.checked) {
-                            data.warehouseType = 4;
+                            data.warehouseType = 3;
                         }
                         if (!this.form.type) {
                             return this.$message.warning('请选择售后类型');
                         }
                         if (this.form.type === '1') {
                             url = 'agreeExchange';
-                            if (data.warehouseType === 4 && (!data.expressNo || !data.expressCode)) {
+                            if (data.warehouseType === 3 && (!data.expressNo || !data.expressCode)) {
                                 return this.$message.warning('请输入完整的物流信息');
                             }
                             this.logicList.forEach((v, k) => {
