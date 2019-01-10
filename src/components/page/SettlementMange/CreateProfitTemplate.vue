@@ -58,7 +58,7 @@
                 </el-row>
                 <el-row style="margin-top:20px">
                     <el-button :loading="btnLoading" @click="beforeSubmit" type="primary">确认保存</el-button>
-                    <el-button @click="$router.replace('profitDistrMange')">取消</el-button>
+                    <el-button @click="$router.push('profitDistrMange')">取消</el-button>
                 </el-row>
             </el-card>
         </div>
@@ -329,7 +329,6 @@ export default {
         },
         // 表单提交前进行判断
         beforeSubmit() {
-            this.btnLoading = true;
             // 判空
             if (this.params.name === '') {
                 this.$message.warning('利润分配模板名称不能为空');
@@ -395,15 +394,17 @@ export default {
         },
         //  提交表单
         submitForm(data) {
+            this.btnLoading = true;
             request
                 .addProfitTpl(data)
                 .then(res => {
                     this.$message.success(res.msg);
-                    this.$router.replace('profitDistrMange');
+                    this.$router.push('profitDistrMange');
                     this.btnLoading = false;
                 })
                 .catch(err => {
                     console.log(err);
+                    this.btnLoading = false;
                 });
         }
     },
