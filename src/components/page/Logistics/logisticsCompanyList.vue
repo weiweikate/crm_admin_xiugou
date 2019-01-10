@@ -36,7 +36,7 @@
             </div>
         </el-card>
         <el-card :body-style="{ padding: '20px 40px'}" style="margin-top: 20px;">
-            <el-button type="danger" size="big" class="mb20" @click="showDialog('add')">添加物流公司</el-button>
+            <el-button type="danger" size="big" class="mb20" @click="showDialog('add')" v-auth="'logistics.logisticsCompanyList.tj'">添加物流公司</el-button>
             <template>
                 <el-table
                     :data="tableData"
@@ -63,9 +63,9 @@
                     </el-table-column>
                     <el-table-column label="操作" width="" align="center">
                         <template slot-scope="scope">
-                            <el-button type="success" size="small" @click="editCompany(scope.$index, scope.row)">编辑</el-button>
-                            <el-button v-if="scope.row.status == 1" type="danger" size="small" @click="disabledCompanytStatus(scope.$index, scope.row)">停用</el-button>
-                            <el-button v-else type="primary" size="small" @click="enableCompanytStatus(scope.$index, scope.row)">启用</el-button>
+                            <el-button type="success" size="small" @click="editCompany(scope.$index, scope.row)" v-auth="'logistics.logisticsCompanyList.bj'">编辑</el-button>
+                            <el-button v-auth="'logistics.logisticsCompanyList.tyqy'" v-if="scope.row.status == 1" type="danger" size="small" @click="disabledCompanytStatus(scope.$index, scope.row)">停用</el-button>
+                            <el-button v-auth="'logistics.logisticsCompanyList.tyqy'" v-else type="primary" size="small" @click="enableCompanytStatus(scope.$index, scope.row)">启用</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

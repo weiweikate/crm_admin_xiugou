@@ -135,12 +135,12 @@
                                 <span class="r-content">创建管理员账号</span>
                             </div>
                         </router-link>
-                        <router-link to="/accountRecharge" tag="div" v-auth="'dashboard.shortcut.zhcz'">
+                        <!--<router-link to="/accountRecharge" tag="div" v-auth="'dashboard.shortcut.zhcz'">
                             <div class="right-content">
                                 <div class="r-ico-wrap"><icon ico='icon-zhanghuchongzhi-xiugai' /></div>
                                 <span class="r-content">账户充值</span>
                             </div>
-                        </router-link>
+                        </router-link>-->
                     </div>
                 </el-card>
             </el-col>
@@ -166,11 +166,11 @@
                             <span class='l-title'>提现审核</span>
                             <span class="l-content">{{info.pending}}</span>
                         </router-link>
-                        <router-link tag="div" to="/showValReCharge" class='left-content' v-auth="'dashboard.todo.zhczsh'">
+                        <!--<router-link tag="div" to="/showValReCharge" class='left-content' v-auth="'dashboard.todo.zhczsh'">
                             <div class="ico-wrap"><icon ico='icon-zhanghuchongzhi-xiugai' /></div>
                             <span class='l-title'>账户充值审核</span>
                             <span class="l-content">{{info.accountChange}}</span>
-                        </router-link>
+                        </router-link>-->
                         <router-link tag="div" to="/productList" class='left-content' v-auth="'dashboard.todo.cpsh'">
                             <div class="ico-wrap"><icon ico='icon-shangpin' /></div>
                             <span class='l-title'>产品审核</span>
