@@ -48,8 +48,8 @@
 
         <el-card style="margin-top: 20px;">
             <el-button type="primary" @click="activeRegularDialog = true">活动规则</el-button>
-            <router-link to="/expAddOrEdit?type=add" v-auth="'yunying.expManage.tj'"><el-button type="primary">添加活动</el-button></router-link>
-
+            <router-link to="/expAddOrEdit?type=add" class="el-button el-button--primary el-button--small" v-auth="'yunying.expManage.tj'">添加活动</router-link>
+            
             <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%;margin-top:20px;">
                 <el-table-column prop="activityCode" label="活动ID" align="center" width="150"></el-table-column>
                 <el-table-column prop="name" label="活动名称" width="100" align="center"></el-table-column>
