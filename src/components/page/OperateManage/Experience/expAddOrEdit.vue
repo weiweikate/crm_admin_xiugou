@@ -488,7 +488,7 @@
             couponCountCheck() {
                 // 活动未开始时优惠券为可选  开始后如果之前有优惠券则必填
                 if (this.isActivityIng && this.couponInfo.id && !this.checkCoupon) {
-                    this.$message.warning('优惠券不能为空');
+                    this.$message.warning('优惠券必选且不能为空');
                     return false;
                 }
                 if (this.checkCoupon && !this.form.couponId) {
