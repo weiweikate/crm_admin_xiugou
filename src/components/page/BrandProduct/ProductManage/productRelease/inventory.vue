@@ -458,7 +458,7 @@
             // 处理价格自动生成
             handlePrice(row) {
                 if (row.settlementPrice !== '' && row.settlementPrice !== null && row.settlementPrice !== undefined) {
-                    const groupPriceRoot = this.ceil(row.settlementPrice * 1.5);
+                    const groupPriceRoot = this.ceil(row.settlementPrice * 1.6);
                     row.groupPrice = groupPriceRoot;
                     if (row.v0 !== '' && row.v0 !== null && row.v0 !== undefined && row.v0 >= row.settlementPrice) {
                         const a = (row.v0 - groupPriceRoot) / 4;
