@@ -36,7 +36,7 @@
         </el-card>
         <el-card style='margin-top:20px;minHeight:90vh;' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
-                <el-button type="primary" v-auth="'afterSaleOrder.afterSaleOrderList.dc'">导出</el-button>
+                <!-- <el-button type="primary" v-auth="'afterSaleOrder.afterSaleOrderList.dc'">导出</el-button> -->
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="all">
