@@ -195,11 +195,11 @@
                         <el-input type="textarea" maxlength="50" v-model="form.remarks"></el-input>
                     </el-form-item>
                     <!-- 审核通过 虚拟仓 换货 hasAuth测试true线上false-->
-                    <el-form-item v-if="form.type!=2&&orderInfo.warehouseType!=4&&form.result!=2&&hasAuth">
+                    <el-form-item v-if="form.type!=2&&orderInfo.warehouseType!=3&&form.result!=2&&hasAuth">
                         <el-checkbox v-model="checked" @change="chooseXnSend">虚拟发货</el-checkbox>
                     </el-form-item>
                     <!--换货-->
-                    <template v-if="form.type!=2&&form.result!=2&&(orderInfo.warehouseType==4||checked)">
+                    <template v-if="form.type!=2&&form.result!=2&&(orderInfo.warehouseType==3||checked)">
                         <el-form-item label="换货物流公司">
                             <el-select v-model="form.expressCode">
                                 <el-option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.name"></el-option>
@@ -348,14 +348,14 @@ export default {
                         url = 'refuse';
                     } else {
                         if (this.checked) {
-                            data.warehouseType = 4;
+                            data.warehouseType = 3;
                         }
                         if (!this.form.type) {
                             return this.$message.warning('请选择售后类型');
                         }
                         if (this.form.type === '1') {
                             url = 'agreeExchange';
-                            if (data.warehouseType === 4 && (!data.expressNo || !data.expressCode)) {
+                            if (data.warehouseType === 3 && (!data.expressNo || !data.expressCode)) {
                                 return this.$message.warning('请输入完整的物流信息');
                             }
                             this.logicList.forEach((v, k) => {
