@@ -61,6 +61,7 @@
                                     :min="1" :precision="0"
                                     :max="999999999"
                                     style="width: 100px;text-align: left"
+                                    :disabled="isActivityIng"
                                     @change="couponCountCheck"
                                     v-model="form.startCount"
                                 ></el-input-number> 张
@@ -72,6 +73,7 @@
                                         :precision="0"
                                         :max="999999999"
                                         style="width: 100px;text-align: left"
+                                        :disabled="isActivityIng"
                                         v-model="form.maxCount"
                                         @change="couponCountCheck"
                                     >
