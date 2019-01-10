@@ -82,7 +82,7 @@ export default {
         handleCommand(command) {
             if (command === 'loginout') {
                 this.$store.dispatch('FedLogOut').then(() => {
-                    this.$router.push('/login');
+                    location.reload();
                 });
             } else if (command === 'editMangerMsg') {
                 sessionStorage.setItem('editMangerMsg', 'admin');

@@ -1,8 +1,11 @@
-<<<<<<< HEAD
 # crm_admin_xiugou
 
 秀购后台
 =======
+### mrnpm包安装方式
+```
+http://registry.npm.mr.com/#/detail/mrnpm
+```
 ### 秀购后台管理系统说明文档
 ```$xslt
 账号：18458866522
@@ -96,4 +99,3 @@ clipboard.on('success', () => {
     ]
 }
 ```
->>>>>>> hotfix-product

@@ -65,6 +65,7 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import moment from 'moment';
     import request from '@/http/http.js';
+    import utils from '@/utils/index.js';
 
     export default {
         components: {
@@ -92,6 +93,12 @@
         activated() {
             this.id =
                 this.$route.query.noticeInformId || sessionStorage.getItem('noticeInformId');
+            this.newRegist = false;
+            this.notRegist = false;
+            this.checkAll = false;
+            this.isIndeterminate = false;
+            this.users = [];
+            this.checkedUsers = [];
             this.getDetail();
         },
         methods: {
@@ -104,33 +111,33 @@
                 request.queryNoticeById(data).then(res => {
                     this.form = res.data;
                     this.form.date = [];
-                    this.index = res.data.type == 100 ? 0 : 1;
+                    this.index = res.data.type === 100 ? 0 : 1;
                     this.form.date[0] = res.data.startTime ? moment(res.data.startTime).format('YYYY-MM-DD HH:mm:ss') : '';
                     this.form.date[1] = res.data.endTime ? moment(res.data.endTime).format('YYYY-MM-DD HH:mm:ss') : '';
                     request.getUserLevelList({}).then(resData => {
                         let count = 0;
                         const arr = res.data.userLevel.split(',');
                         for (const i in resData.data) {
-                            const name = resData.data[i].name;
-                            if (this.users.indexOf(name) == -1) {
-                                this.users.push(name);
+                            const level = 'V' + resData.data[i].level;
+                            if (this.users.indexOf(level) === -1) {
+                                this.users.push(level);
                             }
                             for (const j in arr) {
-                                if (arr[j] == resData.data[i].id) {
+                                if (utils.stringToNumber(arr[j]) === utils.stringToNumber(resData.data[i].id)) {
                                     count++;
-                                    if (this.checkedUsers.indexOf(name) == -1) {
-                                        this.checkedUsers.push(name);
+                                    if (this.checkedUsers.indexOf(level) === -1) {
+                                        this.checkedUsers.push(level);
                                     }
                                 }
-                                if (arr[j] == 'new') {
+                                if (arr[j] === 'new') {
                                     this.newRegist = true;
                                 }
-                                if (arr[j] == 'no') {
+                                if (arr[j] === 'no') {
                                     this.notRegist = true;
                                 }
                             }
                         }
-                        if (count == resData.data.length) {
+                        if (count === resData.data.length) {
                             this.checkAll = true;
                             this.isIndeterminate = false;
                         }
@@ -140,6 +147,7 @@
                     this.loading = false;
                 }).catch(err => {
                     this.loading = false;
+                    console.log(err);
                 });
             },
             // 返回列表

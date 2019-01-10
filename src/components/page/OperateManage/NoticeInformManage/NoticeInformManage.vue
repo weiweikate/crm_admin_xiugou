@@ -181,9 +181,9 @@ export default {
         getTableData() {
             request.getUserLevelList({}).then(res => {
                 for (const i in res.data) {
-                    const name = res.data[i].name;
+                    const level = res.data[i].level;
                     const id = res.data[i].id;
-                    this.levels.push(name);
+                    this.levels.push(level);
                     this.levelIds.push(id);
                 }
                 this.getList(this.page.currentPage);
@@ -193,7 +193,7 @@ export default {
         },
         change(num) {
             this.index = num;
-            if (num == 0) { // 公告
+            if (num === 0) { // 公告
                 this.nav = ['服务管理', '公告'];
                 this.form.type = 100;
             } else { // 通知
@@ -223,28 +223,28 @@ export default {
                     const temp = [];
                     for (const k in arr) {
                         for (const j in this.levelIds) {
-                            if (arr[k] == this.levelIds[j]) {
-                                const name = this.levels[j];
-                                if (temp.indexOf(name) == -1) {
-                                    temp.push(this.levels[j]);
+                            if (utils.stringToNumber(arr[k]) === utils.stringToNumber(this.levelIds[j])) {
+                                const level = 'V' + this.levels[j];
+                                if (temp.indexOf(level) === -1) {
+                                    temp.push('V' + this.levels[j]);
                                 }
                             }
                         }
-                        if (arr[k] == 'new') {
+                        if (arr[k] === 'new') {
                             temp.push('新注册用户');
                         }
-                        if (arr[k] == 'no') {
+                        if (arr[k] === 'no') {
                             temp.push('未注册用户');
                         }
                     }
-                    if (this.index == 0) {
-                        if (temp.length == this.levelIds.length + 2) {
+                    if (this.index === 0) {
+                        if (temp.length === this.levelIds.length + 2) {
                             res.data.data[i].userLevel = '全部';
                         } else {
                             res.data.data[i].userLevel = temp.join(',');
                         }
                     } else {
-                        if (temp.length == this.levelIds.length + 1) {
+                        if (temp.length === this.levelIds.length + 1) {
                             res.data.data[i].userLevel = '全部';
                         } else {
                             res.data.data[i].userLevel = temp.join(',');
@@ -266,15 +266,15 @@ export default {
         // 再次推送,取消推送
         upStatusItem(id, status) {
             this.tipsMask = true;
-            // if (status == 2) {
+            // if (status === 2) {
             //     this.info = '确定再次推送？';
             //     this.url = 'cancelNoticeById';
             // }
-            if (status == 3) {
+            if (status === 3) {
                 this.info = '确定取消推送？';
                 this.url = 'cancelNoticeById';
             }
-            if (status == 4) {
+            if (status === 4) {
                 this.info = '确定删除？';
                 this.url = 'deleteNoticeById';
             }

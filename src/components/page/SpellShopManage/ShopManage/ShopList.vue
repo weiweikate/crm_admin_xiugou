@@ -53,7 +53,7 @@
                 <el-table-column prop="storeNumber" label="店铺内部编号" align="center"></el-table-column>
                 <el-table-column prop="starName" label="店铺等级" align="center"></el-table-column>
                 <el-table-column prop="storeUserName" label="店长" align="center"></el-table-column>
-                <el-table-column label="成员数" align="center">
+                <el-table-column label="成员数" align="center" v-if="$oprAuth('pindian.shopList.cys')">
                     <template slot-scope="scope">
                         <template><span @click="toUserList(scope.row)" class="color-blue">{{scope.row.storeUserNum||0}}</span></template>
                     </template>

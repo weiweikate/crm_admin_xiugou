@@ -62,7 +62,6 @@
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 
@@ -81,7 +80,7 @@ export default {
             name: ''
         };
     },
-    activated() {
+    mounted() {
         this.warehouseId = this.$route.query.repertotyId || sessionStorage.getItem('repertotyId');
         this.getDetail();
         this.getList(this.page.currentPage);
@@ -113,8 +112,6 @@ export default {
         },
         // 查看详情
         showInfo(row) {
-            sessionStorage.setItem('repertoryInventoryInfoId', row.id);
-            sessionStorage.setItem('warehouseId', this.warehouseId);
             this.$router.push({
                 path: 'repertoryInventoryInfo',
                 query: { repertoryInventoryInfoId: row.prodCode, warehouseId: this.warehouseId }

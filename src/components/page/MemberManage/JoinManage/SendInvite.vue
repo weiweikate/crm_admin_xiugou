@@ -11,7 +11,7 @@
                                  :class="num==index?'checked':''">
                                 <div class="upper">
                                     <icon class="icon" ico="icon-zhucedengluyonghuming"></icon>
-                                    <div>{{item.name || 0}}</div>
+                                    <div>{{`v${item.level}` || 0}}</div>
                                 </div>
                                 <div class="downer">已有人数：{{item.count == null?0 : item.count}}</div>
                             </div>

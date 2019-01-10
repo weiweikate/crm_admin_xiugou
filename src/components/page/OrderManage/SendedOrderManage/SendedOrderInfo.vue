@@ -115,6 +115,8 @@
                     .deliveryNo({ dispatchNo: this.deliveryNo })
                     .then(res => {
                         this.tableData = [];
+                        this.spanArr = [];
+                        this.position = 0;
                         this.orderInfo = res.data;
                         res.data.sendOrderProducts.forEach((v, k) => {
                             const tempTitle = v.specTitle.split('@');
