@@ -245,6 +245,13 @@
                 this.firstCategoryId = '';
                 this.secondCategoryId = '';
                 this.thirdCategoryId = '';
+                this.firstIndex = ''; // 展开二级类目所对应的一级类目索引值
+                this.secondIndex = ''; // 展开产品列表所对应的二级类目索引值
+                this.thirdIndex = ''; // 展开产品列表所对应的二级类目索引值
+                this.firstChecked = []; // 一级类目选中状态
+                this.secondChecked = []; // 二级类目选中状态
+                this.thirdChecked = []; // 三级类目选中状态
+                this.productChecked = []; // 产品选中状态
             },
             // 获取一级类目
             getFirst() {
