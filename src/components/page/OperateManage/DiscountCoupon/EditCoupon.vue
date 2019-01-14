@@ -9,8 +9,7 @@
                 </el-form-item>
                 <el-form-item label="券类型">
                     <el-select v-model="form.type" placeholder="请选择" @change="chooseType">
-                        <el-option v-for="(v,k) in typeArr" :key="k" :label="v.name"
-                                   :value="v.type"></el-option>
+                        <el-option v-for="(v,k) in typeArr" :key="k" :label="v.name" :value="v.type"></el-option>
                     </el-select>
                 </el-form-item>
                 <div class="line"></div>
@@ -18,16 +17,14 @@
                     <el-input v-model="form.value" placeholder="请输入券值"></el-input>
                     元
                 </el-form-item>
-                <el-form-item label="折扣"  v-if="form.type==3">
+                <el-form-item label="折扣" v-if="form.type==3">
                     <el-select v-model="form.value" placeholder="请选择">
-                        <el-option v-for="(v,k) in discountArr" :key="k" :label="v.name"
-                                   :value="v.type"></el-option>
+                        <el-option v-for="(v,k) in discountArr" :key="k" :label="v.name" :value="v.type"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="券模板">
                     <el-select v-model="form.couponTemplateId" placeholder="请选择券模板">
-                        <el-option v-for="(v,k) in tempArr" :key="k" :label="v.name"
-                                   :value="v.id"></el-option>
+                        <el-option v-for="(v,k) in tempArr" :key="k" :label="v.name" :value="v.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="使用限制" style="margin-top: 30px" v-if="form.type!=4&&form.type!=2">
@@ -65,19 +62,23 @@
                     </el-checkbox>
                     <div style="margin: 15px 0;"></div>
                     <el-checkbox-group v-model="checkedUsers" @change="handleCheckedUsersChange">
-                        <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{item.name}}
+                        <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{`V`+item.level}}
                         </el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item label="发放数量">
                     <el-input class="mid-inp" v-model="form.totalNumber" :disabled="totalNumber"></el-input>
                     张
-                    <span><el-checkbox style="margin-left: 10px" v-model="totalNumber">不限制</el-checkbox></span>
+                    <span>
+                        <el-checkbox style="margin-left: 10px" v-model="totalNumber">不限制</el-checkbox>
+                    </span>
                 </el-form-item>
                 <el-form-item label="每人限额">
                     <el-input class="mid-inp" v-model="form.getLimit" :disabled="getLimit"></el-input>
                     张
-                    <span><el-checkbox style="margin-left: 10px" v-model="getLimit">不限制</el-checkbox></span>
+                    <span>
+                        <el-checkbox style="margin-left: 10px" v-model="getLimit">不限制</el-checkbox>
+                    </span>
                 </el-form-item>
 
                 <el-form-item label="优惠券说明">
@@ -97,10 +98,9 @@
     import vMultichoose from '@/components/common/discountCoupon/multiChoose.vue';
     import vOnlychoose from '@/components/common/discountCoupon/onlyChoose.vue';
     import icon from '@/components/common/ico';
-    import * as pApi from '@/privilegeList/OperateManage/DiscountCoupon/index.js';
     import utils from '@/utils/index.js';
     import request from '@/http/http.js';
-    import {regExpConfig} from '@/utils/regConfig.js'
+    import { regExpConfig } from '@/utils/regConfig.js';
 
     export default {
         components: {
@@ -125,9 +125,7 @@
             };
             return {
                 rules: {
-                    name: [
-                        { validator: checkName, trigger: 'blur' }
-                    ]
+                    name: [{ validator: checkName, trigger: 'blur' }]
                 },
                 nav: ['运营管理', '优惠券设置', '编辑优惠券'],
                 // 用户层级
@@ -145,47 +143,64 @@
                     getLimit: '',
                     remarks: ''
                 },
-                typeArr: [{// 优惠券类型
-                    name: '满减券(商品满额可用)',
-                    type: 1
-                }, {
-                    name: '抵价券(商品直接抵价)',
-                    type: 2
-                }, {
-                    name: '折扣券(打折百分比券)',
-                    type: 3
-                }, {
-                    name: '抵扣券',
-                    type: 4
-                }],
-                discountArr: [{// 折扣值
-                    name: '1折',
-                    type: 10
-                }, {
-                    name: '2折',
-                    type: 20
-                }, {
-                    name: '3折',
-                    type: 30
-                }, {
-                    name: '4折',
-                    type: 40
-                }, {
-                    name: '5折',
-                    type: 50
-                }, {
-                    name: '6折',
-                    type: 60
-                }, {
-                    name: '7折',
-                    type: 70
-                }, {
-                    name: '8折',
-                    type: 80
-                }, {
-                    name: '9折',
-                    type: 90
-                }],
+                typeArr: [
+                    {
+                        // 优惠券类型
+                        name: '满减券(商品满额可用)',
+                        type: 1
+                    },
+                    {
+                        name: '抵价券(商品直接抵价)',
+                        type: 2
+                    },
+                    {
+                        name: '折扣券(打折百分比券)',
+                        type: 3
+                    },
+                    {
+                        name: '抵扣券',
+                        type: 4
+                    }
+                ],
+                discountArr: [
+                    {
+                        // 折扣值
+                        name: '1折',
+                        type: 10
+                    },
+                    {
+                        name: '2折',
+                        type: 20
+                    },
+                    {
+                        name: '3折',
+                        type: 30
+                    },
+                    {
+                        name: '4折',
+                        type: 40
+                    },
+                    {
+                        name: '5折',
+                        type: 50
+                    },
+                    {
+                        name: '6折',
+                        type: 60
+                    },
+                    {
+                        name: '7折',
+                        type: 70
+                    },
+                    {
+                        name: '8折',
+                        type: 80
+                    },
+                    {
+                        name: '9折',
+                        type: 90
+                    }
+                ],
                 tempArr: [], // 优惠券模版
                 isChooseBrand: false, // 选择品类弹窗
                 remindFlag: false, // 是否到期提醒
@@ -194,7 +209,7 @@
                 effectiveDays: '', // 多少天失效
                 data: {
                     totalNumber: '', // 发放数量
-                    getLimit: ''// 每人限额
+                    getLimit: '' // 每人限额
                 },
                 totalNumber: false, // 发放数量是否限制
                 getLimit: false, // 每人限额是否限制
@@ -219,9 +234,9 @@
             this.isOnly = false;
             utils.cleanFormData(this.form);
 
-            this.queryTemplateList();// 加载优惠券模版
-            this.id = this.$route.query.couponId || sessionStorage.getItem('couponId');// 获取id
-            this.getDetail();// 加载详情
+            this.queryTemplateList(); // 加载优惠券模版
+            this.id = this.$route.query.couponId || sessionStorage.getItem('couponId'); // 获取id
+            this.getDetail(); // 加载详情
         },
 
         methods: {
@@ -234,109 +249,119 @@
                 const data = {
                     id: this.id
                 };
-                request.findCouponById(data).then(res => {
-                    const detail = res.data;
-                    this.form.name = detail.name;
-                    this.form.type = detail.type;
-                    if (this.form.type == 4) {
-                        this.isOnly = true;
-                    }
-                    this.form.value = detail.value;
-                    this.form.couponTemplateId = detail.couponTemplateId;
-                    this.form.remarks = detail.remarks;
-                    this.count = detail.remarks ? detail.remarks.length : 0;
-                    this.categoryType = res.data.categoryType;
-                    this.useConditions = detail.useConditions;
-                    this.getProducts = {
-                        firstCategoryIds: detail.firstCategoryIds,
-                        secondCategoryIds: detail.secondCategoryIds,
-                        thirdCategoryIds: detail.thirdCategoryIds,
-                        products: detail.prodCodes,
-                        firstCategoryNames: detail.firstCategoryNames,
-                        secondCategoryNames: detail.secondCategoryNames,
-                        thirdCategoryNames: detail.thirdCategoryNames,
-                        productNames: detail.productNames
-                    };
-                    if (detail.cycleFlag == 1) { // 1是周期礼包，0不是
-                        this.isDay = true;
-                        this.day = '';
-                        this.waitDays = detail.waitDays;
-                        this.effectiveDays = detail.effectiveDays;
-                    } else {
-                        this.isDay = false;
-                        this.day = detail.effectiveDays;
-                        this.waitDays = '';
-                        this.effectiveDays = '';
-                    }
-                    this.remindFlag = detail.remindFlag == 1;// 1提醒2不提醒
-                    this.remindDays = detail.remindDays;// 几天前提醒
-                    const userLevelIds = [];
-                    for (const i in detail.userLevel) {
-                        userLevelIds.push(detail.userLevel[i].userLevelId);
-                    }
-                    this.form.userLevelId = userLevelIds.join(',');
-                    this.showLevel(userLevelIds.join(','));
-                    if (detail.getLimit == -1) {
-                        this.getLimit = true;
-                        this.form.getLimit = '';
-                    } else {
-                        this.getLimit = false;
-                        this.form.getLimit = detail.getLimit;
-                    }
-                    if (detail.totalNumber == -1) {
-                        this.totalNumber = true;
-                        this.form.totalNumber = '';
-                    } else {
-                        this.totalNumber = false;
-                        this.form.totalNumber = detail.totalNumber;
-                    }
-                    const temp = {
-                        firstCategoryIds: detail.firstCategoryIds,
-                        secondCategoryIds: detail.secondCategoryIds,
-                        thirdCategoryIds: detail.thirdCategoryIds,
-                        productIds: detail.prodCodes
-                    };
-                    this.productIds = temp;
-                }).catch(error => {
-                    console.log(error);
-                });
+                request
+                    .findCouponById(data)
+                    .then(res => {
+                        const detail = res.data;
+                        this.form.name = detail.name;
+                        this.form.type = detail.type;
+                        if (this.form.type === 4) {
+                            this.isOnly = true;
+                        }
+                        this.form.value = detail.value;
+                        this.form.couponTemplateId = detail.couponTemplateId;
+                        this.form.remarks = detail.remarks;
+                        this.count = detail.remarks ? detail.remarks.length : 0;
+                        this.categoryType = res.data.categoryType;
+                        this.useConditions = detail.useConditions;
+                        this.getProducts = {
+                            firstCategoryIds: detail.firstCategoryIds,
+                            secondCategoryIds: detail.secondCategoryIds,
+                            thirdCategoryIds: detail.thirdCategoryIds,
+                            products: detail.prodCodes,
+                            firstCategoryNames: detail.firstCategoryNames,
+                            secondCategoryNames: detail.secondCategoryNames,
+                            thirdCategoryNames: detail.thirdCategoryNames,
+                            productNames: detail.productNames
+                        };
+                        if (detail.cycleFlag === 1) {
+                            // 1是周期礼包，0不是
+                            this.isDay = true;
+                            this.day = '';
+                            this.waitDays = detail.waitDays;
+                            this.effectiveDays = detail.effectiveDays;
+                        } else {
+                            this.isDay = false;
+                            this.day = detail.effectiveDays;
+                            this.waitDays = '';
+                            this.effectiveDays = '';
+                        }
+                        this.remindFlag = detail.remindFlag === 1; // 1提醒2不提醒
+                        this.remindDays = detail.remindDays; // 几天前提醒
+                        const userLevelIds = [];
+                        for (const i in detail.userLevel) {
+                            userLevelIds.push(detail.userLevel[i].userLevelId);
+                        }
+                        this.form.userLevelId = userLevelIds.join(',');
+                        this.showLevel(userLevelIds.join(','));
+                        if (detail.getLimit === -1) {
+                            this.getLimit = true;
+                            this.form.getLimit = '';
+                        } else {
+                            this.getLimit = false;
+                            this.form.getLimit = detail.getLimit;
+                        }
+                        if (detail.totalNumber === -1) {
+                            this.totalNumber = true;
+                            this.form.totalNumber = '';
+                        } else {
+                            this.totalNumber = false;
+                            this.form.totalNumber = detail.totalNumber;
+                        }
+                        const temp = {
+                            firstCategoryIds: detail.firstCategoryIds,
+                            secondCategoryIds: detail.secondCategoryIds,
+                            thirdCategoryIds: detail.thirdCategoryIds,
+                            productIds: detail.prodCodes
+                        };
+                        this.productIds = temp;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             },
             // 加载层级
             showLevel(userLevelId) {
                 this.users = [];
                 this.checkedUsers = [];
-                request.getUserLevelList({}).then(res => {
-                    let count = 0;
-                    const arr = userLevelId.split(',');
-                    for (const i in res.data) {
-                        const name = res.data[i].name;
-                        if (this.users.indexOf(name) == -1) {
-                            this.users.push(res.data[i]);
-                        }
-                        for (const j in arr) {
-                            if (arr[j] == res.data[i].id) {
-                                count++;
-                                this.checkedUsers.push(res.data[i]);
+                request
+                    .getUserLevelList({})
+                    .then(res => {
+                        let count = 0;
+                        const arr = userLevelId.split(',');
+                        for (const i in res.data) {
+                            const level = res.data[i].level;
+                            if (this.users.indexOf(level) === -1) {
+                                this.users.push(res.data[i]);
+                            }
+                            for (const j in arr) {
+                                if (utils.stringToNumber(arr[j]) === utils.stringToNumber(res.data[i].id)) {
+                                    count++;
+                                    this.checkedUsers.push(res.data[i]);
+                                }
                             }
                         }
-                    }
-                    if (count == res.data.length) {
-                        this.checkAll = true;
-                        this.isIndeterminate = false;
-                    } else {
-                        this.isIndeterminate = true;
-                    }
-                }).catch(error => {
-                    console.log(error);
-                });
+                        if (count === res.data.length) {
+                            this.checkAll = true;
+                            this.isIndeterminate = false;
+                        } else {
+                            this.isIndeterminate = true;
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             },
             // 优惠券模版
             queryTemplateList() {
-                request.queryTemplateList({}).then(res => {
-                    this.tempArr = res.data;
-                }).catch(error => {
-                    console.log(error);
-                });
+                request
+                    .queryTemplateList({})
+                    .then(res => {
+                        this.tempArr = res.data;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             },
             // 推送人群选择
             handleCheckAllChange(val) {
@@ -359,7 +384,7 @@
                 let result = '';
                 for (const i in that.users) {
                     for (const j in value) {
-                        if (that.users[i].id == value[j].id) {
+                        if (that.users[i].id === value[j].id) {
                             result += that.users[i].id + ',';
                         }
                     }
@@ -378,7 +403,7 @@
             submitForm(formName) {
                 const that = this;
                 const data = this.form;
-                that.$refs[formName].validate((valid) => {
+                that.$refs[formName].validate(valid => {
                     if (!valid) {
                         return;
                     } else {
@@ -390,9 +415,9 @@
                             this.$message.warning('请选择优惠券类型!');
                             return;
                         }
-                        if (data.type != 4) {
+                        if (data.type !== 4) {
                             if (!data.value) {
-                                if (data.type != 3) {
+                                if (data.type !== 3) {
                                     this.$message.warning('请输入券值!');
                                 } else {
                                     this.$message.warning('请选中折扣值!');
@@ -411,8 +436,13 @@
                         } else {
                             data.useConditions = 0;
                         }
+                        if (data.type === 1) {
+                            if (utils.stringToNumber(data.useConditions) < utils.stringToNumber(this.form.value)) {
+                                return this.$message.warning('使用限制应大于等于券值');
+                            }
+                        }
                         data.id = this.id;
-                        const reg = regExpConfig.regNum1_4;// 1-4正整数
+                        const reg = regExpConfig.regNum1_4; // 1-4正整数
                         if (!this.isDay) {
                             data.effectiveDays = this.day;
                             if (!data.effectiveDays) {
@@ -444,15 +474,15 @@
                             if (!data.remindDays) {
                                 this.$message.warning('请输入到期前提醒天数!');
                                 return;
-                            }else{
-                                if(Number(data.remindDays)>Number(data.effectiveDays)){
-                                    return this.$message.warning('到期前提醒天数不能大于周期有效天数')
+                            } else {
+                                if (utils.stringToNumber(data.remindDays) > utils.stringToNumber(data.effectiveDays)) {
+                                    return this.$message.warning('到期前提醒天数不能大于周期有效天数');
                                 }
                             }
                         } else {
                             data.remindFlag = 0;
                         }
-                        if (this.form.type == 4) {
+                        if (this.form.type === 4) {
                             if (!that.productList.products) {
                                 this.$message.warning('请选择可用产品!');
                                 return;
@@ -470,31 +500,37 @@
                             }
                             data.categoryType = 5;
                         } else {
-                            let firstCategoryIds = []; let secondCategoryIds = []; let thirdCategoryIds = []; let productIds = [];
+                            let firstCategoryIds = [];
+                            let secondCategoryIds = [];
+                            let thirdCategoryIds = [];
+                            let productIds = [];
                             firstCategoryIds = that.productList.firstCategoryIds;
                             secondCategoryIds = that.productList.secondCategoryIds;
                             thirdCategoryIds = that.productList.thirdCategoryIds;
                             productIds = that.productList.products;
-                            if (firstCategoryIds.length == 0 && secondCategoryIds.length == 0 && thirdCategoryIds.length === 0 && productIds.length == 0) {
+                            if (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0 && productIds.length === 0) {
                                 this.$message.warning('请选择可用品类!');
                                 return;
                             }
                             data.firstCategoryIds = firstCategoryIds.length ? firstCategoryIds.join(',') : '';
                             data.secondCategoryIds = secondCategoryIds.length ? secondCategoryIds.join(',') : '';
                             data.thirdCategoryIds = thirdCategoryIds.length ? thirdCategoryIds.join(',') : '';
-                            data.productIds = productIds.length ? productIds.join(',') : '';
+                            data.prodCodes = productIds.length ? productIds.join(',') : '';
                             if (that.productList.checkAll) {
-                                data.categoryType = 1;// 全品类
+                                data.categoryType = 1; // 全品类
                                 data.firstCategoryIds = -1;
                             } else {
                                 if (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0 && productIds.length === 1) {
-                                    data.categoryType = 5;// 单商品
+                                    data.categoryType = 5; // 单商品
                                 } else if (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0 && productIds.length > 1) {
-                                    data.categoryType = 4;// 多商品
-                                } else if (((firstCategoryIds.length === 1 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0) || (firstCategoryIds.length === 0 && secondCategoryIds.length === 1 && thirdCategoryIds.length === 0) || (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 1)) && productIds.length === 0) {
-                                    data.categoryType = 3;// 单品类
+                                    data.categoryType = 4; // 多商品
+                                } else if (
+                                    ((firstCategoryIds.length === 1 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0) || (firstCategoryIds.length === 0 && secondCategoryIds.length === 1 && thirdCategoryIds.length === 0) || (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 1)) &&
+                                    productIds.length === 0
+                                ) {
+                                    data.categoryType = 3; // 单品类
                                 } else {
-                                    data.categoryType = 2;// 多品类
+                                    data.categoryType = 2; // 多品类
                                 }
                             }
                         }
@@ -524,14 +560,17 @@
                             data.useConditions = 0;
                         }
                         that.btnLoading = true;
-                        request.addOrModifyCoupon(data).then(res => {
-                            that.$message.success(res.msg);
-                            that.$router.push('/discountCoupon');
-                            that.btnLoading = false;
-                        }).catch(error => {
-                            console.log(error);
-                            that.btnLoading = false;
-                        });
+                        request
+                            .addOrModifyCoupon(data)
+                            .then(res => {
+                                that.$message.success(res.msg);
+                                that.$router.push('/discountCoupon');
+                                that.btnLoading = false;
+                            })
+                            .catch(error => {
+                                console.log(error);
+                                that.btnLoading = false;
+                            });
                     }
                 });
             },
@@ -554,22 +593,26 @@
             background: #eee;
             margin-bottom: 20px;
         }
-        .el-input, .el-input__inner {
+        .el-input,
+        .el-input__inner {
             width: 300px;
         }
-        .sml-inp.el-input, .sml-inp .el-input__inner, .sml-inp .el-input {
+        .sml-inp.el-input,
+        .sml-inp .el-input__inner,
+        .sml-inp .el-input {
             width: 80px;
         }
-        .mid-inp.el-input, .mid-inp .el-input__inner {
+        .mid-inp.el-input,
+        .mid-inp .el-input__inner {
             width: 180px;
         }
         .choose-brand {
             cursor: pointer;
-            color: #409EFF;
+            color: #409eff;
         }
         .address-item {
             .el-form-item__label {
-                line-height: 20px
+                line-height: 20px;
             }
         }
         .quill-editor {
@@ -645,8 +688,8 @@
                 color: #9a9a9a;
             }
             .selected-btn {
-                background-color: #409EFF;
-                border-color: #409EFF;
+                background-color: #409eff;
+                border-color: #409eff;
                 color: #fff;
             }
         }
@@ -693,7 +736,8 @@
                     .el-input--small .el-input__inner {
                         line-height: 30px;
                     }
-                    .el-input-group__append, .el-input-group__prepend {
+                    .el-input-group__append,
+                    .el-input-group__prepend {
                         padding: 0 5px;
                     }
                 }
@@ -711,7 +755,7 @@
             height: 150px;
             resize: none;
         }
-        .count{
+        .count {
             position: absolute;
             bottom: 0;
             left: 450px;

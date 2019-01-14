@@ -126,7 +126,7 @@ export default {
             id: ''
         };
     },
-    activated() {
+    mounted() {
         this.id = this.$route.query.repertoryInfoId || sessionStorage.getItem('repertoryInfoId');
         this.getDetail();
     },

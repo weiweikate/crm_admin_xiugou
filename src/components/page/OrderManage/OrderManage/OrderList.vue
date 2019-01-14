@@ -1,5 +1,5 @@
 <template>
-    <div class="product-list">
+    <div class="order-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="query-panue" :body-style="{ padding: '20px 20px'}">
             <el-form :model="form" ref="form" inline label-width="120px">
@@ -62,7 +62,7 @@
                 </el-form-item>
             </el-form>
         </el-card>
-        <el-card style='margin-top:20px;minHeight:90vh;overflow-x: auto;min-width: 1336px' :body-style="{ padding: '20px 50px' }">
+        <el-card style='margin-top:20px;minHeight:90vh;' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
                 <el-button type="danger" @click="sendOut" v-auth="'order.orderList.yjts'">推送云仓</el-button>
                 <a ref="exportData" @click="downloadOrderData">
@@ -170,8 +170,7 @@ export default {
                 userPhoneName: '', // 收货人姓名
                 marker: '', // 标记
                 pushStatus: '', // 推送状态
-                lockStatus: '', // 锁定状态
-                orderStatus: '' // 订单状态
+                lockStatus: '' // 锁定状态
             },
             formData: {}
         };
@@ -194,7 +193,7 @@ export default {
                 marker: this.form.marker,
                 pushStatus: this.form.pushStatus,
                 lockStatus: this.form.lockStatus,
-                orderStatus: this.form.orderStatus,
+                orderStatus: this.activeName === 'all' ? '' : this.activeName,
                 form: this.dateRange.length !== 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '',
                 to: this.dateRange.length !== 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 00:00:00') : '',
                 warehouseOrderNos: this.$refs[this.activeName].warehouseOrderNos.join(',')
@@ -212,6 +211,7 @@ export default {
             this.$refs[this.activeName].page.currentPage = 1;
             this.$refs[this.activeName].data = data;
             this.$refs[this.activeName].getList(this.page.currentPage);
+            this.$refs[this.activeName].warehouseOrderNos=[];
         },
         //  重置表单
         resetForm(formName) {
@@ -221,7 +221,7 @@ export default {
         },
         //  点击tab选项卡
         handleClick(tab) {
-            this.resetForm('form');
+            // this.resetForm('form');
             this.activeName = tab.name;
             this.getList();
         },
@@ -238,11 +238,7 @@ export default {
 };
 </script>
 <style lang='less'>
-.product-list {
-    .el-card__body {
-        overflow-x: auto;
-        min-width: 1336px;
-    }
+.order-list {
     .el-tabs__active-bar {
         background-color: #ff1e30;
     }

@@ -207,7 +207,7 @@
                     limitBuyNum: 0,
                     afterSaleServiceDays: 0, // 售后周期
                     flatService: [],
-                    autoUnShelve: '',
+                    autoUnShelve: false,
                     secCategoryId: '',
                     skuList: []
                 },

@@ -2,6 +2,10 @@
 export const getSPUList = '/warehouse/stock/SPUList';
 // 仓库存货数spu列表
 export const SKUListByProductId = '/warehouse/stock/SKUListByProductId';
+// 仓库报损数明细列表
+export const stockLossDetail = '/warehouse/stock/stockLossDetail';
+// 仓库报损数列表
+export const stockLossList = '/warehouse/stock/stockLossList';
 
 // 插入或者删除
 export const addOrUpdateRepertory = '/warehouse/addOrUpdate';

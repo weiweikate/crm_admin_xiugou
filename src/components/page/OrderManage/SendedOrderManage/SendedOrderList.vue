@@ -36,52 +36,43 @@
         </el-card>
         <div class="table-block">
             <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
-                    <el-table-column label="发货单号" align="center">
-                        <template slot-scope="scope">{{scope.row.orderDelivery?scope.row.orderDelivery.dispatchNo:'/'}}</template>
-                    </el-table-column>
-                    <el-table-column label="仓库订单号" align="center">
-                        <template slot-scope="scope">{{scope.row.orderDelivery?scope.row.orderDelivery.warehouseOrderNo:'/'}}</template>
-                    </el-table-column>
-                    <el-table-column label="供应商名称" align="center">
-                        <template slot-scope="scope">{{scope.row.orderDelivery.supplierName || `/`}}</template>
-                    </el-table-column>
-                    <el-table-column label="物流费用" align="center">
-                        <template slot-scope="scope">{{scope.row.orderDelivery.freightAmount | formatMoney}}</template>
-                    </el-table-column>
-                    <el-table-column label="物流公司" align="center">
-                        <template slot-scope="scope">
-                            <template v-if="scope.row.orderProductExpress&&scope.row.orderProductExpress.expressName">{{scope.row.orderProductExpress.expressName}}</template>
-                            <template v-else>/</template>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="发货单状态" align="center">
-                        <template slot-scope="scope">
-                            <template v-if="scope.row.orderDelivery.status == 1">仓库接收失败</template>
-                            <template v-if="scope.row.orderDelivery.status == 3">全部发货</template>
-                            <template v-if="scope.row.orderDelivery.status == 2">等待仓库发货</template>
-                            <template v-if="scope.row.orderDelivery.status == 4">发货取消</template>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="创建时间" align="center">
-                        <template slot-scope="scope">
-                            {{scope.row.orderDelivery.createTime|formatDateAll}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作" align="center">
-                        <template slot-scope="scope">
-                            <el-button type="primary" @click="$router.push({path:'/sendedOrderInfo',query:{sendedOrderInfoId:scope.row.orderDelivery.dispatchNo}})">查看</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
+                <el-table-column label="发货单号" align="center">
+                    <template slot-scope="scope">{{scope.row.orderDelivery?scope.row.orderDelivery.dispatchNo:'/'}}</template>
+                </el-table-column>
+                <el-table-column label="仓库订单号" align="center">
+                    <template slot-scope="scope">{{scope.row.orderDelivery?scope.row.orderDelivery.warehouseOrderNo:'/'}}</template>
+                </el-table-column>
+                <el-table-column label="物流费用" align="center">
+                    <template slot-scope="scope">{{scope.row.orderDelivery.freightAmount | formatMoney}}</template>
+                </el-table-column>
+                <el-table-column label="发货单状态" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.orderDelivery.status == 1">仓库接收失败</template>
+                        <template v-if="scope.row.orderDelivery.status == 3">全部发货</template>
+                        <template v-if="scope.row.orderDelivery.status == 2">等待仓库发货</template>
+                        <template v-if="scope.row.orderDelivery.status == 4">发货取消</template>
+                    </template>
+                </el-table-column>
+                <el-table-column label="创建时间" align="center">
+                    <template slot-scope="scope">
+                        {{scope.row.orderDelivery.createTime|formatDateAll}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="primary" @click="$router.push({path:'/sendedOrderInfo',query:{sendedOrderInfoId:scope.row.orderDelivery.dispatchNo}})">查看</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
             <div class="block">
                 <el-pagination
-                        background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page.currentPage"
-                        :page-size="page.pageSize"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
                 </el-pagination>
             </div>
         </div>

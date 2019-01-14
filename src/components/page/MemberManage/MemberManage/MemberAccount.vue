@@ -3,7 +3,7 @@
         <v-breadcrumb :nav="['经销商会员管理','会员管理','会员详情','TA的账户']"></v-breadcrumb>
         <div class="accountInfod">
             <ul class="card-box">
-                <li class="Account">
+                <li class="Account" v-auth="'vip.memberAccount.xjzh'">
                     <div class="card-title">
                         <icon class="ico" ico='icon-ffffff'/>
                         现金账户（元）
@@ -13,10 +13,10 @@
                             可提现：{{accountInfo.cash || 0}}
                         </div>
                     </div>
-                    <span class="spanBtn spanFirBtn" @click="$router.push('/showValReCharge')">账户充值</span>
+                    <!--<span class="spanBtn spanFirBtn" @click="$router.push('/showValReCharge')">账户充值</span>-->
                     <span class="spanBtn spanFirBtn" @click="btnClicked(1)">收支明细</span>
                 </li>
-                <li class="userToken">
+                <li class="userToken" v-auth="'vip.memberAccount.xdzh'">
                     <div class="card-title">
                         <icon class="ico" ico='icon-jinbiqian'/>
                         秀豆账户（分）
@@ -40,7 +40,7 @@
                     <!--</div>-->
                     <!--<span class="spanBtn"  @click="btnClicked(3)">收支明细</span>-->
                 <!--</li>-->
-                <li class="userCard">
+                <li class="userCard" v-auth="'vip.memberAccount.ybdyhk'">
                     <div class="card-title">
                         <icon class="ico" ico='icon-tubiaolunkuo-'/>
                         银行卡（张）
@@ -52,7 +52,7 @@
                     </div>
                     <span class="spanBtn"  @click="btnClicked(5)">查看详情</span>
                 </li>
-                <li class="withdrawAccount">
+                <li class="withdrawAccount" v-auth="'vip.memberAccount.dtxzh'">
                     <div class="card-title">
                         <icon class="ico" ico='icon-tixian1'/>
                         待提现账户（元）
@@ -64,14 +64,14 @@
                     </div>
                     <span class="spanBtn"  @click="btnClicked(6)">查看详情</span>
                 </li>
-                <li class="Account">
+                <li class="Account" v-auth="'vip.memberAccount.zhhydzh'">
                     <div class="card-title">
                         <icon class="ico" ico='icon-ffffff'/>
-                        秀值账户（元）
+                        综合活跃度账户（元）
                     </div>
                     <div class="card-content">
                         <div class="card-amout">
-                            秀值账户
+                            综合活跃度账户
                         </div>
                     </div>
                     <span class="spanBtn" @click="btnClicked(4)">收支明细</span>
@@ -135,7 +135,7 @@
                 request.memberAccountListInfo({code: this.code}).then(res => {
                     this.pageLoading = false;
                     this.accountInfo = res.data;
-                }).catch(err => {
+                }).catch(() => {
                     this.pageLoading = false;
                 });
             }

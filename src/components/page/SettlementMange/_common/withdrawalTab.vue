@@ -3,7 +3,7 @@
         <el-table :data="table" v-loading="pageLoading" border>
             <el-table-column prop='withdrawNum' label="提现编号" align="center"></el-table-column>
             <el-table-column prop='userName' label="申请人" align="center"></el-table-column>
-            <el-table-column prop='withdrawBalance' label="申请提现金额" align="center">
+            <el-table-column prop='totalBalance' label="申请提现金额" align="center">
                 <template slot-scope="scope">
                     <span style="color:red">{{scope.row.withdrawBalance || 0 | handleMoney}}</span>
                 </template>
@@ -38,7 +38,7 @@
                     <el-button @click="audit(scope.row,2)" v-if='scope.row.status == 1' type="warning">驳回</el-button>
                     <el-button :loading="btnloading" @click="record(scope.row)" v-if='scope.row.status == 2' type="warning">打款记录</el-button>
                     <!--<el-button :loading="refReaBtnLoading" @click="showRefuseReason(scope.row)" v-if='scope.row.status == 3' type="danger">查看驳回理由</el-button>-->
-                    <el-button :loading="refReaBtnLoading" @click="audit(scope.row,2)" v-if='scope.row.status == 3' type="danger">查看驳回理由</el-button>
+                    <el-button :loading="refReaBtnLoading" @click="showRefuseReason(scope.row)" v-if='scope.row.status == 3' type="danger">查看驳回理由</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -177,7 +177,7 @@ export default {
         },
         // 账户明细
         accountMsg(row) {
-            this.$router.push({ path: '/cashAccountBalance', query: { memberAccMsg: {memberId: row.id, nickname: row.userName || ''} }});
+            this.$router.push({ path: '/cashAccountBalance', query: { memberAccMsg: {memberCode: row.userCode, nickname: row.userName || ''} }});
         },
         // 审核
         audit(row, status) {

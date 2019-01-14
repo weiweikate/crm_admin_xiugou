@@ -114,8 +114,8 @@
                     secondName: '',
                     supplierCode: '',
                     warehouseType: '',
-                    type: '',
-                    businessType: '',
+                    type: '1',
+                    businessType: '1',
                     brandId: ''
                 },
                 rules: {
@@ -254,6 +254,9 @@
                     // this.pageLoading = false;
                 } else {
                     this.form.prodCode = '';
+                    this.form.restrictions = 7;
+                    this.form.upType = 3;
+                    this.form.autoUnShelve = false;
                     await this.getSupplyList();
                     await this.getNaturalList();
                     this.pageLoading = false;

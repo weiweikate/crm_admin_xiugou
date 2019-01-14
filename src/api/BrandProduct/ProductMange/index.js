@@ -5,7 +5,7 @@ export const queryCategoryBrandCid = 'admin/categoryBrand/queryCategoryBrandCid'
 // 添加产品
 export const addProduct = '/admin/product/addProduct';
 // 上传图片
-export const addImg='/admin/ossClient/aliyunOSSUploadImage';
+export const addImg = '/admin/ossClient/aliyunOSSUploadImage';
 // 获取供应商列表
 export const querySupplierBrandPageList = '/admin/supplierBrand/querySupplierBrandPageList';
 // 获取模板列表
@@ -27,11 +27,11 @@ export const deleteSaleSpecValue = '/admin/saleSpecValue/deleteSaleSpecValue';
 // 提交产品规格
 export const addProductSpec = '/admin/price/addProductSpec';
 // 获取产品价格
-export const queryProductPriceSaleSpecList = '/admin/price/queryProductPriceSaleSpecList'
+export const queryProductPriceSaleSpecList = '/admin/price/queryProductPriceSaleSpecList';
 // 保存产品价格
-export const updateProductPrice = '/admin/price/updateProductPrice'
+export const updateProductPrice = '/admin/price/updateProductPrice';
 // 获取库存列表
-export const queryProductStockList = '/admin/price/queryProductStockList'
+export const queryProductStockList = '/admin/price/queryProductStockList';
 // 保存库存信息
 export const updateProductStock = '/admin/price/updateProductStock';
 // 产品审核操作
