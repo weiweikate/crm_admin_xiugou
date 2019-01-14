@@ -76,3 +76,5 @@ export const queryWithdrawalList = ['/user/account/queryWithdrawalList', { metho
 export const queryCardByUserId = ['/user/account/queryByUserCode', { methods: 'get' }];
 // 删除银行卡
 export const deleteAccountCardById = ['/user/account/deleteById', { methods: 'get' }];
+// 经验值列表
+export const queryUserExperiencePageList = ['/user/userExperience/queryUserExperiencePageList', { methods: 'post' }];

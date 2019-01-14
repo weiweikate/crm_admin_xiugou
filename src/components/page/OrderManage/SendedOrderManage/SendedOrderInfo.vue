@@ -7,35 +7,23 @@
                     <div class="title">订单基础信息</div>
                     <div class="item">
                         <span>平台订单号</span>
-                        <span>{{platformOrder.platformOrderNo}}</span>
+                        <span>{{orderInfo.platformOrderNo}}</span>
                     </div>
                     <div class="item">
                         <span>仓库订单号</span>
-                        <span>{{orderDelivery.warehouseOrderNo}}</span>
+                        <span>{{orderInfo.warehouseOrderNo}}</span>
                     </div>
                     <div class="item">
                         <span>发货单号</span>
-                        <span>{{orderDelivery.dispatchNo}}</span>
-                    </div>
-                    <div class="item">
-                        <span>供应商名称</span>
-                        <span>{{orderDelivery.supplierName||`/`}}</span>
-                    </div>
-                    <div class="item">
-                        <span>物流公司</span>
-                        <span>{{orderProductExpress[0]?orderProductExpress[0].expressName:`/`}}</span>
-                    </div>
-                    <div class="item">
-                        <span>物流单号</span>
-                        <span>{{orderProductExpress[0]?orderProductExpress[0].expressNo:`/`}}</span>
+                        <span>{{orderInfo.dispatchNo}}</span>
                     </div>
                     <div class="item">
                         <span>物流费用</span>
-                        <span>{{orderDelivery.freightAmount | formatMoney}}</span>
+                        <span>{{orderInfo.freightAmount | formatMoney}}</span>
                     </div>
                     <div class="item">
                         <span>发货单创建时间</span>
-                        <span>{{orderDelivery.createTime|formatDateAll}}</span>
+                        <span>{{orderInfo.createTime|formatDateAll}}</span>
                     </div>
                 </div>
 
@@ -43,19 +31,19 @@
                     <div class="title">订单收货信息</div>
                     <div class="item">
                         <span>收货人姓名</span>
-                        <span>{{platformOrder.receiver}}</span>
+                        <span>{{orderInfo.receiver}}</span>
                     </div>
                     <div class="item">
                         <span>收货人联系方式</span>
-                        <span>{{platformOrder.receiverPhone}}</span>
+                        <span>{{orderInfo.receiverPhone}}</span>
                     </div>
                     <div class="item">
                         <span>收货省市区</span>
-                        <span>{{platformOrder.province}}{{platformOrder.city}}{{platformOrder.area}}</span>
+                        <span>{{orderInfo.province}}{{orderInfo.city}}{{orderInfo.area}}</span>
                     </div>
                     <div class="item">
                         <span>收货详细地址</span>
-                        <span>{{platformOrder.address}}</span>
+                        <span>{{orderInfo.address}}</span>
                     </div>
                     <div class="item">
                         <span>配送方式</span>
@@ -65,8 +53,15 @@
             </div>
             <div class="goods-info">
                 <div class="title">商品信息</div>
-                <el-table :data="tableData" border>
-                    <el-table-column label="商品信息" align="center">
+                <el-table :data="tableData" border :span-method="objectSpanMethod">
+                    <el-table-column prop="expressName" label="物流公司" align="center"></el-table-column>
+                    <el-table-column prop="expressNo" label="物流单号" align="center"></el-table-column>
+                    <el-table-column label="发货时间" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.createTime|formatDateAll}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="商品信息" align="center" width="400">
                         <template slot-scope="scope">
                             <div class="name">
                                 <img :src="scope.row.specImg" alt="">
@@ -102,9 +97,9 @@
                 deliveryNo: '',
                 tableData: [],
                 // 订单信息
-                orderDelivery: {},
-                orderProductExpress: [],
-                platformOrder: {}
+                orderInfo: {},
+                spanArr: [],
+                position: 0
             };
         },
 
@@ -116,65 +111,90 @@
         methods: {
             //  获取信息
             getInfo() {
-                request.deliveryNo({ deliveryNo: this.deliveryNo }).then(res => {
-                    this.tableData = [];
-                    this.orderDelivery = res.data.orderDelivery ? res.data.orderDelivery : {};
-                    this.orderProductExpress = res.data.orderProductExpress ? res.data.orderProductExpress : {};
-                    this.platformOrder = res.data.platformOrder ? res.data.platformOrder : {};
-                    res.data.warehouseOrderProducts.forEach((v, k) => {
-                        const tempTitle = v.specTitle.split('@');
-                        const tempValue = v.specValues.substring(1, v.specValues.length - 1).split('@');
-                        v.spec = [];
-                        tempTitle.forEach((v1, k1) => {
-                            const temp = v1 + ':' + tempValue[k1] + '    ';
-                            v.spec.push(temp);
+                request
+                    .deliveryNo({ dispatchNo: this.deliveryNo })
+                    .then(res => {
+                        this.tableData = [];
+                        this.spanArr = [];
+                        this.position = 0;
+                        this.orderInfo = res.data;
+                        res.data.sendOrderProducts.forEach((v, k) => {
+                            const tempTitle = v.specTitle.split('@');
+                            const tempValue = v.specValues.substring(1, v.specValues.length - 1).split('@');
+                            v.spec = [];
+                            tempTitle.forEach((v1, k1) => {
+                                const temp = v1 + ':' + tempValue[k1] + '    ';
+                                v.spec.push(temp);
+                            });
+                            v.spec = v.spec.join('  ');
+                            this.tableData.push(v);
                         });
-                        v.spec = v.spec.join('  ');
-                        v.skuNum = '/';
-                        res.data.orderProductExpress.forEach((v1, k1) => {
-                            if (v1.orderProductNo == v.orderProductNo) {
-                                v.skuNum = v1.skuNum;
-                            }
-                        });
-                        this.tableData.push(v);
+                        this.rowspan();
+                    })
+                    .catch(err => {
+                        console.log(err);
                     });
-                }).catch(err => {
-                    console.log(err);
+            },
+            rowspan() {
+                this.tableData.forEach((item, index) => {
+                    if (index === 0) {
+                        this.spanArr.push(1);
+                        this.position = 0;
+                    } else {
+                        if (this.tableData[index].expressNo === this.tableData[index - 1].expressNo) {
+                            this.spanArr[this.position] += 1;
+                            this.spanArr.push(0);
+                        } else {
+                            this.spanArr.push(1);
+                            this.position = index;
+                        }
+                    }
                 });
+            },
+            objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+                // 表格合并行
+                if (columnIndex < 3) {
+                    const _row = this.spanArr[rowIndex];
+                    const _col = _row > 0 ? 1 : 0;
+                    return {
+                        rowspan: _row,
+                        colspan: _col
+                    };
+                }
             }
         }
     };
 </script>
 <style lang='less'>
     .order-info {
-        .title{
+        .title {
             margin-bottom: 10px;
         }
-        .wrap{
+        .wrap {
             display: flex;
             justify-content: flex-start;
-            .item-wrap{
-                .item{
+            .item-wrap {
+                .item {
                     font-size: 14px;
                     color: #666666;
                     line-height: 30px;
                     margin-right: 100px;
-                    span:first-child{
+                    span:first-child {
                         display: inline-block;
                         width: 100px;
                     }
-                    span:nth-child(2){
+                    span:nth-child(2) {
                         display: inline-block;
                     }
                 }
             }
         }
-        .goods-info{
+        .goods-info {
             margin-top: 50px;
-            .table-area{
-                font-size:12px;
+            .table-area {
+                font-size: 12px;
                 width: 100%;
-                color:#606266;
+                color: #606266;
                 border: 1px solid #ebeef5;
                 border-collapse: collapse;
                 margin-bottom: 20px;
@@ -207,12 +227,12 @@
                 .pro-spec {
                     position: absolute;
                     left: 115px;
-                    bottom:5px;
+                    bottom: 5px;
                     width: 270px;
                 }
             }
         }
-        .color-blue{
+        .color-blue {
             color: #33b4ff;
             cursor: pointer;
         }

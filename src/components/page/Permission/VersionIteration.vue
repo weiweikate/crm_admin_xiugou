@@ -4,10 +4,12 @@
         <el-card :body-style="{ padding: '30px 60px' }">
             <el-tabs v-model="activeName" @tab-click="changeTab">
                 <el-tab-pane label="IOS" name="IOS">
-                    <v-version-temp :name="activeName" @showDeleteToast="showDeleteToast" ref="IOS" @addVersion="addVersion"></v-version-temp>
+                    <v-version-temp :name="activeName" @showDeleteToast="showDeleteToast" ref="IOS"
+                                    @addVersion="addVersion"></v-version-temp>
                 </el-tab-pane>
                 <el-tab-pane label="Android" name="Android">
-                    <v-version-temp :name="activeName" @showDeleteToast="showDeleteToast" ref="Android" @addVersion="addVersion"></v-version-temp>
+                    <v-version-temp :name="activeName" @showDeleteToast="showDeleteToast" ref="Android"
+                                    @addVersion="addVersion"></v-version-temp>
                 </el-tab-pane>
             </el-tabs>
             <el-dialog :title="title" :visible.sync="isShowAddQues" width="500px" @close='resetForm'>
@@ -21,12 +23,17 @@
                             :action="upUrl"
                             :show-file-list="false"
                             :before-upload="beforeUpload"
-                            :on-error = 'uploadError'
-                            :on-progress = 'onProgress'
+                            :on-error='uploadError'
+                            :on-progress='onProgress'
                             :on-success="uploadSuccess">
-                          <el-button :loading="uploadLoading" type="primary">{{uploadLoading?percent:'上传apk'}}</el-button>
+                            <el-button :loading="uploadLoading" type="primary">{{uploadLoading?percent:'上传apk'}}
+                            </el-button>
                         </el-upload>
                     </el-form-item>
+                    <el-form-item v-else label="APP地址">
+                        <el-input v-model="form.url"></el-input>
+                    </el-form-item>
+
                     <el-form-item label="是否强制更新">
                         <el-radio-group v-model="form.forceUpdate">
                             <el-radio label="1">是</el-radio>
@@ -37,14 +44,15 @@
                         <el-input :maxlength="180" type="textarea" v-model="form.description"></el-input>
                     </el-form-item>
                     <el-form-item>
-                      <div class="btnDiv">
-                          <el-button type="primary" :loading="btnLoading" @click="onSubmit">确认保存</el-button>
-                          <el-button @click="resetForm('form')">重置</el-button>
-                      </div>
+                        <div class="btnDiv">
+                            <el-button type="primary" :loading="btnLoading" @click="onSubmit">确认保存</el-button>
+                            <el-button @click="resetForm('form')">重置</el-button>
+                        </div>
                     </el-form-item>
                 </el-form>
             </el-dialog>
-            <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
+            <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast'
+                          v-if="isShowDelToast"></delete-toast>
         </el-card>
     </div>
 </template>
@@ -55,6 +63,7 @@
     import deleteToast from '@/components/common/DeleteToast';
     import * as cApi from '@/api/api';
     import request from '../../../http/http';
+
     export default {
         components: { vBreadcrumb, deleteToast, vVersionTemp },
 
@@ -97,7 +106,7 @@
                 this.form.url = res.data;
                 this.uploadLoading = false;
             },
-            uploadError(err) {
+            uploadError() {
                 this.$message.warning('上传失败');
                 this.uploadLoading = false;
             },
@@ -162,47 +171,47 @@
 </script>
 <style lang='less' scoped>
     .versionpage {
-        /deep/.el-dialog .el-upload--text {
+        /deep/ .el-dialog .el-upload--text {
             position: absolute;
-            top:0;
+            top: 0;
             left: 200px;
             width: 100px;
             height: 35px;
             border: none;
         }
-        /deep/.el-tabs__active-bar {
+        /deep/ .el-tabs__active-bar {
             background-color: #ff1e30;
         }
-        /deep/.el-textarea__inner{
+        /deep/ .el-textarea__inner {
             height: 150px;
         }
-        /deep/.el-tabs__item.is-active,
-        /deep/.el-tabs__item:hover {
+        /deep/ .el-tabs__item.is-active,
+        /deep/ .el-tabs__item:hover {
             color: #ff1e30;
         }
-        .btnDiv{
+        .btnDiv {
             text-align: right;
             width: 350px;
         }
-        .input-sty{
+        .input-sty {
             width: 210px;
         }
         .block {
             float: right;
             margin: 10px 0 10px 0;
         }
-        /deep/.el-dialog{
-            border-radius:10px;
-            .el-dialog__header{
+        /deep/ .el-dialog {
+            border-radius: 10px;
+            .el-dialog__header {
                 border-bottom: 1px solid #dfdfdf;
-                .el-dialog__title{
+                .el-dialog__title {
                     color: #ff4e4e;
                 }
             }
-            .el-input.el-input--small{
+            .el-input.el-input--small {
                 width: 180px;
             }
-            .el-textarea.el-input--small{
+            .el-textarea.el-input--small {
                 width: 350px;
             }
         }

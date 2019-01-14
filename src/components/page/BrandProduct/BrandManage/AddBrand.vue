@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-breadcrumb :nav="['品牌产品管理','品牌管理','添加品牌']"></v-breadcrumb>
+        <v-breadcrumb :nav="['产品管理','品牌管理','添加品牌']"></v-breadcrumb>
         <div class="container">
             <div class="brand-box">
                 <el-form :model="form" ref="form" :rules="rules">

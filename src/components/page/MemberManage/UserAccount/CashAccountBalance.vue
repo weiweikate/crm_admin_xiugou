@@ -22,13 +22,14 @@
                     <template slot-scope="scope">
                         <template v-if="scope.row.useType==1">用户收益</template>
                         <template v-else-if="scope.row.useType==2">提现</template>
-                        <template v-else-if="scope.row.useType==3">消费支出</template>
-                        <template v-else-if="scope.row.useType==4">店主分红</template>
-                        <template v-else-if="scope.row.useType==5">店员分红</template>
-                        <template v-else-if="scope.row.useType==6">销售提成</template>
+                        <template v-else-if="scope.row.useType==3">消费</template>
+                        <template v-else-if="scope.row.useType==4">导师管理费</template>
+                        <template v-else-if="scope.row.useType==5">品牌分红奖励金</template>
+                        <template v-else-if="scope.row.useType==6">品牌推广奖励金</template>
                         <template v-else-if="scope.row.useType==7">现金红包</template>
-                        <template v-else-if="scope.row.useType==8">任务奖励</template>
+                        <template v-else-if="scope.row.useType==8">任务奖励金</template>
                         <template v-else-if="scope.row.useType==9">消费退款</template>
+                        <template v-else-if="scope.row.useType==10">提现退回</template>
                         <template v-else>-</template>
                     </template>
                 </el-table-column>

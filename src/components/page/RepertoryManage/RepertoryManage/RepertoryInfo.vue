@@ -15,7 +15,7 @@
                     </div>
                     <div class="item">
                         <span>仓库类型：</span>
-                        <span>{{!detail.type==1?'自建仓':detail.type==2?'加盟仓':detail.type==3?'供应商仓':'虚拟仓'}}</span>
+                        <span>{{!detail.type==1?'自建仓':detail.type==2?'加盟仓':detail.type==3?'虚拟仓':'供应商仓'}}</span>
                     </div>
                     <div class="item">
                         <span>仓库状态：</span>
@@ -126,7 +126,7 @@ export default {
             id: ''
         };
     },
-    activated() {
+    mounted() {
         this.id = this.$route.query.repertoryInfoId || sessionStorage.getItem('repertoryInfoId');
         this.getDetail();
     },

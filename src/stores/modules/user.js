@@ -48,7 +48,7 @@ const user = {
                     setToken(data[TokenKey]);
                     commit('SET_TOKEN', data[TokenKey]);
                     commit('SET_ID', data['id']);
-                    sessionStorage.setItem('ms_userID', data['id']);
+                    localStorage.setItem('ms_userID', data['id']);
                     resolve();
                 }).catch(error => {
                     reject(error);
@@ -59,7 +59,7 @@ const user = {
         // 获取用户信息
         GetInfo({ commit, state }) {
             return new Promise((resolve, reject) => {
-                let id = sessionStorage.getItem('ms_userID');
+                let id = localStorage.getItem('ms_userID');
                 getInfo(id).then(response => {
                     const data = response.data;
                     const roles = data.roles || [];

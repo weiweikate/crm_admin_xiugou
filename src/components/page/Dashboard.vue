@@ -17,7 +17,7 @@
                             <div class="otitle"><icon class="icon" ico='icon-huiyuan' /> 今日晋升会员</div>
                             <div class="ocontent">{{info.up || 0}}</div>
                         </div>
-                        <div class="top-card-content">
+                        <div class="top-card-content" style="cursor: pointer" @click="getOldUserActNum">
                             <div class="otitle"><icon class="icon" ico='icon-huiyuanjifenshixiaobaobiao' /> 今日会员激活数</div>
                             <div class="ocontent">{{info.activation || 0}}</div>
                         </div>
@@ -135,12 +135,12 @@
                                 <span class="r-content">创建管理员账号</span>
                             </div>
                         </router-link>
-                        <router-link to="/accountRecharge" tag="div" v-auth="'dashboard.shortcut.zhcz'">
+                        <!--<router-link to="/accountRecharge" tag="div" v-auth="'dashboard.shortcut.zhcz'">
                             <div class="right-content">
                                 <div class="r-ico-wrap"><icon ico='icon-zhanghuchongzhi-xiugai' /></div>
                                 <span class="r-content">账户充值</span>
                             </div>
-                        </router-link>
+                        </router-link>-->
                     </div>
                 </el-card>
             </el-col>
@@ -166,11 +166,11 @@
                             <span class='l-title'>提现审核</span>
                             <span class="l-content">{{info.pending}}</span>
                         </router-link>
-                        <router-link tag="div" to="/showValReCharge" class='left-content' v-auth="'dashboard.todo.zhczsh'">
+                        <!--<router-link tag="div" to="/showValReCharge" class='left-content' v-auth="'dashboard.todo.zhczsh'">
                             <div class="ico-wrap"><icon ico='icon-zhanghuchongzhi-xiugai' /></div>
                             <span class='l-title'>账户充值审核</span>
                             <span class="l-content">{{info.accountChange}}</span>
-                        </router-link>
+                        </router-link>-->
                         <router-link tag="div" to="/productList" class='left-content' v-auth="'dashboard.todo.cpsh'">
                             <div class="ico-wrap"><icon ico='icon-shangpin' /></div>
                             <span class='l-title'>产品审核</span>
@@ -186,27 +186,27 @@
                             <span class='l-title'>优惠套餐审核</span>
                             <span class="l-content">{{info.discountPackageCheck}}</span>
                         </router-link>
-                        <router-link tag="div" to="/orderList" class='left-content' v-auth="'dashboard.todo.tkss'">
+                        <router-link tag="div" to="/afterSaleOrderList" class='left-content' v-auth="'dashboard.todo.tkss'">
                             <div class="ico-wrap"><icon ico='icon-tuikuan' /></div>
                             <span class='l-title'>退款审核</span>
                             <span class="l-content">{{info.refund}}</span>
                         </router-link>
-                        <router-link tag="div" to="/orderList" class='left-content' v-auth="'dashboard.todo.tkthss'">
+                        <router-link tag="div" to="/afterSaleOrderList" class='left-content' v-auth="'dashboard.todo.tkthss'">
                             <div class="ico-wrap"><icon ico='icon-dulituihuodingdan' /></div>
                             <span class='l-title'>退货退款审核</span>
                             <span class="l-content">{{info.refunds}}</span>
                         </router-link>
-                        <router-link tag="div" to="/orderList" class='left-content' v-auth="'dashboard.todo.hhss'">
+                        <router-link tag="div" to="/afterSaleOrderList" class='left-content' v-auth="'dashboard.todo.hhss'">
                             <div class="ico-wrap"><icon ico='icon-tuihuanhuodingdan' /></div>
                             <span class='l-title'>换货审核</span>
                             <span class="l-content">{{info.exchange}}</span>
                         </router-link>
-                        <router-link tag="div" to="/orderList" class='left-content' v-auth="'dashboard.todo.tkthqr'">
+                        <router-link tag="div" to="/afterSaleOrderList" class='left-content' v-auth="'dashboard.todo.tkthqr'">
                             <div class="ico-wrap"><icon ico='icon-chaxun' /></div>
                             <span class='l-title'>退货退款确认</span>
                             <span class="l-content">{{info.refundsCheck}}</span>
                         </router-link>
-                        <router-link tag="div" to="/orderList" class='left-content' v-auth="'dashboard.todo.hhqr'">
+                        <router-link tag="div" to="/afterSaleOrderList" class='left-content' v-auth="'dashboard.todo.hhqr'">
                             <div class="ico-wrap"><icon ico='icon-dingdan' /></div>
                             <span class='l-title'>换货确认</span>
                             <span class="l-content">{{info.exchangeCheck}}</span>
@@ -217,6 +217,31 @@
         </el-row>
         <act-account-code @status='isShowCode' v-if="isShowActAccCode"></act-account-code>
         <act-account-pwd @status='isShowPwd' v-if="isShowActAccPwd"></act-account-pwd>
+        <!--老用户数据激活弹窗-->
+        <el-dialog
+            title="用户激活数量"
+            :visible.sync="oldUserNumMask"
+            :before-close="closeMask"
+            width="800px">
+            <el-date-picker type="daterange" v-model="activeDate" start-placeholder="开始时间" end-placeholder="结束时间" class="vam"></el-date-picker>
+            <el-button type="primary" @click="getOldUserActNum">搜索</el-button>
+            <el-button @click="()=>{activeDate = [];getOldUserActNum()}">重置</el-button>
+            <el-table v-loading="tableLoading" :data="oldUserActiveNum" class="mt10" border stripe>
+                <el-table-column fixed="left" prop="level" label="用户层级" align="center">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.level !== null && scope.row.level !== '总计'">{{`v${scope.row.level}`}}</span>
+                        <span v-else-if="scope.row.level !== null && scope.row.level === '总计'">{{scope.row.level}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="num" label="新老用户总计" align="center"></el-table-column>
+                <el-table-column width="120px" v-for="(v, k) in dateNum" :key="k" :prop="v.day" :label="v.day" align="center"></el-table-column>
+                <el-table-column fixed="right" prop="total" label="老用户总计" align="center"></el-table-column>
+            </el-table>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="closeMask">确 定</el-button>
+                <el-button @click="closeMask">取 消</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -238,16 +263,24 @@ export default {
     computed: {
         ...mapGetters([
             'user'
-        ])
+        ]),
+        dateNum() {
+            return this.oldUserActiveNum.length === 0 ? [] : !this.oldUserActiveNum[0].counts || this.oldUserActiveNum[0].counts.length === 0 ? [] : this.oldUserActiveNum[0].counts;
+        }
     },
     data() {
         return {
             isShowActAccPwd: false,
             isShowActAccCode: false,
+            oldUserNumMask: false,
             info: {},
             userLevelName: [],
             userLevelMsg: [],
-            userNum: ''
+            userNum: '',
+            activeDate: [], // 老用户激活时间
+            tableLoading: false,
+            // 老用户激活列表
+            oldUserActiveNum: []
         };
     },
     created() {
@@ -351,6 +384,61 @@ export default {
         },
         isShowPwd(msg) {
             this.isShowActAccPwd = false;
+        },
+        // 获取老用户激活数据
+        getOldUserActNum() {
+            this.oldUserNumMask = true;
+            this.activeDate = this.activeDate ? this.activeDate : [];
+            const data = {
+                startTime: this.activeDate.length === 0 ? '' : this.$utils.formatTime(this.activeDate[0], 1),
+                endTime: this.activeDate.length === 0 ? '' : this.$utils.formatTime(this.activeDate[1], 1)
+            };
+            this.tableLoading = true;
+            request.countSignUsers(data).then(res => {
+                this.tableLoading = false;
+                const arr = res.data || [];
+                if (arr.length !== 0) {
+                    arr.forEach(v => {
+                        if (v.counts && v.counts.length !== 0) {
+                            v.counts.forEach(ele => {
+                                v[ele.day] = ele.num;
+                            });
+                        }
+                    });
+                }
+                // 统计人数
+                const totalObj = {
+                    level: '总计',
+                    num: 0,
+                    total: 0
+                };
+                if (arr.length !== 0) {
+                    const count = arr[0].counts || [];
+                    const len = count.length;
+                    arr[0].counts.forEach(v => {
+                        totalObj[v.day] = 0;
+                    });
+                    arr.forEach(v => {
+                        totalObj.num += v.num || 0;
+                        totalObj.total += v.total || 0;
+                        if (v.counts && v.counts.length !== 0) {
+                            v.counts.forEach(ele => {
+                                totalObj[ele.day] += ele.num || 0;
+                            });
+                        }
+                    });
+                }
+                arr.push(totalObj);
+                this.oldUserActiveNum = arr;
+            }).catch(err => {
+                this.tableLoading = false;
+                console.log(err);
+            });
+        },
+        // 关闭用户激活数量显示弹窗
+        closeMask() {
+            this.activeDate = [];
+            this.oldUserNumMask = false;
         }
     }
 };

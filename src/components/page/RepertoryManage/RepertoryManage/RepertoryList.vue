@@ -32,10 +32,10 @@
                 <el-form-item prop="type" label="仓库类别">
                     <el-select v-model="form.type" placeholder="请选择仓库类别">
                         <el-option value="" label="全部"></el-option>
-                        <el-option value="1" label="自建仓"></el-option>
+                        <!-- <el-option value="1" label="自建仓"></el-option> -->
                         <el-option value="2" label="加盟仓"></el-option>
-                        <el-option value="3" label="供应商仓"></el-option>
-                        <el-option value="4" label="虚拟仓"></el-option>
+                        <el-option value="3" label="虚拟仓"></el-option>
+                        <!-- <el-option value="4" label="供应商仓"></el-option> -->
                     </el-select>
                 </el-form-item>
                 <el-form-item label="">
@@ -53,10 +53,10 @@
                 <el-table-column prop="code" label="仓库编码" align="center"></el-table-column>
                 <el-table-column prop="type" label="仓库类型" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.type==1">自建仓</template>
+                        <!-- <template v-if="scope.row.type==1">自建仓</template> -->
                         <template v-if="scope.row.type==2">加盟仓</template>
-                        <template v-if="scope.row.type==3">供应商仓</template>
-                        <template v-if="scope.row.type==4">虚拟仓</template>
+                        <template v-if="scope.row.type==3">虚拟仓</template>
+                        <!-- <template v-if="scope.row.type==4">供应商仓</template> -->
                     </template>
                 </el-table-column>
                 <el-table-column label="加盟仓类型" align="center">
@@ -81,13 +81,12 @@
                         <span v-else>/</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="lossCount" label="仓库报损数" align="center"></el-table-column>
-                <!--<el-table-column label="仓库报损数" align="center">-->
-                    <!--<template slot-scope="scope">-->
-                        <!--<el-button @click="toLoss(scope.row)" v-if="scope.row.lossCount">{{scope.row.lossCount}}</el-button>-->
-                        <!--<span v-else>/</span>-->
-                    <!--</template>-->
-                <!--</el-table-column>-->
+                <el-table-column label="仓库报损数" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="primary" @click="toLoss(scope.row)" v-if="scope.row.lossCount">{{scope.row.lossCount}}</el-button>
+                        <span v-else>/</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="是否为发货仓" align="center">
                     <template slot-scope="scope">
                         <template>{{scope.row.sendGoods?'是':'否'}}</template>
@@ -187,7 +186,7 @@ export default {
             return userPhone;
         }
     },
-    activated() {
+    mounted() {
         this.getList(this.page.currentPage);
     },
     methods: {
@@ -247,7 +246,7 @@ export default {
             this.formMask.status = row.status;
             this.formMask.verifyCode = '';
             this.codeTime = 60;
-            this.title = num == 1 ? '停用仓库' : '启用仓库';
+            this.title = num === 1 ? '停用仓库' : '启用仓库';
         },
         sure(formName) {
             const data = {};
@@ -286,8 +285,8 @@ export default {
             this.$router.push({ path: '/repertoryInventory', query: { repertotyId: row.code }});
         },
         toLoss(row) {
-            sessionStorage.setItem('repertotyId', row.id);
-            this.$router.push({ path: '/repertoryBad', query: { repertotyId: row.id }});
+            sessionStorage.setItem('repertotyId', row.code);
+            this.$router.push({ path: '/repertoryBad', query: { repertotyId: row.code }});
         }
     }
 };

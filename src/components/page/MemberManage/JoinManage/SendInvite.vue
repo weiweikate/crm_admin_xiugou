@@ -11,7 +11,7 @@
                                  :class="num==index?'checked':''">
                                 <div class="upper">
                                     <icon class="icon" ico="icon-zhucedengluyonghuming"></icon>
-                                    <div>{{item.name || 0}}</div>
+                                    <div>{{`v${item.level}` || 0}}</div>
                                 </div>
                                 <div class="downer">已有人数：{{item.count == null?0 : item.count}}</div>
                             </div>
@@ -58,14 +58,13 @@
 <script>
     import icon from '@/components/common/ico';
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import vChoosearea from '@/components/common/chooseBrand.vue';
     import moment from 'moment';
     import request from '@/http/http';
     import { mapGetters } from 'vuex';
 
     export default {
         components: {
-            vBreadcrumb, icon, vChoosearea
+            vBreadcrumb, icon
         },
         computed: {
             ...mapGetters([

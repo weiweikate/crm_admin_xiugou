@@ -75,7 +75,6 @@
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 
@@ -94,7 +93,7 @@ export default {
             realTotal: 0
         };
     },
-    activated() {
+    mounted() {
         this.id = this.$route.query.reportInfoId || sessionStorage.getItem('reportInfoId');
         this.getDetail();
     },

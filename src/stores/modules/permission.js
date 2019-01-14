@@ -1,21 +1,15 @@
 import { asyncRouterMap, constantRouterMap } from '@/router';
+import { getAuthRoutes, getNoAuthRoutes, getAdminRoutes } from '@/auth-util';
 
 /**
- * 通过meta.role判断是否与当前用户权限匹配
- * @param auth
- * @param roles
+ * @param noAuthRoutes
  * @param route
  */
-function hasPermission(auth, roles, route) {
-    if (route.hidden) {
-        return true;
-    }
-    else if (route.meta && route.meta.roles) {
-        return roles.some(role => route.meta.roles.includes(role));
-    } else if (auth.includes(route.name)) {
-        return true;
-    } else {
+function hasPermission(noAuthRoutes, route) {
+    if (noAuthRoutes.includes(route.name)) {
         return false;
+    } else {
+        return true;
     }
 }
 
@@ -24,18 +18,14 @@ function hasPermission(auth, roles, route) {
  * @param routes asyncRouterMap
  * @param auth
  */
-function filterAsyncRouter(routes, auth, roles) {
+function filterAsyncRouter(routes, noAuthRoutes) {
     const res = [];
     const len = routes.length;
     for (let i = 0; i < len; i++) {
         const tmp = { ...routes[i] };
-        if (tmp.default) {
-            res.push(tmp);
-            continue;
-        }
-        if (hasPermission(auth, roles, tmp)) {
+        if (hasPermission(noAuthRoutes, tmp)) {
             if (tmp.children) {
-                tmp.children = filterAsyncRouter(tmp.children, auth, roles);
+                tmp.children = filterAsyncRouter(tmp.children, noAuthRoutes);
             }
             res.push(tmp);
         }
@@ -47,12 +37,16 @@ function filterAsyncRouter(routes, auth, roles) {
 const permission = {
     state: {
         routers: constantRouterMap,
-        addRouters: []
+        addRouters: [],
+        noAuthRoutes: []
     },
     mutations: {
         SET_ROUTERS: (state, routers) => {
             state.addRouters = routers;
             state.routers = constantRouterMap.concat(routers);
+        },
+        SET_NOAUTHROUTES: (state, routes) => {
+            state.noAuthRoutes = routes;
         }
     },
     actions: {
@@ -60,15 +54,24 @@ const permission = {
             return new Promise(resolve => {
                 const roles = data.roles;
                 const auth = data._auth;
+                const adminRoutes = getAdminRoutes(asyncRouterMap);
+                const noAuthRoutes = getNoAuthRoutes(auth);
+                const dashboard = noAuthRoutes.indexOf('dashboard');
                 let accessedRouters;
+                if (dashboard > -1) {
+                    noAuthRoutes.splice(dashboard, 1);
+                }
                 // 超级管理员则赋予所有权限
                 if (roles.includes('admin')) {
                     accessedRouters = asyncRouterMap;
                 } else {
-                    accessedRouters = filterAsyncRouter(asyncRouterMap, auth, roles);
+                    let tmp = noAuthRoutes.concat(adminRoutes);
+                    console.log('没权限的路由：', tmp);
+                    accessedRouters = filterAsyncRouter(asyncRouterMap, noAuthRoutes);
                 }
                 console.log('用户权限', accessedRouters);
                 commit('SET_ROUTERS', accessedRouters.concat([{ path: '*', redirect: '/404', hidden: true }]));
+                commit('SET_NOAUTHROUTES',noAuthRoutes)
                 resolve();
             });
         }

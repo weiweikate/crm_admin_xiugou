@@ -5,10 +5,10 @@
             <el-form :model="form" :rules="rules" ref="form" label-width="120px">
                 <el-form-item prop="type" label="仓库类型">
                     <el-select v-model="form.type" placeholder="请选择仓库类型" class="inp">
-                        <el-option value="1" label="自建仓">自建仓</el-option>
+                        <!-- <el-option value="1" label="自建仓">自建仓</el-option> -->
                         <el-option value="2" label="加盟仓">加盟仓</el-option>
-                        <el-option value="3" label="供应商仓">供应商仓</el-option>
-                        <el-option value="4" label="虚拟仓">虚拟仓</el-option>
+                        <el-option value="3" label="虚拟仓">虚拟仓</el-option>
+                        <!-- <el-option value="4" label="供应商仓">供应商仓</el-option> -->
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="supplierCode" label="供应商ID" v-if="form.type==3||form.type==4">
@@ -182,14 +182,14 @@
                 num: ''
             };
         },
-        activated() {
+        mounted() {
             this.id = this.$route.query.repertoryId || sessionStorage.getItem('repertoryId');
-            this.type = this.$route.query.type == 'add' ? 1 : 2;
+            this.type = this.$route.query.type === 'add' ? 1 : 2;
             this.getInfo();
         },
         methods: {
             querySearchAsyncById(queryString, cb) {
-                if (queryString == '') {
+                if (queryString === '') {
                     return;
                 }
                 request.findSupplierLike({ 'keyword': this.form.supplierCode }).then(res => {
@@ -206,7 +206,7 @@
                 });
             },
             querySearchAsyncByName(queryString, cb) {
-                if (queryString == '') {
+                if (queryString === '') {
                     return;
                 }
                 request.findSupplierLike({ 'keyword': this.form.supplierName }).then(res => {
@@ -231,14 +231,14 @@
                 this.$refs[formName].validate((valid) => {
                     if (!valid) return;
                     const data = this[formName];
-                    if (this.type == 2) {
+                    if (this.type === 2) {
                         data.code = this.id;
                     }
-                    if (this.form.type == 1) {
+                    if (this.form.type === 1) {
                         data.supplierCode = '';
                         data.supplierName = '';
                         data.joinWarehouseType = '';
-                    } else if (this.form.type == 2) {
+                    } else if (this.form.type === 2) {
                         data.supplierCode = '';
                         data.supplierName = '';
                     } else {
@@ -250,8 +250,8 @@
                     if (this.form.returnWarehouseAddress && !this.returnWarehouseAddress) {
                         return this.$message.warning('请选择退货仓仓库省市区');
                     }
-                    data.sendGoods = data.sendGoods == 1;
-                    data.returnGoods = data.returnGoods == 1;
+                    data.sendGoods = data.sendGoods === 1;
+                    data.returnGoods = data.returnGoods === 1;
                     if (!data.returnGoods) {
                         data.returnManager = '';
                         data.returnContact = '';
@@ -276,7 +276,7 @@
             },
             getInfo() {
                 this.resetValue();
-                if (this.type == 1) {
+                if (this.type === 1) {
                     this.nav[2] = '新建仓库';
                 } else {
                     this.nav[2] = '编辑仓库';
@@ -316,7 +316,7 @@
                 request.queryRepertoryById(data).then(res => {
                     this.form = res.data;
                     this.form.type = res.data.type.toString();
-                    if (this.form.type == 2) {
+                    if (this.form.type === 2) {
                         this.form.joinWarehouseType = res.data.joinWarehouseType.toString();
                     } else {
                         this.form.joinWarehouseType = '';
@@ -326,7 +326,7 @@
                     const reginArr = [];
                     reginArr.push(res.data.addressProvinceCode, res.data.addressCityCode, res.data.addressDistrictCode);
                     this.address = reginArr;
-                    if (this.form.returnGoods == 1) {
+                    if (this.form.returnGoods === 1) {
                         const reginArr2 = [];
                         reginArr2.push(res.data.returnProvinceCode, res.data.returnCityCode, res.data.returnDistrictCode);
                         this.returnWarehouseAddress = reginArr2;

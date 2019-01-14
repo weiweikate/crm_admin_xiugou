@@ -57,21 +57,21 @@ export const getAllgetAllActivety = '/admin/securityCodeTemplate/getSecurityCode
 export const productionSecurityCode = '/securityCode/securityCodeRecord/productionSecurityCode';
 //
 // 查看管理员操作日志
-export const getMangerLog = '/admin/logAdminuser/getPage';
+export const getMangerLog = '/logAdminuser/getPage';
 // 重置登陆密码
-export const resetPassword = '/admin/adminUser/resetPassword';
+export const resetPassword = '/adminUser/resetPassword';
 // 开启/关闭管理员账号
-export const updateAdminUserStatus = '/admin/adminUser/updateAdminUserStatus';
+export const updateAdminUserStatus = '/adminUser/updateAdminUserStatus';
 // 删除管理员账号
-export const deleteAdminUser = '/admin/adminUser/deleteUpdateAdminUser';
+export const deleteAdminUser = '/adminUser/deleteUpdateAdminUser';
 // 查询权限三级模块列表
-export const queryPrivilegeList = '/admin/privilege/queryPrivilegeList';
+export const queryPrivilegeList = '/privilege/queryPrivilegeList';
 // 添加权限
-export const addPrivilege = '/admin/privilege/addPrivilege';
+export const addPrivilege = '/privilege/addPrivilege';
 // 获取一级模块列表
-export const queryTopMenuList = '/admin/privilege/queryTopMenuList';
+export const queryTopMenuList = '/privilege/queryTopMenuList';
 // 新增功能模块
-export const addFunctionModule = '/admin/privilege/addFunctionModule';
+export const addFunctionModule = '/privilege/addFunctionModule';
 
 // 品牌产品管理
 // 获取一二级类目列表
@@ -122,7 +122,7 @@ export const getLevelListWithDealerCount = '/admin/dealerLevel/getLevelListWithD
 // 发起——授权渠道
 export const getStatusONList = '/admin/permitChannel/getStatusONList';
 // 发起——授权品牌
-export const getList = '/admin/brand/getList';
+// export const getList = '/admin/brand/getList';
 // 发起——根据品牌获取品类
 export const getProductCategoryList = '/admin/productCategory/queryProductCategoryByBrandId';
 // 晋级设置
@@ -130,15 +130,15 @@ export const promotionManage = '/promotionManage';
 // 降级设置
 export const degradeManage = '/degradeManage';
 // 经销商加盟管理
-// 发起经销商接口
-export const addInvite = '/admin/invite/addInvite';
+
 // 经销商列表接口
 export const getInvitePageList = '/admin/invite/queryInvitePageList';
 // 查看用户邀请详情
 export const findInviteInfo = '/admin/invite/findInviteInfo';
 // 生成邀请二维码
 export const createWxQrcode = '/admin/invite/createWxQrcode';
-
+// 导出
+export const downloadCouponList = ['/user/coupon/downloadCouponList', { methods: 'get' }];
 // 经销商会员管理
 
 // 关闭用户
@@ -228,8 +228,6 @@ export const queryFeedbackList = '/userFeedback/queryFeedbackList';
 export const findFeedbackById = ['/userFeedback/findFeedbackDetailById', { methods: 'get' }];
 // 修改反馈详情
 export const updateFeedback = '/userFeedback/updateDetailById';
-// 券数据导出
-export const downloadCouponList = '/admin/user/coupon/downloadCouponList';
 // 添加岗位
 export const addRole = '/role/addRole';
 // 根据id查询岗位
@@ -256,6 +254,16 @@ export const addExpress = ['/config/sysExpress/save', { methods: 'post' }];
 // 更新物流公司
 export const updateExpress = ['/config/sysExpress/edit', { methods: 'post' }];
 
+// 获取地区列表
+export const queryAreaList = ['/area/query', { methods: 'get' }];
+// 地区启用停用
+export const disabledArea = ['/area/disable', { methods: 'get' }];
+export const enabledArea = ['/area/enable', { methods: 'get' }];
+// 添加地区
+export const addArea = ['/area/save', { methods: 'post' }];
+// 编辑地区
+export const editArea = ['/area/edit', { methods: 'post' }];
+
 // ERP接口
 export const updateERPstatus = ['/config/erp/change', { methods: 'get' }];
 export const updateERP = '/config/erp/save';
@@ -265,3 +273,5 @@ export const getERP = ['/config/erp/get', { methods: 'get' }];
 
 // 导出
 export const downloadOrderList = '/admin/orderManagement/orders/export';
+// 统计老用户注册数量
+export const countSignUsers = '/user/countSignUsers';

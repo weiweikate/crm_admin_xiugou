@@ -9,8 +9,7 @@
                 </el-form-item>
                 <el-form-item label="券类型">
                     <el-select v-model="form.type" placeholder="请选择" @change="chooseType">
-                        <el-option v-for="(v,k) in typeArr" :key="k" :label="v.name"
-                                   :value="v.type"></el-option>
+                        <el-option v-for="(v,k) in typeArr" :key="k" :label="v.name" :value="v.type"></el-option>
                     </el-select>
                 </el-form-item>
                 <div class="line"></div>
@@ -20,14 +19,12 @@
                 </el-form-item>
                 <el-form-item label="折扣" v-if="form.type==3">
                     <el-select v-model="form.value" placeholder="请选择">
-                        <el-option v-for="(v,k) in discountArr" :key="k" :label="v.name"
-                                   :value="v.type"></el-option>
+                        <el-option v-for="(v,k) in discountArr" :key="k" :label="v.name" :value="v.type"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="券模板">
                     <el-select v-model="form.couponTemplateId" placeholder="请选择券模板">
-                        <el-option v-for="(v,k) in tempArr" :key="k" :label="v.name"
-                                   :value="v.id"></el-option>
+                        <el-option v-for="(v,k) in tempArr" :key="k" :label="v.name" :value="v.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="使用限制" style="margin-top: 30px" v-if="form.type!=2&&form.type!=4">
@@ -52,8 +49,8 @@
                 <el-form-item label="可用品类">
                     <!--<div @click="chooseBrand"><span class="choose-brand">请选择品类</span></div>-->
                     <!--<template v-for="item in package">-->
-                        <!--<div>{{item.firstCategoryName}}-{{item.secCategoryName}}</div>-->
-                        <!--<div>产品ID:{{item.products}}</div>-->
+                    <!--<div>{{item.firstCategoryName}}-{{item.secCategoryName}}</div>-->
+                    <!--<div>产品ID:{{item.products}}</div>-->
                     <!--</template>-->
                     <v-multichoose @getProductIds="getProductIds" v-if="form.type!=4"></v-multichoose>
                     <v-onlychoose @getProductIds="getProductIds" v-else></v-onlychoose>
@@ -64,19 +61,23 @@
                     </el-checkbox>
                     <div style="margin: 15px 0;"></div>
                     <el-checkbox-group v-model="checkedUsers" @change="handleCheckedUsersChange">
-                        <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{item.name}}
+                        <el-checkbox v-for="(item,index) in users" :label="item" :key="index">{{`V`+item.level}}
                         </el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item label="发放数量">
                     <el-input class="mid-inp" v-model="form.totalNumber" :disabled="totalNumber"></el-input>
                     张
-                    <span><el-checkbox style="margin-left: 10px" v-model="totalNumber">不限制</el-checkbox></span>
+                    <span>
+                        <el-checkbox style="margin-left: 10px" v-model="totalNumber">不限制</el-checkbox>
+                    </span>
                 </el-form-item>
                 <el-form-item label="每人限额">
                     <el-input class="mid-inp" v-model="form.getLimit" :disabled="getLimit"></el-input>
                     张
-                    <span><el-checkbox style="margin-left: 10px" v-model="getLimit">不限制</el-checkbox></span>
+                    <span>
+                        <el-checkbox style="margin-left: 10px" v-model="getLimit">不限制</el-checkbox>
+                    </span>
                 </el-form-item>
 
                 <el-form-item label="优惠券说明">
@@ -99,7 +100,7 @@
     import icon from '@/components/common/ico';
     import utils from '@/utils/index.js';
     import request from '@/http/http.js';
-    import {regExpConfig} from '@/utils/regConfig.js'
+    import { regExpConfig } from '@/utils/regConfig.js';
 
     export default {
         components: {
@@ -123,9 +124,7 @@
             };
             return {
                 rules: {
-                    name: [
-                        { validator: checkName, trigger: 'blur' }
-                    ]
+                    name: [{ validator: checkName, trigger: 'blur' }]
                 },
                 nav: ['运营管理', '优惠券设置', '添加优惠券'],
                 // 用户层级
@@ -143,53 +142,70 @@
                     getLimit: '',
                     remark: ''
                 },
-                typeArr: [{// 优惠券类型
-                    name: '满减券(商品满额可用)',
-                    type: 1
-                }, {
-                    name: '抵价券(商品直接抵价)',
-                    type: 2
-                }, {
-                    name: '折扣券(打折百分比券)',
-                    type: 3
-                }, {
-                    name: '抵扣券',
-                    type: 4
-                }],
-                discountArr: [{// 折扣值
-                    name: '1折',
-                    type: 10
-                }, {
-                    name: '2折',
-                    type: 20
-                }, {
-                    name: '3折',
-                    type: 30
-                }, {
-                    name: '4折',
-                    type: 40
-                }, {
-                    name: '5折',
-                    type: 50
-                }, {
-                    name: '6折',
-                    type: 60
-                }, {
-                    name: '7折',
-                    type: 70
-                }, {
-                    name: '8折',
-                    type: 80
-                }, {
-                    name: '9折',
-                    type: 90
-                }],
+                typeArr: [
+                    {
+                        // 优惠券类型
+                        name: '满减券(商品满额可用)',
+                        type: 1
+                    },
+                    {
+                        name: '抵价券(商品直接抵价)',
+                        type: 2
+                    },
+                    {
+                        name: '折扣券(打折百分比券)',
+                        type: 3
+                    },
+                    {
+                        name: '抵扣券',
+                        type: 4
+                    }
+                ],
+                discountArr: [
+                    {
+                        // 折扣值
+                        name: '1折',
+                        type: 10
+                    },
+                    {
+                        name: '2折',
+                        type: 20
+                    },
+                    {
+                        name: '3折',
+                        type: 30
+                    },
+                    {
+                        name: '4折',
+                        type: 40
+                    },
+                    {
+                        name: '5折',
+                        type: 50
+                    },
+                    {
+                        name: '6折',
+                        type: 60
+                    },
+                    {
+                        name: '7折',
+                        type: 70
+                    },
+                    {
+                        name: '8折',
+                        type: 80
+                    },
+                    {
+                        name: '9折',
+                        type: 90
+                    }
+                ],
                 tempArr: [], // 优惠券模版
                 remindFlag: false, // 是否到期提醒
                 remindDays: '', // 到期前几天提示
                 data: {
                     totalNumber: '', // 发放数量
-                    getLimit: ''// 每人限额
+                    getLimit: '' // 每人限额
                 },
                 totalNumber: false, // 发放数量是否限制
                 getLimit: false, // 每人限额是否限制
@@ -211,8 +227,8 @@
         methods: {
             resetValue() {
                 utils.cleanFormData(this.form);
-                this.getLevelList();// 加载用户层级
-                this.queryTemplateList();// 优惠券模版
+                this.getLevelList(); // 加载用户层级
+                this.queryTemplateList(); // 优惠券模版
                 // 数据清除
                 this.isIndeterminate = false;
                 this.checkAll = false;
@@ -233,11 +249,14 @@
             },
             // 优惠券模版
             queryTemplateList() {
-                request.queryTemplateList({}).then(res => {
-                    this.tempArr = res.data;
-                }).catch(error => {
-                    console.log(error);
-                });
+                request
+                    .queryTemplateList({})
+                    .then(res => {
+                        this.tempArr = res.data;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             },
             // 优惠券选择切换
             chooseType() {
@@ -246,11 +265,14 @@
             // 获取用户层级列表
             getLevelList() {
                 const that = this;
-                request.getUserLevelList({}).then(res => {
-                    that.users = res.data;
-                }).catch(error => {
-                    console.log(error);
-                });
+                request
+                    .getUserLevelList({})
+                    .then(res => {
+                        that.users = res.data;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             },
             // 推送人群选择
             handleCheckAllChange(val) {
@@ -273,7 +295,7 @@
                 let result = '';
                 for (const i in that.users) {
                     for (const j in value) {
-                        if (that.users[i].id == value[j].id) {
+                        if (that.users[i].id === value[j].id) {
                             result += that.users[i].id + ',';
                         }
                     }
@@ -292,7 +314,7 @@
             submitForm(formName) {
                 const that = this;
                 const data = this.form;
-                that.$refs[formName].validate((valid) => {
+                that.$refs[formName].validate(valid => {
                     if (!valid) {
                         return;
                     } else {
@@ -304,9 +326,9 @@
                             this.$message.warning('请选择优惠券类型!');
                             return;
                         }
-                        if (data.type != 4) {
+                        if (data.type !== 4) {
                             if (!data.value) {
-                                if (data.type != 3) {
+                                if (data.type !== 3) {
                                     this.$message.warning('请输入券值!');
                                 } else {
                                     this.$message.warning('请选中折扣值!');
@@ -320,7 +342,7 @@
                             this.$message.warning('请选择券模板!');
                             return;
                         }
-                        if (data.type == 1 || data.type == 3) {
+                        if (data.type === 1 || data.type === 3) {
                             if (!this.useConditions) {
                                 this.$message.warning('请输入使用限制!');
                                 return;
@@ -330,7 +352,12 @@
                         } else {
                             data.useConditions = 0;
                         }
-                        const reg = regExpConfig.regNum1_4;// 1-4正整数
+                        if (data.type === 1) {
+                            if (utils.stringToNumber(data.useConditions) < utils.stringToNumber(this.form.value)) {
+                                return this.$message.warning('使用限制应大于等于券值');
+                            }
+                        }
+                        const reg = regExpConfig.regNum1_4; // 1-4正整数
                         if (!this.isDay) {
                             data.effectiveDays = this.day;
                             if (!data.effectiveDays) {
@@ -362,11 +389,15 @@
                             if (!data.remindDays) {
                                 this.$message.warning('请输入到期前提醒天数!');
                                 return;
+                            } else {
+                                if (utils.stringToNumber(data.remindDays) > utils.stringToNumber(data.effectiveDays)) {
+                                    return this.$message.warning('到期前提醒天数不能大于周期有效天数');
+                                }
                             }
                         } else {
                             data.remindFlag = 0;
                         }
-                        if (this.form.type == 4) {
+                        if (this.form.type === 4) {
                             if (!that.productList.products) {
                                 this.$message.warning('请选择可用产品!');
                                 return;
@@ -394,17 +425,20 @@
                             data.thirdCategoryIds = thirdCategoryIds.length ? thirdCategoryIds.join(',') : '';
                             data.prodCodes = productIds.length ? productIds.join(',') : '';
                             if (that.productList.checkAll) {
-                                data.categoryType = 1;// 全品类
+                                data.categoryType = 1; // 全品类
                                 data.firstCategoryIds = -1;
                             } else {
                                 if (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0 && productIds.length === 1) {
-                                    data.categoryType = 5;// 单商品
+                                    data.categoryType = 5; // 单商品
                                 } else if (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0 && productIds.length > 1) {
-                                    data.categoryType = 4;// 多商品
-                                } else if (((firstCategoryIds.length === 1 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0) || (firstCategoryIds.length === 0 && secondCategoryIds.length === 1 && thirdCategoryIds.length === 0) || (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 1)) && productIds.length === 0) {
-                                    data.categoryType = 3;// 单品类
+                                    data.categoryType = 4; // 多商品
+                                } else if (
+                                    ((firstCategoryIds.length === 1 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 0) || (firstCategoryIds.length === 0 && secondCategoryIds.length === 1 && thirdCategoryIds.length === 0) || (firstCategoryIds.length === 0 && secondCategoryIds.length === 0 && thirdCategoryIds.length === 1)) &&
+                                    productIds.length === 0
+                                ) {
+                                    data.categoryType = 3; // 单品类
                                 } else {
-                                    data.categoryType = 2;// 多品类
+                                    data.categoryType = 2; // 多品类
                                 }
                             }
                         }
@@ -429,14 +463,17 @@
                             }
                         }
                         that.btnLoading = true;
-                        request.addOrModifyCoupon(data).then(res => {
-                            that.$message.success(res.msg);
-                            that.$router.push('/discountCoupon');
-                            that.btnLoading = false;
-                        }).catch(error => {
-                            console.log(error);
-                            that.btnLoading = false;
-                        });
+                        request
+                            .addOrModifyCoupon(data)
+                            .then(res => {
+                                that.$message.success(res.msg);
+                                that.$router.push('/discountCoupon');
+                                that.btnLoading = false;
+                            })
+                            .catch(error => {
+                                console.log(error);
+                                that.btnLoading = false;
+                            });
                     }
                 });
             },
@@ -459,22 +496,26 @@
             background: #eee;
             margin-bottom: 20px;
         }
-        .el-input, .el-input__inner {
+        .el-input,
+        .el-input__inner {
             width: 300px;
         }
-        .sml-inp.el-input, .sml-inp .el-input__inner, .sml-inp .el-input {
+        .sml-inp.el-input,
+        .sml-inp .el-input__inner,
+        .sml-inp .el-input {
             width: 80px;
         }
-        .mid-inp.el-input, .mid-inp .el-input__inner {
+        .mid-inp.el-input,
+        .mid-inp .el-input__inner {
             width: 180px;
         }
         .choose-brand {
             cursor: pointer;
-            color: #409EFF;
+            color: #409eff;
         }
         .address-item {
             .el-form-item__label {
-                line-height: 20px
+                line-height: 20px;
             }
         }
         .quill-editor {
@@ -550,8 +591,8 @@
                 color: #9a9a9a;
             }
             .selected-btn {
-                background-color: #409EFF;
-                border-color: #409EFF;
+                background-color: #409eff;
+                border-color: #409eff;
                 color: #fff;
             }
         }
@@ -598,7 +639,8 @@
                     .el-input--small .el-input__inner {
                         line-height: 30px;
                     }
-                    .el-input-group__append, .el-input-group__prepend {
+                    .el-input-group__append,
+                    .el-input-group__prepend {
                         padding: 0 5px;
                     }
                 }
@@ -611,15 +653,12 @@
                 cursor: pointer;
             }
         }
-        .el-textarea {
-
-        }
         .el-textarea__inner {
             width: 500px;
             height: 150px;
             resize: none;
         }
-        .count{
+        .count {
             position: absolute;
             bottom: 0;
             left: 450px;

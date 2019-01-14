@@ -34,7 +34,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="getList(1)" type="primary">查询</el-button>
-                    <el-button @click="exportData" type="primary">导出</el-button>
+                    <!--<el-button @click="exportData" type="primary">导出</el-button>-->
                     <!--<el-button @click="resetForm('form')">重置</el-button>-->
                 </el-form-item>
             </el-form>
@@ -46,7 +46,7 @@
                     <el-table-column prop="nickname" label="用户昵称" align="center"></el-table-column>
                     <el-table-column prop="phone" label="手机号" align="center"></el-table-column>
                     <el-table-column label="授权层级" align="center">
-                        <template slot-scope="scope">{{scope.row.levelName}}级</template>
+                        <template slot-scope="scope" v-if="scope.row.level !== undefined && scope.row.level !== null">{{`v${scope.row.level}`}}</template>
                     </el-table-column>
                     <el-table-column label="最近登录时间" align="center">
                         <template slot-scope="scope">
@@ -70,7 +70,7 @@
                     <el-table-column label="下级" align="center">
                         <template slot-scope="scope">
                         <span style="cursor: pointer;color:#ff6868"
-                              @click="toLower(scope.row.id)">{{scope.row.junior}}</span>
+                              @click="toLower(scope.row.code)">{{scope.row.junior}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column label="状态" align="center">
@@ -239,6 +239,7 @@
                     that.tipsMask = false;
                     that.getList(that.page.currentPage);
                 }).catch(err => {
+                    console.log(err);
                     that.btnLoading = false;
                 });
             },
@@ -262,25 +263,25 @@
                     data.cityId = '';
                     data.areaId = '';
                 }
-                that.$axios
-                    .post(api.exportDealerListExcel, data, { responseType: 'blob' })
-                    .then(res => {
-                        var data = res.data;
-                        if (!data) {
-                            return;
-                        }
-                        const url = window.URL.createObjectURL(new Blob([data]));
-                        const link = document.createElement('a');
-                        link.style.display = 'none';
-                        link.href = url;
-                        const time = moment(new Date()).format('YYYYMMDDHHmmss');
-                        link.setAttribute('download', '会员列表' + time + '.xlsx');
-                        document.body.appendChild(link);
-                        link.click();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                // that.$axios
+                //     .post(api.exportDealerListExcel, data, { responseType: 'blob' })
+                //     .then(res => {
+                //         var data = res.data;
+                //         if (!data) {
+                //             return;
+                //         }
+                //         const url = window.URL.createObjectURL(new Blob([data]));
+                //         const link = document.createElement('a');
+                //         link.style.display = 'none';
+                //         link.href = url;
+                //         const time = moment(new Date()).format('YYYYMMDDHHmmss');
+                //         link.setAttribute('download', '会员列表' + time + '.xlsx');
+                //         document.body.appendChild(link);
+                //         link.click();
+                //     })
+                //     .catch(err => {
+                //         console.log(err);
+                //     });
             },
             //   重置表单
             resetForm(formName) {

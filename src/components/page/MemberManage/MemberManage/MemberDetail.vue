@@ -26,15 +26,15 @@
                         <div class="item">地址信息 ：{{dealer.province}}{{dealer.city}}{{dealer.area}}{{dealer.address}}</div>
                     </div>
                     <div class="item-row">
-                        <div class="item">注册时间：{{dealer.regTime|formatDateAll}}</div>
-                        <div class="item">最近登录时间：{{dealer.lastLoginTime|formatDateAll}}</div>
+                        <div class="item">注册时间：{{dealer.regTime | formatDateAll}}</div>
+                        <div class="item">最近登录时间：{{dealer.lastLoginTime | formatDateAll}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item" style="width: 100%;">会员简介：{{dealer.profile}}</div>
                     </div>
                 </div>
                 <div class="center">
-                    <el-button @click="updateBasicInf">修改</el-button>
+                    <el-button @click="updateBasicInf" v-auth="'vip.memberDetail.jcxxxg'">修改</el-button>
                 </div>
                 <div class="right">
                     <div>
@@ -42,12 +42,12 @@
                         <img class="img" v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('lowerMemberManage', 'memberToLowListPage')">
+                        <el-button type="primary" @click="btnClicked('lowerMemberManage', 'memberToLowListPage')" v-auth="'vip.memberDetail.xjdl'">
                             下级代理({{dealer.junior || 0}})
                         </el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('memberTree', 'memberTreeInfo')"
+                        <el-button type="primary" @click="btnClicked('memberTree', 'memberTreeInfo')" v-auth="'vip.memberDetail.ckhyszt'"
                                    style="margin-left: 0">查看会员树状图
                         </el-button>
                     </div>
@@ -56,17 +56,17 @@
                         <!--</el-button>-->
                     <!--</div>-->
                     <div>
-                        <el-button type="primary" @click="btnClicked('memberAccount', 'memberInfoAccount')"
+                        <el-button type="primary" @click="btnClicked('memberAccount', 'memberInfoAccount')" v-auth="'vip.memberDetail.tdzh'"
                                    style="margin-left: 0">他的账户
                         </el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('realNameInfo', 'memberInfoRealName')"
+                        <el-button type="primary" @click="btnClicked('realNameInfo', 'memberInfoRealName')" v-auth="'vip.memberDetail.smxx'"
                                    style="margin-left: 0">实名信息{{dealer.realnameStatus == '1'?'(已实名)':''}}
                         </el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="$router.push('showMsg')"
+                        <el-button type="primary" @click="$router.push('showMsg')" v-auth="'vip.memberDetail.dpxx'"
                                    style="margin-left: 0">店铺信息
                         </el-button>
                     </div>
@@ -88,14 +88,14 @@
                     </div>
                     <div class="item-row">
                         <div class="item">授权码：{{dealer.code}}</div>
-                        <div class="item">授权层级：{{dealer.level?`v${dealer.level}`: ''}}</div>
+                        <div class="item">授权层级：{{dealer.level !== undefined && dealer.level !== null?`v${dealer.level}`: ''}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item">经验值：{{dealer.experience}}</div>
                     </div>
                 </div>
                 <div class="center">
-                    <el-button @click="updateAuthorInf">修改</el-button>
+                    <el-button @click="updateAuthorInf" v-auth="'vip.memberDetail.sqxxxg'">修改</el-button>
                 </div>
                 <div class="clearfix"></div>
             </div>

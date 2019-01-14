@@ -42,7 +42,7 @@
                 <!--</el-form-item>-->
                 <!--<el-form-item prop="pushStatus" label="推送状态">-->
                     <!--<el-select v-model="form.pushStatus" placeholder="请选择推送状态">-->
-                        <!--<el-option value="" label="全部"></el-option>-->
+                        <!--<el-option value="" label="全部"></el -option>-->
                         <!--<el-option value="1" label="未推送"></el-option>-->
                         <!--<el-option value="2" label="推送成功"></el-option>-->
                         <!--<el-option value="3" label="推送失败"></el-option>-->
@@ -52,8 +52,8 @@
                     <el-select v-model="form.deliveryWare" placeholder="请选择发货方仓">
                         <el-option value="" label="全部"></el-option>
                         <el-option value="2" label="加盟仓"></el-option>
-                        <el-option value="3" label="供应商"></el-option>
-                        <el-option value="4" label="虚拟仓库"></el-option>
+                        <el-option value="3" label="虚拟仓库"></el-option>
+                        <!--<el-option value="4" label="供应商"></el-option>-->
                     </el-select>
                 </el-form-item>
                 <!--<el-form-item prop="deliveryWare" label="商品来源">-->
@@ -99,13 +99,13 @@
             </el-form>
         </el-card>
         <el-card class="mb10">
-            <el-button @click="$refs[activeName].productStatus(0)">删除</el-button>
-            <el-button @click="$refs[activeName].productStatus(6)">下架</el-button>
-            <el-button @click="auditToask = true">审核</el-button>
-            <el-button @click="freightToask = true">调整运费模板</el-button>
-            <el-button type="danger">推送仓库</el-button>
-            <el-button type="danger">导出</el-button>
-            <el-button @click="createProd" type="danger">创建商品</el-button>
+            <el-button @click="$refs[activeName].productStatus(0)" v-auth="'brand.productList.plsc'">删除</el-button>
+            <el-button @click="$refs[activeName].productStatus(6)" v-auth="'brand.productList.plxj'">下架</el-button>
+            <el-button @click="auditToask = true" v-auth="'brand.productList.plsh'">审核</el-button>
+            <el-button @click="freightToask = true" v-auth="'brand.productList.tzyfmb'">调整运费模板</el-button>
+            <el-button type="danger" v-auth="'brand.productList.tsyc'">推送仓库</el-button>
+            <el-button type="danger" v-auth="'brand.productList.pldc'">导出</el-button>
+            <el-button @click="createProd" type="danger" v-auth="'brand.productList.tjcp'">创建商品</el-button>
         </el-card>
         <el-card>
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
@@ -195,9 +195,10 @@
         mounted() {
             const param = this.$route.query;
             if (param) {
-                this.form.brandId = param.brandId;
-                this.form.supplierCode = param.supplierCode;
-                this.form.paramStatus = param.flag; // 已上架状态
+                this.form.thirdCategoryId = param.thirdCatId || '';
+                this.form.brandId = param.brandId || '';
+                this.form.supplierCode = param.supplierCode || '';
+                this.form.paramStatus = param.flag || ''; // 已上架状态
             }
             this.getFeightList();
             this.getFirstCateList();
@@ -298,6 +299,7 @@
                 this.$refs['form'].resetFields();
                 this.form.paramStatus = '';
                 this.form.brandId = '';
+                this.form.thirdCatId = '';
             }
         },
         // 路由离开钩子

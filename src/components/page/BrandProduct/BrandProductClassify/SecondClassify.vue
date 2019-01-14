@@ -1,6 +1,6 @@
 <template>
     <div class="second-classify">
-        <v-breadcrumb :nav="['品牌产品管理','产品品类分类管理',name]"></v-breadcrumb>
+        <v-breadcrumb :nav="['产品管理','分类管理',name]"></v-breadcrumb>
         <div class="table-block">
             <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加二级类目</el-button>
             <template>
@@ -45,7 +45,7 @@
         <!--添加/编辑类目弹窗-->
         <el-dialog :title="title" :visible.sync="editMask">
             <el-form v-model="form" label-width="100px">
-                <el-form-item label="类目名称"">
+                <el-form-item label="类目名称">
                     <el-input v-model="form.name" auto-complete="off"></el-input>
                     <span style="font-size: 12px;color: #aaa">（2-16位汉字字母组合）</span>
                 </el-form-item>

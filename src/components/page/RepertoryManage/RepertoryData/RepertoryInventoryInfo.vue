@@ -5,10 +5,11 @@
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="name" label="产品名称" align="center"></el-table-column>
-                <el-table-column prop="skuCode" label="商品编码" align="center"></el-table-column>
-                <el-table-column label="规格" align="center">
-                    <template slot-scope="scope">{{scope.row.specifyValues.replace(/@/g,' ')}}</template>
-                </el-table-column>
+                <el-table-column prop="skuCode" label="商品SKU编码" align="center"></el-table-column>
+                <template v-for='(v,k) in headData'>
+                    <el-table-column :show-overflow-tooltip="true" :prop="v.value" :label="v.name" :key="k" align="center">
+                    </el-table-column>
+                </template>
                 <el-table-column label="仓库总库存数" align="center">
                     <template slot-scope="scope">{{scope.row.totalCount}}件</template>
                 </el-table-column>
@@ -20,14 +21,7 @@
                 </el-table-column>
             </el-table>
             <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
+                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
                 </el-pagination>
             </div>
         </el-card>
@@ -36,7 +30,6 @@
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 
@@ -50,12 +43,13 @@ export default {
             nav: ['云仓仓库管理', '仓库管理', '仓库存货数'],
             tableData: [],
             productId: '',
-            warehouseId: ''
+            warehouseId: '',
+            headData: [] // 规格表头
         };
     },
-    activated() {
-        this.productId = this.$route.query.repertoryInventoryInfoId || sessionStorage.getItem('repertoryInventoryInfoId');
-        this.warehouseId = this.$route.query.warehouseId || sessionStorage.getItem('warehouseId');
+    mounted() {
+        this.productId = this.$route.query.repertoryInventoryInfoId;
+        this.warehouseId = this.$route.query.warehouseId;
         this.getList(this.page.currentPage);
     },
     methods: {
@@ -75,6 +69,20 @@ export default {
                     if (!res.data) return;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
+                    res.data.data.forEach((v, k) => {
+                        this.headData = [];
+                        if (!v.specifies || !v.specifyValues) return;
+                        const specs = v.specifies.split('-');
+                        const specValues = v.specifyValues.split('-');
+                        specs.forEach((v1, k1) => {
+                            const temp = {
+                                value: v1,
+                                name: v1
+                            };
+                            this.headData.push(temp);
+                            this.tableData[k][v1] = specValues[k1];
+                        });
+                    });
                 })
                 .catch(error => {
                     console.log(error);
@@ -113,6 +121,5 @@ export default {
             margin-right: 30px;
         }
     }
-
 }
 </style>
