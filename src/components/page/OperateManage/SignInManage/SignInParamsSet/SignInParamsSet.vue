@@ -75,7 +75,7 @@
             },
             //   提交表单
             submitForm() {
-                const reg = /^(0|[1-9]\d*)$/;
+                const reg = /^[1-9]\d*|0$/;
                 for (let i = 0; i < this.daysList.length; i++) {
                     let pre = '';
                     if (i === 0) {
@@ -84,7 +84,7 @@
                         pre = this.daysList[i - 1];
                     }
                     const v = this.daysList[i];
-                    if (!v || !reg.test(v) || v < pre) {
+                    if (!v || !reg.test(v) || this.$utils.stringToNumber(v) < this.$utils.stringToNumber(pre)) {
                         this.$message.warning('请输入合法数据');
                         return;
                     }
