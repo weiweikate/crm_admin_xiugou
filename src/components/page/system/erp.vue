@@ -34,7 +34,7 @@
         </el-card>
         <el-card :body-style="{ padding: '20px 40px',}" style="margin-top:20px">
             <el-button @click="gotoAddModal" type="success" style="margin-bottom: 10px;">添加ERP</el-button>
-            <el-table :data="tableData" border :height="height" v-loading="loading">
+            <el-table :data="tableData" border  v-loading="loading">
                 <el-table-column prop="erpCode" label="ERP编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="ERP名称" align="center"></el-table-column>
                 <el-table-column prop="accessKeyId" label="ERP账号" align="center"></el-table-column>
@@ -73,8 +73,9 @@
         <!--添加/编辑层级弹窗-->
         <el-dialog :title="action.title" :visible.sync="isShowModal">
             <el-form :model="modalData" label-width="100px" :rules="rules" ref="modalForm">
-                <el-form-item prop="accessKeyId" label="ERP账号" >
-                    <el-input v-model="modalData.accessKeyId" auto-complete="off" placeholder="" :disabled="action.name=='update'"></el-input>
+                <el-form-item prop="accessKeyId" label="ERP账号">
+                    <el-input v-model="modalData.accessKeyId" auto-complete="off" placeholder=""
+                              :disabled="action.name=='update'"></el-input>
                 </el-form-item>
 
                 <el-form-item label="ERP秘钥" v-if="action.name == 'update'">
@@ -195,10 +196,6 @@
                 height: ''
             };
         },
-        created() {
-            const winHeight = window.screen.availHeight - 540;
-            this.height = winHeight;
-        },
         mounted() {
             this.getList(1);
         },
@@ -261,6 +258,7 @@
             },
             gotoAddModal() {
                 this.modalData = {
+                    status: 1,
                     list: []
                 };
                 this.isShowModal = true;
