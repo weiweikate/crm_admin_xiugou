@@ -322,6 +322,9 @@
                 this.$refs['modalForm'].validate((valid) => {
                     if (valid) {
                         let result = this.transformModalData();
+                        let supplierCodeList = result.supplierCodeList || [];
+                        let unique = new Set(supplierCodeList);
+                        result.supplierCodeList = [...unique];
                         console.log('result', result);
                         request[action.uri]({
                             ...result
