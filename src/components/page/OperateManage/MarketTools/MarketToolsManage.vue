@@ -78,6 +78,13 @@
                         auth: 'yunying.marketToolsManage.ggk',
                         content: '创建商品套餐让顾客购买',
                         page: '/scratchCardsList'
+                    },
+                    {
+                        img: 'static/img/scratchCard.png',
+                        title: '优惠券补发',
+                        auth: 'yunying.marketToolsManage.ggk',
+                        content: '平台优惠券发放',
+                        page: '/couponReplacement'
                     }]
             };
         },
