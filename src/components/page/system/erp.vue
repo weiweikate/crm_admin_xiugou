@@ -131,9 +131,9 @@
 
         data() {
             const validateInput = (rule, value, callback) => {
-                const uPattern = /^\S{6,20}$/;
+                const uPattern = /^\S{1,20}$/;
                 if (!uPattern.test(value)) {
-                    callback(new Error('请输入6-20位'));
+                    callback(new Error('请输入1-20位'));
                 } else {
                     callback();
                 }
