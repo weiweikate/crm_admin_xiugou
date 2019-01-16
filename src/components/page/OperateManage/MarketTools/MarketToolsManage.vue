@@ -80,7 +80,7 @@
                         page: '/scratchCardsList'
                     },
                     {
-                        img: 'static/img/scratchCard.png',
+                        img: 'static/img/CouponReplacement.png',
                         title: '优惠券补发',
                         auth: 'yunying.marketToolsManage.ggk',
                         content: '平台优惠券发放',

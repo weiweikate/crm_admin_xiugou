@@ -1511,6 +1511,20 @@ export const asyncRouterMap = [
             },
             {
                 hidden: true,
+                name: 'couponReplacement',
+                path: '/couponReplacement',
+                component: resolve => require(['../components/page/OperateManage/MarketTools/CouponReplacement/index'], resolve),
+                meta: { title: '优惠券发放', noKeepAlive: true }
+            },
+            {
+                hidden: true,
+                name: 'couponReplacementInfo',
+                path: '/couponReplacementInfo',
+                component: resolve => require(['../components/page/OperateManage/MarketTools/CouponReplacement/info'], resolve),
+                meta: { title: '优惠券发放详情', noKeepAlive: true }
+            },
+            {
+                hidden: true,
                 name: 'activityUse',
                 path: '/activityUse',
                 component: resolve => require(['../components/page/OperateManage/MarketTools/ScratchCards/activityUse'], resolve),
