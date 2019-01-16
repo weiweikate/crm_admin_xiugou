@@ -85,6 +85,13 @@
                         auth: 'yunying.marketToolsManage.ggk',
                         content: '平台优惠券发放',
                         page: '/couponReplacement'
+                    },
+                    {
+                        img: 'static/img/CouponReplacement.png',
+                        title: '优惠券发放记录列表',
+                        auth: 'yunying.marketToolsManage.ggk',
+                        content: '查看全部用户发放领取记录',
+                        page: '/couponReplacementRecord'
                     }]
             };
         },
