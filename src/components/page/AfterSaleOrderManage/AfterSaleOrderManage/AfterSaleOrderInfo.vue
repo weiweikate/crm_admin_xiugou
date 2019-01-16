@@ -261,8 +261,8 @@ export default {
         this.getInfo();
         this.getLogic();
         this.checked = false;
+        this.btnLoading = false;
         this.hasAuth = this.$oprAuth('xnfh');
-        console.log(this.hasAuth);
     },
     methods: {
         //  获取信息
@@ -294,6 +294,7 @@ export default {
                         });
                         v.spec = v.spec.join('  ');
                     });
+                    this.btnLoading = false;
                 })
                 .catch(err => {
                     console.log(err);
@@ -374,11 +375,10 @@ export default {
                 .then(res => {
                     this.$message.success(res.msg);
                     this.getInfo();
-                    this.btnLoading = false;
                 })
                 .catch(err => {
                     console.log(err);
-                    this.btnLoading = false;
+                    // this.btnLoading = false;
                 });
         }
     }
