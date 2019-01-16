@@ -4,13 +4,7 @@
         <el-card class="query-panue" :body-style="{ padding: '20px 20px'}">
             <el-form :model="form" ref="form" inline label-width="120px">
                 <el-form-item prop="dateRange" label="创建时间">
-                    <el-date-picker
-                        v-model="dateRange"
-                        type="datetimerange"
-                        format="yyyy-MM-dd"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                    >
+                    <el-date-picker v-model="dateRange" type="datetimerange" format="yyyy-MM-dd" start-placeholder="开始日期" end-placeholder="结束日期">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item prop="userPhone" label="用户账号">
@@ -24,7 +18,7 @@
                 </el-form-item>
                 <el-form-item prop="status" label="售后状态">
                     <el-select v-model="form.status" placeholder="请选择">
-                      <el-option label="暂不选择" value=""></el-option>
+                        <el-option label="暂不选择" value=""></el-option>
                         <el-option v-for="(v,k) in afterSaleStatusArr" :label="v.label" :value="v.value" :key="k"></el-option>
                     </el-select>
                 </el-form-item>
@@ -36,7 +30,7 @@
         </el-card>
         <el-card style='margin-top:20px;minHeight:90vh;' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
-                <!-- <el-button type="primary" v-auth="'afterSaleOrder.afterSaleOrderList.dc'">导出</el-button> -->
+                <a ref="exportData" class="export" @click="downloadAfterOrderData">导出</a>
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="all">
@@ -61,6 +55,7 @@ import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
 import vOrderlist from './_orderList/_orderList';
+import * as api from '@/api/api.js';
 
 export default {
     components: {
@@ -75,7 +70,8 @@ export default {
             nav: ['订单管理', '订单管理'],
             activeName: 'all',
             dateRange: [],
-            afterSaleStatusArr: [// 售后状态
+            afterSaleStatusArr: [
+                // 售后状态
                 { label: '待审核', value: '1' },
                 { label: '待商品寄回', value: '2' },
                 { label: '待仓库确认', value: '3' },
@@ -83,7 +79,8 @@ export default {
                 { label: '售后完成', value: '5' },
                 { label: '售后关闭', value: '6' }
             ],
-            afterSaleTypeArr: [// 售后类型
+            afterSaleTypeArr: [
+                // 售后类型
                 { label: '仅退款', value: '1' },
                 { label: '退货退款', value: '2' },
                 { label: '换货', value: '3' }
@@ -94,7 +91,8 @@ export default {
                 userPhone: '', // 用户账号
                 status: '' // 推送状态
             },
-            formData: {}
+            formData: {},
+            downloadAfterOrderList: ''
         };
     },
 
@@ -103,6 +101,19 @@ export default {
     },
 
     methods: {
+        downloadAfterOrderData() {
+            const params = {
+                serviceNo: this.form.serviceNo,
+                warehouseOrderNo: this.form.warehouseOrderNo,
+                userPhone: this.form.userPhone,
+                status: this.form.status,
+                type: this.activeName === 'all' ? '' : this.activeName,
+                createStartTime: this.dateRange.length !== 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '',
+                createEndTime: this.dateRange.length !== 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : ''
+            };
+            this.downloadAfterOrderList = api.downloadAfterOrderList + '?' + this.$utils.setRequestParams(params);
+            this.$refs.exportData.href = this.downloadAfterOrderList;
+        },
         // 提交表单
         getList() {
             const data = {};
@@ -131,21 +142,38 @@ export default {
 </script>
 <style lang='less'>
 .after-list {
-  .el-tabs__active-bar {
-    background-color: #ff1e30;
-  }
-  .el-tabs__item.is-active,
-  .el-tabs__item:hover {
-    color: #ff1e30;
-  }
-  .query-panue {
-    .el-input--small .el-input__inner,
-    .el-input--small {
-      width: 220px;
+    .el-tabs__active-bar {
+        background-color: #ff1e30;
     }
-  }
-  .btn-group {
-    margin-bottom: 10px;
-  }
+    .el-tabs__item.is-active,
+    .el-tabs__item:hover {
+        color: #ff1e30;
+    }
+    .query-panue {
+        .el-input--small .el-input__inner,
+        .el-input--small {
+            width: 220px;
+        }
+    }
+    .btn-group {
+        margin-bottom: 10px;
+        .export {
+            display: inline-block;
+            line-height: 1;
+            white-space: nowrap;
+            cursor: pointer;
+            color: #fff;
+            background-color: #409eff;
+            border-color: #409eff;
+            text-align: center;
+            box-sizing: border-box;
+            outline: 0;
+            margin: 0;
+            transition: 0.1s;
+            padding: 10px 15px;
+            font-size: 12px;
+            border-radius: 3px;
+        }
+    }
 }
 </style>

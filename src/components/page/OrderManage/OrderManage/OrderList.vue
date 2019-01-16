@@ -65,9 +65,7 @@
         <el-card style='margin-top:20px;minHeight:90vh;' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
                 <el-button type="danger" @click="sendOut" v-auth="'order.orderList.yjts'">推送云仓</el-button>
-                <a ref="exportData" @click="downloadOrderData">
-                    <el-button type="primary">导出</el-button>
-                </a>
+                <a ref="exportData" class="export" @click="downloadOrderData">导出</a>
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="all">
@@ -102,7 +100,6 @@ import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
 import vOrderlist from './_orderList/_orderList';
 import * as api from '@/api/api.js';
-import utils from '@/utils/index.js';
 
 export default {
     components: {
@@ -198,7 +195,7 @@ export default {
                 to: this.dateRange.length !== 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 00:00:00') : '',
                 warehouseOrderNos: this.$refs[this.activeName].warehouseOrderNos.join(',')
             };
-            this.downloadOrderList = api.downloadOrderList + '?' + utils.setRequestParams(params);
+            this.downloadOrderList = api.downloadOrderList + '?' + this.$utils.setRequestParams(params);
             this.$refs.exportData.href = this.downloadOrderList;
         },
         // 提交表单
@@ -211,7 +208,7 @@ export default {
             this.$refs[this.activeName].page.currentPage = 1;
             this.$refs[this.activeName].data = data;
             this.$refs[this.activeName].getList(this.page.currentPage);
-            this.$refs[this.activeName].warehouseOrderNos=[];
+            this.$refs[this.activeName].warehouseOrderNos = [];
         },
         //  重置表单
         resetForm(formName) {
@@ -254,6 +251,23 @@ export default {
     }
     .btn-group {
         margin-bottom: 10px;
+        .export {
+            display: inline-block;
+            line-height: 1;
+            white-space: nowrap;
+            cursor: pointer;
+            color: #fff;
+            background-color: #409eff;
+            border-color: #409eff;
+            text-align: center;
+            box-sizing: border-box;
+            outline: 0;
+            margin: 0;
+            transition: 0.1s;
+            padding: 10px 15px;
+            font-size: 12px;
+            border-radius: 3px;
+        }
     }
 }
 </style>
