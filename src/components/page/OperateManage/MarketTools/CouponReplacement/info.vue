@@ -89,6 +89,7 @@
             <p class="record">
                 <span class="tip">发放成功人数：<el-tag type="danger">23人</el-tag></span>
             </p>
+            <el-button class="mt10" type="primary" @click="$router.push('couponReplacement')">返回列表</el-button>
         </el-card>
     </div>
 </template>
