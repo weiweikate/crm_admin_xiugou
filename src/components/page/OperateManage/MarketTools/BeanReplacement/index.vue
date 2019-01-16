@@ -1,0 +1,311 @@
+<template>
+    <div class="deliver-coupon">
+        <v-breadcrumb :nav='nav'></v-breadcrumb>
+        <el-card class="mb10">
+            <el-form :model="form" ref="form" inline label-width="120px">
+                <el-form-item prop="code" label="发放方式">
+                    <el-select v-model="form.createUser">
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="条件发放" value="1"></el-option>
+                        <el-option label="定向发放" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item prop="createUser" label="审核状态">
+                    <el-select v-model="form.createUser">
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="审核中" value="1"></el-option>
+                        <el-option label="已审核" value="2"></el-option>
+                        <el-option label="审核驳回" value="3"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item prop="name" label="审核者">
+                    <el-input v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item prop="createTime" label="审核时间">
+                    <el-date-picker type="datetimerange" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.createTime" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
+                </el-form-item>
+                <el-form-item prop="updateUser" label="操作者">
+                    <el-input v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item prop="createTime" label="操作时间">
+                    <el-date-picker type="datetimerange" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.createTime" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
+                </el-form-item>
+                <el-form-item label=" ">
+                    <el-button @click="getList(1)" type="primary">查 询</el-button>
+                    <el-button @click="resetForm('form')" >重 置</el-button>
+                </el-form-item>
+            </el-form>
+        </el-card>
+        <el-card>
+            <el-button type="primary" class="mb10" @click="dialogVisible = true" v-auth="'yunying.marketToolsManage.ggk.xzggk'">发放秀豆</el-button>
+            <el-table :data="tableData" border stripe>
+                <el-table-column prop="code" label="编号" align="center"></el-table-column>
+                <el-table-column prop="name" label="发放秀豆（枚）" align="center"></el-table-column>
+                <el-table-column prop="residualQuantity" label="发放方式" align="center"></el-table-column>
+                <el-table-column prop="residualQuantity" label="发放人数" align="center"></el-table-column>
+                <el-table-column label="审核状态" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.status==1">正常</template>
+                        <template v-if="scope.row.status==2">已暂停</template>
+                    </template>
+                </el-table-column>
+                <el-table-column label="发放状态" align="center">
+                    <template slot-scope="scope">{{scope.row.createName}}<br>{{scope.row.createTime|formatDateAll}}</template>
+                </el-table-column>
+                <el-table-column prop="residualQuantity" label="操作者" align="center"></el-table-column>
+                <el-table-column label="操作时间" align="center">
+                    <template slot-scope="scope">{{scope.row.updateTime|formatDateAll}}</template>
+                </el-table-column>
+                <el-table-column prop="residualQuantity" label="备注" align="center"></el-table-column>
+                <el-table-column prop="residualQuantity" label="审核者" align="center"></el-table-column>
+                <el-table-column label="审核时间" align="center">
+                    <template slot-scope="scope">{{scope.row.updateTime|formatDateAll}}</template>
+                </el-table-column>
+                <el-table-column prop="residualQuantity" label="审核说明" align="center"></el-table-column>
+                <el-table-column prop="residualQuantity" label="操作" align="center"></el-table-column>
+                <el-table-column label="操作" width="320px">
+                    <template slot-scope="scope">
+                        <el-button type="success" @click="toDetail(scope.row.id)" v-auth="'yunying.marketToolsManage.ggk.xq'">查看</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <el-pagination
+                    background
+                    :page-size="page.pageSize"
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </div>
+        </el-card>
+        <el-dialog
+            title="秀豆发放"
+            :visible.sync="dialogVisible"
+            width="500px"
+            :before-close="handleClose">
+            <el-form :model="queryForm" :rules="rules" ref="queryForm" inline label-width="100px">
+                <el-form-item prop="beanId" label="发放秀豆">
+                    <el-input class="w200" v-model="queryForm.beanId"></el-input> 枚
+                </el-form-item>
+                <el-form-item prop="deliverWays" label="发放方式">
+                    <el-radio-group v-model="queryForm.deliverWays" @change="resetQueryForm">
+                        <el-radio label="1">条件发放</el-radio>
+                        <el-radio label="2">定向发放</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <!--条件发放-->
+                <template v-if="queryForm.deliverWays == 1">
+                    <el-form-item label="发放层级">
+                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+                        <el-checkbox-group class="w305" v-model="queryForm.deliverLevels" @change="handleCheckedCitiesChange">
+                            <el-checkbox v-for="(v,k) in levelList" :label="v.id" :key="k">{{v.name}}</el-checkbox>
+                        </el-checkbox-group>
+                    </el-form-item>
+                    <el-form-item prop="regDate" label="注册时间">
+                        <el-date-picker class="w305" type="datetimerange" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="queryForm.regDate" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
+                    </el-form-item>
+                    <el-form-item label=" ">
+                        <div class="diliver-num">
+                            <span>发放人数：{{replacementNum}}</span>
+                            <el-button @click="queryNum" type="primary">查 询</el-button>
+                        </div>
+                    </el-form-item>
+                </template>
+                <!--定向发放-->
+                <template v-else>
+                    <el-form-item prop="deliverNumber" label="发放号码">
+                        <el-input class="w305" type="textarea" :rows="10" v-model="queryForm.deliverNumber"></el-input>
+                        <div class="grey-text">注：请输入补发手机号，一次最多导入1000条数据</div>
+                    </el-form-item>
+                </template>
+                <el-form-item prop="tip" label="备注">
+                    <template style="position: relative">
+                        <el-input class="w305" :maxlength="180" type="textarea" :autosize="{ minRows: 6, maxRows: 6 }" v-model="queryForm.tip"></el-input>
+                        <span class="tip">{{tipLength}}/180</span>
+                    </template>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" :disabled="!replacementNum && queryForm.deliverWays == 1" @click="confirmDeliver">确 定</el-button>
+                <el-button @click="handleClose">取 消</el-button>
+            </span>
+        </el-dialog>
+    </div>
+</template>
+
+<script>
+    import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import { myMixinTable } from '@/JS/commom';
+    import request from '@/http/http.js';
+    import utils from '@/utils/index.js';
+
+    export default {
+        mixins: [myMixinTable],
+        components: { vBreadcrumb },
+        data() {
+            return {
+                nav: ['运营管理', '营销工具管理', '秀豆发放列表'],
+                dialogVisible: false,
+                levelList: [],
+                form: {
+                    code: '',
+                    createUser: '',
+                    createTime: [],
+                    name: '',
+                    updateUser: '',
+                    updateTime: []
+                },
+                checkAll: false,
+                isIndeterminate: false,
+                queryForm: {
+                    beanId: '',
+                    deliverWays: '1',
+                    deliverLevels: [],
+                    deliverNumber: '',
+                    regDate: [],
+                    tip: ''
+                },
+                replacementNum: 0,
+                rules: {
+                    couponId: [
+                        { required: true, message: '请输入优惠券ID', trigger: 'blur' }
+                    ],
+                    deliverWays: [
+                        { required: true, message: '请选择补发方式', trigger: 'blur' }
+                    ]
+                },
+                tableData: [{id: '1'}]
+            };
+        },
+        computed: {
+            tipLength() {
+                return this.queryForm.tip.length || 0;
+            }
+        },
+        mounted() {
+            this.getLevelList();
+            // this.getList(this.page.currentPage);
+        },
+        methods: {
+            getList(val) {
+                const data = {
+                    page: val,
+                    pageSize: this.page.pageSize,
+                    code: this.form.code,
+                    createUser: this.form.createUser,
+                    name: this.form.name,
+                    updateUser: this.form.updateUser,
+                    startTime: this.form.createTime ? utils.formatTime(this.form.createTime[0], 1) : '',
+                    endTime: this.form.createTime ? utils.formatTime(this.form.createTime[1], 1) : '',
+                    updateStartTime: this.form.updateTime ? utils.formatTime(this.form.updateTime[0], 1) : '',
+                    updateEndTime: this.form.updateTime ? utils.formatTime(this.form.updateTime[1], 1) : ''
+                };
+                this.page.currentPage = val;
+                this.tableData = [];
+                request.queryScratchCardList(data).then(res => {
+                    this.tableData = res.data.data;
+                    this.page.totalPage = res.data.totalNum;
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            // 获取层级列表
+            getLevelList() {
+                const data = {};
+                request.getUserLevelList(data).then(res => {
+                    const resData = res.data || {};
+                    if (resData && resData.length !== 0) {
+                        const tmp = [];
+                        resData.forEach(v => {
+                            tmp.push({
+                                id: v.id,
+                                name: `v${v.level}`
+                            });
+                        });
+                        this.levelList = [...tmp];
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            // 层级全选操作
+            handleCheckAllChange(val) {
+                const allList = this.levelList.map(v => v.id);
+                this.queryForm.deliverLevels = val ? allList : [];
+                this.isIndeterminate = false;
+            },
+            // 层级单选操作
+            handleCheckedCitiesChange(value) {
+                const checkedCount = value.length;
+                this.checkAll = checkedCount === this.levelList.length;
+                this.isIndeterminate = checkedCount > 0 && checkedCount < this.levelList.length;
+            },
+            // 查询补发人数
+            queryNum() {
+                this.replacementNum = 666;
+                console.log(this.queryForm.deliverLevels);
+                console.log(this.queryForm.regDate);
+            },
+            // 确定发放
+            confirmDeliver() {
+                console.log(this.queryForm);
+            },
+            // 重置查询人数
+            resetQueryForm() {
+                this.checkAll = false;
+                this.handleCheckAllChange(false);
+                this.replacementNum = 0;
+                this.queryForm.deliverLevels = [];
+                this.queryForm.regDate = [];
+                this.queryForm.deliverNumber = '';
+            },
+            // 重置表单
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+                this.getList(this.page.currentPage);
+            },
+            // 关闭弹窗
+            handleClose() {
+                this.$refs['queryForm'].resetFields();
+                this.checkAll = false;
+                this.handleCheckAllChange(false);
+                this.replacementNum = 0;
+                this.dialogVisible = false;
+            },
+            // 详情
+            toDetail(id) {
+                this.$router.push({ name: 'beanReplacementInfo', query: { replacementCouponId: id }});
+            }
+        }
+    };
+</script>
+
+<style lang="less" scoped>
+    .deliver-coupon{
+        .w200 {
+            width: 200px;
+        }
+        .w305 {
+            width: 305px;
+        }
+        /deep/.el-checkbox{
+            margin: 0 20px 0 0;
+        }
+        .tip {
+            position: absolute;
+            right: 10px;
+            bottom: 0px;
+        }
+        .diliver-num{
+            width: 300px;
+            display: flex;
+            justify-content: space-between;
+            span{
+                color: red;
+            }
+        }
+    }
+</style>

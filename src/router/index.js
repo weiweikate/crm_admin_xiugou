@@ -1532,6 +1532,27 @@ export const asyncRouterMap = [
             },
             {
                 hidden: true,
+                name: 'beanReplacement',
+                path: '/beanReplacement',
+                component: resolve => require(['../components/page/OperateManage/MarketTools/BeanReplacement/index'], resolve),
+                meta: { title: '秀豆发放列表', noKeepAlive: true }
+            },
+            {
+                hidden: true,
+                name: 'beanReplacementInfo',
+                path: '/beanReplacementInfo',
+                component: resolve => require(['../components/page/OperateManage/MarketTools/BeanReplacement/info'], resolve),
+                meta: { title: '秀豆发放详情', noKeepAlive: true }
+            },
+            {
+                hidden: true,
+                name: 'beanReplacementRecord',
+                path: '/beanReplacementRecord',
+                component: resolve => require(['../components/page/OperateManage/MarketTools/BeanReplacement/beanReplacementRecord'], resolve),
+                meta: { title: '秀豆发放记录列表', noKeepAlive: true }
+            },
+            {
+                hidden: true,
                 name: 'activityUse',
                 path: '/activityUse',
                 component: resolve => require(['../components/page/OperateManage/MarketTools/ScratchCards/activityUse'], resolve),
