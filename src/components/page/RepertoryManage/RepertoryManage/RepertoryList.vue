@@ -229,6 +229,7 @@ export default {
             this.formMask.code = row.code;
             this.formMask.status = row.status;
             this.formMask.verifyCode = '';
+            this.code = true;
             this.codeTime = 60;
             this.title = num === 1 ? '停用仓库' : '启用仓库';
         },
