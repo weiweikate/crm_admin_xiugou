@@ -195,11 +195,11 @@
                         <el-input type="textarea" maxlength="50" v-model="form.remarks"></el-input>
                     </el-form-item>
                     <!-- 审核通过 虚拟仓 换货 hasAuth测试true线上false-->
-                    <el-form-item v-if="form.type!=2&&orderInfo.warehouseType!=3&&form.result!=2&&hasAuth">
+                    <el-form-item v-if="orderCustomerServiceInfo.type==3&&form.type!=2&&orderInfo.warehouseType!=3&&form.result!=2&&hasAuth">
                         <el-checkbox v-model="checked" @change="chooseXnSend">虚拟发货</el-checkbox>
                     </el-form-item>
                     <!--换货-->
-                    <template v-if="form.type!=2&&form.result!=2&&(orderInfo.warehouseType==3||checked)">
+                    <template v-if="orderCustomerServiceInfo.type==3&&form.type!=2&&form.result!=2&&(orderInfo.warehouseType==3||checked)">
                         <el-form-item label="换货物流公司">
                             <el-select v-model="form.expressCode">
                                 <el-option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.name"></el-option>
@@ -261,8 +261,8 @@ export default {
         this.getInfo();
         this.getLogic();
         this.checked = false;
+        this.btnLoading = false;
         this.hasAuth = this.$oprAuth('xnfh');
-        console.log(this.hasAuth);
     },
     methods: {
         //  获取信息
@@ -294,6 +294,7 @@ export default {
                         });
                         v.spec = v.spec.join('  ');
                     });
+                    this.btnLoading = false;
                 })
                 .catch(err => {
                     console.log(err);
@@ -374,11 +375,10 @@ export default {
                 .then(res => {
                     this.$message.success(res.msg);
                     this.getInfo();
-                    this.btnLoading = false;
                 })
                 .catch(err => {
                     console.log(err);
-                    this.btnLoading = false;
+                    // this.btnLoading = false;
                 });
         }
     }
