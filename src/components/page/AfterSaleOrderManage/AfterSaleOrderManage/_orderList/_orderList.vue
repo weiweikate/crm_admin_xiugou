@@ -65,10 +65,8 @@
             </el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
-                    <a class="color-blue href" target="_blank" :href="'#/afterSaleOrderInfo?afterSaleOrderInfoId='+`${scope.row.serviceNo}`">
-                        <span v-if="scope.row.status==1||scope.row.status==4">去处理</span>
-                        <span v-else>查看</span>
-                    </a>
+                    <a :href="'#/afterSaleOrderInfo?afterSaleOrderInfoId='+`${scope.row.serviceNo}`" target="_blank" class="el-button el-button--small el-button--primary" v-if="scope.row.status==1||scope.row.status==4">去处理</a>
+                    <a :href="'#/afterSaleOrderInfo?afterSaleOrderInfoId='+`${scope.row.serviceNo}`" target="_blank" class="el-button el-button--small el-button--success" v-else>查看</a>
                 </template>
             </el-table-column>
         </el-table>
