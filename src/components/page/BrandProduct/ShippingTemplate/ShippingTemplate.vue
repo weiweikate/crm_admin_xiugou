@@ -2,7 +2,7 @@
     <div class="freight-template">
         <v-breadcrumb :nav="['物流管理','运费模板']"></v-breadcrumb>
         <div class="table-block" v-loading="btnLoading">
-            <el-button type="primary" style="margin-bottom: 20px" @click="addTemplate" v-auth="'brand.shippingTemplate.tj'">添加模板</el-button>
+            <a v-auth="'brand.shippingTemplate.tj'" href="#/addTemplate" target="_blank" class="el-button el-button--primary el-button--small" style="margin-bottom: 20px">添加模板</a>
             <template>
                 <div v-if="tableData.length==0" class="nodata">暂无模板~</div>
                 <table v-else v-for="(v,k) in tableData" :key="k" class="table-area">
@@ -142,11 +142,6 @@ export default {
                     this.tableLoading = false;
                 });
         },
-
-        // 添加模版
-        addTemplate() {
-            this.$router.push({ path: '/addTemplate' });
-        },
         // 编辑
         // num模板被应用次数 0未被使用，直接跳到编辑页面，否则弹窗确认后跳转
         editItem(id, num, index) {
@@ -205,7 +200,8 @@ export default {
         // 跳转到编辑页面
         toEditPage(id) {
             sessionStorage.setItem('templateId', id);
-            this.$router.push({ path: '/editTemplate', query: { templateId: id }});
+            // this.$router.push({ path: '/editTemplate', query: { templateId: id }});
+            window.open('#/editTemplate?templateId=' + id);
         }
     }
 };
@@ -289,8 +285,8 @@ export default {
             padding: 8px;
             text-align: center;
         }
-        .header-info{
-            text-align: left
+        .header-info {
+            text-align: left;
         }
         .left {
             float: left;
