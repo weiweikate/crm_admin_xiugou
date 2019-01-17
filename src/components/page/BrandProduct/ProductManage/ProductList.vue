@@ -105,7 +105,7 @@
             <el-button @click="freightToask = true" v-auth="'brand.productList.tzyfmb'">调整运费模板</el-button>
             <el-button type="danger" v-auth="'brand.productList.tsyc'">推送仓库</el-button>
             <el-button type="danger" v-auth="'brand.productList.pldc'">导出</el-button>
-            <el-button @click="createProd" type="danger" v-auth="'brand.productList.tjcp'">创建商品</el-button>
+            <a @click="createProd" v-auth="'brand.productList.tjcp'" href="#/releaseProduct" target="_blank" class="el-button el-button--danger el-button--small">创建商品</a>
         </el-card>
         <el-card>
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
@@ -292,7 +292,7 @@
             // 创建商品
             createProd() {
                 this.keepAlive = true;
-                this.$router.push('releaseProduct');
+                // this.$router.push('releaseProduct');
             },
             // 重置
             resetForm() {
