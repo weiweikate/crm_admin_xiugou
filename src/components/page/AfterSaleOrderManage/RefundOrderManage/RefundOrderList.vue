@@ -33,7 +33,7 @@
         </el-card>
         <el-card style='margin-top:20px;minHeight:90vh;' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
-                <a ref="exportData" class="el-button el-button--primary el-button--small" @click="downloadAfterOrderData">导出</a>
+                <!-- <a ref="exportData" class="el-button el-button--primary el-button--small" @click="downloadAfterOrderData">导出</a> -->
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="all">
