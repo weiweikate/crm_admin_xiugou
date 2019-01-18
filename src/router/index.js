@@ -718,14 +718,14 @@ export const asyncRouterMap = [
                 name: 'addTemplate',
                 path: '/addTemplate',
                 component: resolve => require(['../components/page/BrandProduct/ShippingTemplate/AddTemplate.vue'], resolve),
-                meta: { title: '添加模板' }
+                meta: { title: '添加模板', noKeepAlive: true }
             },
             {
                 hidden: true,
                 name: 'editTemplate',
                 path: '/editTemplate',
                 component: resolve => require(['../components/page/BrandProduct/ShippingTemplate/EditTemplate.vue'], resolve),
-                meta: { title: '编辑模板' }
+                meta: { title: '编辑模板', noKeepAlive: true }
             },
             {
                 hidden: true,

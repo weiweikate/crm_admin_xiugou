@@ -30,7 +30,7 @@
                     <el-table-column prop="adminName" label="发起者" align="center"></el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="warning" size="small" @click="detailItem(scope.row)" v-auth="'vip.joinManage.xq'">详情</el-button>
+                            <a v-auth="'vip.joinManage.xq'" :href="`#/inviteDetail?joinManageLinkPage=${scope.row}`" target="_blank" class="el-button el-button--warning el-button--small">详情</a>
                             <el-button type="danger" size="small" @click="watchItem(scope.row)" v-auth="'vip.joinManage.ckyq'">查看邀请</el-button>
                         </template>
                     </el-table-column>

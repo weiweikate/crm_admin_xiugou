@@ -83,8 +83,7 @@
                     <el-table-column prop="adminName" label="处理人" align="center"></el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" @click="detailItem(scope.$index,scope.row)" v-auth="'service.feedBack.ckxq'">查看详情
-                            </el-button>
+                            <a v-auth="'service.feedBack.ckxq'" class="el-button el-button--primary el-button--small" :href="'#/feedDetail?id='+`${scope.row.id}`" target="_blank">查看详情</a>  
                         </template>
                     </el-table-column>
                 </el-table>
@@ -109,7 +108,6 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import icon from '@/components/common/ico.vue';
     import moment from 'moment';
-    import utils from '@/utils/index.js';
     import { myMixinTable, queryDictonary } from '@/JS/commom';
     import request from '@/http/http.js';
 
@@ -168,7 +166,7 @@
                 this.page.currentPage = val;
                 request.queryFeedbackList(data).then(res => {
                     that.tableLoading = false;
-                    that.tableData=res.data.data;
+                    that.tableData = res.data.data;
                     that.page.totalPage = res.data.totalNum;
                 }).catch(error => {
                     that.tableLoading = false;
@@ -183,11 +181,6 @@
                 }).catch(error => {
                     console.log(error);
                 });
-            },
-            // 详情
-            detailItem(index, row) {
-                sessionStorage.setItem('feedDetail', JSON.stringify({ id: row.id }));
-                this.$router.push({ path: '/feedDetail', query: { id: row.id }});
             },
             // 重置表单
             resetForm(formName) {
