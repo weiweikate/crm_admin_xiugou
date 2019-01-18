@@ -2,7 +2,7 @@
     <div>
         <breadcrumb :nav='nav'></breadcrumb>
         <el-card>
-            <el-button type='primary' @click="addRole" v-auth="'quanxian.jobsPermissionMange.tj'">添加岗位</el-button>
+            <a href="#/addJobsPermission" target="_blank" v-auth="'quanxian.jobsPermissionMange.tj'" class="el-button el-button--primary el-button--small">添加岗位</a>
             <el-table v-loading="tableLoading" class="w-table" stripe :data="tableData" border
                       style="width: 100%">
                 <el-table-column prop="id" label="岗位编号" width="180" align="center"></el-table-column>
@@ -10,7 +10,7 @@
                 <el-table-column prop="departmentName" label="部门" align="center"></el-table-column>
                 <el-table-column v-if="isShowOperate" label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button type="warning" @click='editRole(scope.row)' v-auth="'quanxian.jobsPermissionMange.bj'">编辑</el-button>
+                        <a :href="`#/editJobsPermission?userId=${scope.row.id}`" target="_blank" v-auth="'quanxian.jobsPermissionMange.bj'" class="el-button el-button--warning el-button--small">编辑</a>
                         <el-button type="danger" @click="deleteRole(scope.row)" v-auth="'quanxian.jobsPermissionMange.sc'">删除</el-button>
                     </template>
                 </el-table-column>
