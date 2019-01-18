@@ -7,27 +7,28 @@
                 <el-form-item prop="name" label="券名称">
                     <el-input v-model="form.name" placeholder="请输入优惠券名称"></el-input>
                 </el-form-item>
-                <el-form-item label="券类型">
+                <el-form-item prop="type" label="券类型">
                     <el-select v-model="form.type" placeholder="请选择" @change="chooseType">
                         <el-option v-for="(v,k) in typeArr" :key="k" :label="v.name" :value="v.type"></el-option>
                     </el-select>
                 </el-form-item>
                 <div class="line"></div>
-                <el-form-item label="券值" v-if="form.type!=3&&form.type!=4">
-                    <el-input v-model="form.value" placeholder="请输入券值"></el-input>
-                    元
+                <el-form-item prop="value" :label="form.type<3?'券值':form.type==3?'折扣':''">
+                    <template v-if="form.type<3">
+                        <el-input v-model="form.value" placeholder="请输入券值"></el-input>元
+                    </template>
+                    <template v-if="form.type==3">
+                        <el-select v-model="form.value" placeholder="请选择">
+                            <el-option v-for="(v,k) in discountArr" :key="k" :label="v.name" :value="v.type"></el-option>
+                        </el-select>
+                    </template>
                 </el-form-item>
-                <el-form-item label="折扣" v-if="form.type==3">
-                    <el-select v-model="form.value" placeholder="请选择">
-                        <el-option v-for="(v,k) in discountArr" :key="k" :label="v.name" :value="v.type"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="券模板">
+                <el-form-item prop="couponTemplateId" label="券模板">
                     <el-select v-model="form.couponTemplateId" placeholder="请选择券模板">
                         <el-option v-for="(v,k) in tempArr" :key="k" :label="v.name" :value="v.id"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="使用限制" style="margin-top: 30px" v-if="form.type!=2&&form.type!=4">
+                <el-form-item prop="useConditions" label="使用限制" style="margin-top: 30px" v-if="form.type!=2&&form.type!=4">
                     满
                     <el-input v-model="useConditions" placeholder="请输入金额"></el-input>
                     元可用
@@ -47,11 +48,6 @@
                     <el-checkbox v-model="remindFlag">到期前 <el-input :disabled="!remindFlag" v-model="remindDays" class="sml-inp"></el-input> 天提醒一次</el-checkbox>
                 </el-form-item>
                 <el-form-item label="可用品类">
-                    <!--<div @click="chooseBrand"><span class="choose-brand">请选择品类</span></div>-->
-                    <!--<template v-for="item in package">-->
-                    <!--<div>{{item.firstCategoryName}}-{{item.secCategoryName}}</div>-->
-                    <!--<div>产品ID:{{item.products}}</div>-->
-                    <!--</template>-->
                     <v-multichoose @getProductIds="getProductIds" v-if="form.type!=4"></v-multichoose>
                     <v-onlychoose @getProductIds="getProductIds" v-else></v-onlychoose>
                 </el-form-item>
@@ -101,6 +97,7 @@
     import utils from '@/utils/index.js';
     import request from '@/http/http.js';
     import { regExpConfig } from '@/utils/regConfig.js';
+    import { validateCouponName, validateZh } from '@/utils/validate.js';
 
     export default {
         components: {
@@ -110,21 +107,13 @@
             vMultichoose
         },
         data() {
-            var checkName = (rule, value, callback) => {
-                if (!value) {
-                    return callback(new Error('模版名称不能为空'));
-                } else {
-                    const reg = /^[A-Za-z0-9\u4e00-\u9fa5]{2,16}$/;
-                    if (!reg.test(value)) {
-                        callback(new Error('请输入2-16位由汉字字母数字组成的名称'));
-                    } else {
-                        callback();
-                    }
-                }
-            };
             return {
                 rules: {
-                    name: [{ validator: checkName, trigger: 'blur' }]
+                    name: [{ required: true, trigger: 'blur', validator: validateCouponName }],
+                    type: [{ required: true, trigger: 'blur', message: '请选择优惠券类型' }],
+                    value: [{ required: true, trigger: 'blur', message: '必填项' }],
+                    couponTemplateId: [{ required: true, trigger: 'blur', message: '请选择券模板' }],
+                    useConditions: [{ required: true, trigger: 'blur', validator: validateZh }]
                 },
                 nav: ['运营管理', '优惠券设置', '添加优惠券'],
                 // 用户层级
@@ -318,37 +307,30 @@
                     if (!valid) {
                         return;
                     } else {
-                        if (!data.name) {
-                            this.$message.warning('请输入优惠券名称!');
-                            return;
-                        }
-                        if (!data.type) {
-                            this.$message.warning('请选择优惠券类型!');
-                            return;
-                        }
                         if (data.type !== 4) {
                             if (!data.value) {
                                 if (data.type !== 3) {
-                                    this.$message.warning('请输入券值!');
+                                    return this.$message.warning('请输入券值!');
                                 } else {
-                                    this.$message.warning('请选中折扣值!');
+                                    return this.$message.warning('请选中折扣值!');
                                 }
-                                return;
+                            } else {
+                                if (data.type !== 3 && !regExpConfig.isTwodecimal.test(data.value)) {
+                                    return this.$message.warning('券值应为两位小数');
+                                }
                             }
                         } else {
                             data.value = 0;
                         }
-                        if (!data.couponTemplateId) {
-                            this.$message.warning('请选择券模板!');
-                            return;
-                        }
                         if (data.type === 1 || data.type === 3) {
-                            if (!this.useConditions) {
-                                this.$message.warning('请输入使用限制!');
-                                return;
-                            } else {
-                                data.useConditions = this.useConditions;
-                            }
+                            // if (!this.useConditions) {
+                            //     return this.$message.warning('请输入使用限制!');
+                            // } else {
+                            //     if (!regExpConfig.isTwodecimal.test(this.useConditions)){
+                            //         return this.$message.warning('券值应为两位小数')
+                            //     }
+                            //     data.useConditions = this.useConditions;
+                            // }
                         } else {
                             data.useConditions = 0;
                         }
