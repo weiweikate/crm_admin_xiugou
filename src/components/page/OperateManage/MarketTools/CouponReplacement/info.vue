@@ -6,45 +6,42 @@
                 <span>优惠券信息</span>
             </div>
             <el-form label-width="120px" label-position="left">
-                <el-form-item label="券名称">满100减10</el-form-item>
+                <el-form-item label="券名称">{{info.couponName}}</el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
-                <el-form-item label="券类型">满减券</el-form-item>
+                <el-form-item label="券类型">{{info.couponType}}</el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
-                <el-form-item label="券值">￥50</el-form-item>
+                <el-form-item label="券值">￥{{couponInfo.value || 0}}</el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
-                <el-form-item label="券模板">模板一</el-form-item>
+                <el-form-item label="使用限制">{{couponInfo.useConditions || '-'}}</el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
-                <el-form-item label="使用限制">满100可用</el-form-item>
+                <el-form-item label="可用周期">{{couponInfo.effectiveDays || '-'}}</el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
-                <el-form-item label="可用周期">7天</el-form-item>
-            </el-form>
-            <el-form label-width="120px" label-position="left">
-                <el-form-item label="到期提醒">到期前3天提醒一次</el-form-item>
+                <el-form-item label="到期提醒">{{couponInfo.waitDays || '-'}}</el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
                 <el-form-item label="可用品类">
-                    <p>一级类目：数码家电，海鲜特产</p>
-                    <p>二级类目：服装</p>
-                    <p>三级类目：女装</p>
+                    <p>一级类目：{{couponInfo.firstCategoryNames || '-'}}</p>
+                    <p>二级类目：{{couponInfo.secondCategoryNames || '-'}}</p>
+                    <p>三级类目：{{couponInfo.thirdCategoryNames || '-'}}</p>
                     <p>商品ID:212312323，商品ID:212312323，商品ID:212312323，商品ID:212312323，商品ID:212312323，商品ID:212312323</p>
                 </el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
-                <el-form-item label="可用层级">全部用户</el-form-item>
+                <el-form-item label="可用层级">{{couponInfo.userLevel}}</el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
-                <el-form-item label="发放数量">100张</el-form-item>
+                <el-form-item label="发放数量">{{couponInfo.totalNumber || '-'}}张</el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
-                <el-form-item label="每人限领">10张</el-form-item>
+                <el-form-item label="每人限领">{{couponInfo.getLimit || '-'}}张</el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
-                <el-form-item label="优惠券说明">可在双十一使用</el-form-item>
+                <el-form-item label="优惠券说明">{{couponInfo.remarks || '-'}}</el-form-item>
             </el-form>
         </el-card>
         <el-card class="mt10">
@@ -52,42 +49,57 @@
                 <span>发放记录</span>
             </div>
             <p class="record">
-                <span>操作人：王佳丽</span>
-                <span>操作时间：2018-12-23 12:23:00</span>
-                <span>审核状态：<el-tag type="danger">已审核</el-tag></span>
-                <span>发放方式：条件发放</span>
-                <span>发放人数：50人</span>
-                <span>发放张数/人：1张</span>
+                <span>创建人：{{info.submitName}}</span>
+                <span>创建时间：{{info.createTime | formatDateAll}}</span>
+                <span>审核状态：
+                    <el-tag v-if="status == 2" type="danger">已审核</el-tag>
+                    <el-tag v-else-if="status == 1" type="danger">待审核</el-tag>
+                    <el-tag v-else-if="status == 3" type="danger">审核驳回</el-tag>
+                    <el-tag v-else type="danger">-</el-tag>
+                </span>
+                <span v-if="genre == 1">发放方式：条件发放</span>
+                <span v-else-if="genre == 2">发放方式：定向发放</span>
+                <span v-else>发放方式：-</span>
+                <span>发放人数：{{info.personNum || '-'}}人</span>
+                <span>发放张数/人：{{info.couponName}}张</span>
             </p>
             <p class="record">
-                备注：/
+                备注：{{info.remark}}
             </p>
             <p class="record">
-                <span>审核人：李佳丽</span>
-                <span>审核时间：2018-12-23 12:23:00</span>
-                <span>审核说明：/</span>
+                <span>审核人：{{info.reviewName}}</span>
+                <span>审核时间：{{info.auditTime | formatDateAll}}</span>
+                <span>审核说明：{{info.reply}}</span>
             </p>
         </el-card>
-        <el-card class="mt10">
+        <!--审核通过/驳回-->
+        <el-card v-if="status != 1" class="mt10">
             <div slot="header">
                 <span>发放条件</span>
             </div>
             <p class="record">
-                <span>发放层级：V0,V1</span>
+                <span>发放层级：{{info.levelIds}}</span>
             </p>
             <p class="record">
-                <span>注册时间：2018-09-10 12:00:00 到 2018-09-10 12:00:00</span>
+                <span>注册时间：{{info.startTime | formatDateAll}} - {{info.endTime | formatDateAll}}</span>
             </p>
+        </el-card>
+        <!--待审核-->
+        <el-card v-else class="mt10">
+            <div slot="header">
+                <span>发放号码</span>
+            </div>
+            <el-inout type="textarea" v-module="info.phoneListStr" ></el-inout>
         </el-card>
         <el-card class="mt10">
             <div slot="header">
                 <span>发放人数统计</span>
             </div>
             <p class="record">
-                <span class="tip">发放失败人数：<el-tag type="danger">23人</el-tag></span>
+                <span class="tip">发放失败人数：<el-tag type="danger">{{info.errorNum || 0}}人</el-tag></span>
             </p>
             <p class="record">
-                <span class="tip">发放成功人数：<el-tag type="danger">23人</el-tag></span>
+                <span class="tip">发放成功人数：<el-tag type="danger">{{info.successNum || 0}}人</el-tag></span>
             </p>
             <el-button class="mt10" type="primary" @click="$router.push('couponReplacement')">返回列表</el-button>
         </el-card>
@@ -103,12 +115,35 @@
             return {
                 nav: ['运营管理', '营销工具管理', '优惠券发放列表', '优惠券详情'],
                 loading: false,
-                id: ''
+                id: '',
+                info: {},
+                couponInfo: {},
+                status: '' // 1提交审核 2审核通过 3审核失败
             };
         },
         mounted() {
             this.id = this.$route.query.replacementCouponId;
-            console.log(this.id);
+            this.getUserInfo();
+        },
+        methods: {
+            getUserInfo() {
+                request.findReissueById({ id: this.id }).then(res => {
+                    this.info = res.data || {};
+                    this.couponInfo = this.info.couponDetailExt || {};
+                    this.status = this.info.status;
+                    if (this.couponInfo.userLevel && this.couponInfo.userLevel.length !== 0) {
+                        const tmp = [];
+                        this.couponInfo.userLevel.forEach(v => {
+                            const name = `v${v.level || '-'}`;
+                            tmp.push(name);
+                        });
+                        this.couponInfo.userLevel = tmp.join(',');
+                    }
+                    this.info.phoneListStr = this.info.phoneList && this.info.phoneList.length !== 0 ? this.info.phoneList.join(',') : '';
+                }).catch(err => {
+                    console.log(err);
+                });
+            }
         }
     };
 </script>

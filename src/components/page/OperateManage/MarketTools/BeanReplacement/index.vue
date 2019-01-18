@@ -3,31 +3,31 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="mb10">
             <el-form :model="form" ref="form" inline label-width="120px">
-                <el-form-item prop="code" label="发放方式">
-                    <el-select v-model="form.createUser">
+                <el-form-item prop="genre" label="发放方式">
+                    <el-select v-model="form.genre">
                         <el-option label="全部" value=""></el-option>
                         <el-option label="条件发放" value="1"></el-option>
                         <el-option label="定向发放" value="2"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="createUser" label="审核状态">
-                    <el-select v-model="form.createUser">
+                <el-form-item prop="status" label="审核状态">
+                    <el-select v-model="form.status">
                         <el-option label="全部" value=""></el-option>
                         <el-option label="审核中" value="1"></el-option>
                         <el-option label="已审核" value="2"></el-option>
                         <el-option label="审核驳回" value="3"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="name" label="审核者">
-                    <el-input v-model="form.name"></el-input>
+                <el-form-item prop="auditor" label="审核人">
+                    <el-input v-model="form.auditor"></el-input>
                 </el-form-item>
-                <el-form-item prop="createTime" label="审核时间">
+                <el-form-item prop="auditTime" label="审核时间">
                     <el-date-picker type="datetimerange" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.createTime" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
                 </el-form-item>
-                <el-form-item prop="updateUser" label="操作者">
-                    <el-input v-model="form.name"></el-input>
+                <el-form-item prop="operator" label="创建人">
+                    <el-input v-model="form.operator"></el-input>
                 </el-form-item>
-                <el-form-item prop="createTime" label="操作时间">
+                <el-form-item prop="createTime" label="创建时间">
                     <el-date-picker type="datetimerange" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.createTime" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
                 </el-form-item>
                 <el-form-item label=" ">
@@ -39,29 +39,45 @@
         <el-card>
             <el-button type="primary" class="mb10" @click="dialogVisible = true" v-auth="'yunying.marketToolsManage.ggk.xzggk'">发放秀豆</el-button>
             <el-table :data="tableData" border stripe>
-                <el-table-column prop="code" label="编号" align="center"></el-table-column>
-                <el-table-column prop="name" label="发放秀豆（枚）" align="center"></el-table-column>
-                <el-table-column prop="residualQuantity" label="发放方式" align="center"></el-table-column>
-                <el-table-column prop="residualQuantity" label="发放人数" align="center"></el-table-column>
-                <el-table-column label="审核状态" align="center">
+                <el-table-column type="index" label="编号" align="center"></el-table-column>
+                <el-table-column prop="scoreCount" label="发放秀豆（枚）" align="center"></el-table-column>
+                <el-table-column prop="genre" label="发放方式" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.status==1">正常</template>
-                        <template v-if="scope.row.status==2">已暂停</template>
+                        <span v-if="scope.row.genre == 1">条件发放</span>
+                        <span v-else-if="scope.row.genre == 2">定向发放</span>
+                        <span v-else>-</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="发放状态" align="center">
-                    <template slot-scope="scope">{{scope.row.createName}}<br>{{scope.row.createTime|formatDateAll}}</template>
+                <el-table-column prop="personNum" label="发放人数" align="center">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.personNum || 0}}人</span>
+                    </template>
                 </el-table-column>
-                <el-table-column prop="residualQuantity" label="操作者" align="center"></el-table-column>
-                <el-table-column label="操作时间" align="center">
-                    <template slot-scope="scope">{{scope.row.updateTime|formatDateAll}}</template>
+                <el-table-column label="审核状态" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.status==1">提交审核</template>
+                        <template v-else-if="scope.row.status==2">审核通过</template>
+                        <template v-else-if="scope.row.status==3">审核失败</template>
+                        <template v-else>-</template>
+                    </template>
                 </el-table-column>
-                <el-table-column prop="residualQuantity" label="备注" align="center"></el-table-column>
-                <el-table-column prop="residualQuantity" label="审核者" align="center"></el-table-column>
+                <el-table-column label="发送状态" align="center">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.status==4">发送中</template>
+                        <template v-else-if="scope.row.status==5">发送结束</template>
+                        <template v-else>-</template>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="submitName" label="创建人" align="center"></el-table-column>
+                <el-table-column label="创建时间" align="center">
+                    <template slot-scope="scope">{{scope.row.createTime|formatDateAll}}</template>
+                </el-table-column>
+                <el-table-column prop="remark" label="备注" align="center"></el-table-column>
+                <el-table-column prop="reviewName" label="审核人" align="center"></el-table-column>
                 <el-table-column label="审核时间" align="center">
-                    <template slot-scope="scope">{{scope.row.updateTime|formatDateAll}}</template>
+                    <template slot-scope="scope">{{scope.row.auditTime|formatDateAll}}</template>
                 </el-table-column>
-                <el-table-column prop="residualQuantity" label="审核说明" align="center"></el-table-column>
+                <el-table-column prop="reply" label="审核说明" align="center"></el-table-column>
                 <el-table-column prop="residualQuantity" label="操作" align="center"></el-table-column>
                 <el-table-column label="操作" width="320px">
                     <template slot-scope="scope">
@@ -187,25 +203,25 @@
         },
         mounted() {
             this.getLevelList();
-            // this.getList(this.page.currentPage);
+            this.getList(this.page.currentPage);
         },
         methods: {
             getList(val) {
+                this.form.auditTime = this.form.auditTime ? this.form.auditTime : [];
+                this.form.createTime = this.form.createTime ? this.form.createTime : [];
                 const data = {
                     page: val,
                     pageSize: this.page.pageSize,
-                    code: this.form.code,
-                    createUser: this.form.createUser,
-                    name: this.form.name,
-                    updateUser: this.form.updateUser,
-                    startTime: this.form.createTime ? utils.formatTime(this.form.createTime[0], 1) : '',
-                    endTime: this.form.createTime ? utils.formatTime(this.form.createTime[1], 1) : '',
-                    updateStartTime: this.form.updateTime ? utils.formatTime(this.form.updateTime[0], 1) : '',
-                    updateEndTime: this.form.updateTime ? utils.formatTime(this.form.updateTime[1], 1) : ''
+                    type: 1,
+                    ...this.form,
+                    auditBeginTime: this.form.auditTime.length === 0 ? '' : this.form.auditTime[0],
+                    auditEndTime: this.form.auditTime.length === 0 ? '' : this.form.auditTime[1],
+                    beginCreateTime: this.form.createTime.length === 0 ? '' : this.form.createTime[0],
+                    endCreateTime: this.form.createTime.length === 0 ? '' : this.form.createTime[1]
                 };
                 this.page.currentPage = val;
                 this.tableData = [];
-                request.queryScratchCardList(data).then(res => {
+                request.queryReissuePageList(data).then(res => {
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                 }).catch(err => {

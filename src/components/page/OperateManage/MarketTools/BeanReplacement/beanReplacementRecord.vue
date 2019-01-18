@@ -93,21 +93,18 @@
         },
         methods: {
             getList(val) {
+                this.form.updataTime = this.form.updataTime ? this.form.updataTime : [];
                 const data = {
                     page: val,
                     pageSize: this.page.pageSize,
-                    code: this.form.code,
-                    createUser: this.form.createUser,
-                    name: this.form.name,
-                    updateUser: this.form.updateUser,
-                    startTime: this.form.createTime ? utils.formatTime(this.form.createTime[0], 1) : '',
-                    endTime: this.form.createTime ? utils.formatTime(this.form.createTime[1], 1) : '',
-                    updateStartTime: this.form.updateTime ? utils.formatTime(this.form.updateTime[0], 1) : '',
-                    updateEndTime: this.form.updateTime ? utils.formatTime(this.form.updateTime[1], 1) : ''
+                    type: 2,
+                    ...this.form,
+                    beginUpdateTime: this.form.updataTime.length === 0 ? '' : this.form.updataTime[0],
+                    endUpdateTime: this.form.updataTime.length === 0 ? '' : this.form.updataTime[1]
                 };
                 this.page.currentPage = val;
                 this.tableData = [];
-                request.queryScratchCardList(data).then(res => {
+                request.queryReissueRecordPageList(data).then(res => {
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                 }).catch(err => {
