@@ -74,7 +74,8 @@
                     <td :rowspan="v.productOrders.length" v-if="index==0">
                         <div class="order-status">{{statusArr[v.warehouseOrder.status-1]}}</div>
                         <!--<div class="color-blue" v-if="v.status<4" @click="cancelOrder(v)">取消订单</div>-->
-                        <div class="color-blue" @click="$router.push({path:'/orderInfo',query:{orderInfoId:v.warehouseOrder.warehouseOrderNo}})">订单详情</div>
+                        <a class="color-blue href" target="_blank" :href="'#/orderInfo?orderInfoId='+`${v.warehouseOrder.warehouseOrderNo}`">订单详情</a>
+                        <!-- <div class="color-blue" @click="$router.push({path:'/orderInfo',query:{orderInfoId:v.warehouseOrder.warehouseOrderNo}})">订单详情</div> -->
                     </td>
                 </tr>
             </tbody>
@@ -198,7 +199,7 @@ export default {
             for (let i = 0; i < this.tableData.length; i++) {
                 for (let j = 0; j < this.warehouseOrderNos.length; j++) {
                     if (this.warehouseOrderNos[j] === this.tableData[i].warehouseOrder.warehouseOrderNo) {
-                        if (this.tableData[i].warehouseOrder.status!==2||this.tableData[i].warehouseOrder.warehouseType!==2||this.tableData[i].warehouseOrder.subStatus === 3) {
+                        if (this.tableData[i].warehouseOrder.status !== 2 || this.tableData[i].warehouseOrder.warehouseType !== 2 || this.tableData[i].warehouseOrder.subStatus === 3) {
                             return this.$message.warning('请选择已付款的加盟仓订单');
                         }
                     }
