@@ -67,7 +67,7 @@
                     </div>
                     <div class="item">
                         <span>仓库报损数：</span>
-                        <span>{{detail.lossCount||0}}</span>
+                        <span class="color-blue" @click="toLoss(detail)">{{detail.lossCount||0}}</span>
                     </div>
                     <div class="item" v-if="detail.type==3&&detail.type==4">
                         <span>供应商ID：</span>
@@ -147,8 +147,12 @@ export default {
         },
         // 跳转到品类数
         toProduct(row) {
-            sessionStorage.setItem('repertotyId', row.id);
-            this.$router.push({ path: '/repertoryInventory', query: { repertotyId: row.id }});
+            sessionStorage.setItem('repertotyId', row.code);
+            this.$router.push({ path: '/repertoryInventory', query: { repertotyId: row.code }});
+        },
+        toLoss(row) {
+            sessionStorage.setItem('repertotyId', row.code);
+            this.$router.push({ path: '/repertoryBad', query: { repertotyId: row.code }});
         }
     }
 };
