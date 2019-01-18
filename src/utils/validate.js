@@ -14,3 +14,11 @@ export function validatePhone(rule, value, callback) {
         callback();
     }
 }
+export function validateTemplateName(rule, value, callback) {
+    const uPattern = /^[A-Za-z0-9\u4e00-\u9fa5]{1,30}$/;
+    if (!uPattern.test(value)) {
+        callback(new Error('请输入1-30位中英文加数字'));
+    } else {
+        callback();
+    }
+}

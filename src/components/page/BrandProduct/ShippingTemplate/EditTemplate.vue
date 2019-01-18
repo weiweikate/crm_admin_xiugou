@@ -138,13 +138,14 @@ import region from '@/components/common/Region';
 import chooseArea from '@/components/common/chooseArea';
 import request from '@/http/http.js';
 import { regExpConfig } from '@/utils/regConfig.js';
+import { validateTemplateName } from '@/utils/validate.js';
 
 export default {
     components: { vBreadcrumb, icon, region, chooseArea },
     data() {
         return {
             rules: {
-                name: [{ trigger: 'blur', required: true, message: '请输入模版名称' }],
+                name: [{ trigger: 'blur', required: true, validator: validateTemplateName }],
                 status: [{ trigger: 'blur', required: true, message: '请选择状态' }],
                 freightType: [{ trigger: 'blur', required: true, message: '请选择是否包邮' }],
                 calcType: [{ trigger: 'blur', required: true, message: '请选择计费方式' }],
