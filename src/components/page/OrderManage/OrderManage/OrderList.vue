@@ -74,7 +74,7 @@
         <el-card style='margin-top:20px;minHeight:90vh;' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
                 <el-button type="danger" @click="sendOut" v-auth="'order.orderList.yjts'">推送云仓</el-button>
-                <a ref="exportData" class="export" @click="downloadOrderData">导出</a>
+                <a ref="exportData" class="el-button el-button--primary el-button--small" @click="downloadOrderData">导出</a>
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="all">
@@ -278,23 +278,6 @@ export default {
     }
     .btn-group {
         margin-bottom: 10px;
-        .export {
-            display: inline-block;
-            line-height: 1;
-            white-space: nowrap;
-            cursor: pointer;
-            color: #fff;
-            background-color: #409eff;
-            border-color: #409eff;
-            text-align: center;
-            box-sizing: border-box;
-            outline: 0;
-            margin: 0;
-            transition: 0.1s;
-            padding: 10px 15px;
-            font-size: 12px;
-            border-radius: 3px;
-        }
     }
 }
 </style>

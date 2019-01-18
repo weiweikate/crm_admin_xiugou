@@ -16,6 +16,9 @@
                 <el-form-item prop="warehouseOrderNo" label="仓库订单号">
                     <el-input v-model="form.warehouseOrderNo" placeholder="请输入仓库订单号"></el-input>
                 </el-form-item>
+                <el-form-item prop="supplierName" label="供应商名称">
+                    <el-input v-model="form.supplierName" placeholder="请输入供应商名称"></el-input>
+                </el-form-item>
                 <el-form-item prop="status" label="售后状态">
                     <el-select v-model="form.status" placeholder="请选择">
                         <el-option label="暂不选择" value=""></el-option>
@@ -30,7 +33,7 @@
         </el-card>
         <el-card style='margin-top:20px;minHeight:90vh;' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
-                <a ref="exportData" class="export" @click="downloadAfterOrderData">导出</a>
+                <a ref="exportData" class="el-button el-button--primary el-button--small" @click="downloadAfterOrderData">导出</a>
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="all">
@@ -67,7 +70,7 @@ export default {
 
     data() {
         return {
-            nav: ['订单管理', '订单管理'],
+            nav: ['订单管理', '售后单管理'],
             activeName: 'all',
             dateRange: [],
             afterSaleStatusArr: [
@@ -89,7 +92,8 @@ export default {
                 serviceNo: '', // 售后单号
                 warehouseOrderNo: '', // 仓库级订单号
                 userPhone: '', // 用户账号
-                status: '' // 推送状态
+                status: '', // 推送状态
+                supplierName: '' // 供应商名称
             },
             formData: {},
             downloadAfterOrderList: ''
@@ -107,6 +111,7 @@ export default {
                 warehouseOrderNo: this.form.warehouseOrderNo,
                 userPhone: this.form.userPhone,
                 status: this.form.status,
+                supplierName: this.form.supplierName,
                 type: this.activeName === 'all' ? '' : this.activeName,
                 createStartTime: this.dateRange.length !== 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '',
                 createEndTime: this.dateRange.length !== 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : ''
@@ -157,23 +162,6 @@ export default {
     }
     .btn-group {
         margin-bottom: 10px;
-        .export {
-            display: inline-block;
-            line-height: 1;
-            white-space: nowrap;
-            cursor: pointer;
-            color: #fff;
-            background-color: #409eff;
-            border-color: #409eff;
-            text-align: center;
-            box-sizing: border-box;
-            outline: 0;
-            margin: 0;
-            transition: 0.1s;
-            padding: 10px 15px;
-            font-size: 12px;
-            border-radius: 3px;
-        }
     }
 }
 </style>
