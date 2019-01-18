@@ -197,11 +197,11 @@ export default {
                 .then(res => {
                     this.loading = false;
                     this.form = res.data;
-                    this.form.calcType = this.numberToString(this.form.calcType);
-                    this.form.freightType = this.numberToString(this.form.freightType);
-                    this.form.status = this.numberToString(this.form.status);
-                    this.form.hasExemption = this.numberToString(this.form.hasExemption);
-                    this.form.freight = this.numberToString(this.form.freight);
+                    this.form.calcType = this.$utils.numberToString(this.form.calcType);
+                    this.form.freightType = this.$utils.numberToString(this.form.freightType);
+                    this.form.status = this.$utils.numberToString(this.form.status);
+                    this.form.hasExemption = this.$utils.numberToString(this.form.hasExemption);
+                    this.form.freight = this.$utils.numberToString(this.form.freight);
 
                     this.form.freight = 1;
                     if (this.form.freightType === '1') {
@@ -216,6 +216,7 @@ export default {
                         this.freightTemplateInfoList = res.data.freightTemplateInfoList;
                     }
                     if (this.form.hasExemption === '1') {
+
                         res.data.conditionInfos.forEach((v, k) => {
                             v.freightTemplateInfoDetailList.forEach((v1, k1) => {
                                 v1.tableData = v1.provinceName + ':' + v1.cityNames;
@@ -243,8 +244,8 @@ export default {
                             }
                             for (let j = 0; j < this.freightTemplateInfoList[i].freightTemplateInfoDetailList.length; j++) {
                                 if (this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityCodes) {
-                                    this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityCodes = this.ArrayToString(this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityCodes);
-                                    this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityNames = this.ArrayToString(this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityNames);
+                                    this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityCodes = this.$utils.ArrayToString(this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityCodes);
+                                    this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityNames = this.$utils.ArrayToString(this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityNames);
                                 }
                             }
                         }
@@ -262,8 +263,8 @@ export default {
                                     }
                                     for (let j = 0; j < this.conditionInfos[i].freightTemplateInfoDetailList.length; j++) {
                                         if (this.conditionInfos[i].freightTemplateInfoDetailList[j].cityCodes) {
-                                            this.conditionInfos[i].freightTemplateInfoDetailList[j].cityCodes = this.ArrayToString(this.conditionInfos[i].freightTemplateInfoDetailList[j].cityCodes);
-                                            this.conditionInfos[i].freightTemplateInfoDetailList[j].cityNames = this.ArrayToString(this.conditionInfos[i].freightTemplateInfoDetailList[j].cityNames);
+                                            this.conditionInfos[i].freightTemplateInfoDetailList[j].cityCodes = this.$utils.ArrayToString(this.conditionInfos[i].freightTemplateInfoDetailList[j].cityCodes);
+                                            this.conditionInfos[i].freightTemplateInfoDetailList[j].cityNames = this.$utils.ArrayToString(this.conditionInfos[i].freightTemplateInfoDetailList[j].cityNames);
                                         }
                                     }
                                 }
@@ -467,15 +468,6 @@ export default {
                     }
                 }
             }
-        },
-        // 数组转字符串
-        ArrayToString(param) {
-            console.log(param);
-            return typeof param === 'object' ? param.join(',') : param;
-        },
-        // 数字转字符串
-        numberToString(param) {
-            return typeof param === 'number' ? param.toString() : param;
         }
     }
 };

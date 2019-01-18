@@ -144,6 +144,14 @@ const setRequestParams = (params) => {
 const stringToNumber = (param) => {
     return typeof param === 'string' ? Number(param) : param;
 };
+// 数组转字符串
+const ArrayToString = (param) => {
+    return typeof param === 'object' ? param.join(',') : param;
+};
+// 数字转字符串
+const numberToString = (param) => {
+    return typeof param === 'number' ? param.toString() : param;
+};
 
 export default {
     cleanFormData,
@@ -154,5 +162,7 @@ export default {
     getParam,
     getSrc,
     setRequestParams,
-    stringToNumber
+    stringToNumber,
+    ArrayToString,
+    numberToString
 };

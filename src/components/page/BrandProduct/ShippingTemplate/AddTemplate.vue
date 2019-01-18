@@ -212,8 +212,8 @@ export default {
                                 return this.$message.warning('请输入合法数据');
                             }
                             for (let j = 0; j < this.freightTemplateInfoList[i].freightTemplateInfoDetailList.length; j++) {
-                                this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityCodes = this.ArrayToString(this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityCodes);
-                                this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityNames = this.ArrayToString(this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityNames);
+                                this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityCodes = this.$utils.ArrayToString(this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityCodes);
+                                this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityNames = this.$utils.ArrayToString(this.freightTemplateInfoList[i].freightTemplateInfoDetailList[j].cityNames);
                             }
                         }
                         data.freightTemplateInfoList = this.freightTemplateInfoList;
@@ -229,8 +229,8 @@ export default {
                                         return this.$message.warning('请输入合法数据');
                                     }
                                     for (let j = 0; j < this.conditionInfos[i].freightTemplateInfoDetailList.length; j++) {
-                                        this.conditionInfos[i].freightTemplateInfoDetailList[j].cityCodes = this.ArrayToString(this.conditionInfos[i].freightTemplateInfoDetailList[j].cityCodes);
-                                        this.conditionInfos[i].freightTemplateInfoDetailList[j].cityNames = this.ArrayToString(this.conditionInfos[i].freightTemplateInfoDetailList[j].cityNames);
+                                        this.conditionInfos[i].freightTemplateInfoDetailList[j].cityCodes = this.$utils.ArrayToString(this.conditionInfos[i].freightTemplateInfoDetailList[j].cityCodes);
+                                        this.conditionInfos[i].freightTemplateInfoDetailList[j].cityNames = this.$utils.ArrayToString(this.conditionInfos[i].freightTemplateInfoDetailList[j].cityNames);
                                     }
                                 }
                                 data.conditionInfos = this.conditionInfos;
@@ -433,10 +433,6 @@ export default {
                     }
                 }
             }
-        },
-        // 数组转字符串
-        ArrayToString(param) {
-            return typeof param === 'object' ? param.join(',') : param;
         }
     }
 };
