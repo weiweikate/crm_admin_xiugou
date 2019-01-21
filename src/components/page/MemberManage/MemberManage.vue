@@ -93,9 +93,7 @@
                 </el-table-column>
                 <el-table-column min-width="160" label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button type="primary"  size="small"
-                                   @click="detailItem(scope.$index,scope.row)" v-auth="'vip.memberManage.xq'">详情
-                        </el-button>
+                        <a v-auth="'vip.memberManage.xq'" :href="`#/memberDetail?memberToInfo=${scope.row.code}`" target="_blank" class="el-button el-button--primary el-button--small">详情</a>
                         <!--<el-button type="danger" v-if="scope.row.status!=3" size="small"-->
                                    <!--@click="updateStatusItem(scope.$index,scope.row.id,1)">关闭-->
                         <!--</el-button>-->
@@ -234,73 +232,6 @@ export default {
             }
             that.tipsMask = true;
         },
-        // oprSure() {
-        //     const that = this;
-        //     const data = {
-        //         id: that.id
-        //     };
-        //     let url = '';
-        //     if (that.type == '关闭') {
-        //         url = api.stopDealerById;
-        //         data.url = pApi.stopDealerById;
-        //     } else {
-        //         url = api.openDealerById;
-        //         data.url = pApi.openDealerById;
-        //     }
-        //     that.btnLoading = true;
-        //     that.$axios
-        //         .post(url, data)
-        //         .then(res => {
-        //             that.btnLoading = false;
-        //             that.getList(that.page.currentPage);
-        //             that.tipsMask = false;
-        //         })
-        //         .catch(err => {
-        //             that.btnLoading = false;
-        //             that.tipsMask = false;
-        //         });
-        // },
-        // 导出
-        // exportData() {
-        //     const that = this;
-        //     const data = that.form;
-        //     data.page = that.page.currentPage;
-        //     data.levelId = that.exportForm.levelId;
-        //     data.url = pApi.exportDealerListExcel;
-        //     const addrss = that.address;
-        //     if (addrss && addrss[0]) {
-        //         data.provinceId = addrss[0];
-        //         if (addrss[1]) {
-        //             data.cityId = addrss[1];
-        //         }
-        //         if (addrss[2]) {
-        //             data.areaId = addrss[2];
-        //         }
-        //     } else {
-        //         data.provinceId = '';
-        //         data.cityId = '';
-        //         data.areaId = '';
-        //     }
-        //     that.$axios
-        //         .post(api.exportDealerListExcel, data, { responseType: 'blob' })
-        //         .then(res => {
-        //             var data = res.data;
-        //             if (!data) {
-        //                 return;
-        //             }
-        //             const url = window.URL.createObjectURL(new Blob([data]));
-        //             const link = document.createElement('a');
-        //             link.style.display = 'none';
-        //             link.href = url;
-        //             const time = moment(new Date()).format('YYYYMMDDHHmmss');
-        //             link.setAttribute('download', '会员列表' + time + '.xlsx');
-        //             document.body.appendChild(link);
-        //             link.click();
-        //         })
-        //         .catch(err => {
-        //             console.log(err);
-        //         });
-        // },
         //   重置表单
         resetForm(formName) {
             this.address = [];

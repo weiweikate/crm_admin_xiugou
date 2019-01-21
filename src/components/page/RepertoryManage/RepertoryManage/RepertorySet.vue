@@ -43,14 +43,15 @@
                         <el-input type="textarea" class="inp-textarea" placeholder="请输入详细地址" v-model="form.address"></el-input>
                     </div>
                 </el-form-item>
+                <!-- 编辑且为加盟仓时禁用 -->
                 <el-form-item prop="sendGoods" label="是否能发货">
-                    <el-radio-group v-model="form.sendGoods">
+                    <el-radio-group v-model="form.sendGoods" :disabled="type==2&&form.type==2">
                         <el-radio :label="1">是</el-radio>
                         <el-radio :label="2">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item prop="returnGoods" label="是否为退货仓">
-                    <el-radio-group v-model="form.returnGoods">
+                    <el-radio-group v-model="form.returnGoods" :disabled="type==2&&form.type==2">
                         <el-radio :label="1">是</el-radio>
                         <el-radio :label="2">否</el-radio>
                     </el-radio-group>

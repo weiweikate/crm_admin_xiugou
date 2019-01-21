@@ -63,11 +63,13 @@
                     </div>
                     <div class="item">
                         <span>仓库品类数：</span>
-                        <span class="color-blue" @click="toProduct(detail)">{{detail.productCount||0}}</span>
+                        <a :href="'#/repertoryInventory?repertotyId='+`${detail.code}`" target="_blank" class="color-blue href" v-if="detail.productCount">{{detail.productCount}}</a>
+                        <span v-else>/</span>
                     </div>
                     <div class="item">
                         <span>仓库报损数：</span>
-                        <span>{{detail.lossCount||0}}</span>
+                        <a :href="'#/repertoryBad?repertotyId='+`${detail.code}`" target="_blank" class="color-blue href" v-if="detail.lossCount">{{detail.lossCount}}</a>
+                        <span v-else>/</span>
                     </div>
                     <div class="item" v-if="detail.type==3&&detail.type==4">
                         <span>供应商ID：</span>
@@ -144,11 +146,6 @@ export default {
         },
         back() {
             this.$router.push('/repertoryList');
-        },
-        // 跳转到品类数
-        toProduct(row) {
-            sessionStorage.setItem('repertotyId', row.id);
-            this.$router.push({ path: '/repertoryInventory', query: { repertotyId: row.id }});
         }
     }
 };

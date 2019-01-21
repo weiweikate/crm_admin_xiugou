@@ -76,8 +76,8 @@
             };
         },
         activated() {
-            this.code = this.$route.query.memberAccMsg.memberCode || '';
-            this.name = this.$route.query.memberAccMsg.nickname || '';
+            this.code = JSON.parse(this.$route.query.memberAccMsg).memberCode || '';
+            this.name = JSON.parse(this.$route.query.memberAccMsg).nickname || '';
             this.getList();
         },
         methods: {
