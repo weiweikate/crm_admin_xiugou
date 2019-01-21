@@ -33,7 +33,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="300px">
                 <template slot-scope="scope">
-                    <el-button @click="accountMsg(scope.row)" type="primary">账户明细</el-button>
+                    <a :href="editHref(scope.row)" target="_blank" class="el-button el-button--primary el-button--small">账户明细</a>
                     <el-button @click="audit(scope.row,1)" v-if='scope.row.status == 1' type="danger">确认</el-button>
                     <el-button @click="audit(scope.row,2)" v-if='scope.row.status == 1' type="warning">驳回</el-button>
                     <el-button :loading="btnloading" @click="record(scope.row)" v-if='scope.row.status == 2' type="warning">打款记录</el-button>
@@ -151,6 +151,17 @@ export default {
             refuseReason: '', // 驳回理由
             refReaBtnLoading: false
         };
+    },
+    computed: {
+        editHref() {
+            return (row) => {
+                const memberAccMsg = {
+                    memberCode: row.userCode,
+                    nickname: row.userName || ''
+                };
+                return `#/cashAccountBalance?memberAccMsg=${JSON.stringify(memberAccMsg)}`;
+            };
+        }
     },
 
     methods: {

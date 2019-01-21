@@ -1,6 +1,6 @@
 <template>
     <div class="tab-gift-content">
-      <el-button @click="releaseProduct" class="add-product" type="primary" v-auth="'yunying.marketToolsManage.yhtc.tjlb'">添加礼包</el-button>
+        <a href="#/Gift" v-auth="'yunying.marketToolsManage.yhtc.tjlb'" target="_blank" class="el-button el-button--primary el-button--small mb10">添加礼包</a>
       <div class="search-pane">
           <el-form :model="form" ref='form' inline label-width="100px">
               <el-form-item prop="name" label="礼包名称">
@@ -103,11 +103,15 @@
           </el-table-column>
           <el-table-column label="管理操作" align="center" min-width="100">
               <template slot-scope="scope">
-                  <div v-if="scope.row.status != 5 && scope.row.status != 0" class="mange-sty" @click="editProduct(scope.row)" v-auth="'yunying.marketToolsManage.yhtc.bj'">编辑</div>
+                  <div v-if="scope.row.status != 5 && scope.row.status != 0" class="mange-sty" v-auth="'yunying.marketToolsManage.yhtc.bj'">
+                      <a :href="`#/Gift?giftId=${scope.row.id}`" target="_blank" class="primary-text">编辑礼包</a>
+                  </div>
                   <div v-if="scope.row.status != 5 && scope.row.status != 0" class="mange-sty" @click="productMange(scope.row)" v-auth="'yunying.marketToolsManage.yhtc.cpgl'">产品管理</div>
                   <div v-if="scope.row.status != 5 && scope.row.status != 0" class="mange-sty" @click="priceOfInventory(scope.row)" v-auth="'yunying.marketToolsManage.yhtc.jgkc'">价格库存</div>
                   <div v-if="scope.row.status != 0 && scope.row.stockType == 2" class="mange-sty" @click="expMange(scope.row)" v-auth="'yunying.marketToolsManage.yhtc.tjkc'">添加库存</div>
-                  <div class="mange-sty" @click="productInfo(scope.row)">查看详情</div>
+                  <div class="mange-sty">
+                      <a :href="`#/giftInfo?giftId=${scope.row.id}`" target="_blank" class="primary-text">查看详情</a>
+                  </div>
               </template>
           </el-table-column>
       </el-table>

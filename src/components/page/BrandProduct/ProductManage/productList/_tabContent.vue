@@ -116,9 +116,13 @@
                 <template slot-scope="scope">
                     <div class="operate">
                         <!--<span v-if="scope.row.status == 1 || scope.row.status == 5 || scope.row.status == 6" @click="editProduct(scope.row)">编辑</span>-->
-                        <span v-if="scope.row.status != 2 " @click="editProduct(scope.row)" v-auth="'brand.productList.cpbj'">编辑</span>
+                        <span v-if="scope.row.status != 2 " v-auth="'brand.productList.cpbj'">
+                            <a :href="editHref(scope.row)" target="_blank" class="primary-text">编辑</a>
+                        </span>
                         <span @click="addRemark(scope.row)" v-auth="'brand.productList.cpbz'">备注</span>
-                        <span @click="productInfo(scope.row)" v-auth="'brand.productList.cpxq'">详情</span>
+                        <span @click="productInfo(scope.row)" v-auth="'brand.productList.cpxq'">
+                            <a :href="`#/productInfo?prodCode=${scope.row.prodCode}`" target="_blank" class="primary-text">详情</a>
+                        </span>
                     </div>
                 </template>
             </el-table-column>
@@ -158,6 +162,17 @@ export default {
             tableLoading: false,
             tableData: [] // 表格名称
         };
+    },
+    computed: {
+        editHref() {
+            return (row) => {
+                const selectedItem = [];
+                selectedItem.push({ type: 1, label: row.firstCategoryName, value: row.firstCategoryId });
+                selectedItem.push({ type: 2, label: row.secCategoryName, value: row.secCategoryId });
+                selectedItem.push({ type: 3, label: row.thirdCategoryName, value: row.thirdCategoryId });
+                return `#/productBaseParam?cate=${JSON.stringify(selectedItem)}&prodCode=${row.prodCode}`;
+            };
+        }
     },
 
     mounted() {

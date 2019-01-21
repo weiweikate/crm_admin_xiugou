@@ -19,6 +19,9 @@
                 <el-form-item prop="paymentNo" label="支付单号">
                     <el-input style="width:200px" placeholder="请输入支付单号" v-model="form.paymentNo"></el-input>
                 </el-form-item>
+                <el-form-item prop="platformNo" label="平台级订单号">
+                    <el-input v-model="form.platformNo" placeholder="请输入平台级订单号"></el-input>
+                </el-form-item>
                 <el-form-item prop="status" label="支付单状态">
                     <el-select v-model="form.status" placeholder="全部">
                         <el-option label="全部" value=""></el-option>
@@ -104,7 +107,8 @@
                     time: '',
                     userPhone: '',
                     paymentNo: '',
-                    status: ''
+                    status: '',
+                    platformNo: ''
                 }
             };
         },
@@ -122,6 +126,7 @@
                     status: this.form.status,
                     userPhone: this.form.userPhone,
                     paymentNo: this.form.paymentNo,
+                    platformNo: this.form.platformNo,
                     from: this.form.time[0] ? moment(this.form.time[0]).format('YYYY-MM-DD 00:00:00') : '',
                     to: this.form.time[1] ? moment(this.form.time[1]).format('YYYY-MM-DD 23:59:59') : ''
                 };

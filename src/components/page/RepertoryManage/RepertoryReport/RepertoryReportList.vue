@@ -60,7 +60,7 @@
             </el-form>
         </el-card>
         <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
-           <el-button type="primary" style="margin-bottom: 20px" @click="$router.push({path:'repertoryReportSet',query:{type:'add'}})">新建入库单</el-button>
+           <a class="el-button el-button--small el-button--primary" style="margin-bottom: 20px" href="#/repertoryReportSet?type=add" target="_blank">新建入库单</a>
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="code" label="入库单编号" align="center"></el-table-column>
@@ -94,8 +94,8 @@
                 </el-table-column>
                 <el-table-column label="操作" min-width="150">
                     <template slot-scope="scope">
-                        <el-button @click="showInfo(scope.row)" type="primary">详情</el-button>
-                        <el-button @click="editReport(scope.row)" type="success" v-if="scope.row.status==1||scope.row.status==2">编辑</el-button>
+                        <a class="el-button el-button--primary el-button--small" :href="'#/repertoryReportInfo?reportInfoId='+`${scope.row.id}`" target="_blank">详情</a>
+                        <a class="el-button el-button--success el-button--small" :href="'#/repertoryReportSet?reportId='+`${scope.row.id}`" target="_blank" v-if="scope.row.status==1||scope.row.status==2">编辑</a>
                         <el-button @click="sendOrCancel(scope.row,0)" type="warning" v-if="scope.row.status==1">推送</el-button>
                         <el-button @click="sendOrCancel(scope.row,1)" type="warning" v-if="scope.row.status==2">取消入库单</el-button>
                     </template>
@@ -194,22 +194,6 @@ export default {
                 this.page.totalPage = res.data.totalNum;
             }).catch(error => {
                 console.log(error);
-            });
-        },
-        // 查看详情
-        showInfo(row) {
-            sessionStorage.setItem('reportInfoId', row.id);
-            this.$router.push({
-                path: 'repertoryReportInfo',
-                query: { repertoryInfoId: row.id }
-            });
-        },
-        // 编辑
-        editReport(row) {
-            sessionStorage.setItem('reportId', row.id);
-            this.$router.push({
-                path: 'repertoryReportSet',
-                query: { reportId: row.id }
             });
         },
         // 重置表单

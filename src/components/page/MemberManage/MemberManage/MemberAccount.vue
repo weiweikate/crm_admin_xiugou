@@ -110,7 +110,7 @@
                 memberInfo.nickname = that.accountInfo.name;
                 switch (id) {
                     case 1:
-                        this.$router.push({ path: '/cashAccountBalance', query: { 'memberAccMsg': memberInfo }});
+                        this.$router.push({ path: '/cashAccountBalance', query: { 'memberAccMsg': JSON.stringify(memberInfo) }});
                         break;
                     case 2:
                         this.$router.push({ path: '/tokenAccountBalance', query: { 'memberAccMsg': memberInfo }});
