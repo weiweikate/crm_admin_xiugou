@@ -120,7 +120,7 @@
                             <a :href="editHref(scope.row)" target="_blank" class="primary-text">编辑</a>
                         </span>
                         <span @click="addRemark(scope.row)" v-auth="'brand.productList.cpbz'">备注</span>
-                        <span @click="productInfo(scope.row)" v-auth="'brand.productList.cpxq'">
+                        <span v-auth="'brand.productList.cpxq'">
                             <a :href="`#/productInfo?prodCode=${scope.row.prodCode}`" target="_blank" class="primary-text">详情</a>
                         </span>
                     </div>
