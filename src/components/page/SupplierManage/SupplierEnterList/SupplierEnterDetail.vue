@@ -47,18 +47,19 @@ export default {
     data: function() {
         return {
             detail: {},
-            loading: false
+            loading: false,
+            id: ''
         };
     },
     activated() {
-        this.code = this.$route.query.supplierInfo;
+        this.id = this.$route.query.supplierEnterId;
         this.getDetail();
     },
     methods: {
         // 获取详情
         getDetail() {
             const data = {
-                code: this.code
+                id: this.id
             };
             request
                 .findMerchantById(data)
