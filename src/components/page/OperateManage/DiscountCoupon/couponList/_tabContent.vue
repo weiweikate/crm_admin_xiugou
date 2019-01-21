@@ -202,7 +202,7 @@ export default {
         addInventory(row) {
             this.addMask = true;
             this.num = '';
-            this.left = row.totalNumber - row.hasUsed;
+            this.left = row.totalNumber;
             this.id = row.id;
             if (row.type === 3) {
                 this.value = row.value / 10 + '折';

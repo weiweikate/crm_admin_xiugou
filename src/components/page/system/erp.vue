@@ -34,7 +34,7 @@
         </el-card>
         <el-card :body-style="{ padding: '20px 40px',}" style="margin-top:20px">
             <el-button @click="gotoAddModal" type="success" style="margin-bottom: 10px;">添加ERP</el-button>
-            <el-table :data="tableData" border :height="height" v-loading="loading">
+            <el-table :data="tableData" border  v-loading="loading">
                 <el-table-column prop="erpCode" label="ERP编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="ERP名称" align="center"></el-table-column>
                 <el-table-column prop="accessKeyId" label="ERP账号" align="center"></el-table-column>
@@ -52,7 +52,7 @@
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button type="primary" @click='gotoEditModal(scope.row)'>编辑</el-button>
-                        <el-button type="warning" @click='disableErp(scope.row)'>{{scope.row.status==0?'停用':'启用'}}
+                        <el-button type="warning" @click='disableErp(scope.row)'>{{scope.row.status==0?'启用':'停用'}}
                         </el-button>
                     </template>
                 </el-table-column>
@@ -73,8 +73,9 @@
         <!--添加/编辑层级弹窗-->
         <el-dialog :title="action.title" :visible.sync="isShowModal">
             <el-form :model="modalData" label-width="100px" :rules="rules" ref="modalForm">
-                <el-form-item prop="accessKeyId" label="ERP账号" >
-                    <el-input v-model="modalData.accessKeyId" auto-complete="off" placeholder="" :disabled="action.name=='update'"></el-input>
+                <el-form-item prop="accessKeyId" label="ERP账号">
+                    <el-input v-model="modalData.accessKeyId" auto-complete="off" placeholder=""
+                              :disabled="action.name=='update'"></el-input>
                 </el-form-item>
 
                 <el-form-item label="ERP秘钥" v-if="action.name == 'update'">
@@ -131,9 +132,9 @@
 
         data() {
             const validateInput = (rule, value, callback) => {
-                const uPattern = /^[a-zA-Z0-9_-]{1,20}$/;
+                const uPattern = /^\S{1,20}$/;
                 if (!uPattern.test(value)) {
-                    callback(new Error('请输入6-20位'));
+                    callback(new Error('请输入1-20位'));
                 } else {
                     callback();
                 }
@@ -194,10 +195,6 @@
                 tableData: [],
                 height: ''
             };
-        },
-        created() {
-            const winHeight = window.screen.availHeight - 540;
-            this.height = winHeight;
         },
         mounted() {
             this.getList(1);
@@ -261,6 +258,7 @@
             },
             gotoAddModal() {
                 this.modalData = {
+                    status: 1,
                     list: []
                 };
                 this.isShowModal = true;
@@ -324,6 +322,9 @@
                 this.$refs['modalForm'].validate((valid) => {
                     if (valid) {
                         let result = this.transformModalData();
+                        let supplierCodeList = result.supplierCodeList || [];
+                        let unique = new Set(supplierCodeList);
+                        result.supplierCodeList = [...unique];
                         console.log('result', result);
                         request[action.uri]({
                             ...result

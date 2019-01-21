@@ -161,8 +161,9 @@
                              <div class="tip">如需修改，请联系相关人员修改退货信息后再审核</div>-->
                         </div>
                     </el-form-item>
-                    <el-form-item label="售后审核说明">
-                        <el-input type="textarea" maxlength="50" v-model="form.remarks"></el-input>
+                    <el-form-item label="售后审核说明" class="remark-area">
+                        <el-input type="textarea" maxlength="180" @input="getRemarkCount" v-model="form.remarks"></el-input>
+                        <span class="remark-length">{{count}}/180</span>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" :loading="btnLoading" @click="submit('form')">提交</el-button>
@@ -191,15 +192,16 @@
                     <el-form-item label="处理金额调整" v-if="(orderCustomerServiceInfo.type==1||orderCustomerServiceInfo.type==2||form.type==2)&&form.result!=2">
                         <el-input v-model="form.adjustAmount"></el-input><span class="tip">元，请在¥0.00~{{warehouseOrderProduct.payAmount|formatMoney}}区间内调整，其中含运费{{warehouseOrderProduct.freightAmount|formatMoney}}</span>
                     </el-form-item>
-                    <el-form-item label="售后处理说明">
-                        <el-input type="textarea" maxlength="50" v-model="form.remarks"></el-input>
+                    <el-form-item label="售后处理说明" class="remark-area">
+                        <el-input type="textarea" maxlength="180" @input="getRemarkCount" v-model="form.remarks"></el-input>
+                        <span class="remark-length">{{count}}/180</span>
                     </el-form-item>
                     <!-- 审核通过 虚拟仓 换货 hasAuth测试true线上false-->
-                    <el-form-item v-if="form.type!=2&&orderInfo.warehouseType!=3&&form.result!=2&&hasAuth">
+                    <el-form-item v-if="orderCustomerServiceInfo.type==3&&form.type!=2&&orderInfo.warehouseType!=3&&form.result!=2&&hasAuth">
                         <el-checkbox v-model="checked" @change="chooseXnSend">虚拟发货</el-checkbox>
                     </el-form-item>
                     <!--换货-->
-                    <template v-if="form.type!=2&&form.result!=2&&(orderInfo.warehouseType==3||checked)">
+                    <template v-if="orderCustomerServiceInfo.type==3&&form.type!=2&&form.result!=2&&(orderInfo.warehouseType==3||checked)">
                         <el-form-item label="换货物流公司">
                             <el-select v-model="form.expressCode">
                                 <el-option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.name"></el-option>
@@ -248,6 +250,7 @@ export default {
             btnLoading: false,
             logicList: [],
             form: {},
+            count: 0, // 说明字数
             checked: false,
             records: {}, // 售后协商记录
             hasAuth: '' // 是否虚拟发货的权限，用于区分测试与开发环境，测试true 开发false
@@ -261,8 +264,9 @@ export default {
         this.getInfo();
         this.getLogic();
         this.checked = false;
+        this.btnLoading = false;
         this.hasAuth = this.$oprAuth('xnfh');
-        console.log(this.hasAuth);
+        this.count = 0;
     },
     methods: {
         //  获取信息
@@ -294,6 +298,7 @@ export default {
                         });
                         v.spec = v.spec.join('  ');
                     });
+                    this.btnLoading = false;
                 })
                 .catch(err => {
                     console.log(err);
@@ -374,12 +379,15 @@ export default {
                 .then(res => {
                     this.$message.success(res.msg);
                     this.getInfo();
-                    this.btnLoading = false;
                 })
                 .catch(err => {
                     console.log(err);
-                    this.btnLoading = false;
+                    // this.btnLoading = false;
                 });
+        },
+        // 获取说明字数
+        getRemarkCount() {
+            this.count = this.form.remarks.length;
         }
     }
 };
@@ -394,6 +402,7 @@ export default {
         justify-content: flex-start;
         .item-wrap {
             margin-right: 100px;
+            min-width: 290px;
             .item {
                 font-size: 14px;
                 color: #666666;
@@ -490,12 +499,20 @@ export default {
             }
         }
     }
+    .remark-area{
+        position: relative;
+        .remark-length{
+            position: absolute;
+            left: 620px;
+            bottom: 0;
+        }
+    }
     .el-textarea {
         display: inline;
         .el-textarea__inner {
             resize: none;
             width: 600px;
-            height: 100px;
+            height: 130px;
         }
     }
     .color-blue {
