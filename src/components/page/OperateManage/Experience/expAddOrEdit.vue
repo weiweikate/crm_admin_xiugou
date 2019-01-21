@@ -55,7 +55,7 @@
                             <span class="coupon-err" v-else>优惠券不存在</span>
                             <div class="coupon-name" v-if="couponInfo">{{couponInfo.name}}</div>
                             <div class="coupon-regular mt10" v-if="checkCoupon">
-                                每  <el-input style="width: 100px;" v-model="form.rules[0].startPrice" :disabled="true"></el-input> 元，赠送优惠券
+                                每  <el-input style="width: 100px;" v-model="form.startPrice" :disabled="isActivityIng"></el-input> 元，赠送优惠券
                                 <el-input-number
                                     :controls="false"
                                     :min="1" :precision="0"
@@ -733,7 +733,7 @@
                     });
                     data.spuCodes = arr;
                 }
-                data.startPrice = this.form.rules[0].startPrice;
+                data.startPrice = this.form.startPrice;
                 const t = this.form.time;
                 if (!this.isActivityIng && t && t.length) {
                     data.startTime = t[0];
