@@ -44,7 +44,7 @@
                     <div class="shop-left">
                         <p class="shop-msg">
                             <span>店长：<span @click="showShopLeader(detail.userCode)" class="font-href">{{detail.storeUserName}}</span></span>
-                            <span class="inf">实名认证</span>
+                            <span class="inf" v-if="detail.idcard">实名认证</span>
                         </p>
                     </div>
                     <div class="shop-right">
