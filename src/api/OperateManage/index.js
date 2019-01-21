@@ -212,3 +212,11 @@ export const queryReissuePageList = ['/reissue/queryReissuePageList', { methods:
 export const findReissueById = ['/reissue/findReissueById', { methods: 'get' }];
 // 查询优惠券/秀豆发放记录列表
 export const queryReissueRecordPageList = ['/reissue/queryReissueRecordPageList', { methods: 'post' }];
+// 优惠券/秀豆提交
+export const submitReissueBeanOrCoupon = ['/reissue/submit', { methods: 'post' }];
+// 查询人数
+export const countReissueNum = ['/reissue/count', { methods: 'get' }];
+// 发送操作
+export const sendReissueNum = ['/reissue/send', { methods: 'get' }];
+// 审核操作
+export const auditReissueNum = ['/reissue/review', { methods: 'get' }];

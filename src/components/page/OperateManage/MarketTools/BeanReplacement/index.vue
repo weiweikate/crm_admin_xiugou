@@ -38,9 +38,9 @@
         </el-card>
         <el-card>
             <el-button type="primary" class="mb10" @click="dialogVisible = true" v-auth="'yunying.marketToolsManage.ggk.xzggk'">发放秀豆</el-button>
-            <el-table :data="tableData" border stripe>
+            <el-table :data="tableData" border stripe v-loading="pageLoading">
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
-                <el-table-column prop="scoreCount" label="发放秀豆（枚）" align="center"></el-table-column>
+                <el-table-column prop="scoreCount" label="发放秀豆（枚）" min-width="150px" align="center"></el-table-column>
                 <el-table-column prop="genre" label="发放方式" align="center">
                     <template slot-scope="scope">
                         <span v-if="scope.row.genre == 1">条件发放</span>
@@ -55,8 +55,8 @@
                 </el-table-column>
                 <el-table-column label="审核状态" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.status==1">提交审核</template>
-                        <template v-else-if="scope.row.status==2">审核通过</template>
+                        <template v-if="scope.row.status==1">审核中</template>
+                        <template v-else-if="scope.row.status==2 || scope.row.status==4 || scope.row.status==5">审核通过</template>
                         <template v-else-if="scope.row.status==3">审核失败</template>
                         <template v-else>-</template>
                     </template>
@@ -64,24 +64,37 @@
                 <el-table-column label="发送状态" align="center">
                     <template slot-scope="scope">
                         <template v-if="scope.row.status==4">发送中</template>
+                        <template v-else-if="scope.row.status==2">待发送</template>
                         <template v-else-if="scope.row.status==5">发送结束</template>
                         <template v-else>-</template>
                     </template>
                 </el-table-column>
                 <el-table-column prop="submitName" label="创建人" align="center"></el-table-column>
-                <el-table-column label="创建时间" align="center">
+                <el-table-column label="创建时间" min-width="150px" align="center">
                     <template slot-scope="scope">{{scope.row.createTime|formatDateAll}}</template>
                 </el-table-column>
                 <el-table-column prop="remark" label="备注" align="center"></el-table-column>
                 <el-table-column prop="reviewName" label="审核人" align="center"></el-table-column>
-                <el-table-column label="审核时间" align="center">
+                <el-table-column label="审核时间" align="center" min-width="150px">
                     <template slot-scope="scope">{{scope.row.auditTime|formatDateAll}}</template>
                 </el-table-column>
                 <el-table-column prop="reply" label="审核说明" align="center"></el-table-column>
-                <el-table-column prop="residualQuantity" label="操作" align="center"></el-table-column>
-                <el-table-column label="操作" width="320px">
+                <el-table-column prop="residualQuantity" label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button type="success" @click="toDetail(scope.row.id)" v-auth="'yunying.marketToolsManage.ggk.xq'">查看</el-button>
+                        <span v-if="scope.row.status == 1" @click="auditRow(scope.row)" class="primary-text">审核</span>
+                        <span v-else>-</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="residualQuantity" label="操作" align="center">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.status == 2" @click="sendTask(scope.row)" class="primary-text">发送</span>
+                        <span v-else-if="scope.row.status == 5" class="grey-text">已发送</span>
+                        <span v-else>-</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" min-width="100px" align="center">
+                    <template slot-scope="scope">
+                        <span @click="toDetail(scope.row.id)" class="primary-text">查看</span>
                     </template>
                 </el-table-column>
             </el-table>
@@ -97,14 +110,15 @@
                 </el-pagination>
             </div>
         </el-card>
+        <!--发放秀豆-->
         <el-dialog
             title="秀豆发放"
             :visible.sync="dialogVisible"
             width="500px"
             :before-close="handleClose">
             <el-form :model="queryForm" :rules="rules" ref="queryForm" inline label-width="100px">
-                <el-form-item prop="beanId" label="发放秀豆">
-                    <el-input class="w200" v-model="queryForm.beanId"></el-input> 枚
+                <el-form-item prop="beanNum" label="发放秀豆">
+                    <el-input class="w200" v-model="queryForm.beanNum"></el-input>（枚）
                 </el-form-item>
                 <el-form-item prop="deliverWays" label="发放方式">
                     <el-radio-group v-model="queryForm.deliverWays" @change="resetQueryForm">
@@ -121,12 +135,12 @@
                         </el-checkbox-group>
                     </el-form-item>
                     <el-form-item prop="regDate" label="注册时间">
-                        <el-date-picker class="w305" type="datetimerange" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="queryForm.regDate" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
+                        <el-date-picker class="w305" type="datetimerange" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" v-model="queryForm.regDate" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
                     </el-form-item>
                     <el-form-item label=" ">
                         <div class="diliver-num">
                             <span>发放人数：{{replacementNum}}</span>
-                            <el-button @click="queryNum" type="primary">查 询</el-button>
+                            <el-button :loading="queryLoading" @click="queryNum" type="primary">查 询</el-button>
                         </div>
                     </el-form-item>
                 </template>
@@ -145,8 +159,34 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" :disabled="!replacementNum && queryForm.deliverWays == 1" @click="confirmDeliver">确 定</el-button>
+                <el-button type="primary" :loading="submitLoading" :disabled="!replacementNum && queryForm.deliverWays == 1" @click="confirmDeliver">确 定</el-button>
                 <el-button @click="handleClose">取 消</el-button>
+            </span>
+        </el-dialog>
+        <!--审核-->
+        <el-dialog
+            title="审核"
+            :visible.sync="auditVisible"
+            width="500px"
+            :before-close="handleAuditClose"
+        >
+            <el-form :model="auditForm" :rules="auditRules" ref="auditForm" inline label-width="100px">
+                <el-form-item prop="auditRes" label="审核结果">
+                    <el-radio-group v-model="auditForm.auditRes">
+                        <el-radio label="2">审核通过</el-radio>
+                        <el-radio label="3">审核驳回</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item prop="reason" label="备注">
+                    <template style="position: relative">
+                        <el-input class="w305" :maxlength="180" type="textarea" :autosize="{ minRows: 6, maxRows: 6 }" v-model="auditForm.reason"></el-input>
+                        <span class="tip">{{reasonLength}}/180</span>
+                    </template>
+                </el-form-item>
+            </el-form>
+            <span slot="footer">
+                <el-button type="primary" :loading="auditLoading" @click="confirmAudit">确 定</el-button>
+                <el-button @click="handleAuditClose">取 消</el-button>
             </span>
         </el-dialog>
     </div>
@@ -156,7 +196,6 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http.js';
-    import utils from '@/utils/index.js';
 
     export default {
         mixins: [myMixinTable],
@@ -164,41 +203,63 @@
         data() {
             return {
                 nav: ['运营管理', '营销工具管理', '秀豆发放列表'],
+                couponType: { 1: '满减券', 2: '抵价券', 3: '折扣券', 4: '抵扣券' },
                 dialogVisible: false,
+                pageLoading: false,
+                queryLoading: false,
+                submitLoading: false,
+                auditVisible: false,
+                auditLoading: false,
                 levelList: [],
                 form: {
-                    code: '',
-                    createUser: '',
-                    createTime: [],
-                    name: '',
-                    updateUser: '',
-                    updateTime: []
+                    genre: '',
+                    status: '',
+                    auditor: '',
+                    auditTime: [],
+                    operator: '',
+                    createTime: []
                 },
                 checkAll: false,
                 isIndeterminate: false,
                 queryForm: {
-                    beanId: '',
+                    beanNum: '',
+                    couponType: '1',
                     deliverWays: '1',
                     deliverLevels: [],
                     deliverNumber: '',
                     regDate: [],
                     tip: ''
                 },
+                auditId: '',
+                auditForm: {
+                    auditRes: '2',
+                    reason: ''
+                },
+                auditRules: {
+                    auditRes: [
+                        { required: true, message: '请选择审核结果', trigger: 'blur' }
+                    ]
+                },
                 replacementNum: 0,
+                selectedCoupon: null,
+                timer: null,
                 rules: {
-                    couponId: [
-                        { required: true, message: '请输入优惠券ID', trigger: 'blur' }
+                    beanNum: [
+                        { required: true, message: '请输入发放秀豆数量', trigger: 'blur' }
                     ],
                     deliverWays: [
                         { required: true, message: '请选择补发方式', trigger: 'blur' }
                     ]
                 },
-                tableData: [{id: '1'}]
+                tableData: [{ id: '1' }]
             };
         },
         computed: {
             tipLength() {
                 return this.queryForm.tip.length || 0;
+            },
+            reasonLength() {
+                return this.auditForm.reason.length || 0;
             }
         },
         mounted() {
@@ -207,12 +268,13 @@
         },
         methods: {
             getList(val) {
+                this.pageLoading = true;
                 this.form.auditTime = this.form.auditTime ? this.form.auditTime : [];
                 this.form.createTime = this.form.createTime ? this.form.createTime : [];
                 const data = {
                     page: val,
                     pageSize: this.page.pageSize,
-                    type: 1,
+                    type: 2,
                     ...this.form,
                     auditBeginTime: this.form.auditTime.length === 0 ? '' : this.form.auditTime[0],
                     auditEndTime: this.form.auditTime.length === 0 ? '' : this.form.auditTime[1],
@@ -222,9 +284,11 @@
                 this.page.currentPage = val;
                 this.tableData = [];
                 request.queryReissuePageList(data).then(res => {
+                    this.pageLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                 }).catch(err => {
+                    this.pageLoading = false;
                     console.log(err);
                 });
             },
@@ -261,13 +325,114 @@
             },
             // 查询补发人数
             queryNum() {
-                this.replacementNum = 666;
-                console.log(this.queryForm.deliverLevels);
-                console.log(this.queryForm.regDate);
+                if (this.queryForm.deliverLevels.length === 0 && this.queryForm.regDate.length === 0) {
+                    return this.$message.warning('查询条件不能为空!');
+                }
+                this.queryLoading = true;
+                const data = {
+                    levelIds: this.queryForm.deliverLevels.join(','),
+                    startTime: this.queryForm.regDate[0],
+                    endTime: this.queryForm.regDate[1]
+                };
+                request.countReissueNum(data).then(res => {
+                    this.queryLoading = false;
+                    const resData = res.data || {};
+                    this.replacementNum = resData.count || 0;
+                }).catch(err => {
+                    this.queryLoading = false;
+                    console.log(err);
+                });
+            },
+            // 号码导入处理
+            getImportListByInput() {
+                let imporList = [];
+                if (this.queryForm.deliverNumber) {
+                    imporList = this.queryForm.deliverNumber.replace(/\r|\n|\s|\./g, ',').split(',').filter(function(item) {
+                        return item !== '';
+                    });
+                }
+                return imporList.length === 0 ? [] : imporList;
             },
             // 确定发放
             confirmDeliver() {
-                console.log(this.queryForm);
+                this.submitLoading = true;
+                let data = {};
+                if (this.queryForm.deliverWays == 1) {
+                    data = {
+                        type: 2,
+                        scoreCount: this.queryForm.beanNum || '',
+                        genre: this.queryForm.deliverWays || '1',
+                        levelIds: this.queryForm.deliverLevels.length === 0 ? '' : this.queryForm.deliverLevels.join(','),
+                        startTime: this.queryForm.regDate.length === 0 ? '' : this.queryForm.regDate[0],
+                        endTime: this.queryForm.regDate.length === 0 ? '' : this.queryForm.regDate[1],
+                        remark: this.queryForm.tip || ''
+                    };
+                } else {
+                    data = {
+                        type: 2,
+                        scoreCount: this.queryForm.beanNum || '',
+                        phones: this.getImportListByInput(),
+                        genre: this.queryForm.deliverWays || '2',
+                        remark: this.queryForm.tip || ''
+                    };
+                    if (data.phone && data.phone.length > 1000) {
+                        return this.$message.warning('最多导入1000条数据！');
+                    }
+                }
+                request.submitReissueBeanOrCoupon(data).then(res => {
+                    this.submitLoading = false;
+                    this.$message.success(res.msg);
+                    this.resetForm('queryForm');
+                    this.handleClose();
+                }).catch(err => {
+                    this.submitLoading = false;
+                    console.log(err);
+                });
+            },
+            // 审核
+            auditRow(row) {
+                this.auditId = row.id;
+                this.auditVisible = true;
+            },
+            // 审核提交
+            confirmAudit() {
+                const data = {
+                    reissueId: this.auditId,
+                    reason: this.auditForm.reason,
+                    status: this.auditForm.auditRes
+                };
+                this.auditLoading = true;
+                request.auditReissueNum(data).then(res => {
+                    this.auditLoading = false;
+                    this.$message.success(res.msg);
+                    this.handleAuditClose();
+                }).catch(err => {
+                    this.auditLoading = false;
+                    console.log(err);
+                });
+            },
+            // 审核关闭弹窗
+            handleAuditClose() {
+                this.$refs['auditForm'].resetFields();
+                this.auditVisible = false;
+                this.getList(this.page.currentPage);
+            },
+            // 发送
+            sendTask(row) {
+                this.$confirm('是否确认发送，一但发送不可中止！', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    request.sendReissueNum({ reissueId: row.id }).then(res => {
+                        this.$message.success(res.msg);
+                        this.getList(this.page.currentPage);
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                }).catch(() => {
+
+                });
             },
             // 重置查询人数
             resetQueryForm() {
@@ -289,6 +454,7 @@
                 this.checkAll = false;
                 this.handleCheckAllChange(false);
                 this.replacementNum = 0;
+                this.selectedCoupon = null;
                 this.dialogVisible = false;
             },
             // 详情

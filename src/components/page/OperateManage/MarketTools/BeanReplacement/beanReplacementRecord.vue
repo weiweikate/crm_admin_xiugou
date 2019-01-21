@@ -34,21 +34,31 @@
         </el-card>
         <el-card>
             <el-table :data="tableData" border stripe>
-                <el-table-column prop="code" label="序号" align="center"></el-table-column>
-                <el-table-column prop="name" label="发放编号" align="center"></el-table-column>
-                <el-table-column prop="numItems" label="秀豆（枚）" align="center"></el-table-column>
-                <el-table-column prop="residualQuantity" label="发放方式" align="center"></el-table-column>
-                <el-table-column prop="residualQuantity" label="发放手机号" align="center"></el-table-column>
+                <el-table-column type="index" label="序号" align="center"></el-table-column>
+                <el-table-column prop="recordId" label="发放编号" align="center"></el-table-column>
+                <el-table-column prop="scoreCount" label="秀豆（枚）" align="center"></el-table-column>
+                <el-table-column prop="genre" label="发放方式" align="center">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.genre == 1">条件发放</span>
+                        <span v-else-if="scope.row.genre == 2">定向发放</span>
+                        <span v-else>-</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="phone" label="发放手机号" align="center"></el-table-column>
                 <el-table-column label="发送状态" align="center">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.status==1">正常</template>
-                        <template v-if="scope.row.status==2">已暂停</template>
+                        <template v-if="scope.row.status==1">成功</template>
+                        <template v-else-if="scope.row.status==2">失败</template>
+                        <template v-else>-</template>
                     </template>
                 </el-table-column>
                 <el-table-column label="领取时间" align="center">
-                    <template slot-scope="scope">{{scope.row.createName}}<br>{{scope.row.createTime|formatDateAll}}</template>
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.updateTime">{{scope.row.updateTime|formatDateAll}}</span>
+                        <span v-else>-</span>
+                    </template>
                 </el-table-column>
-                <el-table-column prop="residualQuantity" label="失败原因" align="center"></el-table-column>
+                <el-table-column prop="reason" label="失败原因" align="center"></el-table-column>
             </el-table>
             <div class="block">
                 <el-pagination
