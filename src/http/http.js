@@ -9,11 +9,12 @@ import * as api_7 from '@/api/SpellShopManage/index.js';
 import * as api_8 from '@/api/BasePramConfig/index.js';
 import * as api_9 from '@/api/ShowValue/index.js';
 import * as api_10 from '@/api/RepertoryManage/index.js';
+import * as api_11 from '@/api/SupplierManage/index.js';
 import { Message, MessageBox } from 'element-ui';
 import store from '../stores';
 import { getToken } from '@/utils/auth';
 
-const api = judgeApiRepeat(api_1, api_2, api_3, api_4, api_5, api_6, api_7, api_8, api_9, api_10);
+const api = judgeApiRepeat(api_1, api_2, api_3, api_4, api_5, api_6, api_7, api_8, api_9, api_10, api_11);
 const list = [];
 const request = {};
 const http = new HttpUtils({
