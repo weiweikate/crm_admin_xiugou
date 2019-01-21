@@ -50,6 +50,8 @@ export const lookDetail = ['/order/afterSaleService/lookDetail', { methods: 'get
 // 人工退款
 export const manualRefund = '/order/afterSaleService/manualRefund';
 // 退款
+export const refund = '/order/afterSaleService/refundByRefundInfo';
+// 退款
 export const refundAmounts = '/order/afterSaleService/refundAmounts';
 // 售后驳回
 export const refuse = '/order/afterSaleService/refuse';
