@@ -6,7 +6,7 @@
             <div class="title">活动信息</div>
             <el-form ref="form" :model="form" label-width="100px" :rules="rules">
                 <el-form-item prop="name" label="活动名称">
-                    <el-input v-model="form.name" maxlength="30" minlength="1"></el-input>
+                    <el-input v-model="form.name" maxlength="30" minlength="1" :disabled="isActivityIng"></el-input>
                 </el-form-item>
                 <el-form-item prop="rules" label="活动规则">
                     <el-button size="big" :type="form.rules.length >= 5 ? 'info' : 'danger'" @click="addRegular">添加区间</el-button> <span style="color:red" v-if="form.rules.length >= 5">最多添加5个区间</span>
@@ -84,26 +84,10 @@
                 </div>
                 <!-- 可选是否赠送优惠券E -->
                 <el-form-item prop="time" label="活动时间" label-width="120">
-                    <div v-if="isActivityIng">
-                        <el-date-picker
-                            v-model="form.startTime"
-                            value-format="yyyy-MM-dd HH:mm:ss"
-                            type="datetime"
-                            :disabled="true"
-                            placeholder="开始时间">
-                        </el-date-picker> -
-                        <el-date-picker
-                            v-model="form.endTime"
-                            value-format="yyyy-MM-dd HH:mm:ss"
-                            type="datetime"
-                            :picker-options="pickerOption"
-                            placeholder="结束时间">
-                        </el-date-picker>
-                    </div>
                     <el-date-picker
-                        v-else
                         :editable="false"
                         v-model="form.time"
+                        :disabled="isActivityIng"
                         type="datetimerange"
                         value-format="yyyy-MM-dd HH:mm:ss"
                         :default-time="['00:00:00', '23:59:59']"

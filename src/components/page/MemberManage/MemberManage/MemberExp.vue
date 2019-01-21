@@ -39,17 +39,19 @@
         <el-card style="margin-top: 20px;">
 
             <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%;margin-top:20px;">
-                <el-table-column prop="userCode" label="授权码" align="center"></el-table-column>
-                <el-table-column prop="phone" label="手机号" width="100" align="center"></el-table-column>
                 <el-table-column prop="sourceCode" label="经验值来源" align="center"></el-table-column>
-                <el-table-column prop="sourceType" label="经验值状态" width="150" align="center">
+                <el-table-column prop="sourceType" label="经验值状态" align="center">
                     <template slot-scope="scope">
                         {{sourceTypeList[scope.row.sourceType]}}
                     </template>
                 </el-table-column>
-                <el-table-column prop="experience" label="赠送经验值" width="150" align="center"></el-table-column>
-                <el-table-column prop="platformOrderNo" label="平台订单号" width="150" align="center"></el-table-column>
-                <el-table-column prop="startTime" label="创建时间" width="150" align="center">
+                <el-table-column prop="experience" label="赠送经验值" align="center"></el-table-column>
+                <el-table-column prop="platformOrderNo" label="平台订单号" align="center">
+                    <template slot-scope="scope">
+                        {{scope.row.platformOrderNo || '/'}}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="startTime" label="创建时间" align="center">
                     <template slot-scope="scope">
                         {{scope.row.createTime | formatDateAll}}
                     </template>
