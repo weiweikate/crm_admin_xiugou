@@ -1,7 +1,7 @@
 <!--<script src="../../../../../webpack.dll.conf.js"></script>-->
 <template>
     <div class="supplier">
-        <v-breadcrumb :nav="['经销商会员管理','供应商管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['供应商管理','供应商列表']"></v-breadcrumb>
         <el-card style="margin:10px 0 20px">
             <el-form ref="form" :inline="true" :model="form">
                 <el-form-item prop="loginName" label="供应商账号">

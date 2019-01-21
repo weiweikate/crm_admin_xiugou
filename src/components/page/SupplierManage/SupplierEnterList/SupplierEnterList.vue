@@ -39,14 +39,16 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import vTabContent from './SupplierEnterList/_tabContent';
-import moment from 'moment.js';
-import request from 'moment.js';
+import moment from 'moment';
+import request from '@/http/http';
+import { myMixinTable } from '@/JS/commom';
 
 export default {
     components: {
         vBreadcrumb,
         vTabContent
     },
+    mixins: [myMixinTable],
 
     data() {
         return {
@@ -75,13 +77,13 @@ export default {
             data.end = this.dateRange.length !== 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD') : '';
             this.$refs[this.activeName].page.currentPage = 1;
             this.$refs[this.activeName].data = data;
-            this.$refs[this.activeName].getList(this.page.currentPage);
-            request.merchantCount(data).then(res => {
+            request.merchantCount().then(res => {
                 if (!res.data) return;
                 this.unProcessed = res.data.unProcessed;
             }).catch(error => {
                 console.log(error);
             });
+            this.$refs[this.activeName].getList(this.page.currentPage);
         },
         //  重置表单
         resetForm(formName) {

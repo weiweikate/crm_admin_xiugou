@@ -18,7 +18,7 @@
             </el-table-column>
             <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
-                    <a href="#/" class="el-button el-button--primary el-button--small">查看</a>
+                    <a href="#/supplierEnterDetail" class="el-button el-button--primary el-button--small">查看</a>
                     <el-button type="success" v-if="scope.row.status==1" @click="handleItem(scope.row.id)">处理</el-button>
                 </template>
             </el-table-column>
@@ -60,7 +60,7 @@ export default {
             status: '',
             tableData: [],
             tableLoading: false,
-            // 新增库存对应参数
+            data: {},
             mask: false,
             itemId: '',
             btnLoading: false
@@ -95,7 +95,7 @@ export default {
             data.status = this.status;
             this.page.currentPage = val;
             this.tableLoading = true;
-            request.queryCouponList(data).then(res => {
+            request.queryMerchant(data).then(res => {
                 if (!res.data) return;
                 this.tableData = [];
                 this.tableData = res.data.data;
@@ -115,7 +115,7 @@ export default {
             const data = {
                 id: this.itemId
             };
-            request.queryCouponList(data).then(res => {
+            request.processed(data).then(res => {
                 if (!res.data) return;
                 this.tableData = [];
                 this.tableData = res.data.data;

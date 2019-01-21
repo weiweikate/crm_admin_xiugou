@@ -1731,8 +1731,15 @@ export const asyncRouterMap = [
                 path: '/editSupplier',
                 component: resolve => require(['../components/page/SupplierManage/SupplierList/EditSupplier.vue'], resolve),
                 meta: { title: '编辑供应商' }
+            },
+            {
+                hidden: true,
+                default: true,
+                name: 'supplierEnterDetail',
+                path: '/supplierEnterDetail',
+                component: resolve => require(['../components/page/SupplierManage/SupplierEnterList/SupplierEnterDetail.vue'], resolve),
+                meta: { title: '供应商入驻详情' }
             }
-
         ]
     }
 
