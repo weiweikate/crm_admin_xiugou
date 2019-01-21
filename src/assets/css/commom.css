@@ -68,6 +68,10 @@
 .href:link, .href:visited{
     color: #33b4ff;
 }
+/*白色字体*/
+.white{
+    color: #fff;
+}
 
 /*居中*/
 .tac{

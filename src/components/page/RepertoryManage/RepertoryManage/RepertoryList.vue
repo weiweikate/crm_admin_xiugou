@@ -45,7 +45,7 @@
             </el-form>
         </el-card>
         <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
-           <el-button type="primary" style="margin-bottom: 20px" @click="$router.push({path:'repertorySet',query:{type:'add'}})">新建仓库</el-button>
+            <a href="#/repertorySet?type=add" target="_blank" style="margin-bottom: 20px" class="add-product el-button--small el-button el-button--primary">新建仓库</a> 
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="id" label="仓库ID" align="center"></el-table-column>
@@ -77,13 +77,13 @@
                 </el-table-column>
                 <el-table-column label="仓库品类数" align="center">
                     <template slot-scope="scope">
-                        <el-button type="primary" @click="toProduct(scope.row)" v-if="scope.row.productCount">{{scope.row.productCount}}</el-button>
+                        <a :href="'#/repertoryInventory?repertotyId='+`${scope.row.code}`" target="_blank" class="el-button el-button--primary el-button--mini" v-if="scope.row.productCount">{{scope.row.productCount}}</a>
                         <span v-else>/</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="仓库报损数" align="center">
                     <template slot-scope="scope">
-                        <el-button type="primary" @click="toLoss(scope.row)" v-if="scope.row.lossCount">{{scope.row.lossCount}}</el-button>
+                        <a :href="'#/repertoryBad?repertotyId='+`${scope.row.code}`" target="_blank" class="el-button el-button--primary el-button--mini" v-if="scope.row.lossCount">{{scope.row.lossCount}}</a>
                         <span v-else>/</span>
                     </template>
                 </el-table-column>
@@ -105,8 +105,8 @@
                 </el-table-column>
                 <el-table-column label="操作" min-width="200">
                     <template slot-scope="scope">
-                        <el-button @click="showInfo(scope.row)" type="primary">详情</el-button>
-                        <el-button @click="editRepertory(scope.row)" type="success" v-if="scope.row.status==2">编辑</el-button>
+                        <a class="el-button el-button--primary el-button--small" :href="'#/repertoryInfo?repertoryInfoId='+`${scope.row.code}`" target="_blank">详情</a>
+                        <a class="el-button el-button--success el-button--small" :href="'#/repertorySet?repertoryId='+`${scope.row.code}`" target="_blank" v-if="scope.row.status==2">编辑</a>
                         <el-button @click="openOrClose(scope.row,1)" type="warning" v-if="scope.row.status==1">停用</el-button>
                         <el-button @click="openOrClose(scope.row,2)" type="warning" v-if="scope.row.status==2">启用</el-button>
                     </template>
@@ -217,22 +217,6 @@ export default {
                 console.log(error);
             });
         },
-        // 查看详情
-        showInfo(row) {
-            sessionStorage.setItem('repertoryInfoId', row.code);
-            this.$router.push({
-                name: 'repertoryInfo',
-                query: { repertoryInfoId: row.code }
-            });
-        },
-        // 编辑
-        editRepertory(row) {
-            sessionStorage.setItem('repertoryId', row.code);
-            this.$router.push({
-                name: 'repertorySet',
-                query: { repertoryId: row.code }
-            });
-        },
         // 重置表单
         resetForm(formName) {
             this.$refs[formName].resetFields();
@@ -245,6 +229,7 @@ export default {
             this.formMask.code = row.code;
             this.formMask.status = row.status;
             this.formMask.verifyCode = '';
+            this.code = true;
             this.codeTime = 60;
             this.title = num === 1 ? '停用仓库' : '启用仓库';
         },
@@ -278,15 +263,6 @@ export default {
                 }, 1000);
                 this.$message.success(res.msg);
             });
-        },
-        // 跳转到品类数
-        toProduct(row) {
-            sessionStorage.setItem('repertotyId', row.code);
-            this.$router.push({ path: '/repertoryInventory', query: { repertotyId: row.code }});
-        },
-        toLoss(row) {
-            sessionStorage.setItem('repertotyId', row.code);
-            this.$router.push({ path: '/repertoryBad', query: { repertotyId: row.code }});
         }
     }
 };
