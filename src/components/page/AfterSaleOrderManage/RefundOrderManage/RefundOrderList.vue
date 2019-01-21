@@ -33,7 +33,7 @@
         </el-card>
         <el-card style='margin-top:20px;minHeight:90vh;' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
-                <!-- <a ref="exportData" class="el-button el-button--primary el-button--small" @click="downloadAfterOrderData">导出</a> -->
+                <a ref="exportData" class="el-button el-button--primary el-button--small" @click="downloadAfterOrderData">导出</a>
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="all">
@@ -96,13 +96,12 @@ export default {
                 serviceNo: this.form.serviceNo,
                 warehouseOrderNo: this.form.warehouseOrderNo,
                 userPhone: this.form.userPhone,
-                status: this.form.status,
-                supplierName: this.form.supplierName,
-                type: this.activeName === 'all' ? '' : this.activeName,
+                refundNo: this.form.refundNo,
+                status: this.activeName === 'all' ? '' : this.activeName,
                 createStartTime: this.dateRange.length !== 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '',
                 createEndTime: this.dateRange.length !== 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : ''
             };
-            this.downloadRefundOrderList = api.downloadAfterOrderList + '?' + this.$utils.setRequestParams(params);
+            this.downloadRefundOrderList = api.downloadRefundOrderList + '?' + this.$utils.setRequestParams(params);
             this.$refs.exportData.href = this.downloadRefundOrderList;
         },
         // 提交表单

@@ -275,5 +275,7 @@ export const getERP = ['/config/erp/get', { methods: 'get' }];
 export const downloadOrderList = '/admin/orderManagement/orders/export';
 // 售后订单导出
 export const downloadAfterOrderList = '/admin/order/afterSaleService/export';
+// 退款订单导出
+export const downloadRefundOrderList = '/admin/order/orderRefundInfo/export';
 // 统计老用户注册数量
 export const countSignUsers = '/user/countSignUsers';
