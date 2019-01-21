@@ -52,7 +52,7 @@
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button type="primary" @click='gotoEditModal(scope.row)'>编辑</el-button>
-                        <el-button type="warning" @click='disableErp(scope.row)'>{{scope.row.status==0?'停用':'启用'}}
+                        <el-button type="warning" @click='disableErp(scope.row)'>{{scope.row.status==0?'启用':'停用'}}
                         </el-button>
                     </template>
                 </el-table-column>
