@@ -22,7 +22,7 @@
                     <el-input v-model="form.auditor"></el-input>
                 </el-form-item>
                 <el-form-item prop="auditTime" label="审核时间">
-                    <el-date-picker type="datetimerange" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.createTime" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
+                    <el-date-picker type="datetimerange" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.auditTime" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
                 </el-form-item>
                 <el-form-item prop="operator" label="创建人">
                     <el-input v-model="form.operator"></el-input>
@@ -37,7 +37,7 @@
             </el-form>
         </el-card>
         <el-card>
-            <el-button type="primary" class="mb10" @click="dialogVisible = true" v-auth="'yunying.marketToolsManage.ggk.xzggk'">发放秀豆</el-button>
+            <el-button type="primary" class="mb10" @click="dialogVisible = true" v-auth="'yunying.marketToolsManage.xiudou.fafang'">发放秀豆</el-button>
             <el-table :data="tableData" border stripe v-loading="pageLoading">
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column prop="scoreCount" label="发放秀豆（枚）" min-width="150px" align="center"></el-table-column>
@@ -81,20 +81,26 @@
                 <el-table-column prop="reply" label="审核说明" align="center"></el-table-column>
                 <el-table-column prop="residualQuantity" label="操作" align="center">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.status == 1" @click="auditRow(scope.row)" class="primary-text">审核</span>
-                        <span v-else>-</span>
+                        <div v-auth="'yunying.marketToolsManage.xiudou.shenhe'">
+                            <span v-if="scope.row.status == 1" @click="auditRow(scope.row)" class="primary-text">审核</span>
+                            <span v-else>-</span>
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column prop="residualQuantity" label="操作" align="center">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.status == 2" @click="sendTask(scope.row)" class="primary-text">发送</span>
-                        <span v-else-if="scope.row.status == 5" class="grey-text">已发送</span>
-                        <span v-else>-</span>
+                        <div v-auth="'yunying.marketToolsManage.xiudou.fasong'">
+                            <span v-if="scope.row.status == 2" @click="sendTask(scope.row)" class="primary-text">发送</span>
+                            <span v-else-if="scope.row.status == 5" class="grey-text">已发送</span>
+                            <span v-else>-</span>
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" min-width="100px" align="center">
                     <template slot-scope="scope">
-                        <span @click="toDetail(scope.row.id)" class="primary-text">查看</span>
+                        <div v-auth="'yunying.marketToolsManage.xiudou.chakan'">
+                            <span @click="toDetail(scope.row.id)" class="primary-text">查看</span>
+                        </div>
                     </template>
                 </el-table-column>
             </el-table>
@@ -331,8 +337,8 @@
                 this.queryLoading = true;
                 const data = {
                     levelIds: this.queryForm.deliverLevels.join(','),
-                    startTime: this.queryForm.regDate[0],
-                    endTime: this.queryForm.regDate[1]
+                    startTime: this.queryForm.regDate[0] || '',
+                    endTime: this.queryForm.regDate[1] || ''
                 };
                 request.countReissueNum(data).then(res => {
                     this.queryLoading = false;

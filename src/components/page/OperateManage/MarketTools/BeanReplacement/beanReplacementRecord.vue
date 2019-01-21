@@ -21,7 +21,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="createTime" label="领取时间">
-                    <el-date-picker type="datetimerange" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.createTime" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
+                    <el-date-picker type="datetimerange" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.updataTime" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
                 </el-form-item>
                 <el-form-item prop="name" label="发放编号">
                     <el-input v-model="form.name"></el-input>
@@ -33,7 +33,7 @@
             </el-form>
         </el-card>
         <el-card>
-            <el-table :data="tableData" border stripe>
+            <el-table v-loading="pageLoading" :data="tableData" border stripe>
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="recordId" label="发放编号" align="center"></el-table-column>
                 <el-table-column prop="scoreCount" label="秀豆（枚）" align="center"></el-table-column>
@@ -87,6 +87,7 @@
         data() {
             return {
                 nav: ['运营管理', '营销工具管理', '秀豆发放记录列表'],
+                pageLoading: false,
                 form: {
                     code: '',
                     createUser: '',
@@ -103,6 +104,7 @@
         },
         methods: {
             getList(val) {
+                this.pageLoading = true;
                 this.form.updataTime = this.form.updataTime ? this.form.updataTime : [];
                 const data = {
                     page: val,
@@ -115,9 +117,11 @@
                 this.page.currentPage = val;
                 this.tableData = [];
                 request.queryReissueRecordPageList(data).then(res => {
+                    this.pageLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                 }).catch(err => {
+                    this.pageLoading = false;
                     console.log(err);
                 });
             },
