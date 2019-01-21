@@ -160,7 +160,7 @@ export default {
                     value: 0
                 }
             ],
-            nav: ['系统管理', 'ERP账号管理'],
+            nav: ['供应商管理', 'ERP列表'],
             form: {
                 name: '',
                 date: '',

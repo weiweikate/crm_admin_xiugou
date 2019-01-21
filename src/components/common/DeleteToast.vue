@@ -33,7 +33,7 @@
             status: {},
             isTopic: {},
             isProperty: {},
-            type:''
+            type: ''
         },
         components: {
             icon
@@ -72,7 +72,7 @@
                     }).catch(err => {
                         that.btnLoading = false;
                         this.$emit('msg', false);
-                        this.$message.warning(err.msg);
+                        this.$message.warning(err);
                     });
                 } else {
                     this.$emit('msg', false);
