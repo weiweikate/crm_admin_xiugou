@@ -41,7 +41,7 @@
                     <template slot-scope="scope">
                         <span v-if="scope.row.genre == 1">条件发放</span>
                         <span v-else-if="scope.row.genre == 2">定向发放</span>
-                        <span v-else>-</span>
+                        <span v-else>/</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="phone" label="发放手机号" align="center"></el-table-column>
@@ -49,16 +49,23 @@
                     <template slot-scope="scope">
                         <template v-if="scope.row.status==1">成功</template>
                         <template v-else-if="scope.row.status==2">失败</template>
-                        <template v-else>-</template>
+                        <template v-else>/</template>
                     </template>
                 </el-table-column>
                 <el-table-column label="领取时间" align="center">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.updateTime">{{scope.row.updateTime|formatDateAll}}</span>
-                        <span v-else>-</span>
+                        <span v-if="scope.row.status == 1">{{scope.row.updateTime|formatDateAll}}</span>
+                        <span v-else-if="scope.row.status == 2">/</span>
+                        <span v-else>/</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="reason" label="失败原因" align="center"></el-table-column>
+                <el-table-column prop="reason" label="失败原因" align="center">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.status == 1">/</span>
+                        <span v-else-if="scope.row.status == 2">{{scope.row.reason}}</span>
+                        <span v-else>/</span>
+                    </template>
+                </el-table-column>
             </el-table>
             <div class="block">
                 <el-pagination
