@@ -124,7 +124,7 @@
             :before-close="handleClose">
             <el-form :model="queryForm" :rules="rules" ref="queryForm" inline label-width="100px">
                 <el-form-item prop="beanNum" label="发放秀豆">
-                    <el-input-number :mix="1" :controls="false" :max="5" class="w200" v-model="queryForm.beanNum"></el-input-number>（枚）
+                    <el-input class="w200" v-model="queryForm.beanNum"></el-input>（枚）
                 </el-form-item>
                 <el-form-item prop="deliverWays" label="发放方式">
                     <el-radio-group v-model="queryForm.deliverWays" @change="resetQueryForm">
@@ -362,6 +362,10 @@
             // 确定发放
             confirmDeliver() {
                 let data = {};
+                const reg = /^[1-5]$/;
+                if (!reg.test(this.queryForm.beanNum)) {
+                    return this.$message.warning('请输入1-5的正整数！');
+                }
                 if (this.queryForm.deliverWays == 1) {
                     data = {
                         type: 2,
