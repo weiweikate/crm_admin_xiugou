@@ -108,7 +108,7 @@ export const asyncRouterMap = [
             {
                 name: 'supplierEnterList',
                 path: '/supplierEnterList',
-                component: resolve => require(['../components/page/SupplierManage/supplierEnterList/supplierEnterList.vue'], resolve),
+                component: resolve => require(['../components/page/SupplierManage/SupplierEnterList/SupplierEnterList.vue'], resolve),
                 meta: { title: '供应商申请入驻列表', noKeepAlive: true }
             },
             {
