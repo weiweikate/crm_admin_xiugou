@@ -351,8 +351,13 @@
                 this.timer = setTimeout(() => {
                     request.getCouponById({ id: this.queryForm.couponId }).then(res => {
                         const resData = res.data || {};
-                        this.selectedCoupon = resData.name || 0;
-                        this.couponTypeSelf = resData.type || null;
+                        if (resData.status == 2) {
+                            this.selectedCoupon = resData.name || 0;
+                            this.couponTypeSelf = resData.type || null;
+                        } else {
+                            this.selectedCoupon = '该优惠券不可用!';
+                            this.couponTypeSelf = null;
+                        }
                     }).catch(err => {
                         this.selectedCoupon = '查询失败！';
                         this.couponTypeSelf = null;
