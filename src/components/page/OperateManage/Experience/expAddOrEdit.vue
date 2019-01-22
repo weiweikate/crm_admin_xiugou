@@ -6,12 +6,12 @@
             <div class="title">活动信息</div>
             <el-form ref="form" :model="form" label-width="100px" :rules="rules">
                 <el-form-item prop="name" label="活动名称">
-                    <el-input v-model="form.name" maxlength="30" minlength="1"></el-input>
+                    <el-input v-model="form.name" maxlength="30" minlength="1" :disabled="isActivityIng"></el-input>
                 </el-form-item>
                 <el-form-item prop="rules" label="活动规则">
                     <el-button size="big" :type="form.rules.length >= 5 ? 'info' : 'danger'" @click="addRegular">添加区间</el-button> <span style="color:red" v-if="form.rules.length >= 5">最多添加5个区间</span>
                     <div class="regular-list mt20">
-                        <div class="regular-item mt10" v-for="(item,index) in form.rules">
+                        <div class="regular-item mt10" v-for="(item,index) in form.rules" :key="index">
                             购满买 <el-input-number
                                     :controls="false"
                                     v-model.number="item.startPrice"
@@ -55,7 +55,7 @@
                             <span class="coupon-err" v-else>优惠券不存在</span>
                             <div class="coupon-name" v-if="couponInfo">{{couponInfo.name}}</div>
                             <div class="coupon-regular mt10" v-if="checkCoupon">
-                                每  <el-input style="width: 100px;" v-model="form.rules[0].startPrice" :disabled="true"></el-input> 元，赠送优惠券
+                                每  <el-input style="width: 100px;" v-model="form.startPrice" :disabled="isActivityIng"></el-input> 元，赠送优惠券
                                 <el-input-number
                                     :controls="false"
                                     :min="1" :precision="0"
@@ -84,26 +84,10 @@
                 </div>
                 <!-- 可选是否赠送优惠券E -->
                 <el-form-item prop="time" label="活动时间" label-width="120">
-                    <div v-if="isActivityIng">
-                        <el-date-picker
-                            v-model="form.startTime"
-                            value-format="yyyy-MM-dd HH:mm:ss"
-                            type="datetime"
-                            :disabled="true"
-                            placeholder="开始时间">
-                        </el-date-picker> -
-                        <el-date-picker
-                            v-model="form.endTime"
-                            value-format="yyyy-MM-dd HH:mm:ss"
-                            type="datetime"
-                            :picker-options="pickerOption"
-                            placeholder="结束时间">
-                        </el-date-picker>
-                    </div>
                     <el-date-picker
-                        v-else
                         :editable="false"
                         v-model="form.time"
+                        :disabled="isActivityIng"
                         type="datetimerange"
                         value-format="yyyy-MM-dd HH:mm:ss"
                         :default-time="['00:00:00', '23:59:59']"
@@ -225,7 +209,7 @@
                 <el-button type="danger" @click="getList(1)">搜索</el-button>
             </el-form>
             <div class="dialog-body" v-loading="searchLoading">
-                <div class="dialog-good-item" v-for="(item,index) in searchGoods" @click="toggleGoodChecked(index)">
+                <div class="dialog-good-item" v-for="(item,index) in searchGoods" @click="toggleGoodChecked(index)" :key="index">
                     <img :src="item.imgUrl || '/static/img/defaultImg.png'" alt="good img">
                     <div class="dialog-good-name">{{item.name}}</div>
                     <div class="dialog-good-shade" v-if="item.checked">已选中</div>
@@ -264,7 +248,7 @@
         <el-dialog title="商品添加失败" :visible.sync="errorDialog" center @close="dealErrSpuGoods">
             红字的为SPU导入失败异常原因, 关闭窗口后剔除错误商品
             <div class="err-list">
-                <div class="err-item" v-for="item in checkActivityProductRes">
+                <div class="err-item" v-for="(item,index) in checkActivityProductRes" :key="index">
                     <span class="err-item-code">{{item.spuCode}}</span><span class="inline red">{{item.errMsg}}</span>
                 </div>
             </div>
@@ -733,7 +717,7 @@
                     });
                     data.spuCodes = arr;
                 }
-                data.startPrice = this.form.rules[0].startPrice;
+                data.startPrice = this.form.startPrice;
                 const t = this.form.time;
                 if (!this.isActivityIng && t && t.length) {
                     data.startTime = t[0];

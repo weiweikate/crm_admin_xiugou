@@ -205,3 +205,18 @@ export const getCouponById = ['/coupon/findById', { methods: 'get' }];
 export const checkActivityProduct = ['/operator/activityExperienceProd/checkActivityProduct', { methods: 'get' }];
 // 关闭活动商品
 export const closeProduct = ['/operator/activityExperienceProd/closeProduct', { methods: 'get' }];
+/** ************优惠券补发相关*****************/
+// 查询优惠券/秀豆发放列表
+export const queryReissuePageList = ['/reissue/queryReissuePageList', { methods: 'post' }];
+// 根据ID查询发放详情
+export const findReissueById = ['/reissue/findReissueById', { methods: 'get' }];
+// 查询优惠券/秀豆发放记录列表
+export const queryReissueRecordPageList = ['/reissue/queryReissueRecordPageList', { methods: 'post' }];
+// 优惠券/秀豆提交
+export const submitReissueBeanOrCoupon = ['/reissue/submit', { methods: 'post' }];
+// 查询人数
+export const countReissueNum = ['/reissue/count', { methods: 'get' }];
+// 发送操作
+export const sendReissueNum = ['/reissue/send', { methods: 'get' }];
+// 审核操作
+export const auditReissueNum = ['/reissue/review', { methods: 'get' }];

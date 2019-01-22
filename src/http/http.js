@@ -23,7 +23,7 @@ const http = new HttpUtils({
         'Content-Type': 'application/json'
     },
     // 超时时间
-    timeout: 10000,
+    timeout: 60000,
     _transformRequest: function(config) {
         config.headers['token'] = getToken();
         return config;
