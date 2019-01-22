@@ -3,28 +3,28 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="mb10">
             <el-form :model="form" ref="form" inline label-width="120px">
-                <el-form-item prop="name" label="发放手机号">
-                    <el-input v-model="form.name"></el-input>
+                <el-form-item prop="phone" label="发放手机号">
+                    <el-input v-model="form.phone"></el-input>
                 </el-form-item>
-                <el-form-item prop="code" label="发放状态">
-                    <el-select v-model="form.createUser">
+                <el-form-item prop="status" label="发放状态">
+                    <el-select v-model="form.status">
                         <el-option label="全部" value=""></el-option>
                         <el-option label="成功" value="1"></el-option>
                         <el-option label="失败" value="2"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="createUser" label="发放方式">
-                    <el-select v-model="form.createUser">
+                <el-form-item prop="genre" label="发放方式">
+                    <el-select v-model="form.genre">
                         <el-option label="全部" value=""></el-option>
                         <el-option label="条件发放" value="1"></el-option>
                         <el-option label="定向发放" value="2"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="createTime" label="领取时间">
+                <el-form-item prop="updataTime" label="领取时间">
                     <el-date-picker type="datetimerange" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.updataTime" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
                 </el-form-item>
-                <el-form-item prop="name" label="发放编号">
-                    <el-input v-model="form.name"></el-input>
+                <el-form-item prop="recordId" label="发放编号">
+                    <el-input v-model="form.recordId"></el-input>
                 </el-form-item>
                 <el-form-item label=" ">
                     <el-button @click="getList(1)" type="primary">查 询</el-button>
@@ -89,12 +89,11 @@
                 nav: ['运营管理', '营销工具管理', '秀豆发放记录列表'],
                 pageLoading: false,
                 form: {
-                    code: '',
-                    createUser: '',
-                    createTime: [],
-                    name: '',
-                    updateUser: '',
-                    updateTime: []
+                    phone: '',
+                    status: '',
+                    genre: '',
+                    updataTime: [],
+                    recordId: ''
                 },
                 tableData: [{id: '1'}]
             };
