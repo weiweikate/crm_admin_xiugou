@@ -46,7 +46,7 @@
         <!--查看全部-->
         <el-dialog title="查看全部" :visible.sync="allMask">
             <div>
-                <span>浙江省</span>
+                <span>{{addressName}}</span>
                 <span>
                     <i class="el-icon-circle-plus-outline" @click="addRepertory(allData,addressCode,type)"></i>
                 </span>
@@ -97,6 +97,7 @@ export default {
             formMask: {},
             mask: false,
             allMask: false,
+            addressName: '',
             allData: [], // 查看全部数据
             tempAllData: [], // 暂时存放查看的全部数据
             deleteMask: false,
@@ -189,6 +190,7 @@ export default {
             this.tempAllData = [];
             this.tempAllData.push(...this.allData);
             this.allMask = true;
+            this.addressName = row.addressName;
             this.row = row;
             this.addressCode = row.addressCode;
             this.type = num;
