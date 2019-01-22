@@ -35,10 +35,12 @@
                 <el-form-item label="可用层级">{{couponInfo.userLevel}}</el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
-                <el-form-item label="发放数量">{{couponInfo.totalNumber || '-'}}张</el-form-item>
+                <el-form-item v-if="couponInfo.totalNumber == -1" label="发放数量">不限量</el-form-item>
+                <el-form-item v-else label="发放数量">{{couponInfo.totalNumber || '-'}}张</el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
-                <el-form-item label="每人限领">{{couponInfo.getLimit || '-'}}张</el-form-item>
+                <el-form-item v-if="couponInfo.getLimit == -1" label="每人限领">不限量</el-form-item>
+                <el-form-item v-else label="每人限领">{{couponInfo.getLimit || '-'}}张</el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
                 <el-form-item label="优惠券说明">{{couponInfo.remarks || '-'}}</el-form-item>
