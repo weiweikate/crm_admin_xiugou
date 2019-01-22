@@ -710,7 +710,7 @@
                     data.couponId = '';
                 }
                 // todo 如果活动未开始 spuCodes为活动商品表中的所有 否则的话就是添加的部分
-                if (this.isActivityWaiting) {
+                if (!this.isActivityIng) {
                     const arr = [];
                     this.tableData.forEach(item => {
                         arr.push(item.spuCode);
