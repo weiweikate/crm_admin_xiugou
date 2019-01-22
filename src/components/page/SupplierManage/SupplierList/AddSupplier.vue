@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-breadcrumb :nav="['经销商会员管理','供应商管理','添加供应商']"></v-breadcrumb>
+        <v-breadcrumb :nav="['供应商管理','供应商列表','添加供应商']"></v-breadcrumb>
         <div class="container">
             <div class="supplier-box">
                 <el-form :model="form" ref="form" :rules="rules">

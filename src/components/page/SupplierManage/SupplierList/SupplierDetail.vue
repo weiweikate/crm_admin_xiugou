@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-breadcrumb :nav="['会员管理','供应商管理','供应商详情']"></v-breadcrumb>
+        <v-breadcrumb :nav="['供应商管理','供应商列表','供应商详情']"></v-breadcrumb>
         <div class="container" v-loading="loading">
             <div class="basic-inf-area">
                 <div class="item-row">

@@ -27,7 +27,7 @@
             </el-form>
         </el-card>
         <el-card :body-style="{ padding: '20px 40px',}" style="margin-top:20px">
-            <el-button @click="gotoAddModal" type="success" style="margin-bottom: 10px;">添加ERP</el-button>
+            <el-button @click="gotoAddModal" type="success" style="margin-bottom: 10px;" v-auth="'supplier.erp.tj'">添加ERP</el-button>
             <el-table :data="tableData" border :height="height" v-loading="loading">
                 <el-table-column prop="erpCode" label="ERP编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="ERP名称" align="center"></el-table-column>
@@ -45,8 +45,8 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button type="primary" @click='gotoEditModal(scope.row)'>编辑</el-button>
-                        <el-button type="warning" @click='disableErp(scope.row)'>{{scope.row.status==0?'停用':'启用'}}
+                        <el-button type="primary" @click='gotoEditModal(scope.row)' v-auth="'supplier.erp.bj'">编辑</el-button>
+                        <el-button :type="scope.row.status==0?'warning':'success'" @click='disableErp(scope.row)' v-auth="'supplier.erp.tyqy'">{{scope.row.status==0?'启用':'停用'}}
                         </el-button>
                     </template>
                 </el-table-column>

@@ -18,8 +18,8 @@
             </el-table-column>
             <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
-                    <a :href="'#/supplierEnterDetail?supplierEnterId='+`${scope.row.id}`" class="el-button el-button--primary el-button--small">查看</a>
-                    <el-button type="success" v-if="scope.row.status==0" @click="handleItem(scope.row.id)">处理</el-button>
+                    <a :href="'#/supplierEnterDetail?supplierEnterId='+`${scope.row.id}`" class="el-button el-button--primary el-button--small" v-auth="'supplier.supplierEnterList.xq'">查看</a>
+                    <el-button type="success" v-if="scope.row.status==0" @click="handleItem(scope.row.id)" v-auth="'supplier.supplierEnterList.cl'">处理</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -44,7 +44,7 @@ import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 
 export default {
-    props: ['name', 'unProcessed'],
+    props: ['name'],
     components: {},
     mixins: [myMixinTable],
 
@@ -82,7 +82,7 @@ export default {
                         .merchantCount()
                         .then(resData => {
                             if (!resData.data) return;
-                            this.$emit('val', resData.data.unProcessed);
+                            this.$emit('unProcessed', resData.data.unProcessed || 0);
                         })
                         .catch(error => {
                             console.log(error);

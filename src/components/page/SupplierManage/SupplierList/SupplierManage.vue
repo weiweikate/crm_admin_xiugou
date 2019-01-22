@@ -47,7 +47,7 @@
         </el-card>
         <div class="table-block">
             <template>
-                <el-button type="primary" style="margin-bottom: 20px" @click="addSupplier" v-auth="'vip.supplierManage.tjgys'">添加供应商</el-button>
+                <el-button type="primary" style="margin-bottom: 20px" @click="addSupplier" v-auth="'supplier.supplierManage.tjgys'">添加供应商</el-button>
                 <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%">
                     <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
                     <el-table-column prop="loginName" label="供应商账号" width="100" align="center"></el-table-column>
@@ -84,19 +84,19 @@
                     </el-table-column>
                     <el-table-column label="操作" align="center" width="300">
                         <template slot-scope="scope">
-                            <el-button type="warning" size="small" @click="detailItem(scope.$index,scope.row)" v-auth="'vip.supplierManage.xq'">详情
+                            <el-button type="warning" size="small" @click="detailItem(scope.$index,scope.row)" v-auth="'supplier.supplierManage.xq'">详情
                             </el-button>
                             <template v-if="scope.row.status==2">
-                                <el-button type="primary" size="small" @click="editItem(scope.$index,scope.row)" v-auth="'vip.supplierManage.bj'">编辑
+                                <el-button type="primary" size="small" @click="editItem(scope.$index,scope.row)" v-auth="'supplier.supplierManage.bj'">编辑
                                 </el-button>
                             </template>
                             <template v-else>
-                                <el-button type="primary" disabled size="small" @click="editItem(scope.$index,scope.row)" v-auth="'vip.supplierManage.bj'">编辑
+                                <el-button type="primary" disabled size="small" @click="editItem(scope.$index,scope.row)" v-auth="'supplier.supplierManage.bj'">编辑
                                 </el-button>
                             </template>
-                            <el-button type="danger" :disabled="!(scope.row.porductNum === 0)" v-if="scope.row.status==1" size="small" @click="updateStatusItem(scope.$index,scope.row.code,1)" v-auth="'vip.supplierManage.ty'">停用
+                            <el-button type="danger" :disabled="!(scope.row.porductNum === 0)" v-if="scope.row.status==1" size="small" @click="updateStatusItem(scope.$index,scope.row.code,1)" v-auth="'supplier.supplierManage.tyqy'">停用
                             </el-button>
-                            <el-button type="danger" v-if="scope.row.status==2" size="small" @click="updateStatusItem(scope.$index,scope.row.code,2)" v-auth="'vip.supplierManage.ty'">启用
+                            <el-button type="danger" v-if="scope.row.status==2" size="small" @click="updateStatusItem(scope.$index,scope.row.code,2)" v-auth="'supplier.supplierManage.tyqy'">启用
 
                             </el-button>
                         </template>

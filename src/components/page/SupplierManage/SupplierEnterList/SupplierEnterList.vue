@@ -22,13 +22,13 @@
         <el-card style='margin-top:20px;minHeight:90vh;' :body-style="{ padding: '20px 50px' }">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="all">
-                    <v-tab-content ref="all" @unProcessed='unProcessed' :unProcessed="unProcessed"></v-tab-content>
+                    <v-tab-content ref="all" @unProcessed='unProcessed'></v-tab-content>
                 </el-tab-pane>
-                <el-tab-pane :label="`待处理(${unProcessed})`" name="0">
-                    <v-tab-content ref="0" @unProcessed='unProcessed' :unProcessed="unProcessed"></v-tab-content>
+                <el-tab-pane :label="`待处理(${unProcessedCount})`" name="0">
+                    <v-tab-content ref="0" @unProcessed='unProcessed'></v-tab-content>
                 </el-tab-pane>
                 <el-tab-pane label="已处理" name="1">
-                    <v-tab-content ref="1" @unProcessed='unProcessed' :unProcessed="unProcessed"></v-tab-content>
+                    <v-tab-content ref="1" @unProcessed='unProcessed'></v-tab-content>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
@@ -58,7 +58,7 @@ export default {
                 brandName: ''
             },
             dateRange: [],
-            unProcessed: 0 // 待处理数目
+            unProcessedCount: 0 // 待处理数目
         };
     },
     mounted() {
@@ -66,8 +66,7 @@ export default {
     },
     methods: {
         unProcessed(val) {
-            console.log(111);
-            this.unProcessed = val;
+            this.unProcessedCount = val;
         },
         handleClick(tab) {
             this.activeName = tab.name;
