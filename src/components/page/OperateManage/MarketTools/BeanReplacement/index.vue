@@ -56,8 +56,8 @@
                 <el-table-column label="审核状态" align="center">
                     <template slot-scope="scope">
                         <template v-if="scope.row.status==1">审核中</template>
-                        <template v-else-if="scope.row.status==2 || scope.row.status==4 || scope.row.status==5">审核通过</template>
-                        <template v-else-if="scope.row.status==3">审核失败</template>
+                        <template v-else-if="scope.row.status==2 || scope.row.status==4 || scope.row.status==5">已审核</template>
+                        <template v-else-if="scope.row.status==3">审核驳回</template>
                         <template v-else>-</template>
                     </template>
                 </el-table-column>
@@ -361,7 +361,6 @@
             },
             // 确定发放
             confirmDeliver() {
-                this.submitLoading = true;
                 let data = {};
                 if (this.queryForm.deliverWays == 1) {
                     data = {
@@ -385,6 +384,7 @@
                         return this.$message.warning('最多导入1000条数据！');
                     }
                 }
+                this.submitLoading = true;
                 request.submitReissueBeanOrCoupon(data).then(res => {
                     this.submitLoading = false;
                     this.$message.success(res.msg);

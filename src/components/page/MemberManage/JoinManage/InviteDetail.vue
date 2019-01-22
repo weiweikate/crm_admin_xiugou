@@ -4,7 +4,7 @@
         <div class="container" v-loading="loading" >
             <div class="basic-inf-area line">
                 <div class="item-row">
-                    邀请层级：{{msg.level === null? '' : `v${msg.level}`}}
+                    邀请层级：{{msg.level === null || msg.level === undefined? '' : `v${msg.level}`}}
                 </div>
                 <div class="item-row" v-if="msg.invalidType==1">
                     邀请链接打开次数：
