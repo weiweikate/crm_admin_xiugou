@@ -362,6 +362,10 @@
             // 确定发放
             confirmDeliver() {
                 let data = {};
+                const reg = /^[1-5]$/;
+                if (!reg.test(this.queryForm.beanNum)) {
+                    return this.$message.warning('请输入1-5的正整数！');
+                }
                 if (this.queryForm.deliverWays == 1) {
                     data = {
                         type: 2,

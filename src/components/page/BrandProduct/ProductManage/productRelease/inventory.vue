@@ -637,6 +637,8 @@
                         {
                             style: {
                                 display: 'inline-block',
+                                position: 'relative',
+                                top: '12px',
                                 width: '50%',
                                 vertical: 'top'
                             },
