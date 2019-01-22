@@ -12,11 +12,11 @@
                         <span v-else>无</span>
                     </div>
                     <div v-for="(item,index) in detail.completeFileVOS" :key="index" class="mar">
-                          <div class="img-area">
-                                <img :src="item.completeFileUrl" alt="">
-                                <span :title="item.completeFileName">{{item.completeFileName}}</span>  
-                          </div>
-                          <a :href="item.completeFileUrl" class="el-button el-button--primary">下载附件</a>
+                        <div class="img-area">
+                            <img :src="item.completeFileUrl" alt="">
+                            <span :title="item.completeFileName">{{item.completeFileName}}</span>
+                        </div>
+                        <a @click="downloadIamge(item.completeFileUrl,item.completeFileName)" class="el-button el-button--primary">下载附件</a>
                     </div>
                 </el-form-item>
                 <el-form-item label="联系人">{{detail.name}}</el-form-item>
@@ -32,13 +32,13 @@
                 <el-form-item label="官网链接">{{detail.url||`/`}}</el-form-item>
                 <el-form-item label="商品清单" class="product-area">
                     <div class="sub-title">包括供货报价及零售价</div>
-                        <div v-for="(item,index) in detail.productListFileVOS" :key="index" :class="index!=0?'mar':''">
-                               <div class="img-area">
-                                    <img src="/static/img/file.png" alt="">
-                                    <span :title="item.productListFileName">{{item.productListFileName}}</span>  
-                               </div>
-                               <a :href="item.productListFileUrl" class="el-button el-button--primary">下载附件</a>
-                        </div> 
+                    <div v-for="(item,index) in detail.productListFileVOS" :key="index" :class="index!=0?'mar':''">
+                        <div class="img-area">
+                            <img src="/static/img/file.png" alt="">
+                            <span :title="item.productListFileName">{{item.productListFileName}}</span>
+                        </div>
+                        <a :href="item.productListFileUrl" class="el-button el-button--primary">下载附件</a>
+                    </div>
                 </el-form-item>
                 <el-form-item label="其他电商合作平台">{{detail.otherPlatform||`/`}}</el-form-item>
                 <el-form-item label="品牌详情页是否完整">{{detail.isBrandComplete==0?'是':'否'}}</el-form-item>
@@ -48,7 +48,7 @@
                 </div>
             </el-form>
         </el-card>
-       
+
     </div>
 </template>
 
@@ -90,53 +90,72 @@ export default {
                     this.loading = false;
                     console.log(err);
                 });
+        },
+        // 下载图片
+        downloadIamge(imgsrc, name) {
+            let image = new Image();
+            // 解决跨域 Canvas 污染问题
+            image.setAttribute('crossOrigin', 'anonymous');
+            image.onload = function() {
+                let canvas = document.createElement('canvas');
+                canvas.width = image.width;
+                canvas.height = image.height;
+                let context = canvas.getContext('2d');
+                context.drawImage(image, 0, 0, image.width, image.height);
+                let url = canvas.toDataURL('image/png'); //得到图片的base64编码数据
+                let a = document.createElement('a'); // 生成一个a元素
+                let event = new MouseEvent('click'); // 创建一个单击事件
+                a.download = name || 'photo'; // 设置图片名称
+                a.href = url; // 将生成的URL设置为a.href属性
+                a.dispatchEvent(event); // 触发a的单击事件
+            };
+            image.src = imgsrc;
         }
     }
 };
 </script>
 <style scoped lang="less">
-.supplier-enter{
-    .el-form{
-      padding: 0 50px;  
+.supplier-enter {
+    .el-form {
+        padding: 0 50px;
     }
-    .title{
+    .title {
         font-weight: 600;
         line-height: 40px;
-        font-size: 18px
+        font-size: 18px;
     }
-    .line{
+    .line {
         border-top: 1px dashed #aaa;
     }
-    .el-form-item{
+    .el-form-item {
         margin-bottom: 0;
-        
     }
-    /deep/.el-form-item__label{
+    /deep/.el-form-item__label {
         width: 140px;
-        text-align: left
+        text-align: left;
     }
-    .product-area{
+    .product-area {
         position: relative;
-        .sub-title{
+        .sub-title {
             position: absolute;
             left: 0;
-            top:15px;
-            color:#aaa;
-            font-size: 12px
+            top: 15px;
+            color: #aaa;
+            font-size: 12px;
         }
     }
-    .img-area{
-        border:1px dashed #aaa;
+    .img-area {
+        border: 1px dashed #aaa;
         width: 300px;
         padding: 5px;
         margin-bottom: 5px;
         display: inline-block;
-        img{
+        img {
             width: 40px;
             height: 40px;
             vertical-align: middle;
         }
-        span{
+        span {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -146,8 +165,8 @@ export default {
             vertical-align: middle;
         }
     }
-    .mar{
-        margin:0 0 0 140px;
+    .mar {
+        margin: 0 0 0 140px;
     }
 }
 </style>
