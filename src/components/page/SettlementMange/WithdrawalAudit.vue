@@ -2,7 +2,7 @@
     <div class="witdrawal-audit">
         <v-breadcrumb :nav="['结算管理','提现审核']"></v-breadcrumb>
         <el-card :body-style="{ padding: '30px' }">
-            <el-form :model="form" ref='form' inline>
+            <el-form :model="form" ref='form' @submit.native.prevent inline>
                 <el-form-item prop="applyPeople" label="申请人">
                     <el-input v-model="form.applyPeople" placeholder="请输入申请人"></el-input>
                 </el-form-item>
@@ -20,7 +20,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label=" ">
-                    <el-button type="primary" @click="submitForm(1)">查询</el-button>
+                    <el-button native-type="submit" type="primary" @click="submitForm(1)">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>

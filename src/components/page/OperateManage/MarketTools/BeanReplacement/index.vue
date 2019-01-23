@@ -2,7 +2,7 @@
     <div class="deliver-coupon">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="mb10">
-            <el-form :model="form" ref="form" inline label-width="120px">
+            <el-form :model="form" @submit.native.prevent ref="form" inline label-width="120px">
                 <el-form-item prop="genre" label="发放方式">
                     <el-select v-model="form.genre">
                         <el-option label="全部" value=""></el-option>
@@ -31,7 +31,7 @@
                     <el-date-picker type="datetimerange" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.createTime" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
                 </el-form-item>
                 <el-form-item label=" ">
-                    <el-button @click="getList(1)" type="primary">查 询</el-button>
+                    <el-button native-type="submit" @click="getList(1)" type="primary">查 询</el-button>
                     <el-button @click="resetForm('form')" >重 置</el-button>
                 </el-form-item>
             </el-form>
