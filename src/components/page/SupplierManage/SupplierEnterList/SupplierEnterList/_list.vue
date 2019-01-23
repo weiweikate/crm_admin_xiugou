@@ -5,7 +5,7 @@
             <el-table-column prop="merchantName" label="商家名称" align="center"></el-table-column>
             <el-table-column prop="merchantType" label="商家类型" align="center"></el-table-column>
             <el-table-column prop="brandName" label="品牌名称" align="center"></el-table-column>
-            <el-table-column prop="brandType" label="品牌类型" align="center"></el-table-column>
+            <el-table-column prop="brandType" label="产品类型" align="center"></el-table-column>
             <el-table-column prop="name" label="联系人" align="center"></el-table-column>
             <el-table-column prop="telephone" label="联系方式" align="center"></el-table-column>
             <el-table-column prop="remark" label="备注说明" align="center"></el-table-column>

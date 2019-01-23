@@ -28,7 +28,7 @@
                 <el-form-item label="ERP系统">{{detail.erp||`/`}}</el-form-item>
                 <div class="title line">品牌信息</div>
                 <el-form-item label="供应品牌">{{detail.brandName}}</el-form-item>
-                <el-form-item label="品牌类型">{{detail.brandType}}</el-form-item>
+                <el-form-item label="产品类型">{{detail.brandType}}</el-form-item>
                 <el-form-item label="官网链接">{{detail.url||`/`}}</el-form-item>
                 <el-form-item label="商品清单" class="product-area">
                     <div class="sub-title">包括供货报价及零售价</div>
