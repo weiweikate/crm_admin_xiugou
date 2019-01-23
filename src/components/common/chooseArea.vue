@@ -231,11 +231,11 @@ export default {
                                 }
                             }
                         }
-
                         if (that.checkAll[index].provinceCheck[k].cityCodes.indexOf(tempCode) === -1 && isChecked === 'checked') {
                             that.checkAll[index].provinceCheck[k].cityCodes.push(tempCode);
                             that.checkAll[index].provinceCheck[k].cityNames.push(v.name);
                         }
+                        // 选中
                         if (isChecked === 'checked') {
                             if (!that.checkAll[index].provinceCheck[k].isChecked) {
                                 that.checkAll[index].provinceCheck[k].cityCodes = [];
@@ -259,7 +259,7 @@ export default {
                             }
                         }
                         const newNames = that.checkAll[index].provinceCheck[k].cityNames;
-                        // console.log(newNames)
+                        // 展开
                         if (isChecked === 'expand') {
                             for (const k2 in that.checkAll[index].provinceCheck[k].cityCodes) {
                                 const v2 = that.checkAll[index].provinceCheck[k].cityCodes[k2];
@@ -299,21 +299,26 @@ export default {
             } else {
                 that.expandCode = -1;
                 that.showCities = false;
-                that.checkAll[index].provinceCheck.forEach(function(v, k) {
+                that.checkAll[index].provinceCheck.forEach((v, k) => {
                     v.cityCheck.forEach((v1, k1) => {
                         v.cityCheck[k1] = false;
                     });
                     that.preChooseData.forEach((v1, k1) => {
-                        if (that.checkAll[index].provinceCheck[k].code === v1.provinceCode) {
+                        if (that.numberToString(that.checkAll[index].provinceCheck[k].code) === that.numberToString(v1.provinceCode)) {
                             that.preChooseData.splice(k1, 1);
                             that.preChooseProvinceCodes.splice(k1, 1);
+                        }
+                    });
+                    that.allChooseData.forEach((v1, k1) => {
+                        if (that.numberToString(that.checkAll[index].provinceCheck[k].code) === that.numberToString(v1.provinceCode)) {
+                            that.allChooseData.splice(k1, 1);
+                            that.allChooseProvinceCodes.splice(k1, 1);
                         }
                     });
                     that.checkAll[index].provinceCheck[k].isChecked = false;
                     that.checkAll[index].provinceCheck[k].cityNames = [];
                     that.checkAll[index].provinceCheck[k].cityCodes = [];
                     that.checkAll[index].provinceCheck[k].checkedCities = [];
-                    // that.$set(that.checkAll[index].provinceCheck[k].checkedCities, k, that.checkAll[index].provinceCheck[k].checkedCities);
                 });
             }
             this.areaCheckedAll(index);

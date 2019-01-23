@@ -36,10 +36,12 @@
                 </template>
             </el-table-column>
             <el-table-column prop="reason" label="申请售后原因" align="center"></el-table-column>
-            <el-table-column label="售后审核说明" align="center">
+            <el-table-column label="售后审核说明" align="center" class="text-title">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.remarks">{{scope.row.remarks}}</template>
-                    <template v-else>/</template>
+                     <div class="text-title" :title="scope.row.remarks">
+                        <template v-if="scope.row.remarks">{{scope.row.remarks}}</template>
+                        <template v-else>/</template>
+                     </div>
                 </template>
             </el-table-column>
             <el-table-column label="回寄物流公司编码" align="center">
@@ -56,8 +58,10 @@
             </el-table-column>
             <el-table-column label="售后处理说明" align="center">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.secRemarks">{{scope.row.secRemarks}}</template>
-                    <template v-else>/</template>
+                    <div class="text-title" :title="scope.row.secRemarks">
+                        <template v-if="scope.row.secRemarks">{{scope.row.secRemarks}}</template>
+                        <template v-else>/</template>  
+                    </div>
                 </template>
             </el-table-column>
             <el-table-column label="创建时间" align="center">
@@ -182,6 +186,11 @@ export default {
     }
     .block {
         margin: 20px 0px;
+    }
+    .text-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }
 </style>
