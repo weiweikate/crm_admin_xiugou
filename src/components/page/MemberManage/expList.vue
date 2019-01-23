@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-breadcrumb :nav="['会员管理','经验值专区管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['会员管理','经验值列表']"></v-breadcrumb>
         <transition name="move" appear>
             <el-card style="margin:10px 0 20px">
                 <el-form ref="form" :inline="true" :model="form">
