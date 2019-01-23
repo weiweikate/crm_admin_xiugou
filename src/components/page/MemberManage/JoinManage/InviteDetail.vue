@@ -70,21 +70,23 @@
                 loading: false,
                 id: '',
                 detail: {},
+                code: '',
                 msg: {},
                 list: []
             };
         },
         activated() {
-            this.msg = JSON.parse(this.$route.query.joinManageInfo);
+            this.code = this.$route.query.joinManageInfo || -1;
             this.getDetail();
         },
         methods: {
             // 获取详情
             getDetail() {
                 this.loading = true;
-                request.queryInviteFlow({inviteCode: this.msg.code}).then(res => {
+                request.queryInviteFlow({inviteCode: this.code}).then(res => {
                     this.loading = false;
                     this.list = res.data;
+                    this.msg = res.msg;
                 }).catch(err => {
                     this.loading = false;
                     console.log(err);
