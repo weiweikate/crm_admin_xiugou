@@ -36,11 +36,11 @@
             </el-form>
             <el-form label-width="120px" label-position="left">
                 <el-form-item v-if="couponInfo.totalNumber == -1" label="发放数量">不限量</el-form-item>
-                <el-form-item v-else label="发放数量">{{couponInfo.totalNumber || '-'}}张</el-form-item>
+                <el-form-item v-else label="发放数量">{{couponInfo.totalNumber || '0'}}张</el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
                 <el-form-item v-if="couponInfo.getLimit == -1" label="每人限领">不限量</el-form-item>
-                <el-form-item v-else label="每人限领">{{couponInfo.getLimit || '-'}}张</el-form-item>
+                <el-form-item v-else label="每人限领">{{couponInfo.getLimit || '0'}}张</el-form-item>
             </el-form>
             <el-form label-width="120px" label-position="left">
                 <el-form-item label="优惠券说明">{{couponInfo.remarks || '-'}}</el-form-item>
@@ -62,7 +62,7 @@
                 <span v-if="info.genre == 1">发放方式：条件发放</span>
                 <span v-else-if="info.genre == 2">发放方式：定向发放</span>
                 <span v-else>发放方式：-</span>
-                <span>发放人数：{{ info.personNum?info.personNum : '/' }}人</span>
+                <span>发放人数：{{ info.personNum?info.personNum : '0' }}人</span>
                 <span>发放张数/人：1张</span>
             </p>
             <p class="record">
