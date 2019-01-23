@@ -6,7 +6,7 @@
                 <el-form-item prop="genre" label="发放方式">
                     <el-select v-model="form.genre">
                         <el-option label="全部" value=""></el-option>
-                        <el-option label="条件发放" value="1"></el-option>
+                        <!--<el-option label="条件发放" value="1"></el-option>-->
                         <el-option label="定向发放" value="2"></el-option>
                     </el-select>
                 </el-form-item>
@@ -128,30 +128,30 @@
                 </el-form-item>
                 <el-form-item prop="deliverWays" label="发放方式">
                     <el-radio-group v-model="queryForm.deliverWays" @change="resetQueryForm">
-                        <el-radio label="1">条件发放</el-radio>
+                        <!--<el-radio label="1">条件发放</el-radio>-->
                         <el-radio label="2">定向发放</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <!--条件发放-->
-                <template v-if="queryForm.deliverWays == 1">
-                    <el-form-item label="发放层级">
-                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-                        <el-checkbox-group class="w305" v-model="queryForm.deliverLevels" @change="handleCheckedCitiesChange">
-                            <el-checkbox v-for="(v,k) in levelList" :label="v.id" :key="k">{{v.name}}</el-checkbox>
-                        </el-checkbox-group>
-                    </el-form-item>
-                    <el-form-item prop="regDate" label="注册时间">
-                        <el-date-picker class="w305" type="datetimerange" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" v-model="queryForm.regDate" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
-                    </el-form-item>
-                    <el-form-item label=" ">
-                        <div class="diliver-num">
-                            <span>发放人数：{{replacementNum}}</span>
-                            <el-button :loading="queryLoading" @click="queryNum" type="primary">查 询</el-button>
-                        </div>
-                    </el-form-item>
-                </template>
+                <!--<template v-if="queryForm.deliverWays == 1">-->
+                    <!--<el-form-item label="发放层级">-->
+                        <!--<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>-->
+                        <!--<el-checkbox-group class="w305" v-model="queryForm.deliverLevels" @change="handleCheckedCitiesChange">-->
+                            <!--<el-checkbox v-for="(v,k) in levelList" :label="v.id" :key="k">{{v.name}}</el-checkbox>-->
+                        <!--</el-checkbox-group>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item prop="regDate" label="注册时间">-->
+                        <!--<el-date-picker class="w305" type="datetimerange" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" v-model="queryForm.regDate" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label=" ">-->
+                        <!--<div class="diliver-num">-->
+                            <!--<span>发放人数：{{replacementNum}}</span>-->
+                            <!--<el-button :loading="queryLoading" @click="queryNum" type="primary">查 询</el-button>-->
+                        <!--</div>-->
+                    <!--</el-form-item>-->
+                <!--</template>-->
                 <!--定向发放-->
-                <template v-else>
+                <template>
                     <el-form-item prop="deliverNumber" label="发放号码">
                         <el-input class="w305" type="textarea" :rows="10" v-model="queryForm.deliverNumber"></el-input>
                         <div class="grey-text">注：请输入补发手机号，一次最多导入1000条数据</div>
@@ -230,7 +230,7 @@
                 queryForm: {
                     beanNum: '',
                     couponType: '1',
-                    deliverWays: '1',
+                    deliverWays: '2',
                     deliverLevels: [],
                     deliverNumber: '',
                     regDate: [],

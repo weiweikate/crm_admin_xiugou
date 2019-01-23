@@ -103,7 +103,7 @@
             <el-button @click="$refs[activeName].productStatus(6)" v-auth="'brand.productList.plxj'">下架</el-button>
             <el-button @click="auditToask = true" v-auth="'brand.productList.plsh'">审核</el-button>
             <el-button @click="freightToask = true" v-auth="'brand.productList.tzyfmb'">调整运费模板</el-button>
-            <el-button type="danger" v-auth="'brand.productList.tsyc'">推送仓库</el-button>
+            <!--<el-button type="danger" v-auth="'brand.productList.tsyc'">推送仓库</el-button>-->
             <el-button type="danger" v-auth="'brand.productList.pldc'">导出</el-button>
             <a @click="createProd" v-auth="'brand.productList.tjcp'" href="#/releaseProduct" target="_blank" class="el-button el-button--danger el-button--small">创建商品</a>
         </el-card>
