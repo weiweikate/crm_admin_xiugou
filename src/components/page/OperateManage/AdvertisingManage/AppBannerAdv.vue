@@ -233,11 +233,11 @@ export default {
         this.setConfig(this.status, this.pageType);
         this.tableData = [];
         this.getList(this.page.currentPage);
-        if (this.pageType === '2') {
+        if (this.pageType == 2) {
             this.addName = '新建';
-        } else if (this.pageType === '3') {
+        } else if (this.pageType == 3) {
             this.addName = '添加推荐位';
-        } else if (this.pageType === '7') {
+        } else if (this.pageType == 7) {
             this.addName = '添加产品';
         } else {
             this.addName = '添加banner图片';
@@ -252,12 +252,12 @@ export default {
         setConfig(status, pageType) {
             let navName = '';
             this.uploadImg = api.uploadImg;
-            pageType = typeof navName === 'string' ? Number(pageType) : pageType;
-            this.title = pageType === '8' ? '添加' : '添加banner图片';
-            if (pageType === 6) {
+            pageType = typeof navName == 'string' ? Number(pageType) : pageType;
+            this.title = pageType == 8 ? '添加' : '添加banner图片';
+            if (pageType == 6) {
                 // this.linkTypeList = [{ type: '链接', id: 6 }, { type: '专题', id: 2 }, { type: '产品', id: 1 }, { type: '礼包', id: 5 }];
                 this.linkTypeList = [{ type: '产品', id: 1 }, { type: '专题', id: 2 }, { type: '礼包', id: 5 }, { type: '链接', id: 10 }, { type: '秀场', id: 11 }, { type: '经验专区', id: 6 }];
-            } else if (pageType === '8') {
+            } else if (pageType == 8) {
                 this.linkTypeList = [
                     {
                         type: '产品',
@@ -284,7 +284,7 @@ export default {
                         id: 10
                     } */
                 ];
-            } else if (pageType === '11') {
+            } else if (pageType == 11) {
                 this.linkTypeList = [
                     {
                         type: '产品',
@@ -423,7 +423,7 @@ export default {
                 code: this.form.linkTypeCode,
                 type: this.form.linkType
             };
-            if (this.pageType === '3') {
+            if (this.pageType == 3) {
                 data.type = 8;
                 if (!data.code) return;
             } else {
@@ -464,8 +464,8 @@ export default {
                 this.form.date[0] = row.showBegintime;
                 this.form.date[1] = row.showEndtime;
             }
-            this.title = this.pageType === '8' ? '编辑' : '编辑banner图片';
-            if (this.pageType !== '12' && (this.pageType === '6' && this.form.linkType !== '10')) {
+            this.title = this.pageType == 8 ? '编辑' : '编辑banner图片';
+            if (this.pageType != 12 && (this.pageType == 6 && this.form.linkType != 10)) {
                 this.getName();
             }
         },
@@ -478,7 +478,7 @@ export default {
                 url = 'updateAdvertisement';
             }
             data.type = this.pageType;
-            if (this.pageType !== '8') {
+            if (this.pageType != 8) {
                 if (!this.form.imgUrl) {
                     this.$message.warning('请上传图片');
                     return;
@@ -490,22 +490,22 @@ export default {
             }
 
             // 不同页面参数不一致
-            if (this.pageType !== '12' && (this.pageType === '6' && this.form.linkType !== '10')) {
+            if (this.pageType != 12 && (this.pageType == 6 && this.form.linkType != 10)) {
                 if (!this.productName) {
                     this.$message.warning('请输入有效ID');
                     return;
                 }
             }
-            if (this.pageType !== '10' && this.pageType != '12') {
+            if (this.pageType != 10 && this.pageType != 12) {
                 if (!this.form.rank) {
                     this.$message.warning('请输入排序');
                     return;
                 }
             }
-            if (this.pageType === '3') {
+            if (this.pageType == 3) {
                 this.form.linkType = 8;
             }
-            if (this.form.linkType === '10') { // 链接网址校验
+            if (this.form.linkType == 10) { // 链接网址校验
                 if (!regExpConfig.isNetUrl.test(this.form.linkTypeCode)) {
                     return this.$message.warning('请输入合法的地址');
                 }
@@ -558,7 +558,7 @@ export default {
             this.delUrl = 'deleteAdvertisement';
         },
         clearToask(status) {
-            if (status === true) {
+            if (status == true) {
                 const that = this;
                 that.btnLoading = true;
                 const url = this.delUrl;
