@@ -2,7 +2,7 @@
     <div class="found-cate">
         <v-breadcrumb :nav="nav"></v-breadcrumb>
         <el-card>
-            <el-form ref="form" :model="form" inline >
+            <el-form ref="form" @submit.native.prevent :model="form" inline >
                 <el-form-item prop="code" label="编号">
                     <el-input v-model="form.code"></el-input>
                 </el-form-item>
@@ -16,7 +16,7 @@
                     <el-input v-model="form.adminName"></el-input>
                 </el-form-item>
                 <el-form-item label=" ">
-                    <el-button type="primary" @click="getList">查询</el-button>
+                    <el-button native-type="submit" type="primary" @click="getList">查询</el-button>
                 </el-form-item>
             </el-form>
         </el-card>

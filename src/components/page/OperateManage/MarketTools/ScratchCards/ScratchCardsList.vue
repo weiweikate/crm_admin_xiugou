@@ -2,7 +2,7 @@
     <div class="scratch-cards">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="mb10">
-            <el-form :model="form" ref="form" inline label-width="120px">
+            <el-form @submit.native.prevent :model="form" ref="form" inline label-width="120px">
                 <el-form-item prop="code" label="编号">
                     <el-input v-model="form.code"></el-input>
                 </el-form-item>
@@ -28,7 +28,7 @@
                     <el-date-picker type="datetimerange" format="yyyy-MM-dd" v-model="form.updateTime" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
                 </el-form-item>
                 <el-form-item label=" ">
-                    <el-button @click="getList(1)" type="primary">查 询</el-button>
+                    <el-button native-type="submit" @click="getList(1)" type="primary">查 询</el-button>
                     <el-button @click="resetForm('form')" >重 置</el-button>
                 </el-form-item>
             </el-form>
