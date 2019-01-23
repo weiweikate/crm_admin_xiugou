@@ -2,7 +2,7 @@
     <div class="repertory-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
-            <el-form :model="form" ref="form" inline label-width="100px">
+            <el-form :model="form" ref="form" inline label-width="100px" @submit.native.prevent>
                 <el-form-item prop="productName" label="产品名称">
                     <el-input v-model="form.productName" placeholder="请输入产品名称"></el-input>
                 </el-form-item>
@@ -16,7 +16,7 @@
                     <el-input v-model="form.supplierCode" placeholder="请输入供应商ID"></el-input>
                 </el-form-item>
                 <el-form-item label="">
-                    <el-button type="primary" @click="getList(1)">搜索</el-button>
+                    <el-button type="primary" native-type="submit" @click="getList(1)">搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>

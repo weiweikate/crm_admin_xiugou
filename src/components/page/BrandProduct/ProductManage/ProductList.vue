@@ -2,7 +2,7 @@
     <div class="product-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="mb10">
-            <el-form :model="form" ref='form' inline label-width="130px">
+            <el-form :model="form" ref='form' @submit.native.prevent inline label-width="130px">
                 <el-form-item prop="nameOrCode" label="商品SPU/商品名称">
                     <el-input v-model.trim="form.nameOrCode" placeholder="请输入商品SPU/商品名称"></el-input>
                 </el-form-item>
@@ -93,7 +93,7 @@
                 </el-form-item>
                 <el-form-item prop="maxPrice" label=""></el-form-item>
                 <el-form-item label=" ">
-                    <el-button type="primary" @click="handleClick">搜索</el-button>
+                    <el-button native-type="submit" type="primary" @click="handleClick">搜索</el-button>
                     <el-button @click="resetForm">重置</el-button>
                 </el-form-item>
             </el-form>

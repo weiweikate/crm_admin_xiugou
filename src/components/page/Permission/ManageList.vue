@@ -2,7 +2,7 @@
     <div>
         <breadcrumb :nav='nav'></breadcrumb>
         <el-card>
-            <el-form ref="form" :model="form" inline label-width="100px">
+            <el-form ref="form" @submit.native.prevent :model="form" inline label-width="100px">
               <!-- <el-form-item prop="id" label="ID">
                 <el-input v-model="form.id"></el-input>
               </el-form-item> -->
@@ -13,7 +13,7 @@
                 <el-input v-model.trim="form.phone"></el-input>
               </el-form-item>
                 <el-form-item label=" ">
-                    <el-button @click="getList(1)" type="primary">搜索</el-button>
+                    <el-button native-type="submit" @click="getList(1)" type="primary">搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>

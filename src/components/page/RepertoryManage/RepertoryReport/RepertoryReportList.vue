@@ -2,7 +2,7 @@
     <div class="repertory-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
-            <el-form :model="form" ref="form" inline label-width="100px">
+            <el-form :model="form" ref="form" inline label-width="100px" @submit.native.prevent>
                 <el-form-item prop="code" label="入库单编号">
                     <el-input v-model="form.code" placeholder="请输入入库单编号"></el-input>
                 </el-form-item>
@@ -51,10 +51,8 @@
                         <el-option value="4" label="已取消"></el-option>
                     </el-select>
                 </el-form-item>
-
-
                 <el-form-item label="">
-                    <el-button type="primary" @click="getList(1)">搜索</el-button>
+                    <el-button type="primary" native-type="submit" @click="getList(1)">搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>

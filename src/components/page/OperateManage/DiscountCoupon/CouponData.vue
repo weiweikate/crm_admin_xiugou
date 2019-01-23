@@ -3,7 +3,7 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '30px 45px',minHeight:'80vh' }">
             <div class="search-pane">、
-                <el-form :model="form" ref='form' inline label-width="100px">
+                <el-form :model="form" ref='form' inline label-width="100px" @submit.native.prevent>
                     <el-form-item prop="getDate" label="领取时间" label-width="120">
                         <el-date-picker v-model="form.getDate" type="datetimerange" format="yyyy-MM-dd" start-placeholder="开始日期" end-placeholder="结束日期">
                         </el-date-picker>
@@ -22,7 +22,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label=" ">
-                        <el-button type="primary" @click="getList(1)">搜索</el-button>
+                        <el-button type="primary" native-type="submit" @click="getList(1)">搜索</el-button>
                         <el-button @click="resetForm('form')">重置</el-button>
                     </el-form-item>
                     <!--<el-form-item label=" ">-->

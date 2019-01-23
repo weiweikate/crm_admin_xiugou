@@ -2,7 +2,7 @@
     <div class="tab-content">
         <a href="#/addDepreciate" target="_blank" class="add-product el-button--small el-button el-button--primary" v-auth="'yunying.marketToolsManage.jjp.xjjjp'">新建降价拍</a>
         <div class="search-pane">
-            <el-form :model="form" ref='form' inline label-width="100px">
+            <el-form :model="form" ref='form' inline label-width="100px" @submit.native.prevent>
                 <el-form-item prop="productName" label="产品名称">
                     <el-input v-model.trim="form.productName" placeholder="请输入产品名称"></el-input>
                 </el-form-item>
@@ -41,7 +41,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label=" ">
-                    <el-button type="primary" @click="getList(1)">搜索</el-button>
+                    <el-button type="primary" native-type="submit" @click="getList(1)">搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>

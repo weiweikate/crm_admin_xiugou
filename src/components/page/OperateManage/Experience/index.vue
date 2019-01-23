@@ -3,7 +3,7 @@
         <v-breadcrumb :nav="['运营管理','经验值专区管理']"></v-breadcrumb>
         <transition name="move" appear>
             <el-card style="margin:10px 0 20px">
-                <el-form ref="form" :inline="true" :model="form">
+                <el-form ref="form" :inline="true" :model="form" @submit.native.prevent>
                     <el-form-item prop="name" label="活动名称" label-width="120">
                         <el-input style="width:200px" placeholder="模糊搜索" v-model="form.name"></el-input>
                     </el-form-item>
@@ -39,7 +39,7 @@
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item>
-                        <el-button @click="getList(1)" type="primary">查询</el-button>
+                        <el-button native-type="submit" @click="getList(1)" type="primary">查询</el-button>
                         <el-button @click="resetForm('form')">重置</el-button>
                     </el-form-item>
                 </el-form>

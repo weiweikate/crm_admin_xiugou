@@ -3,7 +3,7 @@
     <div class="supplier">
         <v-breadcrumb :nav="['供应商管理','供应商列表']"></v-breadcrumb>
         <el-card style="margin:10px 0 20px">
-            <el-form ref="form" :inline="true" :model="form">
+            <el-form ref="form" :inline="true" :model="form" @submit.native.prevent>
                 <el-form-item prop="loginName" label="供应商账号">
                     <el-input v-model="form.loginName" placeholder="请输入供应商账号"></el-input>
                 </el-form-item>
@@ -40,7 +40,7 @@
                 <!--</div>-->
                 <!--</el-form-item>-->
                 <el-form-item>
-                    <el-button @click="getList(1)" type="primary">搜索</el-button>
+                    <el-button @click="getList(1)" native-type="submit" type="primary">搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>

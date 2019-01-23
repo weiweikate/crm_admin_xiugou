@@ -2,7 +2,7 @@
     <div class="deliver-coupon-record">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="mb10">
-            <el-form :model="form" ref="form" inline label-width="120px">
+            <el-form :model="form" ref="form" @submit.native.prevent inline label-width="120px">
                 <el-form-item prop="phone" label="发放手机号">
                     <el-input v-model="form.phone"></el-input>
                 </el-form-item>
@@ -27,7 +27,7 @@
                     <el-input v-model="form.recordId"></el-input>
                 </el-form-item>
                 <el-form-item label=" ">
-                    <el-button @click="getList(1)" type="primary">查 询</el-button>
+                    <el-button native-type="submit" @click="getList(1)" type="primary">查 询</el-button>
                     <el-button @click="resetForm('form')" >重 置</el-button>
                 </el-form-item>
             </el-form>
