@@ -58,7 +58,8 @@
                     <el-button type="primary" native-type="submit" @click="getList(1)">搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
-                <el-table :data="tableData" border>
+            </el-form>
+             <el-table :data="tableData" border>
                     <el-table-column type="index" label="序号" align="center"></el-table-column>
                     <el-table-column prop="name" label="产品名称" align="center"></el-table-column>
                     <el-table-column prop="productCategory" label="产品类目" align="center"></el-table-column>
@@ -96,7 +97,6 @@
                     <el-button type="primary" @click="submitForm('form')">确认提交</el-button>
                     <el-button @click="$router.push('/repertoryReportList')">取消</el-button>
                 </div>
-            </el-form>
         </el-card>
         <el-dialog title="入库数量" :visible.sync="mask">
            <el-table border :data="chooseData">
