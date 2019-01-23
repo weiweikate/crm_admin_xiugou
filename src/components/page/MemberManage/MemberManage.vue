@@ -2,7 +2,7 @@
     <div class="member">
         <v-breadcrumb :nav="['会员管理','会员管理']"></v-breadcrumb>
         <el-card style="margin:10px 0 20px">
-            <el-form ref="form" inline :model="form">
+            <el-form ref="form" inline :model="form" @submit.native.prevent>
                 <el-form-item prop="condition" label="会员搜索" label-width="120">
                     <el-input style="width:200px" placeholder="可通过授权码/昵称" v-model="form.condition"></el-input>
                 </el-form-item>
@@ -33,7 +33,7 @@
                     </div>
                 </el-form-item>
                 <el-form-item>
-                    <el-button @click="handleCurrentChange(1)" type="primary">查询</el-button>
+                    <el-button native-type="submit" @click="handleCurrentChange(1)" type="primary">查询</el-button>
                     <el-button type="primary" v-auth="'vip.memberManage.dc'">导出</el-button>
                     <!--<el-button @click="resetForm('form')">重置</el-button>-->
                 </el-form-item>
