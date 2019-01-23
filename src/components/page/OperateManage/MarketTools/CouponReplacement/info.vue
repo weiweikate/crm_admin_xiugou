@@ -154,7 +154,6 @@
                             this.couponInfo.userLevel = [];
                         }
                     }
-                    console.log(this.couponInfo.userLevel);
                     this.info.phoneList = this.info.phoneList && this.info.phoneList.length !== 0 ? this.info.phoneList : [];
                 }).catch(err => {
                     console.log(err);
