@@ -225,7 +225,6 @@ export default {
                         code = this.numberToString(code);
                         if (that.allChooseProvinceCodes.indexOf(code) !== -1) {
                             if (that.allCityCodes.indexOf(tempCode) !== -1) {
-                                console.log(111)
                                 that.checkAll[index].provinceCheck[k].cityCheck[kk] = true;
                                 if (that.preCityCodes.indexOf(tempCode) === -1) {
                                     that.checkAll[index].provinceCheck[k].cityDisabled[kk] = true;
@@ -322,6 +321,7 @@ export default {
                     that.checkAll[index].provinceCheck[k].checkedCities = [];
                 });
             }
+            this.areaCheckedAll(index);
         },
         // 省对应的全选操作
         handleCheckAll(val, k, index) {
