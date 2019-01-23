@@ -74,7 +74,7 @@
                 list: []
             };
         },
-        mounted() {
+        activated() {
             this.msg = JSON.parse(this.$route.query.joinManageInfo);
             this.getDetail();
         },

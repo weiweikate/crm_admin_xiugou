@@ -97,10 +97,6 @@ export default {
                 this.tableLoading = false;
             });
         },
-        // 详情
-        detailItem(row) {
-            this.$router.push({name: 'inviteDetail', query: row});
-        },
         // 查看邀请
         watchItem(row) {
             this.$router.push({name: 'inviteLink', query: {joinManageLinkPage: row}});
