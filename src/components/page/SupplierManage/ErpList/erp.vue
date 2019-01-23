@@ -2,7 +2,7 @@
     <div class="recruit-shop-man">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
-            <el-form :model="form" ref="form" inline label-width="100px">
+            <el-form :model="form" ref="form" inline label-width="100px" @submit.native.prevent>
                 <el-form-item prop="date" label="更新时间">
                     <el-date-picker v-model="form.date" type="datetimerange" format="yyyy-MM-dd" start-placeholder="开始日期" end-placeholder="结束日期">
                     </el-date-picker>
@@ -21,7 +21,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="">
-                    <el-button type="primary" @click='getList(1)'>搜索</el-button>
+                    <el-button type="primary" native-type="submit" @click='getList(1)'>搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
@@ -233,8 +233,8 @@ export default {
         },
         // 为erp账号的供应商赋予自定义的key
         transformSupplier(list) {
-            const ts = +new Date(), result = [];
-            let count = 0;
+            const ts = +new Date();
+            let count = 0, result = [];
             list.forEach(item => {
                 result.push({
                     _id: ts + '' + ++count,

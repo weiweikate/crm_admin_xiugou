@@ -2,7 +2,7 @@
     <div class="report-set">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card>
-            <el-form :model="form" :rules="rules" ref="form" label-width="120px">
+            <el-form :model="form" :rules="rules" ref="form" label-width="120px" @submit.native.prevent>
                 <div class="title">基础信息</div>
                 <el-form-item prop="type" label="类型">
                     <el-select v-model="form.type" placeholder="请选择仓库类型" class="inp">
@@ -55,7 +55,7 @@
                     <el-input class="inp" v-model="form.supplierName" placeholder="请输入经销商名称"></el-input>
                 </el-form-item>
                 <el-form-item label="">
-                    <el-button type="primary" @click="getList(1)">搜索</el-button>
+                    <el-button type="primary" native-type="submit" @click="getList(1)">搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
                 <el-table :data="tableData" border>

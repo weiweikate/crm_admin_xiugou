@@ -2,7 +2,7 @@
     <div class="recruit-shop-man">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
-            <el-form :model="form" ref="form" inline label-width="100px">
+            <el-form :model="form" ref="form" inline label-width="100px" @submit.native.prevent>
                 <el-form-item prop="name" label="店铺名称">
                     <el-input v-model="form.name" placeholder="请输入店铺名称"></el-input>
                 </el-form-item>
@@ -17,7 +17,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="">
-                    <el-button type="primary" @click='getList(1)'>搜索</el-button>
+                    <el-button type="primary" native-type="submit" @click='getList(1)'>搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
@@ -67,7 +67,6 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import moment from 'moment';
-import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 
@@ -121,7 +120,7 @@ export default {
         // 查看店铺详情
         showInfo(row) {
             sessionStorage.setItem('recruitShopId', row.storeNumber);
-            this.$router.push({ name: 'recruitShopInfo', query: { 'recruitShopId': row.storeNumber}});
+            this.$router.push({ name: 'recruitShopInfo', query: { 'recruitShopId': row.storeNumber }});
         },
         // 重置表单
         resetForm(formName) {

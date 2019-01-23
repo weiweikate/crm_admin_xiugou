@@ -2,7 +2,7 @@
     <div class="shop-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
-            <el-form :model="form" ref="form" inline label-width="100px">
+            <el-form :model="form" ref="form" inline label-width="100px" @submit.native.prevent>
                 <el-form-item prop="name" label="店铺名称">
                     <el-input v-model="form.name" placeholder="请输入店铺名称"></el-input>
                 </el-form-item>
@@ -40,7 +40,7 @@
                     <el-input v-model="form.maxTradeMoney" placeholder="请输入交易额"></el-input>
                 </el-form-item>
                 <el-form-item label="">
-                    <el-button type="primary" @click="getList(1)">搜索</el-button>
+                    <el-button type="primary" native-type="submit" @click="getList(1)">搜索</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
@@ -111,8 +111,6 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import moment from 'moment';
-import * as pApi from '@/privilegeList/SpellShopManage/index';
-import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 
@@ -182,7 +180,7 @@ export default {
             sessionStorage.setItem('shopInfoId', row.storeNumber);
             this.$router.push({
                 name: 'shopInfo',
-                query: { shopInfoId: row.storeNumber}
+                query: { shopInfoId: row.storeNumber }
             });
         },
         // 重置表单
