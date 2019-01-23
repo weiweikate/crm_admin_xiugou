@@ -6,9 +6,9 @@
             </el-button>
             <el-table border :data="tableData">
                 <el-table-column type="index" label="编号" align="center" v-if="pageType!=10" key="0"></el-table-column>
-                <el-table-column prop="firstStageId" label="编号" align="center" v-if="pageType === 10" key="12"></el-table-column>
-                <el-table-column prop="firstStageName" label="一级分类" align="center" v-if="pageType === 10" key="1"></el-table-column>
-                <el-table-column prop="" label="产品" v-if="pageType === 8" key="2" min-width="120">
+                <el-table-column prop="firstStageId" label="编号" align="center" v-if="pageType == 10" key="12"></el-table-column>
+                <el-table-column prop="firstStageName" label="一级分类" align="center" v-if="pageType == 10" key="1"></el-table-column>
+                <el-table-column prop="" label="产品" v-if="pageType == 8" key="2" min-width="120">
                     <template slot-scope="scope">
                         <div class="product-img">
                             <img :src="scope.row.imgUrl">
@@ -17,9 +17,9 @@
                         <p class="product-id">产品ID：{{scope.row.linkTypeCode}}</p>
                     </template>
                 </el-table-column>
-                <el-table-column prop="title" label="标题" align="center" v-if="pageType === 8" key="3">
+                <el-table-column prop="title" label="标题" align="center" v-if="pageType == 8" key="3">
                 </el-table-column>
-                <el-table-column prop="" label="状态" align="center" v-if="pageType === 8" key="4">
+                <el-table-column prop="" label="状态" align="center" v-if="pageType == 8" key="4">
                     <template slot-scope="scope">
                         <template v-if="scope.row.status==1">有效</template>
                         <template v-if="scope.row.status==0">无效</template>
@@ -30,16 +30,16 @@
                         <img :src="scope.row.imgUrl">
                     </template>
                 </el-table-column>
-                <el-table-column label="店长/店铺名称" align="center" v-if="pageType === 3" key="6">
+                <el-table-column label="店长/店铺名称" align="center" v-if="pageType == 3" key="6">
                     <template slot-scope="scope">
                         {{scope.row.binour}}<br>{{scope.row.storeName}}
                     </template>
                 </el-table-column>
-                <el-table-column prop="linkTypeCode" label="链接" align="center" v-if="pageType === 2" key="7"></el-table-column>
-                <el-table-column prop="linkTypeCode" label="ID" align="center" v-if="pageType !== 2 && pageType !== 8 && pageType !== 12" key="8"></el-table-column>
-                <el-table-column label="上传人/上传时间" align="center" v-if="pageType === 12" key="9"></el-table-column>
+                <el-table-column prop="linkTypeCode" label="链接" align="center" v-if="pageType == 2" key="7"></el-table-column>
+                <el-table-column prop="linkTypeCode" label="ID" align="center" v-if="pageType != 2 && pageType != 8 && pageType != 12" key="8"></el-table-column>
+                <el-table-column label="上传人/上传时间" align="center" v-if="pageType == 12" key="9"></el-table-column>
                 <el-table-column prop="remark" label="备注" align="center"></el-table-column>
-                <el-table-column prop="showBegintime" label="投放时间" align="center" key="10" v-if="pageType !== 2 && pageType !== 6 && pageType !== 7 && pageType !== 8 && pageType !== 12">
+                <el-table-column prop="showBegintime" label="投放时间" align="center" key="10" v-if="pageType != 2 && pageType != 6 && pageType != 7 && pageType != 8 && pageType != 12">
                     <template slot-scope="scope">
                         {{scope.row.showBegintime|formatDateAll}}~<br>{{scope.row.showEndtime|formatDateAll}}
                     </template>
@@ -233,11 +233,11 @@ export default {
         this.setConfig(this.status, this.pageType);
         this.tableData = [];
         this.getList(this.page.currentPage);
-        if (this.pageType === 2) {
+        if (this.pageType === '2') {
             this.addName = '新建';
-        } else if (this.pageType === 3) {
+        } else if (this.pageType === '3') {
             this.addName = '添加推荐位';
-        } else if (this.pageType === 7) {
+        } else if (this.pageType === '7') {
             this.addName = '添加产品';
         } else {
             this.addName = '添加banner图片';
@@ -253,11 +253,11 @@ export default {
             let navName = '';
             this.uploadImg = api.uploadImg;
             pageType = typeof navName === 'string' ? Number(pageType) : pageType;
-            this.title = pageType === 8 ? '添加' : '添加banner图片';
+            this.title = pageType === '8' ? '添加' : '添加banner图片';
             if (pageType === 6) {
                 // this.linkTypeList = [{ type: '链接', id: 6 }, { type: '专题', id: 2 }, { type: '产品', id: 1 }, { type: '礼包', id: 5 }];
                 this.linkTypeList = [{ type: '产品', id: 1 }, { type: '专题', id: 2 }, { type: '礼包', id: 5 }, { type: '链接', id: 10 }, { type: '秀场', id: 11 }, { type: '经验专区', id: 6 }];
-            } else if (pageType === 8) {
+            } else if (pageType === '8') {
                 this.linkTypeList = [
                     {
                         type: '产品',
@@ -284,7 +284,7 @@ export default {
                         id: 10
                     } */
                 ];
-            } else if (pageType === 11) {
+            } else if (pageType === '11') {
                 this.linkTypeList = [
                     {
                         type: '产品',
@@ -423,7 +423,7 @@ export default {
                 code: this.form.linkTypeCode,
                 type: this.form.linkType
             };
-            if (this.pageType === 3) {
+            if (this.pageType === '3') {
                 data.type = 8;
                 if (!data.code) return;
             } else {
@@ -464,8 +464,8 @@ export default {
                 this.form.date[0] = row.showBegintime;
                 this.form.date[1] = row.showEndtime;
             }
-            this.title = this.pageType === 8 ? '编辑' : '编辑banner图片';
-            if (this.pageType !== 12 && (this.pageType === 6 && this.form.linkType !== 10)) {
+            this.title = this.pageType === '8' ? '编辑' : '编辑banner图片';
+            if (this.pageType !== '12' && (this.pageType === '6' && this.form.linkType !== '10')) {
                 this.getName();
             }
         },
@@ -478,7 +478,7 @@ export default {
                 url = 'updateAdvertisement';
             }
             data.type = this.pageType;
-            if (this.pageType !== 8) {
+            if (this.pageType !== '8') {
                 if (!this.form.imgUrl) {
                     this.$message.warning('请上传图片');
                     return;
@@ -490,22 +490,22 @@ export default {
             }
 
             // 不同页面参数不一致
-            if (this.pageType !== 12 && (this.pageType === 6 && this.form.linkType !== 10)) {
+            if (this.pageType !== '12' && (this.pageType === '6' && this.form.linkType !== '10')) {
                 if (!this.productName) {
                     this.$message.warning('请输入有效ID');
                     return;
                 }
             }
-            if (this.pageType !== 10 && this.pageType !== 12) {
+            if (this.pageType !== '10' && this.pageType != '12') {
                 if (!this.form.rank) {
                     this.$message.warning('请输入排序');
                     return;
                 }
             }
-            if (this.pageType === 3) {
+            if (this.pageType === '3') {
                 this.form.linkType = 8;
             }
-            if (this.form.linkType === 10) { // 链接网址校验
+            if (this.form.linkType === '10') { // 链接网址校验
                 if (!regExpConfig.isNetUrl.test(this.form.linkTypeCode)) {
                     return this.$message.warning('请输入合法的地址');
                 }
