@@ -74,8 +74,8 @@
                 list: []
             };
         },
-        activated() {
-            this.msg = this.$route.query.joinManageInfo;
+        mounted() {
+            this.msg = JSON.parse(this.$route.query.joinManageInfo);
             this.getDetail();
         },
         methods: {
