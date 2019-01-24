@@ -433,7 +433,7 @@ export default {
         // 提交表单前进行判断
         beforeSubmit() {
             if (!this.form.name || this.form.name.length < 2) {
-                this.$message.warning('请输入2-46位产品名称');
+                this.$message.warning('请输入2-46位礼包名称');
                 return false;
             }
             if (!this.imgArr || this.imgArr.length === 0) {
