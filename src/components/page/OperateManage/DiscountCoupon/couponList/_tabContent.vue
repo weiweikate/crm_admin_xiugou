@@ -28,7 +28,7 @@
             <el-table-column prop="userLevelIds" label="可使用用户" align="center"></el-table-column>
             <el-table-column label="领取人/次" align="center">
                 <template slot-scope="scope">
-                    {{scope.row.receiverNum?scope.row.receiverNum:'0'}}/{{scope.row.receiveNum?scope.row.receiveNum:'0'}}
+                    {{scope.row.receiverNumber?scope.row.receiverNumber:'0'}}/{{scope.row.receiveNum?scope.row.receiveNum:'0'}}
                 </template>
             </el-table-column>
             <el-table-column label="优惠券库存" align="center">
