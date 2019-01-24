@@ -46,7 +46,11 @@
             <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%;margin-top:20px;">
                 <el-table-column prop="userCode" label="授权码" align="center"></el-table-column>
                 <el-table-column prop="phone" label="手机号" width="100" align="center"></el-table-column>
-                <el-table-column prop="sourceCode" label="经验值来源" align="center"></el-table-column>
+                <el-table-column prop="sourceCode" label="经验值来源" align="center">
+                    <template slot-scope="scope">
+                        {{scope.row.name?scope.row.name+'操作-':''}}{{scope.row.sourceCode}}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="sourceType" label="经验值状态" width="150" align="center">
                     <template slot-scope="scope">
                         {{sourceTypeList[scope.row.sourceType]}}
@@ -104,6 +108,8 @@
                     14: '经验值专区',
                     15: '其他',
                     16: '店铺分红',
+                    17: '秀购赠送',
+                    18: '秀购惩罚',
                     30: '30天未登录',
                     31: '未达到交易额'
                 },
