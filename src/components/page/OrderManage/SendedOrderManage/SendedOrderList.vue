@@ -2,7 +2,7 @@
     <div class="sended-list">
         <v-breadcrumb :nav="['订单管理','支付单列表']"></v-breadcrumb>
         <el-card style="margin:10px 0 20px">
-            <el-form ref="form" :inline="true" :model="form" label-width="120px">
+            <el-form ref="form" :inline="true" :model="form" label-width="120px" @submit.native.prevent>
                 <el-form-item prop="time" label="创建时间">
                     <el-date-picker
                         v-model="form.time"
@@ -29,7 +29,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-button @click="getList(1)" type="primary">查询</el-button>
+                    <el-button @click="getList(1)" native-type="submit" type="primary">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>

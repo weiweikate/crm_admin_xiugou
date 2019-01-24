@@ -1,10 +1,9 @@
 <template>
     <div>
-        <v-breadcrumb :nav="['会员管理','经验值专区管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['会员管理','经验值列表']"></v-breadcrumb>
         <transition name="move" appear>
             <el-card style="margin:10px 0 20px">
-                <el-form ref="form" :inline="true" :model="form">
-
+                <el-form ref="form" :inline="true" :model="form"  @submit.native.prevent>
                     <el-form-item prop="time" label="创建时间" label-width="120">
                         <el-date-picker
                             v-model="form.time"
@@ -35,7 +34,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item>
-                        <el-button @click="getList(1)" type="primary">查询</el-button>
+                        <el-button native-type="submit" @click="getList(1)" type="primary">查询</el-button>
                         <el-button @click="resetForm('form')">重置</el-button>
                     </el-form-item>
                 </el-form>

@@ -3,12 +3,12 @@
         <v-breadcrumb :nav="['运营管理','搜索关键词']"></v-breadcrumb>
         <transition name="move" appear>
             <el-card style="margin:10px 0 20px">
-                <el-form ref="form" :inline="true" :model="form">
+                <el-form ref="form" :inline="true" :model="form" @submit.native.prevent>
                     <el-form-item prop="keyword" label="关键词" label-width="120">
                         <el-input style="width:200px" placeholder="请输入关键词搜索" v-model="form.keyword"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button @click="getList(1)" type="primary">查询</el-button>
+                        <el-button @click="getList(1)" native-type="submit" type="primary">查询</el-button>
                         <el-button @click="resetForm('form')">重置</el-button>
                     </el-form-item>
                 </el-form>
@@ -65,7 +65,7 @@
                 height: '',
                 form: {
                     keyword: ''
-                },
+                }
             };
         },
         created() {

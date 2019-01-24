@@ -2,12 +2,12 @@
     <div class="package-manage">
         <v-breadcrumb :nav="['运营管理','推广订单管理','套餐管理']"></v-breadcrumb>
         <el-card style="margin:10px 0 20px">
-            <el-form ref="form" inline :model="form">
+            <el-form ref="form" inline :model="form" @submit.native.prevent>
                 <el-form-item prop="name" label="套餐名称" label-width="120">
                     <el-input style="width:200px" placeholder="请输入套餐名称" v-model="form.name"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button @click="getList(1)" type="primary">查询</el-button>
+                    <el-button @click="getList(1)" native-type="submit" type="primary">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>

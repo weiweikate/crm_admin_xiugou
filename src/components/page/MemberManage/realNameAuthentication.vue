@@ -2,7 +2,7 @@
     <div class="real-name-auth">
         <v-breadcrumb :nav="['经销商会员管理','会员管理','实名认证记录']"></v-breadcrumb>
         <el-card style="margin:10px 0 20px">
-            <el-form ref="form" :inline="true" :model="form">
+            <el-form ref="form" :inline="true" :model="form" @submit.native.prevent>
                 <!-- <el-form-item prop="code" label="授权码" label-width="120">
                     <el-input style="width:200px" placeholder="请输入用户授权码" v-model="form.code"></el-input>
                 </el-form-item> -->
@@ -13,7 +13,7 @@
                     <el-input style="width:200px" placeholder="请输入用户证件号" v-model="form.idNumber"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="getList(1)">查询</el-button>
+                    <el-button native-type="submit" type="primary" @click="getList(1)">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>

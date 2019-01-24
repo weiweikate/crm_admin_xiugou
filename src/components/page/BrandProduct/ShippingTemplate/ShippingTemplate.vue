@@ -128,7 +128,7 @@ export default {
             this.page.currentPage = val;
             this.tableLoading = true;
             request
-                .queryFreightTemplateList(data)
+                .queryFreightTemplatePageList(data)
                 .then(res => {
                     this.tableLoading = false;
                     if (!res.data.data) {

@@ -2,13 +2,12 @@
     <div>
         <v-breadcrumb :nav="['会员管理','会员邀请管理']"></v-breadcrumb>
             <el-card style="margin:10px 0 20px">
-                <el-form ref="form" :inline="true" :model="form">
+                <el-form ref="form" :inline="true" :model="form" @submit.native.prevent>
                     <el-form-item prop="initiator" label="发起人" label-width="120">
                         <el-input style="width:200px" placeholder="请输入发起人姓名" v-model="form.initiator"></el-input>
                     </el-form-item>
-
                     <el-form-item>
-                        <el-button @click="getList(1)" type="primary">查询</el-button>
+                        <el-button native-type="submit" @click="getList(1)" type="primary">查询</el-button>
                         <el-button @click="resetForm('form')">重置</el-button>
                     </el-form-item>
                 </el-form>
@@ -30,7 +29,7 @@
                     <el-table-column prop="adminName" label="发起者" align="center"></el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <a v-auth="'vip.joinManage.xq'" :href="`#/inviteDetail?joinManageLinkPage=${scope.row}`" target="_blank" class="el-button el-button--warning el-button--small">详情</a>
+                            <a v-auth="'vip.joinManage.xq'" :href="`#/inviteDetail?joinManageInfo=${JSON.stringify(scope.row)}`" target="_blank" class="el-button el-button--warning el-button--small">详情</a>
                             <el-button type="danger" size="small" @click="watchItem(scope.row)" v-auth="'vip.joinManage.ckyq'">查看邀请</el-button>
                         </template>
                     </el-table-column>
@@ -96,10 +95,6 @@ export default {
                 console.log(err);
                 this.tableLoading = false;
             });
-        },
-        // 详情
-        detailItem(row) {
-            this.$router.push({name: 'inviteDetail', query: {joinManageInfo: row}});
         },
         // 查看邀请
         watchItem(row) {

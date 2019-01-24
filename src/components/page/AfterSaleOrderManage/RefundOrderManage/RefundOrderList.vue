@@ -2,7 +2,7 @@
     <div class="order-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="query-panue" :body-style="{ padding: '20px 20px'}">
-            <el-form :model="form" ref="form" inline label-width="120px">
+            <el-form :model="form" ref="form" inline label-width="120px" @submit.native.prevent>
                 <el-form-item prop="dateRange" label="创建时间">
                     <el-date-picker
                         v-model="dateRange"
@@ -26,14 +26,14 @@
                     <el-input v-model="form.warehouseOrderNo" placeholder="请输入仓库订单号"></el-input>
                 </el-form-item>
                 <el-form-item label=" ">
-                    <el-button type="primary" @click="getList(1)">查询</el-button>
+                    <el-button type="primary" native-type="submit" @click="getList(1)">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
         <el-card style='margin-top:20px;minHeight:90vh;' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
-                <!-- <a ref="exportData" class="el-button el-button--primary el-button--small" @click="downloadAfterOrderData">导出</a> -->
+                <a ref="exportData" class="el-button el-button--primary el-button--small" @click="downloadAfterOrderData">导出</a>
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="all">
@@ -96,13 +96,12 @@ export default {
                 serviceNo: this.form.serviceNo,
                 warehouseOrderNo: this.form.warehouseOrderNo,
                 userPhone: this.form.userPhone,
-                status: this.form.status,
-                supplierName: this.form.supplierName,
-                type: this.activeName === 'all' ? '' : this.activeName,
+                refundNo: this.form.refundNo,
+                status: this.activeName === 'all' ? '' : this.activeName,
                 createStartTime: this.dateRange.length !== 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '',
                 createEndTime: this.dateRange.length !== 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : ''
             };
-            this.downloadRefundOrderList = api.downloadAfterOrderList + '?' + this.$utils.setRequestParams(params);
+            this.downloadRefundOrderList = api.downloadRefundOrderList + '?' + this.$utils.setRequestParams(params);
             this.$refs.exportData.href = this.downloadRefundOrderList;
         },
         // 提交表单

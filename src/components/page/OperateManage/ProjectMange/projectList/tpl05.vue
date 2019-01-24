@@ -5,7 +5,7 @@
                 <el-form-item prop="img" label="添加banner">
                     <el-input class="my-inp" v-model="bannerForm.imgUrl" disabled placeholder="请上传图片"></el-input>
                     <upload @img="imgBanner"></upload>
-                    <span style="color:#fe8080"><br />建议图片750px*350px</span>
+                    <span style="color:#fe8080"><br />建议图片750px*高度不限</span>
                 </el-form-item>
                 <el-form-item label=" ">
                     <div class="upload-img-show">
@@ -61,7 +61,7 @@
                             <span @click="delBanner(k,k2)" class="del-btn">x</span>
                             <el-input class="my-inp" v-model="v2.bannerImg" disabled placeholder="请上传图片"></el-input>
                             <upload @img="imgUrl=>img(imgUrl,k,k2)"></upload>
-                            <span style="color:#fe8080"><br />建议图片750px*350px</span>
+                            <span style="color:#fe8080"><br />建议图片750px*高度不限</span>
                         </div>
                     </el-form-item>
                     <el-form-item label=" ">

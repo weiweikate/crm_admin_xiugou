@@ -2,7 +2,7 @@
     <div class="product-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="mb10">
-            <el-form :model="form" ref='form' inline label-width="130px">
+            <el-form :model="form" ref='form' @submit.native.prevent inline label-width="130px">
                 <el-form-item prop="nameOrCode" label="商品SPU/商品名称">
                     <el-input v-model.trim="form.nameOrCode" placeholder="请输入商品SPU/商品名称"></el-input>
                 </el-form-item>
@@ -93,7 +93,7 @@
                 </el-form-item>
                 <el-form-item prop="maxPrice" label=""></el-form-item>
                 <el-form-item label=" ">
-                    <el-button type="primary" @click="handleClick">搜索</el-button>
+                    <el-button native-type="submit" type="primary" @click="handleClick">搜索</el-button>
                     <el-button @click="resetForm">重置</el-button>
                 </el-form-item>
             </el-form>
@@ -103,7 +103,7 @@
             <el-button @click="$refs[activeName].productStatus(6)" v-auth="'brand.productList.plxj'">下架</el-button>
             <el-button @click="auditToask = true" v-auth="'brand.productList.plsh'">审核</el-button>
             <el-button @click="freightToask = true" v-auth="'brand.productList.tzyfmb'">调整运费模板</el-button>
-            <el-button type="danger" v-auth="'brand.productList.tsyc'">推送仓库</el-button>
+            <!--<el-button type="danger" v-auth="'brand.productList.tsyc'">推送仓库</el-button>-->
             <el-button type="danger" v-auth="'brand.productList.pldc'">导出</el-button>
             <a @click="createProd" v-auth="'brand.productList.tjcp'" href="#/releaseProduct" target="_blank" class="el-button el-button--danger el-button--small">创建商品</a>
         </el-card>

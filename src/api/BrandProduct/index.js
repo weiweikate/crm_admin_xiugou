@@ -84,6 +84,7 @@ export const getProvinceList = '/admin/area/getProvinceList';
 // 运费模版
 // 查询列表
 export const queryFreightTemplateList = '/product/freightTemplate/queryFreightTemplateList';
+export const queryFreightTemplatePageList = '/product/freightTemplate/queryFreightTemplatePageList';
 // 添加运费模板接口
 export const addFreightTemplate = '/product/freightTemplate/addFreightTemplate';
 // 查询运费模板接口

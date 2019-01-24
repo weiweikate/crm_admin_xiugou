@@ -3,8 +3,7 @@
         <v-breadcrumb :nav="['会员管理','经验值查看']"></v-breadcrumb>
         <transition name="move" appear>
             <el-card style="margin:10px 0 20px">
-                <el-form ref="form" :inline="true" :model="form">
-
+                <el-form ref="form" :inline="true" :model="form" @submit.native.prevent>
                     <el-form-item prop="startTime" label="创建时间" label-width="120">
                         <el-date-picker
                             v-model="form.time"
@@ -29,7 +28,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item>
-                        <el-button @click="getList(1)" type="primary">查询</el-button>
+                        <el-button native-type="submit" @click="getList(1)" type="primary">查询</el-button>
                         <el-button @click="resetForm('form')">重置</el-button>
                     </el-form-item>
                 </el-form>
@@ -39,17 +38,19 @@
         <el-card style="margin-top: 20px;">
 
             <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%;margin-top:20px;">
-                <el-table-column prop="userCode" label="授权码" align="center"></el-table-column>
-                <el-table-column prop="phone" label="手机号" width="100" align="center"></el-table-column>
                 <el-table-column prop="sourceCode" label="经验值来源" align="center"></el-table-column>
-                <el-table-column prop="sourceType" label="经验值状态" width="150" align="center">
+                <el-table-column prop="sourceType" label="经验值状态" align="center">
                     <template slot-scope="scope">
                         {{sourceTypeList[scope.row.sourceType]}}
                     </template>
                 </el-table-column>
-                <el-table-column prop="experience" label="赠送经验值" width="150" align="center"></el-table-column>
-                <el-table-column prop="platformOrderNo" label="平台订单号" width="150" align="center"></el-table-column>
-                <el-table-column prop="startTime" label="创建时间" width="150" align="center">
+                <el-table-column prop="experience" label="赠送经验值" align="center"></el-table-column>
+                <el-table-column prop="platformOrderNo" label="平台订单号" align="center">
+                    <template slot-scope="scope">
+                        {{scope.row.platformOrderNo || '/'}}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="startTime" label="创建时间" align="center">
                     <template slot-scope="scope">
                         {{scope.row.createTime | formatDateAll}}
                     </template>
