@@ -11,12 +11,14 @@
                         <span v-if="detail.isLicenses==0">有</span>
                         <span v-else>无</span>
                     </div>
-                    <div v-for="(item,index) in detail.completeFileVOS" :key="index" class="mar">
-                        <div class="img-area">
-                            <img :src="item.completeFileUrl" alt="">
-                            <span :title="item.completeFileName">{{item.completeFileName}}</span>
+                    <div v-if="detail.isLicenses==0">
+                        <div v-for="(item,index) in detail.completeFileVOS" :key="index" class="mar">
+                            <div class="img-area">
+                                <img :src="item.completeFileUrl" alt="">
+                                <span :title="item.completeFileName">{{item.completeFileName}}</span>
+                            </div>
+                            <a :href="item.completeFileUrl" class="el-button el-button--primary">下载附件</a>
                         </div>
-                        <a @click="downloadIamge(item.completeFileUrl,item.completeFileName)" class="el-button el-button--primary">下载附件</a>
                     </div>
                 </el-form-item>
                 <el-form-item label="联系人">{{detail.name}}</el-form-item>
@@ -48,7 +50,6 @@
                 </div>
             </el-form>
         </el-card>
-
     </div>
 </template>
 
