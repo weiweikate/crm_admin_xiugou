@@ -96,7 +96,6 @@
                         <div class="flex" v-for="rule in form.rules">
                             <div class="flex-item">购买满{{rule.startPrice}}元，经验值翻{{rule.rate}}倍</div>
                             <div class="flex-item">经验值支出：<span class="red">{{rule.expNumber || 0.00}}</span></div>
-                            <div class="flex-item">优惠券支出：<span class="red">{{rule.couponNumber || 0.00}}张</span></div>
                         </div>
                     </div>
                 </el-form-item>
