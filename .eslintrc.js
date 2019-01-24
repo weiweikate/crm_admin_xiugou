@@ -131,7 +131,7 @@ module.exports = {
         'no-spaced-func': 2,
         'no-sparse-arrays': 2,
         'no-this-before-super': 2,
-        'no-throw-literal': 2,
+        'no-throw-literal': 1,
         'no-trailing-spaces': 2,
         'no-undef': 2,
         'no-undef-init': 2,

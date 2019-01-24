@@ -196,9 +196,8 @@ export default {
                 this.$message.warning('请输入类目名称!');
                 return;
             }
-            const reg = /^[A-Za-z\u4e00-\u9fa5]{2,16}$/;
-            if (!reg.test(data.name)) {
-                this.$message.warning('请输入2-16位汉字字母的组合!');
+            if (data.name.length > 16 || data.name.length < 2) {
+                this.$message.warning('请输入2-16位的类目名称!');
                 return;
             }
             if (!data.img) {
