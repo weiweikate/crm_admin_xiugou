@@ -33,7 +33,7 @@
                         <div>
                             <span class="marl20">下单时间</span> <span class="marl20">{{v.warehouseOrder.createTime|formatDateAll}}</span>
                             <el-popover v-auth="'order.orderList.bj'" placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
-                                <span slot="reference" class="marl20" style="cursor:pointer">标记 &nbsp <span class="star" :style="{color:v.warehouseOrder.starColor}">★</span></span>
+                                <span slot="reference" class="marl20" style="cursor:pointer">标记 &nbsp; <span class="star" :style="{color:v.warehouseOrder.starColor}">★</span></span>
                                 <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)" :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
                                 <el-input v-model="v.warehouseOrder.remark" placeholder="请输入备注"></el-input>
                             </el-popover>
