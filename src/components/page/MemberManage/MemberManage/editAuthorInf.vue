@@ -24,7 +24,7 @@
                                 <el-button @click="expCalc(2)" type="danger">减少经验值</el-button>
                             </div>
                             <div v-if="showExpChangge" class="mgt15">
-                                数量<el-input v-model="expValue" class="mgl10"></el-input>
+                                数量：<el-input v-model.trim.number="expValue" class="mgl10" @keyup.native="expValue = Math.abs(expValue)"></el-input>
                             </div>
                         </div>
                     </el-form-item>
