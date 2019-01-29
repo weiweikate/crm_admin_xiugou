@@ -84,7 +84,7 @@
                 </el-form-item>
                 <el-form-item prop="freightTemplateId" label="运费模板">
                     <el-select v-model="form.freightTemplateId" placeholder="请选择运费模板">
-                        <el-option v-for="(v, k) in freightList" :key="k" :value="v.id" :label="v.name"></el-option>
+                        <el-option v-if="freightList.length !== 0" v-for="(v, k) in freightList" :key="k" :value="v.id" :label="v.name"></el-option>
                     </el-select>
                     <a href="#/shippingTemplate" target="_blank" class="primary-text href">添加运费模板</a>
                     <span class="primary-text">|</span>

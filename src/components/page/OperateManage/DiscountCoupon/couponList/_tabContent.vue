@@ -28,7 +28,7 @@
             <el-table-column prop="userLevelIds" label="可使用用户" align="center"></el-table-column>
             <el-table-column label="领取人/次" align="center">
                 <template slot-scope="scope">
-                    {{scope.row.receiverNum?scope.row.receiverNum:'0'}}/{{scope.row.receiveNum?scope.row.receiveNum:'0'}}
+                    {{scope.row.receiverNumber?scope.row.receiverNumber:'0'}}/{{scope.row.receiveNum?scope.row.receiveNum:'0'}}
                 </template>
             </el-table-column>
             <el-table-column label="优惠券库存" align="center">
@@ -40,8 +40,8 @@
             <el-table-column prop="hasUsed" label="已使用" align="center"></el-table-column>
             <el-table-column prop="" label="是否礼包周期券" align="center">
                 <template slot-scope="scope">
-                    <template v-if='scope.row.cycleFlag == 0'>否</template>
-                    <template v-else-if='scope.row.status == 1'>是</template>
+                    <template v-if='scope.row.cycleFlag == 1'>是</template>
+                    <template v-else>否</template>
                 </template>
             </el-table-column>
             <el-table-column prop="" label="状态" align="center">

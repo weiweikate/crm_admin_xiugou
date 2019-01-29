@@ -74,12 +74,6 @@ export const asyncRouterMap = [
                 meta: { title: '实名认证审核' }
             },
             {
-                name: 'supplierManage',
-                path: '/supplierManage',
-                component: resolve => require(['../components/page/MemberManage/SupplierManage.vue'], resolve),
-                meta: { title: '供应商管理' }
-            },
-            {
                 name: 'expList',
                 path: '/expList',
                 component: resolve => require(['../components/page/MemberManage/expList.vue'], resolve),
@@ -91,6 +85,37 @@ export const asyncRouterMap = [
                 path: '/accountRecharge',
                 component: resolve => require(['../components/page/MemberManage/AccountRecharge.vue'], resolve),
                 meta: { title: '账户充值' }
+            }
+        ]
+    },
+    {
+        path: '/supplier',
+        component: Layout,
+        name: 'supplier',
+        meta: {
+            title: '供应商管理',
+            icon: 'icon-huiyuanzhanghaoguanli'
+        },
+        children: [
+            {
+                name: 'supplierManage',
+                path: '/supplierManage',
+                component: resolve => require(['../components/page/SupplierManage/SupplierList/SupplierManage.vue'], resolve),
+                meta: {
+                    title: '供应商列表'
+                }
+            },
+            {
+                name: 'supplierEnterList',
+                path: '/supplierEnterList',
+                component: resolve => require(['../components/page/SupplierManage/SupplierEnterList/SupplierEnterList.vue'], resolve),
+                meta: { title: '供应商申请入驻列表', noKeepAlive: true }
+            },
+            {
+                name: 'erp',
+                path: '/erp',
+                component: resolve => require(['../components/page/SupplierManage/ErpList/erp.vue'], resolve),
+                meta: { title: 'ERP列表', noKeepAlive: true }
             }
         ]
     },
@@ -612,20 +637,20 @@ export const asyncRouterMap = [
             }
         ]
     },
-    {
-        path: '/system',
-        component: Layout,
-        name: 'system',
-        meta: { title: '系统设置', icon: 'icon-shezhi' },
-        children: [
-            {
-                name: 'erp',
-                path: '/erp',
-                component: resolve => require(['../components/page/system/erp.vue'], resolve),
-                meta: { title: 'ERP管理', noKeepAlive: true }
-            }
-        ]
-    },
+    // {
+    //     path: '/system',
+    //     component: Layout,
+    //     name: 'system',
+    //     meta: { title: '系统设置', icon: 'icon-shezhi' },
+    //     children: [
+    //         {
+    //             name: 'erp',
+    //             path: '/erp',
+    //             component: resolve => require(['../components/page/system/erp.vue'], resolve),
+    //             meta: { title: 'ERP管理', noKeepAlive: true }
+    //         }
+    //     ]
+    // },
     {
         hidden: true,
         path: '/others',
@@ -977,28 +1002,6 @@ export const asyncRouterMap = [
                 path: '/activityParams',
                 component: resolve => require(['../components/page/MemberManage/activityParams.vue'], resolve),
                 meta: { title: '活跃度参数设置' }
-            },
-
-            {
-                hidden: true,
-                name: 'supplierDetail',
-                path: '/supplierDetail',
-                component: resolve => require(['../components/page/MemberManage/SupplierManage/SupplierDetail.vue'], resolve),
-                meta: { title: '供应商详情' }
-            },
-            {
-                hidden: true,
-                name: 'addSupplier',
-                path: '/addSupplier',
-                component: resolve => require(['../components/page/MemberManage/SupplierManage/AddSupplier.vue'], resolve),
-                meta: { title: '添加供应商' }
-            },
-            {
-                hidden: true,
-                name: 'editSupplier',
-                path: '/editSupplier',
-                component: resolve => require(['../components/page/MemberManage/SupplierManage/EditSupplier.vue'], resolve),
-                meta: { title: '编辑供应商' }
             },
             {
                 hidden: true,
@@ -1511,6 +1514,48 @@ export const asyncRouterMap = [
             },
             {
                 hidden: true,
+                name: 'couponReplacement',
+                path: '/couponReplacement',
+                component: resolve => require(['../components/page/OperateManage/MarketTools/CouponReplacement/index'], resolve),
+                meta: { title: '优惠券发放', noKeepAlive: true }
+            },
+            {
+                hidden: true,
+                name: 'couponReplacementInfo',
+                path: '/couponReplacementInfo',
+                component: resolve => require(['../components/page/OperateManage/MarketTools/CouponReplacement/info'], resolve),
+                meta: { title: '优惠券发放详情', noKeepAlive: true }
+            },
+            {
+                hidden: true,
+                name: 'couponReplacementRecord',
+                path: '/couponReplacementRecord',
+                component: resolve => require(['../components/page/OperateManage/MarketTools/CouponReplacement/couponReplacementRecord'], resolve),
+                meta: { title: '优惠券发放记录列表', noKeepAlive: true }
+            },
+            {
+                hidden: true,
+                name: 'beanReplacement',
+                path: '/beanReplacement',
+                component: resolve => require(['../components/page/OperateManage/MarketTools/BeanReplacement/index'], resolve),
+                meta: { title: '秀豆发放列表', noKeepAlive: true }
+            },
+            {
+                hidden: true,
+                name: 'beanReplacementInfo',
+                path: '/beanReplacementInfo',
+                component: resolve => require(['../components/page/OperateManage/MarketTools/BeanReplacement/info'], resolve),
+                meta: { title: '秀豆发放详情', noKeepAlive: true }
+            },
+            {
+                hidden: true,
+                name: 'beanReplacementRecord',
+                path: '/beanReplacementRecord',
+                component: resolve => require(['../components/page/OperateManage/MarketTools/BeanReplacement/beanReplacementRecord'], resolve),
+                meta: { title: '秀豆发放记录列表', noKeepAlive: true }
+            },
+            {
+                hidden: true,
                 name: 'activityUse',
                 path: '/activityUse',
                 component: resolve => require(['../components/page/OperateManage/MarketTools/ScratchCards/activityUse'], resolve),
@@ -1706,6 +1751,36 @@ export const asyncRouterMap = [
                 path: '/repertoryBadInfo',
                 component: resolve => require(['../components/page/RepertoryManage/RepertoryData/RepertoryBadInfo.vue'], resolve),
                 meta: { title: '仓库报损数详情', noKeepAlive: true }
+            },
+            // 供应商管理
+            {
+                hidden: true,
+                name: 'supplierDetail',
+                path: '/supplierDetail',
+                component: resolve => require(['../components/page/SupplierManage/SupplierList/SupplierDetail.vue'], resolve),
+                meta: { title: '供应商详情' }
+            },
+            {
+                hidden: true,
+                name: 'addSupplier',
+                path: '/addSupplier',
+                component: resolve => require(['../components/page/SupplierManage/SupplierList/AddSupplier.vue'], resolve),
+                meta: { title: '添加供应商' }
+            },
+            {
+                hidden: true,
+                name: 'editSupplier',
+                path: '/editSupplier',
+                component: resolve => require(['../components/page/SupplierManage/SupplierList/EditSupplier.vue'], resolve),
+                meta: { title: '编辑供应商' }
+            },
+            {
+                hidden: true,
+                default: true,
+                name: 'supplierEnterDetail',
+                path: '/supplierEnterDetail',
+                component: resolve => require(['../components/page/SupplierManage/SupplierEnterList/SupplierEnterDetail.vue'], resolve),
+                meta: { title: '供应商入驻详情' }
             }
         ]
     }

@@ -2,7 +2,7 @@
     <div class="flat-act-01">
       <v-breadcrumb :nav="nav"></v-breadcrumb>
       <el-card :body-style="{ padding: '30px' }">
-        <el-form :model="form" ref='form' inline>
+        <el-form :model="form" ref='form' @submit.native.prevent inline>
           <el-form-item prop="orderNum" label="订单号">
               <el-input v-model="form.orderNum" placeholder="请输入订单号"></el-input>
           </el-form-item>
@@ -10,7 +10,7 @@
               <el-date-picker v-model="form.time" type="datetimerange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
           </el-form-item>
           <el-form-item label=" ">
-              <el-button type="primary" @click="getList(1)">查询</el-button>
+              <el-button native-type="submit" type="primary" @click="getList(1)">查询</el-button>
               <el-button @click="resetForm('form')">重置</el-button>
           </el-form-item>
         </el-form>

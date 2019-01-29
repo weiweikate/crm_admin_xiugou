@@ -14,8 +14,8 @@
                 </el-table-column>
                 <el-table-column label="秀豆（枚）" align="center" width="200">
                     <template slot-scope="scope">
-                        <template v-if="scope.row.usType==1">{{`+￥${scope.row.userScore || 0}`}}</template>
-                        <template v-else-if="scope.row.usType==2">{{`-￥${scope.row.userScore || 0}`}}</template>
+                        <template v-if="scope.row.usType==1">{{`+${scope.row.userScore || 0}`}}</template>
+                        <template v-else-if="scope.row.usType==2">{{`-${scope.row.userScore || 0}`}}</template>
                         <template v-else >-</template>
                     </template>
                 </el-table-column>

@@ -35,7 +35,7 @@
             <el-table-column label="操作" align="center" min-width="150px">
                 <template slot-scope="scope">
                     <el-button v-auth="'afterSaleOrder.refundOrderList.sgtk'" type="primary" v-if="(scope.row.status==1||scope.row.status==3||scope.row.status==4)&&scope.row.serviceStatus!=6" @click="refund(scope.row,1)">手工退款</el-button>
-                    <!-- <el-button v-auth="'afterSaleOrder.refundOrderList.tk'" type="success" v-if="(scope.row.status==1||scope.row.status==3||scope.row.status==4)&&scope.row.serviceStatus!=6" @click="refund(scope.row,2)">退款</el-button> -->
+                    <el-button v-auth="'afterSaleOrder.refundOrderList.tk'" type="success" v-if="(scope.row.status==1||scope.row.status==3||scope.row.status==4)&&scope.row.serviceStatus!=6&&scope.row.refundAmount>0" @click="refund(scope.row,2)">退款</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -98,19 +98,13 @@
                 });
             },
             refund(row, num) {
-                const data = {
-                    serviceNo: row.serviceNo
-                };
                 this.row = row;
                 if (num === 1) {
                     this.mask = true;
                     this.remarks = '';
                     this.count = 0;
                 } else {
-                    request.refundAmounts(data).then(res => {
-                        this.$message.success(res.msg);
-                        this.getList(this.page.currentPage);
-                    });
+                    this.refundRequest('refund');
                 }
             },
             inputRemark() {
@@ -118,12 +112,15 @@
             },
             // 手工退款
             refundSure() {
+                this.refundRequest('manualRefund');
+            },
+            refundRequest(url) {
                 const data = {
                     refundNo: this.row.refundNo,
                     remarks: this.remarks
                 };
                 this.btnLoading = true;
-                request.manualRefund(data).then(res => {
+                request[url](data).then(res => {
                     this.$message.success(res.msg);
                     this.mask = false;
                     this.getList(this.page.currentPage);

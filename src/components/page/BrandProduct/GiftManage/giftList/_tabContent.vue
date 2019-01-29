@@ -2,7 +2,7 @@
     <div class="tab-gift-content">
         <a href="#/Gift" v-auth="'yunying.marketToolsManage.yhtc.tjlb'" target="_blank" class="el-button el-button--primary el-button--small mb10">添加礼包</a>
       <div class="search-pane">
-          <el-form :model="form" ref='form' inline label-width="100px">
+          <el-form :model="form" ref='form' @submit.native.prevent inline label-width="100px">
               <el-form-item prop="name" label="礼包名称">
                   <el-input v-model.trim="form.name" placeholder="请输入礼包名称"></el-input>
               </el-form-item>
@@ -23,7 +23,7 @@
                   </el-select>
               </el-form-item>
               <el-form-item label=" ">
-                  <el-button type="primary" @click="getList(1)">搜索</el-button>
+                  <el-button native-type="submit" type="primary" @click="getList(1)">搜索</el-button>
                   <el-button @click="resetForm('form')">重置</el-button>
               </el-form-item>
           </el-form>

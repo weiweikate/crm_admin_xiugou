@@ -3,7 +3,7 @@
         <v-breadcrumb :nav="['服务管理','公告通知管理']"></v-breadcrumb>
         <transition name="move" appear>
             <el-card style="margin:10px 0 20px">
-                <el-form ref="form" :inline="true" :model="form">
+                <el-form ref="form" :inline="true" :model="form" @submit.native.prevent>
                     <el-form-item prop="status" label="状态" label-width="120">
                         <el-select v-model="form.status" placeholder="请选择">
                             <el-option label="全部状态" value=""></el-option>
@@ -27,7 +27,7 @@
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item>
-                        <el-button @click="getList(1)" type="primary">查询</el-button>
+                        <el-button @click="getList(1)" native-type="submit" type="primary">查询</el-button>
                         <el-button @click="resetForm('form')">重置</el-button>
                     </el-form-item>
                 </el-form>

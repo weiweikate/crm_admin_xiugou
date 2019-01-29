@@ -3,7 +3,7 @@
         <v-breadcrumb :nav="['物流管理','物流公司列表']"></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 40px' }">
             <div class="search">
-                <el-form :inline="true" :model="searchFields" class="demo-form-inline" ref="searchForm">
+                <el-form :inline="true" :model="searchFields" class="demo-form-inline" ref="searchForm" @submit.native.prevent>
                     <el-form-item label="最近登录时间" prop="time">
                         <el-date-picker
                             v-model="searchFields.time"
@@ -29,7 +29,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="search">查询</el-button>
+                        <el-button type="primary" native-type="submit" @click="search">查询</el-button>
                         <el-button @click="searchReset">重置</el-button>
                     </el-form-item>
                 </el-form>

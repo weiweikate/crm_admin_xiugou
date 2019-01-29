@@ -12,7 +12,7 @@
                   <!--<el-button style="width:100px;height:32px" size="small" type="primary">上传</el-button>-->
               <!--</el-upload>-->
               <upload @img="imgBanner"></upload>
-              <span style="color:#fe8080"><br/>建议图片750px*350px</span>
+              <span style="color:#fe8080"><br/>建议图片750px*高度不限</span>
           </el-form-item>
           <el-form-item label=" " >
               <div class="upload-img-show">
@@ -62,7 +62,7 @@
                 <!--<el-button style="width:100px;height:32px" size="small" type="primary">上传</el-button>-->
             <!--</el-upload>-->
                   <upload @img="imgUrl=>img(imgUrl,k)"></upload>
-            <span style="color:#fe8080"><br/>建议图片750px*350px</span>
+            <span style="color:#fe8080"><br/>建议图片750px*高度不限</span>
               </div>
           </el-form-item>
           <el-form-item label=" " >
@@ -145,7 +145,7 @@ export default {
                 navName: '',
                 type: '', // 导航属性 1文字 2时间
                 topicBannerProducts: [{ prodCode: '', productType: 99 }],
-                topicNavbarBannerList: [{ bannerImg: '', width: '', height: '',  topicBannerProductList: [] }]
+                topicNavbarBannerList: [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }]
             }
         };
     },
@@ -159,7 +159,7 @@ export default {
             navName: '',
             type: '',
             topicBannerProducts: [{ prodCode: '', productType: 99 }],
-            topicNavbarBannerList: [{ bannerImg: '', width: '', height: '',  topicBannerProductList: [] }]
+            topicNavbarBannerList: [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }]
         };
         if (this.tplData != 'add') {
             this.bannerForm.imgUrl = this.tplData.imgUrl;
@@ -247,7 +247,7 @@ export default {
         },
         // 添加banner
         addBanner() {
-            this.topicNavbarList.topicNavbarBannerList == undefined || null ? this.topicNavbarList.topicNavbarBannerList = [{ bannerImg: '', width: '', height: '',  topicBannerProductList: [] }] : this.topicNavbarList.topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [] });
+            this.topicNavbarList.topicNavbarBannerList == undefined || null ? this.topicNavbarList.topicNavbarBannerList = [{ bannerImg: '', width: '', height: '', topicBannerProductList: [] }] : this.topicNavbarList.topicNavbarBannerList.push({ bannerImg: '', topicBannerProductList: [] });
         },
         // 删除区间banner
         delBanner(index) {

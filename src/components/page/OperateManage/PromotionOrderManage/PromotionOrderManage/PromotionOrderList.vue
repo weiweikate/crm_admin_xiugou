@@ -2,7 +2,7 @@
     <div class="promotionManage-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card class="query-panue" :body-style="{ padding: '20px 20px'}">
-            <el-form :model="form" ref="form" inline label-width="120px">
+            <el-form :model="form" ref="form" inline label-width="120px" @submit.native.prevent>
                 <el-form-item prop="nickname" label="推广人">
                     <el-input v-model="form.nickname" placeholder="请输入推广人"></el-input>
                 </el-form-item>
@@ -21,7 +21,7 @@
                 </el-form-item>
 
                 <el-form-item label=" ">
-                    <el-button type="primary" @click="getList">查询</el-button>
+                    <el-button type="primary" native-type="submit" @click="getList">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>

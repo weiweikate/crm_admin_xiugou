@@ -2,7 +2,7 @@
   <div class="trade-info">
       <v-breadcrumb :nav='nav'></v-breadcrumb>
       <el-card :body-style="{ padding: '20px 40px' }">
-        <el-form :model="form" inline label-width="100px">
+        <el-form :model="form" inline label-width="100px" @submit.native.prevent>
           <el-form-item prop="name" label="买家">
               <el-input v-model="form.name" placeholder="请输入买家名称"></el-input>
           </el-form-item>
@@ -25,7 +25,7 @@
               <el-date-picker type="datetime" v-model="form.endTime" placeholder="请选择"></el-date-picker>
           </el-form-item>
           <el-form-item label="">
-            <el-button type="primary" @click='submitForm'>搜索</el-button>
+            <el-button type="primary" native-type="submit" @click='submitForm'>搜索</el-button>
           </el-form-item>
         </el-form>
       </el-card>
