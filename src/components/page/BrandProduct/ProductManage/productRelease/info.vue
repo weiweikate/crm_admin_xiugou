@@ -176,11 +176,10 @@
     import chooseArea from '@/components/common/chooseArea';
     // 图片名字排序
     function sortName(a, b) {
-        let first = a.name.replace(/[^0-9]/ig, '');
-        let second = b.name.replace(/[^0-9]/ig, '');
+        let first = a.name+''.replace(/[^0-9]/ig, '');
+        let second = b.name+''.replace(/[^0-9]/ig, '');
         first = first.length > 0 ? parseInt(first.substr(-5)) : a.name;
         second = second.length > 0 ? parseInt(second.substr(-5)) : b.name;
-        // console.log(first,second)
         return first - second;
     }
     export default {
