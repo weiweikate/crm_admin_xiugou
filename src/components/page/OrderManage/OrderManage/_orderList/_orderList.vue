@@ -24,14 +24,16 @@
             <tbody v-for="(v,k) in tableData" :key="k">
                 <tr>
                     <td colspan="7" class="head">
-                        <div style="width:300px">
-                            <el-checkbox @change="orderCheckBox(v)" v-model="v.checked"></el-checkbox><span class="marl20">平台订单号 </span><span class="marl20">{{v.warehouseOrder.platformOrderNo}}</span>
-                        </div>
-                        <div style="width:300px">仓库订单号 <span class="marl20">{{v.warehouseOrder.warehouseOrderNo}}</span></div>
-                        <div>下单时间 <span class="marl20">{{v.warehouseOrder.createTime|formatDateAll}}</span></div>
                         <div>
+                            <el-checkbox @change="orderCheckBox(v)" v-model="v.checked"></el-checkbox><span class="marl20">平台订单号 </span><span class="marl20">{{v.warehouseOrder.platformOrderNo}}</span>
+                            <!-- <span class="marl20" v-if="v.userExperionce">经验值：{{v.userExperionce}}</span>
+                            <span class="red" v-if="v.warehouseCount>1">(拆)</span> -->
+                        </div>
+                        <div class="marl20">仓库订单号 <span class="marl20">{{v.warehouseOrder.warehouseOrderNo}}</span></div>
+                        <div>
+                            <span class="marl20">下单时间</span> <span class="marl20">{{v.warehouseOrder.createTime|formatDateAll}}</span>
                             <el-popover v-auth="'order.orderList.bj'" placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
-                                <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star" :style="{color:v.warehouseOrder.starColor}">★</span></span>
+                                <span slot="reference" class="marl20" style="cursor:pointer">标记 &nbsp; <span class="star" :style="{color:v.warehouseOrder.starColor}">★</span></span>
                                 <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)" :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
                                 <el-input v-model="v.warehouseOrder.remark" placeholder="请输入备注"></el-input>
                             </el-popover>
@@ -43,7 +45,8 @@
                     <td style="width: 400px">
                         <div class="name">
                             <img :src="value.specImg" alt="">
-                            <div class="pro-name">{{value.productName}}</div>
+                            <div class="pro-name over-more-hidden">{{value.productName}}</div>
+                            <div class="activity-label" v-if="value.activityTag">{{value.activityTag}}</div>
                             <div class="pro-spec">{{value.spec}}</div>
                             <div style="clear: both"></div>
                         </div>
@@ -308,7 +311,6 @@ export default {
             text-align: left;
             div {
                 display: inline-block;
-                width: 20%;
             }
         }
         .marl20 {
@@ -331,6 +333,17 @@ export default {
                 top: 5px;
                 left: 115px;
                 width: 270px;
+                line-height: 18px;
+            }
+            .activity-label{
+                position: absolute;
+                left: 115px;
+                bottom: 30px;
+                padding: 0 5px;
+                border:1px solid #ff6868;
+                color: #ff6868;
+                border-radius: 5px;
+                word-break: keep-all;
             }
             .pro-spec {
                 position: absolute;
@@ -366,6 +379,9 @@ export default {
         .el-input__suffix {
             top: -5px;
         }
+    }
+    .red{
+        color: #ff6868
     }
 }
 </style>

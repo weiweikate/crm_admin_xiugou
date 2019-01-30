@@ -116,9 +116,9 @@ export default {
 
     data() {
         const validateInput = (rule, value, callback) => {
-            const uPattern = /^[a-zA-Z0-9_-]{1,20}$/;
-            if (!uPattern.test(value)) {
-                callback(new Error('请输入6-20位'));
+            // const uPattern = /^[a-zA-Z0-9_-]{1,20}$/;
+            if (!value.length || value.length === '' || value.length>20) {
+                callback(new Error('请输入1-20位'));
             } else {
                 callback();
             }

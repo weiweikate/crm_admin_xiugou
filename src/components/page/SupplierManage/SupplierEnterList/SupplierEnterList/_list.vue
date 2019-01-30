@@ -18,7 +18,7 @@
             </el-table-column>
             <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
-                    <a :href="'#/supplierEnterDetail?supplierEnterId='+`${scope.row.id}`" class="el-button el-button--primary el-button--small" v-auth="'supplier.supplierEnterList.xq'">查看</a>
+                    <a :href="'#/supplierEnterDetail?supplierEnterId='+`${scope.row.id}`" target="_blank" class="el-button el-button--primary el-button--small" v-auth="'supplier.supplierEnterList.xq'">查看</a>
                     <el-button type="success" v-if="scope.row.status==0" @click="handleItem(scope.row.id)" v-auth="'supplier.supplierEnterList.cl'">处理</el-button>
                 </template>
             </el-table-column>
