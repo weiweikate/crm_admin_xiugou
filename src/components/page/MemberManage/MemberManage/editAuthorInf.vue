@@ -124,6 +124,7 @@
                 this.btnLoading = true;
                 request.updateDealerById(data).then(res => {
                     this.btnLoading = false;
+                    this.$parent.loading = true;
                     this.$message.success(res.msg);
                     this.$emit('msg', false);
                 }).catch(err => {
