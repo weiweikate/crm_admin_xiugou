@@ -24,7 +24,7 @@
                                 <el-button @click="expCalc(2)" type="danger">减少经验值</el-button>
                             </div>
                             <div v-if="showExpChangge" class="mgt15">
-                                数量：<el-input v-model.trim.number="expValue" class="mgl10" @keyup.native="expValue = Math.abs(expValue)"></el-input>
+                                数量：<el-input v-model.trim.number="expValue" class="mgl10" @change="validate" @keyup.native="expValue = Math.abs(expValue)"></el-input>
                             </div>
                         </div>
                     </el-form-item>
@@ -55,6 +55,7 @@
     </div>
 </template>
 <script>
+    import { regExpConfig } from '@/utils/regConfig';
     import icon from '@/components/common/ico';
     import request from '@/http/http';
     export default {
@@ -146,6 +147,17 @@
                 this.expValue = '';
                 this.showExpChangge = true;
                 this.calcType = status;
+            },
+            validate(val) {
+                if (!val) {
+                    return false;
+                } else if (!regExpConfig.float.test(val)) {
+                    this.$message.warning('请输入非负数值');
+                } else {
+                    if (!regExpConfig.isTwodecimal.test(val)) {
+                        this.$message.warning('请保存两位小数');
+                    }
+                }
             }
         }
     };
