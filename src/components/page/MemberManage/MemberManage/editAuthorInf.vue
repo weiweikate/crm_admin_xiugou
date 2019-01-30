@@ -152,7 +152,7 @@
                 if (!val) {
                     return false;
                 } else if (!regExpConfig.float.test(val)) {
-                    this.$message.warning('请输入正确数值');
+                    this.$message.warning('请输入非负数值');
                 } else {
                     if (!regExpConfig.isTwodecimal.test(val)) {
                         this.$message.warning('请保存两位小数');
