@@ -26,8 +26,8 @@
                     <td colspan="7" class="head">
                         <div>
                             <el-checkbox @change="orderCheckBox(v)" v-model="v.checked"></el-checkbox><span class="marl20">平台订单号 </span><span class="marl20">{{v.warehouseOrder.platformOrderNo}}</span>
-                            <span class="marl20" v-if="v.userExperionce">经验值：{{v.userExperionce}}</span>
-                            <span class="red" v-if="v.warehouseCount>1">(拆)</span>
+                            <!-- <span class="marl20" v-if="v.userExperionce">经验值：{{v.userExperionce}}</span>
+                            <span class="red" v-if="v.warehouseCount>1">(拆)</span> -->
                         </div>
                         <div class="marl20">仓库订单号 <span class="marl20">{{v.warehouseOrder.warehouseOrderNo}}</span></div>
                         <div>
