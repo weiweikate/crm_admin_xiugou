@@ -31,18 +31,19 @@
                         <span>下单时间</span>
                         <span>{{platformOrder.orderTime|formatDateAll}}</span>
                     </div>
-                    <!--已付款，已发货，交易关闭-->
-                    <div class="item" v-if="warehouseOrder.status>1&&warehouseOrder.status<5">
+                    <!--已付款，已发货，交易完成，交易关闭-->
+                    <div class="item" v-if="warehouseOrder.status>1">
                         <span>付款时间</span>
-                        <span>{{orderPayInfo.payTime|formatDateAll}}</span>
+                        <span v-if="orderPayInfo.payTime">{{orderPayInfo.payTime|formatDateAll}}</span>
+                        <span v-else>/</span>
                     </div>
-                    <!--已发货-->
-                    <div class="item" v-if="warehouseOrder.status==3||warehouseOrder.status==4">
+                    <!--发过货就显示-->
+                    <div class="item" v-if="warehouseOrder.deliverTime">
                         <span>发货时间</span>
                         <span>{{warehouseOrder.deliverTime|formatDateAll}}</span>
                     </div>
-                    <!--交易完成-->
-                    <div class="item" v-if="warehouseOrder.status==4">
+                    <!--成交过就显示-->
+                    <div class="item" v-if="warehouseOrder.autoReceiveTime">
                         <span>成交时间</span>
                         <span>{{warehouseOrder.autoReceiveTime|formatDateAll}}</span>
                     </div>

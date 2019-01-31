@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div v-loading="loading">
         <v-breadcrumb :nav="['经销商会员管理','会员管理','会员详情']"></v-breadcrumb>
-        <div class="container" v-loading="loading">
+        <div class="container">
             <div class="basic-inf-area line">
                 <div class="left">
                     <div class="title">
