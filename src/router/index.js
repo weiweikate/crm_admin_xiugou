@@ -65,7 +65,7 @@ export const asyncRouterMap = [
                 name: 'memberManage',
                 path: '/memberManage',
                 component: resolve => require(['../components/page/MemberManage/MemberManage.vue'], resolve),
-                meta: { title: '会员管理', noKeepAlive: true }
+                meta: { title: '会员管理' }
             },
             {
                 name: 'realNameAuthentication',

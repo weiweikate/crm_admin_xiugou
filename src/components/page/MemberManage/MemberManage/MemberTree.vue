@@ -81,7 +81,8 @@
                                         <span>用户ID：{{direct.id}}</span><span>授权号：{{direct.code}}</span>
                                     </div>
                                     <div @click="expendIndirect(index)" class="click-area">
-                                        <span class="direct-title">间接代理：<span>{{direct.secCount?direct.secCount:0}}</span>人</span>
+                                        <span
+                                            class="direct-title">间接代理：<span>{{direct.secCount?direct.secCount:0}}</span>人</span>
                                         <i :class="direct.checked?'el-icon-caret-bottom':'el-icon-caret-top'"></i>
                                     </div>
                                     <div v-show="direct.checked">
@@ -193,7 +194,11 @@
             },
             // 跳到详情页
             toDetail(code) {
-                this.$router.push({ path: '/memberDetail', query: { memberToInfo: code }});
+                let routeData = this.$router.resolve({
+                    path: '/memberDetail',
+                    query: { memberToInfo: code }
+                });
+                window.open(routeData.href, '_blank');
             }
         }
     };
