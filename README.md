@@ -84,7 +84,7 @@ clipboard.on('success', () => {
 回调 getList函数
 mixin引用 myMixinTable
 注意 1.offset是相对最近一个定位的祖先元素来获位置偏移量（http://www.softwhy.com/article-2515-1.html）  2分页器到滚动父元素（props：parent）之间不能设置overflow：hidden/auto属性否则监听滚动失效
-使用eg: 
+使用eg:(效果在/temp里可查看)
 import mrPagination from '@/components/common/pagination/pagination';
 <mr-pagination @getList="getList" parent="content-box" :pageSize="pageSize" :totalPage="totalPage"></mr-pagination>
 ```
