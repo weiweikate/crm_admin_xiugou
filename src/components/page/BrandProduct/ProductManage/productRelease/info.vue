@@ -178,8 +178,8 @@
     function sortName(a, b) {
         let first = a.name+''.replace(/[^0-9]/ig, '');
         let second = b.name+''.replace(/[^0-9]/ig, '');
-        first = first.length > 0 ? parseInt(first.substr(-10)) : a.name;
-        second = second.length > 0 ? parseInt(second.substr(-10)) : b.name;
+        first = first.length > 0 ? parseInt(first.substr(-6)) : a.name;
+        second = second.length > 0 ? parseInt(second.substr(-6)) : b.name;
         return first - second;
     }
     export default {
@@ -509,6 +509,7 @@
                 if (this.imgList.length >= 10) return this.$message.error('最多上传十张图片');
                 this.imgList.push({ name: file.name, url: res.data });
                 this.imgList.sort(sortName);
+
             },
             // 上传详情图片成功
             uploadInfoImgSuccess(res, file, fileList) {
