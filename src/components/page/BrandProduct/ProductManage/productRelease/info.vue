@@ -176,10 +176,15 @@
     import chooseArea from '@/components/common/chooseArea';
     // 图片名字排序
     function sortName(a, b) {
-        let first = a.name+''.replace(/[^0-9]/ig, '');
-        let second = b.name+''.replace(/[^0-9]/ig, '');
-        first = first.length > 0 ? parseInt(first.substr(-10)) : a.name;
-        second = second.length > 0 ? parseInt(second.substr(-10)) : b.name;
+        // 删除后缀.jpg
+        let first = a.name.toString().split('.')[0];
+        let second = b.name.toString().split('.')[0];
+        // 获取数字部分
+        let firstNum = first.match(/[\d]+/g);
+        let secondNum = second.match(/[\d]+/g);
+        // 如果包含数字则按数字大小排序
+        first = firstNum ? parseInt(firstNum[firstNum.length-1]) : a.name;
+        second = secondNum ? parseInt(secondNum[secondNum.length-1]) : b.name;
         return first - second;
     }
     export default {
@@ -509,6 +514,7 @@
                 if (this.imgList.length >= 10) return this.$message.error('最多上传十张图片');
                 this.imgList.push({ name: file.name, url: res.data });
                 this.imgList.sort(sortName);
+
             },
             // 上传详情图片成功
             uploadInfoImgSuccess(res, file, fileList) {
