@@ -178,8 +178,8 @@
     function sortName(a, b) {
         let first = a.name+''.replace(/[^0-9]/ig, '');
         let second = b.name+''.replace(/[^0-9]/ig, '');
-        first = first.length > 0 ? parseInt(first.substr(-5)) : a.name;
-        second = second.length > 0 ? parseInt(second.substr(-5)) : b.name;
+        first = first.length > 0 ? parseInt(first.substr(-10)) : a.name;
+        second = second.length > 0 ? parseInt(second.substr(-10)) : b.name;
         return first - second;
     }
     export default {
