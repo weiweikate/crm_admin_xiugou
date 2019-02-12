@@ -114,7 +114,7 @@ export const asyncRouterMap = [
             {
                 name: 'erp',
                 path: '/erp',
-                component: resolve => require(['../c\omponents/page/SupplierManage/ErpList/erp.vue'], resolve),
+                component: resolve => require(['../components/page/SupplierManage/ErpList/erp.vue'], resolve),
                 meta: { title: 'ERP列表', noKeepAlive: true }
             }
         ]
