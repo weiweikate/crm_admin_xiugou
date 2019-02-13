@@ -97,19 +97,19 @@ label.require:before,.el-table__header th.require .cell:before {
     color: #f56c6c;
     margin-right: 4px;
 }
-/* mr-layer 样式 */
-.mr-layer {
+/* mr-flying 样式 */
+.mr-flying {
     height: 32px;
     background: #fff;
     text-align: right;
     margin-bottom: 20px;
     float: right;
 }
-.mr-layer-box {
+.mr-flying-box {
     display: inline-block;
     background: #fff;
 }
-.mr-layer-box.active {
+.mr-flying-box.active {
     position: fixed;
     top: 0;
     left: 0;

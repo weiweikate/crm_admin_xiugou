@@ -78,17 +78,31 @@ clipboard.on('success', () => {
 });
 ```
 
-## mrLayer 表格滚动的悬浮弹层
+## flying 表格滚动的悬浮弹层
+
+使用
+```
+import mrFlying from '@/components/common/flying/flying';
+<mr-flying parentClass="content-box">
+    <solt></solt>
+</mr-flying>
+```
+props
+
+| 属性        | 类型   | 默认值  | 说明                                                                      |
+| ---------- | ------ | ------ | ------------------------------------------------------------------------- |
+| parentClas | String | ''     | parentClass相对滚动的最近祖先元素的className,不传后面以body为起始目标滚动 |
+
+slot
+
+| 名称             | 说明               |
+| --------------- | ------------------ |
+| actions         | 插槽提供flying显示内容|
 
 ```
-传参 parentClass相对滚动的最近祖先元素的className,不传后面以body为起始目标滚动
-slot 插槽浮层内容需要注入
-注意 1.offset是相对最近一个定位的祖先元素来获位置偏移量（http://www.softwhy.com/article-2515-1.html）  2分页器到滚动父元素（props：parentClass）之间不能设置overflow：hidden/auto属性否则监听滚动失效
-使用eg:(效果在/demo/layer里可查看)
-import mrLayer from '@/components/common/layer/layer';
-<mr-layer @getList="getList" parentClass="content-box" :pageSize="pageSize" :totalPage="totalPage">
-    <solt></solt>
-</mr-layer>
+注意
+1.offset是相对最近一个定位的祖先元素来获位置偏移量（http://www.softwhy.com/article-2515-1.html）  
+2.组件到滚动父元素（props：parentClass）之间不能设置overflow：hidden/auto属性否则监听滚动失效
 
 ```
 

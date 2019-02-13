@@ -1,8 +1,8 @@
 <template>
     <div class="content-box">
-        <mr-layer @getList="getList" parentClass="content-box" :pageSize="pageSize" :totalPage="totalPage" class="ml10">
+        <mr-flying parentClass="content-box" class="ml10">
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
-        </mr-layer>
+        </mr-flying>
         <el-table :data="tableData" stripe style="width: 100%">
             <el-table-column prop="date" label="日期" width="180"></el-table-column>
             <el-table-column prop="name" label="姓名" width="180"></el-table-column>
@@ -12,13 +12,13 @@
 </template>
 
 <script>
-import mrLayer from '@/components/common/layer/layer';
+import mrFlying from '@/components/common/flying/flying';
 import { myMixinTable } from '@/JS/commom';
 
 export default {
     mixins: [myMixinTable],
     components: {
-        mrLayer
+        mrFlying
     },
     data() {
         return {

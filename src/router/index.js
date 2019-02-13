@@ -1813,8 +1813,8 @@ export const constantRouterMap = [
         redirect: '/dashboard'
     },
     {
-        name: 'demo.layer',
-        path: '/demo/layer',
+        name: 'demo.flying',
+        path: '/demo/flying',
         hidden: true,
         component: resolve => require(['../components/page/temp.vue'], resolve)
     }
