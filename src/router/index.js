@@ -1811,6 +1811,12 @@ export const constantRouterMap = [
     {
         path: '/',
         redirect: '/dashboard'
+    },
+    {
+        name: 'demo.flying',
+        path: '/demo/flying',
+        hidden: true,
+        component: resolve => require(['../components/page/temp.vue'], resolve)
     }
 ];
 
