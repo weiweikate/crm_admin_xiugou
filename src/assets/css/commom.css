@@ -97,7 +97,7 @@ label.require:before,.el-table__header th.require .cell:before {
     color: #f56c6c;
     margin-right: 4px;
 }
-/* 头部分页样式 */
+/* mr-layer 样式 */
 .mr-layer {
     height: 32px;
     background: #fff;
