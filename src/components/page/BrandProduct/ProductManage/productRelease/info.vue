@@ -183,9 +183,9 @@
         let firstNum = first.match(/[\d]+/g);
         let secondNum = second.match(/[\d]+/g);
         // 如果包含数字则按数字大小排序
-        first = firstNum ? parseInt(firstNum[firstNum.length-1]) : a.name;
-        second = secondNum ? parseInt(secondNum[secondNum.length-1]) : b.name;
-        return first - second;
+        first = firstNum ? parseInt(firstNum[firstNum.length-1]) : first;
+        second = secondNum ? parseInt(secondNum[secondNum.length-1]) : second;
+        return first > second ? 1 : -1;
     }
     export default {
         components: { draggable, chooseArea, vBreadcrumb },
