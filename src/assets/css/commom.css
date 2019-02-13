@@ -97,25 +97,3 @@ label.require:before,.el-table__header th.require .cell:before {
     color: #f56c6c;
     margin-right: 4px;
 }
-/* mr-flying 样式 */
-.mr-flying {
-    height: 32px;
-    background: #fff;
-    text-align: right;
-    margin-bottom: 20px;
-    float: right;
-}
-.mr-flying-box {
-    display: inline-block;
-    background: #fff;
-}
-.mr-flying-box.active {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9999;
-    padding-right: 60px;
-    text-align: right;
-    background: #e8edf0;
-}

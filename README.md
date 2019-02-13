@@ -83,15 +83,15 @@ clipboard.on('success', () => {
 使用
 ```
 import mrFlying from '@/components/common/flying/flying';
-<mr-flying parentClass="content-box">
-    <solt></solt>
+<mr-flying parentClass="content-box" class="ml10">
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
 </mr-flying>
 ```
 props
 
 | 属性        | 类型   | 默认值  | 说明                                                                      |
 | ---------- | ------ | ------ | ------------------------------------------------------------------------- |
-| parentClas | String | ''     | parentClass相对滚动的最近祖先元素的className,不传后面以body为起始目标滚动 |
+| parentClass | String | ''     | parentClass相对滚动的最近祖先元素的className,不传后面以body为起始目标滚动 |
 
 slot
 

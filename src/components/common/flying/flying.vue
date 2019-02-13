@@ -72,3 +72,26 @@ export default {
     }
 };
 </script>
+<style lang="less" scoped>
+.mr-flying {
+    height: 32px;
+    background: #fff;
+    text-align: right;
+    margin-bottom: 20px;
+    float: right;
+    .mr-flying-box {
+        display: inline-block;
+        background: #fff;
+        &.active {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            padding-right: 60px;
+            text-align: right;
+            background: #e8edf0;
+        }
+    }
+}
+</style>
