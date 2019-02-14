@@ -20,6 +20,9 @@
             </el-form>
         </el-card>
         <div class="table-block">
+            <mr-flying parentClass="content-box">
+                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
+            </mr-flying>
             <el-button type="primary" style="margin-bottom: 20px" @click="addBrand" v-auth="'brand.brandManage.tjpp'">添加品牌</el-button>
             <template>
                 <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
@@ -53,17 +56,6 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination
-                        background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page.currentPage"
-                        :page-size="page.pageSize"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
         <!--删除弹窗-->
         <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
@@ -74,7 +66,6 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import icon from '@/components/common/ico.vue';
     import deleteToast from '@/components/common/DeleteToast';
-    import utils from '@/utils/index.js';
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http.js';
 

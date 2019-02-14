@@ -29,6 +29,17 @@
             <p style="font-size:14px;color:#ff6868">{{name}}的待提现账户</p>
             <el-button @click="toggleStatus(1)" style="margin:10px 0" :type="biType==1?'primary':''">收入</el-button>
             <el-button @click="toggleStatus(2)" style="margin:10px 0" :type="biType==2?'primary':''">支出</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table :data="tableData" border v-loading="tableLoading">
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column v-if="biType == 1" prop="orderNo" label="订单编号" align="center"></el-table-column>
@@ -67,17 +78,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                        background
-                        :page-size="page.pageSize"
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page.currentPage"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
 
     </div>

@@ -2,6 +2,17 @@
     <div class="report-spell-shop">
         <v-breadcrumb :nav="['拼店管理','店铺举报']"></v-breadcrumb>
         <el-card :body-style="{ padding: '30px' }">
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table :data="tableData" border>
                 <el-table-column type="index" :index='handleIndex' label="序号" align="center"></el-table-column>
                 <el-table-column prop="userName" label="举报用户" align="center">
@@ -26,17 +37,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                        background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page.currentPage"
-                        :page-size="page.pageSize"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
     </div>
 </template>

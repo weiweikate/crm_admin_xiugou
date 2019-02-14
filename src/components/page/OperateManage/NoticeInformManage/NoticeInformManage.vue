@@ -44,6 +44,17 @@
                     <el-button @click="addInf" type="primary" v-auth="'yunying.noticeInformManage.fbggtz'">发布公告/通知</el-button>
                 </el-form-item>
             </el-form>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <template>
                 <el-table :data="tableData" border style="width: 100%">
                     <el-table-column prop="code" label="ID" align="center"></el-table-column>
@@ -99,17 +110,6 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination
-                        background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page.currentPage"
-                        :page-size="page.pageSize"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
         <!--消息确认弹窗-->
         <div class="pwd-mask" v-if="tipsMask">

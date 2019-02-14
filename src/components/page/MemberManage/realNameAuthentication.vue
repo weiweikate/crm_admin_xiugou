@@ -19,6 +19,17 @@
             </el-form>
         </el-card>
         <div class="table-block">
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <template>
                 <el-table :data="tableData" border>
                     <el-table-column  label="编号" type="index" align="center"></el-table-column>
@@ -43,17 +54,6 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    :page-size="page.pageSize"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
         <!-- 驳回认证 -->
         <el-dialog title="驳回理由" :visible.sync="dialogVisible" width="30%">
@@ -130,7 +130,7 @@
             },
             // 实名认证页面
             realName(row) {
-                this.$router.push({name: 'realNameInfo', query: {memberInfoRealName: row.userCode}});
+                this.$router.push({ name: 'realNameInfo', query: { memberInfoRealName: row.userCode }});
             },
             // 驳回审核
             async refuseAudit(row) {

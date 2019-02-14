@@ -59,6 +59,17 @@
         </el-card>
         <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
            <a class="el-button el-button--small el-button--primary" style="margin-bottom: 20px" href="#/repertoryReportSet?type=add" target="_blank">新建入库单</a>
+           <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="code" label="入库单编号" align="center"></el-table-column>
@@ -99,17 +110,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
         <!--删除-->
         <el-dialog title="温馨提示" :visible.sync="mask">

@@ -18,6 +18,7 @@
 
 <script>
 export default {
+    name: 'MrFlying',
     props: {
         // 相对滚动的父元素className 可以不传，不传后面以body为起始目标滚动
         parentClass: {
@@ -75,6 +76,7 @@ export default {
 <style lang="less" scoped>
 .mr-flying {
     height: 32px;
+    min-width: 100px;
     background: #fff;
     text-align: right;
     margin-bottom: 20px;

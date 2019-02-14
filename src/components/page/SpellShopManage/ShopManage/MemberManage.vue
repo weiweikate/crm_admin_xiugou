@@ -2,6 +2,17 @@
   <div class="member-manage">
     <v-breadcrumb :nav='nav'></v-breadcrumb>
     <el-card :body-style="{ padding: '20px 60px' }">
+        <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </mr-flying>
         <el-table border :data="tableData">
             <el-table-column prop="nickName" label="用户名" align="center"></el-table-column>
             <el-table-column label="贡献度（本次）" align="center">
@@ -20,24 +31,12 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="block">
-            <el-pagination
-                background
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :page-size="page.pageSize"
-                :current-page="page.currentPage"
-                layout="total, prev, pager, next, jumper"
-                :total="page.totalPage">
-            </el-pagination>
-        </div>
     </el-card>
   </div>
 </template>
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-import * as pApi from '@/privilegeList/SpellShopManage/index';
 import request from '@/http/http.js';
 import { myMixinTable } from '@/JS/commom';
 

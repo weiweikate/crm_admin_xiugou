@@ -3,6 +3,10 @@
         <v-breadcrumb :nav="['物流管理','运费模板']"></v-breadcrumb>
         <div class="table-block" v-loading="btnLoading">
             <a v-auth="'brand.shippingTemplate.tj'" href="#/addTemplate" target="_blank" class="el-button el-button--primary el-button--small" style="margin-bottom: 20px">添加模板</a>
+            <mr-flying parentClass="content-box">
+                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <template>
                 <div v-if="tableData.length==0" class="nodata">暂无模板~</div>
                 <table v-else v-for="(v,k) in tableData" :key="k" class="table-area">
@@ -49,10 +53,6 @@
                         </tr>
                     </template>
                 </table>
-                <div class="block">
-                    <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
-                    </el-pagination>
-                </div>
             </template>
         </div>
         <!--删除弹窗-->

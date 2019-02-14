@@ -37,6 +37,17 @@
         </el-card>
         <el-card :body-style="{ padding: '20px 40px'}" style="margin-top: 20px;">
             <el-button type="danger" size="big" class="mb20" @click="showDialog('add')" v-auth="'logistics.logisticsCompanyList.tj'">添加物流公司</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <template>
                 <el-table
                     :data="tableData"
@@ -70,17 +81,6 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="pagination">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
         <el-dialog :title="dialogTitle" :visible.sync="dialog">
             <el-form :model="singleCompany" :rules="rules" label-width="120px" label-position="left" ref="ruleCompany">
@@ -127,8 +127,7 @@
     import { myMixinTable } from '@/JS/commom';
     import { regExpConfig } from '@/utils/regConfig';
     Vue.filter('dateformat', function(dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
-        return moment(dataStr).format(pattern)
-
+        return moment(dataStr).format(pattern);
     });
     export default {
         name: 'logisticCompanyList',
