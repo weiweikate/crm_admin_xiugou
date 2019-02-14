@@ -197,11 +197,11 @@
                         <span class="remark-length">{{count}}/180</span>
                     </el-form-item>
                     <!-- 审核通过 虚拟仓 换货 hasAuth测试true线上false-->
-                    <el-form-item v-if="orderCustomerServiceInfo.type==3&&form.type!=2&&orderInfo.warehouseType!=3&&form.result!=2&&hasAuth">
+                    <!-- <el-form-item v-if="orderCustomerServiceInfo.type==3&&form.type!=2&&orderInfo.warehouseType!=3&&form.result!=2&&hasAuth">
                         <el-checkbox v-model="checked" @change="chooseXnSend">虚拟发货</el-checkbox>
-                    </el-form-item>
+                    </el-form-item> -->
                     <!--换货-->
-                    <template v-if="orderCustomerServiceInfo.type==3&&form.type!=2&&form.result!=2&&(orderInfo.warehouseType==3||checked)">
+                    <template v-if="orderCustomerServiceInfo.type==3&&form.type!=2&&form.result!=2&&orderInfo.warehouseType==3">
                         <el-form-item label="换货物流公司">
                             <el-select v-model="form.expressCode">
                                 <el-option v-for="(v,k) in logicList" :key="k" :value="v.code" :label="v.name"></el-option>
@@ -251,7 +251,7 @@ export default {
             logicList: [],
             form: {},
             count: 0, // 说明字数
-            checked: false,
+            // checked: false,
             records: {}, // 售后协商记录
             hasAuth: '' // 是否虚拟发货的权限，用于区分测试与开发环境，测试true 开发false
         };
@@ -352,9 +352,9 @@ export default {
                     if (this.form.result === '2') {
                         url = 'refuse';
                     } else {
-                        if (this.checked) {
-                            data.warehouseType = 3;
-                        }
+                        // if (this.checked) {
+                        //     data.warehouseType = 3;
+                        // }
                         if (!this.form.type) {
                             return this.$message.warning('请选择售后类型');
                         }
