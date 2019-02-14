@@ -24,7 +24,7 @@
             <tbody v-for="(v,k) in tableData" :key="k">
                 <tr>
                     <td colspan="7" class="head">
-                        <div>
+                         <div>
                             <el-checkbox @change="orderCheckBox(v)" v-model="v.checked"></el-checkbox><span class="marl20">平台订单号 </span><span class="marl20">{{v.warehouseOrder.platformOrderNo}}</span>
                             <!-- <span class="marl20" v-if="v.userExperionce">经验值：{{v.userExperionce}}</span>
                             <span class="red" v-if="v.warehouseCount>1">(拆)</span> -->
@@ -32,11 +32,12 @@
                         <div class="marl20">仓库订单号 <span class="marl20">{{v.warehouseOrder.warehouseOrderNo}}</span></div>
                         <div>
                             <span class="marl20">下单时间</span> <span class="marl20">{{v.warehouseOrder.createTime|formatDateAll}}</span>
-                            <el-popover v-auth="'order.orderList.bj'" placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
+                            <span  v-auth="'order.orderList.bj'" class="marl20" @click="remark(v)" style="cursor:pointer">标记 &nbsp; <span class="star" :style="{color:v.warehouseOrder.starColor}">★</span></span>
+                            <!-- <el-popover v-auth="'order.orderList.bj'" placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
                                 <span slot="reference" class="marl20" style="cursor:pointer">标记 &nbsp; <span class="star" :style="{color:v.warehouseOrder.starColor}">★</span></span>
                                 <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)" :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
                                 <el-input v-model="v.warehouseOrder.remark" placeholder="请输入备注"></el-input>
-                            </el-popover>
+                            </el-popover> -->
                             <el-button v-if="v.warehouseOrder.status==2" v-auth="'xnfh'" type="primary" @click="sendGoods(v)">虚拟发货</el-button>
                         </div>
                     </td>
@@ -105,6 +106,22 @@
                 <el-button @click="mask=false">取 消</el-button>
             </div>
         </el-dialog>
+        <!--订单标记-->
+        <el-dialog title="添加/编辑订单标记" :visible.sync="remarkMask">
+            <el-form>
+                <el-form-item label="标记类型">
+                    <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)" :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
+                </el-form-item>
+                <el-form-item label="标记说明">
+                    <el-input type="textarea" v-model="row.warehouseOrder.remark" placeholder="请输入标记说明"></el-input>
+                    <span>{{count}}/180</span>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" :loading="btnLoading" @click="remarkSure">确 认</el-button>
+                <el-button @click="remarkMask=false">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -134,6 +151,8 @@ export default {
                 expressNo: '',
                 expressCode: ''
             },
+            remarkMask: false, // 标记弹窗
+            row: {},
             logicList: []
         };
     },
@@ -178,19 +197,24 @@ export default {
                 this.logicList = res.data.data || [];
             });
         },
+        // 标记弹窗
+        remark(v) {
+            this.remarkMask = true;
+            this.row = v;
+        },
         // 修改星级
-        changeColor(v1, v) {
+        changeColor(v) {
             const data = {};
-            data.warehouseOrderNo = v.warehouseOrder.warehouseOrderNo;
-            data.markStatus = v1.value;
-            data.platformRemarks = v.warehouseOrder.remark;
+            data.warehouseOrderNo = this.row.warehouseOrder.warehouseOrderNo;
+            data.markStatus = v.value;
+            data.platformRemarks = this.row.warehouseOrder.remark;
             request
                 .orderSign(data)
                 .then(res => {
                     this.$message.success(res.msg);
-                    v.warehouseOrder.starColor = v1.label;
-                    v.isShowPop = false;
-                    v.warehouseOrder.platformRemarks = v.warehouseOrder.remark;
+                    this.row.warehouseOrder.starColor = v.label;
+                    this.row.isShowPop = false;
+                    this.row.warehouseOrder.platformRemarks = this.row.warehouseOrder.remark;
                 })
                 .catch(err => {
                     console.log(err);
@@ -222,7 +246,7 @@ export default {
         // 订单详情
         orderInfo(row) {
             sessionStorage.setItem('orderInfoId', row.id);
-            this.$router.push({ name: 'orderInfo', query: { orderInfoId: row.id } });
+            this.$router.push({ name: 'orderInfo', query: { orderInfoId: row.id }});
         },
         // 订单多选框
         orderCheckBox(row) {
@@ -375,6 +399,9 @@ export default {
             .el-input__inner {
                 width: 300px;
             }
+        }
+        .el-textarea{
+            width: 300px;
         }
         .el-input__suffix {
             top: -5px;
