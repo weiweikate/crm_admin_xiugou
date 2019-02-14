@@ -362,9 +362,10 @@
             // 确定发放
             confirmDeliver() {
                 let data = {};
-                const reg = /^[1-5]$/;
-                if (!reg.test(this.queryForm.beanNum)) {
-                    return this.$message.warning('请输入1-5的正整数！');
+                const reg = /^[0-9]+$/;
+                let beanNum = this.queryForm.beanNum;
+                if (!reg.test(beanNum) || parseInt(beanNum) > 10000) {
+                    return this.$message.warning('请输入1-10000的正整数！');
                 }
                 if (this.queryForm.deliverWays == 1) {
                     data = {
