@@ -3,6 +3,17 @@
         <v-breadcrumb :nav="['会员管理','会员层级管理']"></v-breadcrumb>
         <div class="table-block">
             <!--<el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加层级</el-button>-->
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <template>
                 <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
                     <el-table-column prop="id" label="层级编码" width="120" align="center"></el-table-column>
@@ -45,17 +56,6 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div class="block">
-                    <el-pagination
-                        background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page.currentPage"
-                        :page-size="page.pageSize"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                    </el-pagination>
-                </div>
             </template>
         </div>
 
@@ -218,7 +218,6 @@
             },
             // 添加修改确定
             addOrEdit(formName) {
-                const url = '';
                 const data = {};
                 data.name = this[formName].name;
                 data.level = this[formName].level;

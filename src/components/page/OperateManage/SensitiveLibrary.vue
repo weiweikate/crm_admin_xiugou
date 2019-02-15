@@ -3,6 +3,17 @@
         <v-breadcrumb :nav="['运营管理','敏感词库']"></v-breadcrumb>
         <el-card :body-style="{ padding: '30px' }">
             <el-button type="primary" @click="dialogVisible = true" style="margin-bottom:20px" v-auth="'yunying.sensitiveLibrary.tjmgc'">添加敏感词</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table v-loading="tableLoading" :data="tableData" border>
                 <el-table-column type="index" :index="handleIndex" align="center" label="排序"></el-table-column>
                 <el-table-column prop="name" align="center" label="敏感词"></el-table-column>
@@ -12,17 +23,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                        background
-                        @size-change="handleSizeChange"
-                        :page-size="page.pageSize"
-                        @current-change="handleCurrentChange"
-                        :current-page="page.currentPage"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
         <!--删除弹窗-->
         <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
@@ -81,7 +81,7 @@ export default {
                 console.log(err);
             });
         },
-        beforeClose(){
+        beforeClose() {
             this.senWord = '';
             this.dialogVisible = false;
         },

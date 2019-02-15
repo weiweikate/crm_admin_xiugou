@@ -1,5 +1,16 @@
 <template>
     <div class="tab-content">
+        <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </mr-flying>
         <el-table v-loading="tableLoading" border :data="tableData">
             <el-table-column type="index" align="center" label="编号" min-width="100"></el-table-column>
             <el-table-column prop="packageName" label="套餐名称" align="center"></el-table-column>
@@ -54,17 +65,6 @@
             </el-table-column>
 
         </el-table>
-        <div class="block">
-            <el-pagination
-                background
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="page.currentPage"
-                :page-size="page.pageSize"
-                layout="total, prev, pager, next, jumper"
-                :total="page.totalPage">
-            </el-pagination>
-        </div>
         <!--取消弹窗-->
         <div class="pwd-mask" v-if="showMask">
             <div class="box">
@@ -127,6 +127,7 @@
                 })
                     .catch(err => {
                         this.tableLoading = false;
+                        console.log(err);
                     });
             },
             // 取消操作
@@ -167,6 +168,7 @@
                 })
                     .catch(err => {
                         this.btnLoading = false;
+                        console.log(err);
                     });
             },
             // 查看详情

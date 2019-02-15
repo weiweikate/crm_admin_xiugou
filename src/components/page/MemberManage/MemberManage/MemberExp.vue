@@ -36,7 +36,17 @@
         </transition>
 
         <el-card style="margin-top: 20px;">
-
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%;margin-top:20px;">
                 <el-table-column prop="sourceCode" label="经验值来源" align="center"></el-table-column>
                 <el-table-column prop="sourceType" label="经验值状态" align="center">
@@ -56,17 +66,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="paginate">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    :page-size="page.pageSize"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
         <el-dialog title="活动规则说明" :visible.sync="activeRegularDialog" center>
             <div class="dialog-body">

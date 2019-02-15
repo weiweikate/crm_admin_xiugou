@@ -35,6 +35,17 @@
             </el-form>
         </el-card>
         <div class="table-block">
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
                 <el-table-column label="发货单号" align="center">
                     <template slot-scope="scope">{{scope.row.orderDelivery?scope.row.orderDelivery.dispatchNo:'/'}}</template>
@@ -64,17 +75,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
     </div>
 </template>

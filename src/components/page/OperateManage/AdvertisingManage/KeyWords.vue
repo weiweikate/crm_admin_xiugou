@@ -15,7 +15,18 @@
             </el-card>
         </transition>
         <div class="table-block">
-                <el-button @click="addHotWord" type="primary" style="margin-bottom: 20px">添加搜索关键词</el-button>
+            <el-button @click="addHotWord" type="primary" style="margin-bottom: 20px">添加搜索关键词</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <template>
                 <el-table :data="tableData" :height="height" border style="width: 100%">
                     <el-table-column type="index" label="编号" align="center"></el-table-column>
@@ -38,17 +49,6 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
         <!--添加/编辑类目弹窗-->
         <el-dialog title="添加热搜关键词" :visible.sync="addMask">

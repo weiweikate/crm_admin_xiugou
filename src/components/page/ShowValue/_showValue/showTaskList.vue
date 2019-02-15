@@ -1,5 +1,16 @@
 <template>
     <div class="show-t-l">
+        <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </mr-flying>
         <el-table v-loading="loading" :data="tableData" border stripe>
             <el-table-column type="index" label="编号" align="center"></el-table-column>
             <el-table-column prop="name" label="任务名称" align="center"></el-table-column>
@@ -40,17 +51,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="block">
-            <el-pagination
-                background
-                @size-change="handleSizeChange"
-                :page-size="page.pageSize"
-                @current-change="handleCurrentChange"
-                :current-page="page.currentPage"
-                layout="total, prev, pager, next, jumper"
-                :total="page.totalPage">
-            </el-pagination>
-        </div>
     </div>
 </template>
 
@@ -98,7 +98,7 @@
             // 查看分享任务人
             showUser(row) {
                 if (row.userId) {
-                    this.$router.push({name: 'memberDetail', query: {memberToInfo: row.userId}});
+                    this.$router.push({ name: 'memberDetail', query: { memberToInfo: row.userId }});
                 }
             },
             // 查看秀值账户

@@ -3,6 +3,17 @@
     <v-breadcrumb :nav="nav"></v-breadcrumb>
     <el-card :body-style="{ padding: '30px 60px' }">
       <el-button type="primary" @click="addQuestion" v-auth="'yunying.helpCenter.tjwt'">添加问题</el-button>
+      <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+      </mr-flying>
       <el-table :data="tableData" border style='margin-top:20px' :height="height">
         <el-table-column prop="id" label="编号" align="center"></el-table-column>
         <el-table-column prop="title" label="问题标题" align="center"></el-table-column>
@@ -16,17 +27,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="block">
-        <el-pagination
-            background
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="page.currentPage"
-            :page-size="page.pageSize"
-            layout="total, prev, pager, next, jumper"
-            :total="page.totalPage">
-        </el-pagination>
-      </div>
       <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
     </el-card>
   </div>
@@ -36,7 +36,6 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import deleteToast from '@/components/common/DeleteToast';
 import * as pApi from '@/privilegeList/OperateManage/HelpCenter/index.js';
-import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 

@@ -59,6 +59,17 @@
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
              <el-table :data="tableData" border>
                     <el-table-column type="index" label="序号" align="center"></el-table-column>
                     <el-table-column prop="name" label="产品名称" align="center"></el-table-column>
@@ -72,17 +83,6 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div class="block">
-                    <el-pagination
-                        background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page.currentPage"
-                        :page-size="page.pageSize"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                    </el-pagination>
-                </div>
                 <table class="selected-product" v-for="(item,index) in chooseLists" :key="index">
                     <tr v-for="(v,k) in item.skuList" :key="k">
                         <td v-if="k==0" :rowspan="item.skuList.length" style="width: 50px">{{index+1}}</td>

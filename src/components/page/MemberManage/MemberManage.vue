@@ -40,6 +40,17 @@
             </el-form>
         </el-card>
         <div class="table-block">
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table v-loading="tableLoading" :data="tableData" stripe border style="width: 100%">
                 <el-table-column prop="id" label="用户ID" width="60" align="center"></el-table-column>
                 <el-table-column prop="nickname" label="用户昵称" align="center"></el-table-column>
@@ -103,17 +114,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                        background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :page-size="page.pageSize"
-                        :current-page="page.currentPage"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
         <!--消息确认弹窗-->
         <div class="pwd-mask" v-if="tipsMask">
@@ -140,7 +140,6 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
 import region from '@/components/common/Region';
-import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http';
 
