@@ -70,7 +70,7 @@
                                       v-model="v1.value"></el-input>
                             <div class="mt10" v-else>
                                 <el-input :disabled="disabled" v-model="v1.value" style="width: 215px"></el-input>
-                                <span v-if="canHandle" class="primary-text" @click="deleteProps(k,k1)">删除</span>
+                                <span v-if="canHandle && isHandleList" class="primary-text" @click="deleteProps(k,k1)">删除</span>
                             </div>
                             <template v-if="v1.imgUrl == '' || !v1.imgUrl">
                                 <el-upload
@@ -86,7 +86,7 @@
                             </template>
                             <template v-else>
                                 <img :src="v1.imgUrl" alt="">
-                                <span v-if="canHandle" class="primary-text" @click="deleteImg(k, k1)">删除</span>
+                                <span v-if="canHandle && isHandleList" class="primary-text" @click="deleteImg(k, k1)">删除</span>
                             </template>
                         </div>
                         <div class="primary-text">
@@ -369,6 +369,7 @@
             return {
                 nav: ['产品管理', '销售信息编辑'],
                 status: '', // 0：删除 1：待发布2：待审核3：已通过4:已上架5：未通过6:已下架
+                isHandleList: true, // 判断已同步仓库下是否可以显示删除按钮
                 pageLoading: false,
                 salesLoading: false,
                 createListLoading: false,
@@ -798,6 +799,12 @@
                             }
                             this.priceTable.push(v);
                         });
+                    }
+                    // 如果已同步仓库，则不能删除，否则可以删除
+                    if (this.form.checkStatus == true) {
+                        this.isHandleList = false;
+                    } else {
+                        this.isHandleList = true;
                     }
                     // 如果生成列表成功，则将本次提交的数据作为老数据
                     this.salesAttrArr.forEach((v, k) => {
