@@ -32,7 +32,7 @@
                         <div class="marl20">仓库订单号 <span class="marl20">{{v.warehouseOrder.warehouseOrderNo}}</span></div>
                         <div>
                             <span class="marl20">下单时间</span> <span class="marl20">{{v.warehouseOrder.createTime|formatDateAll}}</span>
-                            <span  v-auth="'order.orderList.bj'" class="marl20" @click="remark(v)" style="cursor:pointer">标记 &nbsp; <span class="star" :style="{color:v.warehouseOrder.starColor}">★</span></span>
+                            <span  v-auth="'order.orderList.bj'" class="marl20" @click="orderRemark(v)" style="cursor:pointer">标记 &nbsp; <span class="star" :style="{color:v.warehouseOrder.starColor}">★</span></span>
                             <!-- <el-popover v-auth="'order.orderList.bj'" placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
                                 <span slot="reference" class="marl20" style="cursor:pointer">标记 &nbsp; <span class="star" :style="{color:v.warehouseOrder.starColor}">★</span></span>
                                 <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)" :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
@@ -46,8 +46,15 @@
                     <td style="width: 400px">
                         <div class="name">
                             <img :src="value.specImg" alt="">
-                            <div class="pro-name over-more-hidden">{{value.productName}}</div>
-                            <div class="activity-label" v-if="value.activityTag">{{value.activityTag}}</div>
+                            <div class="pro-name over-more-hidden primary-text" @click="toH5(value)">{{value.productName}}</div>
+                            <div class="label-area">
+                                <!-- 售后状态 1-4售后中 5售后完成 6售后关闭不需要显示-->
+                                <template v-if="value.afterSaleStatus&&value.afterSaleStatus!=6">
+                                    <div class="activity-label">{{value.afterSaleStatus==5 ? '售后完成':'售后中'}}</div>
+                                </template>
+                                <!-- 商品标签 -->
+                                <div class="activity-label" v-if="value.activityTag">{{value.activityTag}}</div>
+                            </div>
                             <div class="pro-spec">{{value.spec}}</div>
                             <div style="clear: both"></div>
                         </div>
@@ -60,11 +67,11 @@
                         <div>应付金额：{{v.warehouseOrder.dueAmount | formatMoney}}</div>
                         <div v-if="v.warehouseOrder.status!=1">实付金额：{{v.warehouseOrder.payAmount | formatMoney}}</div>
                     </td>
-                    <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
+                    <td class="text-left" style="max-width:180px" :rowspan="v.productOrders.length" v-if="index==0">
                         <div>用户账号：{{v.warehouseOrder.userPhone}}</div>
                         <div>收货人姓名：{{v.warehouseOrder.receiver}}</div>
-                        <div v-if="v.warehouseOrder.message">用户留言：{{v.warehouseOrder.message}}</div>
-                        <div v-if="v.warehouseOrder.platformRemarks">平台备注：{{v.warehouseOrder.platformRemarks}}</div>
+                        <div v-if="v.warehouseOrder.message" class="over-more-hidden" :title="v.warehouseOrder.message">用户留言：{{v.warehouseOrder.message}}</div>
+                        <div v-if="v.warehouseOrder.platformRemarks" class="over-more-hidden" :title="v.warehouseOrder.platformRemarks">平台备注：{{v.warehouseOrder.platformRemarks}}</div>
                     </td>
                     <td class="text-left" :rowspan="v.productOrders.length" v-if="index==0">
                         <div v-if="v.warehouseOrder.warehouseType>2">供应商：{{v.warehouseOrder.supplierName}}</div>
@@ -89,7 +96,7 @@
             </el-pagination>
         </div>
         <!--虚拟发货-->
-        <el-dialog title="虚拟发货" :visible.sync="mask">
+        <el-dialog title="虚拟发货" :visible.sync="sendMask">
             <el-form :model="form">
                 <el-form-item label="物流单号">
                     <el-input v-model="form.expressNo" placeholder="请输入物流单号"></el-input>
@@ -103,18 +110,20 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" :loading="btnLoading" @click="sendSure('form')">确 认</el-button>
-                <el-button @click="mask=false">取 消</el-button>
+                <el-button @click="sendMask=false">取 消</el-button>
             </div>
         </el-dialog>
         <!--订单标记-->
         <el-dialog title="添加/编辑订单标记" :visible.sync="remarkMask">
             <el-form>
-                <el-form-item label="标记类型">
-                    <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)" :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
+                <el-form-item label="标记类型" required>
+                    <span v-for="(v,k) in markArr" :key="k" @click="changeColor(v,k)" :style="{color:v.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">
+                        <span v-if="index==k">★</span><span v-else>☆</span>
+                    </span>
                 </el-form-item>
-                <el-form-item label="标记说明">
-                    <el-input type="textarea" v-model="row.warehouseOrder.remark" placeholder="请输入标记说明"></el-input>
-                    <span>{{count}}/180</span>
+                <el-form-item label="标记说明" class="remark-area">
+                    <el-input type="textarea" v-model="remark" @input="getRemarkCount" maxlength="180" placeholder="请输入标记说明"></el-input>
+                    <span class="remark-length">{{count}}/180</span>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -122,15 +131,19 @@
                 <el-button @click="remarkMask=false">取 消</el-button>
             </div>
         </el-dialog>
+        <!-- 商品预览 -->
+        <product-dialog v-show="mask" :src="src" :mask="mask" @msg="closeMask"></product-dialog>
     </div>
 </template>
 
 <script>
 import request from '@/http/http.js';
-import { myMixinTable } from '@/JS/commom';
+import productDialog from '@/components/common/ProductDialog';
+import { myMixinTable, myProductDialog } from '@/JS/commom';
 
 export default {
-    mixins: [myMixinTable],
+    components: { productDialog },
+    mixins: [myMixinTable, myProductDialog],
     data() {
         return {
             starArr: [{ label: '红色标记', value: '1' }, { label: '蓝色标记', value: '2' }, { label: '绿色标记', value: '3' }, { label: '黄色标记', value: '4' }, { label: '紫色标记', value: '5' }],
@@ -145,15 +158,20 @@ export default {
             warehouseOrderNos: [],
             // 虚拟发货
             warehouseOrderNo: '',
-            mask: false,
+            sendMask: false,
             btnLoading: false,
             form: {
                 expressNo: '',
                 expressCode: ''
             },
             remarkMask: false, // 标记弹窗
-            row: {},
-            logicList: []
+            row: {
+                warehouseOrder: {}
+            },
+            remark: '', // 标记说明
+            logicList: [],
+            count: 0, // 说明字数
+            index: -1 // 选中的星星索引
         };
     },
     methods: {
@@ -198,23 +216,40 @@ export default {
             });
         },
         // 标记弹窗
-        remark(v) {
+        orderRemark(v) {
             this.remarkMask = true;
             this.row = v;
+            this.remark = v.warehouseOrder.platformRemarks;
+            this.count = this.remark.length || 0;
+            this.index = (v.warehouseOrder.markSta || 0) - 1;
+            this.row.markStatus = v.warehouseOrder.markStar;
+        },
+        // 获取说明字数
+        getRemarkCount() {
+            this.count = this.remark.length;
         },
         // 修改星级
-        changeColor(v) {
+        changeColor(v, k) {
+            this.index = k;
+            this.row.markStatus = v.value;
+            this.row.label = v.label;
+        },
+        remarkSure(v) {
             const data = {};
             data.warehouseOrderNo = this.row.warehouseOrder.warehouseOrderNo;
-            data.markStatus = v.value;
-            data.platformRemarks = this.row.warehouseOrder.remark;
+            data.markStatus = this.row.markStatus;
+            data.platformRemarks = this.remark;
+            if (!data.markStatus) {
+                return this.$message.warning('请选择标记类型');
+            }
             request
                 .orderSign(data)
                 .then(res => {
                     this.$message.success(res.msg);
-                    this.row.warehouseOrder.starColor = v.label;
-                    this.row.isShowPop = false;
-                    this.row.warehouseOrder.platformRemarks = this.row.warehouseOrder.remark;
+                    this.row.warehouseOrder.starColor = this.row.label;
+                    this.row.warehouseOrder.markStar = this.row.markStatus;
+                    this.remarkMask = false;
+                    this.row.warehouseOrder.platformRemarks = this.remark;
                 })
                 .catch(err => {
                     console.log(err);
@@ -277,7 +312,7 @@ export default {
         },
         // 虚拟发货
         sendGoods(row) {
-            this.mask = true;
+            this.sendMask = true;
             this.form.expressNo = '';
             this.form.expressCode = '';
             this.warehouseOrderNo = row.warehouseOrder.warehouseOrderNo;
@@ -299,14 +334,14 @@ export default {
                 .fictitiousDelivery(data)
                 .then(res => {
                     this.$message.success(res.msg);
-                    this.mask = false;
+                    this.sendMask = false;
                     this.btnLoading = false;
                     this.getList(this.page.currentPage);
                 })
                 .catch(err => {
                     console.log(err);
                     this.btnLoading = false;
-                    this.mask = false;
+                    this.sendMask = false;
                 });
         }
     }
@@ -359,15 +394,20 @@ export default {
                 width: 270px;
                 line-height: 18px;
             }
-            .activity-label{
+            .label-area{
                 position: absolute;
                 left: 115px;
                 bottom: 30px;
+                display: flex;
+            }
+            .activity-label{
                 padding: 0 5px;
                 border:1px solid #ff6868;
                 color: #ff6868;
                 border-radius: 5px;
                 word-break: keep-all;
+                text-align: center;
+                margin-right: 5px;
             }
             .pro-spec {
                 position: absolute;
@@ -402,6 +442,11 @@ export default {
         }
         .el-textarea{
             width: 300px;
+            .el-textarea__inner {
+                resize: none;
+                width: 400px;
+                height: 170px;
+            }
         }
         .el-input__suffix {
             top: -5px;
@@ -409,6 +454,14 @@ export default {
     }
     .red{
         color: #ff6868
+    }
+    .remark-area{
+        position: relative;
+        .remark-length{
+            position: absolute;
+            right: 40px;
+            bottom: 0;
+        }
     }
 }
 </style>

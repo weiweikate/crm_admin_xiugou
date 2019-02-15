@@ -38,8 +38,8 @@
                 <el-form-item prop="userName" label="收货人姓名">
                     <el-input v-model="form.userName" placeholder="请输入收货人姓名"></el-input>
                 </el-form-item>
-                <el-form-item prop="receivePhone" label="收货人手机号码">
-                    <el-input-number :controls="false" v-model="form.receivePhone" :placeholder="请输入收货人手机号码"></el-input-number>
+                <el-form-item prop="receiverPhone" label="收货人手机号码">
+                    <el-input-number :controls="false" v-model="form.receiverPhone" :placeholder="请输入收货人手机号码"></el-input-number>
                 </el-form-item>
                 <el-form-item prop="supplierName" label="供应商名称">
                     <el-input v-model="form.supplierName" placeholder="请输入供应商名称"></el-input>

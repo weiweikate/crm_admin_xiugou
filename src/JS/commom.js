@@ -206,9 +206,11 @@ const myProductDialog = {
         };
     },
     methods: {
-        toH5(code) {
+        toH5(param) {
             this.mask = true;
-            this.src = utils.getSrc(code);
+            const type = param.orderType || 99;
+            const code = type !== 99 ? param.activityCode : param.prodCode;
+            this.src = utils.getSrc(type, code);
         },
         closeMask() {
             this.mask = false;
