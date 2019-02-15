@@ -78,6 +78,34 @@ clipboard.on('success', () => {
 });
 ```
 
+## flying 表格滚动的悬浮弹层
+
+使用
+```
+import mrFlying from '@/components/common/flying/flying';
+<mr-flying parentClass="content-box" class="ml10">
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
+</mr-flying>
+```
+props
+
+| 属性        | 类型   | 默认值  | 说明                                                                      |
+| ---------- | ------ | ------ | ------------------------------------------------------------------------- |
+| parentClass | String | ''     | parentClass相对滚动的最近祖先元素的className,不传后面以body为起始目标滚动 |
+
+slot
+
+| 名称             | 说明               |
+| --------------- | ------------------ |
+| actions         | 插槽提供flying显示内容|
+
+```
+注意
+1.offset是相对最近一个定位的祖先元素来获位置偏移量（http://www.softwhy.com/article-2515-1.html）  
+2.组件到滚动父元素（props：parentClass）之间不能设置overflow：hidden/auto属性否则监听滚动失效
+
+```
+
 #路由与权限
 
 需要权限的路由需要在auth.json里配置  如果不需要权限任何人都能访问的话可以在路由配置中加上`default:true`
