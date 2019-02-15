@@ -35,7 +35,10 @@ export default {
         };
     },
     mounted() {
-        this.init();
+        // 须等待其他组件加载完成
+        this.$nextTick(() => {
+            this.init();
+        }, 0);
     },
     methods: {
         // 初始化
