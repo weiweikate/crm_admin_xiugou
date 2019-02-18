@@ -170,7 +170,7 @@ export default {
         },
         checkPhone() {
             const that = this;
-            const reg = /^1[3-8]\d{9}$/;
+            const reg = /^1\d{10}$/;
             if (!reg.test(that.form.mobile)) {
                 that.$message.warning('请输入正确的手机号格式!');
                 that.phone = false;

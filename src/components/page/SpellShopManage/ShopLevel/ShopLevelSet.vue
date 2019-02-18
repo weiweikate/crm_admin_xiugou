@@ -137,7 +137,7 @@
                     this.$message.warning('请输入等级名称!');
                     return;
                 }
-                if (!data.level) {
+                if (data.level === undefined) {
                     this.$message.warning('请输入层级!');
                     return;
                 }

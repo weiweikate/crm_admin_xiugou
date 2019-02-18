@@ -211,7 +211,6 @@ export default {
                 return;
             } else {
                 if (this.tableTit[9].price && (this.tableTit[8].price < this.tableTit[9].price || this.tableTit[9].price < this.tableTit[10].price)) {
-                    debugger;
                     this.$message.warning('最低支付价必须小于拼店价且大于结算价!');
                     return;
                 }

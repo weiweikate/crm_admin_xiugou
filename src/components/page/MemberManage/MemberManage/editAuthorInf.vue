@@ -17,6 +17,17 @@
                         <el-input v-model="info.upUserCode" @blur="sureUpdate" size="medium"></el-input>
                         <span class="tip">请输入上级代理</span>
                     </el-form-item>
+                    <el-form-item label="经验值:" class="special">{{info.experience}}
+                        <div class="expCalc">
+                            <div>
+                                <el-button @click="expCalc(1)" type="primary">增加经验值</el-button>
+                                <el-button @click="expCalc(2)" type="danger">减少经验值</el-button>
+                            </div>
+                            <div v-if="showExpChangge" class="mgt15">
+                                数量：<el-input type="number" v-model="expValue" class="mgl10" @change="validate"></el-input>
+                            </div>
+                        </div>
+                    </el-form-item>
                 </el-form>
             </div>
             <div class="submit-btn">
@@ -44,6 +55,7 @@
     </div>
 </template>
 <script>
+    import { regExpConfig } from '@/utils/regConfig';
     import icon from '@/components/common/ico';
     import request from '@/http/http';
     export default {
@@ -65,7 +77,10 @@
                 num: '',
                 oldId: '',
                 btnLoading: false,
-                info: {}
+                info: {},
+                calcType: '', // 1是加2是减 ''不做处理
+                expValue: '', // 经验值增减值
+                showExpChangge: false // 经验值输入框显隐
             };
         },
         created() {
@@ -95,18 +110,25 @@
             },
             // 提交表单
             submitForm() {
+                if (this.type === 2 && this.expValue > this.info.experience) {
+                    this.$message.warning('减少的经验值不能大于已有经验值');
+                    return;
+                }
                 const data = {};
                 data.code = this.code;
                 data.levelId = this.info.levelId;
                 data.upUserCode = this.info.upUserCode;
                 data.updateType = 2;
+                data.type = this.calcType;
+                data.experience = this.expValue;
                 this.btnLoading = true;
                 request.updateDealerById(data).then(res => {
                     this.btnLoading = false;
+                    this.$parent.loading = true;
                     this.$message.success(res.msg);
                     this.$emit('msg', false);
                 }).catch(err => {
-                    this.$emit('msg', false);
+                    // this.$emit('msg', false);
                     this.btnLoading = false;
                     console.log(err);
                 });
@@ -120,6 +142,22 @@
                 this.isUpdateUperMask = false;
                 if (!status) {
                     this.info.id = this.oldId;
+                }
+            },
+            expCalc(status) {
+                this.expValue = '';
+                this.showExpChangge = true;
+                this.calcType = status;
+            },
+            validate(val) {
+                if (!val) {
+                    return false;
+                } else if (!regExpConfig.float.test(val)) {
+                    this.$message.warning('请输入非负数值');
+                } else {
+                    if (!regExpConfig.isTwodecimal.test(val)) {
+                        this.$message.warning('请保存两位小数');
+                    }
                 }
             }
         }
@@ -329,6 +367,15 @@
         }
         .el-tabs__content {
             display: none
+        }
+    }
+    .expCalc{
+        margin: 15px 100px;
+        .mgt15{
+            margin-top: 15px;
+        }
+        .mgl10{
+            margin-left: 10px;
         }
     }
 </style>

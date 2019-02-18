@@ -3,9 +3,9 @@
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 45px',color:'#666' }">
             <div class="pro-title">基本信息</div>
-            <el-form :model="form" ref="form" label-width="100px">
-                <el-form-item label="礼包名称">
-                    <el-input style="width:300px" :maxlength="16" v-model="form.name" placeholder="请输入产品名称"></el-input>
+            <el-form :model="form" :rules="rules" ref="form" label-width="100px">
+                <el-form-item label="礼包名称" prop="name">
+                    <el-input style="width:300px" :maxlength="46" v-model="form.name" placeholder="请输入礼包名称"></el-input>
                 </el-form-item>
                 <el-form-item label="礼包类型">
                     <el-select v-model="form.type" @change="changeGiftStatus" placeholder="下拉选择礼包类型">
@@ -320,7 +320,12 @@ export default {
             couponList: [], // 优惠券列表
             tmpCouponList: [], // 暂时存放优惠券列表
             imgInfoList: [], // 商品详情(图片)
-            couponType: '1'
+            couponType: '1',
+            rules: {
+                name: [
+                    { min: 2, max: 46, message: '长度在 2 到 46 个字符', trigger: 'blur' }
+                ]
+            }
         };
     },
     computed: {
@@ -427,6 +432,10 @@ export default {
         },
         // 提交表单前进行判断
         beforeSubmit() {
+            if (!this.form.name || this.form.name.length < 2) {
+                this.$message.warning('请输入2-46位礼包名称');
+                return false;
+            }
             if (!this.imgArr || this.imgArr.length === 0) {
                 this.$message.warning('请添加产品图片');
                 return false;
