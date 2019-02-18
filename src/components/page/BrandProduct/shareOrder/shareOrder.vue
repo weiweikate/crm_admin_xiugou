@@ -57,20 +57,31 @@
                 </el-tab-pane>
             </el-tabs>
         </el-card>
-
+        <!--图片视频预览弹出窗-->
+        <video-pict :link="[
+                    {
+                        type: 'picture',
+                        link: 'https://testcdn.sharegoodsmall.com/sharegoods/8174af6c04e04cbc9f57e4e99a795a69.jpg'
+                    },
+                    {
+                        type: 'video',
+                        link: 'https://testcdn.sharegoodsmall.com/sharegoods/68f31befe5d040eea1352c76b8da7bb9.mp4'
+                    }
+                ]" :dialogVisible="true"></video-pict>
     </div>
 </template>
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import vTabContent from './_list';
-import moment from 'moment';
+import videoPict from '@/components/common/pictureVideo';
 import { myMixinTable } from '@/JS/commom';
 
 export default {
     components: {
         vBreadcrumb,
-        vTabContent
+        vTabContent,
+        videoPict
     },
     mixins: [myMixinTable],
 
