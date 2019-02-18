@@ -199,4 +199,4 @@ export const replyComment = '/product/comment/reply';
 // 置顶
 export const stickComment = ['/product/comment/stick', { methods: 'get' }];
 // 敏感词
-export const sensitiveWord = '/product/comment/sensitive/words';
+export const sensitiveWords = '/product/comment/sensitive/words';

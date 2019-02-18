@@ -23,12 +23,12 @@
                     <div>{{scope.row.comment}}</div>
                     <div>
                         <video v-if="scope.row.videoUrl" @click="showItem(scope.row,0)" class="video-pic" controls="controls" :src="scope.row.videoUrl"></video>
-                        <!-- <template v-if="scope.row.imgUrls">
+                        <template v-if="scope.row.imgUrls">
                             <img :key="k" v-for="(v,k) in scope.row.imgUrls" @click="showItem(scope.row,k+1)" :src="v" class="video-pic" alt="图片加载失败">
-                        </template> -->
-                        <viewer :images="scope.row.imgUrls">
+                        </template>
+                        <!-- <viewer :images="scope.row.imgUrls">
                             <img v-for="(item,index) in scope.row.imgUrls" :key="index" :src="item" alt="" @click="showItem(scope.row,k+1)">
-                        </viewer>
+                        </viewer> -->
                     </div>
                 </template>
             </el-table-column>
@@ -180,6 +180,7 @@ export default {
         // 监听回复内容
         inputReply() {
             this.count = this.reply.length;
+            this.isWarning = false;
         },
         // 确认回复
         replySure() {
@@ -216,15 +217,18 @@ export default {
                 .catch(error => {
                     console.log(error);
                     this.btnLoading = false;
+                    this.isWarning = false;
                 });
         },
         // 替换敏感词
         replaceWords(string, words) {
             if (words && words.length) {
-                words.foreach((v, k) => {
-                    string.replace(v, this.wordToStar(v));
-                });
+                for (const i in words) {
+                    const v = words[i];
+                    string = string.replace(v, this.wordToStar(v));
+                }
             }
+            this.reply = string;
         },
         wordToStar(word) {
             let string = '';

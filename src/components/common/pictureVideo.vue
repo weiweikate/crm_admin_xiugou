@@ -1,14 +1,10 @@
 <template>
     <div class="picture-video">
-        <el-dialog title="" :visible.sync="dialogVisible" :width="width" :height="height" :before-close="handleClose">
+        <el-dialog title="预览" :visible.sync="dialogVisible" :width="width" :height="height" :before-close="handleClose">
             <div class="content-wrap">
                 <i class="el-icon-arrow-left arraw" @click="toggle('left')" :class="current==0?'grey-text':''"></i>
                 <video v-if="link[current] && link[current].type == 'video'" class="video-style" controls="controls" :src="link[current].link"></video>
-                <!-- <img v-else-if="link[current] && link[current].type == 'picture'" class="video-style" :src="link[current].link" alt="图片加载失败">
-                <span v-else>加载失败</span> -->
-                <viewer :images="imgUrls" v-else-if="link[current] && link[current].type == 'picture'">
-                       <img v-for="(item,index) in imgUrls" :key="index" :src="item" alt="">
-                </viewer>
+                <img v-else-if="link[current] && link[current].type == 'picture'" class="video-style" :src="link[current].link" alt="图片加载失败">
                 <span v-else>加载失败</span>
                 <div class="enlarge-small" v-if="link[current] && link[current].type == 'picture'">
                     <i class="el-icon-zoom-in" @click="enlarge(current)"></i>
