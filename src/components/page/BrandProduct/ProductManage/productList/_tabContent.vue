@@ -190,7 +190,7 @@ export default {
                 if (tblData.data && tblData.data.length !== 0) {
                     tblData.data.forEach(v => {
                         const restrictions = v.restrictions || 0;
-                        if (restrictions.toString() === '4' || restrictions.toString() === '5' || restrictions.toString() === '6' || restrictions.toString() === '7') {
+                        if (restrictions.toString() === '4' || restrictions.toString() === '5' || restrictions.toString() === '6' || restrictions.toString() === '7' || restrictions.toString() === '12' || restrictions.toString() === '13' || restrictions.toString() === '15') {
                             v.tags = ['支持7天无理由退换'];
                         }
                         if (!v.imgUrl || v.imgUrl == '') {
