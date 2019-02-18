@@ -6,36 +6,37 @@
                 <el-form-item prop="productName" label="商品名称">
                     <el-input v-model="form.productName" placeholder="请输入商品名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="sku" label="商品SUP编码">
-                    <el-input v-model="form.sku" placeholder="请输入商品SUP编码"></el-input>
+                <el-form-item prop="prodCode" label="商品SUP编码">
+                    <el-input v-model="form.prodCode" placeholder="请输入商品SUP编码"></el-input>
                 </el-form-item>
                 <el-form-item prop="userCount" label="用户账号">
                     <el-input v-model="form.userCount" placeholder="请输入用户账号"></el-input>
                 </el-form-item>
-                <el-form-item prop="isTop" label="置顶">
-                    <el-select v-model="form.isTop">
+                <el-form-item prop="stick" label="置顶">
+                    <el-select v-model="form.stick">
                         <el-option value="" label="全部"></el-option>
-                        <el-option value="1" label="已置顶"></el-option>
-                        <el-option value="2" label="未置顶"></el-option>
+                        <el-option value="true" label="已置顶"></el-option>
+                        <el-option value="false" label="未置顶"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="starCount" label="星级筛选">
-                    <el-select v-model="form.starCount">
+                <el-form-item prop="stars" label="星级筛选">
+                    <el-select v-model="form.stars">
                         <el-option value="" label="全部"></el-option>
                         <el-option v-for="(v,k) in starArr" :key="k" :value=v.value :label=v.label></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="commentType" label="评论内容">
-                    <el-select v-model="form.commentType">
+                <el-form-item prop="type" label="评论内容">
+                    <el-select v-model="form.type">
                         <el-option value="" label="全部"></el-option>
                         <el-option value="1" label="默认评论"></el-option>
                         <el-option value="2" label="自主评论"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="isHide" label="隐藏晒单">
-                    <el-select v-model="form.isHide">
+                <el-form-item prop="reply" label="回复">
+                    <el-select v-model="form.reply">
                         <el-option value="" label="全部"></el-option>
-                        <el-option value="1" label="平台已隐藏"></el-option>
+                        <el-option value="true" label="已回复"></el-option>
+                        <el-option value="false" label="未回复"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label=" ">
@@ -80,12 +81,12 @@ export default {
             activeName: 'all',
             form: {
                 productName: '',
-                sku: '',
+                prodCode: '',
                 userCount: '',
-                isTop: '',
-                starCount: '',
-                commentType: '',
-                isHide: ''
+                stick: '',
+                stars: '',
+                type: '',
+                reply: ''
             },
             starArr: [{ label: '一星', value: 1 }, { label: '二星', value: 2 }, { label: '三星', value: 3 }, { label: '四星', value: 4 }, { label: '五星', value: 5 }]
         };

@@ -189,3 +189,13 @@ export const addProducts = ['/product/product/addOrModifyProduct', { methods: 'p
 export const addProductSku = ['/product/sku/addProductSku', { methods: 'post' }]; // 生成列表
 export const findProductDetailsByCode = ['/product/product/findProductDetailsByCode', { methods: 'get' }]; // 获取商品详情
 export const updateProdRemark = ['/product/product/updateRemark', { methods: 'get' }]; // 更新产品备注
+
+// 晒单管理
+// 晒单分页
+export const getCommentPage = '/product/comment/page';
+// 上下架
+export const displayComment = '/product/comment/display';
+// 回复评论
+export const replyComment = '/product/comment/reply';
+// 置顶
+export const stickComment = '/product/comment/stick';
