@@ -87,7 +87,7 @@ export default {
             };
             this.page.currentPage = val;
             this.tableLoading = true;
-            request.queryList(data).then(res => {
+            request.queryList(this.$utils.trimForm(data)).then(res => {
                 this.tableData = res.data.data;
                 this.page.totalPage = res.data.totalNum;
                 this.tableLoading = false;

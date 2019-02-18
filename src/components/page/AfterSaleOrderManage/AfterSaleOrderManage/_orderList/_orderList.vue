@@ -102,6 +102,7 @@ export default {
             this.data.size = this.page.pageSize;
             this.tableData = [];
             this.pageLoading = true;
+            this.data = this.$utils.trimForm(this.data);
             request
                 .queryAfterSalePage(this.data)
                 .then(res => {
