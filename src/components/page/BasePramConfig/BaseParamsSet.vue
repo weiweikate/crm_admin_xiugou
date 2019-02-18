@@ -148,7 +148,7 @@ export default {
         // 获取数据
         getInfo() {
             const data = {
-                codes: 'time_activity_order_cancel,time_order_cancel,time_goods_confirm,time_express_send,time_evaluation_cancel,times_after_sale,time_after_sale_cancelorder_comment_end_time,'
+                codes: 'time_activity_order_cancel,time_order_cancel,time_goods_confirm,time_express_send,time_evaluation_cancel,times_after_sale,time_after_sale_cancel, order_comment_end_time,'
             };
             this.bodyLoading = true;
             request
