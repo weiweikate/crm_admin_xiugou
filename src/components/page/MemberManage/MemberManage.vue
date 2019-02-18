@@ -20,6 +20,14 @@
                         <el-option label="网红经销商" value="3"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item prop="status" label="会员状态" label-width="120">
+                    <el-select v-model="form.status" placeholder="请选择会员类型">
+                        <el-option label="请选择会员状态" value=""></el-option>
+                        <el-option label="正常" value="1"></el-option>
+                        <el-option label="已关闭" value="2"></el-option>
+                        <el-option label="已注销" value="3"></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item prop="levelId" label="用户层级" label-width="120">
                     <el-select v-model="form.levelId" placeholder="全部层级">
                         <el-option label="全部层级" value=""></el-option>
@@ -98,8 +106,10 @@
                 <el-table-column label="状态" align="center">
                     <template slot-scope="scope">
                         <template v-if="scope.row.status==0">待激活</template>
-                        <template v-if="scope.row.status==1">正常</template>
-                        <template v-if="scope.row.status==2">已关闭</template>
+                        <template v-else-if="scope.row.status==1">正常</template>
+                        <template v-else-if="scope.row.status==2">已关闭</template>
+                        <template v-else-if="scope.row.status==3">已注销</template>
+                        <template v-else>-</template>
                     </template>
                 </el-table-column>
                 <el-table-column min-width="160" label="操作" align="center">
@@ -157,6 +167,7 @@ export default {
             height: '',
             formLabelWidth: '100px',
             form: {
+                status: '',
                 condition: '',
                 phone: '',
                 userType: '',

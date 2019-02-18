@@ -16,7 +16,8 @@
                         <div class="item">微信名称：{{dealer.wechatName}}</div>
                     </div>
                     <div class="item-row">
-                        <div class="item">手机号：{{dealer.phone}}</div>
+                        <div v-if="status == 3" class="item">手机号：{{`${dealer.phone}-mr`}}</div>
+                        <div v-else class="item">手机号：{{dealer.phone}}</div>
                     </div>
                     <div class="item-row">
                         <div class="item">姓名：{{dealer.realname}}</div>
@@ -42,7 +43,7 @@
                         <img class="img" v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('lowerMemberManage', 'memberToLowListPage')" v-auth="'vip.memberDetail.xjdl'">
+                        <el-button :disabled="status == 3" type="primary" @click="btnClicked('lowerMemberManage', 'memberToLowListPage')" v-auth="'vip.memberDetail.xjdl'">
                             下级代理({{dealer.junior || 0}})
                         </el-button>
                     </div>
@@ -70,6 +71,11 @@
                                    style="margin-left: 0">店铺信息
                         </el-button>
                     </div>
+                    <div>
+                        <el-button :disabled="status == 3" type="primary" @click="logout" v-auth="'vip.memberDetail.hyzx'"
+                                   style="margin-left: 0">会员注销
+                        </el-button>
+                    </div>
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -79,7 +85,8 @@
                         <h3>授权信息</h3>
                     </div>
                     <div class="item-row">
-                        <div class="item">上级代理：{{dealer.upUserName}}</div>
+                        <div v-if="status == 3" class="item">上级代理：/</div>
+                        <div v-else class="item">上级代理：{{dealer.upUserName}}</div>
                         <div class="item">会员类型：
                             <span v-if="dealer.userType==1">网信经销商</span>
                             <span v-if="dealer.userType==2">供货经销商</span>
@@ -146,6 +153,18 @@
         <edit-basic @msg='basicToast' :dealer='dealer' :code="code" v-if="isShowEditBasic"></edit-basic>
         <!--授权信息修改弹窗-->
         <edit-author @msg='authorToast' :dealer='dealer' :code="code" v-if="isShowEditAuthor"></edit-author>
+        <!--会员注销-->
+        <el-dialog
+            title="严谨操作"
+            :visible.sync="isShowLogOut"
+            width="500px"
+            >
+            <p class="tac" style="color: red">是否注销该用户，一但注销，不可恢复!</p>
+            <span slot="footer" class="dialog-footer">
+                <el-button :loading="submitLogoutLoading" type="primary" @click="submitLogout">确 定</el-button>
+                <el-button @click="isShowLogOut = false">取 消</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -169,6 +188,8 @@
                 inputValue: '',
                 isShowEditBasic: false,
                 isShowEditAuthor: false,
+                isShowLogOut: false,
+                submitLogoutLoading: false,
                 formLabelWidth: '100px',
                 id: '',
                 loading: false,
@@ -179,7 +200,9 @@
                 // 开设的店铺
                 myStore: '',
                 // 晋升记录
-                record: []
+                record: [],
+                // 当前会员状态
+                status: ''
             };
         },
         mounted() {
@@ -187,6 +210,23 @@
             this.getDetail();
         },
         methods: {
+            // 会员注销
+            logout() {
+                this.isShowLogOut = true;
+            },
+            // 确认会员注销
+            submitLogout() {
+                this.submitLogoutLoading = true;
+                request.writtenOff({ code: this.code }).then(res => {
+                    this.$message.success(res.msg);
+                    this.isShowLogOut = false;
+                    this.submitLogoutLoading = false;
+                    this.getDetail();
+                }).catch(err => {
+                    this.submitLogoutLoading = false;
+                    console.log(err);
+                });
+            },
             basicToast(msg) {
                 const that = this;
                 that.isShowEditBasic = msg;
@@ -210,6 +250,7 @@
                 request.findDealerById(data).then(res => {
                     this.loading = false;
                     this.dealer = res.data;
+                    this.status = res.data.status || 1;
                     this.record = res.data.levelChangeList;
                     this.storeId = res.data.storeId;
                 }).catch(err => {

@@ -68,6 +68,12 @@ export const asyncRouterMap = [
                 meta: { title: '会员管理' }
             },
             {
+                name: 'disabledPhoneList',
+                path: '/disabledPhoneList',
+                component: resolve => require(['../components/page/MemberManage/DisabledPhoneList.vue'], resolve),
+                meta: { title: '禁用手机号列表' }
+            },
+            {
                 name: 'realNameAuthentication',
                 path: '/realNameAuthentication',
                 component: resolve => require(['../components/page/MemberManage/realNameAuthentication.vue'], resolve),
@@ -1658,6 +1664,13 @@ export const asyncRouterMap = [
                 path: '/flatAct02',
                 component: resolve => require(['../components/page/SettlementMange/flatAccountList/flatAct02.vue'], resolve),
                 meta: { title: '资金收入明细' }
+            },
+            {
+                hidden: true,
+                name: 'logoutAccountInfo',
+                path: '/logoutAccountInfo',
+                component: resolve => require(['../components/page/SettlementMange/flatAccountList/logoutAccountInfo.vue'], resolve),
+                meta: { title: '注销账户收入明细', noKeepAlive: true }
             },
             {
                 hidden: true,
