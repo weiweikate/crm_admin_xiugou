@@ -41,7 +41,8 @@
                 <el-form-item label-width="0px">
                     <el-col :span="11">
                         <el-form-item prop="type" label="商品类型">
-                            <el-select :disabled="disabled || status === 6" v-model="form.type" placeholder="请选择商品类型">
+                            <!--<el-select :disabled="disabled || status === 6" v-model="form.type" placeholder="请选择商品类型">-->
+                            <el-select v-model="form.type" placeholder="请选择商品类型">
                                 <el-option label="普通商品" value="1"></el-option>
                                 <el-option label="内购商品" value="2"></el-option>
                                 <!--<el-option label="虚拟商品" value="3"></el-option>-->
