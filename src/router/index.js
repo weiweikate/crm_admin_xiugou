@@ -444,6 +444,12 @@ export const asyncRouterMap = [
                 path: '/userAssociatedParam',
                 component: resolve => require(['../components/page/BasePramConfig/UserAssociatedParam.vue'], resolve),
                 meta: { title: '用户关联参数设置' }
+            },
+            {
+                name: 'userLogoutParam',
+                path: '/userLogoutParam',
+                component: resolve => require(['../components/page/BasePramConfig/userLogoutParam.vue'], resolve),
+                meta: { title: '会员注册限制参数设置' }
             }
         ]
     },
