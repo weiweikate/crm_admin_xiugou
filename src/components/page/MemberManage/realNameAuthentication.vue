@@ -113,7 +113,7 @@
                     idCard: this.form.idNumber
                 };
                 this.tableLoading = true;
-                request.queryUserCertification(data).then(res => {
+                request.queryUserCertification(this.$utils.trimForm(data)).then(res => {
                     this.tableLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
@@ -130,7 +130,7 @@
             },
             // 实名认证页面
             realName(row) {
-                this.$router.push({name: 'realNameInfo', query: {memberInfoRealName: row.userCode}});
+                this.$router.push({ name: 'realNameInfo', query: { memberInfoRealName: row.userCode }});
             },
             // 驳回审核
             async refuseAudit(row) {

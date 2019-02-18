@@ -146,7 +146,7 @@ export default {
             this.pageLoading = true;
             this.page.currentPage = val;
             request
-                .queryOrderPageList(this.data)
+                .queryOrderPageList(this.$utils.trimForm(this.data))
                 .then(res => {
                     this.pageLoading = false;
                     for (const i in res.data.data) {
@@ -222,7 +222,7 @@ export default {
         // 订单详情
         orderInfo(row) {
             sessionStorage.setItem('orderInfoId', row.id);
-            this.$router.push({ name: 'orderInfo', query: { orderInfoId: row.id } });
+            this.$router.push({ name: 'orderInfo', query: { orderInfoId: row.id }});
         },
         // 订单多选框
         orderCheckBox(row) {

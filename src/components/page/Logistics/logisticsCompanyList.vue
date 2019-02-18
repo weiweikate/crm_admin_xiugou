@@ -127,8 +127,7 @@
     import { myMixinTable } from '@/JS/commom';
     import { regExpConfig } from '@/utils/regConfig';
     Vue.filter('dateformat', function(dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
-        return moment(dataStr).format(pattern)
-
+        return moment(dataStr).format(pattern);
     });
     export default {
         name: 'logisticCompanyList',
@@ -286,7 +285,7 @@
                     data.start = f.time[0];
                     data.end = f.time[1];
                 }
-                request.sysExpressQuery(data).then(res => {
+                request.sysExpressQuery(this.$utils.trimForm(data)).then(res => {
                     const data = res.data;
                     this.tableData = data.data;
                     this.page.totalPage = res.data.totalNum;

@@ -91,7 +91,7 @@ export default {
                 page: val
             };
             this.loading = true;
-            request.querySupplierByProductId(data).then(res => {
+            request.querySupplierByProductId(this.$utils.trimForm(data)).then(res => {
                 this.loading = false;
                 const table = res.data.data || [];
                 this.tableData = [];

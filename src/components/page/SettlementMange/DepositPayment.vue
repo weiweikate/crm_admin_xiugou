@@ -122,11 +122,12 @@ export default {
             data.end = this.form.time.length == 0 ? '' : utils.formatTime(this.form.time[1], 1);
             this.tabLoading = true;
             this.page.currentPage = val;
-            request.storePayRecordList(data).then(res => {
+            request.storePayRecordList(this.$utils.trimForm(data)).then(res => {
                 this.tabLoading = false;
                 this.table = res.data.data;
                 this.page.totalPage = res.data.totalNum;
             }).catch(err => {
+                console.log(err);
                 this.tabLoading = false;
             });
         },

@@ -106,7 +106,7 @@
                     endTime: this.form.time.length === 0 ? '' : this.$utils.formatTime(this.form.time[1])
                 };
                 this.tableLoading = true;
-                request.queryMemshowValueList(data).then(res => {
+                request.queryMemshowValueList(this.$utils.trimForm(data)).then(res => {
                     this.tableLoading = false;
                     this.tableData = res.data.data;
                     this.page.currentPage = res.data.currentPage;

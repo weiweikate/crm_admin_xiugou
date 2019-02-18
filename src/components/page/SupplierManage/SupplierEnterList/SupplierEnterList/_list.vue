@@ -72,7 +72,7 @@ export default {
             this.page.currentPage = val;
             this.tableLoading = true;
             request
-                .queryMerchant(this.data)
+                .queryMerchant(this.$utils.trimForm(this.data))
                 .then(res => {
                     if (!res.data) return;
                     this.tableData = [];

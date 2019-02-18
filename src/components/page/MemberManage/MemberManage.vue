@@ -140,7 +140,6 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
 import region from '@/components/common/Region';
-import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http';
 
@@ -194,7 +193,7 @@ export default {
             data.cityId = this.address[1];
             data.areaId = this.address[2];
             this.tableLoading = true;
-            request.queryUserPageList(data).then(res => {
+            request.queryUserPageList(this.$utils.trimForm(data)).then(res => {
                 this.tableLoading = false;
                 this.tableData = [];
                 this.tableData = res.data.data;

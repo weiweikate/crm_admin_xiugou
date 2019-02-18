@@ -162,7 +162,7 @@ export default {
                 status: this.status
             };
             this.tabLoading = true;
-            request.queryRecordPageList(data).then(res => {
+            request.queryRecordPageList(this.$utils.trimForm(data)).then(res => {
                 this.tabLoading = false;
                 if (res.data.data.length !== 0) {
                     res.data.data.forEach(v => {
@@ -205,7 +205,7 @@ export default {
                     this.loading = false;
                     this.$message.success(res.msg);
                     this.handleClose();
-                    this.getList(this.page.currentPage)
+                    this.getList(this.page.currentPage);
                 }).catch(err => {
                     this.loading = false;
                     this.$message.warning(err);
@@ -229,7 +229,7 @@ export default {
                     this.loading = false;
                     this.$message.success(res.msg);
                     this.handleClose();
-                    this.getList(this.page.currentPage)
+                    this.getList(this.page.currentPage);
                 }).catch(err => {
                     this.loading = false;
                     this.$message.warning(err);

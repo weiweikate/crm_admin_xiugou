@@ -164,7 +164,7 @@
                 };
                 that.tableLoading = true;
                 this.page.currentPage = val;
-                request.queryFeedbackList(data).then(res => {
+                request.queryFeedbackList(this.$utils.trimForm(data)).then(res => {
                     that.tableLoading = false;
                     that.tableData = res.data.data;
                     that.page.totalPage = res.data.totalNum;

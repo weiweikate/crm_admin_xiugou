@@ -131,7 +131,7 @@ export default {
             };
             this.tableLoading = true;
             this.tableData = [];
-            request.queryWithdrawalList(data).then(res => {
+            request.queryWithdrawalList(this.$utils.trimForm(data)).then(res => {
                 this.tableLoading = false;
                 this.tableData = res.data.data;
                 this.page.totalPage = res.data.totalNum;

@@ -86,7 +86,6 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http.js';
-    import utils from '@/utils/index.js';
 
     export default {
         mixins: [myMixinTable],
@@ -102,7 +101,7 @@
                     updataTime: [],
                     recordId: ''
                 },
-                tableData: [{id: '1'}]
+                tableData: [{ id: '1' }]
             };
         },
         mounted() {
@@ -122,7 +121,7 @@
                 };
                 this.page.currentPage = val;
                 this.tableData = [];
-                request.queryReissueRecordPageList(data).then(res => {
+                request.queryReissueRecordPageList(this.$utils.trimForm(data)).then(res => {
                     this.pageLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;

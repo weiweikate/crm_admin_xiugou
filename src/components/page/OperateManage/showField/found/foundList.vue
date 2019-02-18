@@ -128,7 +128,7 @@
                     pageSize: this.page.pageSize
                 };
                 this.tabLoading = true;
-                request.queryDiscoverArticlePageList(data).then(res => {
+                request.queryDiscoverArticlePageList(this.$utils.trimForm(data)).then(res => {
                     this.tabLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;

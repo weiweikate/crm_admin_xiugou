@@ -76,7 +76,7 @@
                     pageSize: this.page.pageSize
                 };
                 this.loading = true;
-                request.userTaskQuery(data).then(res => {
+                request.userTaskQuery(this.$utils.trimForm(data)).then(res => {
                     this.loading = false;
                     this.tableData = [];
                     if (res.data) {
@@ -98,7 +98,7 @@
             // 查看分享任务人
             showUser(row) {
                 if (row.userId) {
-                    this.$router.push({name: 'memberDetail', query: {memberToInfo: row.userId}});
+                    this.$router.push({ name: 'memberDetail', query: { memberToInfo: row.userId }});
                 }
             },
             // 查看秀值账户

@@ -155,7 +155,7 @@
                 const params = {
                     activityCode: data.activityCode
                 };
-                let _ = this;
+                const _ = this;
                 _.$confirm('删除后该活动不可查看及生效', '您确定要删除吗？', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -178,7 +178,7 @@
                 });
             },
             showActive(data) {
-                this.$router.push({ path: '/expDetail', query: { id: data.activityCode}});
+                this.$router.push({ path: '/expDetail', query: { id: data.activityCode }});
             },
             editActive(data) {
                 this.$router.push({ path: '/expAddOrEdit', query: { id: data.activityCode, type: 'edit' }});
@@ -189,7 +189,7 @@
                 data.page = val;
                 data.pageSize = this.page.pageSize;
                 this.tableLoading = true;
-                request.queryExpPageList(data).then(res => {
+                request.queryExpPageList(this.$utils.trimForm(data)).then(res => {
                     this.tableLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;

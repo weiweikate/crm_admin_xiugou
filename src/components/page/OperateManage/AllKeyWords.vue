@@ -86,7 +86,7 @@
                 };
                 this.page.currentPage = val;
                 that.tableLoading = true;
-                request.getWordsByPage(data).then(res => {
+                request.getWordsByPage(this.$utils.trimForm(data)).then(res => {
                     that.tableLoading = false;
                     that.tableData = res.data.data;
                     that.page.totalPage = res.data.totalNum;

@@ -85,7 +85,6 @@
 </template>
 <script>
 import breadcrumb from '@/components/common/Breadcrumb';
-import * as api from '@/api/api.js';
 import deleteToast from '@/components/common/DeleteToast';
 import * as pApi from '@/privilegeList/index.js';
 import { myMixinTable } from '@/JS/commom';
@@ -163,7 +162,7 @@ export default {
             data.telephone = this.form.phone;
             data.url = pApi.manageList;
             this.tableLoading = true;
-            request.getMangerList(data).then(res => {
+            request.getMangerList(this.$utils.trimForm(data)).then(res => {
                 this.tableData = [];
                 res.data.data.forEach((v, k) => {
                     v.visible = false;

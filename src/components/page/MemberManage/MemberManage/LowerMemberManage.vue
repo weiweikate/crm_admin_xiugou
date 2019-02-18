@@ -128,7 +128,6 @@
     import icon from '@/components/common/ico.vue';
     import region from '@/components/common/Region';
     import request from '@/http/http';
-    import * as api from '@/api/api';
     export default {
         components: {
             vBreadcrumb, icon, region
@@ -179,7 +178,7 @@
                 data.cityId = this.address[1];
                 data.areaId = this.address[2];
                 that.tableLoading = true;
-                request.queryUserPageList(data).then(res => {
+                request.queryUserPageList(this.$utils.trimForm(data)).then(res => {
                     that.tableLoading = false;
                     that.tableData = [];
                     that.tableData = res.data.data;
@@ -205,7 +204,7 @@
             },
             // 详情
             detailItem(index, row) {
-                this.$router.push({name: 'memberDetail', query: {memberToInfo: row.code}});
+                this.$router.push({ name: 'memberDetail', query: { memberToInfo: row.code }});
             },
             // 关闭,开启
             updateStatusItem(index, id, num) {
@@ -227,7 +226,6 @@
                     id: that.id,
                     status: 1
                 };
-                const url = '';
                 if (that.type === '关闭') {
                     data.status = 2;
                 } else {

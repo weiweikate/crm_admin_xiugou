@@ -160,7 +160,7 @@ export default {
             this.page.currentPage = val;
             this.tableLoading = true;
             request
-                .queryUserCouponList(data)
+                .queryUserCouponList(this.$utils.trimForm(data))
                 .then(res => {
                     if (!res.data) return;
                     this.tableData = [];

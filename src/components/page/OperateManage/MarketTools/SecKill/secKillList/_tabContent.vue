@@ -307,7 +307,7 @@ export default {
             this.page.currentPage = val;
             this.tableLoading = true;
             request
-                .queryOperatorSeckillList(data)
+                .queryOperatorSeckillList(this.$utils.trimForm(data))
                 .then(res => {
                     if (!res.data) return;
                     this.tableData = [];

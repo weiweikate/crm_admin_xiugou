@@ -111,8 +111,8 @@ export default {
                 pageSize: this.page.pageSize
             };
             this.loading = true;
-            request.queryFlatAccountByType(data).then(res => {
-                let resData = res.data || {};
+            request.queryFlatAccountByType(this.$utils.trimForm(data)).then(res => {
+                const resData = res.data || {};
                 this.loading = false;
                 this.tableData = resData.data || [];
                 this.page.totalPage = resData.totalNum || 0;

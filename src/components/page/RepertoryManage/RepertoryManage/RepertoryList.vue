@@ -208,7 +208,7 @@ export default {
                 pageSize: this.page.pageSize
             };
             this.page.currentPage = val;
-            request.queryRepertoryList(data).then(res => {
+            request.queryRepertoryList(this.$utils.trimForm(data)).then(res => {
                 this.tableData = [];
                 if (!res.data) return;
                 this.tableData = res.data.data;

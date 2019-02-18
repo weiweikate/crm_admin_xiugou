@@ -124,7 +124,7 @@
                 };
                 this.page.currentPage = val;
                 that.tableLoading = true;
-                request.queryDelivery(data).then(res => {
+                request.queryDelivery(this.$utils.trimForm(data)).then(res => {
                     that.tableLoading = false;
                     if (!res.data.data) return;
                     res.data.data.forEach((v, k) => {

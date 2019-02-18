@@ -117,7 +117,7 @@ export default {
     data() {
         const validateInput = (rule, value, callback) => {
             // const uPattern = /^[a-zA-Z0-9_-]{1,20}$/;
-            if (!value.length || value.length === '' || value.length>20) {
+            if (!value.length || value.length === '' || value.length > 20) {
                 callback(new Error('请输入1-20位'));
             } else {
                 callback();
@@ -234,7 +234,8 @@ export default {
         // 为erp账号的供应商赋予自定义的key
         transformSupplier(list) {
             const ts = +new Date();
-            let count = 0, result = [];
+            let count = 0;
+            const result = [];
             list.forEach(item => {
                 result.push({
                     _id: ts + '' + ++count,
@@ -342,7 +343,7 @@ export default {
             delete data.date;
             this.loading = true;
             request
-                .getERPList(data)
+                .getERPList(this.$utils.trimForm(data))
                 .then(res => {
                     this.loading = false;
                     const data = res.data || {};

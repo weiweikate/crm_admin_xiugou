@@ -119,7 +119,7 @@
                 };
                 this.page.currentPage = val;
                 that.tableLoading = true;
-                request.getProductBrandList(data).then(res => {
+                request.getProductBrandList(this.$utils.trimForm(data)).then(res => {
                     that.tableLoading = false;
                     if (!res.data) return;
                     that.tableData = res.data.data;
