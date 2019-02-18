@@ -9,8 +9,8 @@
                 <el-form-item prop="prodCode" label="商品SUP编码">
                     <el-input v-model="form.prodCode" placeholder="请输入商品SUP编码"></el-input>
                 </el-form-item>
-                <el-form-item prop="userCount" label="用户账号">
-                    <el-input v-model="form.userCount" placeholder="请输入用户账号"></el-input>
+                <el-form-item prop="phone" label="用户账号">
+                    <el-input v-model="form.phone" placeholder="请输入用户账号"></el-input>
                 </el-form-item>
                 <el-form-item prop="stick" label="置顶">
                     <el-select v-model="form.stick">
@@ -50,39 +50,27 @@
                 <el-tab-pane label="全部" name="all">
                     <v-tab-content ref="all"></v-tab-content>
                 </el-tab-pane>
-                <el-tab-pane label="未回复" name="0">
+                <el-tab-pane label="已上架" name="2">
                     <v-tab-content ref="0"></v-tab-content>
                 </el-tab-pane>
-                <el-tab-pane label="已处理" name="1">
+                <el-tab-pane label="已下架" name="3">
                     <v-tab-content ref="1"></v-tab-content>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
-        <!--图片视频预览弹出窗-->
-        <video-pict :link="[
-                    {
-                        type: 'picture',
-                        link: 'https://testcdn.sharegoodsmall.com/sharegoods/8174af6c04e04cbc9f57e4e99a795a69.jpg'
-                    },
-                    {
-                        type: 'video',
-                        link: 'https://testcdn.sharegoodsmall.com/sharegoods/68f31befe5d040eea1352c76b8da7bb9.mp4'
-                    }
-                ]" :dialogVisible="true"></video-pict>
+
     </div>
 </template>
 
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import vTabContent from './_list';
-import videoPict from '@/components/common/pictureVideo';
 import { myMixinTable } from '@/JS/commom';
 
 export default {
     components: {
         vBreadcrumb,
-        vTabContent,
-        videoPict
+        vTabContent
     },
     mixins: [myMixinTable],
 
@@ -93,7 +81,7 @@ export default {
             form: {
                 productName: '',
                 prodCode: '',
-                userCount: '',
+                phone: '',
                 stick: '',
                 stars: '',
                 type: '',
@@ -114,6 +102,13 @@ export default {
         getList() {
             const data = {};
             Object.assign(data, this.form);
+            // this.$utils.deleteEmptyString(data,'stick');
+            // this.$utils.deleteEmptyString(data,'reply');
+            if (data.stars === '') {
+                this.$utils.deleteEmptyString(data, 'stars');
+            } else {
+                data.stars = [data.stars];
+            }
             this.$refs[this.activeName].page.currentPage = 1;
             data.status = this.activeName === 'all' ? '' : this.activeName;
             this.$nextTick(() => {

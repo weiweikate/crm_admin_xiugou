@@ -152,7 +152,13 @@ const ArrayToString = (param) => {
 const numberToString = (param) => {
     return typeof param === 'number' ? param.toString() : param;
 };
-
+// 删除对象空字符串
+const deleteEmptyString = (object, param) => {
+    if (object[param] === '') {
+        delete object[param];
+        return object;
+    }
+};
 export default {
     cleanFormData,
     handleCity,
@@ -164,5 +170,6 @@ export default {
     setRequestParams,
     stringToNumber,
     ArrayToString,
-    numberToString
+    numberToString,
+    deleteEmptyString
 };

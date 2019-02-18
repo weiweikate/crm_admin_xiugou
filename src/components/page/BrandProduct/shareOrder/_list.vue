@@ -5,42 +5,65 @@
             <el-table-column label="商品信息" width="350">
                 <template slot-scope="scope">
                     <div class="product-info">
-                        <img :src="scope.row.imgUrl" alt="图片加载失败">
+                        <img :src="scope.row.productImg" alt="图片加载失败">
                         <div class="info">
-                            <div class="prod-name over-more-hidden">3434343434</div>
-                            <div class="prod-spu">商品SUP编码: 34343434334343</div>
+                            <div class="prod-name over-more-hidden">{{scope.row.productName}}</div>
+                            <div class="prod-spu">商品SUP编码: {{scope.row.prodCode}}</div>
                         </div>
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="userCount" label="用户账号" align="center" width="150"></el-table-column>
+            <el-table-column prop="phone" label="用户账号" align="center" width="150"></el-table-column>
             <el-table-column label="晒单信息" width="300">
                 <template slot-scope="scope">
                     <div>
-                        <el-rate v-model="scope.row.status" disabled text-color="#ff9900">
+                        <el-rate v-model="scope.row.star" disabled text-color="#ff9900">
                         </el-rate>
                     </div>
-                    <div>fjasjflasdfaskdfkdlflkdksfkdsafk</div>
+                    <div>{{scope.row.comment}}</div>
                     <div>
-                        <viewer :images="scope.row.imgList">
-                            <img v-for="(item,index) in scope.row.imgList" :key="index" :src="item" alt="">
+                        <video v-if="scope.row.videoUrl" @click="showItem(scope.row,0)" class="video-pic" controls="controls" :src="scope.row.videoUrl"></video>
+                        <!-- <template v-if="scope.row.imgUrls">
+                            <img :key="k" v-for="(v,k) in scope.row.imgUrls" @click="showItem(scope.row,k+1)" :src="v" class="video-pic" alt="图片加载失败">
+                        </template> -->
+                        <viewer :images="scope.row.imgUrls">
+                            <img v-for="(item,index) in scope.row.imgUrls" :key="index" :src="item" alt="" @click="showItem(scope.row,k+1)">
                         </viewer>
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="remark" label="回复内容" align="center" width="250"></el-table-column>
-            <el-table-column prop="status" label="状态" align="center" width="150"></el-table-column>
-            <el-table-column prop="user" label="更新人" align="center" width="150"></el-table-column>
-            <el-table-column prop="" label="更新时间" align="center" width="150">
-                <template slot-scope="scope">{{scope.row.updateTime|formatDateAll}}</template>
-            </el-table-column>
-            <el-table-column label="操作" width="200" fixed="right">
+            <el-table-column label="回复内容" align="center" width="250">
                 <template slot-scope="scope">
-                    <el-button type="primary" slot="reference" v-if="!scope.row.remark" @click="reply(scope.row,scope.$index)">回复</el-button>
-                    <el-button type="success" v-if="!scope.row.isTop">置顶</el-button>
-                    <el-button type="success" v-else>取消置顶</el-button>
-                    <el-button type="warning" v-if="!scope.row.isHide">隐藏</el-button>
-                    <el-button type="warning" v-else>取消隐藏</el-button>
+                    <template v-if="scope.row.reply">{{scope.row.reply}}</template>
+                    <template v-else>/</template>
+                </template>
+            </el-table-column>
+            <el-table-column prop="status" label="状态" align="center" width="150">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.status==2">上架</template>
+                    <template v-else-if="scope.row.status==3">下架</template>
+                    <template v-else>/</template>
+                </template>
+            </el-table-column>
+            <el-table-column prop="adminName" label="更新人" align="center" width="150">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.adminName">{{scope.row.adminName}}</template>
+                    <template v-else>/</template>
+                </template>
+            </el-table-column>
+            <el-table-column prop="" label="更新时间" align="center" width="150">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.updateTime">{{scope.row.updateTime|formatDateAll}}</template>
+                    <template v-else>/</template>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="220" fixed="right">
+                <template slot-scope="scope">
+                    <el-button type="primary" slot="reference" v-if="!scope.row.reply" @click="replyItem(scope.row,scope.$index)">回复</el-button>
+                    <el-button type="success" v-if="!scope.row.stick&&scope.row.status==2" @click="stickItem(scope.row,true)">置顶</el-button>
+                    <el-button type="success" v-if="scope.row.stick&&scope.row.status==2" @click="stickItem(scope.row,false)">取消置顶</el-button>
+                    <el-button type="warning" v-if="scope.row.status==2" @click="displayItem(scope.row,false)">下架</el-button>
+                    <el-button type="warning" v-else @click="displayItem(scope.row,true)">上架</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -51,7 +74,7 @@
         <el-dialog title="回复评价" :visible.sync="mask">
             <div>
                 <div class="reply-area">
-                    <el-input type="textarea" v-model="remark" @input="inputReply"></el-input>
+                    <el-input type="textarea" v-model="reply" @input="inputReply"></el-input>
                     <span>{{count}}/180</span>
                 </div>
                 <div class="warning" v-if="isWarning">存在敏感词信息</div>
@@ -62,16 +85,19 @@
                 </div>
             </div>
         </el-dialog>
+        <!--图片视频预览弹出窗-->
+        <video-pict :link="linkList" :dialogVisible="showMask" :current="current" :imgUrls="imgUrls"></video-pict>
     </div>
 </template>
 
 <script>
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
+import videoPict from '@/components/common/pictureVideo';
 
 export default {
     props: ['name'],
-    components: {},
+    components: { videoPict },
     mixins: [myMixinTable],
 
     data() {
@@ -85,9 +111,13 @@ export default {
             count: 0,
             index: '',
             id: '',
-            remark: '',
+            reply: '',
             mask: false,
-            isWarning: false
+            isWarning: false,
+            showMask: false,
+            linkList: [], // 图片视频数组
+            current: 0, // 当前预览
+            imgUrls: [] // 图片数组
         };
     },
     created() {},
@@ -97,15 +127,40 @@ export default {
         //  提交表单
         getList(val) {
             this.data.page = val;
-            this.data.size = this.page.pageSize;
+            this.data.pageSize = this.page.pageSize;
             this.page.currentPage = val;
             this.tableLoading = true;
             request
                 .getCommentPage(this.data)
                 .then(res => {
-                    if (!res.data) return;
+                    if (!res.data) {
+                        return;
+                    }
                     this.tableData = [];
                     this.tableData = res.data.data;
+                    for (const i in res.data.data) {
+                        const v = res.data.data[i];
+                        v.linkList = []; // 图片视频数组
+                        v.imgUrls = [];
+                        if (v.videoUrl) {
+                            const temp = {
+                                type: 'video',
+                                link: v.videoUrl
+                            };
+                            v.linkList.push(temp);
+                        }
+                        if (v.imgUrl) {
+                            const imgUrls = v.imgUrl.split(',');
+                            v.imgUrls = imgUrls;
+                            for (const j in imgUrls) {
+                                const temp = {
+                                    type: 'picture',
+                                    link: imgUrls[j]
+                                };
+                                v.linkList.push(temp);
+                            }
+                        }
+                    }
                     this.page.totalPage = res.data.totalNum;
                     this.tableLoading = false;
                 })
@@ -115,22 +170,108 @@ export default {
                 });
         },
         // 回复
-        reply(row, index) {
+        replyItem(row, index) {
             this.id = row.id;
             this.index = index;
             this.mask = true;
-            this.remark = '';
+            this.reply = '';
             this.count = 0;
         },
         // 监听回复内容
         inputReply() {
-            this.count = this.remark.length;
+            this.count = this.reply.length;
         },
         // 确认回复
         replySure() {
-            this.tableData[this.index].remark = this.remark;
-            this.mask = false;
+            const data = {
+                id: this.id,
+                reply: this.reply
+            };
             this.btnLoading = true;
+            request
+                .sensitiveWords({ content: this.reply })
+                .then(res => {
+                    if (res.data && res.data.length) {
+                        // 有敏感词，标星
+                        this.isWarning = true;
+                        this.replaceWords(this.reply, res.data);
+                        this.btnLoading = false;
+                    } else {
+                        // 无敏感词，回复
+                        request
+                            .replyComment(data)
+                            .then(res => {
+                                this.$message.success(res.msg);
+                                this.tableData[this.index].reply = this.reply;
+                                this.mask = false;
+                                this.isWarning = false;
+                                this.btnLoading = false;
+                            })
+                            .catch(error => {
+                                console.log(error);
+                                this.btnLoading = false;
+                            });
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.btnLoading = false;
+                });
+        },
+        // 替换敏感词
+        replaceWords(string, words) {
+            if (words && words.length) {
+                words.foreach((v, k) => {
+                    string.replace(v, this.wordToStar(v));
+                });
+            }
+        },
+        wordToStar(word) {
+            let string = '';
+            for (let i = 0; i < word.length; i++) {
+                string += '*';
+            }
+            return string;
+        },
+        // （取消）置顶
+        stickItem(row, status) {
+            const data = {
+                id: row.id,
+                stick: status
+            };
+            request
+                .stickComment(data)
+                .then(res => {
+                    this.$message.success(res.msg);
+                    this.getList(this.page.currentPage);
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.tableLoading = false;
+                });
+        },
+        // 上（下）架
+        displayItem(row, status) {
+            const data = {
+                id: row.id,
+                display: status
+            };
+            request
+                .displayComment(data)
+                .then(res => {
+                    this.$message.success(res.msg);
+                    this.getList(this.page.currentPage);
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.tableLoading = false;
+                });
+        },
+        // 图片视频预览
+        showItem(row, num) {
+            this.linkList = row.linkList;
+            this.current = num;
+            this.showMask = true;
         }
     }
 };
@@ -182,6 +323,12 @@ export default {
         float: right;
         margin-top: 10px;
     }
+}
+.video-pic {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 .warning {
     color: #ff6868;
