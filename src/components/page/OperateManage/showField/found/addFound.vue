@@ -51,12 +51,8 @@
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="文章内容">
-                    <quill-editor v-model="form.content" ref="myQuillEditor" :options="editorOption"
-                                  @change="onEditorChange($event)"></quill-editor>
-                    <el-upload :action="upload" :on-success='upScuccess' ref="upload"
-                               style="display:none">
-                        <el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">点击上传</el-button>
-                    </el-upload>
+                    <!-- this.$refs,neditor.editor.具体方法 -->
+                    <vue-neditor-wrap ref="neditor" v-model="form.content" :config="myConfig" :destroy="false"></vue-neditor-wrap>
                 </el-form-item>
                 <el-form-item label="商品推广">
                     <p class="link-position" v-for="(v, k) in linkPosition" :key="k">
@@ -84,14 +80,28 @@
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
-    import Quill from 'quill';
     import * as api from '@/api/api.js';
     import request from '@/http/http';
-
+    import VueNeditorWrap from 'vue-neditor-wrap'
     export default {
-        components: { vBreadcrumb },
+        components: { vBreadcrumb, VueNeditorWrap },
         data() {
             return {
+                myConfig: {
+                    // 如果需要上传功能,找后端小伙伴要服务器接口地址
+                    serverUrl: '/',
+                    // 你的UEditor资源存放的路径,相对于打包后的index.html
+                    UEDITOR_HOME_URL: './static/NEditor/',
+                    // 编辑器不自动被内容撑高
+                    autoHeightEnabled: false,
+                    // 初始容器高度
+                    initialFrameHeight: 540,
+                    // 初始容器宽度
+                    initialFrameWidth: '100%',
+                    // 关闭自动保存
+                    enableAutoSave: false
+                },
+                content: '',
                 nav: ['运营管理', '秀场管理', '新建'],
                 id: '',
                 url: '',
@@ -183,10 +193,7 @@
             this.fileList1 = [];
         },
         mounted() {
-            // 为图片ICON绑定事件 getModule 为编辑器的内部属性
-            this.$refs.myQuillEditor.quill
-                .getModule('toolbar')
-                .addHandler('image', this.imgHandler);
+
         },
         methods: {
             // 判断封面图是否符合尺寸
@@ -315,46 +322,6 @@
                         console.log(err);
                     });
                 }
-            },
-            // 富文本编辑器
-            onEditorChange({ editor, html, text }) {
-                this.form.content = html;
-            },
-            // 图片上传成功回调 插入到编辑器中
-            upScuccess(e, file, fileList) {
-                const vm = this;
-                let url = '';
-                if (this.uploadType === 'image') {
-                    // 获得文件上传后的URL地址
-                    url = e.data;
-                }
-                if (url != null && url.length > 0) {
-                    // 将文件上传后的URL地址插入到编辑器文本中
-                    let value = url;
-                    // this.$refs.myTextEditor.quillEditor.getSelection();
-                    // 获取光标位置对象，里面有两个属性，一个是index 还有 一个length，这里要用range.index，即当前光标之前的内容长度，然后再利用 insertEmbed(length, 'image', imageUrl)，插入图片即可。
-                    vm.addRange = vm.$refs.myQuillEditor.quill.getSelection();
-                    value = value.indexOf('http') !== -1 ? value : 'http:' + value;
-                    vm.$refs.myQuillEditor.quill.insertEmbed(
-                        vm.addRange !== null ? vm.addRange.index : 0,
-                        vm.uploadType,
-                        value,
-                        Quill.sources.USER
-                    ); // 调用编辑器的 insertEmbed 方法，插入URL
-                    this.$message.success('插入成功');
-                } else {
-                    this.$message.error(`${vm.uploadType}插入失败`);
-                }
-                this.$refs['upload'].clearFiles(); // 插入成功后清除input的内容
-            },
-            // 点击图片ICON触发事件
-            imgHandler(state) {
-                this.addRange = this.$refs.myQuillEditor.quill.getSelection();
-                if (state) {
-                    const fileInput = document.getElementById('imgInput');
-                    fileInput.click(); // 加一个触发事件
-                }
-                this.uploadType = 'image';
             },
             // 添加连接位置
             addPosition() {
