@@ -29,7 +29,13 @@
             </mr-flying>
             <el-table v-loading="loading" :data="tableData" border stripe>
                 <el-table-column type="index" :index='handleIndex' label="编号" align="center"></el-table-column>
-                <el-table-column prop='accountBalance' label="金额（¥）" align="center"></el-table-column>
+                <el-table-column prop='accountBalance' label="金额（¥）" align="center">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.accountBalance">{{scope.row.accountBalance.toFixed(2)}}</span>
+                        <span v-else-if="scope.row.accountBalance == 0">0</span>
+                        <span v-else>-</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop='createTime' label="注销时间" align="center">
                     <template slot-scope="scope" v-if='scope.row.createTime'>
                         {{scope.row.createTime | formatDateAll}}

@@ -16,7 +16,7 @@
                         <div class="item">微信名称：{{dealer.wechatName}}</div>
                     </div>
                     <div class="item-row">
-                        <div v-if="status == 3" class="item">手机号：{{`${dealer.phone || ''}-mr`}}</div>
+                        <div v-if="status == 3" class="item">手机号：/</div>
                         <div v-else class="item">手机号：{{dealer.phone}}</div>
                     </div>
                     <div class="item-row">

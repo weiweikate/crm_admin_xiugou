@@ -43,7 +43,7 @@
                 <el-form-item>
                     <el-button native-type="submit" @click="handleCurrentChange(1)" type="primary">查询</el-button>
                     <el-button type="primary" v-auth="'vip.memberManage.dc'">导出</el-button>
-                    <!--<el-button @click="resetForm('form')">重置</el-button>-->
+                    <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
         </el-card>

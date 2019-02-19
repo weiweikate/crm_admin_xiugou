@@ -72,6 +72,11 @@
                         <span v-else class="grey-text">解除禁用</span>
                     </template>
                 </el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <a v-auth="'vip.memberManage.xq'" :href="`#/memberDetail?memberToInfo=${scope.row.userCode}`" target="_blank" class="primary-text">查看详情</a>
+                    </template>
+                </el-table-column>
             </el-table>
         </div>
         <!--解除禁用-->
