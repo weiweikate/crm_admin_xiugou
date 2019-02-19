@@ -219,8 +219,8 @@ export default {
             this.remarkMask = true;
             this.row = v;
             this.remark = v.warehouseOrder.platformRemarks;
-            this.count = this.remark.length || 0;
-            this.index = (v.warehouseOrder.markSta || 0) - 1;
+            this.count = this.remark ? this.remark.length : 0;
+            this.index = (v.warehouseOrder.markStar || 0) - 1;
             this.row.markStatus = v.warehouseOrder.markStar;
         },
         // 获取说明字数
@@ -241,6 +241,7 @@ export default {
             if (!data.markStatus) {
                 return this.$message.warning('请选择标记类型');
             }
+            this.btnLoading = true;
             request
                 .orderSign(data)
                 .then(res => {
@@ -248,10 +249,13 @@ export default {
                     this.row.warehouseOrder.starColor = this.row.label;
                     this.row.warehouseOrder.markStar = this.row.markStatus;
                     this.remarkMask = false;
+                    this.btnLoading = false;
+                    this.index = -1;
                     this.row.warehouseOrder.platformRemarks = this.remark;
                 })
                 .catch(err => {
                     console.log(err);
+                    this.btnLoading = false;
                 });
         },
         // 推送云仓
