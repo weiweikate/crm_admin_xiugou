@@ -1,4 +1,5 @@
 import moment from 'moment';
+const APP = require('../../app.json');
 
 // 清除数据
 const cleanFormData = function(form) {
@@ -110,19 +111,20 @@ const getParam = function(paramName = 'pageDefParam') {
 /**
  * 跳转h5页面路径
  * @param code 产品code
+ * @param type 产品类型
  * @returns {string | *} 参数值
  */
-const getSrc = (code) => {
+const getSrc = (type, code) => {
     const href = location.href;
     let first = '';
     if (href.indexOf('sharegoodsmall.com') === -1) { // 本地环境
-        first = 'http://devh5.sharegoodsmall.com/';
+        first = APP.proxy === 'dev' ? 'http://devh5.sharegoodsmall.com/' : 'http://testh5.sharegoodsmall.com/';
     } else {
         first = first.replace('admin.sharegoodsmall', 'h5.sharegoodsmall');
         const index = first.indexOf('#');
         first = first.substring(0, index);
     }
-    const second = 'product/99/' + code;
+    const second = 'product/' + type + '/' + code;
     return first + second;
 };
 /**
