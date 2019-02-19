@@ -145,7 +145,7 @@ export default {
             this.pageLoading = true;
             this.page.currentPage = val;
             request
-                .queryOrderPageList(this.data)
+                .queryOrderPageList(this.$utils.trimForm(this.data))
                 .then(res => {
                     this.pageLoading = false;
                     for (const i in res.data.data) {

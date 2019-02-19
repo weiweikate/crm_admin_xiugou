@@ -113,7 +113,7 @@
                     idCard: this.form.idNumber
                 };
                 this.tableLoading = true;
-                request.queryUserCertification(data).then(res => {
+                request.queryUserCertification(this.$utils.trimForm(data)).then(res => {
                     this.tableLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;

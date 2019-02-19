@@ -87,7 +87,6 @@
 </template>
 
 <script>
-    import moment from 'moment';
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http.js';
     import icon from '@/components/common/ico.vue';
@@ -119,13 +118,14 @@
                 this.data.pageSize = this.page.pageSize;
                 this.tableLoading = true;
                 this.page.currentPage = val;
-                request.queryPromotionPromoterPageList(this.data).then(res => {
+                request.queryPromotionPromoterPageList(this.$utils.trimForm(this.data)).then(res => {
                     this.tableData = [];
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                     this.tableLoading = false;
                 })
                     .catch(err => {
+                        console.log(err);
                         this.tableLoading = false;
                         console.log(err);
                     });
@@ -167,6 +167,7 @@
                     this.btnLoading = false;
                 })
                     .catch(err => {
+                        console.log(err);
                         this.btnLoading = false;
                         console.log(err);
                     });
@@ -174,7 +175,7 @@
             // 查看详情
             toDetail(row) {
                 sessionStorage.setItem('promotionOrderInfoId', row.id);
-                this.$router.push({ path: '/promotionOrderInfo', query: { promotionOrderInfoId: row.id}});
+                this.$router.push({ path: '/promotionOrderInfo', query: { promotionOrderInfoId: row.id }});
             }
         }
     };

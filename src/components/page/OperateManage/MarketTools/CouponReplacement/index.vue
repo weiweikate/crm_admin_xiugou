@@ -303,7 +303,7 @@
                 };
                 this.page.currentPage = val;
                 this.tableData = [];
-                request.queryReissuePageList(data).then(res => {
+                request.queryReissuePageList(this.$utils.trimForm(data)).then(res => {
                     this.pageLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;

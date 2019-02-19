@@ -143,7 +143,7 @@ export default {
                 pageSize: this.page.pageSize
             };
             this.tableLoading = true;
-            request.queryPromotionPackagePageList(data).then(res => {
+            request.queryPromotionPackagePageList(this.$utils.trimForm(data)).then(res => {
                 // if (!res.data) return;
                 // this.tableData = [];
                 // for (const i in res.data.data) {

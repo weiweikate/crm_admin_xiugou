@@ -99,7 +99,7 @@ export default {
             };
             this.page.currentPage = val;
             request
-                .getSPUList(data)
+                .getSPUList(this.$utils.trimForm(data))
                 .then(res => {
                     this.tableData = [];
                     if (!res.data) return;

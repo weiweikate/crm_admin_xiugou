@@ -347,7 +347,7 @@ export default {
             this.page.currentPage = val;
             this.tableLoading = true;
             request
-                .operatorDepreciatelist(data)
+                .operatorDepreciatelist(this.$utils.trimForm(data))
                 .then(res => {
                     this.tableData = [];
                     this.tableData = res.data.data;

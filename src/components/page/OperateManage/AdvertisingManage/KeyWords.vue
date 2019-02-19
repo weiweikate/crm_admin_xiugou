@@ -158,7 +158,7 @@ export default {
             };
             this.page.currentPage = val;
             that.tableLoading = true;
-            request.getHotWordsByPage(data).then(res => {
+            request.getHotWordsByPage(this.$utils.trimForm(data)).then(res => {
                 that.tableLoading = false;
                 that.tableData = res.data.data;
                 that.page.totalPage = res.data.totalNum;

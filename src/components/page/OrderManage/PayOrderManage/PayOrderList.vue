@@ -132,7 +132,7 @@
                 };
                 this.page.currentPage = val;
                 this.tableLoading = true;
-                request.queryPayments(data).then(res => {
+                request.queryPayments(this.$utils.trimForm(data)).then(res => {
                     this.tableLoading = false;
                     if (!res.data.data) return;
                     this.tableData = res.data.data;

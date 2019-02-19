@@ -185,7 +185,7 @@ export default {
                 pageSize: this.page.pageSize
             };
             this.page.currentPage = val;
-            request.getNoteList(data).then(res => {
+            request.getNoteList(this.$utils.trimForm(data)).then(res => {
                 this.tableData = [];
                 if (!res.data) return;
                 this.tableData = res.data.data;

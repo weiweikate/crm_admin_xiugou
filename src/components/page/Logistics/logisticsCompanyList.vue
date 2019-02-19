@@ -285,7 +285,7 @@
                     data.start = f.time[0];
                     data.end = f.time[1];
                 }
-                request.sysExpressQuery(data).then(res => {
+                request.sysExpressQuery(this.$utils.trimForm(data)).then(res => {
                     const data = res.data;
                     this.tableData = data.data;
                     this.page.totalPage = res.data.totalNum;

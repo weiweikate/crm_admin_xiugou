@@ -350,7 +350,7 @@ export default {
             delete data.date;
             this.loading = true;
             request
-                .getERPList(data)
+                .getERPList(this.$utils.trimForm(data))
                 .then(res => {
                     this.loading = false;
                     const data = res.data || {};

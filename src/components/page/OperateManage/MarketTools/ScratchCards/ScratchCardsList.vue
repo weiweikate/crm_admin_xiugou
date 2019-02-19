@@ -141,7 +141,7 @@
                 };
                 this.page.currentPage = val;
                 this.tableData = [];
-                request.queryScratchCardList(data).then(res => {
+                request.queryScratchCardList(this.$utils.trimForm(data)).then(res => {
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                 }).catch(err => {

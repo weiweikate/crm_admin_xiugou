@@ -86,7 +86,7 @@
                     pageSize: this.page.pageSize
                 };
                 this.tableLoading = true;
-                request.queryMemBeanList(data).then(res => {
+                request.queryMemBeanList(this.$utils.trimForm(data)).then(res => {
                     this.tableLoading = false;
                     this.tableData = res.data.data;
                     this.page.currentPage = res.data.currentPage;

@@ -76,7 +76,7 @@
                     pageSize: this.page.pageSize
                 };
                 this.loading = true;
-                request.userTaskQuery(data).then(res => {
+                request.userTaskQuery(this.$utils.trimForm(data)).then(res => {
                     this.loading = false;
                     this.tableData = [];
                     if (res.data) {

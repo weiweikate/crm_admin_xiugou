@@ -1,14 +1,7 @@
 <template>
     <div class="tab-content">
         <mr-flying parentClass="content-box">
-            <el-pagination
-                background
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="page.currentPage"
-                :page-size="page.pageSize"
-                layout="total, prev, pager, next, jumper"
-                :total="page.totalPage">
+            <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
             </el-pagination>
         </mr-flying>
         <el-table v-loading="tableLoading" border :data="tableData">
@@ -79,7 +72,7 @@ export default {
             this.page.currentPage = val;
             this.tableLoading = true;
             request
-                .queryMerchant(this.data)
+                .queryMerchant(this.$utils.trimForm(this.data))
                 .then(res => {
                     if (!res.data) return;
                     this.tableData = [];
