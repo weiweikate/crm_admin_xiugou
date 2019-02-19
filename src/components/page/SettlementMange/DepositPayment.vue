@@ -16,6 +16,17 @@
         </el-form>
       </el-card>
       <el-card style='margin-top:20px' :body-style="{ padding: '30px' }">
+         <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </mr-flying>
         <el-table :data="table" border v-loading="tabLoading">
           <el-table-column type='index' label="编号" align="center"></el-table-column>
           <el-table-column prop='name' label="缴纳人" align="center"></el-table-column>
@@ -45,16 +56,6 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="block">
-          <el-pagination
-                  background
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="page.currentPage"
-                  layout="total, prev, pager, next, jumper"
-                  :total="page.totalPage">
-          </el-pagination>
-        </div>
       </el-card>
       <el-dialog title="保证金缴纳记录" :visible.sync="isShowdia" width="30%" >
           <p class="deposit-payment">缴纳人：{{name}}</p>
@@ -122,12 +123,14 @@ export default {
             data.end = this.form.time.length == 0 ? '' : utils.formatTime(this.form.time[1], 1);
             this.tabLoading = true;
             this.page.currentPage = val;
-            request.storePayRecordList(data).then(res => {
+            request.storePayRecordList(this.$utils.trimForm(data)).then(res => {
                 this.tabLoading = false;
                 this.table = res.data.data;
                 this.page.totalPage = res.data.totalNum;
             }).catch(err => {
+                console.log(err);
                 this.tabLoading = false;
+                console.log(err);
             });
         },
         // 查看详情

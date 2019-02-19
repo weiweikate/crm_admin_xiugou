@@ -159,6 +159,16 @@ const deleteEmptyString = (object, param) => {
         return object;
     }
 };
+// 对象值前后去空格
+const trimForm = (form) => {
+    for (const key in form) {
+        if (form[key] && typeof form[key] === 'string') {
+            form[key] = form[key].trim();
+        }
+    }
+    return form
+};
+
 export default {
     cleanFormData,
     handleCity,
@@ -171,5 +181,6 @@ export default {
     stringToNumber,
     ArrayToString,
     numberToString,
-    deleteEmptyString
+    deleteEmptyString,
+    trimForm
 };

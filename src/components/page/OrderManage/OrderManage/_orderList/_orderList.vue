@@ -1,5 +1,8 @@
 <template>
     <div class="product-order-list" v-loading="pageLoading">
+        <mr-flying parentClass="content-box">
+          <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
+        </mr-flying>
         <el-table v-if="tableData.length==0" border>
             <el-table-column label="商品信息" align="center"></el-table-column>
             <el-table-column label="单价  数量" align="center"></el-table-column>
@@ -83,10 +86,6 @@
                 </tr>
             </tbody>
         </table>
-        <div class="block">
-            <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage">
-            </el-pagination>
-        </div>
         <!--虚拟发货-->
         <el-dialog title="虚拟发货" :visible.sync="mask">
             <el-form :model="form">
@@ -146,7 +145,7 @@ export default {
             this.pageLoading = true;
             this.page.currentPage = val;
             request
-                .queryOrderPageList(this.data)
+                .queryOrderPageList(this.$utils.trimForm(this.data))
                 .then(res => {
                     this.pageLoading = false;
                     for (const i in res.data.data) {
@@ -222,7 +221,7 @@ export default {
         // 订单详情
         orderInfo(row) {
             sessionStorage.setItem('orderInfoId', row.id);
-            this.$router.push({ name: 'orderInfo', query: { orderInfoId: row.id } });
+            this.$router.push({ name: 'orderInfo', query: { orderInfoId: row.id }});
         },
         // 订单多选框
         orderCheckBox(row) {

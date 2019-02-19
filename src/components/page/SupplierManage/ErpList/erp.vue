@@ -15,7 +15,7 @@
                 </el-form-item>
                 <el-form-item prop="closeReason" label="状态">
                     <el-select v-model="form.status" placeholder="请选择">
-                        <el-option v-for="(v,k) in statusList" :label="v.title" :value="v.value" :key="v.value">
+                        <el-option v-for="v in statusList" :label="v.title" :value="v.value" :key="v.value">
                             {{v.title}}
                         </el-option>
                     </el-select>
@@ -28,6 +28,17 @@
         </el-card>
         <el-card :body-style="{ padding: '20px 40px',}" style="margin-top:20px">
             <el-button @click="gotoAddModal" type="success" style="margin-bottom: 10px;" v-auth="'supplier.erp.tj'">添加ERP</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table :data="tableData" border :height="height" v-loading="loading">
                 <el-table-column prop="erpCode" label="ERP编号" align="center"></el-table-column>
                 <el-table-column prop="name" label="ERP名称" align="center"></el-table-column>
@@ -51,10 +62,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
 
         <!--添加/编辑层级弹窗-->
@@ -117,7 +124,7 @@ export default {
     data() {
         const validateInput = (rule, value, callback) => {
             // const uPattern = /^[a-zA-Z0-9_-]{1,20}$/;
-            if (!value.length || value.length === '' || value.length>20) {
+            if (!value.length || value.length === '' || value.length > 20) {
                 callback(new Error('请输入1-20位'));
             } else {
                 callback();
@@ -234,7 +241,8 @@ export default {
         // 为erp账号的供应商赋予自定义的key
         transformSupplier(list) {
             const ts = +new Date();
-            let count = 0, result = [];
+            let count = 0;
+            const result = [];
             list.forEach(item => {
                 result.push({
                     _id: ts + '' + ++count,
@@ -342,7 +350,7 @@ export default {
             delete data.date;
             this.loading = true;
             request
-                .getERPList(data)
+                .getERPList(this.$utils.trimForm(data))
                 .then(res => {
                     this.loading = false;
                     const data = res.data || {};

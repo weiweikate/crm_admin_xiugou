@@ -50,6 +50,17 @@
             <el-button type="primary" @click="activeRegularDialog = true">活动规则</el-button>
             <!--<router-link to="/expAddOrEdit?type=add" class="el-button el-button&#45;&#45;primary el-button&#45;&#45;small" v-auth="'yunying.expManage.tj'">添加活动</router-link>-->
             <a href="#/expAddOrEdit?type=add" target="_blank" v-auth="'yunying.expManage.tj'" class="el-button el-button--primary el-button--small">添加活动</a>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%;margin-top:20px;">
                 <el-table-column prop="activityCode" label="活动ID" align="center" width="150"></el-table-column>
                 <el-table-column prop="name" label="活动名称" width="100" align="center"></el-table-column>
@@ -91,17 +102,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="paginate">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    :page-size="page.pageSize"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
         <el-dialog title="活动规则说明" :visible.sync="activeRegularDialog" center>
             <div class="dialog-body">
@@ -155,7 +155,7 @@
                 const params = {
                     activityCode: data.activityCode
                 };
-                let _ = this;
+                const _ = this;
                 _.$confirm('删除后该活动不可查看及生效', '您确定要删除吗？', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -178,7 +178,7 @@
                 });
             },
             showActive(data) {
-                this.$router.push({ path: '/expDetail', query: { id: data.activityCode}});
+                this.$router.push({ path: '/expDetail', query: { id: data.activityCode }});
             },
             editActive(data) {
                 this.$router.push({ path: '/expAddOrEdit', query: { id: data.activityCode, type: 'edit' }});
@@ -189,7 +189,7 @@
                 data.page = val;
                 data.pageSize = this.page.pageSize;
                 this.tableLoading = true;
-                request.queryExpPageList(data).then(res => {
+                request.queryExpPageList(this.$utils.trimForm(data)).then(res => {
                     this.tableLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;

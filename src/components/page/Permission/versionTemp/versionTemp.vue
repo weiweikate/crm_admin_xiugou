@@ -1,6 +1,17 @@
 <template>
     <div class="version-iter">
         <el-button type="primary" @click="addVersion">新建版本信息</el-button>
+        <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </mr-flying>
         <el-table v-loading="tableLoading" :data="tableData" border style='margin-top:20px' :height="height">
             <el-table-column prop="id" label="编号" align="center"></el-table-column>
             <el-table-column prop="version" label="版本号" align="center"></el-table-column>
@@ -22,22 +33,10 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="block">
-            <el-pagination
-                background
-                @size-change="handleSizeChange"
-                :page-size="page.pageSize"
-                @current-change="handleCurrentChange"
-                :current-page="page.currentPage"
-                layout="total, prev, pager, next, jumper"
-                :total="page.totalPage">
-            </el-pagination>
-        </div>
     </div>
 </template>
 
 <script>
-import * as api from '@/api/api.js';
 import request from '@/http/http';
 import { myMixinTable } from '@/JS/commom';
 export default {

@@ -19,6 +19,17 @@
         </el-card>
         <el-card>
             <p class="title">{{name}}的秀值账户明细</p>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table border :data="tableData" v-loading="tableLoading">
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column label="类型" align="center" width="200">
@@ -48,17 +59,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                    background
-                    :page-size="page.pageSize"
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
     </div>
 </template>
@@ -106,7 +106,7 @@
                     endTime: this.form.time.length === 0 ? '' : this.$utils.formatTime(this.form.time[1])
                 };
                 this.tableLoading = true;
-                request.queryMemshowValueList(data).then(res => {
+                request.queryMemshowValueList(this.$utils.trimForm(data)).then(res => {
                     this.tableLoading = false;
                     this.tableData = res.data.data;
                     this.page.currentPage = res.data.currentPage;

@@ -15,6 +15,17 @@
             </el-card>
         </transition>
         <div class="table-block">
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <template>
                 <el-table :data="tableData" :height="height" border style="width: 100%">
                     <el-table-column type="index" label="编号" align="center"></el-table-column>
@@ -29,17 +40,6 @@
                     <!--</el-table-column>-->
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    :page-size="page.pageSize"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
     </div>
 </template>
@@ -86,7 +86,7 @@
                 };
                 this.page.currentPage = val;
                 that.tableLoading = true;
-                request.getWordsByPage(data).then(res => {
+                request.getWordsByPage(this.$utils.trimForm(data)).then(res => {
                     that.tableLoading = false;
                     that.tableData = res.data.data;
                     that.page.totalPage = res.data.totalNum;

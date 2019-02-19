@@ -284,7 +284,7 @@
                     data.end = this.searchFields.time[1];
                 }
                 this.loading = true;
-                request.queryAreaList(data).then(res => {
+                request.queryAreaList(this.$utils.trimForm(data)).then(res => {
                     this.data = res.data || [];
                     this.loading = false;
                 }).catch(res => {
