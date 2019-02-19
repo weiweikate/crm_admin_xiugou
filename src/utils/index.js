@@ -125,7 +125,6 @@ const getSrc = (type, code) => {
         first = first.substring(0, index);
     }
     const second = 'product/' + type + '/' + code;
-    console.log(first+second)
     return first + second;
 };
 /**
