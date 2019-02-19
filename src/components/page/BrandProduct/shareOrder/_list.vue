@@ -25,11 +25,9 @@
                     </div>
                     <div>{{scope.row.comment}}</div>
                     <div>
-                        <!-- <video v-if="scope.row.videoUrl" @click="showItem(scope.row,0)" class="video-pic" controls="controls" :src="scope.row.videoUrl"></video> -->
-                        <video v-if="scope.row.videoUrl" @click="showItem(scope.row,0)" class="video-pic" controls="controls" :src="'https://testcdn.sharegoodsmall.com/sharegoods/68f31befe5d040eea1352c76b8da7bb9.mp4'"></video>
+                        <video v-if="scope.row.videoUrl" @click="showItem(scope.row,0)" class="video-pic" :src="scope.row.videoUrl"></video>
                         <template v-if="scope.row.imgUrls">
-                            <!-- <img :key="k" v-for="(v,k) in scope.row.imgUrls" @click="showItem(scope.row,k+1)" :src="v" class="video-pic" alt="图片加载失败"> -->
-                            <img :key="k" v-for="(v,k) in scope.row.imgUrls" @click="showItem(scope.row,k+1)" :src="'https://testcdn.sharegoodsmall.com/sharegoods/c94bbd1fcb6d4c53b1a93c513cd72c20.png'" class="video-pic" alt="图片加载失败">
+                            <img :key="k" v-for="(v,k) in scope.row.imgUrls" @click="showItem(scope.row,k+1)" :src="v" class="video-pic" alt="图片加载失败">
                         </template>
                     </div>
                 </template>
@@ -84,7 +82,7 @@
             </div>
         </el-dialog>
         <!--图片视频预览弹出窗-->
-        <video-pict :link="linkList" :dialogVisible="showMask" :current="current" :imgUrls="imgUrls"></video-pict>
+        <video-pict :link="linkList" :dialogVisible="showMask" @msg="closeMask" :current="current" :imgUrls="imgUrls"></video-pict>
     </div>
 </template>
 
@@ -143,8 +141,7 @@ export default {
                         if (v.videoUrl) {
                             const temp = {
                                 type: 'video',
-                                // link: v.videoUrl
-                                link: 'https://testcdn.sharegoodsmall.com/sharegoods/68f31befe5d040eea1352c76b8da7bb9.mp4'
+                                link: v.videoUrl
                             };
                             v.linkList.push(temp);
                         }
@@ -154,8 +151,7 @@ export default {
                             for (const j in imgUrls) {
                                 const temp = {
                                     type: 'picture',
-                                    // link: imgUrls[j]
-                                    link: 'https://testcdn.sharegoodsmall.com/sharegoods/c94bbd1fcb6d4c53b1a93c513cd72c20.png'
+                                    link: imgUrls[j]
                                 };
                                 v.linkList.push(temp);
                             }
@@ -276,6 +272,9 @@ export default {
             this.linkList = row.linkList;
             this.current = num;
             this.showMask = true;
+        },
+        closeMask(msg) {
+            this.showMask = msg;
         }
     }
 };
