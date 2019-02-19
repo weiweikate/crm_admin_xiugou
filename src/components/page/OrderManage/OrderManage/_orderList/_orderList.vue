@@ -55,7 +55,7 @@
                                 <!-- 商品标签 -->
                                 <div class="activity-label" v-if="value.activityTag">{{value.activityTag}}</div>
                             </div>
-                            <div class="pro-spec">{{value.spec}}</div>
+                            <div class="pro-spec over-hidden" :title="value.spec">{{value.spec}}</div>
                             <div style="clear: both"></div>
                         </div>
                     </td>
