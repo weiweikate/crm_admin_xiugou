@@ -14,8 +14,8 @@
     <div class="picture-video">
         <el-dialog :visible.sync="dialogVisible" :before-close="handleClose">
             <div class="content-wrap">
-                <video v-if="link[current] && link[current].type == 'video'" class="video-style" controls="controls" :src="link[current].link"></video>
-                <img v-else-if="link[current] && link[current].type == 'picture'" class="video-style" :src="link[current].link" alt="图片加载失败">
+                <video v-if="link[current] && link[current].type == 'video'" class="video-style" :class="isBigger?'bigger':isSmaller?'smaller':''" controls="controls" :src="link[current].link"></video>
+                <img v-else-if="link[current] && link[current].type == 'picture'" class="video-style" :class="isBigger?'bigger':isSmaller?'smaller':''" :src="link[current].link" alt="图片加载失败">
                 <span v-else>加载失败</span>
             </div>
              <div class="enlarge-small">
@@ -48,10 +48,11 @@ export default {
     },
     data() {
         return {
+            isBigger: false,
+            isSmaller: false
         };
     },
     mounted() {
-        console.log(this.dialogVisible)
     },
     methods: {
         handleClose() {
@@ -60,6 +61,8 @@ export default {
         },
         // 上一张下一张
         toggle(type) {
+            this.isBigger = false;
+            this.isSmaller = false;
             if (type === 'left') {
                 if (this.current === 0) {
                     return;
@@ -77,12 +80,12 @@ export default {
         },
         // 放大缩小
         enlarge(num) {
-            this.width = '80%';
-            this.height = '80%';
+            this.isBigger = true;
+            this.isSmaller = false;
         },
         small(num) {
-            this.width = '600px';
-            this.height = '600px';
+            this.isBigger = false;
+            this.isSmaller = true;
         }
     }
 };
@@ -120,11 +123,18 @@ export default {
     .content-wrap {
         .video-style {
             width: 50%;
-            text-align: center;
             position: absolute;
             top:50%;
             left: 50%;
             transform: translateX(-50%) translateY(-50%);
+        }
+        .bigger{
+            transform: scale(1.1);
+            transition: all 0.6s;
+        }
+        .smaller{
+            transform: scale(0.9);
+            transition: all 0.6s;
         }
         .arraw {
             cursor: pointer;

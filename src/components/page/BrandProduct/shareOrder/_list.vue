@@ -25,13 +25,12 @@
                     </div>
                     <div>{{scope.row.comment}}</div>
                     <div>
-                        <video v-if="scope.row.videoUrl" @click="showItem(scope.row,0)" class="video-pic" controls="controls" :src="scope.row.videoUrl"></video>
+                        <!-- <video v-if="scope.row.videoUrl" @click="showItem(scope.row,0)" class="video-pic" controls="controls" :src="scope.row.videoUrl"></video> -->
+                        <video v-if="scope.row.videoUrl" @click="showItem(scope.row,0)" class="video-pic" controls="controls" :src="'https://testcdn.sharegoodsmall.com/sharegoods/68f31befe5d040eea1352c76b8da7bb9.mp4'"></video>
                         <template v-if="scope.row.imgUrls">
-                            <img :key="k" v-for="(v,k) in scope.row.imgUrls" @click="showItem(scope.row,k+1)" :src="v" class="video-pic" alt="图片加载失败">
+                            <!-- <img :key="k" v-for="(v,k) in scope.row.imgUrls" @click="showItem(scope.row,k+1)" :src="v" class="video-pic" alt="图片加载失败"> -->
+                            <img :key="k" v-for="(v,k) in scope.row.imgUrls" @click="showItem(scope.row,k+1)" :src="'https://testcdn.sharegoodsmall.com/sharegoods/c94bbd1fcb6d4c53b1a93c513cd72c20.png'" class="video-pic" alt="图片加载失败">
                         </template>
-                        <!-- <viewer :images="scope.row.imgUrls">
-                            <img v-for="(item,index) in scope.row.imgUrls" :key="index" :src="item" alt="" @click="showItem(scope.row,k+1)">
-                        </viewer> -->
                     </div>
                 </template>
             </el-table-column>
@@ -144,7 +143,8 @@ export default {
                         if (v.videoUrl) {
                             const temp = {
                                 type: 'video',
-                                link: v.videoUrl
+                                // link: v.videoUrl
+                                link: 'https://testcdn.sharegoodsmall.com/sharegoods/68f31befe5d040eea1352c76b8da7bb9.mp4'
                             };
                             v.linkList.push(temp);
                         }
@@ -154,7 +154,8 @@ export default {
                             for (const j in imgUrls) {
                                 const temp = {
                                     type: 'picture',
-                                    link: imgUrls[j]
+                                    // link: imgUrls[j]
+                                    link: 'https://testcdn.sharegoodsmall.com/sharegoods/c94bbd1fcb6d4c53b1a93c513cd72c20.png'
                                 };
                                 v.linkList.push(temp);
                             }
