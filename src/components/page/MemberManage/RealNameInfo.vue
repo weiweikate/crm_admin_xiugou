@@ -45,7 +45,7 @@ export default {
             const data = {
                 code: this.code
             };
-            request.findDealerById(data).then(res => {
+            request.findDealerById(this.$utils.trimForm(data)).then(res => {
                 this.detail = res.data;
                 this.img = [];
                 this.img.push(res.data.frontPhoto, res.data.backPhoto);

@@ -169,14 +169,12 @@ export default {
             this.areaDisabled = this.form.country === '1';
         },
         checkPhone() {
-            const that = this;
-            const reg = /^1\d{10}$/;
-            if (!reg.test(that.form.mobile)) {
-                that.$message.warning('请输入正确的手机号格式!');
-                that.phone = false;
+            if (this.form.mobile.length !== 11) {
+                this.$message.warning('请输入正确的手机号格式!');
+                this.phone = false;
                 return false;
             } else {
-                that.phone = true;
+                this.phone = true;
             }
         },
         // 提交表单

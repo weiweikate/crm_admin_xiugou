@@ -140,7 +140,7 @@
                     data.endTime = this.form.time[1];
                 }
                 this.tableLoading = true;
-                request.queryUserExperiencePageList(data).then(res => {
+                request.queryUserExperiencePageList(this.$utils.trimForm(data)).then(res => {
                     this.tableLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;

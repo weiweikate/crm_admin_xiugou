@@ -216,7 +216,7 @@ export default {
             };
             this.page.currentPage = val;
             this.tableLoading = true;
-            request.queryNoticeList(data).then(res => {
+            request.queryNoticeList(this.$utils.trimForm(data)).then(res => {
                 this.tableLoading = false;
                 for (const i in res.data.data) {
                     const arr = res.data.data[i].userLevel.split(',');

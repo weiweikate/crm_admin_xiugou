@@ -152,6 +152,15 @@ const ArrayToString = (param) => {
 const numberToString = (param) => {
     return typeof param === 'number' ? param.toString() : param;
 };
+// 对象值前后去空格
+const trimForm = (form) => {
+    for (const key in form) {
+        if (form[key] && typeof form[key] === 'string') {
+            form[key] = form[key].trim();
+        }
+    }
+    return form
+};
 
 export default {
     cleanFormData,
@@ -164,5 +173,6 @@ export default {
     setRequestParams,
     stringToNumber,
     ArrayToString,
-    numberToString
+    numberToString,
+    trimForm
 };

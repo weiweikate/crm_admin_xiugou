@@ -176,7 +176,7 @@ export default {
             data.page = val;
             data.pageSize = this.page.pageSize;
             this.pageLoading = true;
-            request.queryUserWithdrawList(data).then(res => {
+            request.queryUserWithdrawList(this.utils.trimForm(data)).then(res => {
                 this.pageLoading = false;
                 this.table = res.data.data;
                 this.page.totalPage = res.data.totalNum;
@@ -187,7 +187,7 @@ export default {
         },
         // 账户明细
         accountMsg(row) {
-            this.$router.push({ path: '/cashAccountBalance', query: { memberAccMsg: {memberCode: row.userCode, nickname: row.userName || '' }}});
+            this.$router.push({ path: '/cashAccountBalance', query: { memberAccMsg: { memberCode: row.userCode, nickname: row.userName || '' }}});
         },
         // 审核
         audit(row, status) {

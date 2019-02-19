@@ -93,7 +93,7 @@ export default {
             };
             this.page.currentPage = val;
             request
-                .stockLossList(data)
+                .stockLossList(this.$utils.trimForm(data))
                 .then(res => {
                     this.tableData = [];
                     if (!res.data) return;

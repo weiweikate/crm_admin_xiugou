@@ -197,7 +197,7 @@ export default {
             data.startEndTime = data.time[1];
             that.tableLoading = true;
             request
-                .queryProductSupplierList(data)
+                .queryProductSupplierList(this.$utils.trimForm(data))
                 .then(res => {
                     that.tableLoading = false;
                     that.tableData = res.data.data;

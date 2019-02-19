@@ -89,7 +89,6 @@
 <script>
     import request from '@/http/http.js';
     import { myMixinTable } from '@/JS/commom';
-    import moment from 'moment';
     export default {
         mixins: [myMixinTable],
         data() {
@@ -135,7 +134,7 @@
                 this.data.type = 2;
                 this.tableData = [];
                 this.pageLoading = true;
-                request.queryOrderPageList(this.data).then(res => {
+                request.queryOrderPageList(this.$utils.trimForm(this.data)).then(res => {
                     this.pageLoading = false;
                     for (const i in res.data.data) {
                         // res.data.data[i].isShowPop = false;
