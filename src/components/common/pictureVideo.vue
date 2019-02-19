@@ -1,18 +1,31 @@
 <template>
+    <!-- <div class="picture-video" v-if="dialogVisible"> -->
+        <!-- <div class="content-wrap">
+            <i class="el-icon-arrow-left arraw" @click="toggle('left')" :class="current==0?'grey-text':''"></i>
+            <video v-if="link[current] && link[current].type == 'video'" class="video-style" controls="controls" :src="link[current].link"></video>
+            <img v-else-if="link[current] && link[current].type == 'picture'" class="video-style" :src="link[current].link" alt="图片加载失败">
+            <span v-else>加载失败</span>
+            <div class="enlarge-small" v-if="link[current] && link[current].type == 'picture'">
+                <i class="el-icon-zoom-in" @click="enlarge(current)"></i>
+                <i class="el-icon-zoom-out" @click="small(current)"></i>
+            </div>
+            <i class="el-icon-arrow-right arraw" @click="toggle('right')" :class="current==link.length-1?'grey-text':''"></i>
+        </div>    -->
     <div class="picture-video">
-        <el-dialog title="预览" :visible.sync="dialogVisible" :width="width" :height="height" :before-close="handleClose">
+        <el-dialog :visible.sync="dialogVisible" :before-close="handleClose">
             <div class="content-wrap">
-                <i class="el-icon-arrow-left arraw" @click="toggle('left')" :class="current==0?'grey-text':''"></i>
                 <video v-if="link[current] && link[current].type == 'video'" class="video-style" controls="controls" :src="link[current].link"></video>
                 <img v-else-if="link[current] && link[current].type == 'picture'" class="video-style" :src="link[current].link" alt="图片加载失败">
                 <span v-else>加载失败</span>
-                <div class="enlarge-small" v-if="link[current] && link[current].type == 'picture'">
-                    <i class="el-icon-zoom-in" @click="enlarge(current)"></i>
-                    <i class="el-icon-zoom-out" @click="small(current)"></i>
-                </div>
-                <i class="el-icon-arrow-right arraw" @click="toggle('right')" :class="current==link.length-1?'grey-text':''"></i>
             </div>
+             <div class="enlarge-small">
+                    <i class="el-icon-arrow-left arraw" @click="toggle('left')" :class="current==0?'grey-text':''"></i>
+                    <i class="el-icon-zoom-in arraw" @click="enlarge(current)"></i>
+                    <i class="el-icon-zoom-out arraw" @click="small(current)"></i>
+                    <i class="el-icon-arrow-right arraw" @click="toggle('right')" :class="current==link.length-1?'grey-text':''"></i>
+                </div>
         </el-dialog>
+        <!-- <i class="el-icon-circle-close-outline arraw" @click="handleClose"></i> -->
     </div>
 </template>
 
@@ -35,12 +48,10 @@ export default {
     },
     data() {
         return {
-            width: '600px',
-            height: '600px',
-            i: 0
         };
     },
     mounted() {
+        console.log(this.dialogVisible)
     },
     methods: {
         handleClose() {
@@ -79,27 +90,45 @@ export default {
 
 <style lang="less" scoped>
 .picture-video {
-    .el-dialog {
+    /deep/.el-dialog {
+        width: 100%;
+        height: 100%;
         background: inherit;
+        margin: 0 !important;
+        border-radius: none;
+        color: #fff !important;
+        .el-dialog__header{
+            border-bottom: none
+        }
+        .el-dialog__headerbtn .el-dialog__close{
+            color: #fff;
+            font-size: 20px;
+        }
     }
-    .content-wrap {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        // height: 600px;
-        position: relative;
-        .video-style {
-            width: 400px;
-        }
-        .arraw {
-            cursor: pointer;
-            font-size: 42px;
-        }
-        .enlarge-small {
+    .el-icon-circle-close-outline{
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    .enlarge-small {
             position: absolute;
+            color: #fff;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
+        }
+    .content-wrap {
+        .video-style {
+            width: 50%;
+            text-align: center;
+            position: absolute;
+            top:50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
+        .arraw {
+            cursor: pointer;
+            font-size: 20px;
         }
     }
 }

@@ -1,5 +1,8 @@
 <template>
     <div class="tab-remark">
+        <mr-flying parentClass="content-box">
+          <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
+        </mr-flying>
         <el-table v-loading="tableLoading" border :data="tableData">
             <el-table-column type="index" label="序号" align="center"></el-table-column>
             <el-table-column label="商品信息" width="350">
@@ -67,10 +70,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="block">
-            <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
-            </el-pagination>
-        </div>
         <el-dialog title="回复评价" :visible.sync="mask">
             <div>
                 <div class="reply-area">
@@ -131,7 +130,7 @@ export default {
             this.page.currentPage = val;
             this.tableLoading = true;
             request
-                .getCommentPage(this.data)
+                .getCommentPage(this.$utils.trimForm(this.data))
                 .then(res => {
                     if (!res.data) {
                         return;

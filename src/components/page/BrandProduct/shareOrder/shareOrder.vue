@@ -51,10 +51,10 @@
                     <v-tab-content ref="all"></v-tab-content>
                 </el-tab-pane>
                 <el-tab-pane label="已上架" name="2">
-                    <v-tab-content ref="0"></v-tab-content>
+                    <v-tab-content ref="2"></v-tab-content>
                 </el-tab-pane>
                 <el-tab-pane label="已下架" name="3">
-                    <v-tab-content ref="1"></v-tab-content>
+                    <v-tab-content ref="3"></v-tab-content>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
