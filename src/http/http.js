@@ -55,6 +55,7 @@ Object.keys(api).forEach(function(name) {
     }
 });
 // 生成API接口
+let flag = 0;
 list.forEach(function(item) {
     const name = item.name; const url = item.uri.replace(/\/\//g, '/'); const method = item.methods || 'post'; const action = item.action || '';
     request[name] = function(params, config = {}) {
@@ -64,19 +65,22 @@ list.forEach(function(item) {
             http[method](url, params, config).then(res => {
                 // 错误信息拦截
                 if (res.code === 10009 || res.code === 70009) {
-                    MessageBox.confirm(
-                        '你已被登出，可以取消继续留在该页面，或者重新登录',
-                        '确定登出',
-                        {
-                            confirmButtonText: '重新登录',
-                            cancelButtonText: '取消',
-                            type: 'warning'
-                        }
-                    ).then(() => {
-                        store.dispatch('FedLogOut').then(() => {
-                            location.reload(); // 为了重新实例化vue-router对象 避免bug
+                    flag++;
+                    if (flag <= 1) {
+                        MessageBox.confirm(
+                            '你已被登出，可以取消继续留在该页面，或者重新登录',
+                            '确定登出',
+                            {
+                                confirmButtonText: '重新登录',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }
+                        ).then(() => {
+                            store.dispatch('FedLogOut').then(() => {
+                                location.reload(); // 为了重新实例化vue-router对象 避免bug
+                            });
                         });
-                    });
+                    }
                     return reject(res.msg);
                 }
                 if (res.code !== 10000) {
