@@ -4,7 +4,7 @@
         <el-card class="query-panue" :body-style="{ padding: '20px 20px'}">
             <el-form :model="form" ref="form" inline label-width="120px" @submit.native.prevent>
                 <el-form-item prop="dateRange" label="下单时间">
-                    <el-date-picker v-model="dateRange" type="datetimerange" format="yyyy-MM-dd" start-placeholder="开始日期" end-placeholder="结束日期">
+                    <el-date-picker v-model="dateRange" type="datetimerange" start-placeholder="开始日期" end-placeholder="结束日期">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item prop="platformNo" label="平台级订单号">
@@ -37,6 +37,9 @@
                 </el-form-item>
                 <el-form-item prop="userName" label="收货人姓名">
                     <el-input v-model="form.userName" placeholder="请输入收货人姓名"></el-input>
+                </el-form-item>
+                <el-form-item prop="receiverPhone" label="收货人手机号码">
+                    <el-input-number :controls="false" v-model="form.receiverPhone" :placeholder="请输入收货人手机号码"></el-input-number>
                 </el-form-item>
                 <el-form-item prop="supplierName" label="供应商名称">
                     <el-input v-model="form.supplierName" placeholder="请输入供应商名称"></el-input>
@@ -204,8 +207,8 @@ export default {
                 lockStatus: this.form.lockStatus,
                 supplierName: this.form.supplierName,
                 orderStatus: this.activeName === 'all' ? '' : this.activeName,
-                form: this.dateRange.length !== 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '',
-                to: this.dateRange.length !== 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : '',
+                form: this.dateRange.length !== 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD HH:mm:ss') : '',
+                to: this.dateRange.length !== 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD HH:mm:ss') : '',
                 warehouseOrderNos: this.$refs[this.activeName].warehouseOrderNos.join(',')
             };
             this.getSearchTime(params, this.dateRange);
@@ -216,8 +219,8 @@ export default {
         getList() {
             const data = {};
             Object.assign(data, this.form);
-            data.from = this.dateRange.length !== 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD 00:00:00') : '';
-            data.to = this.dateRange.length !== 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD 23:59:59') : '';
+            data.from = this.dateRange.length !== 0 ? moment(this.dateRange[0]).format('YYYY-MM-DD HH:mm:ss') : '';
+            data.to = this.dateRange.length !== 0 ? moment(this.dateRange[1]).format('YYYY-MM-DD HH:mm:ss') : '';
             data.orderStatus = this.activeName === 'all' ? '' : this.activeName;
             this.getSearchTime(data, this.dateRange);
             this.$refs[this.activeName].page.currentPage = 1;
@@ -272,12 +275,15 @@ export default {
     }
     .query-panue {
         .el-input--small .el-input__inner,
-        .el-input--small {
+        .el-input--small,.el-input-number--small {
             width: 220px;
         }
     }
     .btn-group {
         margin-bottom: 10px;
+    }
+    .el-input-number .el-input__inner{
+        text-align: left
     }
 }
 </style>
