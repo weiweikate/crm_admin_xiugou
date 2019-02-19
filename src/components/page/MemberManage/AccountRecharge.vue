@@ -12,21 +12,14 @@
                     </el-form-item>
                     <el-form-item prop="status" label="状态" label-width="120">
                         <el-select v-model="form.status" placeholder="请选择">
-                            <el-option label="全部记录" value=""></el-option>
+                            <el-option label="全部记录" value></el-option>
                             <el-option label="待审核" value="0"></el-option>
                             <el-option label="已同意" value="1"></el-option>
                             <el-option label="驳回" value="2"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item prop="date" label="时间" label-width="120">
-                        <el-date-picker
-                            v-model="form.date"
-                            type="datetimerange"
-                            format="yyyy-MM-dd"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                        >
-                        </el-date-picker>
+                        <el-date-picker v-model="form.date" type="datetimerange" format="yyyy-MM-dd" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
                     </el-form-item>
                     <el-form-item>
                         <el-button @click="getList(1)" type="primary">查询</el-button>
@@ -37,6 +30,9 @@
         </transition>
         <div class="table-block">
             <el-button @click="recharge" type="primary" v-if="p.addRechargeRecord" style="margin-bottom: 20px">账户充值</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
+            </mr-flying>
             <template>
                 <el-table :data="tableData" :height="height" border style="width: 100%">
                     <el-table-column type="index" label="编号" width="60" align="center"></el-table-column>
@@ -51,7 +47,7 @@
                     <el-table-column prop="rechargeBalance" label="充值金额" align="center"></el-table-column>
                     <el-table-column prop="remark" label="备注" align="center"></el-table-column>
                     <el-table-column label="充值时间" align="center">
-                        <template slot-scope="scope" v-if='scope.row.createTime'>
+                        <template slot-scope="scope" v-if="scope.row.createTime">
                             <template>{{scope.row.createTime|formatDate}}</template>
                         </template>
                     </el-table-column>
@@ -65,40 +61,23 @@
                     </el-table-column>
                     <el-table-column v-if="p.updateRechargeRecord" label="操作" align="center">
                         <template slot-scope="scope" v-if="scope.row.status==0">
-                            <el-button type="primary" size="small"
-                                       @click="updateStatus(1,scope.row)">通过
-                            </el-button>
-                            <el-button type="primary" size="small"
-                                       @click="updateStatus(2,scope.row)">驳回
-                            </el-button>
-
+                            <el-button type="primary" size="small" @click="updateStatus(1,scope.row)">通过</el-button>
+                            <el-button type="primary" size="small" @click="updateStatus(2,scope.row)">驳回</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
         <!--消息确认弹窗-->
         <div class="pwd-mask" v-if="tipsMask">
             <div class="box">
                 <div class="mask-title">
-                    <icon class="ico" ico='icon-jinggao'/>
-                    温馨提示
+                    <icon class="ico" ico="icon-jinggao"/>温馨提示
                 </div>
                 <div class="mask-content">
                     <span class="del-tip">{{info}}</span>
                     <div class="del-btn-group">
-                        <el-button :loading="btnLoading" @click="oprSure(true)" class="del-btn" type="danger">确认
-                        </el-button>
+                        <el-button :loading="btnLoading" @click="oprSure(true)" class="del-btn" type="danger">确认</el-button>
                         <el-button @click="tipsMask=false">取消</el-button>
                     </div>
                 </div>
@@ -112,19 +91,24 @@
                 </el-form-item>
                 <div class="detail" v-if="showDetail">
                     <div class="member-item">
-                        <span class="member-title">会员编号：</span><span>{{detail.code}}</span>
+                        <span class="member-title">会员编号：</span>
+                        <span>{{detail.code}}</span>
                     </div>
                     <div class="member-item">
-                        <span class="member-title">昵称：</span><span>{{detail.nickname}}</span>
+                        <span class="member-title">昵称：</span>
+                        <span>{{detail.nickname}}</span>
                     </div>
                     <div class="member-item">
-                        <span class="member-title">手机号：</span><span>{{detail.phone}}</span>
+                        <span class="member-title">手机号：</span>
+                        <span>{{detail.phone}}</span>
                     </div>
                     <div class="member-item">
-                        <span class="member-title">姓名：</span><span>{{detail.realname}}</span>
+                        <span class="member-title">姓名：</span>
+                        <span>{{detail.realname}}</span>
                     </div>
                     <div class="member-item">
-                        <span class="member-title">身份证号：</span><span>{{detail.idcard}}</span>
+                        <span class="member-title">身份证号：</span>
+                        <span>{{detail.idcard}}</span>
                     </div>
                 </div>
                 <el-form-item label="充值账户类型">
@@ -145,7 +129,6 @@
                 <el-button @click="cancel">取消</el-button>
             </div>
         </el-dialog>
-
     </div>
 </template>
 
@@ -153,23 +136,23 @@
 import vBreadcrumb from '../../common/Breadcrumb.vue';
 import icon from '../../common/ico.vue';
 import * as api from '../../../api/api';
-import moment from 'moment'
-import {getList} from "../../../api/api";
-import utils from '../../../utils/index.js'
+import moment from 'moment';
+import utils from '../../../utils/index.js';
 import * as pApi from '../../../privilegeList/index.js';
 import { myMixinTable } from '@/JS/commom';
 
 export default {
     components: {
-        vBreadcrumb, icon
+        vBreadcrumb,
+        icon
     },
-    mixins:[myMixinTable],
+    mixins: [myMixinTable],
     data() {
         return {
             // 权限控制
             p: {
                 addRechargeRecord: false,
-                updateRechargeRecord: false,
+                updateRechargeRecord: false
             },
 
             tableData: [],
@@ -191,17 +174,17 @@ export default {
                 type: '1',
                 remark: ''
             },
-            showDetail:false,
-            detail:{},
-            dealerId:'',
-            opr:{
-                id:'',
-                status:''
+            showDetail: false,
+            detail: {},
+            dealerId: '',
+            opr: {
+                id: '',
+                status: ''
             }
-        }
+        };
     },
     created() {
-        let winHeight = window.screen.availHeight - 520;
+        const winHeight = window.screen.availHeight - 520;
         this.height = winHeight;
         this.pControl();
     },
@@ -216,16 +199,16 @@ export default {
                 this.p[k] = utils.pc(pApi[k]);
             }
         },
-        //获取列表
+        // 获取列表
         getList(val) {
-            let that = this;
-            let data = {
+            const that = this;
+            const data = {
                 page: val,
                 nickname: that.form.nickname,
                 phone: that.form.phone,
-                status: that.form. status,
+                status: that.form.status,
                 startTime: that.form.date ? moment(that.form.date[0]).format('YYYY-MM-DD') : '',
-                endTime: that.form.date ? moment(that.form.date[1]).format('YYYY-MM-DD') : '',
+                endTime: that.form.date ? moment(that.form.date[1]).format('YYYY-MM-DD') : ''
             };
             data.url = pApi.queryRechargeRecordPageList;
             that.tableLoading = true;
@@ -243,27 +226,27 @@ export default {
                 })
                 .catch(err => {
                     that.tableLoading = false;
-                    console.log(err)
-                })
+                    console.log(err);
+                });
         },
-        //充值
+        // 充值
         recharge() {
             this.addMask = true;
-            this.addForm.phone='';
-            this.addForm.money='';
-            this.addForm.type='1';
-            this.addForm.remark='';
-            this.showDetail=false
+            this.addForm.phone = '';
+            this.addForm.money = '';
+            this.addForm.type = '1';
+            this.addForm.remark = '';
+            this.showDetail = false;
         },
-        findMember(){
-            let reg=/^1[3-8]\d{9}$/;
-            let that=this;
-            if(!reg.test(that.addForm.phone)){
+        findMember() {
+            const reg = /^1[3-8]\d{9}$/;
+            const that = this;
+            if (!reg.test(that.addForm.phone)) {
                 that.$message.warning('请输入正确的手机号!');
-                return
-            }else{
-                let data={
-                    phone:that.addForm.phone,
+                return;
+            } else {
+                const data = {
+                    phone: that.addForm.phone
                     // url:pApi.findDealerByPhone
                 };
                 that.$axios
@@ -271,9 +254,9 @@ export default {
                     .then(res => {
                         if (res.data.code == 200) {
                             // this.$message.success(res.data.msg);
-                            that.showDetail=true;
-                            that.detail=res.data.data;
-                            that.dealerId=res.data.data.id;
+                            that.showDetail = true;
+                            that.detail = res.data.data;
+                            that.dealerId = res.data.data.id;
                         } else {
                             this.$message.warning(res.data.msg);
                         }
@@ -283,26 +266,26 @@ export default {
                     });
             }
         },
-        //账号充值
+        // 账号充值
         addRechargeRecord(formName) {
-            let data = {};
-            data.type=this[formName].type;
-            data.money=this[formName].money;
-            data.dealerId=this.dealerId;
-            if(!data.dealerId){
+            const data = {};
+            data.type = this[formName].type;
+            data.money = this[formName].money;
+            data.dealerId = this.dealerId;
+            if (!data.dealerId) {
                 this.$message.warning('请输入用户手机号!');
-                return
+                return;
             }
-            if(!data.type){
+            if (!data.type) {
                 this.$message.warning('请选择充值账户类型!');
-                return
+                return;
             }
-            if(!data.money){
+            if (!data.money) {
                 this.$message.warning('请输入充值金额!');
-                return
+                return;
             }
-            data.remark=this[formName].remark;
-            data.url=pApi.addRechargeRecord;
+            data.remark = this[formName].remark;
+            data.url = pApi.addRechargeRecord;
             this.$axios
                 .post(api.addRechargeRecord, data)
                 .then(res => {
@@ -318,27 +301,27 @@ export default {
                     console.log(err);
                 });
         },
-        //取消
-        cancel(){
+        // 取消
+        cancel() {
             this.addMask = false;
-            this.getList(this.page.currentPage)
+            this.getList(this.page.currentPage);
         },
-        //通过驳回
-        updateStatus(num,row){
-            let that=this;
-            that.tipsMask=true;
-            if(num==1){
-                that.info='确定通过？'
-            }else{
-                that.info='确定驳回？'
+        // 通过驳回
+        updateStatus(num, row) {
+            const that = this;
+            that.tipsMask = true;
+            if (num == 1) {
+                that.info = '确定通过？';
+            } else {
+                that.info = '确定驳回？';
             }
-            that.opr.id=row.id;
-            that.opr.status=num;
+            that.opr.id = row.id;
+            that.opr.status = num;
         },
-        oprSure(){
-            let that=this;
-            let data=that.opr;
-            data.url=pApi.updateRechargeRecord;
+        oprSure() {
+            const that = this;
+            const data = that.opr;
+            data.url = pApi.updateRechargeRecord;
             this.$axios
                 .post(api.updateRechargeRecord, data)
                 .then(res => {
@@ -354,187 +337,185 @@ export default {
                     console.log(err);
                 });
         },
-        //重置表单
+        // 重置表单
         resetForm(formName) {
             this.$refs[formName].resetFields();
             this.form.date = '';
-            this.getList(this.page.currentPage)
-        },
+            this.getList(this.page.currentPage);
+        }
     }
-}
+};
 </script>
 
 <style lang="less">
-    .account-recharge {
-        /*表格样式*/
-        .table-block {
-            padding: 20px 20px 60px;
-            background: #fff
-        }
-        .block {
-            float: right;
-            margin-top: 10px
-        }
-        .content {
-            padding: 40px 40px 0
-        }
-        .table-block .el-form-item {
-            margin-bottom: 0 !important;
-        }
-        .search-area {
-            margin-bottom: 20px
-        }
-        .search-area .el-input__inner {
-            width: 160px
-        }
+.account-recharge {
+    /*表格样式*/
+    .table-block {
+        padding: 20px 20px 60px;
+        background: #fff;
+    }
+    .block {
+        float: right;
+        margin-top: 10px;
+    }
+    .content {
+        padding: 40px 40px 0;
+    }
+    .table-block .el-form-item {
+        margin-bottom: 0 !important;
+    }
+    .search-area {
+        margin-bottom: 20px;
+    }
+    .search-area .el-input__inner {
+        width: 160px;
+    }
 
-        /*弹窗样式*/
-        .el-dialog {
+    /*弹窗样式*/
+    .el-dialog {
+        width: 530px;
+        border-radius: 10px;
+    }
+
+    .el-dialog__header {
+        border-bottom: 1px solid #eee;
+        padding: 20px 20px 10px 50px;
+    }
+
+    .el-dialog__title {
+        color: #ff6868;
+    }
+
+    .el-dialog .el-input {
+        display: inline;
+    }
+
+    .el-dialog .el-input__inner {
+        width: 270px;
+    }
+
+    .remark-area .el-input__inner {
+        width: 360px;
+    }
+
+    .el-dialog .el-upload--text {
+        width: 100px;
+        height: 40px;
+        border: none;
+    }
+
+    .el-input__suffix {
+        line-height: 24px;
+    }
+
+    .icon-uploader {
+        float: right;
+        margin-right: 31px;
+        height: 33px;
+    }
+
+    .icon-uploader .el-button--small {
+        border-radius: 5px;
+        width: 100px;
+    }
+
+    .el-upload--text .el-icon-upload {
+        line-height: 0;
+        margin: 0;
+        color: #fff;
+        font-size: 14px;
+    }
+
+    .el-dialog__footer {
+        margin-right: 30px;
+    }
+
+    .el-upload-list {
+        display: none;
+    }
+    .detail {
+        margin: -10px 100px 10px;
+        width: 250px;
+        height: 120px;
+        background-color: #33b4ff;
+        border-radius: 5px;
+        color: #fff;
+        padding: 10px;
+    }
+    .member-title {
+        display: inline-block;
+    }
+    .pwd-mask {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 99;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.2);
+        .box {
+            position: relative;
             width: 530px;
-            border-radius: 10px
-        }
-
-        .el-dialog__header {
-            border-bottom: 1px solid #eee;
-            padding: 20px 20px 10px 50px
-        }
-
-        .el-dialog__title {
-            color: #ff6868
-        }
-
-        .el-dialog .el-input {
-            display: inline
-        }
-
-        .el-dialog .el-input__inner {
-            width: 270px
-        }
-
-        .remark-area .el-input__inner {
-            width: 360px
-        }
-
-        .el-dialog .el-upload--text {
-            width: 100px;
-            height: 40px;
-            border: none
-        }
-
-        .el-input__suffix {
-            line-height: 24px
-        }
-
-        .icon-uploader {
-            float: right;
-            margin-right: 31px;
-            height: 33px
-        }
-
-        .icon-uploader .el-button--small {
-            border-radius: 5px;
-            width: 100px
-        }
-
-        .el-upload--text .el-icon-upload {
-            line-height: 0;
-            margin: 0;
-            color: #fff;
-            font-size: 14px
-        }
-
-        .el-dialog__footer {
-            margin-right: 30px
-        }
-
-        .el-upload-list {
-            display: none
-        }
-        .detail{
-            margin: -10px 100px 10px;
-            width: 250px;
-            height: 120px;
-            background-color: #33b4ff;
-            border-radius: 5px;
-            color: #fff;
-            padding: 10px;
-        }
-        .member-title{
-            display: inline-block;
-        }
-        .pwd-mask {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 99;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.2);
-            .box {
-                position: relative;
-                width: 530px;
-                height: 305px;
-                background-color: #fff;
-                border-radius: 10px;
-                overflow: hidden;
-                .mask-title {
-                    width: 100%;
-                    height: 56px;
-                    border-bottom: 1px solid #ccc;
-                    padding-left: 45px;
-                    box-sizing: border-box;
-                    text-align: center;
-                    line-height: 56px;
-                    color: #ff6868;
-                    font-weight: 700;
-                    .ico {
-                        position: absolute;
-                        top: 16px;
-                        left: 228px;
-                        color: red;
-                        font-size: 20px;
-                    }
+            height: 305px;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            .mask-title {
+                width: 100%;
+                height: 56px;
+                border-bottom: 1px solid #ccc;
+                padding-left: 45px;
+                box-sizing: border-box;
+                text-align: center;
+                line-height: 56px;
+                color: #ff6868;
+                font-weight: 700;
+                .ico {
+                    position: absolute;
+                    top: 16px;
+                    left: 228px;
+                    color: red;
+                    font-size: 20px;
                 }
-                .mask-content {
-                    position: relative;
-                    width: 100%;
-                    height: 248px;
-                    overflow: hidden;
-                    padding: 30px 45px 0 45px;
-                    box-sizing: border-box;
-                    .del-tip {
-                        position: absolute;
-                        top: 30%;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        font-size: 22px;
-                    }
-                    .del-btn-group {
-                        width: 180px;
-                        display: flex;
-                        justify-content: space-between;
-                        position: absolute;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        bottom: 15%;
-                        .del-btn {
-                            background-color: #ff6868;
-                        }
+            }
+            .mask-content {
+                position: relative;
+                width: 100%;
+                height: 248px;
+                overflow: hidden;
+                padding: 30px 45px 0 45px;
+                box-sizing: border-box;
+                .del-tip {
+                    position: absolute;
+                    top: 30%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    font-size: 22px;
+                }
+                .del-btn-group {
+                    width: 180px;
+                    display: flex;
+                    justify-content: space-between;
+                    position: absolute;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    bottom: 15%;
+                    .del-btn {
+                        background-color: #ff6868;
                     }
                 }
             }
         }
-        .el-textarea__inner{
-            width: 346px;
-            height: 150px;
-            border-radius: 5px;
-            border: solid 1px #dddddd;
-            resize: none;
-        }
     }
-
-
+    .el-textarea__inner {
+        width: 346px;
+        height: 150px;
+        border-radius: 5px;
+        border: solid 1px #dddddd;
+        resize: none;
+    }
+}
 </style>

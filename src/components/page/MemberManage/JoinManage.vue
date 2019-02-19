@@ -14,6 +14,17 @@
             </el-card>
         <div class="table-block">
             <el-button @click="sendInvite" style="margin-bottom: 20px" type="primary" v-auth="'vip.joinManage.fqyq'">发起邀请</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <template>
                 <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
                     <el-table-column prop="id" label="邀请记录ID" align="center"></el-table-column>
@@ -35,17 +46,6 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination
-                        background
-                        :page-size="page.pageSize"
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page.currentPage"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
 
     </div>
@@ -98,7 +98,7 @@ export default {
         },
         // 查看邀请
         watchItem(row) {
-            this.$router.push({name: 'inviteLink', query: {joinManageLinkPage: row}});
+            this.$router.push({ name: 'inviteLink', query: { joinManageLinkPage: row }});
         },
         // 发起邀请
         sendInvite() {

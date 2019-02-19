@@ -38,6 +38,17 @@
         </el-card>
         <el-card style="margin-top: 10px">
             <el-button type="primary" style="margin-bottom: 10px" @click="rechargeDia = true">秀值充值</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table v-loading="tabLoading" :data="tableData" border stripe>
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column prop="payType" label="充值类型" align="center">
@@ -82,17 +93,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    :page-size="page.pageSize"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
         <el-dialog
             title="秀值充值"

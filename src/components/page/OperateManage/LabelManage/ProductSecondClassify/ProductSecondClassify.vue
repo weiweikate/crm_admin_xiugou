@@ -2,6 +2,17 @@
     <div class="second-classify">
         <v-breadcrumb :nav="['运营管理','标签管理','产品品类','产品二级类目']"></v-breadcrumb>
         <div class="table-block">
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <template>
                 <el-table :data="tableData" border style="width: 100%">
                     <el-table-column type="index" label="ID" align="center"></el-table-column>
@@ -19,17 +30,6 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
 
     </div>

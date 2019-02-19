@@ -158,7 +158,7 @@
                     console.log('findRoleById', res);
                     let data = res.data || {};
                     this.auth = data.privilegeInfo;
-                    console.log(this.auth);
+                    this.form.privilegeInfo = data.privilegeInfo;
                     this.$refs.auth.updateStatus(this.auth);
                 }).catch(err => {
                     console.log(err);
@@ -181,7 +181,7 @@
                                 request[action.method](data).then(res => {
                                     this.btnLoading = false;
                                     this.$message.success(action.msg);
-                                    this.$router.go(-1);
+                                    //this.$router.go(-1);
                                 }).catch(err => {
                                     this.btnLoading = false;
                                     this.$message.warning(err);

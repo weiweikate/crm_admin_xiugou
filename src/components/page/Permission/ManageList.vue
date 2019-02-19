@@ -20,6 +20,17 @@
         </el-card>
         <el-card class="con-card">
           <a href="#/addManger" target="_blank" v-auth="'quanxian.manageList.xjzh'" class="el-button el-button--primary el-button--small">新建管理员</a>
+          <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+          </mr-flying>
           <el-table v-loading="tableLoading" class="w-table" stripe :data="tableData" :height="height" border style="width: 100%">
               <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
               <el-table-column prop="name" label="管理员姓名" align="center"></el-table-column>
@@ -54,17 +65,6 @@
                 </template>
               </el-table-column>
           </el-table>
-          <div class="block">
-              <el-pagination
-                  background
-                  @size-change="handleSizeChange"
-                  :page-size="page.pageSize"
-                  @current-change="handleCurrentChange"
-                  :current-page="page.currentPage"
-                  layout="total, prev, pager, next, jumper"
-                  :total="page.totalPage">
-              </el-pagination>
-          </div>
         </el-card>
         <el-dialog :visible.sync="isShowResetPwd" title="修改密码" width="30%">
             <el-form ref="pwdForm" :rules="rules" :model="pwdForm" inline label-width="100px">

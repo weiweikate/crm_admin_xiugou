@@ -13,6 +13,17 @@
             </el-form>
         </el-card>
         <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="serviceNo" label="售后单号" align="center"></el-table-column>
@@ -31,10 +42,6 @@
                 </el-table-column>
                 <el-table-column prop="remark" label="备注" align="center"></el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
     </div>
 </template>

@@ -1,5 +1,8 @@
 <template>
     <div class="tab-content">
+        <mr-flying parentClass="content-box">
+            <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
+        </mr-flying>
         <el-table v-loading="tableLoading" :data="tableData" @selection-change="handleSelectionChange" border stripe>
             <el-table-column type="selection" label="全选" align="center"></el-table-column>
             <el-table-column type="index" label="编号" align="center"></el-table-column>
@@ -127,17 +130,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="block">
-            <el-pagination
-                background
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :page-size="page.pageSize"
-                :current-page="page.currentPage"
-                layout="total, prev, pager, next, jumper"
-                :total="page.totalPage">
-            </el-pagination>
-        </div>
     </div>
 </template>
 
