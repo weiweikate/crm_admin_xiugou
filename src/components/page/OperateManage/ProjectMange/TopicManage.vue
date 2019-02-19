@@ -4,6 +4,17 @@
         <el-card :body-style="{ padding: '20px 40px' }">
             <el-button @click="addTopic" type="primary" style="margin-bottom:20px" v-auth="'yunying.topicManage.tjzt'">添加专题</el-button>
             <el-button @click="topicTemplate" type="success" style="margin-bottom:20px" v-auth="'yunying.topicManage.ztmb'">专题模板</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table border v-loading="tableLoading" :data="tableData">
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="name" label="专题名称" align="center"></el-table-column>
@@ -31,17 +42,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
         <deletetoast :id="delId" :url="delUrl" :status="3" :isTopic="true" @msg="deleteToast" v-if="isShowDel"></deletetoast>
     </div>
@@ -50,8 +50,6 @@
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import deletetoast from '@/components/common/DeleteToast';
-    import utils from '@/utils/index.js';
-    import moment from 'moment';
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http.js';
     export default {
@@ -188,7 +186,7 @@
         .tip {
             color: #ff4e4e;
             font-size: 12px;
-            sortRank: absolute;
+            position: absolute;
             left: 0;
             top: 80%;
         }

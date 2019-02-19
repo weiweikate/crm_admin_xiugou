@@ -1,5 +1,16 @@
 <template>
     <div class="withdrawal-tab">
+        <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </mr-flying>
         <el-table :data="table" v-loading="pageLoading" border>
             <el-table-column prop='withdrawNum' label="提现编号" align="center"></el-table-column>
             <el-table-column prop='userName' label="申请人" align="center"></el-table-column>
@@ -42,17 +53,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="block">
-            <el-pagination
-                background
-                :page-size="page.pageSize"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="page.currentPage"
-                layout="total, prev, pager, next, jumper"
-                :total="page.totalPage">
-            </el-pagination>
-        </div>
         <!-- 同意/驳回弹窗 -->
         <el-dialog :title="title" :visible.sync="isShowAuditDia" center width="30%">
             <p v-if='status == 1' style="text-align:center;font-size:18px">确认({{name}})的提现申请?</p>

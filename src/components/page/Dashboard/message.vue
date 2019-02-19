@@ -17,6 +17,17 @@
             </el-form>
         </el-card>
         <el-card style="margin-top: 10px ">
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :page-size="page.pageSize"
+                    :current-page="page.currentPage"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table ref="table" v-loading="loading" :data="tableData" border stripe @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="消息类型">
@@ -47,17 +58,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :page-size="page.pageSize"
-                    :current-page="page.currentPage"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
             <span class="block" style="float: left;">
                 <span class="select-all" @click="selectAll([...tableData])" >全选</span>
                 <el-button type="primary" @click="changeStatus()" >标记为已读</el-button>

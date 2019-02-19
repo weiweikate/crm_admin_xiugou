@@ -3,6 +3,17 @@
         <v-breadcrumb :nav="['运营管理','标签管理','产品品类','产品标签类型设置']"></v-breadcrumb>
         <div class="table-block">
             <el-button type="primary" style="margin-bottom: 20px" @click="addClassify">添加产品标签类型</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <template>
                 <el-table :data="tableData" border style="width: 100%">
                     <el-table-column type="index" label="编号" align="center"></el-table-column>
@@ -17,17 +28,6 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
 
         <!--添加弹窗-->
@@ -51,8 +51,6 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
 import deleteToast from '@/components/common/DeleteToast';
-import utils from '@/utils/index.js';
-import * as pApi from '@/privilegeList/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 

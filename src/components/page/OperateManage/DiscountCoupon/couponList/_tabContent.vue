@@ -1,5 +1,16 @@
 <template>
     <div class="tab-content">
+        <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </mr-flying>
         <el-table v-loading="tableLoading" border :data="tableData">
             <el-table-column prop="id" label="ID" align="center" width="50"></el-table-column>
             <el-table-column prop="name" label="券名称" align="center"></el-table-column>
@@ -23,7 +34,7 @@
                 </template>
             </el-table-column>
             <el-table-column label="可用周期" align="center">
-                <template slot-scope="scope">/</template>
+                <template>/</template>
             </el-table-column>
             <el-table-column prop="userLevelIds" label="可使用用户" align="center"></el-table-column>
             <el-table-column label="领取人/次" align="center">
@@ -72,17 +83,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="block">
-            <el-pagination
-                background
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="page.currentPage"
-                :page-size="page.pageSize"
-                layout="total, prev, pager, next, jumper"
-                :total="page.totalPage">
-            </el-pagination>
-        </div>
         <div class="mask" v-if="addMask">
             <div class="content">
                 <div class="item"><span>剩余库存：</span>{{left}}份</div>

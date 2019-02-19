@@ -13,6 +13,17 @@
         </el-form>
       </el-card>
       <el-card style='margin-top:20px' :body-style="{ padding: '30px' }">
+          <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </mr-flying>
         <el-table :data="table" border>
           <el-table-column prop='no' label="编号" align="center"></el-table-column>
           <el-table-column prop='no' label="开始时间" align="center"></el-table-column>
@@ -41,16 +52,6 @@
               </template>
           </el-table-column>
         </el-table>
-        <div class="block">
-          <el-pagination
-                  background
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="page.currentPage"
-                  layout="total, prev, pager, next, jumper"
-                  :total="page.totalPage">
-          </el-pagination>
-        </div>
       </el-card>
       <!-- 结算弹窗 -->
       <el-dialog title="确认结算" :visible.sync="isShowdia" width="30%" center >
@@ -78,8 +79,6 @@
 </template>
 
 <script>
-import utils from '@/utils/index.js';
-import * as api from '@/api/SettlementMange/index.js';
 import vBreadcrumb from '../../common/Breadcrumb.vue';
 export default {
     components: { vBreadcrumb },

@@ -4,6 +4,17 @@
         <v-breadcrumb :nav="['结算管理','利润分配设置']"></v-breadcrumb>
         <el-card :body-style="{ padding: '30px' }">
             <el-button type="primary" style="margin-bottom:10px" @click="createTpl">创建利润模板</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table :data="tableData" border stripe v-loading="tabLoading">
                 <el-table-column type="index" :index="handleIndex" label="编号" align="center"></el-table-column>
                 <el-table-column prop='name' label="利润分配模板名称" align="center"></el-table-column>
@@ -39,10 +50,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
         <!--删除弹窗-->
         <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' tip="取消启用" v-if="isShowDelToast"></delete-toast>

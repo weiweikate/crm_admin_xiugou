@@ -1,5 +1,9 @@
 <template>
     <div class="tab-content">
+        <mr-flying parentClass="content-box">
+            <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
+            </el-pagination>
+        </mr-flying>
         <el-table v-loading="tableLoading" border :data="tableData">
             <el-table-column type="index" label="序号" align="center"></el-table-column>
             <el-table-column prop="merchantName" label="商家名称" align="center"></el-table-column>
@@ -23,10 +27,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="block">
-            <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
-            </el-pagination>
-        </div>
         <el-dialog title="是否确认处理" :visible.sync="mask">
             <div style="text-align:center">
                 是否已经受理该商家提交信息?
