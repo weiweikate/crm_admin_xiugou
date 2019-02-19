@@ -120,7 +120,7 @@ const getSrc = (type, code) => {
     if (href.indexOf('sharegoodsmall.com') === -1) { // 本地环境
         first = APP.proxy === 'dev' ? 'http://devh5.sharegoodsmall.com/' : 'http://testh5.sharegoodsmall.com/';
     } else {
-        first = first.replace('admin.sharegoodsmall', 'h5.sharegoodsmall');
+        first = href.replace('admin.sharegoodsmall', 'h5.sharegoodsmall');
         const index = first.indexOf('#');
         first = first.substring(0, index);
     }
@@ -154,6 +154,13 @@ const ArrayToString = (param) => {
 const numberToString = (param) => {
     return typeof param === 'number' ? param.toString() : param;
 };
+// 删除对象空字符串
+const deleteEmptyString = (object, param) => {
+    if (object[param] === '') {
+        delete object[param];
+        return object;
+    }
+};
 // 对象值前后去空格
 const trimForm = (form) => {
     for (const key in form) {
@@ -176,5 +183,6 @@ export default {
     stringToNumber,
     ArrayToString,
     numberToString,
+    deleteEmptyString,
     trimForm
 };

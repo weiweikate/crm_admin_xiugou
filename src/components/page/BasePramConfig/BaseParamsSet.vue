@@ -10,13 +10,10 @@
                 <el-form-item label="普通订单关闭时间" prop="orderCancleTime">
                     <el-input v-model.number="ruleForm.orderCancleTime" class="input-sty"></el-input><span class="point">小时</span>
                 </el-form-item>
-                <el-form-item label="订单完成超时时间" prop="goodsConfirmTime">
+                <el-form-item label="默认确认收货时间" prop="goodsConfirmTime">
                     <el-input v-model.number="ruleForm.goodsConfirmTime" class="input-sty"></el-input><span class="point">天</span>
                 </el-form-item>
-                <el-form-item label="晒单超时时间" prop="commentTime">
-                    <el-input v-model.number="ruleForm.commentTime" class="input-sty"></el-input><span class="point">天</span>
-                </el-form-item>
-                <el-form-item label="评价超时时间" prop="evaluationCancleTime">
+                <el-form-item label="晒单超时时间" prop="evaluationCancleTime">
                     <el-input v-model.number="ruleForm.evaluationCancleTime" class="input-sty"></el-input><span class="point">天</span>
                 </el-form-item>
                 <el-form-item label="售后回寄超时时间" prop="expressSendTime">

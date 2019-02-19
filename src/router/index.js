@@ -155,6 +155,12 @@ export const asyncRouterMap = [
                 path: '/productList',
                 component: resolve => require(['../components/page/BrandProduct/ProductManage/ProductList.vue'], resolve),
                 meta: { title: '产品管理', noKeepAlive: true }
+            },
+            {
+                name: 'shareOrder',
+                path: '/shareOrder',
+                component: resolve => require(['../components/page/BrandProduct/shareOrder/shareOrder.vue'], resolve),
+                meta: { title: '晒单管理', noKeepAlive: true }
             }
         ]
     },

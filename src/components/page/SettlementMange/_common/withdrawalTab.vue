@@ -176,7 +176,7 @@ export default {
             data.page = val;
             data.pageSize = this.page.pageSize;
             this.pageLoading = true;
-            request.queryUserWithdrawList(this.utils.trimForm(data)).then(res => {
+            request.queryUserWithdrawList(this.$utils.trimForm(data)).then(res => {
                 this.pageLoading = false;
                 this.table = res.data.data;
                 this.page.totalPage = res.data.totalNum;
