@@ -1,5 +1,16 @@
 <template>
     <div class="tab-content">
+        <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </mr-flying>
         <el-table v-loading="tableLoading" border :data="tableData">
             <el-table-column type="index" align="center" label="编号" min-width="100"></el-table-column>
             <el-table-column prop="packageName" label="套餐名称" align="center"></el-table-column>
@@ -54,17 +65,6 @@
             </el-table-column>
 
         </el-table>
-        <div class="block">
-            <el-pagination
-                background
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="page.currentPage"
-                :page-size="page.pageSize"
-                layout="total, prev, pager, next, jumper"
-                :total="page.totalPage">
-            </el-pagination>
-        </div>
         <!--取消弹窗-->
         <div class="pwd-mask" v-if="showMask">
             <div class="box">
@@ -87,7 +87,6 @@
 </template>
 
 <script>
-    import moment from 'moment';
     import { myMixinTable } from '@/JS/commom';
     import request from '@/http/http.js';
     import icon from '@/components/common/ico.vue';
@@ -119,14 +118,16 @@
                 this.data.pageSize = this.page.pageSize;
                 this.tableLoading = true;
                 this.page.currentPage = val;
-                request.queryPromotionPromoterPageList(this.data).then(res => {
+                request.queryPromotionPromoterPageList(this.$utils.trimForm(this.data)).then(res => {
                     this.tableData = [];
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                     this.tableLoading = false;
                 })
                     .catch(err => {
+                        console.log(err);
                         this.tableLoading = false;
+                        console.log(err);
                     });
             },
             // 取消操作
@@ -166,13 +167,15 @@
                     this.btnLoading = false;
                 })
                     .catch(err => {
+                        console.log(err);
                         this.btnLoading = false;
+                        console.log(err);
                     });
             },
             // 查看详情
             toDetail(row) {
                 sessionStorage.setItem('promotionOrderInfoId', row.id);
-                this.$router.push({ path: '/promotionOrderInfo', query: { promotionOrderInfoId: row.id}});
+                this.$router.push({ path: '/promotionOrderInfo', query: { promotionOrderInfoId: row.id }});
             }
         }
     };

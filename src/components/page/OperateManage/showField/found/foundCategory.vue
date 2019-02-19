@@ -17,6 +17,17 @@
         </el-card>
         <el-card style="margin-top: 10px">
             <el-button type="primary" style="margin-bottom: 10px" @click="$router.push('addFoundCategory')" v-auth="'yunying.showHome.xcflgl.xjfl'">新建分类</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table v-loading="loading" :data="tableData" border stripe @sort-change="sortChange">
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column label="图标" align="center">
@@ -40,17 +51,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
         <!--删除弹窗-->
         <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
@@ -96,9 +96,9 @@
                 });
             },
             sortChange({ column, prop, order }) {
-                if(order === 'ascending'){
+                if (order === 'ascending') {
                     this.form.rank = 'asc';
-                }else{
+                } else {
                     this.form.rank = 'desc';
                 }
                 this.getList();
@@ -114,6 +114,7 @@
                     this.$message.success(res.msg);
                     row.status = status;
                 }).catch(err => {
+                    console.log(err);
                 });
             },
             // 删除

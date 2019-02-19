@@ -39,6 +39,9 @@
         <div class="table-block">
             <el-button type="primary" style="margin-bottom: 20px" @click="addProperty">添加属性</el-button>
             <el-button type="success" style="margin-bottom: 20px" @click="deleteProperty">删除</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
+            </mr-flying>
             <template>
                 <el-table :data="tableData" v-loading="tableLoading" border style="width: 100%" @selection-change="handleSelectionChange">
                     <el-table-column
@@ -80,17 +83,6 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div class="block">
-                    <el-pagination
-                        background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page.currentPage"
-                        :page-size="page.pageSize"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                    </el-pagination>
-                </div>
             </template>
         </div>
 

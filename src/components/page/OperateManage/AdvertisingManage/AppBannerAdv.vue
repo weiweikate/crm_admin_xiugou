@@ -4,6 +4,17 @@
         <el-card :body-style="{ padding: '20px 40px' }">
             <el-button @click="addItem" type="primary" style="margin-bottom:20px" v-if="pageType!=10">{{addName}}
             </el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table border :data="tableData">
                 <el-table-column type="index" label="编号" align="center" v-if="pageType!=10" key="0"></el-table-column>
                 <el-table-column prop="firstStageId" label="编号" align="center" v-if="pageType == 10" key="12"></el-table-column>
@@ -53,10 +64,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
         <!--添加/编辑弹窗-->
         <el-dialog :title="title" :visible.sync="mask" :before-close="closeDia">

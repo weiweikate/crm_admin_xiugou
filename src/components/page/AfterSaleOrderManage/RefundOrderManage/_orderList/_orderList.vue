@@ -1,5 +1,8 @@
 <template>
     <div class="refund-order-list" v-loading="pageLoading">
+        <mr-flying parentClass="content-box">
+          <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
+       </mr-flying>
         <el-table border :data="tableData">
             <el-table-column prop="refundNo" label="退款单号" align="center"></el-table-column>
             <el-table-column prop="serviceNo" label="售后单号" align="center"></el-table-column>
@@ -39,17 +42,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="block">
-            <el-pagination
-                background
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :page-size="page.pageSize"
-                :current-page="page.currentPage"
-                layout="total, prev, pager, next, jumper"
-                :total="page.totalPage">
-            </el-pagination>
-        </div>
         <el-dialog title="手工退款备注" :visible.sync="mask">
             <el-form>
                 <el-input type="textarea" v-model="remarks" placeholder="仅需操作第三方退款金额，余额由系统自动退回，请详细记录手工退款账号等信息。" @input="inputRemark" maxlength="100"></el-input>
@@ -88,7 +80,7 @@
                 this.data.size = this.page.pageSize;
                 this.tableData = [];
                 this.pageLoading = true;
-                request.queryRefundPage(this.data).then(res => {
+                request.queryRefundPage(this.$utils.trimForm(this.data)).then(res => {
                     this.pageLoading = false;
                     this.tableData = res.data ? res.data.data : [];
                     this.page.totalPage = res.data.totalNum;

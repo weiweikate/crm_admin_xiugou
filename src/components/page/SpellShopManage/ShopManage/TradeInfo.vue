@@ -30,6 +30,17 @@
         </el-form>
       </el-card>
       <el-card :body-style="{ padding: '20px 40px',}" style="margin-top:20px">
+          <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </mr-flying>
         <el-table :data="tableData" border>
           <el-table-column prop="id" label="编号" align="center"></el-table-column>
           <el-table-column prop="id" label="订单号" align="center"></el-table-column>
@@ -39,16 +50,6 @@
           <el-table-column prop="id" label="利润（元）" align="center"></el-table-column>
           <el-table-column prop="id" label="分红金（元）" align="center"></el-table-column>
         </el-table>
-        <div class="block">
-            <el-pagination
-                background
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="page.currentPage"
-                layout="total, prev, pager, next, jumper"
-                :total="page.totalPage">
-            </el-pagination>
-        </div>
       </el-card>
   </div>
 </template>

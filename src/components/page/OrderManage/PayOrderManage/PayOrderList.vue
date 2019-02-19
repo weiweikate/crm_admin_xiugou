@@ -38,6 +38,17 @@
             </el-form>
         </el-card>
         <div class="table-block">
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table v-loading="tableLoading" :data="tableData" border style="width: 100%">
                <el-table-column prop="tradeNo" label="支付单号" align="center"></el-table-column>
                <el-table-column prop="platformOrderNo" label="平台订单号" align="center"></el-table-column>
@@ -71,17 +82,6 @@
                    </template>
                </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                        background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page.currentPage"
-                        :page-size="page.pageSize"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
     </div>
 </template>
@@ -132,7 +132,7 @@
                 };
                 this.page.currentPage = val;
                 this.tableLoading = true;
-                request.queryPayments(data).then(res => {
+                request.queryPayments(this.$utils.trimForm(data)).then(res => {
                     this.tableLoading = false;
                     if (!res.data.data) return;
                     this.tableData = res.data.data;

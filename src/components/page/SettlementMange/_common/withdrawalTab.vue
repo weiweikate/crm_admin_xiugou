@@ -1,5 +1,16 @@
 <template>
     <div class="withdrawal-tab">
+        <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </mr-flying>
         <el-table :data="table" v-loading="pageLoading" border>
             <el-table-column prop='withdrawNum' label="提现编号" align="center"></el-table-column>
             <el-table-column prop='userName' label="申请人" align="center"></el-table-column>
@@ -42,17 +53,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="block">
-            <el-pagination
-                background
-                :page-size="page.pageSize"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="page.currentPage"
-                layout="total, prev, pager, next, jumper"
-                :total="page.totalPage">
-            </el-pagination>
-        </div>
         <!-- 同意/驳回弹窗 -->
         <el-dialog :title="title" :visible.sync="isShowAuditDia" center width="30%">
             <p v-if='status == 1' style="text-align:center;font-size:18px">确认({{name}})的提现申请?</p>
@@ -106,7 +106,6 @@
 
 <script>
 import utils from '@/utils/index.js';
-import moment from 'moment';
 import { queryDictonary, myMixinTable } from '@/JS/commom';
 import request from '@/http/http';
 export default {
@@ -177,7 +176,7 @@ export default {
             data.page = val;
             data.pageSize = this.page.pageSize;
             this.pageLoading = true;
-            request.queryUserWithdrawList(data).then(res => {
+            request.queryUserWithdrawList(this.utils.trimForm(data)).then(res => {
                 this.pageLoading = false;
                 this.table = res.data.data;
                 this.page.totalPage = res.data.totalNum;
@@ -188,7 +187,7 @@ export default {
         },
         // 账户明细
         accountMsg(row) {
-            this.$router.push({ path: '/cashAccountBalance', query: { memberAccMsg: {memberCode: row.userCode, nickname: row.userName || ''} }});
+            this.$router.push({ path: '/cashAccountBalance', query: { memberAccMsg: { memberCode: row.userCode, nickname: row.userName || '' }}});
         },
         // 审核
         audit(row, status) {

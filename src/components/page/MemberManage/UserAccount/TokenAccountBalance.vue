@@ -3,6 +3,17 @@
         <breadcrumb :nav='nav'></breadcrumb>
         <el-card>
             <p class="title">{{name}}的秀豆账户明细</p>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table border :data="tableData" v-loading="tableLoading">
                 <el-table-column prop="serialNo" label="流水号" align="center" min-width="180"></el-table-column>
                 <el-table-column label="收入/支出" align="center" width="200">
@@ -36,17 +47,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                    background
-                    :page-size="page.pageSize"
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
     </div>
 </template>
@@ -86,7 +86,7 @@
                     pageSize: this.page.pageSize
                 };
                 this.tableLoading = true;
-                request.queryMemBeanList(data).then(res => {
+                request.queryMemBeanList(this.$utils.trimForm(data)).then(res => {
                     this.tableLoading = false;
                     this.tableData = res.data.data;
                     this.page.currentPage = res.data.currentPage;

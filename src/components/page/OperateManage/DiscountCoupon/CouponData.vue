@@ -30,6 +30,17 @@
                     <!--</el-form-item>-->
                 </el-form>
             </div>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table v-loading="tableLoading" border :data="tableData" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" align="center" width="50"></el-table-column>
                 <el-table-column prop="code" label="优惠券编码"></el-table-column>
@@ -68,10 +79,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
-                </el-pagination>
-            </div>
             <div class="operate-table">
                 <el-popover placement="top" width="160" v-model="isShowPop">
                     <p>确定失效吗？</p>
@@ -160,7 +167,7 @@ export default {
             this.page.currentPage = val;
             this.tableLoading = true;
             request
-                .queryUserCouponList(data)
+                .queryUserCouponList(this.$utils.trimForm(data))
                 .then(res => {
                     if (!res.data) return;
                     this.tableData = [];

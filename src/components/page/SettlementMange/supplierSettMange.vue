@@ -16,6 +16,17 @@
       </el-card>
       <el-card style='margin-top:20px' :body-style="{ padding: '30px' }">
         <el-button style="margin-bottom:10px" type="primary" @click="exportRecord"><a style="color: #fff" :href="downLoadUrl">导出对账单</a></el-button>
+        <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </mr-flying>
         <el-table v-loading="loading" :data="tableData" :span-method="arraySpanMethod"  border>
           <el-table-column prop='supplierName' label="供应商" align="center"></el-table-column>
           <el-table-column prop='productName' label="产品名称" align="center"></el-table-column>
@@ -32,17 +43,6 @@
               </template>
           </el-table-column>
         </el-table>
-        <div class="block">
-          <el-pagination
-                  background
-                  :page-size="page.pageSize"
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="page.currentPage"
-                  layout="total, prev, pager, next, jumper"
-                  :total="page.totalPage">
-          </el-pagination>
-        </div>
       </el-card>
     </div>
 </template>
@@ -91,7 +91,7 @@ export default {
                 page: val
             };
             this.loading = true;
-            request.querySupplierByProductId(data).then(res => {
+            request.querySupplierByProductId(this.$utils.trimForm(data)).then(res => {
                 this.loading = false;
                 const table = res.data.data || [];
                 this.tableData = [];
