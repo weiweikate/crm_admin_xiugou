@@ -164,7 +164,7 @@ export default {
             };
             this.page.currentPage = val;
             request
-                .getStoreList(data)
+                .getStoreList(this.$utils.trimForm(data))
                 .then(res => {
                     this.tableData = [];
                     if (!res.data) return;

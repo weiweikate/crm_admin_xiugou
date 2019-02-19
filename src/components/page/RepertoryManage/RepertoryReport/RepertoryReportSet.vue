@@ -274,7 +274,7 @@
                     return this.$message.warning('请输入入库方名称或编码');
                 }
                 this.page.currentPage = val;
-                request.SPUList(data).then(res => {
+                request.SPUList(this.$utils.trimForm(data)).then(res => {
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                 }).catch(err => {

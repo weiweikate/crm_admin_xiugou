@@ -80,7 +80,7 @@
                 this.data.size = this.page.pageSize;
                 this.tableData = [];
                 this.pageLoading = true;
-                request.queryRefundPage(this.data).then(res => {
+                request.queryRefundPage(this.$utils.trimForm(this.data)).then(res => {
                     this.pageLoading = false;
                     this.tableData = res.data ? res.data.data : [];
                     this.page.totalPage = res.data.totalNum;

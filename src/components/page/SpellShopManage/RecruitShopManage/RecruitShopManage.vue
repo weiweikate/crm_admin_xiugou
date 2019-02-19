@@ -108,7 +108,7 @@ export default {
                 status: 3
             };
             this.page.currentPage = val;
-            request.getStoreList(data).then(res => {
+            request.getStoreList(this.$utils.trimForm(data)).then(res => {
                 this.tableData = [];
                 if (!res.data) return;
                 this.tableData = res.data.data;

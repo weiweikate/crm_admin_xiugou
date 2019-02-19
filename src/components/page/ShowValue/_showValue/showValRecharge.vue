@@ -162,7 +162,7 @@ export default {
                 status: this.status
             };
             this.tabLoading = true;
-            request.queryRecordPageList(data).then(res => {
+            request.queryRecordPageList(this.$utils.trimForm(data)).then(res => {
                 this.tabLoading = false;
                 if (res.data.data.length !== 0) {
                     res.data.data.forEach(v => {

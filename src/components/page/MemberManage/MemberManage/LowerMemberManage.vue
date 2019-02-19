@@ -178,7 +178,7 @@
                 data.cityId = this.address[1];
                 data.areaId = this.address[2];
                 that.tableLoading = true;
-                request.queryUserPageList(data).then(res => {
+                request.queryUserPageList(this.$utils.trimForm(data)).then(res => {
                     that.tableLoading = false;
                     that.tableData = [];
                     that.tableData = res.data.data;

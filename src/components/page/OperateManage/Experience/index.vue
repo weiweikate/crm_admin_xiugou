@@ -189,7 +189,7 @@
                 data.page = val;
                 data.pageSize = this.page.pageSize;
                 this.tableLoading = true;
-                request.queryExpPageList(data).then(res => {
+                request.queryExpPageList(this.$utils.trimForm(data)).then(res => {
                     this.tableLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;

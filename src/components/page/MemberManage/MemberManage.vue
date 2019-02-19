@@ -204,7 +204,7 @@ export default {
             data.cityId = this.address[1];
             data.areaId = this.address[2];
             this.tableLoading = true;
-            request.queryUserPageList(data).then(res => {
+            request.queryUserPageList(this.$utils.trimForm(data)).then(res => {
                 this.tableLoading = false;
                 this.tableData = [];
                 this.tableData = res.data.data;
