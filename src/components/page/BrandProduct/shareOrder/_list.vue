@@ -59,11 +59,11 @@
             </el-table-column>
             <el-table-column label="操作" width="220" fixed="right">
                 <template slot-scope="scope">
-                    <el-button type="primary" slot="reference" v-if="!scope.row.reply" @click="replyItem(scope.row,scope.$index)">回复</el-button>
-                    <el-button type="success" v-if="!scope.row.stick&&scope.row.status==2" @click="stickItem(scope.row,true)">置顶</el-button>
-                    <el-button type="success" v-if="scope.row.stick&&scope.row.status==2" @click="stickItem(scope.row,false)">取消置顶</el-button>
-                    <el-button type="warning" v-if="scope.row.status==2" @click="displayItem(scope.row,false)">下架</el-button>
-                    <el-button type="warning" v-else @click="displayItem(scope.row,true)">上架</el-button>
+                    <el-button type="primary" slot="reference" v-if="!scope.row.reply" @click="replyItem(scope.row,scope.$index)" v-auth="'brand.shareOrderManage.sdhf'">回复</el-button>
+                    <el-button type="success" v-if="!scope.row.stick&&scope.row.status==2" @click="stickItem(scope.row,true)" v-auth="'brand.shareOrderManage.zdsd'">置顶</el-button>
+                    <el-button type="success" v-if="scope.row.stick&&scope.row.status==2" @click="stickItem(scope.row,false)" v-auth="'brand.shareOrderManage.zdsd'">取消置顶</el-button>
+                    <el-button type="warning" v-if="scope.row.status==2" @click="displayItem(scope.row,false)" v-auth="'brand.shareOrderManage.xj'">下架</el-button>
+                    <el-button type="warning" v-else @click="displayItem(scope.row,true)" v-auth="'brand.shareOrderManage.sj'">上架</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -146,7 +146,7 @@ export default {
                             v.linkList.push(temp);
                         }
                         if (v.imgUrl) {
-                            const imgUrls = v.imgUrl.split(',');
+                            const imgUrls = v.imgUrl.split('$');
                             v.imgUrls = imgUrls;
                             for (const j in imgUrls) {
                                 const temp = {
@@ -295,8 +295,9 @@ export default {
     .product-info {
         display: flex;
         img {
-            width: 100px;
-            height: 100px;
+            width: 60px;
+            height: 60px;
+            margin-right: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
