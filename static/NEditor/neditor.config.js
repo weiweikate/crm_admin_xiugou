@@ -103,7 +103,7 @@
                 // 'simpleupload',
                 'insertimage',
                 'emotion',
-                'scrawl',
+                // 'scrawl',
                 // 'insertvideo',
                 // 'music',
                 'attachment',
