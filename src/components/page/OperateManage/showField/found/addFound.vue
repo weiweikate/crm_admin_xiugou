@@ -82,7 +82,7 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import * as api from '@/api/api.js';
     import request from '@/http/http';
-    import VueNeditorWrap from 'vue-neditor-wrap'
+    import VueNeditorWrap from 'vue-neditor-wrap';
     export default {
         components: { vBreadcrumb, VueNeditorWrap },
         data() {

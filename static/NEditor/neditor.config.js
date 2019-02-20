@@ -45,7 +45,7 @@
         toolbars: [
             [
                 'fullscreen',
-                'source',
+                // 'source',
                 '|',
                 'undo',
                 'redo',
@@ -65,6 +65,7 @@
                 '|',
                 'forecolor',
                 'backcolor',
+                'background',
                 'insertorderedlist',
                 'insertunorderedlist',
                 'selectall',
@@ -93,7 +94,7 @@
                 '|',
                 'link',
                 'unlink',
-                'anchor',
+                // 'anchor',
                 '|',
                 'imagenone',
                 'imageleft',
@@ -106,22 +107,21 @@
                 // 'scrawl',
                 // 'insertvideo',
                 // 'music',
-                'attachment',
-                'map',
-                'gmap',
+                // 'attachment',
+                // 'map',
+                // 'gmap',
                 'insertframe',
                 //  'webapp',
                 'pagebreak',
-                'template',
-                'background',
+                // 'template',
                 '|',
-                'insertcode',
+                // 'insertcode',
                 'horizontal',
                 'date',
                 'time',
                 'spechars',
-                'snapscreen',
-                'wordimage',
+                // 'snapscreen',
+                // 'wordimage',
                 '|',
                 'inserttable',
                 'deletetable',
@@ -141,7 +141,7 @@
                 // 'print',
                 'preview',
                 'searchreplace',
-                'drafts',
+                // 'drafts',
                 'help'
             ]
         ],
@@ -394,9 +394,9 @@
 
         // autoFloatEnabled
         // 是否保持toolbar的位置不动,默认true
-        // ,autoFloatEnabled:true
+        autoFloatEnabled: false,
         // 浮动时工具栏距离浏览器顶部的高度，用于某些具有固定头部的页面
-        // ,topOffset:30
+        topOffset: 70,
         // 编辑器底部距离工具栏高度(如果参数大于等于编辑器高度，则设置无效)
         // ,toolbarTopOffset:400
 
@@ -505,7 +505,20 @@
             header: [],
             hr: [],
             i: ['class', 'style'],
-            img: ['style', 'src', 'alt', 'title', 'width', 'height', 'id', '_src', '_url', 'loadingclass', 'class', 'data-latex'],
+            img: [
+                'style',
+                'src',
+                'alt',
+                'title',
+                'width',
+                'height',
+                'id',
+                '_src',
+                '_url',
+                'loadingclass',
+                'class',
+                'data-latex'
+            ],
             ins: ['datetime'],
             li: ['class', 'style'],
             mark: [],
@@ -530,10 +543,48 @@
             tt: [],
             u: [],
             ul: ['class', 'style'],
-            video: ['autoplay', 'controls', 'loop', 'preload', 'src', 'height', 'width', 'class', 'style'],
+            video: [
+                'autoplay',
+                'controls',
+                'loop',
+                'preload',
+                'src',
+                'height',
+                'width',
+                'class',
+                'style'
+            ],
             source: ['src', 'type'],
-            embed: ['type', 'class', 'pluginspage', 'src', 'width', 'height', 'align', 'style', 'wmode', 'play', 'autoplay', 'loop', 'menu', 'allowscriptaccess', 'allowfullscreen', 'controls', 'preload'],
-            iframe: ['src', 'class', 'height', 'width', 'max-width', 'max-height', 'align', 'frameborder', 'allowfullscreen']
+            embed: [
+                'type',
+                'class',
+                'pluginspage',
+                'src',
+                'width',
+                'height',
+                'align',
+                'style',
+                'wmode',
+                'play',
+                'autoplay',
+                'loop',
+                'menu',
+                'allowscriptaccess',
+                'allowfullscreen',
+                'controls',
+                'preload'
+            ],
+            iframe: [
+                'src',
+                'class',
+                'height',
+                'width',
+                'max-width',
+                'max-height',
+                'align',
+                'frameborder',
+                'allowfullscreen'
+            ]
         }
     };
 
@@ -554,10 +605,12 @@
         var basePath = confUrl;
 
         if (/^(\/|\\\\)/.test(confUrl)) {
-            basePath =
-                /^.+?\w(\/|\\\\)/.exec(docUrl)[0] + confUrl.replace(/^(\/|\\\\)/, '');
+            basePath = /^.+?\w(\/|\\\\)/.exec(docUrl)[0] + confUrl.replace(/^(\/|\\\\)/, '');
         } else if (!/^[a-z]+:/i.test(confUrl)) {
-            docUrl = docUrl.split('#')[0].split('?')[0].replace(/[^\\\/]+$/, '');
+            docUrl = docUrl
+                .split('#')[0]
+                .split('?')[0]
+                .replace(/[^\\\/]+$/, '');
 
             basePath = docUrl + '' + confUrl;
         }
@@ -566,13 +619,18 @@
     }
 
     function optimizationPath(path) {
-        var protocol = /^[a-z]+:\/\// .exec(path)[0],
-            tmp = null,
-            res = [];
+        var protocol = /^[a-z]+:\/\//.exec(path)[0];
 
-        path = path.replace(protocol, '').split('?')[0].split('#')[0];
+        var tmp = null;
 
-        path = path.replace(/\\/g, '/').split(/\// );
+        var res = [];
+
+        path = path
+            .replace(protocol, '')
+            .split('?')[0]
+            .split('#')[0];
+
+        path = path.replace(/\\/g, '/').split(/\//);
 
         path[path.length - 1] = '';
 
