@@ -15,6 +15,8 @@ export const querySettlementRecordListByCalcType = '/admin/settlementRecord/quer
 export const querySettlementTotalList = '/admin/settlementTotal/querySettlementTotalList';
 // 无主账户资金收入明细
 export const querySettlementRecordList = '/admin/settlementRecord/querySettlementRecordList';
+// 注销账户收入明细
+export const queryConfineBalancePageList = '/user/regConfine/queryConfineBalancePageList';
 
 // 收益金比例设置
 export const updateConfigBalanceInProfitRatio = '/admin/config/updateConfigBalanceInProfitRatio';

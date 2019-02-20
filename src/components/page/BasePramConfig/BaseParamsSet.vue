@@ -10,10 +10,10 @@
                 <el-form-item label="普通订单关闭时间" prop="orderCancleTime">
                     <el-input v-model.number="ruleForm.orderCancleTime" class="input-sty"></el-input><span class="point">小时</span>
                 </el-form-item>
-                <el-form-item label="订单完成超时时间" prop="goodsConfirmTime">
+                <el-form-item label="默认确认收货时间" prop="goodsConfirmTime">
                     <el-input v-model.number="ruleForm.goodsConfirmTime" class="input-sty"></el-input><span class="point">天</span>
                 </el-form-item>
-                <el-form-item label="评价超时时间" prop="evaluationCancleTime">
+                <el-form-item label="晒单超时时间" prop="evaluationCancleTime">
                     <el-input v-model.number="ruleForm.evaluationCancleTime" class="input-sty"></el-input><span class="point">天</span>
                 </el-form-item>
                 <el-form-item label="售后回寄超时时间" prop="expressSendTime">
@@ -72,6 +72,7 @@ export default {
                 activityOrderCancelTime: '', // 活动订单关闭时间
                 orderCancleTime: '', // 普通订单关闭时间
                 goodsConfirmTime: '', // 订单完成超时时间
+                commentTime: '', // 晒单超时时间
                 evaluationCancleTime: '', // 评价超时时间
                 expressSendTime: '', // 售后回寄超时时间
                 afterSaleTimes: '', // 售后申请次数
@@ -126,6 +127,13 @@ export default {
                         validator: checkoutDays,
                         trigger: 'blur'
                     }
+                ],
+                commentTime: [
+                    {
+                        required: true,
+                        validator: checkoutDays,
+                        trigger: 'blur'
+                    }
                 ]
             }
         };
@@ -137,7 +145,7 @@ export default {
         // 获取数据
         getInfo() {
             const data = {
-                codes: 'time_activity_order_cancel,time_order_cancel,time_goods_confirm,time_express_send,time_evaluation_cancel,times_after_sale,time_after_sale_cancel'
+                codes: 'time_activity_order_cancel,time_order_cancel,time_goods_confirm,time_express_send,time_evaluation_cancel,times_after_sale,time_after_sale_cancel, order_comment_end_time,'
             };
             this.bodyLoading = true;
             request
@@ -166,6 +174,9 @@ export default {
                                 break;
                             case 'time_after_sale_cancel':
                                 this.ruleForm.afterSaleCancleTime = v.value;
+                                break;
+                            case 'order_comment_end_time':
+                                this.ruleForm.commentTime = v.value;
                                 break;
                         }
                     });
@@ -209,6 +220,10 @@ export default {
                             {
                                 code: 'time_after_sale_cancel',
                                 value: this.ruleForm.afterSaleCancleTime
+                            },
+                            {
+                                code: 'order_comment_end_time',
+                                value: this.ruleForm.commentTime
                             }
                         ]
                     };

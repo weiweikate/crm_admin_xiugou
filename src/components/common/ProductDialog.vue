@@ -24,11 +24,11 @@
 
 <style scoped lang="less">
     /deep/.el-dialog{
-        width: 440px;
-        height: 800px;
+        width: 390px;
+        height: 700px;
         .el-dialog__body{
-            width:400px ;
-            height: 700px;
+            width:350px ;
+            height: 600px;
         }
         .iframe{
             border: none;

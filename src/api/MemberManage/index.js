@@ -78,3 +78,9 @@ export const queryCardByUserId = ['/user/account/queryByUserCode', { methods: 'g
 export const deleteAccountCardById = ['/user/account/deleteById', { methods: 'get' }];
 // 经验值列表
 export const queryUserExperiencePageList = ['/user/userExperience/queryUserExperiencePageList', { methods: 'post' }];
+// 注销账户
+export const writtenOff = ['/user/writtenOff', { methods: 'get' }];
+// 禁用手机号列表
+export const queryDisabledPhonePageList = ['/user/regConfine/queryConfinePageList', { methods: 'post' }];
+// 解除禁用
+export const canclePhoneDisabled = ['/user/regConfine/update', { methods: 'get' }];

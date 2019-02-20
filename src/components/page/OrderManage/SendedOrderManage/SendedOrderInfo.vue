@@ -65,8 +65,8 @@
                         <template slot-scope="scope">
                             <div class="name">
                                 <img :src="scope.row.specImg" alt="">
-                                <!--<span class="pro-name color-blue" @click="toH5(scope.row.prodCode)">{{scope.row.productName}}</span>-->
-                                <span class="pro-name">{{scope.row.productName}}</span>
+                                <span class="pro-name primary-text" @click="toH5(scope.row)">{{scope.row.productName}}</span>
+                                <!-- <span class="pro-name">{{scope.row.productName}}</span> -->
                                 <span class="pro-spec">{{scope.row.spec}}</span>
                             </div>
                         </template>
