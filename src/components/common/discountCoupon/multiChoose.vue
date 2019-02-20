@@ -319,6 +319,7 @@
                 this.second = [];
                 this.third = [];
                 this.productList = [];
+                this.param = '';
                 this.transValue(); // 向父组件传值
             },
             // 判断品类是否全选
