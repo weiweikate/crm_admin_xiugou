@@ -89,7 +89,7 @@
                     <!--<span v-if="scope.row.warehouseType == 1 ">自建仓</span>-->
                     <span v-if="scope.row.warehouseType == 2">加盟仓</span>
                     <span v-else-if="scope.row.warehouseType == 3">虚拟仓库</span>
-                    <!--<span v-else-if="scope.row.warehouseType == 4">供应商</span>-->
+                    <span v-else-if="scope.row.warehouseType == 4">供应商仓</span>
                     <span v-else>-</span>
                 </template>
             </el-table-column>
