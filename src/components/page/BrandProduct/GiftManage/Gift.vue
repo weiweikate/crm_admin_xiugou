@@ -129,7 +129,7 @@
                 <el-form-item>
                     <el-checkbox v-if="form.type == 2" label="经验值" v-model="gifts.isSetExp"></el-checkbox>
                 </el-form-item>
-                <el-form-item v-if="gifts.isSetExp" label="设置赠送经验值" style="margin-left: 85px">
+                <el-form-item v-if="form.type == 2 && gifts.isSetExp" label="设置赠送经验值" style="margin-left: 100px" label-width="110px">
                     <el-input style="width:300px" :maxlength="16" v-model="form.experience" placeholder="请输入经验值"></el-input> 点
                 </el-form-item>
                 <div class="pro-title">产品详情</div>
@@ -258,7 +258,7 @@ export default {
             proCategoryArr: [],
             form: {
                 name: '',
-                type: '1',
+                type: '', // 礼包类型 '1'普通 '2' 升级
                 firstCategoryId: '',
                 secCategoryId: '',
                 thirdCategoryId: '',
@@ -375,7 +375,7 @@ export default {
                     this.form.name = res.data.name;
                     this.form.weight = res.data.weight;
                     this.form.experience = res.data.experience;
-                    this.gifts.isSetExp = res.data.experience !== '';
+                    this.gifts.isSetExp = !['', null, undefined].includes(res.data.experience);
                     this.gifts.isSetBuyTime = res.data.couponList.length !== 0;
                     this.form.type = res.data.type.toString();
                     this.form.firstCategoryId = Number(res.data.firstCategoryId);
@@ -424,7 +424,6 @@ export default {
                             });
                         });
                     }
-                    this.changeGiftStatus(this.form.type);
                 })
                 .catch(err => {
                     console.log(err);
@@ -969,13 +968,14 @@ export default {
         },
         // 修改礼包状态
         changeGiftStatus(status) {
-            if (status === 1) {
+            this.limit.notSupportCoupon = true; // 不支持优惠券
+            if (status === '1') {
                 this.gifts.isSetExp = false;
-                this.limit.notSupportCoupon = true; // 不支持优惠券
-                this.limit.notSupportRetChange = true; // 不支持换货
+                this.limit.notSupportRetMoney = false; // 不支持退款
+                this.limit.notSupportRetChange = false; // 不支持换货
+                this.limit.notSupportRetGoods = false; // 不支持退货
                 this.form.experience = '';
             } else {
-                this.limit.notSupportCoupon = true; // 不支持优惠券
                 this.limit.notSupportRetMoney = true; // 不支持退款
                 this.limit.notSupportRetChange = true; // 不支持换货
                 this.limit.notSupportRetGoods = true; // 不支持退货
