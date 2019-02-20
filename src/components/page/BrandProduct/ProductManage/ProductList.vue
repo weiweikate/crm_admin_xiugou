@@ -104,7 +104,7 @@
             <el-button @click="auditToask = true" v-auth="'brand.productList.plsh'">审核</el-button>
             <el-button @click="freightToask = true" v-auth="'brand.productList.tzyfmb'">调整运费模板</el-button>
             <!--<el-button type="danger" v-auth="'brand.productList.tsyc'">推送仓库</el-button>-->
-            <el-button type="danger" v-auth="'brand.productList.pldc'">导出</el-button>
+            <a ref="exportData" class="el-button el-button--danger el-button--small" @click="exportProduct" v-auth="'brand.productList.pldc'">导出</a>
             <a @click="createProd" v-auth="'brand.productList.tjcp'" href="#/releaseProduct" target="_blank" class="el-button el-button--danger el-button--small">创建商品</a>
         </el-card>
         <el-card>
@@ -152,6 +152,7 @@
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
     import vTabContent from './productList/_tabContent';
     import request from '@/http/http';
+    import * as api from '@/api/api.js';
     export default {
         components: {
             vBreadcrumb,
@@ -205,6 +206,16 @@
             this.handleClick();
         },
         methods: {
+            // 导出
+            exportProduct() {
+                const data = {
+                    ...this.form,
+                    totalStatus: status,
+                    beginTime: this.$utils.formatTime(this.form.updateTime[0], 1),
+                    endTime: this.$utils.formatTime(this.form.updateTime[1], 1)
+                };
+                this.$refs.exportData.href = api.exportProduct + '?' + this.$utils.setRequestParams(data);
+            },
             // 批量审核产品
             auditProduct(status) {
                 if (this.$refs[this.activeName].prodIdArr.length === 0) return this.$message.warning('请先选择产品再进行操作');
