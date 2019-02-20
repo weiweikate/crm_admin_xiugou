@@ -20,6 +20,7 @@ export const queryArticalPublishCUserList = ['/discoverArticle/queryUserList', {
 // 优惠券
 // 分页查询优惠券
 export const queryCouponList = '/coupon/queryCouponList';
+export const queryCouponCount = ['/coupon/queryCouponCount', { methods: 'get' }];
 // 添加修改优惠券
 export const addOrModifyCoupon = '/coupon/addOrModifyCoupon';
 // 添加库存
@@ -158,7 +159,7 @@ export const updatePromotionPackageStockAndStatus = '/promotion/promotionPackage
 // 查询
 export const findPromotionPackageDetailsById = ['/promotion/promotionPackage/findPromotionPackageDetailsById', { methods: 'get' }];
 
-//推广订单
+// 推广订单
 // 列表
 export const queryPromotionPromoterPageList = '/promotion/promotionPromoter/queryPromotionPromoterPageList';
 // 分页查询用户购买信息列表
