@@ -159,7 +159,7 @@
          <!--手动批量升级失败列表弹窗-->
         <el-dialog title="手动批量升级失败列表" :visible.sync="showPromoteFail">
             <el-form :model="promoteFaild" label-width="100px">
-                <el-form-item prop="invalidCodes" label="无效用户信息" v-show="promoteFaild.invalidCodes.length>0">
+                <el-form-item prop="invalidCodes" label="无效用户code" v-show="promoteFaild.invalidCodes.length>0">
                    {{promoteFaild.invalidCodes}}
                 </el-form-item>
                 <el-form-item prop="noRulesCodes" label="等级限制" v-show="promoteFaild.noRulesCodes.length>0">
@@ -293,7 +293,10 @@ export default {
         // 升级提交
         promoteSure() {
             if (this.promote.content) {
-                const userCodes = this.promote.content.split('\n');
+                this.btnLoading = true;
+                const userCodes = this.promote.content.replace(/\r|\n|\s|\./g, ',').split(',').filter(function(item) {
+                    return item !== '';
+                });
                 if (userCodes.length > 100) {
                     this.$message.warning('输入数据大于100条,请重新输入');
                     return false;
@@ -303,7 +306,6 @@ export default {
                     userCodes: userCodes
                 };
                 request.addTmpUserLevelOptLog(data).then(res => {
-                    this.$message.success('操作成功');
                     this.promoteCancel();
                     // 无效用户信息
                     if (res.data.invalidCodes && res.data.invalidCodes.length > 0) {
@@ -315,7 +317,12 @@ export default {
                         this.promoteFaild.noRulesCodes = res.data.noRulesCodes;
                         this.showPromoteFail = true;
                     }
+                    this.btnLoading = false;
+                    if (!this.showPromoteFail) {
+                        this.$message.success('处理完成');
+                    }
                 }).catch(err => {
+                    this.btnLoading = false;
                     console.log(err);
                 });
             } else {
