@@ -35,7 +35,7 @@
                 <el-form-item>
                     <el-button native-type="submit" @click="handleCurrentChange(1)" type="primary">查询</el-button>
                     <el-button type="primary" v-auth="'vip.memberManage.dc'">导出</el-button>
-                    <!--<el-button @click="resetForm('form')">重置</el-button>-->
+                    <el-button type="primary" @click="showPromote = true">批量升级</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -132,6 +132,41 @@
                 </div>
             </div>
         </div>
+         <!--手动批量升级弹窗-->
+        <el-dialog title="手动批量升级" :visible.sync="showPromote">
+            <el-form v-model="promote" label-width="100px">
+                <el-form-item prop="content" label="用户code">
+                   <el-input
+                        type="textarea"
+                        :autosize="{ minRows: 2, maxRows: 4}"
+                        placeholder="每条数据间用换行分隔，最大不超过100条数据"
+                        resize='none'
+                        v-model="promote.content">
+                   </el-input>
+                </el-form-item>
+                <el-form-item prop="levelId" label="用户层级">
+                    <el-select v-model="promote.levelId" placeholder="全部层级">
+                        <el-option :label="`v${item.level}`" :value="item.id" v-for="(item,index) in levelList"
+                                   :key="index"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" :loading="btnLoading" @click="promoteSure">确定保存</el-button>
+                <el-button :loading="btnLoading"  @click="promoteCancel">取消</el-button>
+            </div>
+        </el-dialog>
+         <!--手动批量升级失败列表弹窗-->
+        <el-dialog title="手动批量升级失败列表" :visible.sync="showPromoteFail">
+            <el-form :model="promoteFaild" label-width="100px">
+                <el-form-item prop="invalidCodes" label="无效用户信息" v-show="promoteFaild.invalidCodes.length>0">
+                   {{promoteFaild.invalidCodes}}
+                </el-form-item>
+                <el-form-item prop="noRulesCodes" label="等级限制" v-show="promoteFaild.noRulesCodes.length>0">
+                    {{promoteFaild.noRulesCodes}}
+                </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 
 </template>
@@ -140,7 +175,6 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
 import region from '@/components/common/Region';
-import moment from 'moment';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http';
 
@@ -174,7 +208,19 @@ export default {
             info: '',
             type: '',
             btnTxt: '',
-            hasAuth: ''// 是否有查看下级的权限
+            hasAuth: '', // 是否有查看下级的权限
+            // 手动升级经验值 Start
+            showPromote: false, // 批量升级弹窗
+            showPromoteFail: false, // 批量升级失败弹窗
+            promote: {
+                content: '', // 文本列表(不超过100)
+                levelId: 3 // 提升到的等级 默认level2
+            },
+            promoteFaild: { // 升级失败内容
+                invalidCodes: [], // 无效用户信息
+                noRulesCodes: [] // 等级限制
+            }
+            // 手动升级经验值 end
         };
     },
     mounted() {
@@ -243,6 +289,47 @@ export default {
         // 获取省市区
         getRegion(msg) {
             this.address = msg;
+        },
+        // 升级提交
+        promoteSure() {
+            if (this.promote.content) {
+                const userCodes = this.promote.content.split('\n');
+                if (userCodes.length > 100) {
+                    this.$message.warning('输入数据大于100条,请重新输入');
+                    return false;
+                }
+                const data = {
+                    levelId: this.promote.levelId,
+                    userCodes: userCodes
+                };
+                request.addTmpUserLevelOptLog(data).then(res => {
+                    this.$message.success('操作成功');
+                    this.promoteCancel();
+                    // 无效用户信息
+                    if (res.data.invalidCodes && res.data.invalidCodes.length > 0) {
+                        this.promoteFaild.invalidCodes = res.data.invalidCodes;
+                        this.showPromoteFail = true;
+                    }
+                    // 等级限制
+                    if (res.data.noRulesCodes && res.data.noRulesCodes.length > 0) {
+                        this.promoteFaild.noRulesCodes = res.data.noRulesCodes;
+                        this.showPromoteFail = true;
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
+            } else {
+                this.$message.warning('请输入用户code');
+            }
+        },
+        // 取消升级提交
+        promoteCancel() {
+            this.showPromote = false;
+            this.promote.content = '';
+            this.promoteFaild = {
+                invalidCodes: [],
+                noRulesCodes: []
+            };
         }
     }
 };
