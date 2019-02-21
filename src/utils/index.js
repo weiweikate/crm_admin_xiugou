@@ -124,7 +124,7 @@ const getSrc = (type, code) => {
         const index = first.indexOf('#');
         first = first.substring(0, index);
     }
-    const second = 'product/' + type + '/' + code;
+    const second = 'product/' + type + '/' + code + '?from=display';
     return first + second;
 };
 /**

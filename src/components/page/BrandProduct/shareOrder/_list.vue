@@ -1,7 +1,7 @@
 <template>
     <div class="tab-remark">
         <mr-flying parentClass="content-box">
-          <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
+            <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
         </mr-flying>
         <el-table v-loading="tableLoading" border :data="tableData">
             <el-table-column type="index" label="序号" align="center"></el-table-column>
@@ -270,7 +270,7 @@ export default {
         // 图片视频预览
         showItem(row, num) {
             this.linkList = row.linkList;
-            this.current = num;
+            this.current = row.videoUrl ? num : num - 1;
             this.showMask = true;
         },
         closeMask(msg) {
@@ -295,8 +295,8 @@ export default {
     .product-info {
         display: flex;
         img {
-            width: 60px;
-            height: 60px;
+            width: 100px;
+            height: 100px;
             margin-right: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -329,8 +329,8 @@ export default {
     }
 }
 .video-pic {
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
