@@ -78,3 +78,6 @@ export const queryCardByUserId = ['/user/account/queryByUserCode', { methods: 'g
 export const deleteAccountCardById = ['/user/account/deleteById', { methods: 'get' }];
 // 经验值列表
 export const queryUserExperiencePageList = ['/user/userExperience/queryUserExperiencePageList', { methods: 'post' }];
+
+// 手动批量升级
+export const addTmpUserLevelOptLog = ['/user/tmpUserLevelOptLog/addTmpUserLevelOptLog', { methods: 'post' }];
