@@ -294,7 +294,9 @@ export default {
         promoteSure() {
             if (this.promote.content) {
                 this.btnLoading = true;
-                const userCodes = this.promote.content.split('\n');
+                const userCodes = this.promote.content.replace(/\r|\n|\s|\./g, ',').split(',').filter(function(item) {
+                    return item !== '';
+                });
                 if (userCodes.length > 100) {
                     this.$message.warning('输入数据大于100条,请重新输入');
                     return false;
