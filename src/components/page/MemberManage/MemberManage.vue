@@ -159,7 +159,7 @@
          <!--手动批量升级失败列表弹窗-->
         <el-dialog title="手动批量升级失败列表" :visible.sync="showPromoteFail">
             <el-form :model="promoteFaild" label-width="100px">
-                <el-form-item prop="invalidCodes" label="无效用户信息" v-show="promoteFaild.invalidCodes.length>0">
+                <el-form-item prop="invalidCodes" label="无效用户code" v-show="promoteFaild.invalidCodes.length>0">
                    {{promoteFaild.invalidCodes}}
                 </el-form-item>
                 <el-form-item prop="noRulesCodes" label="等级限制" v-show="promoteFaild.noRulesCodes.length>0">
@@ -303,7 +303,6 @@ export default {
                     userCodes: userCodes
                 };
                 request.addTmpUserLevelOptLog(data).then(res => {
-                    this.$message.success('操作成功');
                     this.promoteCancel();
                     // 无效用户信息
                     if (res.data.invalidCodes && res.data.invalidCodes.length > 0) {
@@ -314,6 +313,9 @@ export default {
                     if (res.data.noRulesCodes && res.data.noRulesCodes.length > 0) {
                         this.promoteFaild.noRulesCodes = res.data.noRulesCodes;
                         this.showPromoteFail = true;
+                    }
+                    if (!this.showPromoteFail) {
+                        this.$message.success('处理完成');
                     }
                 }).catch(err => {
                     console.log(err);
