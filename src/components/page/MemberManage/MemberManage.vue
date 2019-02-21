@@ -293,6 +293,7 @@ export default {
         // 升级提交
         promoteSure() {
             if (this.promote.content) {
+                this.btnLoading = true;
                 const userCodes = this.promote.content.split('\n');
                 if (userCodes.length > 100) {
                     this.$message.warning('输入数据大于100条,请重新输入');
@@ -314,10 +315,12 @@ export default {
                         this.promoteFaild.noRulesCodes = res.data.noRulesCodes;
                         this.showPromoteFail = true;
                     }
+                    this.btnLoading = false;
                     if (!this.showPromoteFail) {
                         this.$message.success('处理完成');
                     }
                 }).catch(err => {
+                    this.btnLoading = false;
                     console.log(err);
                 });
             } else {
