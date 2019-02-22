@@ -208,11 +208,10 @@
         methods: {
             // 导出
             exportProduct() {
+                const codes = this.$refs[this.activeName].prodIdArr.length == 0 ? '' : this.$refs[this.activeName].prodIdArr.join(',');
                 const data = {
-                    ...this.form,
-                    totalStatus: status,
-                    beginTime: this.$utils.formatTime(this.form.updateTime[0], 1),
-                    endTime: this.$utils.formatTime(this.form.updateTime[1], 1)
+                    ...this.$refs[this.activeName].form,
+                    prodCodeList: codes
                 };
                 this.$refs.exportData.href = api.exportProduct + '?' + this.$utils.setRequestParams(data);
             },
