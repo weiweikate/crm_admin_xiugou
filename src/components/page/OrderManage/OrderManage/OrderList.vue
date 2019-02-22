@@ -130,7 +130,7 @@ export default {
                 // 发货仓库
                 // { label: '自建仓', value: '1' },
                 { label: '加盟仓', value: '2' },
-                // { label: '供应商仓', value: '4' },
+                { label: '供应商仓', value: '4' },
                 { label: '虚拟仓', value: '3' }
             ],
             orderSourceArr: [

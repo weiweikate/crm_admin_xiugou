@@ -70,7 +70,7 @@
         <el-dialog title="回复评价" :visible.sync="mask">
             <div>
                 <div class="reply-area">
-                    <el-input type="textarea" v-model="reply" @input="inputReply"></el-input>
+                    <el-input type="textarea" maxlength="180" v-model="reply" @input="inputReply"></el-input>
                     <span>{{count}}/180</span>
                 </div>
                 <div class="warning" v-if="isWarning">存在敏感词信息</div>
