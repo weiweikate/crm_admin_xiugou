@@ -11,7 +11,7 @@
                         <img :src="scope.row.productImg" alt="图片加载失败">
                         <div class="info">
                             <div class="prod-name over-more-hidden">{{scope.row.productName}}</div>
-                            <div class="prod-spu">商品SUP编码: {{scope.row.prodCode}}</div>
+                            <div class="prod-spu">商品SPU编码: {{scope.row.prodCode}}</div>
                         </div>
                     </div>
                 </template>
@@ -190,8 +190,9 @@ export default {
                     if (res.data && res.data.length) {
                         // 有敏感词，标星
                         this.isWarning = true;
-                        this.replaceWords(this.reply, res.data);
+                        // this.replaceWords(this.reply, res.data);
                         this.btnLoading = false;
+                        return this.$message.warning('存在敏感词:'+ res.data);
                     } else {
                         // 无敏感词，回复
                         request
@@ -285,8 +286,8 @@ export default {
         .video-btn {
             position: absolute;
             left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 15px;
+            // transform: translateY(-50%);
             width: 30px;
             height: 30px;
             border-radius: 50%;
@@ -294,8 +295,8 @@ export default {
             i {
                 position: absolute;
                 left: 5px;
-                top: 50%;
-                transform: translateY(-50%);
+                top: 5px;
+                // transform: translateY(-50%);
                 font-size: 20px;
             }
         }
