@@ -25,8 +25,11 @@
                     </div>
                     <div>{{scope.row.comment}}</div>
                     <div class="pic-wrap">
-                        <video v-if="scope.row.videoUrl" @click="showItem(scope.row,0)" class="video-pic" :src="scope.row.videoUrl"></video>
-                        <span v-if="scope.row.videoUrl" class="video-btn"><i class="el-icon-caret-right"></i></span>
+                        <template v-if="scope.row.videoUrl">
+                            <video @click="showItem(scope.row,0)" class="video-pic" :src="scope.row.videoUrl"></video>
+                            <span @click="showItem(scope.row,0)" class="video-btn"><i class="el-icon-caret-right"></i></span>
+                        </template>
+
                         <template v-if="scope.row.imgUrls">
                             <img :key="k" v-for="(v,k) in scope.row.imgUrls" @click="showItem(scope.row,k+1)" :src="v" class="video-pic" alt="图片加载失败">
                         </template>
@@ -190,8 +193,9 @@ export default {
                     if (res.data && res.data.length) {
                         // 有敏感词，标星
                         this.isWarning = true;
-                        this.replaceWords(this.reply, res.data);
+                        // this.replaceWords(this.reply, res.data);
                         this.btnLoading = false;
+                        return this.$message.warning('存在敏感词:' + res.data);
                     } else {
                         // 无敏感词，回复
                         request
@@ -285,8 +289,8 @@ export default {
         .video-btn {
             position: absolute;
             left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 15px;
+            // transform: translateY(-50%);
             width: 30px;
             height: 30px;
             border-radius: 50%;
@@ -294,8 +298,8 @@ export default {
             i {
                 position: absolute;
                 left: 5px;
-                top: 50%;
-                transform: translateY(-50%);
+                top: 5px;
+                // transform: translateY(-50%);
                 font-size: 20px;
             }
         }
