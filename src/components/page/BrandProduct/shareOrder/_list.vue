@@ -11,7 +11,7 @@
                         <img :src="scope.row.productImg" alt="图片加载失败">
                         <div class="info">
                             <div class="prod-name over-more-hidden">{{scope.row.productName}}</div>
-                            <div class="prod-spu">商品SUP编码: {{scope.row.prodCode}}</div>
+                            <div class="prod-spu">商品SPU编码: {{scope.row.prodCode}}</div>
                         </div>
                     </div>
                 </template>
