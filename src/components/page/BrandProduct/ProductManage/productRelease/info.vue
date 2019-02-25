@@ -119,6 +119,7 @@
                         <el-checkbox :label="1">支持使用优惠券</el-checkbox>
                         <el-checkbox :disabled="provideInvoice" :label="2">提供发票</el-checkbox>
                         <el-checkbox :disabled="provideChange" :label="4">支持7天无理由退换</el-checkbox>
+                        <el-checkbox :label="8">节假日发货</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item prop="afterSaleServiceDays" label="售后保障">
@@ -291,6 +292,7 @@
                         if (this.form.flatService.includes(1)) restrictions += 1;
                         if (this.form.flatService.includes(2)) restrictions += 2;
                         if (this.form.flatService.includes(4)) restrictions += 4;
+                        if (this.form.flatService.includes(8)) restrictions += 8;
                         const tags = [];
                         if (this.selectedTagArr.length !== 0) {
                             this.selectedTagArr.forEach(v => {
@@ -367,7 +369,14 @@
                         4: [4],
                         5: [1, 4],
                         6: [2, 4],
-                        7: [1, 2, 4]
+                        7: [1, 2, 4],
+                        8: [8],
+                        9: [1, 8],
+                        10: [2, 8],
+                        11: [1, 2, 8],
+                        12: [4, 8],
+                        13: [1, 4, 8],
+                        15: [1, 2, 4, 8]
                     };
                     resData.flatService = map[limitServer];
                     this.prodType = resData.type || 1;

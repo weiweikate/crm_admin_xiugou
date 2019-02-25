@@ -4,7 +4,9 @@ import utils from '@/utils/index.js';
 const getUserId = {
     methods: {
         getUserId() {
-            this.id = this.$route.query.memberId || JSON.parse(sessionStorage.getItem('memberId'));
+            this.id =
+                this.$route.query.memberId ||
+                JSON.parse(sessionStorage.getItem('memberId'));
         }
     }
 };
@@ -49,15 +51,18 @@ const queryDictonary = {
             const data = {
                 code: dKey
             };
-            await request.queryDictionaryDetailsType(data).then(res => {
-                this.tmpAxiosData = res.data;
-            }).catch(err => {
-                this.dicNum++;
-                console.log(err);
-                if (this.dicNum < 3) {
-                    this.queryDictonary(this.divDKey);
-                }
-            });
+            await request
+                .queryDictionaryDetailsType(data)
+                .then(res => {
+                    this.tmpAxiosData = res.data;
+                })
+                .catch(err => {
+                    this.dicNum++;
+                    console.log(err);
+                    if (this.dicNum < 3) {
+                        this.queryDictonary(this.divDKey);
+                    }
+                });
         }
     }
 };
@@ -69,7 +74,10 @@ const beforeAvatarUpload = {
     },
     methods: {
         beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
+            const isJPG =
+                file.type === 'image/jpg' ||
+                file.type === 'image/jpeg' ||
+                file.type === 'image/png';
             const isLt3M = file.size / 1024 / 1024 < 3;
             if (!isJPG || !isLt3M) {
                 this.$message.error('请上传3M以内jpg,jpeg,png格式的图片!');
@@ -95,7 +103,10 @@ const uploadImage = {
          */
         beforeUploadImage(file, name, size) {
             const that = this;
-            if (!this.imageInfoMix[name] && !(this.imageInfoMix[name] instanceof Array)) {
+            if (
+                !this.imageInfoMix[name] &&
+                !(this.imageInfoMix[name] instanceof Array)
+            ) {
                 this.imageInfoMix[name] = [];
             }
             return new Promise(function(resolve, reject) {
@@ -135,13 +146,15 @@ const uploadImage = {
                     }
                 };
                 image.src = _URL.createObjectURL(file);
-            }).then(() => {
-                return file;
-            }, (err) => {
-                console.log(err);
-                this.$notify.warning(err);
-                return Promise.reject();
-            }
+            }).then(
+                () => {
+                    return file;
+                },
+                err => {
+                    console.log(err);
+                    this.$notify.warning(err);
+                    return Promise.reject();
+                }
             );
         },
         /**
@@ -156,7 +169,9 @@ const uploadImage = {
             const list = this.imageInfoMix[name];
             list.forEach(v => {
                 if (v.uid === file.uid) {
-                    this.$notify.warning(`${file.name}正在上传(${event.percent}%)`);
+                    this.$notify.warning(
+                        `${file.name}正在上传(${event.percent}%)`
+                    );
                 }
             });
         },
@@ -206,13 +221,22 @@ const myProductDialog = {
         };
     },
     methods: {
-        toH5(code) {
+        toH5(param) {
             this.mask = true;
-            this.src = utils.getSrc(code);
+            const type = (param.orderType < 5 ? param.orderType : 99) || 99;
+            const code = type !== 99 ? param.activityCode : param.prodCode;
+            this.src = utils.getSrc(type, code);
         },
         closeMask() {
             this.mask = false;
         }
     }
 };
-export { getUserId, myMixinTable, queryDictonary, beforeAvatarUpload, uploadImage, myProductDialog };
+export {
+    getUserId,
+    myMixinTable,
+    queryDictonary,
+    beforeAvatarUpload,
+    uploadImage,
+    myProductDialog
+};

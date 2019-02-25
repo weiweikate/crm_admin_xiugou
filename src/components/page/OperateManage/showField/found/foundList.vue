@@ -22,6 +22,17 @@
         </el-card>
         <el-card style="margin-top: 10px">
             <el-button type="primary" style="margin-bottom: 10px" @click="$router.push('addFound')" v-auth="'yunying.showHome.sclb.xjfxwz'">新建秀场文章</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table v-loading="tabLoading" :data="tableData" border stripe @sort-change="sortChange">
                 <el-table-column prop="code" label="编号" align="center"></el-table-column>
                 <el-table-column prop="pureContent" label="内容" align="center">
@@ -69,17 +80,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
         <!--删除弹窗-->
         <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
@@ -128,7 +128,7 @@
                     pageSize: this.page.pageSize
                 };
                 this.tabLoading = true;
-                request.queryDiscoverArticlePageList(data).then(res => {
+                request.queryDiscoverArticlePageList(this.$utils.trimForm(data)).then(res => {
                     this.tabLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;

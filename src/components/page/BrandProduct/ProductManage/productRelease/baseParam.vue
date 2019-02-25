@@ -41,7 +41,8 @@
                 <el-form-item label-width="0px">
                     <el-col :span="11">
                         <el-form-item prop="type" label="商品类型">
-                            <el-select :disabled="disabled || status === 6" v-model="form.type" placeholder="请选择商品类型">
+                            <!--<el-select :disabled="disabled || status === 6" v-model="form.type" placeholder="请选择商品类型">-->
+                            <el-select v-model="form.type" placeholder="请选择商品类型">
                                 <el-option label="普通商品" value="1"></el-option>
                                 <el-option label="内购商品" value="2"></el-option>
                                 <!--<el-option label="虚拟商品" value="3"></el-option>-->
@@ -130,7 +131,7 @@
                 tmpParamList: [], // 临时储存属性，刷新使用
                 supplierArr: [], // 供应商列表
                 brandArr: [], // 品牌列表
-                deliveryWarehouseArr: [{ label: '加盟仓', value: '2' }, { label: '虚拟仓库', value: '3' }], // 发货仓库
+                deliveryWarehouseArr: [{ label: '加盟仓', value: '2' }, { label: '虚拟仓库', value: '3' }, { label: '供应商仓', value: '4' }], // 发货仓库
                 naturalAttribute: [], // 自然属性列表
                 naturalLoading: false, // 自然属性loading
                 btnLoading: false

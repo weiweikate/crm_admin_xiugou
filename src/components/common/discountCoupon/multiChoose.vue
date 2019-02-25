@@ -319,6 +319,7 @@
                 this.second = [];
                 this.third = [];
                 this.productList = [];
+                this.param = '';
                 this.transValue(); // 向父组件传值
             },
             // 判断品类是否全选
@@ -383,6 +384,8 @@
             getSecond(item, index) {
                 const that = this;
                 that.firstCategoryName = item.name;
+                that.firstCategoryId = item.id;
+                that.param = ''; // 重新调用清除搜索框输入值
                 if (that.firstChecked[index]) {
                     // 改变对应一级类目的选中值
                     that.addTags(1, item); // 增加一级类目标签值
@@ -391,6 +394,7 @@
                     });
                 } else {
                     that.deleteTags(1, item, 'false'); // 移除一级类目标签值
+                    that.firstCategoryId = '';
                 }
 
                 // 封装一级类目与三级类目、产品列表，作用于跨级回显
@@ -414,7 +418,6 @@
                 that.second = [];
                 that.secondChecked = [];
                 that.firstIndex = index;
-                that.firstCategoryId = item.id;
                 const data = {
                     fatherId: item.id,
                     page: 1,
@@ -447,6 +450,8 @@
             getThird(item, index) {
                 const that = this;
                 that.secondCategoryName = item.name;
+                that.secondCategoryId = item.id;
+                that.param = ''; // 重新调用清除搜索框输入值
                 if (that.secondChecked[index]) {
                     // 改变对应二级类目的选中值
                     that.addTags(2, item); // 增加二级类目标签值
@@ -456,6 +461,7 @@
                     that.deleteProductTags(item); // 删除对应产品标签值
                 } else {
                     that.deleteTags(2, item, 'false'); // 移除二级类目标签值
+                    that.secondCategoryId = '';
                 }
                 that.isUpCheck(1); // 一级类目的选中状态
                 // 封装一级类目与产品列表，作用于跨级回显
@@ -478,7 +484,6 @@
                 that.third = [];
                 that.thirdChecked = [];
                 that.secondIndex = index;
-                that.secondCategoryId = item.id;
                 const data = {
                     fatherId: item.id,
                     page: 1,

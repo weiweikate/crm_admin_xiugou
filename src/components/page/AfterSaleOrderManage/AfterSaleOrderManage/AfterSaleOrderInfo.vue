@@ -101,8 +101,8 @@
                         <template slot-scope="scope">
                             <div class="name">
                                 <img :src="scope.row.specImg" alt="">
-                                <!--<span class="pro-name color-blue" @click="toH5(scope.row.prodCode)">{{scope.row.productName}}</span>-->
-                                <span class="pro-name">{{scope.row.productName}}</span>
+                                <span class="pro-name primary-text" @click="toH5(scope.row)">{{scope.row.productName}}</span>
+                                <!-- <span class="pro-name">{{scope.row.productName}}</span> -->
                                 <span class="pro-spec">{{scope.row.spec}}</span>
                             </div>
                         </template>
@@ -131,7 +131,7 @@
             <div class="opr-area" v-if="orderCustomerServiceInfo.type!=1&&orderCustomerServiceInfo.status==1">
                 <div class="title">操作</div>
                 <el-form :model="form">
-                    <el-form-item label="售后审核结果">
+                    <el-form-item label="售后审核结果" required="">
                         <el-radio-group v-model="form.result">
                             <el-radio label="1">审核通过</el-radio>
                             <el-radio label="2">审核驳回</el-radio>
@@ -175,7 +175,7 @@
             <div class="opr-area" v-if="(orderCustomerServiceInfo.type==1&&orderCustomerServiceInfo.status==1||orderCustomerServiceInfo.status==4)&&orderCustomerServiceInfo.subStatus!=9">
                 <div class="title">操作</div>
                 <el-form :model="form">
-                    <el-form-item label="售后处理结果">
+                    <el-form-item label="售后处理结果" required="">
                         <el-radio-group v-model="form.result">
                             <el-radio label="1">审核通过</el-radio>
                             <el-radio label="2">审核驳回</el-radio>

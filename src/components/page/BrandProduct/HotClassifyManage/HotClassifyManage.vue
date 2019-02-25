@@ -3,6 +3,9 @@
         <v-breadcrumb :nav="['品牌产品管理','产品品牌分类管理','热门分类管理']"></v-breadcrumb>
         <div class="table-block">
             <el-button type="primary" style="margin-bottom: 20px" @click="addOrEditHotClassify(true)">添加热门分类</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
+            </mr-flying>
             <template>
                 <el-table :data="tableData" :height="height" border style="width: 100%">
                     <el-table-column type="index" label="编号" align="center"></el-table-column>
@@ -23,17 +26,6 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
 
         <!--添加/编辑弹窗-->
@@ -104,7 +96,6 @@
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import icon from '@/components/common/ico.vue';
 import deleteToast from '@/components/common/DeleteToast';
-import utils from '@/utils/index.js';
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
 
@@ -162,7 +153,7 @@ export default {
                 page: val,
                 pageSize: this.page.pageSize
             };
-            this.page.currentPage=val;
+            this.page.currentPage = val;
             request.queryListByHotFlag(data).then(res => {
                 this.tableData = [];
                 this.tableData = res.data.data;

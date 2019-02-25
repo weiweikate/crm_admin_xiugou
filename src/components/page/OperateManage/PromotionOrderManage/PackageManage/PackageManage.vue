@@ -14,6 +14,17 @@
         </el-card>
         <div class="table-block">
             <el-button type="primary" style="margin-bottom: 20px" @click="addPackage" v-auth="'yunying.promotionOrderManage.tcgl'">新建套餐</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table v-loading="tableLoading" :height="height" border :data="tableData">
                 <el-table-column type="index" label="编号" align="center" width="50"></el-table-column>
                 <el-table-column prop="name" label="套餐名称" align="center"></el-table-column>
@@ -51,17 +62,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
             <div class="mask" v-if="addMask">
                 <div class="content">
                     <div class="item"><span>增加</span><el-input v-model="count" placeholder="请输入数值"></el-input>份</div>
@@ -143,7 +143,7 @@ export default {
                 pageSize: this.page.pageSize
             };
             this.tableLoading = true;
-            request.queryPromotionPackagePageList(data).then(res => {
+            request.queryPromotionPackagePageList(this.$utils.trimForm(data)).then(res => {
                 // if (!res.data) return;
                 // this.tableData = [];
                 // for (const i in res.data.data) {

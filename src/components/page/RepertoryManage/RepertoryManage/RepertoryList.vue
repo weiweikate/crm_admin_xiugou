@@ -35,7 +35,7 @@
                         <!-- <el-option value="1" label="自建仓"></el-option> -->
                         <el-option value="2" label="加盟仓"></el-option>
                         <el-option value="3" label="虚拟仓"></el-option>
-                        <!-- <el-option value="4" label="供应商仓"></el-option> -->
+                        <el-option value="4" label="供应商仓"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="">
@@ -46,6 +46,17 @@
         </el-card>
         <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
             <a href="#/repertorySet?type=add" target="_blank" style="margin-bottom: 20px" class="add-product el-button--small el-button el-button--primary">新建仓库</a> 
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="id" label="仓库ID" align="center"></el-table-column>
@@ -56,7 +67,7 @@
                         <!-- <template v-if="scope.row.type==1">自建仓</template> -->
                         <template v-if="scope.row.type==2">加盟仓</template>
                         <template v-if="scope.row.type==3">虚拟仓</template>
-                        <!-- <template v-if="scope.row.type==4">供应商仓</template> -->
+                        <template v-if="scope.row.type==4">供应商仓</template>
                     </template>
                 </el-table-column>
                 <el-table-column label="加盟仓类型" align="center">
@@ -112,17 +123,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    :page-size="page.pageSize"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
         <el-dialog :title="title" :visible.sync="mask">
             <el-form v-model="formMask">
@@ -208,7 +208,7 @@ export default {
                 pageSize: this.page.pageSize
             };
             this.page.currentPage = val;
-            request.queryRepertoryList(data).then(res => {
+            request.queryRepertoryList(this.$utils.trimForm(data)).then(res => {
                 this.tableData = [];
                 if (!res.data) return;
                 this.tableData = res.data.data;
