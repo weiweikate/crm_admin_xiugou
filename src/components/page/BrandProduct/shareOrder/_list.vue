@@ -24,8 +24,9 @@
                         </el-rate>
                     </div>
                     <div>{{scope.row.comment}}</div>
-                    <div>
+                    <div class="pic-wrap">
                         <video v-if="scope.row.videoUrl" @click="showItem(scope.row,0)" class="video-pic" :src="scope.row.videoUrl"></video>
+                        <span v-if="scope.row.videoUrl" class="video-btn"><i class="el-icon-caret-right"></i></span>
                         <template v-if="scope.row.imgUrls">
                             <img :key="k" v-for="(v,k) in scope.row.imgUrls" @click="showItem(scope.row,k+1)" :src="v" class="video-pic" alt="图片加载失败">
                         </template>
@@ -62,7 +63,7 @@
                     <el-button type="primary" slot="reference" v-if="!scope.row.reply && scope.row.type!=1" @click="replyItem(scope.row,scope.$index)" v-auth="'brand.shareOrderManage.sdhf'">回复</el-button>
                     <el-button type="success" v-if="!scope.row.stick&&scope.row.status==2 && scope.row.type!=1" @click="stickItem(scope.row,true)" v-auth="'brand.shareOrderManage.zdsd'">置顶</el-button>
                     <el-button type="success" v-if="scope.row.stick&&scope.row.status==2 && scope.row.type!=1" @click="stickItem(scope.row,false)" v-auth="'brand.shareOrderManage.zdsd'">取消置顶</el-button>
-                    <el-button type="danger" v-if="scope.row.type!=1&&scope.row.status==1" @click="displayItem(scope.row,true)" v-auth="'brand.shareOrderManage.sj'">上架</el-button>
+                    <el-button type="danger" v-if="scope.row.type!=1&&scope.row.status!=2" @click="displayItem(scope.row,true)" v-auth="'brand.shareOrderManage.sj'">上架</el-button>
                     <el-button type="warning" v-if="scope.row.status<=2 && scope.row.type!=1" @click="displayItem(scope.row,false)" v-auth="'brand.shareOrderManage.xj'">下架</el-button>
                 </template>
             </el-table-column>
@@ -85,7 +86,6 @@
         <video-pict :link="linkList" :dialogVisible="showMask" @msg="closeMask" :current="current" :imgUrls="imgUrls"></video-pict>
     </div>
 </template>
-
 <script>
 import { myMixinTable } from '@/JS/commom';
 import request from '@/http/http.js';
@@ -118,7 +118,6 @@ export default {
     },
     created() {},
     mounted() {},
-
     methods: {
         //  提交表单
         getList(val) {
@@ -126,13 +125,13 @@ export default {
             this.data.pageSize = this.page.pageSize;
             this.page.currentPage = val;
             this.tableLoading = true;
+            this.tableData = [];
             request
                 .getCommentPage(this.$utils.trimForm(this.data))
                 .then(res => {
                     if (!res.data) {
                         return;
                     }
-                    this.tableData = [];
                     this.tableData = res.data.data;
                     for (const i in res.data.data) {
                         const v = res.data.data[i];
@@ -281,6 +280,26 @@ export default {
 </script>
 <style lang='less' scoped>
 .tab-remark {
+    .pic-wrap {
+        position: relative;
+        .video-btn {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #fff;
+            i {
+                position: absolute;
+                left: 5px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 20px;
+            }
+        }
+    }
     .search-pane {
         width: 100%;
         padding: 30px 0 0 0;

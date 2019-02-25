@@ -164,19 +164,19 @@ export default {
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;
                     this.tableLoading = false;
-                    this.queryCouponCount(this.tableData);
+                    this.tableData.forEach((v, k) => {
+                        this.queryCouponCount(v.id, k);
+                    });
                 })
                 .catch(error => {
                     console.log(error);
                     this.tableLoading = false;
                 });
         },
-        queryCouponCount(data) {
-            data.forEach((v, k) => {
-                request.queryCouponCount({ id: v.id }).then(res => {
-                    this.tableData[k].hasUsed = res.data.usedNumber;
-                    this.tableData[k].receiveNum = res.data.grantNumber;
-                });
+        queryCouponCount(id, index) {
+            request.queryCouponCount({ id: id }).then(res => {
+                this.tableData[index].hasUsed = res.data.usedNumber;
+                this.tableData[index].receiveNum = res.data.grantNumber;
             });
         },
         // 编辑优惠券
