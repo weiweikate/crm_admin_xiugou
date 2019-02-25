@@ -87,7 +87,8 @@
                     <div class="item-row">
                         <div v-if="status == 3" class="item">上级代理：/</div>
                         <div v-else class="item">上级代理：{{dealer.upUserName}}</div>
-                        <div class="item">绑定时间：暂无</div>
+                        <div v-if="dealer.bindTime" class="item">绑定时间：{{dealer.bindTime | formatDateAll}}</div>
+                        <div v-else class="item">绑定时间：/</div>
                     </div>
                     <div class="item-row">
                         <div class="item">会员类型：
