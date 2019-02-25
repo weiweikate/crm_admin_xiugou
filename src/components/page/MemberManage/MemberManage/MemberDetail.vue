@@ -87,17 +87,19 @@
                     <div class="item-row">
                         <div v-if="status == 3" class="item">上级代理：/</div>
                         <div v-else class="item">上级代理：{{dealer.upUserName}}</div>
+                        <div v-if="dealer.bindTime" class="item">绑定时间：{{dealer.bindTime | formatDateAll}}</div>
+                        <div v-else class="item">绑定时间：/</div>
+                    </div>
+                    <div class="item-row">
                         <div class="item">会员类型：
                             <span v-if="dealer.userType==1">网信经销商</span>
                             <span v-if="dealer.userType==2">供货经销商</span>
                             <span v-if="dealer.userType==3">网红经销商</span>
                         </div>
-                    </div>
-                    <div class="item-row">
                         <div class="item">授权码：{{dealer.code}}</div>
-                        <div class="item">授权层级：{{dealer.level !== undefined && dealer.level !== null?`v${dealer.level}`: ''}}</div>
                     </div>
                     <div class="item-row">
+                        <div class="item">授权层级：{{dealer.level !== undefined && dealer.level !== null?`v${dealer.level}`: ''}}</div>
                         <div class="item">经验值：{{dealer.experience}}</div>
                     </div>
                 </div>
