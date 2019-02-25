@@ -64,21 +64,6 @@
                         <span v-else v-for="(v,k) in productParam" :key="k">{{v.name}}：<el-input class="inp-param" v-model="v.value"></el-input></span>
                     </div>
                 </el-form-item>
-                <div class="pro-title">运费其他</div>
-                <el-form-item label="选择运费模板">
-                    <el-select v-model="form.freightTemplateId" placeholder="请选择模板">
-                        <el-option v-for="(v,k) in freightTemplateArr" :key="k" :label="v.name" :value="v.id"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="售后周期">
-                    <transition name="fade">
-                        <el-select v-if="!showSaleTime" v-model="form.aferServiceDays" placeholder="请选择售后周期">
-                            <el-option v-for="(v,k) in aferServiceDays" :key="k" :label="v.label" :value="v.value"></el-option>
-                        </el-select>
-                        <el-input v-if='showSaleTime' v-model="form.aferServiceDays" style="width:215px" placeholder="请输入售后周期"></el-input>
-                    </transition>
-                    <el-button @click="defSaleTime">自定义</el-button>
-                </el-form-item>
                 <div class="pro-title">使用限制</div>
                 <el-form-item>
                     <el-checkbox disabled label="不支持优惠券" v-model="limit.notSupportCoupon"></el-checkbox>
@@ -241,7 +226,6 @@ export default {
             },
             giftId: '',
             isUseUpload: false,
-            showSaleTime: false,
             checkedAllUser: false,
             uploadImg: api.uploadImg,
             imgArr: [],
@@ -269,7 +253,7 @@ export default {
                 sendMode: '',
                 weight: '',
                 freightTemplateId: '',
-                aferServiceDays: '',
+                aferServiceDays: '0', // 售后周期默认显示第一个
                 imgFileList: [],
                 restrictions: 0,
                 paramValueList: []
@@ -573,11 +557,6 @@ export default {
                 this.isUseUpload = false;
             }
         },
-        // 自定义售后周期
-        defSaleTime() {
-            this.form.aferServiceDays = '';
-            this.showSaleTime = !this.showSaleTime;
-        },
         // 富文本编辑器
         onEditorChange({ editor, html, text }) {
             this.form.content = html;
@@ -805,6 +784,8 @@ export default {
                 .queryFreightTemplateList({})
                 .then(res => {
                     this.freightTemplateArr = res.data;
+                    // 运费模版默认显示第一个
+                    this.form.freightTemplateId = res.data[0].id;
                 })
                 .catch(err => {
                     console.log(err);
