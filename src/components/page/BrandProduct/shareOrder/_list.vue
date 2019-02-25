@@ -59,18 +59,18 @@
             </el-table-column>
             <el-table-column label="操作" width="220" fixed="right">
                 <template slot-scope="scope">
-                    <el-button type="primary" slot="reference" v-if="!scope.row.reply" @click="replyItem(scope.row,scope.$index)" v-auth="'brand.shareOrderManage.sdhf'">回复</el-button>
-                    <el-button type="success" v-if="!scope.row.stick&&scope.row.status==2" @click="stickItem(scope.row,true)" v-auth="'brand.shareOrderManage.zdsd'">置顶</el-button>
-                    <el-button type="success" v-if="scope.row.stick&&scope.row.status==2" @click="stickItem(scope.row,false)" v-auth="'brand.shareOrderManage.zdsd'">取消置顶</el-button>
-                    <el-button type="warning" v-if="scope.row.status==2" @click="displayItem(scope.row,false)" v-auth="'brand.shareOrderManage.xj'">下架</el-button>
-                    <el-button type="warning" v-else @click="displayItem(scope.row,true)" v-auth="'brand.shareOrderManage.sj'">上架</el-button>
+                    <el-button type="primary" slot="reference" v-if="!scope.row.reply && scope.row.type!=1" @click="replyItem(scope.row,scope.$index)" v-auth="'brand.shareOrderManage.sdhf'">回复</el-button>
+                    <el-button type="success" v-if="!scope.row.stick&&scope.row.status==2 && scope.row.type!=1" @click="stickItem(scope.row,true)" v-auth="'brand.shareOrderManage.zdsd'">置顶</el-button>
+                    <el-button type="success" v-if="scope.row.stick&&scope.row.status==2 && scope.row.type!=1" @click="stickItem(scope.row,false)" v-auth="'brand.shareOrderManage.zdsd'">取消置顶</el-button>
+                    <el-button type="danger" v-if="scope.row.type!=1&&scope.row.status==1" @click="displayItem(scope.row,true)" v-auth="'brand.shareOrderManage.sj'">上架</el-button>
+                    <el-button type="warning" v-if="scope.row.status<=2 && scope.row.type!=1" @click="displayItem(scope.row,false)" v-auth="'brand.shareOrderManage.xj'">下架</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-dialog title="回复评价" :visible.sync="mask">
             <div>
                 <div class="reply-area">
-                    <el-input type="textarea" v-model="reply" @input="inputReply"></el-input>
+                    <el-input type="textarea" maxlength="180" v-model="reply" @input="inputReply"></el-input>
                     <span>{{count}}/180</span>
                 </div>
                 <div class="warning" v-if="isWarning">存在敏感词信息</div>

@@ -114,7 +114,7 @@
                 },
                 supplierArr: [], // 供应商列表
                 brandArr: [], // 品牌列表
-                deliveryWarehouseArr: [{ label: '加盟仓', value: '1' }, { label: '虚拟仓库', value: '3' }], // 发货仓库
+                deliveryWarehouseArr: [{ label: '加盟仓', value: '1' }, { label: '虚拟仓库', value: '3' }, { label: '供应商仓', value: '4' }], // 发货仓库
                 naturalAttribute: [],
                 naturalTmpAttribute: []
             };
