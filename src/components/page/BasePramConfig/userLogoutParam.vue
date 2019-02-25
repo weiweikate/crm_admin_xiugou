@@ -5,10 +5,10 @@
             <div class="currency-title">参数设置</div>
             <el-form :model="form" :rules="rules" ref="ruleForm" label-width="140px" size='mini' class="mt10">
                 <el-form-item label="解绑手机号，禁用" prop="unbindingPhone">
-                    <el-input v-model.number="form.unbindingPhone" class="input-sty"></el-input><span class="point">天</span>
+                    <el-input v-model="form.unbindingPhone" class="input-sty"></el-input><span class="point">天</span>
                 </el-form-item>
                 <el-form-item label="注销手机号，禁用" prop="canclePhone">
-                    <el-input v-model.number="form.canclePhone" class="input-sty"></el-input><span class="point">天</span>
+                    <el-input v-model="form.canclePhone" class="input-sty"></el-input><span class="point">天</span>
                 </el-form-item>
                 <p class="grey-text">注：禁用期间，手机号不可注册新账号，绑定其他账号</p>
                 <el-form-item>
@@ -21,21 +21,20 @@
 
 <script>
     import vBreadcrumb from '@/components/common/Breadcrumb.vue';
+    import * as reg from '@/utils/regConfig.js';
     import request from '@/http/http';
     export default {
         components: { vBreadcrumb },
         data() {
             const commonCheckReg = (rule, value, callback) => {
-                if (!value) {
+                if (!value || value == '0') {
                     return callback(new Error('选项不能为空'));
                 }
-                setTimeout(() => {
-                    if (!Number.isInteger(value)) {
-                        callback(new Error('请输入数字值'));
-                    } else {
-                        callback();
-                    }
-                }, 1000);
+                if (!reg.regExpConfig.isNozeroNumber.test(value)) {
+                    callback(new Error('请输入正确的数字值'));
+                } else {
+                    callback();
+                }
             };
             return {
                 nav: ['基础参数设置', '会员注册限制参数设置'],
