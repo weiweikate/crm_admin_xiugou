@@ -64,19 +64,6 @@
                         <span v-else v-for="(v,k) in productParam" :key="k">{{v.name}}：<el-input class="inp-param" v-model="v.value"></el-input></span>
                     </div>
                 </el-form-item>
-                <!-- <div class="pro-title">运费其他</div>
-                <el-form-item label="选择运费模板">
-                    <el-select v-model="form.freightTemplateId" placeholder="请选择模板" disabled>
-                        <el-option v-for="(v,k) in freightTemplateArr" :key="k" :label="v.name" :value="v.id"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="售后周期">
-                    <transition name="fade">
-                        <el-select v-model="form.aferServiceDays" placeholder="请选择售后周期" disabled>
-                            <el-option v-for="(v,k) in aferServiceDays" :key="k" :label="v.label" :value="v.value"></el-option>
-                        </el-select>
-                    </transition>
-                </el-form-item> -->
                 <div class="pro-title">使用限制</div>
                 <el-form-item>
                     <el-checkbox disabled label="不支持优惠券" v-model="limit.notSupportCoupon"></el-checkbox>
