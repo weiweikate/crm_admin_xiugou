@@ -48,6 +48,17 @@
         <div class="table-block">
             <template>
                 <el-button type="primary" style="margin-bottom: 20px" @click="addSupplier" v-auth="'supplier.supplierManage.tjgys'">添加供应商</el-button>
+                <mr-flying parentClass="content-box">
+                    <el-pagination
+                        background
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="page.currentPage"
+                        :page-size="page.pageSize"
+                        layout="total, prev, pager, next, jumper"
+                        :total="page.totalPage">
+                    </el-pagination>
+                </mr-flying>
                 <el-table v-loading="tableLoading" :data="tableData" :height="height" border style="width: 100%">
                     <el-table-column prop="id" label="ID" width="100" align="center"></el-table-column>
                     <el-table-column prop="loginName" label="供应商账号" width="100" align="center"></el-table-column>
@@ -103,10 +114,6 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination background @size-change="handleSizeChange" :page-size="page.pageSize" @current-change="handleCurrentChange" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
         <!--消息确认弹窗-->
         <div class="pwd-mask" v-if="tipsMask">
