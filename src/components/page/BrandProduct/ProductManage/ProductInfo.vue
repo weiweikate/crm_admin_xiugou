@@ -17,7 +17,7 @@
                   <!--<template v-if="info.warehouseType == 1">自建仓</template>-->
                   <template v-if="info.warehouseType == 2">加盟仓</template>
                   <template v-else-if="info.warehouseType == 3">虚拟仓库</template>
-                  <!--<template v-else-if="info.warehouseType == 4">供应商</template>-->
+                  <template v-else-if="info.warehouseType == 4">供应商仓</template>
               </el-form-item>
               <el-form-item label="贸易类型：">
                   <template v-if="info.businessType == 1">一般贸易</template>
@@ -154,13 +154,7 @@
                   <template v-else>{{info.buyLimit}}</template>
               </el-form-item>
               <el-form-item label="平台服务：">
-                    <template v-if="info.restrictions == 1">支持使用优惠券</template>
-                    <template v-else-if="info.restrictions == 2">提供发票</template>
-                    <template v-else-if="info.restrictions == 3">支持使用优惠券, 提供发票</template>
-                    <template v-else-if="info.restrictions == 4">支持7天无理由退换</template>
-                    <template v-else-if="info.restrictions == 5">支持使用优惠券, 支持7天无理由退换</template>
-                    <template v-else-if="info.restrictions == 6">提供发票, 支持7天无理由退换</template>
-                    <template v-else-if="info.restrictions == 7">支持使用优惠券, 提供发票, 支持7天无理由退换</template>
+                  {{flatServer}}
               </el-form-item>
               <el-form-item label="售后保障：">
                   <template v-if="info.afterSaleServiceDays>0">{{info.afterSaleServiceDays}}天</template>
@@ -192,7 +186,8 @@ export default {
             nav: ['产品管理', '产品详情'],
             prodCode: '',
             loading: false,
-            info: {}
+            info: {},
+            flatServer: ''
         };
     },
 
@@ -233,6 +228,22 @@ export default {
                     });
                 }
                 this.info.selectedTag = tagArr;
+                const reg = this.info.restrictions;
+                const tmpServer = [];
+                this.flatServer = '';
+                if ((reg & 1) != 0) {
+                    tmpServer.push('支持使用优惠券');
+                }
+                if ((reg & 2) != 0) {
+                    tmpServer.push('提供发票');
+                }
+                if ((reg & 4) != 0) {
+                    tmpServer.push('支持7天无理由退换');
+                }
+                if ((reg & 8) != 0) {
+                    tmpServer.push('节假日发货');
+                }
+                this.flatServer = tmpServer.join(',');
             }).catch(err => {
                 this.loading = false;
                 console.log(err);

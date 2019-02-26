@@ -34,6 +34,11 @@
             </el-row><br/>
             <!--<el-row>-->
                 <!--<el-col :span="6">-->
+                    <!--<div @click="logoutAccountInfo" class="card them1">注销账户收入明细</div>-->
+                <!--</el-col>-->
+            <!--</el-row><br/>-->
+            <!--<el-row>-->
+                <!--<el-col :span="6">-->
                     <!--<div @click="goPage('9')" class="card them1">秀值（推广提成）收支明细细</div>-->
                 <!--</el-col>-->
                 <!--<el-col :span="6">-->
@@ -56,6 +61,10 @@ export default {
     },
 
     methods: {
+        // 注销账户收入明细
+        logoutAccountInfo() {
+            this.$router.push('/logoutAccountInfo');
+        },
         goPage(val) {
             let url = '';
             let flag = '';
@@ -115,7 +124,7 @@ export default {
                     break;
             }
             if (url === 'flatAct01') {
-                this.$router.push({ name: url, query: { accountInfoFlag: flag}});
+                this.$router.push({ name: url, query: { accountInfoFlag: flag }});
             } else {
                 this.$router.push({ name: url, query: { accountInfoFlag1: flag1 }});
             }

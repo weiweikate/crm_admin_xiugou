@@ -16,6 +16,17 @@
         </el-form>
       </el-card>
       <el-card style='margin-top:20px' :body-style="{ padding: '30px' }">
+        <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </mr-flying>
         <el-table v-loading="loading" :data="tableData" border stripe>
           <el-table-column type="index" :index='handleIndex' label="编号" align="center"></el-table-column>
           <el-table-column prop='orderNum' label="订单号" align="center"></el-table-column>
@@ -31,17 +42,6 @@
           </el-table-column>
           <el-table-column prop='sourceDesc' label="来源" align="center"></el-table-column>
         </el-table>
-        <div class="block">
-          <el-pagination
-                  background
-                  :page-size="page.pageSize"
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="page.currentPage"
-                  layout="total, prev, pager, next, jumper"
-                  :total="page.totalPage">
-          </el-pagination>
-        </div>
       </el-card>
     </div>
 </template>
@@ -111,8 +111,8 @@ export default {
                 pageSize: this.page.pageSize
             };
             this.loading = true;
-            request.queryFlatAccountByType(data).then(res => {
-                let resData = res.data || {};
+            request.queryFlatAccountByType(this.$utils.trimForm(data)).then(res => {
+                const resData = res.data || {};
                 this.loading = false;
                 this.tableData = resData.data || [];
                 this.page.totalPage = resData.totalNum || 0;

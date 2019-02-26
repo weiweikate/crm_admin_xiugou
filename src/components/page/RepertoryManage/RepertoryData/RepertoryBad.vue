@@ -23,6 +23,17 @@
         </el-card>
         <el-card :body-style="{ padding: '20px 40px' }" style='margin-top:20px'>
             <div style="margin-bottom: 20px;font-size: 14px">仓库编码：{{code}} <span style="margin-left: 30px">仓库名称：{{name}}</span></div>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table :data="tableData" border>
                 <el-table-column type="index" label="序号" align="center"></el-table-column>
                 <el-table-column prop="productName" label="产品名称" align="center"></el-table-column>
@@ -39,10 +50,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage" :page-size="page.pageSize" layout="total, prev, pager, next, jumper" :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
     </div>
 </template>
@@ -86,7 +93,7 @@ export default {
             };
             this.page.currentPage = val;
             request
-                .stockLossList(data)
+                .stockLossList(this.$utils.trimForm(data))
                 .then(res => {
                     this.tableData = [];
                     if (!res.data) return;

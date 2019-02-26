@@ -28,6 +28,9 @@
               </el-form-item>
           </el-form>
       </div>
+      <mr-flying parentClass="content-box">
+          <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
+      </mr-flying>
       <el-table v-loading="tableLoading" border :data="tableData" @selection-change="handleSelectionChange">
           <el-table-column type="selection" align="center"></el-table-column>
           <el-table-column prop="name" label="产品名称" min-width="300">
@@ -115,17 +118,6 @@
               </template>
           </el-table-column>
       </el-table>
-      <div class="block">
-          <el-pagination
-              background
-              @size-change="handleSizeChange"
-              :page-size="page.pageSize"
-              @current-change="handleCurrentChange"
-              :current-page="page.currentPage"
-              layout="total, prev, pager, next, jumper"
-              :total="page.totalPage">
-          </el-pagination>
-      </div>
       <div class="operate-table">
           <el-popover placement="top" width="160" v-model="isShowPop">
               <p>确定删除吗？</p>
@@ -224,7 +216,6 @@ export default {
         // 获取可购买层级列表
         getLevelList() {
             const that = this;
-            const data = {};
             request.getLevelList({}).then(res => {
                 that.levelList = res.data;
             }).catch(err => {
@@ -354,7 +345,7 @@ export default {
     margin-top: 10px;
   }
   .product-img {
-    display: inline-block;
+    // display: inline-block;
     float: left;
     width: 80px;
     height: 80px;

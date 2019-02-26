@@ -38,6 +38,17 @@
         </el-card>
         <el-card>
             <el-button type="primary" class="mb10" @click="dialogVisible = true" v-auth="'yunying.marketToolsManage.xiudou.fafang'">发放秀豆</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table :data="tableData" border stripe v-loading="pageLoading">
                 <el-table-column type="index" label="编号" align="center"></el-table-column>
                 <el-table-column prop="scoreCount" label="发放秀豆（枚）" min-width="150px" align="center"></el-table-column>
@@ -104,17 +115,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                    background
-                    :page-size="page.pageSize"
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
         <!--发放秀豆-->
         <el-dialog
@@ -289,7 +289,7 @@
                 };
                 this.page.currentPage = val;
                 this.tableData = [];
-                request.queryReissuePageList(data).then(res => {
+                request.queryReissuePageList(this.$utils.trimForm(data)).then(res => {
                     this.pageLoading = false;
                     this.tableData = res.data.data;
                     this.page.totalPage = res.data.totalNum;

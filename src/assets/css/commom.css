@@ -97,3 +97,6 @@ label.require:before,.el-table__header th.require .cell:before {
     color: #f56c6c;
     margin-right: 4px;
 }
+.el-tabs__content{
+    position: static;
+}

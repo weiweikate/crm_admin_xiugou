@@ -20,6 +20,14 @@
                         <el-option label="网红经销商" value="3"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item prop="status" label="会员状态" label-width="120">
+                    <el-select v-model="form.status" placeholder="请选择会员类型">
+                        <el-option label="请选择会员状态" value=""></el-option>
+                        <el-option label="正常" value="1"></el-option>
+                        <el-option label="已关闭" value="2"></el-option>
+                        <el-option label="已注销" value="3"></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item prop="levelId" label="用户层级" label-width="120">
                     <el-select v-model="form.levelId" placeholder="全部层级">
                         <el-option label="全部层级" value=""></el-option>
@@ -35,11 +43,23 @@
                 <el-form-item>
                     <el-button native-type="submit" @click="handleCurrentChange(1)" type="primary">查询</el-button>
                     <el-button type="primary" v-auth="'vip.memberManage.dc'">导出</el-button>
+                    <el-button @click="resetForm('form')">重置</el-button>
                     <el-button type="primary" @click="showPromote = true" v-auth="'vip.memberManage.plsj'">批量升级</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
         <div class="table-block">
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table v-loading="tableLoading" :data="tableData" stripe border style="width: 100%">
                 <el-table-column prop="id" label="用户ID" width="60" align="center"></el-table-column>
                 <el-table-column prop="nickname" label="用户昵称" align="center"></el-table-column>
@@ -87,8 +107,10 @@
                 <el-table-column label="状态" align="center">
                     <template slot-scope="scope">
                         <template v-if="scope.row.status==0">待激活</template>
-                        <template v-if="scope.row.status==1">正常</template>
-                        <template v-if="scope.row.status==2">已关闭</template>
+                        <template v-else-if="scope.row.status==1">正常</template>
+                        <template v-else-if="scope.row.status==2">已关闭</template>
+                        <!--<template v-else-if="scope.row.status==3">已注销</template>-->
+                        <template v-else>-</template>
                     </template>
                 </el-table-column>
                 <el-table-column min-width="160" label="操作" align="center">
@@ -102,36 +124,28 @@
                         <!--</el-button>-->
                     </template>
                 </el-table-column>
+                <el-table-column min-width="160" label="操作" align="center">
+                    <template slot-scope="scope">
+                        <span @click="updateStatusItem(scope.row, 1)" v-if="scope.row.status==2" class="primary-text">开启</span>
+                        <span @click="updateStatusItem(scope.row, 2)" v-else-if="scope.row.status==1" class="primary-text">关闭</span>
+                        <span v-else-if="scope.row.status==3" class="grey-text">开启</span>
+                        <span v-else>-</span>
+                    </template>
+                </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                        background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :page-size="page.pageSize"
-                        :current-page="page.currentPage"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
-        <!--消息确认弹窗-->
-        <div class="pwd-mask" v-if="tipsMask">
-            <div class="box">
-                <div class="mask-title">
-                    <icon class="ico" ico='icon-jinggao'/>
-                    温馨提示
-                </div>
-                <div class="mask-content">
-                    <span class="del-tip">{{info}}</span>
-                    <div class="del-btn-group">
-                        <el-button :loading="btnLoading" @click="oprSure(true)" class="del-btn" type="danger">{{btnTxt}}
-                        </el-button>
-                        <el-button @click="tipsMask=false">取消</el-button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!--开启/关闭弹窗-->
+        <el-dialog
+            title="提示"
+            :visible.sync="tipsMask"
+            width="500px"
+        >
+            <p class="tac">{{info}}</p>
+            <span slot="footer" class="dialog-footer">
+                <el-button :loading="btnLoading" type="primary" @click="confirmOperate">确 定</el-button>
+                <el-button @click="tipsMask = false">取 消</el-button>
+            </span>
+        </el-dialog>
          <!--手动批量升级弹窗-->
         <el-dialog title="手动批量升级" :visible.sync="showPromote">
             <el-form v-model="promote" label-width="100px">
@@ -192,6 +206,7 @@ export default {
             height: '',
             formLabelWidth: '100px',
             form: {
+                status: '',
                 condition: '',
                 phone: '',
                 userType: '',
@@ -240,7 +255,7 @@ export default {
             data.cityId = this.address[1];
             data.areaId = this.address[2];
             this.tableLoading = true;
-            request.queryUserPageList(data).then(res => {
+            request.queryUserPageList(this.$utils.trimForm(data)).then(res => {
                 this.tableLoading = false;
                 this.tableData = [];
                 this.tableData = res.data.data;
@@ -264,25 +279,35 @@ export default {
             this.$router.push({ name: 'memberDetail', query: { memberToInfo: row.code }});
         },
         // 关闭,开启
-        updateStatusItem(index, id, num) {
-            const that = this;
-            that.id = id;
+        updateStatusItem(scope, num) {
+            this.id = scope.code;
             if (num == 1) {
-                that.info = '是否确认关闭？';
-                that.type = '关闭';
-                that.btnTxt = '确认关闭';
+                this.info = '是否要开启该会员层级？';
+                this.type = 1;
             } else {
-                that.info = '是否确认开启？';
-                that.type = '开启';
-                that.btnTxt = '确认开启';
+                this.info = '是否要停用该会员层级？';
+                this.type = 2;
             }
-            that.tipsMask = true;
+            this.tipsMask = true;
+        },
+        confirmOperate() {
+            this.btnloading = true;
+            request.updateDealerById({ code: this.id, status: this.type }).then(res => {
+                this.btnloading = false;
+                this.$message.success(res.msg);
+                this.getList(this.page.currentPage);
+                this.tipsMask = false;
+            }).catch(err => {
+                this.btnloading = false;
+                console.log(err);
+            });
         },
         //   重置表单
         resetForm(formName) {
             this.address = [];
             this.$refs[formName].resetFields();
-            this.$refs['exportForm'].resetFields();
+            this.exportForm.levelId = '';
+            // this.$refs['exportForm'].resetFields();
             this.getList(this.page.currentPage);
         },
 

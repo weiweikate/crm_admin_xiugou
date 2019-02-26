@@ -279,3 +279,5 @@ export const downloadAfterOrderList = '/admin/order/afterSaleService/export';
 export const downloadRefundOrderList = '/admin/order/orderRefundInfo/export';
 // 统计老用户注册数量
 export const countSignUsers = '/user/countSignUsers';
+// 导出产品
+export const exportProduct = '/admin/product/product/export';

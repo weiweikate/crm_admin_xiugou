@@ -1,5 +1,8 @@
 <template>
     <div class="product-order-list" v-loading="pageLoading">
+        <mr-flying parentClass="content-box">
+          <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
+       </mr-flying>
         <el-table border :data="tableData">
             <el-table-column prop="serviceNo" label="售后单号" align="center"></el-table-column>
             <el-table-column prop="warehouseOrderNo" label="仓库订单号" align="center"></el-table-column>
@@ -76,10 +79,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="block">
-            <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage">
-            </el-pagination>
-        </div>
     </div>
 </template>
 
@@ -102,6 +101,7 @@ export default {
             this.data.size = this.page.pageSize;
             this.tableData = [];
             this.pageLoading = true;
+            this.data = this.$utils.trimForm(this.data);
             request
                 .queryAfterSalePage(this.data)
                 .then(res => {

@@ -2,6 +2,17 @@
     <div class="scratch-cards">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card>
+            <mr-flying parentClass="content-box">
+                <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page.currentPage"
+                    :page-size="page.pageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="page.totalPage">
+                </el-pagination>
+            </mr-flying>
             <el-table :data="tableData" border stripe>
                 <el-table-column prop="name" label="活动名称" align="center"></el-table-column>
                 <el-table-column prop="type" label="活动类型" align="center">
@@ -19,17 +30,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-pagination
-                    background
-                    :page-size="page.pageSize"
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </el-card>
     </div>
 </template>

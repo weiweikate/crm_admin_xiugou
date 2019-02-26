@@ -30,22 +30,26 @@ import Viewer from 'v-viewer';
 import 'viewerjs/dist/viewer.css';
 
 Vue.use(Viewer);
+
+import MrFlying from '@/components/common/flying/flying';
+Vue.component(MrFlying.name, MrFlying);
+
 Viewer.setDefaults({
     Options: {
-        'inline': true,
-        'button': true,
-        'navbar': true,
-        'title': true,
-        'toolbar': true,
-        'tooltip': true,
-        'movable': true,
-        'zoomable': true,
-        'rotatable': true,
-        'scalable': true,
-        'transition': true,
-        'fullscreen': true,
-        'keyboard': true,
-        'url': 'data-source'
+        inline: true,
+        button: true,
+        navbar: true,
+        title: true,
+        toolbar: true,
+        tooltip: true,
+        movable: true,
+        zoomable: true,
+        rotatable: true,
+        scalable: true,
+        transition: true,
+        fullscreen: true,
+        keyboard: true,
+        url: 'data-source'
     }
 });
 Vue.use(ElementUI, { size: 'small' });
@@ -54,7 +58,7 @@ Vue.use(Vue => {
 });
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$utils = utils;
-Vue.prototype.$oprAuth = function (value) {
+Vue.prototype.$oprAuth = function(value) {
     // 获取用户权限
     const getters = this.$store.getters;
     const roles = getters.roles;
@@ -67,10 +71,8 @@ Vue.prototype.$oprAuth = function (value) {
 };
 /** 权限指令**/
 Vue.directive('auth', {
-    inserted: function (el) {
-
-    },
-    bind: function (el, binding, vnode) {
+    inserted: function(el) {},
+    bind: function(el, binding, vnode) {
         // 获取按钮权限
         const value = binding.value;
         // 获取用户权限
@@ -90,8 +92,7 @@ Vue.directive('auth', {
         }
 
         if (!auth.includes(value)) {
-
-            setTimeout(function () {
+            setTimeout(function() {
                 try {
                     el.parentNode.removeChild(el);
                 } catch (e) {
@@ -99,14 +100,13 @@ Vue.directive('auth', {
                 }
             }, 10);
         } else {
-            setTimeout(function () {
+            setTimeout(function() {
                 try {
                     el.style.opacity = '1';
                 } catch (e) {
                     console.log(e);
                 }
             }, 10);
-
         }
     }
 });

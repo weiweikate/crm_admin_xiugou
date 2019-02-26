@@ -3,6 +3,17 @@
     <v-breadcrumb :nav="nav"></v-breadcrumb>
     <el-card :body-style="{ padding: '30px 60px' }">
       <el-button type="primary" @click="addQuestionCate" v-auth="'yunying.helpCenter.tjwtlm'">添加问题类目</el-button>
+      <mr-flying parentClass="content-box">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+      </mr-flying>
       <el-table :data="tableData" border style='margin-top:20px' :height="height">
         <el-table-column prop="id" label="编号" align="center"></el-table-column>
         <el-table-column prop="name" label="问题类目" align="center"></el-table-column>
@@ -19,17 +30,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="block">
-        <el-pagination
-            background
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="page.currentPage"
-            :page-size="page.pageSize"
-            layout="total, prev, pager, next, jumper"
-            :total="page.totalPage">
-        </el-pagination>
-      </div>
       <el-dialog title="添加问题类目" :visible.sync="isShowAddQues">
           <div class="add-item">
               <span>问题类型</span>
@@ -59,8 +59,6 @@
 <script>
 import vBreadcrumb from '@/components/common/Breadcrumb.vue';
 import deleteToast from '@/components/common/DeleteToast';
-import * as pApi from '@/privilegeList/OperateManage/HelpCenter/index.js';
-import utils from '@/utils/index.js';
 import { myMixinTable, beforeAvatarUpload } from '@/JS/commom';
 import request from '@/http/http.js';
 import * as api from '@/api/api.js';

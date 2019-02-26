@@ -4,6 +4,9 @@
         <div class="table-block">
             <el-button type="primary" style="margin-bottom: 20px" @click="addClassify" v-auth="'brand.brandProductClassify.tjyjlm'">添加一级类目</el-button>
             <el-button type="success" style="margin-bottom: 20px" @click="hotClassifyManage" v-auth="'brand.brandProductClassify.tjrmfl'">热门分类管理</el-button>
+            <mr-flying parentClass="content-box">
+                <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-size="page.pageSize" :current-page="page.currentPage" layout="total, prev, pager, next, jumper" :total="page.totalPage"></el-pagination>
+            </mr-flying>
             <template>
                 <el-table :data="tableData"  border style="width: 100%">
                     <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
@@ -39,17 +42,6 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination
-                        background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page.currentPage"
-                        :page-size="page.pageSize"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
 
         <!--添加/编辑类目弹窗-->
