@@ -65,16 +65,6 @@
                     </div>
                 </el-form-item>
                 <div class="pro-title">使用限制</div>
-                <el-form-item>
-                    <el-checkbox disabled label="不支持优惠券" v-model="limit.notSupportCoupon"></el-checkbox>
-                    <!--<el-checkbox label="不支持1元积分抵扣" v-model="limit.notSupportScore"></el-checkbox>-->
-                </el-form-item>
-                <el-form-item>
-                    <el-checkbox :disabled="form.type == 2" label="不支持退款" v-model="limit.notSupportRetMoney"></el-checkbox>
-                    <el-checkbox :disabled="form.type == 2" label="不支持换货" v-model="limit.notSupportRetChange"></el-checkbox>
-                    <el-checkbox :disabled="form.type == 2" label="不支持退货" v-model="limit.notSupportRetGoods"></el-checkbox>
-                </el-form-item>
-                <hr style="border: 0;height: 1px;background-color: #eee;" />
                 <el-form-item label="">
                     <el-checkbox label="是否限购" v-model="purchaseLimit"></el-checkbox>
                     <br>
@@ -266,14 +256,6 @@ export default {
                 isSetBuyTime: false,
                 isSetExp: false
             },
-            // 使用限制
-            limit: {
-                notSupportCoupon: false, // 不支持优惠券
-                notSupportScore: false, // 不支持积分抵扣
-                notSupportRetMoney: false, // 不支持退款
-                notSupportRetChange: false, // 不支持换货
-                notSupportRetGoods: false // 不支持退货
-            },
             videoUrl: '', // 视频
             // 是否限购
             purchaseLimit: false,
@@ -376,12 +358,6 @@ export default {
                     this.form.aferServiceDays = res.data.aferServiceDays.toString();
                     this.imgInfoList = res.data.content ? res.data.content.split(',') : [];
                     this.imgArr = res.data.imgFileList;
-                    this.form.restrictions = Number(res.data.restrictions);
-                    this.limit.notSupportCoupon = (this.form.restrictions & 1) !== 0;
-                    this.limit.notSupportScore = (this.form.restrictions & 2) !== 0;
-                    this.limit.notSupportRetMoney = (this.form.restrictions & 4) !== 0;
-                    this.limit.notSupportRetChange = (this.form.restrictions & 8) !== 0;
-                    this.limit.notSupportRetGoods = (this.form.restrictions & 16) !== 0;
                     this.purchaseLimit = res.data.buyLimit !== -1;
                     this.purchasevalue = res.data.buyLimit;
                     this.setBuyTime.push(res.data.beginTime);
@@ -460,21 +436,6 @@ export default {
                 return;
             }
             this.form.restrictions = 0;
-            if (this.limit.notSupportCoupon) {
-                this.form.restrictions += 1;
-            }
-            if (this.limit.notSupportScore) {
-                this.form.restrictions += 2;
-            }
-            if (this.limit.notSupportRetMoney) {
-                this.form.restrictions += 4;
-            }
-            if (this.limit.notSupportRetChange) {
-                this.form.restrictions += 8;
-            }
-            if (this.limit.notSupportRetGoods) {
-                this.form.restrictions += 16;
-            }
             this.form.paramValueList = [];
             this.productParam.forEach(v => {
                 this.form.paramValueList.push({ paramName: v.name, paramValue: v.value });
@@ -949,17 +910,9 @@ export default {
         },
         // 修改礼包状态
         changeGiftStatus(status) {
-            this.limit.notSupportCoupon = true; // 不支持优惠券
             if (status === '1') {
                 this.gifts.isSetExp = false;
-                this.limit.notSupportRetMoney = false; // 不支持退款
-                this.limit.notSupportRetChange = false; // 不支持换货
-                this.limit.notSupportRetGoods = false; // 不支持退货
                 this.form.experience = '';
-            } else {
-                this.limit.notSupportRetMoney = true; // 不支持退款
-                this.limit.notSupportRetChange = true; // 不支持换货
-                this.limit.notSupportRetGoods = true; // 不支持退货
             }
         },
         // 返回
