@@ -109,7 +109,7 @@
                         <template v-if="scope.row.status==0">待激活</template>
                         <template v-else-if="scope.row.status==1">正常</template>
                         <template v-else-if="scope.row.status==2">已关闭</template>
-                        <template v-else-if="scope.row.status==3">已注销</template>
+                        <!--<template v-else-if="scope.row.status==3">已注销</template>-->
                         <template v-else>-</template>
                     </template>
                 </el-table-column>

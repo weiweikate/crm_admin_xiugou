@@ -71,11 +71,11 @@
                                    style="margin-left: 0">店铺信息
                         </el-button>
                     </div>
-                    <div>
-                        <el-button :disabled="status == 3" type="primary" @click="logout" v-auth="'vip.memberDetail.hyzx'"
-                                   style="margin-left: 0">会员注销
-                        </el-button>
-                    </div>
+                    <!--<div>-->
+                        <!--<el-button :disabled="status == 3" type="primary" @click="logout" v-auth="'vip.memberDetail.hyzx'"-->
+                                   <!--style="margin-left: 0">会员注销-->
+                        <!--</el-button>-->
+                    <!--</div>-->
                 </div>
                 <div class="clearfix"></div>
             </div>
