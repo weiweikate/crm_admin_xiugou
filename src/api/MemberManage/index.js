@@ -84,3 +84,6 @@ export const writtenOff = ['/user/writtenOff', { methods: 'get' }];
 export const queryDisabledPhonePageList = ['/user/regConfine/queryConfinePageList', { methods: 'post' }];
 // 解除禁用
 export const canclePhoneDisabled = ['/user/regConfine/update', { methods: 'get' }];
+
+// 手动批量升级
+export const addTmpUserLevelOptLog = ['/user/tmpUserLevelOptLog/addTmpUserLevelOptLog', { methods: 'post' }];
