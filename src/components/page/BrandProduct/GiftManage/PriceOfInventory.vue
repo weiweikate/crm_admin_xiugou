@@ -40,6 +40,7 @@
                     <div class="bot">
                         <el-input style="width:100%" v-model.number="v.price" :min="0" :controls="false" @change="handlePrice(v.name)"></el-input>
                     </div>
+                    <span class="text-red" v-if="v.name === '拼店价'">升级礼包拼店价无效</span>
                 </div>
             </div>
             <div class="btn-group">
@@ -383,6 +384,13 @@ export default {
                 line-height: 58px;
                 padding: 0 20px;
                 box-sizing: border-box;
+            }
+            .text-red{
+                margin-top: 5px;
+                color: red;
+                display: block;
+                font-size: 8px;
+                text-align: center;
             }
         }
     }
