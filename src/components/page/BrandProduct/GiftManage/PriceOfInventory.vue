@@ -40,6 +40,7 @@
                     <div class="bot">
                         <el-input style="width:100%" v-model.number="v.price" :min="0" :controls="false" @change="handlePrice(v.name)"></el-input>
                     </div>
+                    <span class="text-red" v-if="giftType === 2 && v.name === '拼店价'">升级礼包拼店价无效</span>
                 </div>
             </div>
             <div class="btn-group">
@@ -75,13 +76,15 @@ export default {
             // 价格区间信息
             priceInterval: [],
             // 库存状态 1:商品共用库存 2：固定发放库存
-            stockType: 1
+            stockType: 1,
+            giftType: 1 // 礼包类型 1.普通礼包 2.升级礼包
         };
     },
 
     activated() {
         this.giftId = this.$route.query.priceOfInventoryId || JSON.parse(sessionStorage.getItem('priceOfInventoryId')).id;
         this.stockType = this.$route.query.stockType || JSON.parse(sessionStorage.getItem('priceOfInventoryId')).stockType;
+        this.giftType = this.$route.query.giftType;
         this.tableData = [];
         // 获取参考价
         this.getPrice();
@@ -383,6 +386,13 @@ export default {
                 line-height: 58px;
                 padding: 0 20px;
                 box-sizing: border-box;
+            }
+            .text-red{
+                margin-top: 5px;
+                color: red;
+                display: block;
+                font-size: 8px;
+                text-align: center;
             }
         }
     }

@@ -251,7 +251,7 @@ export default {
             sessionStorage.setItem('priceOfInventoryId', JSON.stringify({ id: row.id, stockType: row.stockType }));
             this.$router.push({
                 path: '/priceOfInventory',
-                query: { priceOfInventoryId: row.id, stockType: row.stockType }
+                query: { priceOfInventoryId: row.id, stockType: row.stockType, giftType: row.type }
             });
         },
         // 优惠券管理
